@@ -1,0 +1,4956 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "Manage data collection forms",
+            "action_refs": [],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": false,
+            "core_logic": null
+        },
+        {
+            "index": 1,
+            "function_description": "The page functions as the main menu for ODK Collect, providing options to fill, edit, send, view, get, or delete data collection forms, along with a dropdown for additional settings and information.",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ]
+            ],
+            "data_in": [
+                "main menu options"
+            ],
+            "data_out": [
+                "dropdown menu with additional options"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The main menu of ODK Collect is the entry point. From here, the user can click the 'more options' dropdown (three dots) to open a menu with additional settings and information options like About, General Settings, or Admin Settings. This action initiates the flow to access these supplementary options.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the more options dropdown to open additional settings/info menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "The \"Fill Blank Form\" page is intended to display and allow interaction with blank data collection forms, but currently shows a message indicating no forms are available and suggests obtaining and filling out a blank form.",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ]
+            ],
+            "data_in": [
+                "blank form"
+            ],
+            "data_out": [
+                "fill blank form page (loaded)"
+            ],
+            "data_dependencies": [
+                11,
+                12,
+                19,
+                21
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the Main Menu page and clicks the 'Fill Blank Form' button. This navigates to the Fill Blank Form page, which displays a message indicating no forms are available and suggests getting a blank form. There are no further interactive steps here as the form list is empty.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click 'Fill Blank Form' button on Main Menu to navigate to Fill Blank Form page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "The \"Edit Saved Form\" page is intended to display and allow editing of previously saved data collection forms, but currently shows a message indicating no saved forms are available and suggests getting a blank form to fill out.",
+            "action_refs": [
+                [
+                    0,
+                    2
+                ]
+            ],
+            "data_in": [
+                "saved form"
+            ],
+            "data_out": [
+                "saved form list (for editing)"
+            ],
+            "data_dependencies": [
+                13,
+                14,
+                20,
+                21,
+                40,
+                41,
+                42
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the Main Menu page. They click the 'Edit Saved Form' button, which navigates to the Edit Saved Form page. On this page, a message indicates no saved forms are available, and suggests getting a blank form to fill out. There are no further interactive steps here as the page has no editable content.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click 'Edit Saved Form' button on Main Menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "The \"Send Finalized Form\" page is used to send finalized data collection forms, and currently indicates there are no finalized forms available to send, prompting the user to finalize saved forms first.",
+            "action_refs": [
+                [
+                    0,
+                    3
+                ],
+                [
+                    4,
+                    2
+                ]
+            ],
+            "data_in": [
+                "finalized form",
+                "menu icon"
+            ],
+            "data_out": [
+                "sent form record",
+                "menu options (General Settings, Change View)"
+            ],
+            "data_dependencies": [
+                5,
+                15
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the Main Menu page and clicks 'Send Finalized Form' to navigate to the Send Finalized Form page. On this page, the user sees a message indicating no finalized forms are available, prompting them to finalize saved forms first. The user can then click the menu icon to access additional options like settings or view changes.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click 'Send Finalized Form' from Main Menu to navigate to its management page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            4,
+                            2
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 120,
+                        "action": "click",
+                        "summary": "Click menu icon on Send Finalized Form page to access options"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "The \"View Sent Form\" page is intended to display previously sent data collection forms, but currently shows a message indicating no sent forms are available to display and suggests sending finalized forms first.",
+            "action_refs": [
+                [
+                    0,
+                    4
+                ]
+            ],
+            "data_in": [
+                "sent form"
+            ],
+            "data_out": [
+                "sent form list (viewed)"
+            ],
+            "data_dependencies": [
+                17,
+                18
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the Main Menu page. They click the 'View Sent Form' button, which navigates to the 'View Sent Form' page. On this page, a message is displayed indicating no sent forms are available and suggesting to send finalized forms first. There are no further actions or branches here as the flow ends with viewing the message.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click 'View Sent Form' button on Main Menu to navigate to View Sent Form page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "The current page is the main menu of ODK Collect, providing options to fill, edit, send, view, get, or delete data collection forms, and in this context, it is in the process of connecting to a server to retrieve a blank form after the \"Get Blank Form\" action was initiated from the \"Manage data collection forms\" page.",
+            "action_refs": [
+                [
+                    0,
+                    5
+                ]
+            ],
+            "data_in": [
+                "blank form"
+            ],
+            "data_out": [
+                "blank form (retrieved)"
+            ],
+            "data_dependencies": [
+                2,
+                12,
+                19,
+                21
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The process starts on the main menu page of ODK Collect. The user initiates the 'Get Blank Form' action by clicking the corresponding button. This action triggers a transition to a state where a 'Connecting to server' dialog is displayed, indicating the app is attempting to retrieve the blank form from the server.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click 'Get Blank Form' button to start connecting to server for blank form retrieval"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "The page allows users to view and potentially delete saved data collection forms, with a current state showing no saved forms are available to display.",
+            "action_refs": [
+                [
+                    0,
+                    6
+                ],
+                [
+                    7,
+                    0
+                ]
+            ],
+            "data_in": [
+                "saved form",
+                "saved forms tab",
+                "form management interface"
+            ],
+            "data_out": [
+                "deleted saved form"
+            ],
+            "data_dependencies": [
+                3,
+                13,
+                14,
+                20,
+                21,
+                40,
+                41,
+                42
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the main menu page and clicks the 'Delete Saved Form' button to navigate to the deletion page. On the deletion page, the user clicks to switch to the 'Saved Forms' tab, where the UI shows no saved forms are available to display.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            6
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click 'Delete Saved Form' to navigate to the deletion page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            7,
+                            0
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click to switch to 'Saved Forms' tab"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "The \"About\" page of ODK Collect provides options to visit the ODK website, join the ODK forum, share the app, leave a Play Store review, and view open source libraries/licenses, along with brief descriptions of each option's purpose.",
+            "action_refs": [
+                [
+                    1,
+                    0
+                ]
+            ],
+            "data_in": [
+                "about option"
+            ],
+            "data_out": [
+                "ODK Collect about information page"
+            ],
+            "data_dependencies": [
+                22,
+                23,
+                24,
+                25,
+                26
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts on the Main Menu page. The user clicks the 'About' option, which navigates to the About page of ODK Collect. On the About page, options like visiting the ODK website, joining the forum, sharing the app, leaving a review, and viewing open source details are presented, each with a descriptive purpose.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            0
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click 'About' option to navigate to ODK Collect's About page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "The General Settings page allows users to configure various app - wide settings including Server, User interface, Maps, Form management, and User and device identity.",
+            "action_refs": [
+                [
+                    1,
+                    1
+                ]
+            ],
+            "data_in": [
+                "general settings option"
+            ],
+            "data_out": [
+                "general settings page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts at the Main Menu page. The user clicks on the 'General Settings' option, which navigates to the General Settings page where various app - wide settings (Server, User interface, Maps, Form management, User and device identity) can be configured. There are no branches or loops in this initial flow as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            1
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click on General Settings option to navigate to General Settings page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "The Admin Settings page provides options for administrators to manage various system settings including general settings, password, application reset, import/export, user access control, main menu, user settings, and form entry settings.",
+            "action_refs": [
+                [
+                    1,
+                    2
+                ],
+                [
+                    10,
+                    2
+                ],
+                [
+                    67,
+                    4
+                ]
+            ],
+            "data_in": [
+                "admin settings option",
+                "reset application setting"
+            ],
+            "data_out": [
+                "admin settings management page",
+                "selected reset data (to be deleted)"
+            ],
+            "data_dependencies": [
+                34,
+                35,
+                36,
+                37,
+                59,
+                60,
+                61,
+                62,
+                63
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts by clicking the Admin Settings option from the main menu to access the admin settings page. Then, the 'Reset application...' option is clicked to navigate to the data reset selection page. Finally, the 'Toggle map layers reset' action is performed to manage the map layers reset setting.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            2
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click Admin Settings option to open admin settings page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            10,
+                            2
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 67,
+                        "action": "click",
+                        "summary": "Click Reset application... option to go to data reset page"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            67,
+                            4
+                        ],
+                        "src_page_idx": 67,
+                        "dst_page_idx": 79,
+                        "action": "click",
+                        "summary": "Toggle map layers reset setting"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "The current page provides sorting options (by name in ascending/descending order, by date newest/oldest first) for blank forms within the \"Fill Blank Form\" management section, and indicates there are no forms available to display currently.",
+            "action_refs": [
+                [
+                    2,
+                    0
+                ],
+                [
+                    107,
+                    0
+                ],
+                [
+                    107,
+                    1
+                ]
+            ],
+            "data_in": [
+                "blank form list",
+                "form list",
+                "sort setting",
+                "sort option (Name, Z-A)"
+            ],
+            "data_out": [
+                "sorting configuration for blank forms",
+                "updated sort setting",
+                "sorted form list"
+            ],
+            "data_dependencies": [
+                38,
+                39
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The user starts on the 'Fill Blank Form' page (which shows no forms available). First, they click the menu navigation control to open the sorting options for blank forms. Then, at the sorting options page, they can choose to sort by Name A-Z or Name Z-A (the flow branches here based on the selected sorting option).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            0
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 107,
+                        "action": "click",
+                        "summary": "Click the menu navigation control to open sorting options for blank forms"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            107,
+                            0
+                        ],
+                        "src_page_idx": 107,
+                        "dst_page_idx": 109,
+                        "action": "click",
+                        "summary": "Click 'Sort by Name, A-Z' to sort blank forms (if applicable)"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            107,
+                            1
+                        ],
+                        "src_page_idx": 107,
+                        "dst_page_idx": 110,
+                        "action": "click",
+                        "summary": "Click 'Sort by Name, Z-A' to sort blank forms (if applicable)"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2",
+                                "condition": "User selects 'Sort by Name, A-Z'"
+                            },
+                            {
+                                "next_step": "S3",
+                                "condition": "User selects 'Sort by Name, Z-A'"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "This page provides a search interface to look for blank forms within the data collection form management system, with a message indicating no forms are currently available to display and a suggestion to get and fill out a blank form.",
+            "action_refs": [
+                [
+                    2,
+                    1
+                ],
+                [
+                    108,
+                    0
+                ]
+            ],
+            "data_in": [
+                "blank form",
+                "search query",
+                "form data (implicit)"
+            ],
+            "data_out": [
+                "search result (blank form)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The user starts on page 2 and clicks the search function control to search for blank forms, navigating to page 108. Then, on page 108, the user clicks the search input field, moving to page 113. The flow is a straight sequence with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            1
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 108,
+                        "action": "click",
+                        "summary": "Click search function control to search for blank forms"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            108,
+                            0
+                        ],
+                        "src_page_idx": 108,
+                        "dst_page_idx": 113,
+                        "action": "click",
+                        "summary": "Click search input field"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "The current page provides sorting options (by name, date, or status) for saved forms within the \"Edit Saved Form\" management interface, allowing users to organize how saved forms are displayed.",
+            "action_refs": [
+                [
+                    3,
+                    0
+                ],
+                [
+                    114,
+                    0
+                ],
+                [
+                    114,
+                    1
+                ],
+                [
+                    114,
+                    4
+                ]
+            ],
+            "data_in": [
+                "saved form",
+                "saved form list",
+                "sorting configuration (Name, A-Z)",
+                "sort by setting",
+                "sorting configuration"
+            ],
+            "data_out": [
+                "sorting configuration for saved forms",
+                "sorted saved form list (by Name, A-Z)",
+                "updated sort by setting",
+                "sorted saved form list",
+                "updated saved form list (sorted by status, finalized first)",
+                "updated sorting configuration"
+            ],
+            "data_dependencies": [
+                40,
+                41,
+                42
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The user starts on the 'Edit Saved Form' page (page 3) and clicks the menu icon to open the sorting options (page 114). At the sorting options page, the user can choose one of multiple sorting methods (e.g., Name A-Z, Name Z-A, Status finalized first), each leading back to the main form list page (page 3) with the selected sorting applied.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            0
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 114,
+                        "action": "click",
+                        "summary": "Click menu icon to open sorting options"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            114,
+                            0
+                        ],
+                        "src_page_idx": 114,
+                        "dst_page_idx": 116,
+                        "action": "click",
+                        "summary": "Click 'Sort by Name, A-Z' option"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            114,
+                            1
+                        ],
+                        "src_page_idx": 114,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click 'Sort by Name, Z-A' option"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            114,
+                            4
+                        ],
+                        "src_page_idx": 114,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click 'Sort by Status, finalized first' option"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "This page provides a search functionality to locate saved data collection forms, with a message indicating no forms are currently available to display and suggesting the user get and fill out a blank form.",
+            "action_refs": [
+                [
+                    3,
+                    1
+                ],
+                [
+                    115,
+                    0
+                ]
+            ],
+            "data_in": [
+                "saved form",
+                "search query",
+                "form records"
+            ],
+            "data_out": [
+                "search result (forms)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The user starts on page 3 and clicks the search icon to initiate form search (step S1), which navigates to page 115. Then, on page 115, the user clicks the search input field (step S2). The flow is a straight sequence with no branches, as the actions lead from the search trigger to the input interaction.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            1
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 115,
+                        "action": "click",
+                        "summary": "Click the search icon to start searching for saved forms"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            115,
+                            0
+                        ],
+                        "src_page_idx": 115,
+                        "dst_page_idx": 117,
+                        "action": "click",
+                        "summary": "Click the search input field"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "The page provides sorting options (by name alphabetically, by date) for finalized forms in the \"Send Finalized Form\" management interface, allowing users to organize the list of forms to send.",
+            "action_refs": [
+                [
+                    4,
+                    0
+                ]
+            ],
+            "data_in": [
+                "finalized form list"
+            ],
+            "data_out": [
+                "sorting configuration for finalized forms"
+            ],
+            "data_dependencies": [
+                44
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The process starts on the 'Send Finalized Form' page. The user clicks the filter icon (which provides sorting options) to open the sorting menu. This action leads to a new page (or menu) where sorting options for finalized forms are presented, allowing the user to choose a sorting criterion (e.g., by name alphabetically or by date) to organize the list of forms to send.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            0
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 118,
+                        "action": "click",
+                        "summary": "Click the filter icon to open sorting options for finalized forms"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "The page allows users to search for finalized forms that are ready to be sent, with a message indicating no forms are currently available and prompting to finalize saved forms first.",
+            "action_refs": [
+                [
+                    4,
+                    1
+                ],
+                [
+                    119,
+                    0
+                ]
+            ],
+            "data_in": [
+                "finalized form",
+                "search query",
+                "form records"
+            ],
+            "data_out": [
+                "search result (finalized forms)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user starts on page 4 and clicks the search icon to initiate a search for finalized forms (step S1). This action navigates to page 119, where the user then clicks the search input field (step S2). After this, the app displays a message indicating no forms are available and prompts to finalize saved forms first.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            1
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 119,
+                        "action": "click",
+                        "summary": "Click the search icon to start searching for finalized forms"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            119,
+                            0
+                        ],
+                        "src_page_idx": 119,
+                        "dst_page_idx": 121,
+                        "action": "click",
+                        "summary": "Click the search input field"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "The page provides sorting options (by name in ascending/descending order, by date newest/oldest first) for organizing the list of sent data collection forms within the \"View Sent Form\" interface.",
+            "action_refs": [
+                [
+                    5,
+                    0
+                ]
+            ],
+            "data_in": [
+                "sent form list"
+            ],
+            "data_out": [
+                "sorting options menu"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user starts on the 'View Sent Form' page (page 5). They click the menu icon (sorting options menu) to open the sorting menu, which navigates to page 125. The sorting menu provides options to sort sent forms by name (A-Z, Z-A) or date (newest first, oldest first), though the flow here captures the initial action to open the menu.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            0
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 125,
+                        "action": "click",
+                        "summary": "Click the menu icon to open the sorting options menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "The page provides a search interface to look for sent data collection forms, with a message indicating no forms are available to display and suggesting to send finalized forms first.",
+            "action_refs": [
+                [
+                    5,
+                    1
+                ],
+                [
+                    126,
+                    0
+                ]
+            ],
+            "data_in": [
+                "sent form",
+                "search input",
+                "form records"
+            ],
+            "data_out": [
+                "search interface state"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The process starts on page 5. First, the search icon is clicked to open the search interface for sent forms (navigating to page 126). Then, the search input field is clicked (on page 126, leading to page 127). The interface then shows a message if no forms are available, suggesting to send finalized forms first.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            1
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 126,
+                        "action": "click",
+                        "summary": "Click search icon to open sent forms search interface"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            126,
+                            0
+                        ],
+                        "src_page_idx": 126,
+                        "dst_page_idx": 127,
+                        "action": "click",
+                        "summary": "Click search input field"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "The current page, under the \"Blank Forms\" tab, is used to display blank data collection forms, but currently shows no available forms to display.",
+            "action_refs": [
+                [
+                    7,
+                    1
+                ]
+            ],
+            "data_in": [
+                "blank form",
+                "form management context"
+            ],
+            "data_out": [
+                "blank form list (displayed)"
+            ],
+            "data_dependencies": [
+                2,
+                11,
+                12,
+                21,
+                38,
+                39
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The user starts on page 7 and clicks the 'Blank Forms' tab to switch to it. After switching, the 'Blank Forms' page (page 128) is displayed, and it shows 'Nothing available to display' with no blank data collection forms present.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            1
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 128,
+                        "action": "click",
+                        "summary": "Click on the 'Blank Forms' tab to switch to it"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "The page provides sorting options (by name alphabetically or by date) for saved forms within the \"Delete Saved Form\" section, allowing users to organize how saved forms are displayed.",
+            "action_refs": [
+                [
+                    7,
+                    2
+                ]
+            ],
+            "data_in": [
+                "saved forms"
+            ],
+            "data_out": [
+                "sort options for saved forms"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The user starts on the 'Delete Saved Form' page (page 7). They click the menu icon to open the sort options for saved forms, which navigates to the sort menu page (page 129). At this point, the user can choose a sorting option (e.g., by name or date) to organize the saved forms, though the specific choice is not captured in the single action provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            2
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 129,
+                        "action": "click",
+                        "summary": "Click the menu icon to open sort options for saved forms"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "The page allows users to search for saved or blank data collection forms, with tabs to switch between viewing saved forms and blank forms, and currently shows no forms available for display.",
+            "action_refs": [
+                [
+                    7,
+                    3
+                ],
+                [
+                    130,
+                    0
+                ]
+            ],
+            "data_in": [
+                "saved form",
+                "blank form",
+                "form (saved/blank)"
+            ],
+            "data_out": [
+                "search result (form)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The user starts on page 7 and clicks the search option to navigate to the form search page (page 130). On page 130, the user clicks the search input field. The page shows no forms available for display, with tabs to switch between saved and blank forms, but no further actions are needed as the display is empty.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            3
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 130,
+                        "action": "click",
+                        "summary": "Click the search option to navigate to the form search page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            130,
+                            0
+                        ],
+                        "src_page_idx": 130,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the search input field on the form search page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "The page allows the user to select an application (e.g., Chrome, WebView Browser Tester) to open the link for visiting the ODK website from the ODK Collect about information page.",
+            "action_refs": [
+                [
+                    8,
+                    0
+                ]
+            ],
+            "data_in": [
+                "ODK website link"
+            ],
+            "data_out": [
+                "app selection for ODK website link"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "On the ODK Collect about page, the user clicks the 'Visit the ODK website' option. This triggers a dialog to select an app (e.g., Chrome, WebView Browser Tester) to open the link, allowing the user to choose how to navigate to the ODK website.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            0
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click 'Visit the ODK website' to open app selection dialog"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "The current page allows the user to select an application (either Chrome or WebView Browser Tester) to open the link for visiting the ODK website from the ODK Collect about information page.",
+            "action_refs": [
+                [
+                    8,
+                    1
+                ]
+            ],
+            "data_in": [
+                "ODK forum link"
+            ],
+            "data_out": [
+                "forum access initiation"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The user starts on the ODK Collect about page. They click the 'Visit the ODK website' option, which triggers an 'Open with' dialog to appear, offering two browser choices: Chrome or WebView Browser Tester. The user then selects one of these browsers to open the ODK website link.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            1
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click 'Visit the ODK website' to trigger browser selection dialog"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": null,
+                                "condition": "Select Chrome"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "Select WebView Browser Tester"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "The page provides options to share the ODK Collect app via different methods such as copying to clipboard, Gmail, Hangouts, Messenger, or saving to Drive.",
+            "action_refs": [
+                [
+                    8,
+                    2
+                ]
+            ],
+            "data_in": [
+                "ODK Collect sharing option"
+            ],
+            "data_out": [
+                "sharing interface (with options: Copy to clipboard, Gmail, Hangouts, Messenger, Save to Drive)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The flow starts on the 'About' page. The user clicks the 'Share ODK Collect' option, which opens a sharing menu with multiple methods (Copy to clipboard, Gmail, Hangouts, Messenger, Save to Drive). The user can then choose one of these methods to share the app.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            2
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click 'Share ODK Collect' to open sharing options"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 25,
+            "function_description": "The current page allows the user to select a browser application (from options like Chrome or WebView Browser Tester) to open the link for visiting the ODK website, as part of the ODK Collect app's \"About\" section functionality.",
+            "action_refs": [
+                [
+                    8,
+                    3
+                ]
+            ],
+            "data_in": [
+                "Play Store review request"
+            ],
+            "data_out": [
+                "initiated Play Store review process"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The user starts on the 'About' page of ODK Collect. They click on 'Visit the ODK website', which triggers a dialog to open the link with a browser. Then, the user selects a browser (Chrome or WebView Browser Tester) from the 'Open with' dialog to proceed to the ODK website.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            3
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click 'Visit the ODK website' to trigger browser selection dialog"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 26,
+            "function_description": "The page displays a list of open source libraries and their respective licenses used in the ODK Collect application.",
+            "action_refs": [
+                [
+                    8,
+                    4
+                ]
+            ],
+            "data_in": [
+                "open source libraries/licenses item"
+            ],
+            "data_out": [
+                "open source licenses list"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The user starts on page 8 (About page). They click the 'Open source libraries/licenses' option, which navigates to page 13. On page 13, the list of open source libraries and their licenses is displayed. There are no branches or loops as the flow is a single click to view the list.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            4
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click 'Open source libraries/licenses' to navigate to the licenses list page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 27,
+            "function_description": "The current page, \"Server Settings\", allows users to configure the server connection settings, including specifying the server type (ODK Aggregate), server URL, username, and password for the app's server connection.",
+            "action_refs": [
+                [
+                    9,
+                    0
+                ],
+                [
+                    14,
+                    1
+                ],
+                [
+                    14,
+                    2
+                ],
+                [
+                    14,
+                    3
+                ],
+                [
+                    19,
+                    0
+                ],
+                [
+                    19,
+                    1
+                ],
+                [
+                    20,
+                    0
+                ],
+                [
+                    20,
+                    2
+                ]
+            ],
+            "data_in": [
+                "server setting",
+                "ODK password setting",
+                "server settings",
+                "password setting",
+                "server type setting",
+                "ODK password input",
+                "platform setting"
+            ],
+            "data_out": [
+                "server setting",
+                "ODK password setting",
+                "password input (in progress)",
+                "updated server type setting",
+                "updated server settings (with password)",
+                "updated platform setting"
+            ],
+            "data_dependencies": [
+                45,
+                58,
+                69,
+                91
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts by clicking the 'Server settings' option to enter the Server Settings page. On this page, they can click the 'Username' or 'Password' fields to input credentials (with a dialog for each), or click the 'Type' option to select the server platform (choosing between ODK Aggregate or Other). The flow includes branches for entering username/password and selecting the server type.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            0
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click 'Server settings' to navigate to Server Settings page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            14,
+                            1
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click 'Username' field to open username input dialog"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            14,
+                            2
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click 'Password' field to open password input dialog"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            14,
+                            3
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 20,
+                        "action": "click",
+                        "summary": "Click 'Type' option to open server platform selection dialog"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            19,
+                            0
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 21,
+                        "action": "click",
+                        "summary": "Click username input field in dialog"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            19,
+                            1
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 22,
+                        "action": "click",
+                        "summary": "Click 'OK' button in input dialog"
+                    },
+                    {
+                        "id": "S7",
+                        "action_ref": [
+                            20,
+                            0
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 23,
+                        "action": "click",
+                        "summary": "Select 'ODK Aggregate' in platform dialog"
+                    },
+                    {
+                        "id": "S8",
+                        "action_ref": [
+                            20,
+                            2
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 25,
+                        "action": "click",
+                        "summary": "Select 'Other' in platform dialog"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S5",
+                        "to": "S6"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S7"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S8"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2",
+                                "condition": "User chooses to enter username"
+                            },
+                            {
+                                "next_step": "S3",
+                                "condition": "User chooses to enter password"
+                            },
+                            {
+                                "next_step": "S4",
+                                "condition": "User chooses to select server type"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S4",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S7",
+                                "condition": "User selects ODK Aggregate"
+                            },
+                            {
+                                "next_step": "S8",
+                                "condition": "User selects Other"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 28,
+            "function_description": "The current page allows users to configure user interface settings including theme, language, text font size, navigation method, splash screen visibility, and selected splash image.",
+            "action_refs": [
+                [
+                    9,
+                    1
+                ],
+                [
+                    15,
+                    0
+                ],
+                [
+                    15,
+                    2
+                ],
+                [
+                    26,
+                    0
+                ],
+                [
+                    26,
+                    1
+                ],
+                [
+                    28,
+                    0
+                ],
+                [
+                    28,
+                    1
+                ],
+                [
+                    28,
+                    2
+                ],
+                [
+                    28,
+                    3
+                ],
+                [
+                    28,
+                    4
+                ]
+            ],
+            "data_in": [
+                "user interface setting",
+                "theme setting",
+                "text font size setting"
+            ],
+            "data_out": [
+                "user interface configuration page",
+                "updated theme setting (Light theme)",
+                "updated theme setting (dark theme)",
+                "updated text font size setting (Extra Large)",
+                "updated text font size setting (Large)",
+                "updated text font size setting (medium)",
+                "updated text font size setting (small)",
+                "updated text font size setting (Extra Small)"
+            ],
+            "data_dependencies": [
+                27,
+                46,
+                48,
+                49,
+                70,
+                71,
+                72,
+                73,
+                74,
+                84
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The flow starts with clicking the user interface settings option (S1) to enter the UI settings page. Then, at the UI settings page, the user can choose to configure the theme (S2) or text font size (S3). For the theme branch (S2), the user can select either Light (S4) or Dark (S5) theme. For the text font size branch (S3), the user can select from Extra Large (S6), Large (S7), Medium (S8), Small (S9), or Extra Small (S10) font sizes.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            1
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click to open user interface settings"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            15,
+                            0
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 26,
+                        "action": "click",
+                        "summary": "Click to open theme selection dialog"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            15,
+                            2
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 28,
+                        "action": "click",
+                        "summary": "Click to open text font size selection dialog"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            26,
+                            0
+                        ],
+                        "src_page_idx": 26,
+                        "dst_page_idx": 31,
+                        "action": "click",
+                        "summary": "Select Light theme"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            26,
+                            1
+                        ],
+                        "src_page_idx": 26,
+                        "dst_page_idx": 32,
+                        "action": "click",
+                        "summary": "Select Dark theme"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            28,
+                            0
+                        ],
+                        "src_page_idx": 28,
+                        "dst_page_idx": 34,
+                        "action": "click",
+                        "summary": "Select Extra Large font size"
+                    },
+                    {
+                        "id": "S7",
+                        "action_ref": [
+                            28,
+                            1
+                        ],
+                        "src_page_idx": 28,
+                        "dst_page_idx": 35,
+                        "action": "click",
+                        "summary": "Select Large font size"
+                    },
+                    {
+                        "id": "S8",
+                        "action_ref": [
+                            28,
+                            2
+                        ],
+                        "src_page_idx": 28,
+                        "dst_page_idx": 36,
+                        "action": "click",
+                        "summary": "Select Medium font size"
+                    },
+                    {
+                        "id": "S9",
+                        "action_ref": [
+                            28,
+                            3
+                        ],
+                        "src_page_idx": 28,
+                        "dst_page_idx": 37,
+                        "action": "click",
+                        "summary": "Select Small font size"
+                    },
+                    {
+                        "id": "S10",
+                        "action_ref": [
+                            28,
+                            4
+                        ],
+                        "src_page_idx": 28,
+                        "dst_page_idx": 38,
+                        "action": "click",
+                        "summary": "Select Extra Small font size"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S6"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S7"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S8"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S9"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S10"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S3",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S6"
+                            },
+                            {
+                                "next_step": "S7"
+                            },
+                            {
+                                "next_step": "S8"
+                            },
+                            {
+                                "next_step": "S9"
+                            },
+                            {
+                                "next_step": "S10"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 29,
+            "function_description": "The current page allows users to configure map settings, including selecting the Mapping SDK (e.g., Google Maps SDK) and the Basemap type (e.g., Streets).",
+            "action_refs": [
+                [
+                    9,
+                    2
+                ]
+            ],
+            "data_in": [
+                "maps setting item"
+            ],
+            "data_out": [
+                "maps settings page"
+            ],
+            "data_dependencies": [
+                27,
+                47,
+                50,
+                51,
+                75,
+                76
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts on the General Settings page. They click the 'Maps' option to navigate to the Maps settings page, where they can configure the Mapping SDK and Basemap type. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            2
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click on the 'Maps' settings option to enter the Maps settings page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 30,
+            "function_description": "The current page, \"Form management,\" allows users to configure various settings related to form updates (e.g., periodic checks, automatic download, hiding old versions), form submission (e.g., auto send, delete after send), and form filling (e.g., default to finalized, constraint processing) for data collection forms.",
+            "action_refs": [
+                [
+                    9,
+                    3
+                ],
+                [
+                    17,
+                    3
+                ],
+                [
+                    17,
+                    5
+                ],
+                [
+                    50,
+                    0
+                ],
+                [
+                    50,
+                    1
+                ],
+                [
+                    50,
+                    2
+                ],
+                [
+                    50,
+                    3
+                ]
+            ],
+            "data_in": [
+                "form management setting",
+                "auto send setting",
+                "form management settings",
+                "default to finalized setting"
+            ],
+            "data_out": [
+                "form management setting (entered)",
+                "updated auto send setting",
+                "updated default to finalized setting",
+                "updated auto send setting (Off)",
+                "updated auto send setting (Wifi only)",
+                "updated auto send setting (Cellular only)"
+            ],
+            "data_dependencies": [
+                27,
+                52,
+                53,
+                54,
+                55,
+                56,
+                77,
+                78,
+                79,
+                80,
+                81
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The flow starts by navigating to Form management settings. Then, it proceeds to configure auto send options for form submission. At the auto send configuration step, there are mutually exclusive branches to select different auto send modes (Off, Wifi only, Cellular only, or Wifi or cellular). Additionally, there is a step to set the form to default to finalized.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            3
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click to access Form management settings"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            17,
+                            3
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 50,
+                        "action": "click",
+                        "summary": "Click to configure auto send for form submission"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            50,
+                            0
+                        ],
+                        "src_page_idx": 50,
+                        "dst_page_idx": 59,
+                        "action": "click",
+                        "summary": "Select Off for auto send"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            50,
+                            1
+                        ],
+                        "src_page_idx": 50,
+                        "dst_page_idx": 60,
+                        "action": "click",
+                        "summary": "Select Wifi only for auto send"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            50,
+                            2
+                        ],
+                        "src_page_idx": 50,
+                        "dst_page_idx": 61,
+                        "action": "click",
+                        "summary": "Select Cellular only for auto send"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            50,
+                            3
+                        ],
+                        "src_page_idx": 50,
+                        "dst_page_idx": 62,
+                        "action": "click",
+                        "summary": "Select Wifi or cellular for auto send"
+                    },
+                    {
+                        "id": "S7",
+                        "action_ref": [
+                            17,
+                            5
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 52,
+                        "action": "click",
+                        "summary": "Set form to default to finalized"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S6"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S7"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            },
+                            {
+                                "next_step": "S6"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 31,
+            "function_description": "The page allows users to manage user and device identity settings, including configuring form metadata for identifying data submitters and toggling the collection of anonymous usage data to assist the ODK team in prioritizing fixes and features.",
+            "action_refs": [
+                [
+                    9,
+                    4
+                ]
+            ],
+            "data_in": [
+                "user and device identity setting"
+            ],
+            "data_out": [
+                "user and device identity setting (entered)"
+            ],
+            "data_dependencies": [
+                27,
+                57
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts on the General Settings page. They click the 'User and device identity' option, which navigates to the User and device identity settings page. This page allows managing form metadata for data submitter identification and toggling anonymous usage data collection.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            4
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click 'User and device identity' option to navigate to its settings page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 32,
+            "function_description": "The General Settings page provides access to configure various system - related settings including Server, User interface, Maps, Form management, and User and device identity for the application.",
+            "action_refs": [
+                [
+                    10,
+                    0
+                ]
+            ],
+            "data_in": [
+                "general settings entry"
+            ],
+            "data_out": [
+                "general settings page access"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The flow starts on the Admin Settings page. The user clicks on the 'General Settings' option, which navigates to the General Settings page. This page provides access to configure various system - related settings including Server, User interface, Maps, Form management, and User and device identity.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            0
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click on General Settings to navigate to its page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 33,
+            "function_description": "The current page is the main menu of the ODK Collect app, providing options to fill, edit, send, view, get, or delete data collection forms, along with access to additional options via a dropdown menu.",
+            "action_refs": [
+                [
+                    10,
+                    1
+                ],
+                [
+                    66,
+                    0
+                ],
+                [
+                    66,
+                    2
+                ]
+            ],
+            "data_in": [
+                "admin password setting",
+                "password input field"
+            ],
+            "data_out": [
+                "admin password setting (updated)",
+                "new password input field"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The flow starts on the Admin Settings page. First, the user clicks the 'Admin Password' option to open the password change dialog. Then, at the dialog, the user can either click the new password input field to enter a password or click the OK button to confirm the change, with these two actions being mutually exclusive choices.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            1
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 66,
+                        "action": "click",
+                        "summary": "Click Admin Password to open password change dialog"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            66,
+                            0
+                        ],
+                        "src_page_idx": 66,
+                        "dst_page_idx": 72,
+                        "action": "click",
+                        "summary": "Click new password input field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            66,
+                            2
+                        ],
+                        "src_page_idx": 66,
+                        "dst_page_idx": 74,
+                        "action": "click",
+                        "summary": "Click OK button to confirm password change"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 34,
+            "function_description": "The Import/Export Settings page enables users to manage the import and export of settings (via QR code or SD card) and handle sensitive information like admin and server passwords associated with the QR code.",
+            "action_refs": [
+                [
+                    10,
+                    3
+                ],
+                [
+                    68,
+                    1
+                ],
+                [
+                    68,
+                    3
+                ]
+            ],
+            "data_in": [
+                "import/export settings item",
+                "import/export settings",
+                "settings import/export code file"
+            ],
+            "data_out": [
+                "import/export settings page access",
+                "saved import/export settings"
+            ],
+            "data_dependencies": [
+                65,
+                67
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The flow starts by clicking to access the Import/Export Settings page. Once on this page, a user can either save settings (a leaf action) or select a code from the SD card (which triggers an app selection dialog). The main branch point is at the Import/Export Settings page, where the user chooses between saving settings or selecting a code from the SD card.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            3
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 68,
+                        "action": "click",
+                        "summary": "Click to open Import/Export Settings page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            68,
+                            1
+                        ],
+                        "src_page_idx": 68,
+                        "dst_page_idx": 68,
+                        "action": "click",
+                        "summary": "Click to save settings (leaf action)"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            68,
+                            3
+                        ],
+                        "src_page_idx": 68,
+                        "dst_page_idx": 84,
+                        "action": "click",
+                        "summary": "Click to select code from SD card (triggers app selection)"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 35,
+            "function_description": "The page allows users to manage the visibility of main menu items related to data collection forms by checking or unchecking options to show or hide them from the main menu.",
+            "action_refs": [
+                [
+                    10,
+                    4
+                ]
+            ],
+            "data_in": [
+                "main menu settings item"
+            ],
+            "data_out": [
+                "main menu items visibility settings"
+            ],
+            "data_dependencies": [
+                68
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The user starts on the Admin Settings page. They click on 'Main Menu Settings' to navigate to the page where they can manage the visibility of main menu items related to data collection forms. On the Main Menu Settings page, they can then check or uncheck the listed form-related menu items to show or hide them from the main menu.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            4
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 69,
+                        "action": "click",
+                        "summary": "Click on 'Main Menu Settings' to access the page for managing main menu item visibility"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 36,
+            "function_description": "The User Settings page allows users to manage the visibility of various settings (e.g., Server, Theme, Language) by checking or unchecking options to show or hide them from General Settings.",
+            "action_refs": [
+                [
+                    10,
+                    5
+                ]
+            ],
+            "data_in": [
+                "user settings item"
+            ],
+            "data_out": [
+                "user settings visibility configuration"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The flow starts on the Admin Settings page. The user clicks on the 'User Settings' option, which navigates to the User Settings page. On this page, the user can manage the visibility of various settings (like Server, Theme, Language) by checking or unchecking their respective checkboxes to show or hide them from General Settings.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            5
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 70,
+                        "action": "click",
+                        "summary": "Click on User Settings to navigate to its page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 37,
+            "function_description": "The Form Entry Settings page allows users to enable or disable various form entry-related options (e.g., Moving backwards, General Settings, Change Language, etc.) by checking or unchecking corresponding checkboxes.",
+            "action_refs": [
+                [
+                    10,
+                    6
+                ]
+            ],
+            "data_in": [
+                "form entry settings option"
+            ],
+            "data_out": [
+                "form entry settings page"
+            ],
+            "data_dependencies": [
+                82,
+                83,
+                84,
+                85,
+                86,
+                87,
+                88
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The user starts on the Admin Settings page. They click on the 'Form Entry Settings' option, which navigates to the Form Entry Settings page where various form entry - related options (like Moving backwards, General Settings, etc.) can be enabled or disabled via checkboxes.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            6
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 71,
+                        "action": "click",
+                        "summary": "Click on Form Entry Settings to navigate to its page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 38,
+            "function_description": "Sort by Date, newest first",
+            "action_refs": [
+                [
+                    107,
+                    2
+                ]
+            ],
+            "data_in": [
+                "form list",
+                "sorting option (date, newest first)"
+            ],
+            "data_out": [
+                "updated form list (sorted by date, newest first)",
+                "sorting setting (date, newest first)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 107,
+                "logic": "On the initial page (page 107), the user performs a click action on the 'Sort by Date, newest first' option. This action transitions the app to the destination page (page 111), completing the sorting setup to display items in the newest-first date order.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            107,
+                            2
+                        ],
+                        "src_page_idx": 107,
+                        "dst_page_idx": 111,
+                        "action": "click",
+                        "summary": "Click on 'Sort by Date, newest first' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 39,
+            "function_description": "Sort by Date, oldest first",
+            "action_refs": [
+                [
+                    107,
+                    3
+                ]
+            ],
+            "data_in": [
+                "form list",
+                "sorting configuration"
+            ],
+            "data_out": [
+                "updated form list (sorted by date, oldest first)",
+                "updated sorting configuration"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 107,
+                "logic": "On the source page (page 107), the user performs a click action on the 'Sort by Date, oldest first' option. This action navigates to the destination page (page 112), completing the sorting operation as intended.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            107,
+                            3
+                        ],
+                        "src_page_idx": 107,
+                        "dst_page_idx": 112,
+                        "action": "click",
+                        "summary": "Click on 'Sort by Date, oldest first' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 40,
+            "function_description": "The current page, reached after sorting saved forms by Name in reverse alphabetical order (Z - A) from the edit saved forms management page, displays a message indicating no saved forms are available and suggests getting and filling out a blank form.",
+            "action_refs": [
+                [
+                    114,
+                    2
+                ]
+            ],
+            "data_in": [
+                "saved form list",
+                "sorting configuration"
+            ],
+            "data_out": [
+                "updated sorting configuration",
+                "sorted saved form list"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 114,
+                "logic": "The process starts on the edit saved forms management page. A click action is performed to sort the saved forms by 'Date, newest first'. After this action, the page updates to display a message indicating no saved forms are available and suggests getting and filling out a blank form.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            114,
+                            2
+                        ],
+                        "src_page_idx": 114,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click to sort by Date, newest first"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 41,
+            "function_description": "The page allows users to view and potentially edit saved forms, with sorting options (like sorting by name in reverse alphabetical order) and a message indicating no saved forms are available, prompting users to get and fill out a blank form.",
+            "action_refs": [
+                [
+                    114,
+                    3
+                ]
+            ],
+            "data_in": [
+                "saved form list",
+                "sorting configuration"
+            ],
+            "data_out": [
+                "updated saved form list (sorted by date, oldest first)",
+                "updated sorting configuration"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 114,
+                "logic": "The user starts on the 'Edit Saved Form' page. They can click the sort menu (e.g., to select 'Date, oldest first') to sort saved forms. If no forms are saved, a message prompts them to get a blank form. The flow includes sorting actions and checking for saved forms.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            114,
+                            3
+                        ],
+                        "src_page_idx": 114,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click to sort by Date, oldest first"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 42,
+            "function_description": "The current page, reached after sorting saved forms by Name in Z - A order, displays a message indicating no saved forms are available and suggests getting and filling out a blank form, while also providing options for menu and search functionality related to saved forms.",
+            "action_refs": [
+                [
+                    114,
+                    5
+                ]
+            ],
+            "data_in": [
+                "saved form list",
+                "sorting preference (status, unfinalized first)"
+            ],
+            "data_out": [
+                "updated saved form list (sorted by status, unfinalized first)",
+                "updated sorting preference"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 114,
+                "logic": "The process starts on page 114. A click action is performed to sort saved forms by Status (unfinalized first), leading to page 3. On page 3, the UI displays a message that no saved forms are available and suggests filling a blank form, with menu and search options present.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            114,
+                            5
+                        ],
+                        "src_page_idx": 114,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click to sort saved forms by Status (unfinalized first)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 43,
+            "function_description": "The General Settings page provides options to configure settings related to Server, User interface, Maps, Form management, and User and device identity for the data collection form management application.",
+            "action_refs": [
+                [
+                    120,
+                    0
+                ]
+            ],
+            "data_in": [
+                "general settings option"
+            ],
+            "data_out": [
+                "general settings page"
+            ],
+            "data_dependencies": [
+                27,
+                28,
+                29,
+                30,
+                31,
+                32,
+                83
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 120,
+                "logic": "The flow starts at the entry page (page 120). The user clicks on the 'General Settings' option, which navigates to the General Settings page (page 9) where configuration options for Server, User interface, Maps, Form management, and User and device identity are available. There are no branches or loops in this initial flow as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            120,
+                            0
+                        ],
+                        "src_page_idx": 120,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click on General Settings option to navigate to General Settings page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 44,
+            "function_description": "The current page provides a \"Change View\" dialog with options to filter the display of forms as either \"Show Unsent Forms\" or \"Show Sent and Unsent Forms\" for the finalized forms management interface.",
+            "action_refs": [
+                [
+                    120,
+                    1
+                ]
+            ],
+            "data_in": [
+                "form view setting"
+            ],
+            "data_out": [
+                "updated form view setting"
+            ],
+            "data_dependencies": [
+                89,
+                90
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 120,
+                "logic": "The process starts on the finalized forms management page (page 120). The user clicks the 'Change View' option, which opens a dialog (page 122) with two filtering options: 'Show Unsent Forms' and 'Show Sent and Unsent Forms'. The flow now branches based on which option the user selects to filter the form display.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            120,
+                            1
+                        ],
+                        "src_page_idx": 120,
+                        "dst_page_idx": 122,
+                        "action": "click",
+                        "summary": "Click 'Change View' to open the view - changing dialog"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": null,
+                                "condition": "User selects 'Show Unsent Forms'"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "User selects 'Show Sent and Unsent Forms'"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 45,
+            "function_description": "The page allows users to configure server connection settings for an ODK Aggregate server, including viewing or editing the server URL, username, and password, and accessing ODK Aggregate specific settings.",
+            "action_refs": [
+                [
+                    14,
+                    0
+                ]
+            ],
+            "data_in": [
+                "ODK Aggregate settings link"
+            ],
+            "data_out": [
+                "ODK Aggregate settings page"
+            ],
+            "data_dependencies": [
+                58,
+                69
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "On the Server Settings page (page 14), the user clicks the 'ODK Aggregate settings' link. This action likely navigates to (or opens) the ODK Aggregate - specific settings page, allowing further configuration of server - related details for ODK Aggregate.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            0
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click the 'ODK Aggregate settings' link on the Server Settings page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 46,
+            "function_description": "This page allows the user to select the app's language from a list of available languages, with an option to use the device's language.",
+            "action_refs": [
+                [
+                    15,
+                    1
+                ],
+                [
+                    27,
+                    0
+                ]
+            ],
+            "data_in": [
+                "language setting"
+            ],
+            "data_out": [
+                "updated language setting"
+            ],
+            "data_dependencies": [
+                71,
+                84
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user starts on page 15 and clicks the 'Language' setting to navigate to page 27. Then, on page 27, the user clicks a language option to complete the selection (page 33).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            1
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 27,
+                        "action": "click",
+                        "summary": "Click 'Language' setting to open language selection page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            27,
+                            0
+                        ],
+                        "src_page_idx": 27,
+                        "dst_page_idx": 33,
+                        "action": "click",
+                        "summary": "Click a language option to select it"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 47,
+            "function_description": "The page functions as a dialog for selecting the mapping SDK (Google Maps SDK, OpenStreetMap SDK, or Mapbox Maps SDK) to be used within the app's navigation or mapping-related features.",
+            "action_refs": [
+                [
+                    15,
+                    3
+                ],
+                [
+                    29,
+                    0
+                ],
+                [
+                    29,
+                    1
+                ],
+                [
+                    29,
+                    2
+                ]
+            ],
+            "data_in": [
+                "mapping SDK setting"
+            ],
+            "data_out": [
+                "updated mapping SDK setting"
+            ],
+            "data_dependencies": [
+                50
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The flow starts by clicking the Navigation setting to open the option selection dialog. Then, from the dialog, the user can choose one of three navigation options: horizontal swipes, forward/backward buttons, or both swipes and buttons, with each choice leading to a distinct page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            3
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 29,
+                        "action": "click",
+                        "summary": "Click Navigation setting to open option dialog"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            29,
+                            0
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 39,
+                        "action": "click",
+                        "summary": "Select 'Use horizontal swipes' option"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            29,
+                            1
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 40,
+                        "action": "click",
+                        "summary": "Select 'Use forward/backward buttons' option"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            29,
+                            2
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 41,
+                        "action": "click",
+                        "summary": "Select 'Use swipes and buttons' option"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 48,
+            "function_description": "Splash screen toggle",
+            "action_refs": [
+                [
+                    15,
+                    4
+                ]
+            ],
+            "data_in": [
+                "splash screen setting"
+            ],
+            "data_out": [
+                "updated splash screen setting"
+            ],
+            "data_dependencies": [
+                74
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user starts on page 15 (User interface settings). The core logic is to perform a click action on the 'Splash screen toggle' option, which likely toggles the splash screen setting (e.g., enabling or disabling it) and may navigate to a new page (30) or update the current page's state. There are no branches or loops here as it's a single action to toggle the setting.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            4
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 30,
+                        "action": "click",
+                        "summary": "Click on the 'Splash screen toggle' option to toggle its state (e.g., enable/disable splash screen on app start) and potentially navigate to page 30."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 49,
+            "function_description": "The current page, within the user interface settings of the app, allows the user to configure the selected splash image (along with other UI settings like theme, language, text font size, navigation, and splash screen visibility).",
+            "action_refs": [
+                [
+                    15,
+                    5
+                ]
+            ],
+            "data_in": [
+                "selected splash image setting"
+            ],
+            "data_out": [
+                "updated selected splash image setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user starts on the User interface settings page. The core logic involves clicking on the 'Selected splash image' setting, which likely allows configuration of the splash image (though the current action is a click to access or modify this setting). There are no branches or loops here as only one action is present.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            5
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click on the 'Selected splash image' setting to configure the splash image"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 50,
+            "function_description": "The current page allows the user to select a Mapping SDK (Google Maps SDK, OpenStreetMap SDK, or Mapbox Maps SDK) for the app's map functionality.",
+            "action_refs": [
+                [
+                    16,
+                    0
+                ]
+            ],
+            "data_in": [
+                "mapping SDK setting"
+            ],
+            "data_out": [
+                "updated mapping SDK setting"
+            ],
+            "data_dependencies": [
+                47
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 16,
+                "logic": "The user starts on page 16 (Maps settings). They click the 'Mapping SDK' setting, which opens a dialog (dst page 29) with options to select Google Maps SDK, OpenStreetMap SDK, or Mapbox Maps SDK. This click initiates the process of choosing a mapping SDK for the app's map functionality.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            16,
+                            0
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 29,
+                        "action": "click",
+                        "summary": "Click 'Mapping SDK' setting to open SDK selection dialog"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 51,
+            "function_description": "The current page allows the user to select the type of basemap (Streets, Satellite, Terrain, Hybrid) for the map settings within the app.",
+            "action_refs": [
+                [
+                    16,
+                    1
+                ],
+                [
+                    42,
+                    0
+                ],
+                [
+                    42,
+                    1
+                ],
+                [
+                    42,
+                    2
+                ],
+                [
+                    42,
+                    3
+                ]
+            ],
+            "data_in": [
+                "basemap setting"
+            ],
+            "data_out": [
+                "updated basemap setting",
+                "updated basemap setting (Streets)",
+                "updated basemap setting (Satellite)",
+                "updated basemap setting (Terrain)",
+                "updated basemap setting (Hybrid)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 16,
+                "logic": "The user starts on page 16 and clicks to open the basemap selection menu (step S1). Then, at the basemap selection page (step S2), the user chooses one of four options: Streets (S3), Satellite (S4), Terrain (S5), or Hybrid (S6), with each choice leading to a distinct destination page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            16,
+                            1
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 42,
+                        "action": "click",
+                        "summary": "Open basemap selection menu"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            42,
+                            0
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": 43,
+                        "action": "click",
+                        "summary": "Select Streets basemap"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            42,
+                            1
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": 44,
+                        "action": "click",
+                        "summary": "Select Satellite basemap"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            42,
+                            2
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": 45,
+                        "action": "click",
+                        "summary": "Select Terrain basemap"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            42,
+                            3
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": 46,
+                        "action": "click",
+                        "summary": "Select Hybrid basemap"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 52,
+            "function_description": "This page allows the user to configure the frequency (e.g., Never, Every fifteen minutes, Every hour, etc.) at which the app checks for periodic form updates within the form management settings.",
+            "action_refs": [
+                [
+                    17,
+                    0
+                ],
+                [
+                    47,
+                    0
+                ],
+                [
+                    47,
+                    1
+                ],
+                [
+                    47,
+                    2
+                ],
+                [
+                    47,
+                    3
+                ],
+                [
+                    47,
+                    4
+                ]
+            ],
+            "data_in": [
+                "periodic form updates check setting"
+            ],
+            "data_out": [
+                "updated periodic form updates check setting",
+                "updated periodic form updates check setting (Every fifteen minutes)",
+                "updated periodic form updates check setting (to Every hour)",
+                "updated periodic form updates check setting (Every six hours)",
+                "updated periodic form updates check setting (Every 24 hours)"
+            ],
+            "data_dependencies": [
+                77
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 17,
+                "logic": "The user starts on the form management page and clicks to open the periodic form updates check settings. Then, from the list of frequency options (Never, Every fifteen minutes, Every hour, Every six hours, Every 24 hours), the user selects one to configure the update check frequency.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            17,
+                            0
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 47,
+                        "action": "click",
+                        "summary": "Open periodic form updates check settings"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            47,
+                            0
+                        ],
+                        "src_page_idx": 47,
+                        "dst_page_idx": 54,
+                        "action": "click",
+                        "summary": "Select 'Never' frequency"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            47,
+                            1
+                        ],
+                        "src_page_idx": 47,
+                        "dst_page_idx": 55,
+                        "action": "click",
+                        "summary": "Select 'Every fifteen minutes' frequency"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            47,
+                            2
+                        ],
+                        "src_page_idx": 47,
+                        "dst_page_idx": 56,
+                        "action": "click",
+                        "summary": "Select 'Every hour' frequency"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            47,
+                            3
+                        ],
+                        "src_page_idx": 47,
+                        "dst_page_idx": 57,
+                        "action": "click",
+                        "summary": "Select 'Every six hours' frequency"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            47,
+                            4
+                        ],
+                        "src_page_idx": 47,
+                        "dst_page_idx": 58,
+                        "action": "click",
+                        "summary": "Select 'Every 24 hours' frequency"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S6"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2",
+                                "condition": "User chooses 'Never'"
+                            },
+                            {
+                                "next_step": "S3",
+                                "condition": "User chooses 'Every fifteen minutes'"
+                            },
+                            {
+                                "next_step": "S4",
+                                "condition": "User chooses 'Every hour'"
+                            },
+                            {
+                                "next_step": "S5",
+                                "condition": "User chooses 'Every six hours'"
+                            },
+                            {
+                                "next_step": "S6",
+                                "condition": "User chooses 'Every 24 hours'"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 53,
+            "function_description": "Enable automatic form download",
+            "action_refs": [
+                [
+                    17,
+                    1
+                ]
+            ],
+            "data_in": [
+                "automatic download setting"
+            ],
+            "data_out": [
+                "updated automatic download setting (enabled)"
+            ],
+            "data_dependencies": [
+                78
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 17,
+                "logic": "The process starts on the Form management page. The user performs a click action to enable the automatic form download feature, which likely toggles the associated checkbox or setting to activate automatic downloads of updated form versions.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            17,
+                            1
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 48,
+                        "action": "click",
+                        "summary": "Click to enable automatic form download"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 54,
+            "function_description": "Hide old form versions",
+            "action_refs": [
+                [
+                    17,
+                    2
+                ]
+            ],
+            "data_in": [
+                "hide old form versions setting"
+            ],
+            "data_out": [
+                "updated hide old form versions setting"
+            ],
+            "data_dependencies": [
+                79
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 17,
+                "logic": "The process starts on the Form management page. The user clicks on the 'Hide old form versions' option, which likely toggles its state (e.g., enabling or disabling the hiding of old form versions). This action completes the functional point of hiding old form versions.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            17,
+                            2
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 49,
+                        "action": "click",
+                        "summary": "Click on 'Hide old form versions' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 55,
+            "function_description": "Delete forms after sending",
+            "action_refs": [
+                [
+                    17,
+                    4
+                ]
+            ],
+            "data_in": [
+                "delete after send setting"
+            ],
+            "data_out": [
+                "updated delete after send setting"
+            ],
+            "data_dependencies": [
+                81
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 17,
+                "logic": "The user starts on the Form management page. They perform a click action on the 'Delete forms after sending' option (likely a checkbox or toggle) to enable or configure the deletion of forms after they are sent. This action transitions to the next page (51), completing the setup for this functionality.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            17,
+                            4
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 51,
+                        "action": "click",
+                        "summary": "Click 'Delete forms after sending' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 56,
+            "function_description": "The current page allows the user to configure the constraint processing behavior for forms, with options to validate upon forward swipe or defer validation until finalized.",
+            "action_refs": [
+                [
+                    17,
+                    6
+                ],
+                [
+                    53,
+                    0
+                ],
+                [
+                    53,
+                    1
+                ]
+            ],
+            "data_in": [
+                "constraint processing setting",
+                "constraint processing behavior setting"
+            ],
+            "data_out": [
+                "updated constraint processing behavior setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 17,
+                "logic": "The user starts on the form management page and clicks to open the constraint processing behavior settings. Then, at the settings page, the user chooses between two options: validate upon forward swipe or defer validation until finalized, with each choice leading to a confirmation of the selected behavior.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            17,
+                            6
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 53,
+                        "action": "click",
+                        "summary": "Open constraint processing behavior settings"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            53,
+                            0
+                        ],
+                        "src_page_idx": 53,
+                        "dst_page_idx": 63,
+                        "action": "click",
+                        "summary": "Select 'Validate upon forward swipe'"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            53,
+                            1
+                        ],
+                        "src_page_idx": 53,
+                        "dst_page_idx": 64,
+                        "action": "click",
+                        "summary": "Select 'Defer validation until finalized'"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 57,
+            "function_description": "Collect anonymous usage data checkbox",
+            "action_refs": [
+                [
+                    18,
+                    0
+                ]
+            ],
+            "data_in": [
+                "collect anonymous usage data setting"
+            ],
+            "data_out": [
+                "updated collect anonymous usage data setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 18,
+                "logic": "The user interacts with the 'Collect anonymous usage data' checkbox by clicking it. This action likely toggles the checkbox's state (checked/unchecked) and may navigate to a different page (dst_page_idx 65) or update the setting.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            18,
+                            0
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 65,
+                        "action": "click",
+                        "summary": "Click the 'Collect anonymous usage data' checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 58,
+            "function_description": "Show password checkbox",
+            "action_refs": [
+                [
+                    66,
+                    1
+                ]
+            ],
+            "data_in": [
+                "show password setting"
+            ],
+            "data_out": [
+                "updated show password setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 66,
+                "logic": "The flow starts on page 66. The user performs a click action on the 'Show password checkbox' element, which leads to page 73. There are no branches or loops as this is a single-step action to interact with the checkbox.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            66,
+                            1
+                        ],
+                        "src_page_idx": 66,
+                        "dst_page_idx": 73,
+                        "action": "click",
+                        "summary": "Click the Show password checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 59,
+            "function_description": "Toggle all settings reset",
+            "action_refs": [
+                [
+                    67,
+                    0
+                ]
+            ],
+            "data_in": [
+                "all settings reset option"
+            ],
+            "data_out": [
+                "updated all settings reset selection"
+            ],
+            "data_dependencies": [
+                64
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 67,
+                "logic": "The flow starts on page 67. The user performs a click action to toggle the 'All settings (internal settings, saved settings)' option in the 'Select what to reset' dialog. This action is the core step to initiate the all settings reset process.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            67,
+                            0
+                        ],
+                        "src_page_idx": 67,
+                        "dst_page_idx": 75,
+                        "action": "click",
+                        "summary": "Click to toggle the 'All settings (internal settings, saved settings)' option in the reset dialog"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 60,
+            "function_description": "Toggle saved forms reset",
+            "action_refs": [
+                [
+                    67,
+                    1
+                ]
+            ],
+            "data_in": [
+                "saved forms reset option"
+            ],
+            "data_out": [
+                "updated saved forms reset selection"
+            ],
+            "data_dependencies": [
+                64
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 67,
+                "logic": "The process starts on page 67. The user clicks the 'Toggle saved forms reset' element, which navigates to page 76. This action likely toggles the selection of the 'Saved forms' option in the reset dialog to prepare for resetting saved forms data.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            67,
+                            1
+                        ],
+                        "src_page_idx": 67,
+                        "dst_page_idx": 76,
+                        "action": "click",
+                        "summary": "Click to toggle saved forms reset, navigating to the reset selection page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 61,
+            "function_description": "Toggle blank forms reset",
+            "action_refs": [
+                [
+                    67,
+                    2
+                ]
+            ],
+            "data_in": [
+                "blank forms reset setting"
+            ],
+            "data_out": [
+                "updated blank forms reset setting"
+            ],
+            "data_dependencies": [
+                64
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 67,
+                "logic": "The flow starts on page 67. The user performs a click action to toggle the 'Blank forms reset' option, which navigates to page 77. This is a single-step flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            67,
+                            2
+                        ],
+                        "src_page_idx": 67,
+                        "dst_page_idx": 77,
+                        "action": "click",
+                        "summary": "Click to toggle blank forms reset"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 62,
+            "function_description": "Toggle form load cache reset",
+            "action_refs": [
+                [
+                    67,
+                    3
+                ]
+            ],
+            "data_in": [
+                "form load cache setting",
+                "reset selection"
+            ],
+            "data_out": [
+                "updated form load cache reset selection"
+            ],
+            "data_dependencies": [
+                64
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 67,
+                "logic": "The process starts on page 67. The user clicks the 'Toggle form load cache reset' option, which navigates to page 78. This action likely initiates the process of toggling the form load cache reset setting, possibly opening a confirmation or selection dialog for resetting the form load cache.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            67,
+                            3
+                        ],
+                        "src_page_idx": 67,
+                        "dst_page_idx": 78,
+                        "action": "click",
+                        "summary": "Click the 'Toggle form load cache reset' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 63,
+            "function_description": "Toggle OSM tile cache reset",
+            "action_refs": [
+                [
+                    67,
+                    5
+                ]
+            ],
+            "data_in": [
+                "OSM tile cache reset option"
+            ],
+            "data_out": [
+                "updated OSM tile cache reset selection"
+            ],
+            "data_dependencies": [
+                64
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 67,
+                "logic": "The process starts on page 67. The user clicks the 'Toggle OSM tile cache reset' option, which navigates to page 80. This action initiates the process of toggling the OSM tile cache reset functionality.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            67,
+                            5
+                        ],
+                        "src_page_idx": 67,
+                        "dst_page_idx": 80,
+                        "action": "click",
+                        "summary": "Click the 'Toggle OSM tile cache reset' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 64,
+            "function_description": "Reset selected data",
+            "action_refs": [
+                [
+                    67,
+                    6
+                ]
+            ],
+            "data_in": [
+                "selected data (all settings, saved forms, blank forms, form load cache, map layers, OSM tile cache)"
+            ],
+            "data_out": [
+                "deleted selected data (all settings, saved forms, blank forms, form load cache, map layers, OSM tile cache)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 67,
+                "logic": "The process starts on page 67. The user clicks the 'Reset selected data' option, which leads to page 81 (the 'Select what to reset' dialog). This action initiates the workflow to choose and reset selected data categories.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            67,
+                            6
+                        ],
+                        "src_page_idx": 67,
+                        "dst_page_idx": 81,
+                        "action": "click",
+                        "summary": "Click 'Reset selected data' to open the reset selection dialog"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 65,
+            "function_description": "The page provides options to share a QR code (associated with import/export settings) via various apps like Add to Maps, Gmail, Hangouts, Messenger, Save to Drive, and Upload to Photos.",
+            "action_refs": [
+                [
+                    68,
+                    0
+                ]
+            ],
+            "data_in": [
+                "QR code (settings)"
+            ],
+            "data_out": [
+                "shared QR code (settings)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 68,
+                "logic": "On the Import/Export Settings page (with the QR code), the user clicks the share option. This opens a share menu with multiple app options (Add to Maps, Gmail, Hangouts, Messenger, Save to Drive, Upload to Photos) for sharing the QR code. The flow then allows selecting any of these apps to proceed with sharing.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            68,
+                            0
+                        ],
+                        "src_page_idx": 68,
+                        "dst_page_idx": 82,
+                        "action": "click",
+                        "summary": "Click the share option to open QR code sharing menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": null,
+                                "condition": "Select Add to Maps"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "Select Gmail"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "Select Hangouts"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "Select Messenger"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "Select Save to Drive"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "Select Upload to Photos"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 66,
+            "function_description": "This page functions as a barcode scanning viewfinder interface, guiding the user to place a barcode within the viewfinder rectangle to scan it.",
+            "action_refs": [
+                [
+                    68,
+                    2
+                ]
+            ],
+            "data_in": [
+                "barcode"
+            ],
+            "data_out": [
+                "scanned barcode data"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 68,
+                "logic": "The process starts on the Import/Export Settings page. The user clicks the 'Scan code from other device' button, which navigates to the barcode scanning viewfinder interface. Here, the user is guided to place a barcode within the viewfinder rectangle to scan it, with no further branching or looping in this initial flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            68,
+                            2
+                        ],
+                        "src_page_idx": 68,
+                        "dst_page_idx": 83,
+                        "action": "click",
+                        "summary": "Click 'Scan code from other device' to open barcode scanning viewfinder"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 67,
+            "function_description": "Remove passwords option",
+            "action_refs": [
+                [
+                    68,
+                    4
+                ]
+            ],
+            "data_in": [
+                "passwords (in QR code)"
+            ],
+            "data_out": [
+                "updated QR code (without passwords)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 68,
+                "logic": "The process starts on the Import/Export Settings page. The user clicks the 'Remove passwords option' (at the bottom of the screen, as a tap target in the warning banner). This action likely leads to a new page (dst_page_idx 85) where the passwords are removed or the QR code is updated without them.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            68,
+                            4
+                        ],
+                        "src_page_idx": 68,
+                        "dst_page_idx": 85,
+                        "action": "click",
+                        "summary": "Click the 'Remove passwords option' (tap the warning banner's 'Tap to remove the passwords' area)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 68,
+            "function_description": "Toggle menu item visibility",
+            "action_refs": [
+                [
+                    69,
+                    0
+                ]
+            ],
+            "data_in": [
+                "menu item visibility setting"
+            ],
+            "data_out": [
+                "updated menu item visibility setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 69,
+                "logic": "The process starts on the Main Menu Settings page. A click action is performed to toggle the visibility of a menu item, which transitions the app to a new page (or updates the current page's state) to reflect the change in menu item visibility.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            69,
+                            0
+                        ],
+                        "src_page_idx": 69,
+                        "dst_page_idx": 86,
+                        "action": "click",
+                        "summary": "Click to toggle menu item visibility"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 69,
+            "function_description": "Server setting checkbox",
+            "action_refs": [
+                [
+                    70,
+                    0
+                ]
+            ],
+            "data_in": [
+                "server setting"
+            ],
+            "data_out": [
+                "updated server setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 70,
+                "logic": "The user starts on the User Settings page (page 70). They perform a click action on the 'Server' setting checkbox. This action leads to a new page (page 87), completing the interaction with the server setting checkbox.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            70,
+                            0
+                        ],
+                        "src_page_idx": 70,
+                        "dst_page_idx": 87,
+                        "action": "click",
+                        "summary": "Click the Server setting checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 70,
+            "function_description": "Theme setting checkbox",
+            "action_refs": [
+                [
+                    70,
+                    1
+                ]
+            ],
+            "data_in": [
+                "theme setting"
+            ],
+            "data_out": [
+                "updated theme setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 70,
+                "logic": "The user starts on the User Settings page (page 70). They perform a click action on the Theme setting checkbox, which results in navigating to page 88. This action toggles the Theme setting's state (checked/unchecked) as part of the app's theme configuration logic.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            70,
+                            1
+                        ],
+                        "src_page_idx": 70,
+                        "dst_page_idx": 88,
+                        "action": "click",
+                        "summary": "Click on the Theme setting checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 71,
+            "function_description": "Language setting checkbox",
+            "action_refs": [
+                [
+                    70,
+                    2
+                ]
+            ],
+            "data_in": [
+                "language setting"
+            ],
+            "data_out": [
+                "updated language setting (toggle state)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 70,
+                "logic": "The user starts on the User Settings page (page 70). They perform a click action on the Language setting checkbox. This action leads to a new page (page 89), completing the interaction with the Language setting checkbox.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            70,
+                            2
+                        ],
+                        "src_page_idx": 70,
+                        "dst_page_idx": 89,
+                        "action": "click",
+                        "summary": "Click the Language setting checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 72,
+            "function_description": "Text font size checkbox",
+            "action_refs": [
+                [
+                    70,
+                    3
+                ]
+            ],
+            "data_in": [
+                "text font size setting"
+            ],
+            "data_out": [
+                "updated text font size setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 70,
+                "logic": "The user starts on the User Settings page (page 70). They perform a click action on the 'Text font size' checkbox, which results in navigating to page 90. This action toggles the checkbox's state (either enabling or disabling the text font size option in settings).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            70,
+                            3
+                        ],
+                        "src_page_idx": 70,
+                        "dst_page_idx": 90,
+                        "action": "click",
+                        "summary": "Click on the 'Text font size' checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 73,
+            "function_description": "Navigation setting checkbox",
+            "action_refs": [
+                [
+                    70,
+                    4
+                ]
+            ],
+            "data_in": [
+                "navigation setting"
+            ],
+            "data_out": [
+                "updated navigation setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 70,
+                "logic": "The user starts on the User Settings page (page 70). They perform a click action on the Navigation setting checkbox, which leads to a transition to page 91. This action toggles the checkbox's state (either enabling or disabling the Navigation setting in the app's settings).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            70,
+                            4
+                        ],
+                        "src_page_idx": 70,
+                        "dst_page_idx": 91,
+                        "action": "click",
+                        "summary": "Click the Navigation setting checkbox to toggle its state"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 74,
+            "function_description": "Splash screen checkbox",
+            "action_refs": [
+                [
+                    70,
+                    5
+                ]
+            ],
+            "data_in": [
+                "splash screen setting"
+            ],
+            "data_out": [
+                "updated splash screen setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 70,
+                "logic": "The user starts on the User Settings page (page 70). They perform a click action on the Splash screen checkbox. This action leads to a transition to page 92, completing the interaction with the Splash screen checkbox.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            70,
+                            5
+                        ],
+                        "src_page_idx": 70,
+                        "dst_page_idx": 92,
+                        "action": "click",
+                        "summary": "Click on the Splash screen checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 75,
+            "function_description": "Show Map SDK Options checkbox",
+            "action_refs": [
+                [
+                    70,
+                    6
+                ]
+            ],
+            "data_in": [
+                "show map SDK options setting"
+            ],
+            "data_out": [
+                "updated show map SDK options setting"
+            ],
+            "data_dependencies": [
+                76
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 70,
+                "logic": "The flow starts on the User Settings page (page 70). The user performs a click action on the 'Show Map SDK Options' checkbox. This action leads to a transition to page 93, completing the interaction with this checkbox.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            70,
+                            6
+                        ],
+                        "src_page_idx": 70,
+                        "dst_page_idx": 93,
+                        "action": "click",
+                        "summary": "Click on the 'Show Map SDK Options' checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 76,
+            "function_description": "Show Basemap Options checkbox",
+            "action_refs": [
+                [
+                    70,
+                    7
+                ]
+            ],
+            "data_in": [
+                "show basemap options setting"
+            ],
+            "data_out": [
+                "updated show basemap options setting"
+            ],
+            "data_dependencies": [
+                75
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 70,
+                "logic": "The user starts on page 70 (User Settings) and clicks the 'Show Basemap Options' checkbox. This action leads to page 94, completing the interaction with this checkbox.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            70,
+                            7
+                        ],
+                        "src_page_idx": 70,
+                        "dst_page_idx": 94,
+                        "action": "click",
+                        "summary": "Click the 'Show Basemap Options' checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 77,
+            "function_description": "Periodic form updates check checkbox",
+            "action_refs": [
+                [
+                    70,
+                    8
+                ]
+            ],
+            "data_in": [
+                "periodic form updates check setting"
+            ],
+            "data_out": [
+                "updated periodic form updates check setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 70,
+                "logic": "The user starts on the User Settings page (page 70). They perform a click action on the 'Periodic form updates check' checkbox, which transitions the app to page 95. This action toggles the checkbox's state (either enabling or disabling the periodic form updates check feature).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            70,
+                            8
+                        ],
+                        "src_page_idx": 70,
+                        "dst_page_idx": 95,
+                        "action": "click",
+                        "summary": "Click the 'Periodic form updates check' checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 78,
+            "function_description": "Automatic download checkbox",
+            "action_refs": [
+                [
+                    70,
+                    9
+                ]
+            ],
+            "data_in": [
+                "automatic download setting"
+            ],
+            "data_out": [
+                "updated automatic download setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 70,
+                "logic": "The user starts on the User Settings page. They perform a click action on the 'Automatic download' checkbox, which likely toggles its state (checked/unchecked) and may navigate to a new page (page 96) or update the current settings. This is a single-step interaction with the checkbox to modify the automatic download setting.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            70,
+                            9
+                        ],
+                        "src_page_idx": 70,
+                        "dst_page_idx": 96,
+                        "action": "click",
+                        "summary": "Click the 'Automatic download' checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 79,
+            "function_description": "Hide old form versions checkbox",
+            "action_refs": [
+                [
+                    70,
+                    10
+                ]
+            ],
+            "data_in": [
+                "hide old form versions setting"
+            ],
+            "data_out": [
+                "updated hide old form versions setting (unchecked)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 70,
+                "logic": "The user starts on page 70 (User Settings). They perform a click action on the 'Hide old form versions' checkbox, which transitions the app to page 97. This action toggles the checkbox's state to manage the visibility of old form versions.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            70,
+                            10
+                        ],
+                        "src_page_idx": 70,
+                        "dst_page_idx": 97,
+                        "action": "click",
+                        "summary": "Click the 'Hide old form versions' checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 80,
+            "function_description": "Auto send setting checkbox",
+            "action_refs": [
+                [
+                    70,
+                    11
+                ]
+            ],
+            "data_in": [
+                "auto send setting"
+            ],
+            "data_out": [
+                "updated auto send setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 70,
+                "logic": "The flow starts on the User Settings page (page 70). The user clicks the 'Auto send' setting checkbox, which transitions the app to a new page (page 98). This action toggles the Auto send setting, completing the functional point's execution.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            70,
+                            11
+                        ],
+                        "src_page_idx": 70,
+                        "dst_page_idx": 98,
+                        "action": "click",
+                        "summary": "Click the Auto send setting checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 81,
+            "function_description": "Delete after send checkbox",
+            "action_refs": [
+                [
+                    70,
+                    12
+                ]
+            ],
+            "data_in": [
+                "delete after send setting"
+            ],
+            "data_out": [
+                "updated delete after send setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 70,
+                "logic": "The user starts on page 70 (User Settings) and clicks the 'Delete after send' checkbox. This action likely toggles the checkbox's state (checked/unchecked) and may navigate to page 99, completing the interaction with this checkbox.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            70,
+                            12
+                        ],
+                        "src_page_idx": 70,
+                        "dst_page_idx": 99,
+                        "action": "click",
+                        "summary": "Click the 'Delete after send' checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 82,
+            "function_description": "Toggle Moving backwards",
+            "action_refs": [
+                [
+                    71,
+                    0
+                ]
+            ],
+            "data_in": [
+                "Moving backwards setting"
+            ],
+            "data_out": [
+                "updated Moving backwards setting (toggled state)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 71,
+                "logic": "On the Form Entry Settings page, the user clicks the 'Moving backwards' toggle. This action toggles the state of the 'Moving backwards' option, likely changing its visibility or functionality in Form Entry.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            71,
+                            0
+                        ],
+                        "src_page_idx": 71,
+                        "dst_page_idx": 100,
+                        "action": "click",
+                        "summary": "Click the 'Moving backwards' toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 83,
+            "function_description": "Toggle General Settings",
+            "action_refs": [
+                [
+                    71,
+                    1
+                ]
+            ],
+            "data_in": [
+                "general settings toggle"
+            ],
+            "data_out": [
+                "updated general settings toggle state"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 71,
+                "logic": "The process starts on the Form Entry Settings page. The user clicks to toggle the General Settings option, which likely changes its checked/unchecked state. This is a single-step action with no branching or looping.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            71,
+                            1
+                        ],
+                        "src_page_idx": 71,
+                        "dst_page_idx": 101,
+                        "action": "click",
+                        "summary": "Click to toggle the General Settings option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 84,
+            "function_description": "Toggle Change Language",
+            "action_refs": [
+                [
+                    71,
+                    2
+                ]
+            ],
+            "data_in": [
+                "change language setting"
+            ],
+            "data_out": [
+                "updated change language setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 71,
+                "logic": "The process starts on the Form Entry Settings page (page 71). The user clicks the 'Change Language' toggle, which results in navigating to page 102. This action toggles the state of the 'Change Language' option.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            71,
+                            2
+                        ],
+                        "src_page_idx": 71,
+                        "dst_page_idx": 102,
+                        "action": "click",
+                        "summary": "Click the 'Change Language' toggle on the Form Entry Settings page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 85,
+            "function_description": "Toggle Go To Prompt",
+            "action_refs": [
+                [
+                    71,
+                    3
+                ]
+            ],
+            "data_in": [
+                "Go To Prompt setting"
+            ],
+            "data_out": [
+                "updated Go To Prompt setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 71,
+                "logic": "The user starts on the Form Entry Settings page (page 71). They perform a click action on the 'Go To Prompt' toggle. This action toggles the state of the 'Go To Prompt' setting, and the flow ends after this single action as it is a leaf action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            71,
+                            3
+                        ],
+                        "src_page_idx": 71,
+                        "dst_page_idx": 103,
+                        "action": "click",
+                        "summary": "Click on the 'Go To Prompt' toggle to change its state"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 86,
+            "function_description": "Toggle Save Form",
+            "action_refs": [
+                [
+                    71,
+                    4
+                ]
+            ],
+            "data_in": [
+                "save form setting"
+            ],
+            "data_out": [
+                "updated save form setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 71,
+                "logic": "The user starts on the Form Entry Settings page. They perform a click action to toggle the 'Save Form' option, which likely changes its checked/unchecked state. This action transitions to a new page (or updates the current page's state) to reflect the toggle.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            71,
+                            4
+                        ],
+                        "src_page_idx": 71,
+                        "dst_page_idx": 104,
+                        "action": "click",
+                        "summary": "Click the 'Save Form' toggle to change its state"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 87,
+            "function_description": "Toggle Name this form",
+            "action_refs": [
+                [
+                    71,
+                    5
+                ]
+            ],
+            "data_in": [
+                "Name this form setting"
+            ],
+            "data_out": [
+                "updated Name this form setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 71,
+                "logic": "The user starts on the Form Entry Settings page. They perform a click action to toggle the 'Name this form' option, which likely changes its checked state (enabled/disabled) and navigates to a new page (or updates the current page).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            71,
+                            5
+                        ],
+                        "src_page_idx": 71,
+                        "dst_page_idx": 105,
+                        "action": "click",
+                        "summary": "Click to toggle the 'Name this form' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 88,
+            "function_description": "Toggle Mark form as finalized",
+            "action_refs": [
+                [
+                    71,
+                    6
+                ]
+            ],
+            "data_in": [
+                "mark form as finalized setting"
+            ],
+            "data_out": [
+                "updated mark form as finalized setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 71,
+                "logic": "On the Form Entry Settings page, the user clicks the 'Mark form as finalized' toggle. This action likely toggles the form's finalized status, with the flow proceeding to the destination page (106) after the click.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            71,
+                            6
+                        ],
+                        "src_page_idx": 71,
+                        "dst_page_idx": 106,
+                        "action": "click",
+                        "summary": "Click the 'Mark form as finalized' toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 89,
+            "function_description": "Show Unsent Forms option",
+            "action_refs": [
+                [
+                    122,
+                    0
+                ]
+            ],
+            "data_in": [
+                "form view setting"
+            ],
+            "data_out": [
+                "updated form view setting (show unsent forms)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 122,
+                "logic": "The user initiates the process on page 122. Then, they perform a click action on the 'Show Unsent Forms' option, which transitions the app to page 123. This action is the core step to enable the view that shows only unsent forms.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            122,
+                            0
+                        ],
+                        "src_page_idx": 122,
+                        "dst_page_idx": 123,
+                        "action": "click",
+                        "summary": "Click on 'Show Unsent Forms' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 90,
+            "function_description": "Show Sent and Unsent Forms option",
+            "action_refs": [
+                [
+                    122,
+                    1
+                ]
+            ],
+            "data_in": [
+                "form view setting"
+            ],
+            "data_out": [
+                "updated form view setting (show sent and unsent forms)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 122,
+                "logic": "The user starts on page 122 and clicks the 'Show Sent and Unsent Forms' option. This action transitions the app to page 124, completing the task of selecting this view option.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            122,
+                            1
+                        ],
+                        "src_page_idx": 122,
+                        "dst_page_idx": 124,
+                        "action": "click",
+                        "summary": "Click 'Show Sent and Unsent Forms' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 91,
+            "function_description": "Select Google Drive, Google Sheets",
+            "action_refs": [
+                [
+                    20,
+                    1
+                ]
+            ],
+            "data_in": [
+                "platform setting"
+            ],
+            "data_out": [
+                "updated platform setting (Google Drive, Google Sheets)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The user starts on page 20 (Server Settings with a Platform dialog). The core action is to click the 'Google Drive, Google Sheets' option in the Platform dialog, which navigates to page 24. There are no branches or loops here as it's a single selection action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            1
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 24,
+                        "action": "click",
+                        "summary": "Click 'Google Drive, Google Sheets' option in the Platform dialog"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        }
+    ]
+}

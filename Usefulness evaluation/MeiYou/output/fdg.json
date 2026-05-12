@@ -1,0 +1,3632 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "Period tracking & women’s health social community",
+            "action_refs": [
+                [
+                    0,
+                    8
+                ]
+            ],
+            "data_in": [
+                "recommend page content"
+            ],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The app starts on the main page (entry page 0). The core action is clicking the '推荐 (Recommend)' bottom tab, which keeps the user on the same page (dst_page_idx 0), likely refreshing or confirming the recommended content feed for the period tracking and women’s health community.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            8
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the '推荐 (Recommend)' bottom tab to stay on the recommended content page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 1,
+            "function_description": "The page functions as a search interface within a period tracking and women’s health social community app, allowing users to input queries, view search history, explore suggested searches, and browse trending health - related topics.",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ],
+                [
+                    1,
+                    0
+                ],
+                [
+                    1,
+                    2
+                ]
+            ],
+            "data_in": [
+                "search feature entry",
+                "search query",
+                "search history",
+                "search suggestions",
+                "search hot topics",
+                "search history item"
+            ],
+            "data_out": [
+                "search interface loaded",
+                "search results"
+            ],
+            "data_dependencies": [
+                13,
+                14
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The search process begins with clicking the search icon to open the search interface. Then, users can either input a query in the search field or click on a suggested query. If a suggested query is clicked, it leads to the display of search results for that query.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the search icon to open the search page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            1,
+                            0
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 1,
+                        "action": "input",
+                        "summary": "Input a query in the search field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            1,
+                            2
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click a suggested query to view its search results"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "This page enables users to create and publish a new post (with a minimum text length of 8 characters) in a women’s health social community, offering options to add hashtags, emojis, images, and other elements, as well as access to drafts and templates.",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    2,
+                    0
+                ],
+                [
+                    2,
+                    1
+                ],
+                [
+                    2,
+                    2
+                ]
+            ],
+            "data_in": [
+                "post content",
+                "post creation context",
+                "post draft",
+                "hashtag suggestion (#月经推迟那些天)"
+            ],
+            "data_out": [
+                "new post draft",
+                "updated post content",
+                "post with hashtag added"
+            ],
+            "data_dependencies": [
+                15,
+                17,
+                54
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "To create a new post, start by clicking the 'Post new content' button. Then, input the post content (minimum 8 characters) in the text field. After that, you can choose to add a hashtag by clicking a hashtag suggestion, or cancel the post creation. The flow includes optional steps for adding elements like hashtags or canceling.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click to start creating a new post"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            2,
+                            0
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 2,
+                        "action": "input",
+                        "summary": "Input post content (at least 8 characters)"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            2,
+                            1
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click to cancel post creation"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            2,
+                            2
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click a hashtag suggestion to add it to the post"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3",
+                                "condition": "User wants to cancel post creation"
+                            },
+                            {
+                                "next_step": "S4",
+                                "condition": "User wants to add a hashtag (or other optional elements)"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "The current page provides detailed information about the user's menstrual cycle on the current day, including the current menstrual phase, remaining days until the period ends, symptom predictions, and blood volume changes, along with an option to view updated menstrual health analysis.",
+            "action_refs": [
+                [
+                    0,
+                    2
+                ],
+                [
+                    3,
+                    0
+                ]
+            ],
+            "data_in": [
+                "period prediction",
+                "menstrual health report"
+            ],
+            "data_out": [
+                "period prediction details"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the main page (page 0) and clicks to view period prediction details, navigating to page 3 to see detailed menstrual cycle info. Then, the user can click the back arrow to return to the main page (page 0).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click to view period prediction details"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            3,
+                            0
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click back navigation arrow"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "Mark period as not started (否)",
+            "action_refs": [
+                [
+                    0,
+                    3
+                ]
+            ],
+            "data_in": [
+                "period record"
+            ],
+            "data_out": [
+                "updated period record (marked as not started)"
+            ],
+            "data_dependencies": [
+                9,
+                16,
+                20,
+                55
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The process starts on page 0. The user performs a click action to mark the period as not started (否), which leads to page 4. There are no branches or loops in this flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click to mark period as not started (否)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "This page allows users to provide feedback on a specific post in the period tracking and women’s health social community, offering options to indicate disinterest or report issues like inappropriate content, low - quality content, or content unsuitable for minors.",
+            "action_refs": [
+                [
+                    0,
+                    4
+                ],
+                [
+                    5,
+                    0
+                ]
+            ],
+            "data_in": [
+                "post (content)",
+                "feedback modal"
+            ],
+            "data_out": [
+                "feedback request (for post)",
+                "closed feedback modal",
+                "updated main feed view"
+            ],
+            "data_dependencies": [
+                6,
+                7,
+                32,
+                58
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on page 0. First, the user clicks the post options menu (vertical ellipsis) on a post, leading to page 5. Then, the user can click the close feedback modal button to return to page 0, ending the flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click post options menu (vertical ellipsis) to open feedback-related options"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            5,
+                            0
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click close feedback modal button to return to original page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "The current page functions as a post - viewing and interaction interface within a women’s health social community (specifically for late - pregnancy mothers), enabling users to read a post about a user's experience with a lung - promoting injection, view associated advertisements, and engage with the post by commenting, liking, or favoriting it.",
+            "action_refs": [
+                [
+                    0,
+                    5
+                ],
+                [
+                    6,
+                    0
+                ],
+                [
+                    6,
+                    3
+                ]
+            ],
+            "data_in": [
+                "post",
+                "comment input",
+                "comment input field",
+                "post (促肺针真的很痛)",
+                "post comments",
+                "sorting option (latest)"
+            ],
+            "data_out": [
+                "new comment",
+                "comment draft (in input field)",
+                "sorted post comments (by latest)"
+            ],
+            "data_dependencies": [
+                5,
+                7,
+                32,
+                58
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the community feed page (page 0) and clicks to comment on a post (about a lung - promoting injection experience), navigating to the post detail page (page 6). On page 6, the user can either input a comment in the comment field or click to sort comments by the latest tab. These are two separate actions on the post detail page after accessing it via the comment click.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click to comment on the post, navigating to the post detail page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            6,
+                            0
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 6,
+                        "action": "input",
+                        "summary": "Input a comment in the comment input field on the post detail page"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            6,
+                            3
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click to sort comments by the latest comments tab on the post detail page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "Like post",
+            "action_refs": [
+                [
+                    0,
+                    6
+                ]
+            ],
+            "data_in": [
+                "post (by 橙橙 AO)"
+            ],
+            "data_out": [
+                "like state of post (by 橙橙 AO) updated to liked"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The core execution logic for liking a post starts on the initial page (page 0). The user performs a single action: clicking the 'Like post' button (or the like icon associated with a post). This action transitions the app to page 7, completing the like operation. There are no branches or loops as it is a straightforward single-step flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            6
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click the 'Like post' element (e.g., like icon) to like the post and transition to page 7."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "This page enables users to create and post new content (with a minimum 8 - character text requirement) in a period tracking and women’s health social community, offering features like adding topics, emojis, and using templates to share personal stories or experiences.",
+            "action_refs": [
+                [
+                    0,
+                    7
+                ]
+            ],
+            "data_in": [],
+            "data_out": [
+                "new post draft"
+            ],
+            "data_dependencies": [
+                15,
+                54
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on page 0 and clicks the 'Create new post' floating pen button, which navigates to page 2 (the post creation page) to begin composing a new post with features like adding topics, emojis, or using templates, and meeting the minimum 8 - character text requirement.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            7
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click the 'Create new post' floating pen button to enter the post creation page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "The current page (under the \"Record\" tab) allows users to track and log various women’s health - related events and data such as menstrual cycles, sexual activity, symptoms, mood, vaginal discharge, body temperature, weight, and also write diaries, with a calendar for visualizing the menstrual cycle and related phases.",
+            "action_refs": [
+                [
+                    0,
+                    9
+                ]
+            ],
+            "data_in": [
+                "period record",
+                "user health data"
+            ],
+            "data_out": [
+                "period record page loaded"
+            ],
+            "data_dependencies": [
+                4,
+                16,
+                20,
+                55
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the app's main page and clicks the '记录 (Record)' bottom tab. This navigates to the Record page, where a calendar and various health - related event logging options (like menstrual cycle, sexual activity, symptoms, etc.) are presented for tracking women’s health data.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            9
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click the '记录 (Record)' bottom tab to navigate to the Record page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "The current page, accessed via the \"返现 (Cashback)\" bottom tab from the period tracking and women’s health social community app, enables users to check for cashback by pasting e - commerce product links, offers a \"new user 1 - yuan purchase\" promotion, and provides cashback options for various shopping platforms (like Taobao, JD, etc.), takeout, ride - hailing, and live - stream shopping.",
+            "action_refs": [
+                [
+                    0,
+                    10
+                ],
+                [
+                    9,
+                    1
+                ]
+            ],
+            "data_in": [
+                "product link",
+                "clipboard data"
+            ],
+            "data_out": [
+                "pasted product link",
+                "rebate query request"
+            ],
+            "data_dependencies": [
+                21
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user first clicks the '返现 (Cashback)' bottom tab to navigate to the cashback page. Then, on the cashback page, the user can click the 'Paste' button to paste an e - commerce product link to check for cashback. The page also offers a 'new user 1 - yuan purchase' promotion and cashback options for various shopping platforms, takeout, ride - hailing, and live - stream shopping.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            10
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Navigate to the cashback page by clicking the bottom tab '返现 (Cashback)'"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            9,
+                            1
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click the paste button to paste a product link for cashback check"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "This page functions as the \"Messages\" section of a period tracking and women’s health social community app, where users can view interactive messages related to their activities or interactions within the app.",
+            "action_refs": [
+                [
+                    0,
+                    11
+                ]
+            ],
+            "data_in": [
+                "messages feature entry"
+            ],
+            "data_out": [
+                "messages page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the main page (page 0) and clicks the '消息 (Messages)' bottom tab. This action navigates to the Messages page (page 10), where interactive messages related to the user’s app activities are displayed. There are no further branches or loops in this flow as it is a direct navigation to the target page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            11
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click the '消息 (Messages)' bottom tab to navigate to the Messages page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "The \"Me\" page in the period tracking and women’s health social community app provides access to user account settings, health mode management (period, pregnancy, etc.), personal reports, financial management (wallet, orders), community sections, and additional services, serving as the user’s personalized hub for account-related and health - related actions.",
+            "action_refs": [
+                [
+                    0,
+                    12
+                ]
+            ],
+            "data_in": [
+                "user profile page entry"
+            ],
+            "data_out": [
+                "user profile page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The core logic starts on the app's main page (page 0). The user clicks the '我 (Me)' bottom tab (action_ref [0,12]), which navigates to the 'Me' page (page 11). This page serves as the hub for account settings, health modes, reports, financial management, community sections, and additional services, with no further branching or loops in this single-step flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            12
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click the '我 (Me)' bottom tab to navigate to the 'Me' page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "Displays search results (including posts, expert answers, and ads) for the query \"Why does the lung - promoting injection hurt so much\" within a women’s health - related social community, with options to filter results by categories like comprehensive, knowledge, posts, and users.",
+            "action_refs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    12,
+                    0
+                ],
+                [
+                    12,
+                    1
+                ],
+                [
+                    12,
+                    3
+                ]
+            ],
+            "data_in": [
+                "search query",
+                "search interface",
+                "搜索结果列表",
+                "知识分类标签"
+            ],
+            "data_out": [
+                "search results"
+            ],
+            "data_dependencies": [
+                14,
+                33,
+                50
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "First, click the search button to execute the query and view comprehensive results. Then, from the search results page, optional actions include filtering by the '知识' (knowledge) category, expanding AI content, or interacting with a Youku video download button (though the latter may be an ad - related action). The main flow starts with the search, and then users can choose to filter or interact with specific content elements.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            1
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click the search button to execute the query and navigate to the search results page."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            12,
+                            0
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click the '知识' (knowledge) category tag to filter the search results by the knowledge category."
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            12,
+                            1
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click the AI content expansion button to expand the AI - related content in the search results."
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            12,
+                            3
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click the Youku video download button (likely related to an ad in the search results)."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "The current page displays search results (including community posts, expert answers, and ads) for the query \"Why does the lung - promoting injection hurt so much\" within a women's health - related social community, aiming to provide health - related information and related content to users.",
+            "action_refs": [
+                [
+                    1,
+                    3
+                ]
+            ],
+            "data_in": [
+                "search hotspot item"
+            ],
+            "data_out": [
+                "search results page"
+            ],
+            "data_dependencies": [
+                33,
+                50
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user starts on the search page with the query '促肺针为什么那么疼' (Why does the lung - promoting injection hurt so much). The core action is clicking on the '搜索' (Search) button (implied by the flow to the results page), then the search results page (page 12) displays community posts, expert answers, and ads related to the query. There are no branches or loops as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            3
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click on the search result hotspot '排卵期出血or月经？学会区分' (though the main search logic leads to the results page for the query)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "This page functions as a photo selection interface (labeled \"所有照片\" - All Photos) within a women’s health social community app, allowing users to browse, select, preview, and confirm (via \"完成\" - Done) an image to add to their post during the post - creation process, with an option to cancel (via \"取消\" - Cancel) the selection.",
+            "action_refs": [
+                [
+                    2,
+                    3
+                ],
+                [
+                    19,
+                    0
+                ],
+                [
+                    19,
+                    1
+                ],
+                [
+                    20,
+                    0
+                ],
+                [
+                    20,
+                    1
+                ]
+            ],
+            "data_in": [
+                "post (draft)",
+                "photo selection session",
+                "post draft",
+                "album selection dropdown",
+                "photo album",
+                "post content",
+                "post topic"
+            ],
+            "data_out": [
+                "image selection interface opened",
+                "post draft (updated, no photo attached)",
+                "published post",
+                "updated post content"
+            ],
+            "data_dependencies": [
+                17,
+                54
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The user starts on the post - creation page (page 2) and clicks the 'Add image' button to enter the 'All Photos' page (page 19). On this page, the user can either click the 'Cancel' button to return to the post - creation page (page 2) or interact with the album selection dropdown (though the dropdown interaction doesn't change the page here).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            3
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click the 'Add image' button to open the 'All Photos' page."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            19,
+                            0
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 20,
+                        "action": "click",
+                        "summary": "Click the 'Cancel' button to go back to the post - creation page."
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            19,
+                            1
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click the album selection dropdown (no page change)."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "The current page displays menstrual cycle prediction details, including the current menstrual phase, remaining days until the period ends, symptom predictions, and blood volume changes, and provides a button to record the period.",
+            "action_refs": [
+                [
+                    3,
+                    1
+                ],
+                [
+                    22,
+                    0
+                ],
+                [
+                    22,
+                    1
+                ],
+                [
+                    22,
+                    2
+                ]
+            ],
+            "data_in": [
+                "period record",
+                "date selection setting",
+                "menstrual health record"
+            ],
+            "data_out": [
+                "updated period record",
+                "updated date - related menstrual health record"
+            ],
+            "data_dependencies": [
+                4,
+                9,
+                15,
+                17,
+                20
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The user starts on the menstrual cycle prediction page (page 3). They click the 'Record Period' button to open the record period page (page 22). On page 22, they can choose to cancel (return to page 3), confirm (proceed to page 23), or adjust the date (return to page 3).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            1
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 22,
+                        "action": "click",
+                        "summary": "Click 'Record Period' button to open record period page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            22,
+                            0
+                        ],
+                        "src_page_idx": 22,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click 'Cancel' button to return to the prediction page"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            22,
+                            1
+                        ],
+                        "src_page_idx": 22,
+                        "dst_page_idx": 23,
+                        "action": "click",
+                        "summary": "Click 'Confirm' button to proceed to confirmation page"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            22,
+                            2
+                        ],
+                        "src_page_idx": 22,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click date selection to return to the prediction page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "The current page is the main feed of a period tracking and women’s health social community app, where users can view posts related to women’s health topics, track their menstrual cycle, and interact with posts (e.g., comment, like) or create new posts.",
+            "action_refs": [
+                [
+                    5,
+                    1
+                ]
+            ],
+            "data_in": [
+                "content feedback option",
+                "post content"
+            ],
+            "data_out": [
+                "updated recommendation optimization record",
+                "feedback submission record"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user starts on page 5 (a feedback modal) and clicks the 'Dislike this content' button. This action navigates them back to page 0 (the main feed of the app), completing the interaction with the feedback feature and returning to the main content view.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            1
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the 'Dislike this content' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "The current page is a post interaction page within a women’s health social community, specifically focused on a post about a user's experience with a lung - promoting injection during pregnancy, and it provides a comment input field for users to leave comments related to this post.",
+            "action_refs": [
+                [
+                    6,
+                    1
+                ]
+            ],
+            "data_in": [
+                "user profile (小芸OS)"
+            ],
+            "data_out": [
+                "follow relationship (with 小芸OS)"
+            ],
+            "data_dependencies": [
+                5,
+                6,
+                7,
+                19,
+                32,
+                58
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The process starts on the post interaction page (page 6). The user performs a click action on the 'Follow user' button (or the '关注' button visible in the screenshot). Since there are no branches or loops here, the flow is a single step of clicking this button, with the page remaining on page 6 after the action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            1
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click the 'Follow user' (关注) button on the post interaction page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "This page is an account security verification interface where users are required to click on text in an image in a specified order to complete verification, with options to refresh the verification image or confirm the selection.",
+            "action_refs": [
+                [
+                    6,
+                    2
+                ],
+                [
+                    16,
+                    2
+                ],
+                [
+                    16,
+                    3
+                ]
+            ],
+            "data_in": [
+                "post update follow action",
+                "account security verification requirement",
+                "verification task",
+                "verification input (clicked text)",
+                "captcha verification task",
+                "captcha image with text '活'"
+            ],
+            "data_out": [
+                "verification challenge presented",
+                "follow action pending verification",
+                "verification result (submitted)",
+                "captcha verification progress (text '活' selected)"
+            ],
+            "data_dependencies": [
+                35
+            ],
+            "to_test": true,
+            "core_logic": null
+        },
+        {
+            "index": 20,
+            "function_description": "The current page functions as a menstrual and health record interface, allowing users to log and track menstrual cycles, sexual activity, symptoms, mood, cervical mucus, body temperature, weight, and journal entries, with options to mark the start of menstruation and access analysis features.",
+            "action_refs": [
+                [
+                    8,
+                    0
+                ]
+            ],
+            "data_in": [
+                "period record",
+                "ovulation record",
+                "menstruation record"
+            ],
+            "data_out": [
+                "analysis report"
+            ],
+            "data_dependencies": [
+                4,
+                9,
+                16,
+                55
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The user starts on the menstrual and health record page (page 8). The core action is clicking the '分析 (Analysis)' button, which likely leads to viewing analysis of the logged menstrual and health data. There are no branches or loops here as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            0
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click the '分析 (Analysis)' button to access analysis features."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "The page functions as a search interface within the cashback shopping section, allowing users to input keywords (e.g., \"垃圾袋\") to retrieve related product rebate information and view search suggestions for refined queries.",
+            "action_refs": [
+                [
+                    9,
+                    0
+                ],
+                [
+                    29,
+                    0
+                ],
+                [
+                    29,
+                    2
+                ]
+            ],
+            "data_in": [
+                "rebate query",
+                "search term (垃圾袋)",
+                "search input (垃圾袋)",
+                "search suggestion",
+                "search query (垃圾袋)"
+            ],
+            "data_out": [
+                "search suggestions for rebate query",
+                "cleared search input",
+                "search results (thick garbage bags)"
+            ],
+            "data_dependencies": [
+                36,
+                44
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts on page 9 and inputs a search query (e.g., '垃圾袋') into the search bar. After input, the flow branches: one path clears the input (via a button), and another selects a search suggestion (e.g., '垃圾袋加厚') to refine the query and view related rebate products.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            0
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 29,
+                        "action": "input",
+                        "summary": "Input search keyword '垃圾袋' into the search bar"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            29,
+                            0
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 34,
+                        "action": "click",
+                        "summary": "Click the clear search input button"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            29,
+                            2
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 35,
+                        "action": "click",
+                        "summary": "Click the search suggestion '垃圾袋加厚'"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "This page allows users to check in (打卡) to receive cash subsidies, view cumulative and available cash subsidies, access rules for the check - in cash - getting activity, and also shows e - commerce platforms for shopping with cashback that can be combined with the check - in subsidies, along with tips for withdrawing the cash subsidies.",
+            "action_refs": [
+                [
+                    9,
+                    2
+                ],
+                [
+                    30,
+                    0
+                ]
+            ],
+            "data_in": [
+                "cash earning entry",
+                "打卡领现金页面"
+            ],
+            "data_out": [
+                "cash earning page access",
+                "返现主页面"
+            ],
+            "data_dependencies": [
+                37
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts on page 9. First, they click the 'Get Cash' button to navigate to page 30. Then, they can click the back arrow icon to return to page 9, and this navigation between page 9 and 30 can be repeated as needed.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            2
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 30,
+                        "action": "click",
+                        "summary": "Click 'Get Cash' button to go to page 30"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            30,
+                            0
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click back arrow icon to return to page 9"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "loop",
+                        "branches": [
+                            {
+                                "next_step": "S1"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "This page is a pop - up for the \"Newcomer 1 - Yuan Purchase\" activity. It shows the details of the \"Heating Womb Warmer\" product, including the rebate amount and the final price after rebate on Meiyou. It also provides options to place an order on Taobao, get a rebate after receiving the goods, or give up the newcomer welfare.",
+            "action_refs": [
+                [
+                    9,
+                    3
+                ]
+            ],
+            "data_in": [
+                "heating womb warmer product card"
+            ],
+            "data_out": [
+                "heating womb warmer product details"
+            ],
+            "data_dependencies": [
+                41,
+                42,
+                43
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The flow starts with clicking the 'Heating Womb Warmer' product card in the 'Newcomer 1-Yuan Purchase' section. This action opens a pop-up showing the product details, including rebate and final price, and presents options to order on Taobao, get rebate after receipt, or give up the welfare. No branches are shown yet as only the initial click action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            3
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 31,
+                        "action": "click",
+                        "summary": "Click the 'Heating Womb Warmer' product card in the 'Newcomer 1-Yuan Purchase' area to open its details pop-up."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "This page enables users to shop on Taobao via the Meiyou app to get cashback (around 5% for orders), offers options like signing in for benefits, grabbing red packets, and accessing flash sales, and also allows checking cashback by copying product links.",
+            "action_refs": [
+                [
+                    9,
+                    4
+                ],
+                [
+                    32,
+                    0
+                ]
+            ],
+            "data_in": [
+                "Taobao mall rebate entry",
+                "商品搜索输入框"
+            ],
+            "data_out": [
+                "Taobao rebate page content",
+                "商品搜索输入框（待输入状态）"
+            ],
+            "data_dependencies": [
+                45
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The flow starts on page 9. First, the user clicks the Taobao mall rebate icon (action from page 9 to 32). Then, on page 32, the user inputs a product name (e.g., '无线耳机') into the search box. There are no branches as the provided actions form a linear sequence: click the Taobao icon, then input a product search term.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            4
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 32,
+                        "action": "click",
+                        "summary": "Click Taobao mall rebate icon to navigate to Taobao shopping page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            32,
+                            0
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": null,
+                        "action": "input",
+                        "summary": "Input product name (e.g., '无线耳机') into the search box"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 25,
+            "function_description": "The page functions as a directory for all participating merchants in the cashback program, allowing users to browse, search, and access different merchants (categorized by usage, shopping, dining, etc.) to view their respective cashback rates and proceed with shopping to earn rebates.",
+            "action_refs": [
+                [
+                    9,
+                    5
+                ],
+                [
+                    33,
+                    0
+                ],
+                [
+                    33,
+                    3
+                ]
+            ],
+            "data_in": [
+                "all malls navigation link",
+                "merchant search input",
+                "merchant list",
+                "merchant list page state"
+            ],
+            "data_out": [
+                "all merchants list page",
+                "filtered merchant list",
+                "previous page state (navigation result)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The flow starts by navigating to the all merchants page via a click. Then, users can either search for a merchant by inputting a name or navigate back. The search action is for finding specific merchants, while the back action returns to the previous page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            5
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 33,
+                        "action": "click",
+                        "summary": "Navigate to all merchants page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            33,
+                            0
+                        ],
+                        "src_page_idx": 33,
+                        "dst_page_idx": null,
+                        "action": "input",
+                        "summary": "Search for a merchant (e.g., 淘宝)"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            33,
+                            3
+                        ],
+                        "src_page_idx": 33,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Navigate back to previous page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 26,
+            "function_description": "互动消息 entry",
+            "action_refs": [
+                [
+                    10,
+                    0
+                ]
+            ],
+            "data_in": [
+                "互动消息入口"
+            ],
+            "data_out": [
+                "进入互动消息功能"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The user starts on page 10 (the '消息' page) and clicks on the '互动消息' entry. This action likely leads to the interactive messages section, with no branching or looping in this simple flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            0
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on '互动消息' entry"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 27,
+            "function_description": "经期设置 导航项",
+            "action_refs": [
+                [
+                    11,
+                    0
+                ]
+            ],
+            "data_in": [
+                "经期设置入口"
+            ],
+            "data_out": [
+                "经期设置页面加载"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The flow starts on page 11. The user clicks the '经期设置' (Menstrual Settings) navigation item. Since there's only one action here, the flow is a single step with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            0
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '经期设置' navigation item"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 28,
+            "function_description": "备孕模式 切换按钮",
+            "action_refs": [
+                [
+                    11,
+                    1
+                ]
+            ],
+            "data_in": [
+                "备孕模式设置"
+            ],
+            "data_out": [
+                "备孕模式设置启用"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The core logic involves clicking the '备孕模式' (Pre - pregnancy Mode) toggle button. This action is expected to switch the app's mode from the current one (e.g., menstrual mode) to the pre - pregnancy mode, or vice versa if it was already in pre - pregnancy mode.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            1
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '备孕模式' toggle button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 29,
+            "function_description": "立即开通 会员按钮",
+            "action_refs": [
+                [
+                    11,
+                    2
+                ]
+            ],
+            "data_in": [
+                "美柚会员开通入口",
+                "会员开通相关信息"
+            ],
+            "data_out": [
+                "会员开通请求提交",
+                "可能的会员开通结果（如成功开通、进入支付流程等）"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The user starts on page 11. The core action is to click the '立即开通 会员' (Activate Membership Now) button. This action is a single step with no branching or looping, as it directly initiates the membership activation process (or navigates to the relevant page, though the destination is null here, indicating the action's effect is to trigger the next stage of the flow).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            2
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '立即开通 会员' button to initiate membership activation (or navigate to the next relevant page/flow)."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 30,
+            "function_description": "设置 图标按钮",
+            "action_refs": [
+                [
+                    11,
+                    3
+                ]
+            ],
+            "data_in": [
+                "settings entry"
+            ],
+            "data_out": [
+                "settings page access"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The core execution logic involves clicking the '设置' (Settings) icon button. This action is performed on the page with index 11, and there are no subsequent steps or branches as the action is a leaf node (is_leaf: false might be a typo, but based on the action, it's a single click step).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            3
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '设置' (Settings) icon button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 31,
+            "function_description": "问医生 服务图标",
+            "action_refs": [
+                [
+                    11,
+                    4
+                ]
+            ],
+            "data_in": [
+                "问医生服务入口"
+            ],
+            "data_out": [
+                "进入问医生服务页面"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The core execution logic starts on page 11. The user performs a click action on the '问医生' service icon. Since there are no further steps or branches provided, the flow consists of this single click action on the specified icon.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            4
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the '问医生' service icon"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 32,
+            "function_description": "This page functions as a detailed post - viewing interface within a women’s health - related social community. It enables users to read a specific post (here, a post about pregnancy - related experiences with \"促肺针\"), view associated advertisements, and interact with the post by reading and adding comments, liking, favoriting, or engaging in other interactive actions.",
+            "action_refs": [
+                [
+                    12,
+                    2
+                ]
+            ],
+            "data_in": [
+                "帖子"
+            ],
+            "data_out": [
+                "帖子详情"
+            ],
+            "data_dependencies": [
+                33,
+                34,
+                50
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The user starts on page 12 (a search results page with posts about '促肺针'). They click on a post's clickable area (action_ref [12,2]), which navigates to page 13 (the detailed post view). On page 13, the user can read the post, view associated ads, and then choose to interact (like, comment, favorite, etc.) or exit, but the core flow here is navigating to the post detail via the click.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            2
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click on the post's clickable area to open the detailed post view."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 33,
+            "function_description": "This page displays search results (including posts, expert answers, etc.) related to the query \"Why is the lung - promoting injection so painful\" in a women's health - related social community, allowing users to browse content about the pain of lung - promoting injections and related experiences and knowledge.",
+            "action_refs": [
+                [
+                    12,
+                    4
+                ]
+            ],
+            "data_in": [
+                "advertisement (酷狗音乐)"
+            ],
+            "data_out": [
+                "advertisement removed from view"
+            ],
+            "data_dependencies": [
+                34,
+                50
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The user starts on page 12. They click the ad close button (action_ref [12,4]) to remove the advertisement, transitioning to page 14 where the search results about 'Why is the lung - promoting injection so painful' are now fully visible without the ad, allowing browsing of relevant posts and expert answers.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            4
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click the ad close button to remove the advertisement and view the full search results."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 34,
+            "function_description": "This page displays a post in a women’s health community (specifically for late - pregnancy mothers) where users can view the post content, interact with it (like, favorite, comment), and see an advertisement, with the post sharing a personal experience about getting a lung - promoting injection during pregnancy.",
+            "action_refs": [
+                [
+                    16,
+                    0
+                ]
+            ],
+            "data_in": [
+                "verification dialog"
+            ],
+            "data_out": [
+                "verification dialog closed",
+                "forum post page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 16,
+                "logic": "The flow starts on page 16 (verification dialog). The user clicks the close verification dialog button, transitioning to page 6 (the post page). On page 6, the user can view the post about a late - pregnancy mother's experience with a lung - promoting injection, along with an advertisement, and has options to interact with the post (like, favorite, comment).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            16,
+                            0
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Close the verification dialog to navigate to the post page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 35,
+            "function_description": "This page is for account security verification, where users can refresh the captcha image (by clicking the \"Refresh\" button) to get a new captcha for completing the text - clicking verification task.",
+            "action_refs": [
+                [
+                    16,
+                    1
+                ]
+            ],
+            "data_in": [
+                "captcha verification component"
+            ],
+            "data_out": [
+                "refreshed captcha image"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 16,
+                "logic": "The user is on the account security verification page with a captcha. When the 'Refresh' button is clicked, the captcha image updates to show a new verification task. This action can be repeated if the user needs another captcha.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            16,
+                            1
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click the 'Refresh' button to get a new captcha image for verification."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "loop",
+                        "branches": [
+                            {
+                                "next_step": "S1"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 36,
+            "function_description": "This page displays search results for product rebate discounts, showing various trash bag products from different e - commerce platforms (Taobao, JD, Pinduoduo, Vipshop) with their rebate amounts, discounted prices, and sales information, allowing users to browse and compare trash bag products with cashback offers.",
+            "action_refs": [
+                [
+                    29,
+                    1
+                ]
+            ],
+            "data_in": [
+                "search query (垃圾袋)",
+                "discount search function"
+            ],
+            "data_out": [
+                "discount product list (垃圾袋相关)"
+            ],
+            "data_dependencies": [
+                21,
+                37,
+                44,
+                56
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 29,
+                "logic": "The user starts on page 29 (with search term '垃圾袋' entered) and clicks the '搜优惠' (Search discounts) button. This action navigates to page 35, where search results for trash bag rebate discounts across platforms (Taobao, JD, Pinduoduo, Vipshop) are displayed, showing products with rebate amounts, discounted prices, and sales info for browsing and comparison.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            29,
+                            1
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 35,
+                        "action": "click",
+                        "summary": "Click '搜优惠' button to trigger search and display trash bag discount results"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 37,
+            "function_description": "This page confirms a successful check - in for cash subsidy, displays the cumulative and daily cash subsidy amounts, and provides an option to place an order to get cashback with the subsidy.",
+            "action_refs": [
+                [
+                    30,
+                    1
+                ],
+                [
+                    42,
+                    1
+                ]
+            ],
+            "data_in": [
+                "check-in cash subsidy setting",
+                "check-in record",
+                "打卡成功弹窗"
+            ],
+            "data_out": [
+                "updated check-in cash subsidy",
+                "updated check-in record",
+                "关闭的打卡成功弹窗"
+            ],
+            "data_dependencies": [
+                38,
+                39,
+                40,
+                41,
+                57
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 30,
+                "logic": "The process starts on page 30. First, the user clicks the 'Check-in to get cash' button (action_ref [30,1]) to check in and view the cash subsidy details. After the check - in, a popup appears (on page 42), and then the user clicks the 'Close popup (X) button' (action_ref [42,1]) to close the popup, completing the flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            30,
+                            1
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 42,
+                        "action": "click",
+                        "summary": "Click the 'Check-in to get cash' button to check in and proceed to the page showing cash subsidy details and the popup."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            42,
+                            1
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'Close popup (X) button' to close the popup."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 38,
+            "function_description": "Details link",
+            "action_refs": [
+                [
+                    30,
+                    2
+                ]
+            ],
+            "data_in": [
+                "cash subsidy details"
+            ],
+            "data_out": [
+                "cash subsidy details page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 30,
+                "logic": "The user starts on page 30 (the '打卡领现金' page). The core action is clicking the 'Details link' (labeled '明细') on this page. This click likely leads to a new page (dst_page_idx is null here, but the action is to click the details link to access more information about the cash补贴).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            30,
+                            2
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '明细' (Details) link on the '打卡领现金' page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 39,
+            "function_description": "Rules button",
+            "action_refs": [
+                [
+                    30,
+                    3
+                ]
+            ],
+            "data_in": [
+                "check-in cash subsidy rule"
+            ],
+            "data_out": [
+                "displayed check-in cash subsidy rule"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 30,
+                "logic": "The user interacts with the 'Rules' button on the '打卡领现金' (Check-in for Cash) page. The core logic involves clicking the 'Rules' button, which likely triggers a display of the rules related to the check-in cash reward feature. There are no branches or loops here as it's a single action to access the rules.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            30,
+                            3
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'Rules' button to access the rules related to the check-in cash reward feature."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 40,
+            "function_description": "Taobao mall icon",
+            "action_refs": [
+                [
+                    30,
+                    4
+                ]
+            ],
+            "data_in": [
+                "Taobao mall entry",
+                "cash subsidy information"
+            ],
+            "data_out": [
+                "navigation to Taobao mall page"
+            ],
+            "data_dependencies": [
+                45,
+                46,
+                49,
+                57
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 30,
+                "logic": "The user initiates the action by clicking on the Taobao mall icon. This action is the core step in the flow related to the Taobao mall icon functional point, with no subsequent branches or loops as it is a single click action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            30,
+                            4
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the Taobao mall icon"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 41,
+            "function_description": "去下单按钮（购买1元暖宝宝）",
+            "action_refs": [
+                [
+                    31,
+                    0
+                ]
+            ],
+            "data_in": [
+                "暖宝宝商品信息",
+                "新人1元购活动信息"
+            ],
+            "data_out": [
+                "下单请求（暖宝宝）"
+            ],
+            "data_dependencies": [
+                40
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 31,
+                "logic": "The core execution logic starts on page 31. The user clicks the '去下单' (Go to order) button to initiate the purchase of the 1-yuan warm baby product. This action is the primary step to proceed with the order process for the selected item.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            31,
+                            0
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '去下单' button to start the order process for the 1-yuan warm baby product."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 42,
+            "function_description": "放弃新人福利按钮",
+            "action_refs": [
+                [
+                    31,
+                    1
+                ]
+            ],
+            "data_in": [
+                "新人福利活动"
+            ],
+            "data_out": [
+                "放弃新人福利的操作记录"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 31,
+                "logic": "The user starts on page 31 (likely the '新人1元购' popup page). The core action is clicking the '放弃新人福利' button, which likely closes the popup or navigates away from the新人福利 flow. Since there's only one action, the flow is a single step with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            31,
+                            1
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '放弃新人福利' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 43,
+            "function_description": "活动规则查看按钮",
+            "action_refs": [
+                [
+                    31,
+                    2
+                ]
+            ],
+            "data_in": [
+                "新人1元购活动规则"
+            ],
+            "data_out": [
+                "新人1元购活动规则详情"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 31,
+                "logic": "The user starts on page 31. The core action is clicking the '活动规则' (Activity Rules) button, which likely triggers the display of the activity rules (though the destination page is null here, implying the action initiates the rule - viewing process).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            31,
+                            2
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the activity rules view button."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 44,
+            "function_description": "搜优惠按钮",
+            "action_refs": [
+                [
+                    32,
+                    1
+                ]
+            ],
+            "data_in": [
+                "search query",
+                "promotion information"
+            ],
+            "data_out": [
+                "search results for promotions"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 32,
+                "logic": "The core execution logic starts on page 32, where the user clicks the '搜优惠' (Search Discounts) button. This action is the primary step to initiate the discount search process, with no branching or looping as it's a single click action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            32,
+                            1
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '搜优惠' button to start searching for discounts."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 45,
+            "function_description": "淘宝签到领福利去下单按钮",
+            "action_refs": [
+                [
+                    32,
+                    2
+                ]
+            ],
+            "data_in": [
+                "淘宝签到领福利活动入口"
+            ],
+            "data_out": [
+                "淘宝签到领福利下单页面导航"
+            ],
+            "data_dependencies": [
+                46,
+                49
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 32,
+                "logic": "The user starts on page 32 and clicks the '淘宝签到领福利 去下单' button. This action likely initiates a process to proceed with placing an order related to the Taobao sign - in benefit, with the destination page yet to be determined (as dst_page_idx is null for now).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            32,
+                            2
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '淘宝签到领福利 去下单' button on page 32."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 46,
+            "function_description": "下单拿返现按钮",
+            "action_refs": [
+                [
+                    32,
+                    3
+                ]
+            ],
+            "data_in": [
+                "返现下单功能入口"
+            ],
+            "data_out": [
+                "返现下单操作触发"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 32,
+                "logic": "The core execution logic starts on page 32, where the user clicks the '下单拿返现' (Place Order for Cashback) button. This action is the primary step to initiate the cashback - related order process, and there are no branching or looping steps in this initial flow as described by the provided action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            32,
+                            3
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '下单拿返现' button on page 32"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 47,
+            "function_description": "切换商城下拉按钮",
+            "action_refs": [
+                [
+                    32,
+                    4
+                ]
+            ],
+            "data_in": [
+                "商城切换设置"
+            ],
+            "data_out": [
+                "商城切换设置更新"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 32,
+                "logic": "The core execution logic starts on page 32. The user performs a click action on the '切换商城' (switch mall) dropdown button. This action likely triggers a change or expansion related to the mall selection, though the exact destination page isn't specified here.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            32,
+                            4
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '切换商城' dropdown button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 48,
+            "function_description": "Shopping Rebates category tab",
+            "action_refs": [
+                [
+                    33,
+                    1
+                ]
+            ],
+            "data_in": [
+                "shopping rebates category tab",
+                "merchant list"
+            ],
+            "data_out": [
+                "shopping rebates merchant list"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 33,
+                "logic": "The user starts on page 33 and clicks the 'Shopping Rebates' category tab. This action likely navigates to or displays the shopping rebates - related content, with no branching or looping in this single - step flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            33,
+                            1
+                        ],
+                        "src_page_idx": 33,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the Shopping Rebates category tab"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 49,
+            "function_description": "Taobao merchant card (约返5%)",
+            "action_refs": [
+                [
+                    33,
+                    2
+                ]
+            ],
+            "data_in": [
+                "Taobao merchant card"
+            ],
+            "data_out": [
+                "Taobao merchant card details"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 33,
+                "logic": "The core execution logic starts at page 33 (the '全部商家' page). The user clicks on the Taobao merchant card (marked with '约返5%') to interact with it. Since there's only one action here, the flow is a single step with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            33,
+                            2
+                        ],
+                        "src_page_idx": 33,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the Taobao merchant card (约返5%)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 50,
+            "function_description": "This page functions as a search results page for the query \"促肺针为什么那么疼\" (Why is the lung - promoting injection so painful), displaying relevant user posts, expert - answered content, and an advertisement, and also provides category - switching options like \"Comprehensive\", \"Knowledge\", \"Posts\", and \"Users\" to help users find information related to the pain of the lung - promoting injection.",
+            "action_refs": [
+                [
+                    13,
+                    0
+                ]
+            ],
+            "data_in": [
+                "search query (促肺针为什么那么疼)"
+            ],
+            "data_out": [
+                "search results (related to 促肺针为什么那么疼)"
+            ],
+            "data_dependencies": [
+                51,
+                52,
+                53
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 13,
+                "logic": "The process starts on page 13. The user clicks on the suggested search term “促肺针为什么那么疼” (Why is the lung - promoting injection so painful), which navigates to page 15. On page 15, the search results for the query are displayed, including relevant posts, expert - answered content, an advertisement, and category - switching options like “Comprehensive”, “Knowledge”, “Posts”, and “Users” to help the user find information related to the pain of the lung - promoting injection.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            13,
+                            0
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click on the suggested search term “促肺针为什么那么疼” to navigate to the search results page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 51,
+            "function_description": "This page displays a user - posted article about the pain of taking lung - promoting injections during the late pregnancy period, and also provides functions such as following the poster, viewing comments, and interacting with the post (liking, favoriting, commenting).",
+            "action_refs": [
+                [
+                    13,
+                    1
+                ]
+            ],
+            "data_in": [
+                "recommended advertisement"
+            ],
+            "data_out": [
+                "new recommended advertisement"
+            ],
+            "data_dependencies": [
+                52,
+                53
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 13,
+                "logic": "The core execution logic starts on page 13. The user clicks the '换一换' button, which leads to a transition to page 6. There are no branch points or loops as the flow is a straight - line action of clicking the button to change the content.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            13,
+                            1
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click the '换一换' button on page 13"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 52,
+            "function_description": "This page displays a user - posted article about the pain of taking lung - promoting injections during the third trimester of pregnancy, and also provides functions such as following the poster, viewing comments, and interacting with the post (liking, favoriting, commenting).",
+            "action_refs": [
+                [
+                    13,
+                    2
+                ]
+            ],
+            "data_in": [
+                "hot topic (排卵期出血or月经？学会区分👀)"
+            ],
+            "data_out": [
+                "search result of hot topic (排卵期出血or月经？学会区分👀)"
+            ],
+            "data_dependencies": [
+                53
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 13,
+                "logic": "The core execution logic starts on page 13. The user clicks on a specific hot topic search item, which navigates to page 6. This action likely leads to the display of relevant content or a new page related to the searched topic.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            13,
+                            2
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click on the hot topic search item to navigate to the related page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 53,
+            "function_description": "广告关闭按钮",
+            "action_refs": [
+                [
+                    14,
+                    0
+                ]
+            ],
+            "data_in": [
+                "advertisement"
+            ],
+            "data_out": [
+                "advertisement closed"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The user starts on page 14. They click the ad close button (action_ref [14,0]), which navigates to page 18. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            0
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click the ad close button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 54,
+            "function_description": "This page functions as a photo selection interface for creating a post, allowing users to browse, preview, and select photos from their device (with options to cancel or complete the selection), and also to switch photo albums.",
+            "action_refs": [
+                [
+                    20,
+                    2
+                ]
+            ],
+            "data_in": [
+                "post content",
+                "image attachment function"
+            ],
+            "data_out": [
+                "image selection interface opened"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The flow starts on the post creation page (page 20). The user clicks the image attachment button, which navigates to the photo selection interface (page 19) for browsing, previewing, and selecting photos (with options to cancel or complete selection) or switching albums. This action initiates the photo selection process for the post.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            2
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click the image attachment button to open the photo selection interface."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 55,
+            "function_description": "This page displays comprehensive menstrual health analysis information, including AI - predicted menstrual health scores, cycle indicators, and AI - tracked abnormal conditions, and also provides a \"View Report\" button for users to access more detailed reports.",
+            "action_refs": [
+                [
+                    23,
+                    0
+                ],
+                [
+                    24,
+                    1
+                ],
+                [
+                    24,
+                    2
+                ],
+                [
+                    24,
+                    3
+                ]
+            ],
+            "data_in": [
+                "menstrual analysis entry",
+                "period health data",
+                "period metrics data",
+                "周期指标数据"
+            ],
+            "data_out": [
+                "menstrual analysis report page",
+                "周期指标概况视图"
+            ],
+            "data_dependencies": [
+                59
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 23,
+                "logic": "The user starts on page 23 and clicks the '立即查看' button to navigate to the menstrual analysis page (page 24). On page 24, the user can perform optional actions: clicking '全部周期' to view all cycles, '近半年' to view the last six months, or '概况' to view an overview, all while remaining on page 24 to explore menstrual health details.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            23,
+                            0
+                        ],
+                        "src_page_idx": 23,
+                        "dst_page_idx": 24,
+                        "action": "click",
+                        "summary": "Click '立即查看' to open menstrual analysis page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            24,
+                            1
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 24,
+                        "action": "click",
+                        "summary": "Click '全部周期' to view all cycles"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            24,
+                            2
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 24,
+                        "action": "click",
+                        "summary": "Click '近半年' to view last six months"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            24,
+                            3
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 24,
+                        "action": "click",
+                        "summary": "Click '概况' to view overview"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 56,
+            "function_description": "This page is a Taobao login authorization interface that allows users to log in with their Taobao account (by entering account and password) or register for free, while also requiring users to agree to the Taobao service agreement to obtain account information reading and login state maintenance permissions for subsequent operations (likely related to the garbage bag product rebate process).",
+            "action_refs": [
+                [
+                    35,
+                    0
+                ],
+                [
+                    36,
+                    0
+                ],
+                [
+                    36,
+                    1
+                ],
+                [
+                    36,
+                    4
+                ]
+            ],
+            "data_in": [
+                "thick drawstring garbage bag product card",
+                "login session",
+                "account credential",
+                "password input",
+                "login authorization page state"
+            ],
+            "data_out": [
+                "login authorization page loaded",
+                "inputted account credential",
+                "password input (updated)",
+                "shopping search page state"
+            ],
+            "data_dependencies": [
+                61
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 35,
+                "logic": "The flow starts by clicking a garbage bag product card (step S1) to enter the Taobao login authorization page. Then, the user can either input the account (step S2) or input the password (step S3), or choose to go back (step S4) via the back arrow. The main path involves entering account and password details for login, with a back option available.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            35,
+                            0
+                        ],
+                        "src_page_idx": 35,
+                        "dst_page_idx": 36,
+                        "action": "click",
+                        "summary": "Click the garbage bag product card to navigate to the login page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            36,
+                            0
+                        ],
+                        "src_page_idx": 36,
+                        "dst_page_idx": 37,
+                        "action": "input",
+                        "summary": "Input account information (phone/email/account name)"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            36,
+                            1
+                        ],
+                        "src_page_idx": 36,
+                        "dst_page_idx": 38,
+                        "action": "input",
+                        "summary": "Input login password"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            36,
+                            4
+                        ],
+                        "src_page_idx": 36,
+                        "dst_page_idx": 35,
+                        "action": "click",
+                        "summary": "Click back arrow to return to the product list page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 57,
+            "function_description": "去下单 button",
+            "action_refs": [
+                [
+                    42,
+                    0
+                ]
+            ],
+            "data_in": [
+                "cash subsidy record",
+                "shopping platform list"
+            ],
+            "data_out": [
+                "shopping order initiation"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 42,
+                "logic": "The user starts on page 42 (a打卡成功 popup). The core action is clicking the '去下单' button, which likely initiates a transition (though dst_page is null here, implying the next page is loaded post-click). There are no branches as it's a single click action to proceed with ordering.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            42,
+                            0
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '去下单' button to proceed with ordering (using cash补贴 and 返现)."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 58,
+            "function_description": "This page displays a post titled \"促肺针真的很痛\" (Lung-promoting injection is really painful) from a user in the \"孕晚期妈咪\" (Late pregnancy mothers) community, sharing the user's experience of getting lung - promoting injections during pregnancy, along with an advertisement and a comment section for interaction.",
+            "action_refs": [
+                [
+                    15,
+                    0
+                ]
+            ],
+            "data_in": [
+                "post titled '促肺针真的很痛'"
+            ],
+            "data_out": [
+                "detailed post content"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The flow starts on page 15. The user clicks on the post titled '促肺针真的很痛' to view its detailed content, including the user's experience, an advertisement, and the comment section. This is a straight-line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            0
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click on the post titled '促肺针真的很痛' to view its details"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 59,
+            "function_description": "This page displays a membership subscription popup for the Meiyou app, offering different membership plans (monthly, quarterly, annual) with discounts and freebies, and options to pay via Alipay or WeChat Pay, while the underlying page shows menstrual health analysis (partially obscured by the popup).",
+            "action_refs": [
+                [
+                    24,
+                    0
+                ],
+                [
+                    25,
+                    0
+                ],
+                [
+                    25,
+                    1
+                ]
+            ],
+            "data_in": [
+                "经期健康数据",
+                "membership promotion popup",
+                "美柚会员订阅计划（连续包季）"
+            ],
+            "data_out": [
+                "会员开通选项展示",
+                "closed membership promotion popup",
+                "period health data (displayed)",
+                "选中的美柚会员订阅计划（连续包季）"
+            ],
+            "data_dependencies": [
+                66
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 24,
+                "logic": "The flow starts with clicking '查看报告' to open the membership subscription popup. Once the popup is open, there’s a branch: either close the popup (returning to the menstrual health page) or select a membership plan (e.g., the ¥33 quarterly plan) to proceed with subscription.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            24,
+                            0
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 25,
+                        "action": "click",
+                        "summary": "Click '查看报告' to open the membership subscription popup."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            25,
+                            0
+                        ],
+                        "src_page_idx": 25,
+                        "dst_page_idx": 24,
+                        "action": "click",
+                        "summary": "Click 'Close popup' to dismiss the subscription popup and return to the menstrual health page."
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            25,
+                            1
+                        ],
+                        "src_page_idx": 25,
+                        "dst_page_idx": 25,
+                        "action": "click",
+                        "summary": "Click 'Select ¥33 quarterly plan' to choose the quarterly membership plan."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 60,
+            "function_description": "关闭AI横幅按钮",
+            "action_refs": [
+                [
+                    24,
+                    4
+                ]
+            ],
+            "data_in": [
+                "AI横幅设置"
+            ],
+            "data_out": [
+                "AI横幅设置（关闭状态）"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 24,
+                "logic": "The process starts on page 24. The user clicks the button to close the AI banner, which leads to page 26. There are no branches or loops as it's a single action to close the banner.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            24,
+                            4
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 26,
+                        "action": "click",
+                        "summary": "Click the button to close the AI banner"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 61,
+            "function_description": "This page enables users to log in to Taobao by entering account credentials, agreeing to the service agreement, and authorizing the app to access basic account information and maintain login status for rebate - related shopping activities.",
+            "action_refs": [
+                [
+                    36,
+                    2
+                ]
+            ],
+            "data_in": [
+                "login credentials",
+                "Taobao service agreement consent"
+            ],
+            "data_out": [
+                "login session",
+                "authorized account state"
+            ],
+            "data_dependencies": [
+                56,
+                62,
+                65,
+                68
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 36,
+                "logic": "The user starts on the Taobao login authorization page. The core action is clicking the '授权并登录' (Authorize and Login) button, which likely triggers the login process after credentials are entered and the agreement is accepted (implied by the page’s context).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            36,
+                            2
+                        ],
+                        "src_page_idx": 36,
+                        "dst_page_idx": 36,
+                        "action": "click",
+                        "summary": "Click the '授权并登录' button to attempt Taobao login authorization."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 62,
+            "function_description": "我已阅读并同意 checkbox",
+            "action_refs": [
+                [
+                    36,
+                    3
+                ]
+            ],
+            "data_in": [
+                "agreement consent setting"
+            ],
+            "data_out": [
+                "agreement consent setting enabled"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 36,
+                "logic": "The user starts on page 36 (login authorization page). The core action is clicking the '我已阅读并同意' checkbox. After this click, the flow proceeds to page 39, likely enabling further actions like logging in or registering.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            36,
+                            3
+                        ],
+                        "src_page_idx": 36,
+                        "dst_page_idx": 39,
+                        "action": "click",
+                        "summary": "Click the '我已阅读并同意' checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 63,
+            "function_description": "This page enables users to register a Taobao account by entering a mobile phone number, obtaining a verification code, agreeing to relevant terms, and completing the registration process to enable login authorization for related services (like accessing product rebate discounts).",
+            "action_refs": [
+                [
+                    36,
+                    5
+                ],
+                [
+                    40,
+                    0
+                ],
+                [
+                    40,
+                    3
+                ]
+            ],
+            "data_in": [
+                "Taobao account registration entry",
+                "phone number input field",
+                "registration form data",
+                "agreement consent state"
+            ],
+            "data_out": [
+                "Taobao account registration page loaded"
+            ],
+            "data_dependencies": [
+                56,
+                61,
+                62,
+                65,
+                67,
+                68
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 36,
+                "logic": "The user starts on the login authorization page and clicks the '免费注册' link to enter the registration page. On the registration page, the user inputs a mobile number into the designated field. Finally, the user clicks the '同意并注册' button to complete the registration process, which enables login authorization for related services.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            36,
+                            5
+                        ],
+                        "src_page_idx": 36,
+                        "dst_page_idx": 40,
+                        "action": "click",
+                        "summary": "Click '免费注册' link to navigate to registration page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            40,
+                            0
+                        ],
+                        "src_page_idx": 40,
+                        "dst_page_idx": 40,
+                        "action": "input",
+                        "summary": "Input mobile number into the input field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            40,
+                            3
+                        ],
+                        "src_page_idx": 40,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click '同意并注册' button to complete registration"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 64,
+            "function_description": "Select WeChat Pay",
+            "action_refs": [
+                [
+                    25,
+                    2
+                ]
+            ],
+            "data_in": [
+                "payment method setting",
+                "WeChat Pay option"
+            ],
+            "data_out": [
+                "WeChat Pay selected as payment method"
+            ],
+            "data_dependencies": [
+                66
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 25,
+                "logic": "The process starts on page 25 (a membership purchase page). The user performs a click action to select WeChat Pay, which transitions the flow to page 27. This is a straight-line flow with no branches or loops, as the action directly completes the selection of WeChat Pay as the payment method.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            25,
+                            2
+                        ],
+                        "src_page_idx": 25,
+                        "dst_page_idx": 27,
+                        "action": "click",
+                        "summary": "Click to select WeChat Pay as the payment method"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 65,
+            "function_description": "Agree to service terms",
+            "action_refs": [
+                [
+                    25,
+                    3
+                ]
+            ],
+            "data_in": [
+                "service terms agreement setting"
+            ],
+            "data_out": [
+                "service terms agreement setting (agreed)"
+            ],
+            "data_dependencies": [
+                66
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 25,
+                "logic": "The user starts on page 25. The core action is to click the element to agree to service terms, which navigates to page 28. There are no branches or loops as it's a single action flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            25,
+                            3
+                        ],
+                        "src_page_idx": 25,
+                        "dst_page_idx": 28,
+                        "action": "click",
+                        "summary": "Click to agree to service terms"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 66,
+            "function_description": "This page functions as a membership subscription popup for the Meiyou app, offering users different subscription plans (including a ¥33 quarterly plan) to access enhanced menstrual health analysis features, along with payment options and promotional offers.",
+            "action_refs": [
+                [
+                    25,
+                    4
+                ]
+            ],
+            "data_in": [
+                "美柚会员开通选项",
+                "支付方式设置",
+                "协议确认状态"
+            ],
+            "data_out": [
+                "美柚会员开通请求"
+            ],
+            "data_dependencies": [
+                64,
+                65,
+                68
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 25,
+                "logic": "The flow starts on page 25 with the membership subscription popup. The user clicks the ¥9 immediate subscription button, which likely initiates the payment or subscription process for the Meiyou membership plan. This is a straight - line flow with no branching or looping.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            25,
+                            4
+                        ],
+                        "src_page_idx": 25,
+                        "dst_page_idx": 25,
+                        "action": "click",
+                        "summary": "Click the ¥9 immediate subscription button to proceed with the membership subscription."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 67,
+            "function_description": "This page functions as a Taobao account registration interface, allowing users to input their mobile number, obtain a verification code, agree to service agreements, and complete the registration process to enable login authorization for related shopping or rebate - related operations.",
+            "action_refs": [
+                [
+                    40,
+                    1
+                ]
+            ],
+            "data_in": [
+                "phone number (for verification)"
+            ],
+            "data_out": [
+                "verification code request initiated"
+            ],
+            "data_dependencies": [
+                68
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 40,
+                "logic": "The user starts on the Taobao account registration page. The core logic involves clicking the 'Get verification code' button (action_ref [40,1]) to initiate the verification code retrieval process, likely after entering a mobile number (implied but not in the provided actions) and agreeing to terms (implied). This step is part of the flow to enable subsequent registration steps like entering the code and confirming registration.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            40,
+                            1
+                        ],
+                        "src_page_idx": 40,
+                        "dst_page_idx": 40,
+                        "action": "click",
+                        "summary": "Click the 'Get verification code' button to request a verification code for registration."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 68,
+            "function_description": "Terms agreement checkbox",
+            "action_refs": [
+                [
+                    40,
+                    2
+                ]
+            ],
+            "data_in": [
+                "terms agreement setting"
+            ],
+            "data_out": [
+                "terms agreement setting (agreed)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 40,
+                "logic": "The flow starts on page 40 (login authorization page). The user clicks the terms agreement checkbox, which transitions the flow to page 41. There are no branches or loops as this is a single action to interact with the checkbox.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            40,
+                            2
+                        ],
+                        "src_page_idx": 40,
+                        "dst_page_idx": 41,
+                        "action": "click",
+                        "summary": "Click the terms agreement checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        }
+    ]
+}

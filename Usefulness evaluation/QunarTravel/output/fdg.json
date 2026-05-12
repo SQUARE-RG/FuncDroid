@@ -1,0 +1,2151 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "旅游出行服务预订（酒店、机票、旅游）",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ],
+                [
+                    0,
+                    5
+                ]
+            ],
+            "data_in": [
+                "景点搜索输入内容"
+            ],
+            "data_out": [
+                "更新后的景点搜索输入内容"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the home page (page 0). First, input '北京故宫' into the scenic spot search box (action on page 0, edge 0). Then, there's a click action on the '首页Tab' (action on page 0, edge 5) which stays on the same page, potentially for navigation or resetting the view.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "input",
+                        "summary": "Input '北京故宫' into the scenic spot search box"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the '首页Tab' to stay on the home page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 1,
+            "function_description": "The current page functions as a search interface for travel - related services (including hotels, flights, train tickets, tickets, and homestays). It enables users to input search queries, offers access to historical search records, presents popular recommendations, displays an advertisement, and shows trending search results related to travel destinations and hotels.",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    2,
+                    0
+                ],
+                [
+                    2,
+                    1
+                ],
+                [
+                    2,
+                    2
+                ],
+                [
+                    9,
+                    1
+                ]
+            ],
+            "data_in": [
+                "search query",
+                "search interface configuration",
+                "search results",
+                "hot search list",
+                "搜索输入内容",
+                "搜索服务",
+                "搜索输入框内容",
+                "搜索结果列表"
+            ],
+            "data_out": [
+                "search results page",
+                "search interface state updated",
+                "refreshed search results",
+                "refreshed hot search list",
+                "搜索结果（故宫博物院相关）"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the travel service search page. They can click the search button to proceed, then interact with the hotel category tag, refresh recommendations, or input a search query like '故宫博物院'. After inputting, the app processes the query, and the user can further interact with the search input if needed.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click the search button"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            2,
+                            0
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click hotel category tag"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            2,
+                            1
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click refresh button"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            2,
+                            2
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 9,
+                        "action": "input",
+                        "summary": "Input search query"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            9,
+                            1
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 9,
+                        "action": "input",
+                        "summary": "Re-input search query"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S5"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S4",
+                        "type": "loop",
+                        "branches": [
+                            {
+                                "next_step": "S5"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "This page enables users to search for and browse special - price hotels for a specified stay period (from 01 - 06 to 01 - 07 for 1 adult and 0 children), with options to use a map view and access more features, facilitating the process of finding and potentially booking discounted hotel accommodations.",
+            "action_refs": [
+                [
+                    0,
+                    2
+                ],
+                [
+                    3,
+                    0
+                ],
+                [
+                    3,
+                    1
+                ],
+                [
+                    3,
+                    2
+                ],
+                [
+                    12,
+                    1
+                ],
+                [
+                    12,
+                    2
+                ],
+                [
+                    15,
+                    0
+                ],
+                [
+                    15,
+                    3
+                ]
+            ],
+            "data_in": [
+                "特价酒店入口",
+                "酒店搜索输入框",
+                "日期选择（01-06至01-07）",
+                "人数选择（1成人0儿童）",
+                "hotel search results page",
+                "search parameters (date, people)",
+                "推荐排序设置",
+                "酒店搜索结果",
+                "旅游搜索输入框",
+                "目的地搜索输入框",
+                "搜索关键词",
+                "hotel search session"
+            ],
+            "data_out": [
+                "特价酒店搜索页面",
+                "home page (travel app)",
+                "更新后的酒店搜索结果（因系统错误未正常加载）",
+                "搜索结果列表",
+                "navigation back to home page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts by clicking the '特价酒店' (special - price hotels) entry. Then, they input '北京酒店' (Beijing hotels) in the search box. After that, they can choose to click the '推荐排序' (recommended sorting) dropdown menu, or click the back button to return to the previous page, or continue with other actions related to the special - price hotel search and browsing.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click the special - price hotels entry"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            3,
+                            0
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 3,
+                        "action": "input",
+                        "summary": "Input '北京酒店' in the hotel search box"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            3,
+                            1
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the back button"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            3,
+                            2
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click the recommended sorting dropdown menu"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "This page serves as a comprehensive travel service portal, allowing users to search for and book hotels, flights, tours, scenic spot tickets, and other travel - related services, while also providing promotional offers and new - user benefits.",
+            "action_refs": [
+                [
+                    0,
+                    3
+                ]
+            ],
+            "data_in": [
+                "旅游服务入口"
+            ],
+            "data_out": [
+                "旅游服务页面加载"
+            ],
+            "data_dependencies": [
+                4,
+                6
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on page 0 and clicks the travel service entry (e.g., a travel - related option like '旅游' or its sub - options). This action leads to page 5, which is likely the page for accessing specific travel - related services such as hotel booking, flight booking, or tour booking.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click the travel service entry on page 0 to navigate to page 5."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "The current page is a travel service booking interface that allows users to search for and book hotels, flights, and travel-related services, as well as access promotions, special offers, and user account features.",
+            "action_refs": [
+                [
+                    0,
+                    4
+                ]
+            ],
+            "data_in": [
+                "酒店相关功能入口"
+            ],
+            "data_out": [
+                "酒店添加功能触发"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the travel service booking interface (page 0). They click the '添加酒店按钮' (Add Hotel Button), which navigates them to page 7. This is a straight - line flow with no branches or loops as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click the '添加酒店按钮' to navigate from page 0 to page 7."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "The current page, accessed via the \"我的\" (My) tab from the travel service booking page, serves as a personal center for managing user account-related activities such as login/registration, viewing and managing coupons, favorites, points, and various order statuses (pending payment, pending travel, pending review, refund orders, all orders), along with other personalized service options.",
+            "action_refs": [
+                [
+                    0,
+                    6
+                ]
+            ],
+            "data_in": [
+                "user profile",
+                "order records",
+                "coupon records",
+                "points records"
+            ],
+            "data_out": [
+                "user profile page (loaded)",
+                "order records (loaded)",
+                "coupon records (loaded)",
+                "points records (loaded)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the travel service booking page (page 0). The user clicks the '我的' (My) tab, which navigates to the personal center page (page 8). This page provides access to account management (login/registration), coupon, favorite, point, and order status (pending payment, travel, review, refund, all orders) management, along with other personalized services.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            6
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click the '我的' (My) tab to navigate to the personal center page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "The current page (a travel service entry page for domestic/outbound tours) displays a location - based prompt dialog, asking the user whether to switch to view travel - related services and information under the city of Mountain View (where the user is currently located).",
+            "action_refs": [
+                [
+                    5,
+                    0
+                ],
+                [
+                    34,
+                    0
+                ]
+            ],
+            "data_in": [
+                "旅游服务入口",
+                "location switch prompt"
+            ],
+            "data_out": [
+                "旅游服务页面",
+                "prompt dismissed"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user starts on page 5 and clicks the travel service entry (for outbound/domestic tours) to navigate to page 34. On page 34, a location - based prompt dialog appears, and the user can click the cancel button to complete the interaction related to this functional point.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            0
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 34,
+                        "action": "click",
+                        "summary": "Click the travel service entry (outbound/domestic tours) to go to page 34"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            34,
+                            0
+                        ],
+                        "src_page_idx": 34,
+                        "dst_page_idx": 35,
+                        "action": "click",
+                        "summary": "Click the cancel button on page 34"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "The settings page of the travel service app (e.g., 去哪儿网) allows users to manage personal information (e.g., profile, real - name authentication), account security (e.g., password, associated accounts), payment settings, login device management, system preferences (e.g., language), view app - related information (e.g., about the app, privacy policies), and control features like itinerary synchronization.",
+            "action_refs": [
+                [
+                    8,
+                    0
+                ],
+                [
+                    37,
+                    0
+                ]
+            ],
+            "data_in": [
+                "settings entry"
+            ],
+            "data_out": [
+                "settings page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The flow starts on page 8 (e.g., 'My' page) where the settings icon is clicked to navigate to page 37 (settings page). From the settings page, clicking the back arrow icon navigates back to page 39 (likely a previous page).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            0
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 37,
+                        "action": "click",
+                        "summary": "Click the settings icon on page 8 to navigate to the settings page (page 37)."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            37,
+                            0
+                        ],
+                        "src_page_idx": 37,
+                        "dst_page_idx": 39,
+                        "action": "click",
+                        "summary": "Click the back arrow icon on page 37 to navigate back to page 39."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "The page functions as an order management interface where users can view, filter (by status like all, pending payment, pending travel, etc.), and search for their travel - related orders (such as hotel, flight, or tour bookings).",
+            "action_refs": [
+                [
+                    8,
+                    1
+                ]
+            ],
+            "data_in": [
+                "待付款订单入口"
+            ],
+            "data_out": [
+                "待付款订单页面加载"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The user starts on page 8 (the 'My' page) and clicks the '待付款' (Pending Payment) button. This action navigates to page 38 (the order management page filtered to pending payment orders). The flow is a straight line as there are no branches or loops shown with the provided action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            1
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 38,
+                        "action": "click",
+                        "summary": "Click the '待付款' (Pending Payment) button to navigate to the pending payment orders page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "The page functions as an order management interface where users can view, filter (by status like all, pending payment, pending travel, etc.), and search for their travel - related orders (such as hotel, flight, travel bookings).",
+            "action_refs": [
+                [
+                    8,
+                    2
+                ]
+            ],
+            "data_in": [
+                "我的钱包功能入口"
+            ],
+            "data_out": [
+                "进入我的钱包功能页面"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The user starts on page 8 and clicks the '我的钱包' button, which navigates to page 38. This action likely leads to an interface related to order management or wallet - associated order operations.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            2
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 38,
+                        "action": "click",
+                        "summary": "Click the '我的钱包' button to navigate from page 8 to page 38."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "This page displays detailed information about the Palace Museum, including its rating, opening hours, location, real - time visitor flow, and options to view its introduction, map, and related content, serving as a detailed information display page for this tourist attraction.",
+            "action_refs": [
+                [
+                    9,
+                    0
+                ],
+                [
+                    10,
+                    0
+                ],
+                [
+                    6,
+                    0
+                ],
+                [
+                    11,
+                    0
+                ]
+            ],
+            "data_in": [
+                "故宫博物院搜索结果卡片",
+                "故宫博物院景点信息",
+                "Palace Museum details page",
+                "ticket attraction introduction page"
+            ],
+            "data_out": [
+                "故宫博物院详情页",
+                "加载完成的故宫博物院景点详情（含评论、图片、标签等）",
+                "Ticket attraction introduction page",
+                "search results page for Forbidden City"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The flow starts on page 9. First, click the Palace Museum search result card (action_ref [9,0]) to navigate to page 10. Then, click the same - named search result card on page 10 (action_ref [10,0]) to reach page 6. Finally, click the back arrow on page 6 (action_ref [6,0]) to return to page 11, and then click the back arrow on page 11 (action_ref [11,0]) to go back to page 9. The flow is a sequence of clicks for navigation and back - navigation.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            0
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click the Palace Museum search result card on page 9 to go to page 10"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            10,
+                            0
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click the Palace Museum search result card on page 10 to go to page 6"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            6,
+                            0
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click the back arrow on page 6 to go to page 11"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            11,
+                            0
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click the back arrow on page 11 to go back to page 9"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "关闭页面按钮",
+            "action_refs": [
+                [
+                    12,
+                    0
+                ]
+            ],
+            "data_in": [
+                "hotel search page"
+            ],
+            "data_out": [
+                "navigation back to previous page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The user starts on page 12. Then, the user clicks the '关闭页面按钮' (close page button), which navigates to page 13. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            0
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click the close page button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "切换城市按钮",
+            "action_refs": [
+                [
+                    34,
+                    1
+                ]
+            ],
+            "data_in": [
+                "城市切换设置",
+                "定位信息"
+            ],
+            "data_out": [
+                "城市切换设置（更新为山景城）"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 34,
+                "logic": "The process starts on page 34. The user clicks the '切换城市' (switch city) button, which leads to page 36. This is a straightforward flow with no branches or loops, as the action directly transitions to the destination page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            34,
+                            1
+                        ],
+                        "src_page_idx": 34,
+                        "dst_page_idx": 36,
+                        "action": "click",
+                        "summary": "Click the '切换城市' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "The current page, titled \"个人信息\" (Personal Information), allows users to view and modify personal details such as avatar, nickname, phone number, email, and perform real - name authentication, as well as export personal information.",
+            "action_refs": [
+                [
+                    37,
+                    1
+                ]
+            ],
+            "data_in": [
+                "user info setting option"
+            ],
+            "data_out": [
+                "personal information page opened"
+            ],
+            "data_dependencies": [
+                23,
+                36
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 37,
+                "logic": "The user starts on the settings page (page 37). They click the 'Modify user info' button, which navigates them to the 'Personal Information' page (page 40) where they can view and modify details like avatar, nickname, phone, email, perform real - name authentication, or export personal information.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            37,
+                            1
+                        ],
+                        "src_page_idx": 37,
+                        "dst_page_idx": 40,
+                        "action": "click",
+                        "summary": "Click the 'Modify user info' button to navigate to the 'Personal Information' page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "Trip sync toggle switch",
+            "action_refs": [
+                [
+                    37,
+                    2
+                ]
+            ],
+            "data_in": [
+                "行程同步设置"
+            ],
+            "data_out": [
+                "行程同步设置已启用"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 37,
+                "logic": "The user starts on the settings page (page 37). The core action is clicking the trip sync toggle switch, which transitions the app to page 41. This single step toggles the trip sync functionality, with no branching or looping in this simple flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            37,
+                            2
+                        ],
+                        "src_page_idx": 37,
+                        "dst_page_idx": 41,
+                        "action": "click",
+                        "summary": "Click the trip sync toggle switch"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "This page is the real - name authentication page within the account management settings, and its function is to provide the relevant interface and options for users to complete the real - name authentication process.",
+            "action_refs": [
+                [
+                    37,
+                    3
+                ]
+            ],
+            "data_in": [
+                "real - name authentication setting item"
+            ],
+            "data_out": [
+                "real - name authentication page (loaded)"
+            ],
+            "data_dependencies": [
+                24
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 37,
+                "logic": "The user starts on the settings page (page 37). They click the 'Real - name authentication' option, which navigates them to the real - name authentication page (page 42). There are no branches or loops in this initial flow as it's a simple navigation action to access the real - name authentication interface.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            37,
+                            3
+                        ],
+                        "src_page_idx": 37,
+                        "dst_page_idx": 42,
+                        "action": "click",
+                        "summary": "Click the 'Real - name authentication' option to navigate to the real - name authentication page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "该页面为去哪儿用户个人中心，可管理订单（含待付款、待出行等）、查看会员权益、使用信贷服务、管理个人信息（如常用信息、发票等）并浏览推荐内容。",
+            "action_refs": [
+                [
+                    38,
+                    0
+                ]
+            ],
+            "data_in": [
+                "全部订单页面"
+            ],
+            "data_out": [
+                "个人中心页面"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 39,
+                "logic": "The user starts on the personal center page (page 39) and can perform actions like managing orders, viewing membership benefits, using credit services, or managing personal info. When the '返回箭头' (back arrow) is clicked (action from page 38 to 39? Wait, no, the action_ref is [38,0], src 38, dst 39. Wait, maybe the entry is page 38? Wait, the first screenshot is page 38 (全部订单), second is page 39 (个人中心). So the action is clicking the back arrow on page 38 to go to page 39 (personal center). So the logic is: From the '全部订单' page (page 38), click the back arrow to navigate to the personal center page (page 39), where various personal center functions (order management, membership, credit, personal info, recommendations) are accessible. Wait, but the action is from page 38 (src) to page 39 (dst), action click (back arrow). So the step is: On page 38 (全部订单), click the back arrow to return to page 39 (去哪儿用户个人中心), which provides access to order management, membership benefits, credit services, personal info management, and recommended content. Wait, but the functional point is the personal center, so the entry is page 39? Or the action is navigating to the personal center via back arrow from order page. So the steps: S1: On page 38 (全部订单), click the back arrow (action_ref [38,0]) to go to page 39 (个人中心). Then, on page 39, the personal center functions are available. But since there's only one action, the logic is: The user navigates from the '全部订单' page (page 38) to the personal center page (page 39) by clicking the back arrow. Once on the personal center page, they can manage orders, view membership benefits, use credit services, manage personal information, or browse recommendations. Wait, but the action is the back arrow click. So the core logic here is the navigation to the personal center via the back arrow from the order page. So the steps: S1: Click the back arrow on page 38 (全部订单) to navigate to page 39 (去哪儿用户个人中心), where the personal center's functional areas (order management, membership, credit, personal info, recommendations) are accessible. Since there's only one action, no branches. So: ",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            38,
+                            0
+                        ],
+                        "src_page_idx": 38,
+                        "dst_page_idx": 39,
+                        "action": "click",
+                        "summary": "Click the back arrow on the '全部订单' page to navigate to the personal center page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "This page functions as a filter interface for managing orders, allowing users to categorize and view orders by different travel product types (e.g., flights, hotels, train tickets) and membership - related services (e.g., travel mall, paid membership) when accessing the \"All Orders\" dropdown menu from the pending payment orders management page.",
+            "action_refs": [
+                [
+                    38,
+                    1
+                ]
+            ],
+            "data_in": [
+                "全部订单下拉菜单"
+            ],
+            "data_out": [
+                "展开的订单分类菜单"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 38,
+                "logic": "The user starts on the pending payment orders management page (page 38) and clicks the 'All Orders' dropdown menu. This action opens a filter interface (page 44) that categorizes orders by travel product types (e.g., flights, hotels) and membership - related services (e.g., travel mall, paid membership).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            38,
+                            1
+                        ],
+                        "src_page_idx": 38,
+                        "dst_page_idx": 44,
+                        "action": "click",
+                        "summary": "Click the 'All Orders' dropdown menu to open the order filter interface."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "The page enables users to query orders by entering the order contact's mobile number, obtaining and filling in a verification code, and selecting a year (e.g., 2026), then clicking the \"查询订单\" (Query Order) button.",
+            "action_refs": [
+                [
+                    38,
+                    2
+                ],
+                [
+                    45,
+                    0
+                ],
+                [
+                    45,
+                    1
+                ]
+            ],
+            "data_in": [
+                "订单查询入口",
+                "订单联系人手机号输入框",
+                "order query form",
+                "verification code input field"
+            ],
+            "data_out": [
+                "手机查单页面",
+                "订单联系人手机号输入框",
+                "filled verification code input field"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 38,
+                "logic": "The user starts by clicking the '手机查单' (Mobile Order Query) button. Then, they input the order contact's mobile number into the designated field. Next, they input the verification code into its respective field. Finally, after selecting the year (e.g., 2026) and ensuring the inputs are complete, they click the '查询订单' (Query Order) button to retrieve the orders. The flow is linear with no branches or loops as described by the provided actions.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            38,
+                            2
+                        ],
+                        "src_page_idx": 38,
+                        "dst_page_idx": 45,
+                        "action": "click",
+                        "summary": "Click the '手机查单' button to navigate to the order query page."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            45,
+                            0
+                        ],
+                        "src_page_idx": 45,
+                        "dst_page_idx": 49,
+                        "action": "input",
+                        "summary": "Input the order contact's mobile number into the mobile number input field."
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            45,
+                            1
+                        ],
+                        "src_page_idx": 45,
+                        "dst_page_idx": 50,
+                        "action": "input",
+                        "summary": "Input the verification code into the verification code input field."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "The page functions as an order management interface for \"待出行\" (upcoming travel) orders, displaying a message indicating no such orders exist and providing an option to check the reason for missing orders, with a note on train ticket order display rules.",
+            "action_refs": [
+                [
+                    38,
+                    3
+                ]
+            ],
+            "data_in": [
+                "待出行订单数据"
+            ],
+            "data_out": [
+                "待出行订单筛选结果"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 38,
+                "logic": "The user starts on the '全部订单' (All Orders) page. They click the '待出行' (Upcoming Travel) tab to view upcoming travel orders. The page then displays a message if no such orders exist, along with an option to check the reason and a note on train ticket display rules.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            38,
+                            3
+                        ],
+                        "src_page_idx": 38,
+                        "dst_page_idx": 48,
+                        "action": "click",
+                        "summary": "Click the '待出行' (Upcoming Travel) tab to switch to the upcoming travel orders view."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "This page attempts to display a map - based view for searching tourist destinations or hotels with date filtering, but currently shows a system error and provides a \"Retry\" button to reload the content.",
+            "action_refs": [
+                [
+                    15,
+                    1
+                ],
+                [
+                    17,
+                    0
+                ],
+                [
+                    17,
+                    2
+                ],
+                [
+                    17,
+                    3
+                ]
+            ],
+            "data_in": [
+                "地图功能入口",
+                "search query",
+                "search parameters (date, people)"
+            ],
+            "data_out": [
+                "地图视图"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": null
+        },
+        {
+            "index": 21,
+            "function_description": "This page provides access to user - related features such as checking messages, managing vouchers, viewing hotel orders, giving feedback, and also allows users to check their travel footprints (with an option to view all footprints) and manage their collections.",
+            "action_refs": [
+                [
+                    15,
+                    2
+                ]
+            ],
+            "data_in": [
+                "more options menu entry"
+            ],
+            "data_out": [
+                "user profile menu (with messages, vouchers, orders, feedback, footprints, collections)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The flow starts on page 15. The user clicks the '更多' (More) button, which navigates to page 18. On page 18, options like messages, vouchers, hotel orders, feedback, travel footprints (with a 'view all' option), and collections are accessible. There are no branches or loops as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            2
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click the '更多' (More) button to navigate to the page with user - related features."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "This page is loading the list of pending payment orders for the user, allowing them to view and manage orders that require payment within the travel service booking application.",
+            "action_refs": [
+                [
+                    39,
+                    0
+                ],
+                [
+                    43,
+                    0
+                ],
+                [
+                    43,
+                    3
+                ]
+            ],
+            "data_in": [
+                "pending payment order list",
+                "order list page",
+                "order list (all orders)"
+            ],
+            "data_out": [
+                "loaded pending payment order list",
+                "user profile page",
+                "loaded order list (all orders)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 39,
+                "logic": "The user starts on page 39 and clicks the '待付款 (Pending Payment)' button to navigate to page 43 (loading pending payment orders). From page 43, the user can either click the back arrow to return to page 39 or click the '全部 (All Orders)' tab to view all orders on page 46.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            39,
+                            0
+                        ],
+                        "src_page_idx": 39,
+                        "dst_page_idx": 43,
+                        "action": "click",
+                        "summary": "Click '待付款 (Pending Payment)' button to load pending payment orders page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            43,
+                            0
+                        ],
+                        "src_page_idx": 43,
+                        "dst_page_idx": 39,
+                        "action": "click",
+                        "summary": "Click back arrow to return to previous page"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            43,
+                            3
+                        ],
+                        "src_page_idx": 43,
+                        "dst_page_idx": 46,
+                        "action": "click",
+                        "summary": "Click '全部 (All Orders)' tab to view all orders"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "This page allows the user to modify their avatar as part of managing personal information, providing an interface to update the profile picture.",
+            "action_refs": [
+                [
+                    40,
+                    0
+                ]
+            ],
+            "data_in": [
+                "avatar setting",
+                "user profile"
+            ],
+            "data_out": [
+                "avatar preview"
+            ],
+            "data_dependencies": [
+                36
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 40,
+                "logic": "The user starts on the personal information page. They click the avatar modification button (or the avatar area) to navigate to the avatar modification page, initiating the process to update the profile picture.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            40,
+                            0
+                        ],
+                        "src_page_idx": 40,
+                        "dst_page_idx": 53,
+                        "action": "click",
+                        "summary": "Click the avatar modification button (or avatar area) to go to the avatar modification page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "This page is for users to perform real - name authentication, likely providing a form or interface to input personal information required for real - name verification after clicking the \"去实名\" button from the settings - related real - name authentication option page.",
+            "action_refs": [
+                [
+                    42,
+                    0
+                ]
+            ],
+            "data_in": [
+                "real - name authentication setting"
+            ],
+            "data_out": [
+                "real - name authentication setting updated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 42,
+                "logic": "The user starts on page 42 and clicks the '去实名' (real - name authentication) button. This action likely initiates the process of entering personal information for real - name verification, though the current flow only includes this initial click step.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            42,
+                            0
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": 42,
+                        "action": "click",
+                        "summary": "Click the '去实名' button to start real - name authentication process"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 25,
+            "function_description": "This page displays the \"待出行\" (Upcoming Travel) category of flight and package orders, showing a message that there are no such orders currently, with options to check other order categories or view reasons for missing orders.",
+            "action_refs": [
+                [
+                    44,
+                    0
+                ]
+            ],
+            "data_in": [
+                "机票·套餐订单类别",
+                "全部订单数据"
+            ],
+            "data_out": [
+                "筛选后的机票·套餐订单数据"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 44,
+                "logic": "The user starts on the order category selection page. They click the '机票·套餐' (flight & package) order category button, which navigates to the '待出行' (upcoming travel) tab of the flight/package orders page. Here, a message shows no such orders exist, with options to check other categories or view reasons for missing orders.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            44,
+                            0
+                        ],
+                        "src_page_idx": 44,
+                        "dst_page_idx": 48,
+                        "action": "click",
+                        "summary": "Click '机票·套餐' order category button to navigate to '待出行' tab of flight/package orders"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 26,
+            "function_description": "This page enables users to query orders by entering a year, a contact phone number, and a verification code (after sending the code to the phone), allowing order lookup via mobile verification.",
+            "action_refs": [
+                [
+                    45,
+                    2
+                ]
+            ],
+            "data_in": [
+                "订单联系人手机号",
+                "验证码发送请求"
+            ],
+            "data_out": [
+                "验证码发送指令"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 45,
+                "logic": "The user starts on the mobile order query page. They click the '发送验证码' (send verification code) button, likely to initiate the process of sending a code to the entered phone number for order lookup. This action is part of the flow to verify the phone and retrieve orders.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            45,
+                            2
+                        ],
+                        "src_page_idx": 45,
+                        "dst_page_idx": 45,
+                        "action": "click",
+                        "summary": "Click the '发送验证码' button to send a verification code to the entered phone number."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 27,
+            "function_description": "This page enables users to query orders by entering a year, a contact phone number, and a verification code (after sending the code to the phone), with the \"发送验证码\" button used to send the verification code to the entered mobile number for authentication before order query.",
+            "action_refs": [
+                [
+                    45,
+                    3
+                ]
+            ],
+            "data_in": [
+                "order query form (year, phone number, verification code)"
+            ],
+            "data_out": [
+                "order query result"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 45,
+                "logic": "The user starts on the '手机查单' (Mobile Order Query) page. The core action is clicking the '查询订单' (Query Order) button, which likely triggers the order query process after ensuring the year, phone number, and verification code (after sending) are provided. The flow is a single step to initiate the query.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            45,
+                            3
+                        ],
+                        "src_page_idx": 45,
+                        "dst_page_idx": 45,
+                        "action": "click",
+                        "summary": "Click the '查询订单' button to initiate order query"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 28,
+            "function_description": "This page displays flight package orders that are in the \"to be issued\" status, allowing users to view and manage such orders, with a current indication of no existing orders in this category.",
+            "action_refs": [
+                [
+                    48,
+                    0
+                ]
+            ],
+            "data_in": [
+                "order list",
+                "待出票 order status filter"
+            ],
+            "data_out": [
+                "filtered order list (待出票)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 48,
+                "logic": "The user starts on the order page and clicks the '待出票' (to be issued) order status tab. After this action, the page updates to show the list of orders with this status, and in this case, it indicates that there are no such orders currently.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            48,
+                            0
+                        ],
+                        "src_page_idx": 48,
+                        "dst_page_idx": 48,
+                        "action": "click",
+                        "summary": "Click the '待出票' order status tab to view orders in this category."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 29,
+            "function_description": "This page displays a system error message with a \"Retry\" button, likely intended to load search results for hotels or travel destinations (e.g., related to \"California\") but failed to do so, prompting the user to retry the operation.",
+            "action_refs": [
+                [
+                    16,
+                    0
+                ]
+            ],
+            "data_in": [
+                "搜索关键词“加州”",
+                "搜索请求"
+            ],
+            "data_out": [
+                "搜索结果（系统错误反馈）"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 16,
+                "logic": "The user initiates a search for 'California' by clicking the search button. This action leads to a system error page. The core logic involves the initial search attempt and the resulting error state, with the option to retry the search (though the retry action is not included in the provided steps here).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            16,
+                            0
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click the button to search for '加州' (California)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 30,
+            "function_description": "This page displays a system error message with a \"Retry\" button, likely intended to search for hotels or travel destinations (e.g., \"California\") but encountered a system error, prompting the user to retry the operation.",
+            "action_refs": [
+                [
+                    16,
+                    1
+                ]
+            ],
+            "data_in": [
+                "北京环球度假区标签",
+                "搜索相关数据"
+            ],
+            "data_out": [
+                "搜索结果（系统错误状态）"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 16,
+                "logic": "The flow starts on page 16 (a search interface with '加州' entered). A click action on the '北京环球度假区' tag (from page 16 to 12) leads to a page showing a system error with a 'Retry' button. The core logic involves initiating an action (clicking the tag) that results in a system error, prompting a retry option (though the retry action isn't in the provided steps here).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            16,
+                            1
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click the '北京环球度假区' tag on page 16"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 31,
+            "function_description": "This page displays a system error message with a \"Retry\" button, likely intended for searching hotels or destinations with date filtering, but currently unable to load results due to a system error.",
+            "action_refs": [
+                [
+                    16,
+                    2
+                ]
+            ],
+            "data_in": [
+                "search input",
+                "search interface state"
+            ],
+            "data_out": [
+                "search interface closed (or reset)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user encounters a system error page while attempting to search for hotels or destinations with date filtering. The page displays a 'Retry' button. The user can choose to click the 'Retry' button to attempt reloading the results, or potentially navigate back (though the provided action is a 'Cancel' button click, which may relate to exiting the search context).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            16,
+                            2
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click the 'Cancel' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 32,
+            "function_description": "This page allows users to filter hotels by star rating and price range within a map - based hotel search interface, with options to clear filters or view filtered results (though there is a system error currently).",
+            "action_refs": [
+                [
+                    17,
+                    1
+                ],
+                [
+                    19,
+                    0
+                ],
+                [
+                    19,
+                    1
+                ]
+            ],
+            "data_in": [
+                "钻级价格筛选设置",
+                "筛选条件",
+                "酒店搜索参数",
+                "筛选条件设置"
+            ],
+            "data_out": [
+                "钻级价格筛选面板展开",
+                "筛选结果（酒店列表）",
+                "筛选条件设置（已清空）"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 17,
+                "logic": "The flow starts by clicking the star-rating and price filter button (from page 17 to 19). At the filter page (page 19), there is a branch: either click the 'clear filters' button (staying on page 19) or click the 'view filtered results' button (returning to page 17).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            17,
+                            1
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click the star-rating and price filter button to open the filter interface."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            19,
+                            0
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click the 'view filtered results' button to return to the map page with filters applied."
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            19,
+                            1
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click the 'clear filters' button to reset filter settings (staying on the filter page)."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2",
+                                "condition": "User chooses to view filtered results"
+                            },
+                            {
+                                "next_step": "S3",
+                                "condition": "User chooses to clear filter conditions"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 33,
+            "function_description": "The page functions as an order filtering interface, allowing users to select different categories of travel products (e.g., flights, hotels, train tickets) and membership-related services to view or manage corresponding orders.",
+            "action_refs": [
+                [
+                    43,
+                    1
+                ]
+            ],
+            "data_in": [
+                "全部订单 dropdown"
+            ],
+            "data_out": [
+                "全部订单 dropdown expanded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 43,
+                "logic": "The user starts on page 43 and clicks the '全部订单' dropdown (action S1). This action opens a menu (on page 44) with categories for travel products (e.g., flights, hotels) and membership services, allowing the user to filter orders by selecting a specific category.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            43,
+                            1
+                        ],
+                        "src_page_idx": 43,
+                        "dst_page_idx": 44,
+                        "action": "click",
+                        "summary": "Click the '全部订单' dropdown to open the order category menu."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 34,
+            "function_description": "The page enables users to query orders by entering the order contact's mobile number, verifying it with a code, selecting a year, and then submitting the information to retrieve the relevant orders.",
+            "action_refs": [
+                [
+                    43,
+                    2
+                ]
+            ],
+            "data_in": [
+                "order list page",
+                "mobile check order feature entry"
+            ],
+            "data_out": [
+                "mobile check order page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 43,
+                "logic": "The process starts by clicking the '手机查单' button on page 43, which navigates to the '手机查单' page (page 45). On this page, the user will then enter the order contact's mobile number, verify it with a code, select a year, and submit to retrieve orders, though the latter steps are implied by the functional point description and the initial navigation step here.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            43,
+                            2
+                        ],
+                        "src_page_idx": 43,
+                        "dst_page_idx": 45,
+                        "action": "click",
+                        "summary": "Click '手机查单' button to navigate to the order query page by mobile"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 35,
+            "function_description": "Displays a \"Reason Explanation\" popup with details on order visibility (e.g., app vs. mini - program orders, account - switching, order - search, and train - ticket order time limits) and provides \"Switch Account\" and \"Search Order\" action buttons.",
+            "action_refs": [
+                [
+                    43,
+                    4
+                ],
+                [
+                    47,
+                    0
+                ]
+            ],
+            "data_in": [
+                "order list page",
+                "reason explanation trigger",
+                "原因说明弹窗"
+            ],
+            "data_out": [
+                "reason explanation content",
+                "关闭后的订单页面视图"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 43,
+                "logic": "The flow starts on page 43. First, the user clicks the '查看原因' link (action from [43,4]) to open the 'Reason Explanation' popup on page 47. Then, the user can choose to close the popup by clicking the close button (action from [47,0]), which ends the flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            43,
+                            4
+                        ],
+                        "src_page_idx": 43,
+                        "dst_page_idx": 47,
+                        "action": "click",
+                        "summary": "Click '查看原因' link to open the reason explanation popup"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            47,
+                            0
+                        ],
+                        "src_page_idx": 47,
+                        "dst_page_idx": 51,
+                        "action": "click",
+                        "summary": "Click to close the reason explanation popup"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 36,
+            "function_description": "This page allows users to view and manage their personal information (avatar, nickname, phone, email, real - name authentication) and also provides the function to export personal information.",
+            "action_refs": [
+                [
+                    53,
+                    0
+                ]
+            ],
+            "data_in": [
+                "avatar setting",
+                "user profile"
+            ],
+            "data_out": [
+                "updated avatar setting"
+            ],
+            "data_dependencies": [
+                23
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 53,
+                "logic": "The flow starts on the personal information page (page 53). The user clicks the avatar image, which triggers a transition to another page (page 40) likely for avatar modification or viewing. This is the initial step in managing personal information, with the avatar action initiating a sub - flow for avatar - related operations.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            53,
+                            0
+                        ],
+                        "src_page_idx": 53,
+                        "dst_page_idx": 40,
+                        "action": "click",
+                        "summary": "Click the avatar image to trigger a transition, likely for avatar management"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 37,
+            "function_description": "This page provides an explanation of the diamond rating system for overseas hotels, likely to help users understand how hotel quality is categorized.",
+            "action_refs": [
+                [
+                    19,
+                    2
+                ],
+                [
+                    20,
+                    0
+                ],
+                [
+                    20,
+                    1
+                ]
+            ],
+            "data_in": [
+                "钻级说明链接",
+                "hotel diamond level explanation data"
+            ],
+            "data_out": [
+                "海外酒店钻级说明页面内容"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 19,
+                "logic": "The user starts on page 19 and clicks the '钻级说明' (diamond level explanation) link to navigate to page 20 (the explanation page). On page 20, the user can either click the back arrow to return, or use the search bar to input a diamond level (e.g., '五星级酒店') to search for related information. These are two mutually exclusive options after reaching the explanation page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            19,
+                            2
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 20,
+                        "action": "click",
+                        "summary": "Click the '钻级说明' link to open the diamond level explanation page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            20,
+                            0
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the back arrow to return"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            20,
+                            1
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": null,
+                        "action": "input",
+                        "summary": "Input a diamond level (e.g., '五星级酒店') in the search bar"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 38,
+            "function_description": "The page functions as a confirmation dialog to ask the user whether to proceed with switching accounts, which will log out the currently used account, with options to cancel or continue the switch.",
+            "action_refs": [
+                [
+                    47,
+                    1
+                ]
+            ],
+            "data_in": [
+                "账号切换设置"
+            ],
+            "data_out": [
+                "账号切换确认请求"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 47,
+                "logic": "The process starts with clicking the '切换账号' (Switch Account) button. This action triggers a confirmation dialog asking whether to proceed with switching accounts (which will log out the current account). At this dialog, the user can choose to either cancel the switch or continue with the account switch.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            47,
+                            1
+                        ],
+                        "src_page_idx": 47,
+                        "dst_page_idx": 52,
+                        "action": "click",
+                        "summary": "Click the '切换账号' (Switch Account) button to trigger the account switch confirmation dialog."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 39,
+            "function_description": "The current page is a pop - up window for order inquiry reason explanation and operation. It provides explanations for order - related issues (such as order viewing in mini - programs, account switching for order viewing, order display time limits) and offers operation buttons like \"Switch Account\" and \"Search Order\" to help users solve order - related problems.",
+            "action_refs": [
+                [
+                    47,
+                    2
+                ]
+            ],
+            "data_in": [
+                "order search function",
+                "order data"
+            ],
+            "data_out": [
+                "search result (order)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 47,
+                "logic": "The user starts on the order inquiry explanation popup page. They can choose to click the 'Search Order' button to proceed with searching for orders. There are no branches or loops as only one action is available here.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            47,
+                            2
+                        ],
+                        "src_page_idx": 47,
+                        "dst_page_idx": 47,
+                        "action": "click",
+                        "summary": "Click the 'Search Order' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 40,
+            "function_description": "取消切换账号按钮",
+            "action_refs": [
+                [
+                    52,
+                    0
+                ]
+            ],
+            "data_in": [
+                "切换账号提醒对话框",
+                "账号切换操作（取消）"
+            ],
+            "data_out": [
+                "取消切换账号的状态",
+                "关闭下线当前账号提醒对话框"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 52,
+                "logic": "The process starts on page 52 where a dialog about switching accounts (with a logout warning) is displayed. The user clicks the '取消' (Cancel) button in this dialog to abort the account - switching process. There are no branches or loops as this is a single - step action to cancel the account switch.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            52,
+                            0
+                        ],
+                        "src_page_idx": 52,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '取消' button in the account - switching confirmation dialog to cancel the account - switching operation."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 41,
+            "function_description": "继续切换账号按钮",
+            "action_refs": [
+                [
+                    52,
+                    1
+                ]
+            ],
+            "data_in": [
+                "account switching operation",
+                "current account session"
+            ],
+            "data_out": [
+                "current account logged out",
+                "account switching initiated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 52,
+                "logic": "When the '下线当前账号提醒' dialog appears, the user clicks the '继续切换' (Continue Switching) button to proceed with switching accounts, which will log out the currently used account.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            52,
+                            1
+                        ],
+                        "src_page_idx": 52,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '继续切换' button in the account switching confirmation dialog."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        }
+    ]
+}

@@ -1,0 +1,1454 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "News app home: featured stories, navigation tabs",
+            "action_refs": [
+                [
+                    0,
+                    3
+                ]
+            ],
+            "data_in": [
+                "home page content"
+            ],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the app's home page (or navigates to it by clicking the 'Home' bottom tab). The home page displays featured stories and navigation tabs (Latest, Audio, Games, Search) at the bottom. There are no branching or looping actions here, as the main flow is viewing the home page content after accessing it.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the 'Home' bottom tab to navigate to (or stay on) the home page, which shows featured stories and navigation tabs."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 1,
+            "function_description": "The current page is the settings page of The Atlantic's news app, where users can manage their Atlantic - related content (like saved stories, audio queue), handle account - related actions (such as subscribing, creating an account, signing in, restoring purchases), and navigate back to the previous page.",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ],
+                [
+                    1,
+                    0
+                ]
+            ],
+            "data_in": [
+                "user profile icon"
+            ],
+            "data_out": [
+                "settings page access"
+            ],
+            "data_dependencies": [
+                8,
+                27
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the home page (page 0). First, the user clicks the user profile icon to navigate to the settings page (page 1). Then, the user can click the back navigation button to return to the home page (page 0). There are no branches or loops as the actions form a simple navigation sequence between two pages.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click user profile icon to go to settings page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            1,
+                            0
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click back button to return to home page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "The page allows users to subscribe to The Atlantic by selecting a monthly ($7.99) or annual ($79.99, 20% off) plan, start a free trial, sign in/restore purchase if already a subscriber, and reviews subscription terms.",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    2,
+                    0
+                ]
+            ],
+            "data_in": [
+                "featured story article",
+                "subscription page state"
+            ],
+            "data_out": [
+                "subscription page (loaded)",
+                "navigation back to settings page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on page 0, where a featured story article card is clicked (navigating to page 2). From page 2, the Cancel button is clicked, returning to page 1. There are no branches or loops as the actions form a linear sequence of navigation and cancellation.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click featured story article card to navigate to page 2"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            2,
+                            0
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click Cancel button to navigate back to page 1"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "The current page (home of the news app) displays featured news stories (like \"The Plan That Foretold Trump’s 2025\") with options to access additional actions for each story via a three - dot menu, and also provides navigation tabs (Home, Latest, Audio, Games, Search) for different sections of the app.",
+            "action_refs": [
+                [
+                    0,
+                    2
+                ]
+            ],
+            "data_in": [
+                "story options menu",
+                "story"
+            ],
+            "data_out": [
+                "story options menu opened"
+            ],
+            "data_dependencies": [
+                2,
+                16
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the home page of the news app. They can click the three - dot menu of a featured news story (like 'The Plan That Foretold Trump’s 2025') to access additional actions for that story. There are also navigation tabs (Home, Latest, Audio, Games, Search) for navigating to different sections of the app, but the main flow here is about interacting with the story's menu.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the three - dot menu of a featured news story to access additional actions for that story"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "The \"Latest\" page in the news app displays the most recent news articles, including headlines, images, summaries, and author information, allowing users to access and read up - to - date news content.",
+            "action_refs": [
+                [
+                    0,
+                    4
+                ]
+            ],
+            "data_in": [
+                "latest news feature entry"
+            ],
+            "data_out": [
+                "latest news page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the Home page (page 0). They click the 'Latest' bottom tab (action from [0,4]), which navigates to the Latest page (page 3). On the Latest page, recent news articles with headlines, images, summaries, and author info are displayed, allowing access to up - to - date news content.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click the 'Latest' bottom tab to navigate to the Latest news page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "The current page in the news app's Audio section (specifically the Narrated Articles tab) allows users to access and play narrated news articles, with options to browse different audio - related content categories like All Audio, Podcasts, etc., and provides details (such as title, summary, author, and playtime) for each narrated article.",
+            "action_refs": [
+                [
+                    0,
+                    5
+                ],
+                [
+                    4,
+                    0
+                ]
+            ],
+            "data_in": [
+                "audio feature entry",
+                "narrated articles category"
+            ],
+            "data_out": [
+                "audio page loaded"
+            ],
+            "data_dependencies": [
+                17,
+                18
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the Home page (page 0) and clicks the 'Audio' bottom tab to navigate to the Audio section (page 4). Then, on the Audio page, the user clicks the 'Narrated Articles' category tab (which stays on page 4) to access and view narrated news articles with their details.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the 'Audio' bottom tab to navigate to the Audio section."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            4,
+                            0
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the 'Narrated Articles' category tab to view narrated articles."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "The page provides a search bar to search content within \"The Atlantic\" and lists categories (Most Popular, Magazine, Narrated Articles, Politics, Culture, Technology, Planet, Ideas) for navigating to specific types of articles or content.",
+            "action_refs": [
+                [
+                    0,
+                    6
+                ],
+                [
+                    6,
+                    0
+                ]
+            ],
+            "data_in": [
+                "search feature entry",
+                "search input field",
+                "search query (potential)"
+            ],
+            "data_out": [
+                "search page loaded"
+            ],
+            "data_dependencies": [
+                19
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the home page. First, the user clicks the 'Search' bottom tab to navigate to the search page. Then, on the search page, the user inputs a query (e.g., 'climate change') into the search field. There are no branches or loops here as the actions are sequential and complete the search setup.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            6
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click the 'Search' bottom tab to go to the search page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            6,
+                            0
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 6,
+                        "action": "input",
+                        "summary": "Input 'climate change' into the search input field"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "The current page in The Atlantic app displays the user's saved stories (showing none currently) and provides instructions on how to save stories for later by tapping the bookmark icon on a story.",
+            "action_refs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    7,
+                    0
+                ]
+            ],
+            "data_in": [
+                "saved stories setting"
+            ],
+            "data_out": [
+                "saved stories page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts on the Settings page. First, the user clicks the 'Saved Stories' option to navigate to the Saved Stories page (which shows no saved stories and instructions). Then, the user can click the back button to return to the Settings page. There are no branches or loops as the flow is a simple navigation sequence with a return option.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            1
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click 'Saved Stories' to go to the Saved Stories page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            7,
+                            0
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click back button to return to Settings page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "The \"My Audio Queue\" page in The Atlantic app displays the user's queued stories for audio listening (currently empty) and provides instructions on how to queue stories for listening.",
+            "action_refs": [
+                [
+                    1,
+                    2
+                ],
+                [
+                    8,
+                    0
+                ]
+            ],
+            "data_in": [
+                "my audio queue setting",
+                "audio queue page",
+                "settings page"
+            ],
+            "data_out": [
+                "my audio queue page loaded",
+                "settings page (navigated back to)"
+            ],
+            "data_dependencies": [
+                27
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts on the Settings page. First, the user clicks the 'My Audio Queue' option to navigate to the My Audio Queue page (which shows an empty queue and instructions). Then, the user can click the 'Back to Settings page' button to return to the Settings page. There are no branches or loops as the actions are sequential navigation steps.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            2
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click 'My Audio Queue' to go to its page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            8,
+                            0
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click 'Back to Settings page' to return to Settings"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "The page allows users to subscribe to The Atlantic app by selecting a monthly or yearly plan, starting a free trial, or signing in/ restoring purchase if already a subscriber, with details on subscription terms and conditions.",
+            "action_refs": [
+                [
+                    1,
+                    3
+                ]
+            ],
+            "data_in": [
+                "subscription option"
+            ],
+            "data_out": [
+                "subscription page loaded"
+            ],
+            "data_dependencies": [
+                2,
+                13,
+                26
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts on the settings page. The user clicks the 'Subscribe' button, which navigates to the subscription page where they can choose a monthly/yearly plan, start a free trial, or sign in/restore purchase (though the latter actions are not detailed in the provided step here).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            3
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click the 'Subscribe' button on the settings page to navigate to the subscription page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "The page allows users to create a new account for The Atlantic app by entering an email address, a password (with a minimum length requirement), optionally opting in for updates, and proceeding to the next step, with options for existing subscribers to sign in or restore purchases.",
+            "action_refs": [
+                [
+                    1,
+                    4
+                ],
+                [
+                    9,
+                    0
+                ],
+                [
+                    9,
+                    1
+                ],
+                [
+                    9,
+                    3
+                ]
+            ],
+            "data_in": [
+                "create account option",
+                "account creation form",
+                "email address input field",
+                "password input",
+                "account creation form data"
+            ],
+            "data_out": [
+                "create account page",
+                "entered email address",
+                "updated password input"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts by clicking the 'Create Account' option (from page 1 to 9). Then, the user inputs an email address (on page 9) and a password (on page 9). Finally, the user clicks the 'Next' button (on page 9) to proceed, with the option to opt in for updates and existing users able to sign in or restore purchases.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            4
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click 'Create Account' to navigate to account creation page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            9,
+                            0
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 19,
+                        "action": "input",
+                        "summary": "Input email address in the email field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            9,
+                            1
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 20,
+                        "action": "input",
+                        "summary": "Input password in the password field"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            9,
+                            3
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click 'Next' button to proceed"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "The page enables users to sign in to their Atlantic app account by entering their email and password, or via alternative methods like email link, Google/Facebook, or institutional sign - in for group subscriptions.",
+            "action_refs": [
+                [
+                    1,
+                    5
+                ],
+                [
+                    10,
+                    0
+                ],
+                [
+                    10,
+                    1
+                ]
+            ],
+            "data_in": [
+                "sign in option",
+                "email address input",
+                "sign in session",
+                "password input",
+                "account sign-in credentials"
+            ],
+            "data_out": [
+                "sign in page loaded",
+                "filled email address input",
+                "entered password",
+                "updated sign-in form data"
+            ],
+            "data_dependencies": [
+                12,
+                15,
+                21,
+                22,
+                23,
+                24,
+                25
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user starts on page 1 and clicks the 'Sign In' option to navigate to the sign - in page (page 10). On the sign - in page, the user can either input their email address (action leading to page 14) or input their password (action leading to page 15). These input actions are part of the process to sign in using the email - password method, with alternative sign - in methods also available on the sign - in page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            5
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click on the Sign In option to go to the sign - in page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            10,
+                            0
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 14,
+                        "action": "input",
+                        "summary": "Input email address in the Email Address input field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            10,
+                            1
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 15,
+                        "action": "input",
+                        "summary": "Input password in the Password input field"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "The page (via the \"Restore Purchase\" action) attempts to restore a subscription for The Atlantic app but displays an error dialog indicating no active subscription is associated with the account, requiring user acknowledgment with \"OK\".",
+            "action_refs": [
+                [
+                    1,
+                    6
+                ],
+                [
+                    11,
+                    0
+                ]
+            ],
+            "data_in": [
+                "restore purchase setting",
+                "account subscription data",
+                "restore failed notification"
+            ],
+            "data_out": [
+                "restore purchase result (failure)",
+                "dismissed restore failed notification"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user starts on the settings page and clicks the 'Restore Purchase' option. This triggers a check, and an error dialog (Restore Failed) appears, indicating no active subscription. The user then clicks the 'OK' button to acknowledge the error and dismiss the dialog.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            6
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click 'Restore Purchase' option"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            11,
+                            0
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 22,
+                        "action": "click",
+                        "summary": "Click 'OK' button in Restore Failed popup"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "$7.99 Per Month plan",
+            "action_refs": [
+                [
+                    2,
+                    1
+                ]
+            ],
+            "data_in": [
+                "subscription plan selection"
+            ],
+            "data_out": [
+                "$7.99 per month subscription plan selected"
+            ],
+            "data_dependencies": [
+                14,
+                26
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The flow starts on page 2 (subscription selection). The user clicks on the '$7.99 Per Month' plan option, which navigates to page 12. This is a single-step flow with no branches or loops, focusing on selecting the monthly subscription plan.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            1
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click on the $7.99 Per Month plan option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "This page facilitates the process of starting a free trial for The Atlantic subscription via Google Play, displaying subscription details (free trial period, annual cost, terms) and prompting to update an expired payment card to proceed with the trial.",
+            "action_refs": [
+                [
+                    2,
+                    2
+                ]
+            ],
+            "data_in": [
+                "free trial subscription option",
+                "selected subscription plan"
+            ],
+            "data_out": [
+                "initiated free trial subscription process",
+                "Google Play subscription prompt"
+            ],
+            "data_dependencies": [
+                26
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The flow starts on the subscription page (page 2) where the annual plan is selected. The user clicks the 'Start Free Trial' button, which leads to the Google Play subscription confirmation page (page 13). Here, subscription details (free trial, annual cost, terms) are shown, and an expired payment card is displayed, prompting the user to update it to proceed with the trial.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            2
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click 'Start Free Trial' button on the subscription page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "The page enables users to sign in to their Atlantic account by entering their email and password, or via alternative methods like email link, Google/Facebook, or institutional sign - in for group subscriptions.",
+            "action_refs": [
+                [
+                    2,
+                    3
+                ]
+            ],
+            "data_in": [
+                "user account credentials"
+            ],
+            "data_out": [
+                "login session"
+            ],
+            "data_dependencies": [
+                21,
+                25
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The flow starts on the subscription page (page 2). The user clicks the 'Sign In' link, which navigates to the sign - in page (page 10). On the sign - in page, the user can choose to sign in via email/password, or use alternative methods like email link, Google/Facebook, or institutional sign - in for group subscriptions.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            3
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click the 'Sign In' link on the subscription page to navigate to the sign - in page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "The page allows users to subscribe to The Atlantic by selecting a monthly or yearly plan, starting a free trial, or signing in/ restoring purchase if already a subscriber, while also presenting subscription terms and conditions.",
+            "action_refs": [
+                [
+                    3,
+                    0
+                ]
+            ],
+            "data_in": [
+                "volcanic activity news article"
+            ],
+            "data_out": [
+                "subscription page (free trial offer)"
+            ],
+            "data_dependencies": [
+                26
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The user starts on page 3 (a news feed) and clicks a news article card (Volcanic Activity), which navigates to page 2 (the subscription page). On page 2, the user can choose a monthly/yearly plan, start a free trial, sign in/restore purchase, or view terms. The flow here is a single navigation step from the news page to the subscription page, with no branches in this initial action set.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            0
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click the 'Photos: The Year in Volcanic Activity' news article card to navigate to the subscription page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "This page facilitates user subscription or sign - in for audio content access, presenting options to continue, sign in, restore purchase, and displaying terms & conditions related to the subscription (including payment, auto - renewal, and free - trial details).",
+            "action_refs": [
+                [
+                    4,
+                    1
+                ]
+            ],
+            "data_in": [
+                "narrated article audio"
+            ],
+            "data_out": [
+                "narrated article audio playback started"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user starts on the audio content page (page 4). They click the audio play button, which leads to a subscription/sign-in page (page 23). On this page, the user can choose to continue, sign in, restore purchase, or review the terms & conditions related to the subscription (including payment, auto-renewal, and free-trial details).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            1
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 23,
+                        "action": "click",
+                        "summary": "Click the audio play button to proceed to the subscription/sign-in page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "The current page, under the \"Narrated Articles\" tab in the audio section of the news app, displays and allows users to access (e.g., play) narrated news articles, with each article showing a title, summary, author, and a play button with a duration indicator.",
+            "action_refs": [
+                [
+                    4,
+                    2
+                ]
+            ],
+            "data_in": [
+                "article options menu"
+            ],
+            "data_out": [
+                "article options menu opened"
+            ],
+            "data_dependencies": [
+                17
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user starts on the 'Narrated Articles' tab of the Audio page. They click the article options menu button (three dots) for a narrated article, which likely opens a menu with additional options for that article.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            2
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the article options menu button (three dots) for a narrated article"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "The page enables users to search for articles within \"The Atlantic\" and browse articles by categories such as Most Popular, Magazine, Narrated Articles, Politics, Culture, Technology, Planet, and Ideas.",
+            "action_refs": [
+                [
+                    6,
+                    1
+                ]
+            ],
+            "data_in": [
+                "Most Popular category"
+            ],
+            "data_out": [
+                "Most Popular articles list"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on the Search page (page 6). The core logic involves interacting with article category buttons. The first step is clicking the 'Most Popular' category button, which likely leads to browsing articles in that category (or stays on the same page for further interaction, though the flow here is a single step of selecting this category).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            1
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click the 'Most Popular' category button to browse articles in that category (or prepare for further interaction)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "Update preferences toggle switch",
+            "action_refs": [
+                [
+                    9,
+                    2
+                ]
+            ],
+            "data_in": [
+                "updates preference setting"
+            ],
+            "data_out": [
+                "updates preference setting (enabled)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The process starts on page 9 (account creation). The user clicks the toggle switch for update preferences, which changes its state (on/off) and navigates to page 21. There are no branches or loops as it’s a single action to update the toggle.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            2
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 21,
+                        "action": "click",
+                        "summary": "Click the update preferences toggle switch"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "This page enables users to sign in to their Atlantic account by entering their email and password, or via alternative methods like email link, Google/Facebook, or institutional sign - in for group subscriptions.",
+            "action_refs": [
+                [
+                    10,
+                    2
+                ]
+            ],
+            "data_in": [
+                "login session",
+                "email address",
+                "password"
+            ],
+            "data_out": [
+                "login session (authenticated)"
+            ],
+            "data_dependencies": [
+                15,
+                22,
+                23,
+                25
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The flow starts on the sign - in page (page 10). The user can click the 'Sign In' button. After clicking this button, the flow remains on the same page (page 10), likely for further input or to present alternative sign - in options.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            2
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click the 'Sign In' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "This page enables users to sign in to their Atlantic account by entering their email address to receive a password - less sign - in link.",
+            "action_refs": [
+                [
+                    10,
+                    3
+                ],
+                [
+                    16,
+                    0
+                ],
+                [
+                    16,
+                    1
+                ]
+            ],
+            "data_in": [
+                "login session",
+                "email link sign-in option",
+                "email address",
+                "sign in session"
+            ],
+            "data_out": [
+                "email link sign-in flow initiated",
+                "entered email address",
+                "sign in session (updated)"
+            ],
+            "data_dependencies": [
+                25
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The user starts on page 10 and clicks the 'Email link' sign-in option to navigate to page 16. On page 16, the user inputs their email address into the email field. Then, the user clicks the 'Next' button to proceed (though the final destination isn't fully specified here, the core flow is selecting email link, entering email, and clicking Next).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            3
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click 'Email link' sign-in option to go to email input page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            16,
+                            0
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 18,
+                        "action": "input",
+                        "summary": "Input email address into the email field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            16,
+                            1
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click 'Next' button for email sign-in"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "This page enables users to sign in to their Atlantic account by entering their email address to receive a password - less sign - in link.",
+            "action_refs": [
+                [
+                    10,
+                    4
+                ]
+            ],
+            "data_in": [
+                "login session",
+                "Google/Facebook sign-in option"
+            ],
+            "data_out": [
+                "login session (initiated via Google/Facebook)"
+            ],
+            "data_dependencies": [
+                25
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The user starts on the sign-in page (page 10). They click the 'Google or Facebook' sign-in option, which navigates to page 16. This action is part of the alternative sign-in methods provided on the initial sign-in page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            4
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click Google/Facebook sign-in option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "This page enables users to sign in to their Atlantic account by entering their email and password, or to use alternative sign - in methods like email link, Google/Facebook, or institutional sign - in for group subscriptions.",
+            "action_refs": [
+                [
+                    10,
+                    5
+                ]
+            ],
+            "data_in": [
+                "institution sign-in option"
+            ],
+            "data_out": [
+                "institution sign-in page loaded"
+            ],
+            "data_dependencies": [
+                25
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The user starts on the sign-in page (page 10). They can choose to click the institution sign-in option, which is part of the alternative sign-in methods for group subscriptions. This action keeps them on the same page (page 10) to proceed with institutional sign-in.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            5
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click the institution sign-in option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 25,
+            "function_description": "This page (an email composition screen) allows the user to send a help request email to The Atlantic's support team (at support@theatlantic.com) regarding issues with signing in to their Atlantic account, with the email subject/body pre - filled as \"I need help signing in\" and the user's email set as the sender.",
+            "action_refs": [
+                [
+                    10,
+                    6
+                ]
+            ],
+            "data_in": [
+                "sign in help request",
+                "user email account"
+            ],
+            "data_out": [
+                "support email draft"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The user starts on the sign - in page (page 10). They click the 'Help' link at the top right. This action navigates them to the email composition page (page 17), where the email is pre - filled with the recipient (support@theatlantic.com), subject ('I need help signing in'), and the user's email as the sender, ready to be sent.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            6
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click the 'Help' link at the top right of the sign - in page to navigate to the email composition page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 26,
+            "function_description": "This page enables users to subscribe to \"The Atlantic\" by selecting a monthly ($7.99) or annual ($79.99, 20% savings) plan, start a free trial, or sign in/restore purchase if already a subscriber, with details on billing and auto - renewal.",
+            "action_refs": [
+                [
+                    23,
+                    0
+                ]
+            ],
+            "data_in": [
+                "subscription process"
+            ],
+            "data_out": [
+                "subscription plan selection page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 23,
+                "logic": "The flow starts on page 23. The user clicks the 'Continue with subscription button', which navigates to page 2. On page 2, the user can choose to start a free trial (after selecting a monthly/annual plan), sign in/restore purchase if already a subscriber, with billing and auto - renewal details provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            23,
+                            0
+                        ],
+                        "src_page_idx": 23,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click 'Continue with subscription button' to navigate to the subscription plan selection page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 27,
+            "function_description": "The page allows users to browse and access audio - based content (including narrated articles, podcasts, etc.), with the ability to play audio versions of articles (like the 9 - minute - duration audio of the article \"Why the Supreme Court Is Giving ICE So Much Power\") and also provides options related to subscription/account access for such audio content.",
+            "action_refs": [
+                [
+                    23,
+                    1
+                ]
+            ],
+            "data_in": [
+                "subscription page session"
+            ],
+            "data_out": [
+                "audio page navigation state"
+            ],
+            "data_dependencies": [
+                26
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 23,
+                "logic": "The flow starts on page 23. The user clicks the 'Cancel navigation button', which navigates to page 4. This action likely exits a subscription/account - related screen and returns to the audio content browsing page (page 4) where audio - based content like narrated articles can be accessed.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            23,
+                            1
+                        ],
+                        "src_page_idx": 23,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the Cancel navigation button to navigate from page 23 to page 4."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 28,
+            "function_description": "This page enables users to sign in to their Atlantic account by entering email/password or using alternative methods (email link, Google/Facebook, institutional sign - in) to access subscribed audio content.",
+            "action_refs": [
+                [
+                    23,
+                    2
+                ]
+            ],
+            "data_in": [
+                "login session",
+                "user account credentials"
+            ],
+            "data_out": [
+                "login session (initiated)",
+                "user account access (pending)"
+            ],
+            "data_dependencies": [
+                15
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 23,
+                "logic": "The user starts on page 23 and clicks the 'Sign In' link. This action navigates to page 10, which is the 'Sign in to your account' page where users can enter email/password or use alternative sign-in methods (email link, Google/Facebook, institutional sign-in) to access subscribed audio content.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            23,
+                            2
+                        ],
+                        "src_page_idx": 23,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click 'Sign In' link to navigate to the sign-in page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        }
+    ]
+}

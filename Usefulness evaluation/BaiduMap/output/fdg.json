@@ -1,0 +1,3309 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "Map navigation & travel service interface",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ],
+                [
+                    0,
+                    4
+                ],
+                [
+                    0,
+                    11
+                ],
+                [
+                    1,
+                    0
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    3
+                ],
+                [
+                    1,
+                    5
+                ],
+                [
+                    12,
+                    0
+                ],
+                [
+                    16,
+                    0
+                ]
+            ],
+            "data_in": [
+                "location search query",
+                "map interface",
+                "map view",
+                "user location data",
+                "出行功能界面",
+                "search result page",
+                "map interface state",
+                "search input text",
+                "location search input",
+                "search query (北京大学)",
+                "search query",
+                "search results",
+                "map data",
+                "search results (location entries)"
+            ],
+            "data_out": [
+                "location search results",
+                "centered map view (updated)",
+                "出行功能界面（地图及相关信息更新）",
+                "map home page (navigation/initial state)",
+                "cleared search input text",
+                "updated location search results",
+                "extended search results",
+                "updated map view",
+                "zoomed map data"
+            ],
+            "data_dependencies": [
+                4,
+                6,
+                11,
+                12,
+                15,
+                21,
+                22,
+                37,
+                41,
+                42,
+                51
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the map page (page 0). First, they input a location (中国科学院软件研究所) in the search field (S1), leading to the search results page (page 1). Then, they can either click the back button to return to the map (S2→S3) or clear the input (S2→S4) to re-enter a new location (like 北京大学, S5). Alternatively, they can switch to the travel tab (S6) to access travel-related features, or zoom in on the map (S7). If re-entering a location, the input can be repeated (S8) on the new search page (page 16).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "input",
+                        "summary": "Input '中国科学院软件研究所' in the location search field"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            1,
+                            0
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the back button to return to the map page"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the location center button on the map page"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            1,
+                            1
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click the clear input button to empty the search field"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            1,
+                            3
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 16,
+                        "action": "input",
+                        "summary": "Input '北京大学' in the location search field"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            0,
+                            11
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click the '出行 (Travel)' tab to switch to travel services"
+                    },
+                    {
+                        "id": "S7",
+                        "action_ref": [
+                            12,
+                            0
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the map zoom-in button on the travel tab page"
+                    },
+                    {
+                        "id": "S8",
+                        "action_ref": [
+                            16,
+                            0
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 16,
+                        "action": "input",
+                        "summary": "Repeat input '北京大学' in the location search field (loop)"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S6"
+                    },
+                    {
+                        "from": "S6",
+                        "to": "S7"
+                    },
+                    {
+                        "from": "S5",
+                        "to": "S8"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S8",
+                        "type": "loop",
+                        "branches": [
+                            {
+                                "next_step": "S8"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 1,
+            "function_description": "The current page is a map - based travel service interface. It offers functions such as map display, location search, route planning, and various travel - related services (including driving, public transportation, taxi - hailing, hotel booking, etc.). It also provides information like weather, traffic restrictions, and nearby points of interest, aiming to assist users in travel - related decision - making and navigation.",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ]
+            ],
+            "data_in": [
+                "map layer setting"
+            ],
+            "data_out": [
+                "map layer setting updated"
+            ],
+            "data_dependencies": [
+                5
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the map - based travel service page. The core action is clicking the map layer button, and after this click, the user remains on the same page, likely to adjust the map layer settings for better travel - related information viewing.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the map layer button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "This page serves as a user - centered interface for map - related contributions and rewards. It enables users to carry out actions like reporting map - related issues (such as location and road problems), participating in merchant - related operations (like store entry), engaging in money - making tasks (such as taking photos and顺路赚钱), and managing/receiving rewards from tasks, so as to jointly build and improve map data while getting incentives.",
+            "action_refs": [
+                [
+                    0,
+                    2
+                ]
+            ],
+            "data_in": [
+                "feedback feature entry"
+            ],
+            "data_out": [
+                "feedback page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the main map page (page 0). They click the 'Feedback' button, which navigates to the map - related contribution and reward page (page 5). On this new page, users can perform various actions like reporting map issues, merchant - related operations, and money - making tasks, and also manage or receive rewards from these tasks.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click the 'Feedback' button on the main map page to enter the map - related contribution and reward page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "The current page (Message Center) functions as a hub to display, manage, and view various messages (e.g., from \"足迹君\", \"导航队长\", \"资讯广播\") related to travel, navigation, and informational updates, with options to navigate back or delete messages.",
+            "action_refs": [
+                [
+                    0,
+                    3
+                ],
+                [
+                    6,
+                    0
+                ]
+            ],
+            "data_in": [
+                "message feature entry",
+                "message center page state"
+            ],
+            "data_out": [
+                "message center page loaded",
+                "navigation back to previous map page state"
+            ],
+            "data_dependencies": [
+                16,
+                17
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the main page (page 0). First, the user clicks the 'Message' button to navigate to the Message Center (page 6). From the Message Center, the user can click the back arrow to return to the main page (page 0). There are no branches or loops as the actions form a simple navigation flow between two pages.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click 'Message' button to open Message Center"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            6,
+                            0
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click back arrow to return to previous page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "The current page, accessed via the route planning button from the map navigation and travel service interface, functions as a comprehensive walking - focused travel and fitness - related platform. It enables users to plan walking routes (by inputting start and end points), offers additional travel - related services such as public transportation, cycling, and ride - hailing options, and also provides fitness - related features like tracking walking/running activities (including recording mileage, duration, and frequency), managing historical movement records, and accessing special offers for transportation services.",
+            "action_refs": [
+                [
+                    0,
+                    5
+                ],
+                [
+                    7,
+                    0
+                ],
+                [
+                    7,
+                    2
+                ],
+                [
+                    65,
+                    0
+                ]
+            ],
+            "data_in": [
+                "route planning feature entry",
+                "终点输入框",
+                "位置信息",
+                "导航设置",
+                "destination (中关村地铁站)",
+                "starting point (我的位置)",
+                "search query (中关村地铁站)"
+            ],
+            "data_out": [
+                "route planning interface loaded",
+                "输入的终点信息",
+                "搜索结果（地点）",
+                "导航设置更新",
+                "navigation route (from 我的位置 to 中关村-A1口)",
+                "route details (distance, time, transportation options)"
+            ],
+            "data_dependencies": [
+                41,
+                42
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts by clicking the route planning button from the map interface (page 0) to enter the walking - focused travel and fitness platform (page 7). Then, they input the destination (e.g., Zhongguancun Subway Station) in the destination input box (page 7). After that, they can either click the search button (page 65) to get the walking route or click the navigation settings button (page 7) for related settings. The main flow is a sequence with a branch point after the destination input to choose between searching for the route or adjusting navigation settings.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click the route planning button to enter the walking - focused travel and fitness platform"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            7,
+                            0
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 65,
+                        "action": "input",
+                        "summary": "Input the destination (e.g., Zhongguancun Subway Station) in the destination input box"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            65,
+                            0
+                        ],
+                        "src_page_idx": 65,
+                        "dst_page_idx": 43,
+                        "action": "click",
+                        "summary": "Click the search button to get the walking route"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            7,
+                            2
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 67,
+                        "action": "click",
+                        "summary": "Click the navigation settings button for related navigation settings"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "The current page (reached via the route planning button from the map navigation/travel service interface) enables users to plan walking routes, access features like carbon - neutral planet, track records, real - time public transport, and discounted rides, view and manage walking - related exercise data (such as mileage, duration, and times), start running, set running routes, check historical trajectories and exercise records, and manage historical walking route records (including home and company - related route settings).",
+            "action_refs": [
+                [
+                    0,
+                    6
+                ]
+            ],
+            "data_in": [
+                "driving mode setting"
+            ],
+            "data_out": [
+                "driving mode setting enabled"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the map navigation page (page 0) and clicks the '路线' (route) button to enter the walking route planning page (page 7). On this page, various walking and exercise - related features are accessible, such as viewing低碳星球 (low - carbon planet), 记录轨迹 (track records), and managing exercise data and historical records.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            6
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click the '路线' (route) button on the map navigation page to enter the walking - related function page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "The current page (public transit mode) of the map navigation & travel service app enables users to plan public transit routes, view real - time bus information (including nearby bus routes' arrival times and destinations), access a subway map, and manage travel - related features like historical records and quick access to home/company routes.",
+            "action_refs": [
+                [
+                    0,
+                    7
+                ],
+                [
+                    8,
+                    0
+                ]
+            ],
+            "data_in": [
+                "map interface",
+                "public transit mode option",
+                "route planning task",
+                "destination input"
+            ],
+            "data_out": [
+                "public transit - focused map interface",
+                "public transit related data (bus schedules, subway map)",
+                "destination input (updated)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the main map page (page 0) and clicks the public transit mode button to switch to the public transit page (page 8). Then, on the public transit page, the user inputs a destination (e.g., 中关村地铁站) into the destination field. This flow is a straight line with no branches or loops as only two actions are provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            7
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click public transit mode button to switch to public transit page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            8,
+                            0
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": null,
+                        "action": "input",
+                        "summary": "Input destination (中关村地铁站) into destination field"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "This page provides a centralized interface for users to access various transportation and travel - related functions, including managing frequently used functions, viewing recently used functions, and selecting from a wide range of common travel - related options such as different travel modes, hotel booking, and map - related services.",
+            "action_refs": [
+                [
+                    0,
+                    8
+                ],
+                [
+                    9,
+                    0
+                ]
+            ],
+            "data_in": [
+                "transport options menu",
+                "function search input field"
+            ],
+            "data_out": [
+                "expanded transport options list"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the main travel - related page (page 0). First, the user clicks the 'More transport options' button (action from [0,8]) to navigate to a new page (page 9). Then, on page 9, the user inputs '打车' in the function search input field (action from [9,0]). There are no branch or loop points as the flow is a simple sequence of two actions.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            8
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click the 'More transport options' button to go to the page with more transport - related functions"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            9,
+                            0
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": null,
+                        "action": "input",
+                        "summary": "Input '打车' in the function search input field"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "This page functions as a location - related input and selection interface, enabling users to input a company's name or address, or to select a location from the map, from saved (collected) locations, or use their current location for subsequent operations such as navigation or location - based services.",
+            "action_refs": [
+                [
+                    0,
+                    9
+                ],
+                [
+                    10,
+                    0
+                ],
+                [
+                    10,
+                    3
+                ]
+            ],
+            "data_in": [
+                "home shortcut setting",
+                "address input field",
+                "address search interface state"
+            ],
+            "data_out": [
+                "home shortcut navigation result",
+                "entered home address",
+                "previous page state restored"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on page 0 and clicks the Home shortcut button to navigate to page 10. On page 10, the user can either input a home address or click the Back button. If the user inputs the address, they proceed with that input; if they click Back, they return to the previous page (page 0).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            9
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click Home shortcut button to go to page 10"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            10,
+                            0
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": null,
+                        "action": "input",
+                        "summary": "Input home address on page 10"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            10,
+                            3
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click Back button on page 10"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "This page functions as a location search interface, allowing users to input a company name or address, select a location from the map, access saved locations, or use their current location for navigation or travel - related services.",
+            "action_refs": [
+                [
+                    0,
+                    10
+                ]
+            ],
+            "data_in": [
+                "company address setting"
+            ],
+            "data_out": [
+                "company address input interface opened"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on page 0. The user clicks the 'Company shortcut button' (action_ref [0,10]), which navigates to page 10. On page 10, the interface allows inputting a company name/address, selecting a map location, accessing saved locations, or using the current location for travel - related services. The core logic is initiated by the click on the company shortcut button to enter the location - related operation interface.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            10
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click the Company shortcut button to navigate to the location - related operation page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "The \"My\" page provides user - centered functionality, including displaying personal information (such as account, level, and travel - related statistics), offering access to features like collection, historical trips, voice packs, and wallet - related services, presenting promotional activities (like card - opening discounts and money - earning tasks), and enabling participation in popular activities, to manage personal - related content and services of the navigation and travel application.",
+            "action_refs": [
+                [
+                    0,
+                    12
+                ]
+            ],
+            "data_in": [
+                "user profile page entry (我的 tab)"
+            ],
+            "data_out": [
+                "user profile page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The core logic starts with clicking the '我的 (My)' tab on the main page (page 0). This action navigates to the 'My' page (page 13), where personal information, feature access (like collection, historical trips), promotional activities, and popular activities are displayed for managing personal - related content and services of the navigation and travel application.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            12
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click the '我的 (My)' tab to navigate to the 'My' page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "The current page provides detailed information about \"中国科学院软件研究所(中关村南四街)\", including its location on the map, ratings, reviews, images, and options for navigation, calling, sharing, and exploring nearby services like hotel booking.",
+            "action_refs": [
+                [
+                    1,
+                    2
+                ]
+            ],
+            "data_in": [
+                "search query",
+                "location search result list"
+            ],
+            "data_out": [
+                "location detail page",
+                "location details"
+            ],
+            "data_dependencies": [
+                12,
+                28,
+                29,
+                30,
+                31,
+                32,
+                33,
+                34,
+                35,
+                36
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The process starts on page 1. The user clicks the search button, which navigates to page 15. On page 15, the detailed information about '中国科学院软件研究所(中关村南四街)' is displayed, including its map location, ratings, reviews, images, and options for navigation, calling, sharing, and exploring nearby hotel booking services.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            2
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click the search button to navigate to the detailed information page of '中国科学院软件研究所(中关村南四街)'"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "This page provides detailed information about \"中国科学院软件研究所(中关村南四街)\", including its location on the map, user reviews, photos, and options for navigation, calling, booking nearby hotels, and exploring related services.",
+            "action_refs": [
+                [
+                    1,
+                    4
+                ]
+            ],
+            "data_in": [
+                "search query (中国科学院软件研究所)",
+                "search result item (中国科学院软件研究所)"
+            ],
+            "data_out": [
+                "location details (中国科学院软件研究所)",
+                "map view (中国科学院软件研究所 location)",
+                "location-related actions (navigation, call, comment, etc.)"
+            ],
+            "data_dependencies": [
+                28,
+                29,
+                30,
+                31,
+                32,
+                33,
+                34,
+                35,
+                36
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts on page 1, where the user clicks the search result for '中国科学院软件研究所(中关村南四街)'. This action navigates to page 15, which displays detailed information about the location, including its map position, user reviews, photos, and options for navigation, calling, and booking nearby hotels. No branches or loops are present as it is a single-step navigation to the details page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            4
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click the search result for '中国科学院软件研究所(中关村南四街)' to view its detailed information page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "This page enables users to add a new location by filling in required information such as the location name, uploading a facade photo, confirming the location on a map, selecting the industry type, and then submitting the form.",
+            "action_refs": [
+                [
+                    5,
+                    0
+                ],
+                [
+                    42,
+                    0
+                ],
+                [
+                    42,
+                    1
+                ],
+                [
+                    42,
+                    4
+                ],
+                [
+                    45,
+                    0
+                ],
+                [
+                    45,
+                    1
+                ],
+                [
+                    45,
+                    2
+                ],
+                [
+                    39,
+                    0
+                ],
+                [
+                    39,
+                    1
+                ],
+                [
+                    39,
+                    2
+                ],
+                [
+                    48,
+                    0
+                ],
+                [
+                    50,
+                    1
+                ],
+                [
+                    50,
+                    2
+                ],
+                [
+                    50,
+                    3
+                ]
+            ],
+            "data_in": [
+                "地点名称输入框",
+                "新增地点表单",
+                "门脸照片上传功能",
+                "新增地点表单数据",
+                "location name",
+                "storefront photo",
+                "location position",
+                "industry type",
+                "门脸照片上传操作",
+                "相册图片",
+                "门脸照片上传选项菜单",
+                "图片",
+                "selected photos",
+                "相册文件",
+                "camera interface",
+                "photo capture context",
+                "photo preview thumbnail",
+                "photo session (current)",
+                "photo (taken)"
+            ],
+            "data_out": [
+                "new location record",
+                "输入后的地点名称",
+                "更新的新增地点表单",
+                "门脸照片上传选项（拍照/相册）",
+                "拍摄的门脸照片",
+                "更新的新增地点表单数据",
+                "待选择的相册图片列表",
+                "门脸照片上传选项菜单关闭",
+                "已选择的图片",
+                "captured photo",
+                "photo preview",
+                "photo session (continued)",
+                "photo (saved for location entry)"
+            ],
+            "data_dependencies": [
+                37,
+                38,
+                49,
+                50,
+                58
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "To add a new location, start by clicking the '新增地点' (Add Location) button. Next, input the location name in the '地点名称' field. Then, click the '上传图片' (Upload Image) button, where you can choose to take a photo, upload from the album, or cancel. If taking a photo, after capturing, you can preview, continue taking photos, or finish to return to the form. Finally, click the '提交' (Submit) button to complete the location addition.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            0
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 42,
+                        "action": "click",
+                        "summary": "Click '新增地点' button to enter the add location form page."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            42,
+                            0
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": 44,
+                        "action": "input",
+                        "summary": "Input location name '知春里便利店' in the '地点名称' field."
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            42,
+                            1
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": 45,
+                        "action": "click",
+                        "summary": "Click '上传图片' button to open the image upload options."
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            45,
+                            0
+                        ],
+                        "src_page_idx": 45,
+                        "dst_page_idx": 48,
+                        "action": "click",
+                        "summary": "Click '拍照片' option to enter the camera page."
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            48,
+                            0
+                        ],
+                        "src_page_idx": 48,
+                        "dst_page_idx": 50,
+                        "action": "click",
+                        "summary": "Click the camera shutter button to take a photo."
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            50,
+                            3
+                        ],
+                        "src_page_idx": 50,
+                        "dst_page_idx": 42,
+                        "action": "click",
+                        "summary": "Click '完成拍照' button to return to the add location form page with the photo uploaded."
+                    },
+                    {
+                        "id": "S7",
+                        "action_ref": [
+                            42,
+                            4
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": 42,
+                        "action": "click",
+                        "summary": "Click '提交' button to submit the new location form."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S5",
+                        "to": "S6"
+                    },
+                    {
+                        "from": "S6",
+                        "to": "S7"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S3",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S4",
+                                "condition": "Choose to take a photo"
+                            },
+                            {
+                                "next_step": "S3",
+                                "condition": "Choose to upload from album (not shown in steps but part of the options)"
+                            },
+                            {
+                                "next_step": "S2",
+                                "condition": "Choose to cancel (not shown in steps but part of the options)"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S5",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S6",
+                                "condition": "Finish taking photos"
+                            },
+                            {
+                                "next_step": "S5",
+                                "condition": "Continue taking photos (click '继续拍照' button)"
+                            },
+                            {
+                                "next_step": "S5",
+                                "condition": "Preview the photo (click '照片预览缩略图')"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "This page functions as a map community task and feedback management interface, allowing users to claim, complete, or abandon tasks (e.g., uploading a storefront photo for \"知春里水站\" to earn rewards), access feedback/achievement stats, and use map-related contribution features like reporting locations/roads or earning money through tasks.",
+            "action_refs": [
+                [
+                    5,
+                    1
+                ]
+            ],
+            "data_in": [
+                "知春里水站任务"
+            ],
+            "data_out": [
+                "知春里水站任务领取状态更新"
+            ],
+            "data_dependencies": [
+                15
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "On the map community task management page, the user clicks the '领取' (Claim Task) button for the '知春里水站' task. Since there's only one action here, the flow is a single step with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            1
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click the '领取' button for the '知春里水站' task"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "This page provides navigation functionality for walking from the user's current location to the \"中关村 - A1口\" (Zhongguancun - A1 Exit), including route visualization, estimated arrival time, and options for different travel modes (walking, driving, public transport, etc.), along with additional features like sharing, route details, and starting navigation.",
+            "action_refs": [
+                [
+                    5,
+                    2
+                ],
+                [
+                    43,
+                    0
+                ]
+            ],
+            "data_in": [
+                "知春里水站位置信息",
+                "用户当前位置信息",
+                "步行导航路线",
+                "起点信息",
+                "终点信息"
+            ],
+            "data_out": [
+                "导航路线规划结果",
+                "预计到达时间信息",
+                "步行导航会话（已开始）",
+                "导航计时数据",
+                "导航路径跟踪数据"
+            ],
+            "data_dependencies": [
+                34,
+                48
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user starts by clicking the '到这去' (Navigate) link for the target location (知春里水站) on page 5, which navigates to the route planning page (page 43). Then, on page 43, the user clicks the '开始导航' (Start Navigation) button to initiate walking navigation to the destination, transitioning to the navigation interface (page 23).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            2
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 43,
+                        "action": "click",
+                        "summary": "Click '到这去' to navigate to route planning page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            43,
+                            0
+                        ],
+                        "src_page_idx": 43,
+                        "dst_page_idx": 23,
+                        "action": "click",
+                        "summary": "Click '开始导航' to start walking navigation"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "The current page is a Message Center that displays various notifications (e.g., from \"足迹君\", \"导航队长\", \"资讯广播\") and provides a trash icon to delete these messages.",
+            "action_refs": [
+                [
+                    6,
+                    1
+                ]
+            ],
+            "data_in": [
+                "messages"
+            ],
+            "data_out": [
+                "deleted messages"
+            ],
+            "data_dependencies": [
+                17
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on the Message Center page (page 6). The core action is clicking the trash icon to delete messages; after clicking, the page remains on page 6 (likely reflecting the deletion or confirmation state). There are no branches or loops here, just the single action of interacting with the trash icon for message deletion.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            1
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click the trash icon to initiate message deletion"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "This page displays a notification from \"足迹君\" about点亮北京市 (lighting up Beijing) with an option to view details and a settings option, allowing users to see and interact with this specific travel - related notification.",
+            "action_refs": [
+                [
+                    6,
+                    2
+                ]
+            ],
+            "data_in": [
+                "足迹君消息"
+            ],
+            "data_out": [
+                "足迹君消息详情"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on the message center page (page 6). They click the '足迹君' message entry to view details, which navigates to the '足迹君' page (page 60) showing the '点亮北京市' notification and options to view details or access settings.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            2
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 60,
+                        "action": "click",
+                        "summary": "Click '足迹君' message entry to view details of the '点亮北京市' notification"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "This page enables users to add a travel itinerary by setting the destination, departure date, optional departure time and location, and choosing a travel mode (driving, public transit, or taxi) before confirming the details.",
+            "action_refs": [
+                [
+                    7,
+                    1
+                ],
+                [
+                    66,
+                    0
+                ]
+            ],
+            "data_in": [
+                "常用地址设置入口",
+                "行程信息",
+                "出发日期设置项"
+            ],
+            "data_out": [
+                "添加行程页面加载完成"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The process starts on page 7, where the user clicks the '添加常用地址按钮' (Add Frequent Address Button) to navigate to page 66. On page 66, the user then clicks the '出发日期选择框' (Departure Date Selection Box) to proceed with setting the departure date for the travel itinerary.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            1
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 66,
+                        "action": "click",
+                        "summary": "Click '添加常用地址按钮' to navigate to page 66"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            66,
+                            0
+                        ],
+                        "src_page_idx": 66,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click '出发日期选择框' to set departure date"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "Edit common functions button",
+            "action_refs": [
+                [
+                    9,
+                    1
+                ]
+            ],
+            "data_in": [
+                "common functions configuration"
+            ],
+            "data_out": [
+                "entered common functions edit mode"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The process starts on page 9. The user clicks the 'Edit common functions button' (action_ref [9,1]). Since there are no further actions or branches provided, this is the sole step in the flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            1
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the Edit common functions button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "Driving function button",
+            "action_refs": [
+                [
+                    9,
+                    2
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The core execution logic starts on page 9. The user clicks the 'Driving function button' (represented by a car icon) on this page. Since there are no further actions or branches provided, the flow consists of this single click action to initiate the driving function.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            2
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the driving function button (car icon) on page 9"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "Map selection button",
+            "action_refs": [
+                [
+                    10,
+                    1
+                ]
+            ],
+            "data_in": [
+                "location selection option"
+            ],
+            "data_out": [
+                "map - based location selection interface"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The user starts on page 10. The core action is clicking the 'Map selection button' (labeled '地图选点') on this page. This click likely initiates a process related to map - based point selection, and as of now, there are no branching or looping steps observed from this single action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            1
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the Map selection button (地图选点)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "My location button",
+            "action_refs": [
+                [
+                    10,
+                    2
+                ]
+            ],
+            "data_in": [
+                "location service",
+                "user location data"
+            ],
+            "data_out": [
+                "user's current location information"
+            ],
+            "data_dependencies": [
+                28
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The user starts on page 10. The core action is clicking the 'My location' button. This action likely triggers a process to retrieve or use the user's current location, with no branching or looping in this single-step flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            2
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'My location' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "签到领现金按钮",
+            "action_refs": [
+                [
+                    13,
+                    0
+                ]
+            ],
+            "data_in": [
+                "签到领现金功能入口"
+            ],
+            "data_out": [
+                "签到领现金操作触发"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 13,
+                "logic": "The core execution logic for the '签到领现金按钮' (sign in to get cash button) functional point involves a single step: clicking the '签到' (sign in) button located on the '我的' (My) page. There are no branches or loops as it is a straightforward click action to initiate the sign - in for cash process.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            13,
+                            0
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '签到领现金' (sign in to get cash) button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "收藏功能图标",
+            "action_refs": [
+                [
+                    13,
+                    1
+                ]
+            ],
+            "data_in": [
+                "收藏功能入口"
+            ],
+            "data_out": [
+                "进入收藏功能页面"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 13,
+                "logic": "The core execution logic for the '收藏功能图标' (Favorites Function Icon) functional point involves a single step: clicking the '收藏' (Favorites) icon located on the page. This action is performed on page 13, and there are no subsequent steps or branches in this flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            13,
+                            1
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '收藏' (Favorites) icon"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 25,
+            "function_description": "设置图标",
+            "action_refs": [
+                [
+                    13,
+                    2
+                ]
+            ],
+            "data_in": [
+                "settings entry"
+            ],
+            "data_out": [
+                "settings page navigation"
+            ],
+            "data_dependencies": [
+                40
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 13,
+                "logic": "The functional point involves a single action: clicking the settings icon located on the 'My' page. This action is the core step, and there are no subsequent branches or loops as the action is a leaf node (no further navigation or decisions post - click).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            13,
+                            2
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the settings icon on the 'My' page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 26,
+            "function_description": "0.1元开卡去解锁按钮",
+            "action_refs": [
+                [
+                    13,
+                    3
+                ]
+            ],
+            "data_in": [
+                "0.1元开卡活动"
+            ],
+            "data_out": [
+                "进入开卡活动解锁流程"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 13,
+                "logic": "The core execution logic starts on page 13. The user performs a click action on the '0.1元开卡去解锁' button. This is a single-step flow with no branches or loops as there's only one action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            13,
+                            3
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '0.1元开卡去解锁' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 27,
+            "function_description": "每日签到卡片",
+            "action_refs": [
+                [
+                    13,
+                    4
+                ]
+            ],
+            "data_in": [
+                "每日签到卡片"
+            ],
+            "data_out": [
+                "签到记录更新"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 13,
+                "logic": "The core execution logic for the daily check - in card starts with a click on the '每日签到卡片' (Daily Check - in Card) on page 13. Since there are no further actions or branches provided, this is a single - step flow focused on initiating the interaction with the daily check - in card.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            13,
+                            4
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the daily check - in card"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 28,
+            "function_description": "This page provides navigation functionality for walking to the Chinese Academy of Sciences Software Institute, including route display, estimated arrival time, and options for starting navigation, viewing route details, and accessing additional features like AR navigation and nearby hotel deals.",
+            "action_refs": [
+                [
+                    15,
+                    0
+                ]
+            ],
+            "data_in": [
+                "destination location (中国科学院软件研究所)",
+                "user's current location"
+            ],
+            "data_out": [
+                "navigation route (步行)"
+            ],
+            "data_dependencies": [
+                29,
+                34,
+                48
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user starts on the location details page for the Chinese Academy of Sciences Software Institute. They click the '到这去 (Go Here)' button to navigate to the walking route page, where the route, estimated time, and additional options like AR navigation are displayed.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            0
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click '到这去 (Go Here)' button to view walking route to the destination"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 29,
+            "function_description": "This page presents the Baidu Maps navigation usage prompt, explaining data usage related to location services, voice recognition, and device information, and requires users to agree to the privacy policy and user service agreement to proceed with navigation.",
+            "action_refs": [
+                [
+                    15,
+                    1
+                ]
+            ],
+            "data_in": [
+                "地点信息（中国科学院软件研究所）",
+                "导航功能入口"
+            ],
+            "data_out": [
+                "导航使用提示页面加载"
+            ],
+            "data_dependencies": [
+                46,
+                47
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user starts on page 15 (location details) and clicks the '导航 (Navigation)' button. This action leads to page 18, which displays the Baidu Maps navigation usage prompt explaining data usage for location services, voice recognition, and device information, along with options to agree or disagree with the privacy policy and user service agreement. The flow is a straight line from clicking the navigation button to reaching the prompt page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            1
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click the '导航 (Navigation)' button on the location details page to navigate to the navigation usage prompt page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 30,
+            "function_description": "电话 (Phone) button",
+            "action_refs": [
+                [
+                    15,
+                    2
+                ]
+            ],
+            "data_in": [
+                "中国科学院软件研究所地点信息"
+            ],
+            "data_out": [
+                "电话拨打操作触发"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The core execution logic starts on page 15. The user clicks the '电话 (Phone)' button (action_ref [15,2]), which navigates to page 19. This is a straight-line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            2
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click the '电话 (Phone)' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 31,
+            "function_description": "The current page provides detailed information about the \"Institute of Software, Chinese Academy of Sciences (Zhongguancun South Fourth Street)\", including its location, rating, user reviews, and offers a \"Go to Book\" button to navigate to a hotel booking interface for accommodations near this research institute.",
+            "action_refs": [
+                [
+                    15,
+                    3
+                ]
+            ],
+            "data_in": [
+                "酒店预订入口",
+                "考点周边酒店信息"
+            ],
+            "data_out": [
+                "进入酒店预订界面"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user starts on the page showing details of the Institute of Software, Chinese Academy of Sciences. The core logic is to click the 'Go to Book' button, which navigates to the hotel booking interface for accommodations near this institute. There are no branches or loops here, just a single action to proceed to the booking page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            3
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click the '去订房 (Go to Book)' button to navigate to the hotel booking interface for accommodations near the institute."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 32,
+            "function_description": "This page provides detailed information about the \"Institute of Software, Chinese Academy of Sciences (Zhongguancun South Fourth Street)\", including its location on the map, user reviews, contact options, and a button to book nearby hotels for exam venues.",
+            "action_refs": [
+                [
+                    15,
+                    4
+                ]
+            ],
+            "data_in": [
+                "中国科学院软件研究所地点信息"
+            ],
+            "data_out": [
+                "中国科学院软件研究所深度搜索结果"
+            ],
+            "data_dependencies": [
+                30,
+                31,
+                33,
+                35,
+                36
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user starts on the page for the Institute of Software, Chinese Academy of Sciences. The core logic involves clicking on the '深度搜索 (Deep Search)' tab to explore further details about this location, likely to access additional search-related functionality or information.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            4
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click on the '深度搜索 (Deep Search)' tab to access its functionality or information."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 33,
+            "function_description": "This page provides detailed information about the \"Institute of Software, Chinese Academy of Sciences (Zhongguancun South Fourth Street)\", including its location, rating, user reviews, and offers a \"Go to Book\" button to book nearby hotels, along with options for navigation, calling, sharing, and viewing user comments.",
+            "action_refs": [
+                [
+                    15,
+                    5
+                ]
+            ],
+            "data_in": [
+                "中国科学院软件研究所地点信息",
+                "用户评论功能入口"
+            ],
+            "data_out": [
+                "新评论编辑界面（隐含）"
+            ],
+            "data_dependencies": [
+                30,
+                31,
+                35,
+                36
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user starts on the page with details about the Institute of Software, Chinese Academy of Sciences. The core action is clicking the 'Write Comment' button, which likely leads to a comment - writing interface (though the destination page here is the same as the source, maybe a modal or in - page interaction for writing a comment).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            5
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click the 'Write Comment' button to initiate the comment - writing process."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 34,
+            "function_description": "This page provides a walking navigation route from the user's current location to the Chinese Academy of Sciences Software Research Institute, including route visualization, estimated travel time and distance, and options for starting navigation, AR navigation, and other travel-related actions.",
+            "action_refs": [
+                [
+                    15,
+                    6
+                ]
+            ],
+            "data_in": [
+                "location details",
+                "navigation route"
+            ],
+            "data_out": [
+                "shared location/route information"
+            ],
+            "data_dependencies": [
+                34,
+                48
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The process starts on the location details page for the Chinese Academy of Sciences Software Research Institute. The user clicks the '到这去' (Go Here) button to generate a walking route. The app then displays the walking navigation page with the route, estimated time, distance, and options for AR navigation or starting navigation.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            6
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click '到这去' (Go Here) button to generate walking route"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 35,
+            "function_description": "收藏 (Favorite) button",
+            "action_refs": [
+                [
+                    15,
+                    7
+                ]
+            ],
+            "data_in": [
+                "地点详情（中国科学院软件研究所）",
+                "收藏设置"
+            ],
+            "data_out": [
+                "收藏设置（已更新）",
+                "收藏的地点记录"
+            ],
+            "data_dependencies": [
+                36
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user starts on page 15 (a location details page). The core action is clicking the '收藏 (Favorite)' button, which transitions the flow to page 20. There are no branches or loops as it's a single click action to trigger the favorite functionality.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            7
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 20,
+                        "action": "click",
+                        "summary": "Click the '收藏 (Favorite)' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 36,
+            "function_description": "This page provides detailed information about the \"Institute of Software, Chinese Academy of Sciences (Zhongguancun South Fourth Street)\", including its location, rating, user reviews, and offers a \"Go to Book\" button to navigate to a hotel booking interface for accommodations near this research institute.",
+            "action_refs": [
+                [
+                    15,
+                    8
+                ]
+            ],
+            "data_in": [
+                "location information (中国科学院软件研究所)"
+            ],
+            "data_out": [
+                "error report submission (for location information)"
+            ],
+            "data_dependencies": [
+                30,
+                31,
+                35
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user starts on the page showing details of the Institute of Software, Chinese Academy of Sciences. The core action is clicking the '报错 (Report Error)' button, which likely triggers an error-reporting process (though the destination page remains the same here, implying a confirmation or in-place action).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            8
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click the '报错 (Report Error)' button to initiate error reporting."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 37,
+            "function_description": "This page enables users to edit and confirm the location for a new place entry by dragging the map marker, searching for a location, or selecting from nearby suggested locations, and then finalizing the position.",
+            "action_refs": [
+                [
+                    42,
+                    2
+                ],
+                [
+                    46,
+                    0
+                ],
+                [
+                    46,
+                    4
+                ]
+            ],
+            "data_in": [
+                "地点位置设置项",
+                "地图数据",
+                "地图选定的位置",
+                "位置信息",
+                "map interface",
+                "location selection context"
+            ],
+            "data_out": [
+                "编辑后的地点位置",
+                "新增地点的位置信息",
+                "确认后的位置数据",
+                "updated location marker",
+                "refreshed location information"
+            ],
+            "data_dependencies": [
+                38,
+                49,
+                50
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 42,
+                "logic": "The process starts on page 42, where the user clicks the '编辑地图位置按钮' to enter the map editing page (46). On page 46, the user can choose to click '确定位置按钮' to finalize the location (returning to page 42) or click '定位当前位置按钮' to set the current location (leading to page 53).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            42,
+                            2
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": 46,
+                        "action": "click",
+                        "summary": "Click the button to edit the map location, navigating to the map editing page."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            46,
+                            0
+                        ],
+                        "src_page_idx": 46,
+                        "dst_page_idx": 42,
+                        "action": "click",
+                        "summary": "Click the button to confirm the location, returning to the previous page."
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            46,
+                            4
+                        ],
+                        "src_page_idx": 46,
+                        "dst_page_idx": 53,
+                        "action": "click",
+                        "summary": "Click the button to locate the current position, navigating to the current location page."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 38,
+            "function_description": "This page functions as a category selection interface for adding a new location, allowing users to choose an appropriate category (e.g., tourism, food, entertainment) from a list and confirm the selection to proceed with the location addition process.",
+            "action_refs": [
+                [
+                    42,
+                    3
+                ],
+                [
+                    47,
+                    0
+                ],
+                [
+                    47,
+                    1
+                ],
+                [
+                    47,
+                    3
+                ],
+                [
+                    47,
+                    4
+                ],
+                [
+                    54,
+                    0
+                ],
+                [
+                    54,
+                    1
+                ],
+                [
+                    54,
+                    2
+                ]
+            ],
+            "data_in": [
+                "地点信息（新增）",
+                "行业类型设置",
+                "地点分类选择操作",
+                "地点分类列表",
+                "搜索关键词（咖啡店）",
+                "地点分类选择",
+                "新增地点表单",
+                "search input (咖啡店)",
+                "search operation",
+                "location category search query"
+            ],
+            "data_out": [
+                "地点分类选择界面",
+                "待确认的行业类型",
+                "取消地点分类选择后的新增地点页面状态",
+                "搜索结果（暂无匹配）",
+                "已选择的美食分类",
+                "更新后的新增地点表单",
+                "cleared search input",
+                "search operation canceled",
+                "location category search results"
+            ],
+            "data_dependencies": [
+                37,
+                49,
+                50,
+                52
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 42,
+                "logic": "The user starts on page 42 and clicks the '添加行业类型按钮' to enter the category selection page (47). On page 47, the user can either search for a category via input (leading to page 54), select a category like '美食' (leading to page 56), or cancel/confirm to return to page 42. If searching, page 54 allows clearing input, canceling (back to 47), or re-entering search terms (staying on 54).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            42,
+                            3
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": 47,
+                        "action": "click",
+                        "summary": "Click '添加行业类型按钮' to open category selection page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            47,
+                            0
+                        ],
+                        "src_page_idx": 47,
+                        "dst_page_idx": 42,
+                        "action": "click",
+                        "summary": "Click '取消按钮' to cancel and return to page 42"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            47,
+                            1
+                        ],
+                        "src_page_idx": 47,
+                        "dst_page_idx": 54,
+                        "action": "input",
+                        "summary": "Input '咖啡店' in search box to search for category"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            47,
+                            3
+                        ],
+                        "src_page_idx": 47,
+                        "dst_page_idx": 56,
+                        "action": "click",
+                        "summary": "Click '分类选项（美食）' to select the '美食' category"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            47,
+                            4
+                        ],
+                        "src_page_idx": 47,
+                        "dst_page_idx": 42,
+                        "action": "click",
+                        "summary": "Click '确认按钮' to confirm selection and return to page 42"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            54,
+                            0
+                        ],
+                        "src_page_idx": 54,
+                        "dst_page_idx": 57,
+                        "action": "click",
+                        "summary": "Click 'Clear search input' to clear search input"
+                    },
+                    {
+                        "id": "S7",
+                        "action_ref": [
+                            54,
+                            1
+                        ],
+                        "src_page_idx": 54,
+                        "dst_page_idx": 47,
+                        "action": "click",
+                        "summary": "Click 'Cancel search' to cancel search and return to page 47"
+                    },
+                    {
+                        "id": "S8",
+                        "action_ref": [
+                            54,
+                            2
+                        ],
+                        "src_page_idx": 54,
+                        "dst_page_idx": 54,
+                        "action": "input",
+                        "summary": "Input '咖啡店' again in search box (looping search)"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S6"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S7"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S8"
+                    },
+                    {
+                        "from": "S6",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S7",
+                        "to": "S1"
+                    },
+                    {
+                        "from": "S8",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S3",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S6"
+                            },
+                            {
+                                "next_step": "S7"
+                            },
+                            {
+                                "next_step": "S8"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S6",
+                        "type": "loop",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S8",
+                        "type": "loop",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 39,
+            "function_description": "This page displays the user's travel footprint map (with Beijing highlighted as \"点亮+1\"), provides statistics on accumulated city/region点亮, and offers access to footprint reports, allowing users to view and manage their travel footprint data.",
+            "action_refs": [
+                [
+                    60,
+                    0
+                ]
+            ],
+            "data_in": [
+                "北京市足迹信息"
+            ],
+            "data_out": [
+                "北京市足迹详情页面加载结果"
+            ],
+            "data_dependencies": [
+                54
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 60,
+                "logic": "The user starts on page 60 (足迹君 page) and clicks the '查看详情' button. This action navigates to page 61, where the travel footprint map (with Beijing highlighted as '点亮+1'), city/region statistics, and footprint report access are displayed. There are no branches or loops in this core flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            60,
+                            0
+                        ],
+                        "src_page_idx": 60,
+                        "dst_page_idx": 61,
+                        "action": "click",
+                        "summary": "Click '查看详情' button to navigate to the travel footprint page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 40,
+            "function_description": "This page is the \"Message Settings\" page, which provides the function to toggle the \"Do Not Disturb\" option for messages, where enabling it stops unread messages in the App from being notified by numbers.",
+            "action_refs": [
+                [
+                    60,
+                    1
+                ]
+            ],
+            "data_in": [
+                "设置入口"
+            ],
+            "data_out": [
+                "进入消息设置页面"
+            ],
+            "data_dependencies": [
+                55
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 60,
+                "logic": "The process starts on page 60, where the user clicks the '设置' (Settings) button. This action navigates to page 62, which is the 'Message Settings' page. From there, the user can interact with the '消息免打扰' (Do Not Disturb) toggle to enable or disable the feature, though the provided action focuses on navigating to the settings page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            60,
+                            1
+                        ],
+                        "src_page_idx": 60,
+                        "dst_page_idx": 62,
+                        "action": "click",
+                        "summary": "Click the '设置' button to navigate to the Message Settings page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 41,
+            "function_description": "This page provides navigation functionality for a planned route (from \"我的位置\" to \"中关村 - A1口\") in walking mode, displaying the route on a map, estimated arrival time, alternative travel options (e.g., taxi) with time/cost details, and action buttons for sharing, viewing route details, starting AR navigation, or initiating standard navigation.",
+            "action_refs": [
+                [
+                    65,
+                    1
+                ]
+            ],
+            "data_in": [
+                "中关村地铁站",
+                "A1口"
+            ],
+            "data_out": [
+                "步行导航路线",
+                "预计到达时间"
+            ],
+            "data_dependencies": [
+                42,
+                45,
+                48
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 65,
+                "logic": "The user starts on page 65 and clicks on the '中关村地铁站' option (specifically the A1口 selection flow is implied). This action navigates to page 43, where the walking route to 中关村 - A1口 is displayed, along with alternative travel options and navigation action buttons.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            65,
+                            1
+                        ],
+                        "src_page_idx": 65,
+                        "dst_page_idx": 43,
+                        "action": "click",
+                        "summary": "Click on the 中关村地铁站 (A1口 related) option to navigate to the route page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 42,
+            "function_description": "This page provides walking route navigation from the user's current location to \"中关村 - A1口\", including the route map, estimated arrival time, and alternative travel options (e.g., taxi, other walking routes) with corresponding time and cost information, along with additional features like sharing, route details, and starting navigation.",
+            "action_refs": [
+                [
+                    65,
+                    2
+                ]
+            ],
+            "data_in": [
+                "destination (Zhongguancun A1 Exit)",
+                "navigation request"
+            ],
+            "data_out": [
+                "navigation route (walking to Zhongguancun A1 Exit)",
+                "route details (time, distance, transportation options)"
+            ],
+            "data_dependencies": [
+                45,
+                48
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 65,
+                "logic": "The user starts on a page with location input fields. They click the 'A1口' button (associated with 中关村地铁站) to navigate to a page displaying the walking route to 中关村-A1口, along with the route map, estimated arrival time, and alternative travel options.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            65,
+                            2
+                        ],
+                        "src_page_idx": 65,
+                        "dst_page_idx": 43,
+                        "action": "click",
+                        "summary": "Click the 'A1口' button for 中关村地铁站 to view the walking route to 中关村-A1口."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 43,
+            "function_description": "梵屋公寓选项",
+            "action_refs": [
+                [
+                    65,
+                    3
+                ]
+            ],
+            "data_in": [
+                "梵屋公寓信息"
+            ],
+            "data_out": [
+                "梵屋公寓详情页面"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 65,
+                "logic": "The core execution logic starts on page 65. The user performs a click action on the '梵屋公寓选项' (Fanwu Apartment option). Since there are no further steps or branches provided, this is a single-step flow focused on interacting with the apartment option.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            65,
+                            3
+                        ],
+                        "src_page_idx": 65,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the 梵屋公寓选项"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 44,
+            "function_description": "步行出行方式切换按钮",
+            "action_refs": [
+                [
+                    67,
+                    0
+                ]
+            ],
+            "data_in": [
+                "步行出行方式设置"
+            ],
+            "data_out": [
+                "步行出行方式设置已切换"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 67,
+                "logic": "The core execution logic involves clicking the walking travel mode toggle button. This action is performed on the page with index 67, and there are no subsequent steps or branches as the action is a leaf node (no further navigation or decisions).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            67,
+                            0
+                        ],
+                        "src_page_idx": 67,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the walking travel mode toggle button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 45,
+            "function_description": "This page displays a disclaimer statement for a navigation app, outlining usage guidelines, safety warnings, cost information, and permission details related to navigation features, with options to reject or accept the terms to proceed.",
+            "action_refs": [
+                [
+                    17,
+                    0
+                ]
+            ],
+            "data_in": [
+                "navigation route",
+                "navigation settings"
+            ],
+            "data_out": [
+                "navigation initiation request",
+                "disclaimer page display"
+            ],
+            "data_dependencies": [
+                48,
+                56,
+                57
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 17,
+                "logic": "The user starts on the navigation page (page 17) and clicks the 'Start Navigation' button. This action leads to the disclaimer page (page 21), where the user can then choose to reject or accept the terms to proceed with navigation.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            17,
+                            0
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 21,
+                        "action": "click",
+                        "summary": "Click the 'Start Navigation' button to navigate to the disclaimer page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 46,
+            "function_description": "不同意按钮 (Disagree Button)",
+            "action_refs": [
+                [
+                    18,
+                    0
+                ]
+            ],
+            "data_in": [
+                "agreement prompt (Baidu Maps navigation usage)"
+            ],
+            "data_out": [
+                "agreement rejection result"
+            ],
+            "data_dependencies": [
+                53
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 18,
+                "logic": "The user starts on page 18 (the Baidu Maps navigation usage prompt page). The core action is clicking the 'Disagree' button, which leads to page 24. There are no branches or loops here as it's a single click action to navigate away from the prompt page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            18,
+                            0
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 24,
+                        "action": "click",
+                        "summary": "Click the 'Disagree' button on the Baidu Maps navigation usage prompt page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 47,
+            "function_description": "This page presents Baidu Maps navigation usage tips, including location service, voice recognition, and device information details, and requires users to agree to the terms (via the \"Agree\" button) to proceed with using the navigation service.",
+            "action_refs": [
+                [
+                    18,
+                    1
+                ]
+            ],
+            "data_in": [
+                "Baidu Maps navigation usage prompt agreement"
+            ],
+            "data_out": [
+                "Agreed Baidu Maps navigation usage prompt"
+            ],
+            "data_dependencies": [
+                46,
+                53
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 18,
+                "logic": "The user is on the Baidu Maps navigation usage tips page. To proceed with using the navigation service, the user must click the 'Agree' button. This action confirms agreement to the terms and allows access to the navigation functionality.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            18,
+                            1
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click the 'Agree' button to accept the terms and proceed with navigation usage"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 48,
+            "function_description": "退出导航按钮",
+            "action_refs": [
+                [
+                    23,
+                    0
+                ]
+            ],
+            "data_in": [
+                "navigation session"
+            ],
+            "data_out": [
+                "navigation session ended"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 23,
+                "logic": "The user starts on the navigation page (page 23). They click the '退出' (Exit Navigation) button, which transitions the app to page 59, completing the exit from navigation.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            23,
+                            0
+                        ],
+                        "src_page_idx": 23,
+                        "dst_page_idx": 59,
+                        "action": "click",
+                        "summary": "Click the '退出' (Exit Navigation) button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 49,
+            "function_description": "This page functions as a form for users to fill in information (including location name, storefront photo, location, industry type, etc.) to add a new location to the map, with a \"Submit\" button to send the filled - in information for review and addition to the map system.",
+            "action_refs": [
+                [
+                    46,
+                    1
+                ]
+            ],
+            "data_in": [
+                "位置信息"
+            ],
+            "data_out": [
+                "新增地点表单"
+            ],
+            "data_dependencies": [
+                50
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 46,
+                "logic": "The user starts by inputting a location name (e.g., '中国科学院软件研究所') into the search box. After entering the location, the app transitions to a page where the user can continue filling out other details (like storefront photo, industry type) for the new location, and finally submit the form for review.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            46,
+                            1
+                        ],
+                        "src_page_idx": 46,
+                        "dst_page_idx": 42,
+                        "action": "input",
+                        "summary": "Input location name into the search box"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 50,
+            "function_description": "This page enables users to fill in and submit information (including location name, storefront photo, location, industry type, etc.) to add a new location to the map, with options to promote the store and upload relevant materials to facilitate the review process.",
+            "action_refs": [
+                [
+                    46,
+                    2
+                ]
+            ],
+            "data_in": [
+                "位置信息"
+            ],
+            "data_out": [
+                "新增地点的位置信息"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 46,
+                "logic": "The user starts on page 46 and clicks on the location list item '中国科学院软件研究所' to navigate to page 42, likely to confirm or proceed with the location selection for adding a new place.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            46,
+                            2
+                        ],
+                        "src_page_idx": 46,
+                        "dst_page_idx": 42,
+                        "action": "click",
+                        "summary": "Click on the location list item '中国科学院软件研究所(中关村南四街)' to navigate to the next page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 51,
+            "function_description": "卫星地图切换按钮",
+            "action_refs": [
+                [
+                    46,
+                    3
+                ]
+            ],
+            "data_in": [
+                "map view setting",
+                "map data"
+            ],
+            "data_out": [
+                "map view updated to satellite mode"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 46,
+                "logic": "The core execution logic starts on page 46. The user clicks the satellite map toggle button, which transitions the app to page 52. There are no branches or loops as it is a single click action to switch the map view.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            46,
+                            3
+                        ],
+                        "src_page_idx": 46,
+                        "dst_page_idx": 52,
+                        "action": "click",
+                        "summary": "Click the satellite map toggle button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 52,
+            "function_description": "This page provides a search function for users to input keywords to find the corresponding industry category when adding a new location, with a cancel option and text input-related operation buttons at the bottom.",
+            "action_refs": [
+                [
+                    47,
+                    2
+                ],
+                [
+                    55,
+                    0
+                ],
+                [
+                    55,
+                    1
+                ]
+            ],
+            "data_in": [
+                "地点分类列表",
+                "search keyword input field",
+                "search interface",
+                "search cancellation action"
+            ],
+            "data_out": [
+                "搜索界面（用于地点分类）",
+                "entered search keyword",
+                "exited search interface",
+                "returned to previous page (location classification selection)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 47,
+                "logic": "The flow starts with clicking the search icon to open the search page. On the search page, the user can either input a keyword to search for an industry category or click the cancel button to return to the previous page. If inputting, the keyword is entered into the search field; if canceling, the flow exits the search process.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            47,
+                            2
+                        ],
+                        "src_page_idx": 47,
+                        "dst_page_idx": 55,
+                        "action": "click",
+                        "summary": "Click the search icon to open the search page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            55,
+                            0
+                        ],
+                        "src_page_idx": 55,
+                        "dst_page_idx": 58,
+                        "action": "input",
+                        "summary": "Input a keyword (e.g., '餐厅') into the search field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            55,
+                            1
+                        ],
+                        "src_page_idx": 55,
+                        "dst_page_idx": 47,
+                        "action": "click",
+                        "summary": "Click the cancel button to return to the previous page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 53,
+            "function_description": "不同意按钮",
+            "action_refs": [
+                [
+                    61,
+                    0
+                ]
+            ],
+            "data_in": [
+                "agreement confirmation request"
+            ],
+            "data_out": [
+                "agreement rejection response"
+            ],
+            "data_dependencies": [
+                53
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 61,
+                "logic": "The functional point starts on page 61. The user clicks the '不同意' (Disagree) button, which navigates to page 63. There are no branches or loops in this flow as it is a single click action leading to a new page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            61,
+                            0
+                        ],
+                        "src_page_idx": 61,
+                        "dst_page_idx": 63,
+                        "action": "click",
+                        "summary": "Click the '不同意' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 54,
+            "function_description": "This page is a travel footprint (city - visiting record) display interface, which can show the user's city - visiting footprint, including the number of lit - up provinces and cities, the proportion of unlocked national territory area, and also provides functions such as viewing annual reports, setting, and generating reports.",
+            "action_refs": [
+                [
+                    61,
+                    1
+                ]
+            ],
+            "data_in": [
+                "足迹设置"
+            ],
+            "data_out": [
+                "足迹设置已开启"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 61,
+                "logic": "The user starts on page 61 and clicks the '同意并开启足迹' (Agree and Enable Footprint) button. This action likely enables the travel footprint feature, allowing the app to track and display city - visiting records, including lit - up provinces and cities, and related area proportion, and also enabling access to functions like annual reports, settings, and report generation.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            61,
+                            1
+                        ],
+                        "src_page_idx": 61,
+                        "dst_page_idx": 61,
+                        "action": "click",
+                        "summary": "Click the '同意并开启足迹' button to enable the travel footprint feature."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 55,
+            "function_description": "消息免打扰开关",
+            "action_refs": [
+                [
+                    62,
+                    0
+                ]
+            ],
+            "data_in": [
+                "消息免打扰设置"
+            ],
+            "data_out": [
+                "消息免打扰设置开启"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 62,
+                "logic": "The process starts on page 62 (message settings). The user clicks the '消息免打扰' (Do Not Disturb for Messages) toggle switch, which is the only action in this flow, and the flow ends after this click (as it's a leaf action).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            62,
+                            0
+                        ],
+                        "src_page_idx": 62,
+                        "dst_page_idx": 64,
+                        "action": "click",
+                        "summary": "Click the '消息免打扰' toggle switch"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 56,
+            "function_description": "拒绝免责声明按钮",
+            "action_refs": [
+                [
+                    21,
+                    0
+                ]
+            ],
+            "data_in": [
+                "disclaimer agreement"
+            ],
+            "data_out": [
+                "disclaimer agreement rejected"
+            ],
+            "data_dependencies": [
+                56,
+                57
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 21,
+                "logic": "用户在免责声明页面（页面21），点击底部的“拒绝”按钮（对应action_ref[21,0]），随后页面跳转到目标页面（页面22），整个流程为直线型，无分支或循环。",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            21,
+                            0
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": 22,
+                        "action": "click",
+                        "summary": "点击免责声明页面底部的拒绝按钮"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 57,
+            "function_description": "This page provides real - time pedestrian navigation, showing the walking route on the map, along with data like calories burned, distance walked, and time spent, and also offers functions such as map view switching, route sharing, reporting errors, and AR - based real - scene navigation.",
+            "action_refs": [
+                [
+                    21,
+                    1
+                ]
+            ],
+            "data_in": [
+                "disclaimer (navigation service)"
+            ],
+            "data_out": [
+                "navigation service access granted",
+                "walking navigation session started"
+            ],
+            "data_dependencies": [
+                48,
+                57
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 21,
+                "logic": "The user starts on the disclaimer page (page 21). They click the 'accept disclaimer' button, which transitions to the pedestrian navigation page (page 23) where real - time navigation, along with metrics like calories, distance, and time, is shown, and functions like map switching, route sharing, error reporting, and AR navigation are available.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            21,
+                            1
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": 23,
+                        "action": "click",
+                        "summary": "Click the accept disclaimer button to enter the pedestrian navigation page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 58,
+            "function_description": "删除照片按钮（垃圾桶图标）",
+            "action_refs": [
+                [
+                    50,
+                    0
+                ]
+            ],
+            "data_in": [
+                "photo"
+            ],
+            "data_out": [
+                "photo deleted"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 50,
+                "logic": "The process starts on page 50. The user clicks the trash can icon (delete photo button) on this page, which leads to page 51. There are no branches or loops as it's a single action flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            50,
+                            0
+                        ],
+                        "src_page_idx": 50,
+                        "dst_page_idx": 51,
+                        "action": "click",
+                        "summary": "Click the trash can icon (delete photo button)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        }
+    ]
+}

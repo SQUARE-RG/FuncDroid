@@ -1,0 +1,1156 @@
+
+================= [TaskTest] FDG[0] =================
+[Function] Track and manage daily activities
+
+[Core Logic Task]
+The user starts on the activity diary page (page 0). They perform a click action on the 'Woodworking' activity tag, which remains on the same page (page 0). This action likely tracks or manages the Woodworking activity, with no branching logic as only one action is present.
+
+[Variant Paths] (3)
+ - V1: Tap <Woodworking activity tag> twice (repeat the action)
+ - V2: Omit tapping <Woodworking activity tag> (skip the tracking action)
+ - V3: Tap <Woodworking activity tag> and then tap it again (order doesn't change but repeat, same as first but explicit order)
+
+================= [TaskTest] FDG[1] =================
+[Function] The current page (a side menu) in the Activity Diary app provides navigation options to select an activity, view the diary, add or edit activities, access settings, and learn about the app, enabling users to manage and navigate through different features related to tracking daily activities.
+
+[Core Logic Task]
+The flow starts on the main page (page 0). The user clicks the hamburger menu icon (action S1), which opens the side menu (page 1) with navigation options. From here, the user can choose to navigate to different features like selecting an activity, viewing the diary, adding/editing activities, accessing settings, or learning about the app, but the core step here is opening the side menu via the hamburger icon click.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[2] =================
+[Function] The current page allows users to search for specific daily activities within the Activity Diary app, enabling them to locate and potentially manage or view details of tracked activities.
+
+[Core Logic Task]
+The user starts on the main Activity Diary page. They click the search icon (at position [864, 124]) to initiate the search functionality for daily activities. This action likely opens a search input or interface to locate specific tracked activities.
+
+[Variant Paths] (2)
+ - V1: Omit tapping <Search icon> (test if app allows search without initiating via this icon, though likely fails but is a mutation)
+ - V2: Tap <Search icon> twice (repeat the action to see if it causes unexpected behavior like multiple search interfaces or errors)
+
+================= [TaskTest] FDG[3] =================
+[Function] This page allows the user to edit the title and color of a daily activity (specifically "Woodworking") and provides options to save, delete, or cancel the changes.
+
+[Core Logic Task]
+The user starts by clicking the plus icon to add or edit the 'Woodworking' activity (step S1). Then, they can edit the activity title via the input field (S2) or adjust the activity color using the color selection bar (S3). For color adjustment, sliders for red, green, and blue can be modified (S4, S5, S6), and the color selection is confirmed (S7). Finally, the user can save the changes (S8), delete the activity (not shown in steps), or cancel (S9).
+
+[Variant Paths] (5)
+ - V1: Tap <Plus icon for adding activity>, then immediately Tap <Save activity button> (omit editing title/color)
+ - V2: Tap <Plus icon for adding activity>, Input "" into <Activity Title input field>, then Tap <Save activity button> (empty title input)
+ - V3: Tap <Plus icon for adding activity>, Tap <Activity Color selection bar>, Tap <SELECT confirmation button>, then Tap <Save activity button> (skip color sliders)
+ - V4: Tap <Plus icon for adding activity>, Tap <Red color adjustment slider>, Tap <Green color adjustment slider>, Tap <Blue color adjustment slider>, Tap <SELECT confirmation button>, then Tap <Close new activity button> (cancel after color adjustment instead of save)
+ - V5: Tap <Plus icon for adding activity>, Tap <Green color adjustment slider>, Tap <Red color adjustment slider>, Tap <Blue color adjustment slider>, Tap <SELECT confirmation button>, then Tap <Save activity button> (swap red and green slider order)
+
+================= [TaskTest] FDG[4] =================
+[Function] This page functions as a camera interface (likely for augmented reality or activity - related photo capture) that is accessed from the daily activity tracking and management page, enabling users to take photos or record videos, possibly for documenting activities or for AR - related tasks.
+
+[Core Logic Task]
+The user starts on the activity diary page (page 0). They click the camera button, which navigates to the camera interface (page 3) for photo/video capture related to activities. The flow is a straight line with no branches or loops here.
+
+[Variant Paths] (3)
+ - V1: Tap <Camera button> twice (repeat the operation)
+ - V2: Omit tapping <Camera button> (skip the navigation to camera interface)
+ - V3: Tap <Camera button> after a very long delay (simulate a delayed interaction, though the action is still tapping the same widget)
+
+================= [TaskTest] FDG[5] =================
+[Function] The current page (a "Note" dialog) allows the user to input a note related to a daily activity (accessed via the edit button from the activity tracking page) and either confirm the input with "OK" or cancel the action with "CANCEL".
+
+[Core Logic Task]
+The flow starts by clicking the Edit button on the activity tracking page to open the Note dialog. Then, the user can either input text in the note field or click the CANCEL button to exit the dialog without saving. If inputting, the flow proceeds to the input step; if canceling, it returns to the activity page.
+
+[Variant Paths] (5)
+ - V1: Tap <Edit button> to open the Note dialog, then tap <CANCEL button> without interacting with <Note text input field>
+ - V2: Tap <Edit button> to open the Note dialog, input an empty string into <Note text input field>, then tap <OK> (instead of canceling)
+ - V3: Tap <Edit button> to open the Note dialog, input a very long string (e.g., 1000 repeated 'a's) into <Note text input field>, then tap <OK>
+ - V4: Tap <Edit button> to open the Note dialog, input special characters (e.g., '!@#$%^&*()') into <Note text input field>, then tap <OK>
+ - V5: Tap <Edit button> to open the Note dialog, tap <OK> immediately without inputting anything (omitting the input step)
+
+================= [TaskTest] FDG[6] =================
+[Function] The current page of the Activity Diary Debug app allows users to track and manage daily activities by displaying a current activity (Woodworking with a 7-minute duration) and providing options to select from a list of predefined activities (e.g., Cinema, Swimming, Sleeping) or use camera/editing features.
+
+[Core Logic Task]
+The user starts on page 1 (menu open) and clicks the 'Select Activity' menu option. This action navigates to page 0, where the current activity (Woodworking, 7 min) and a list of predefined activities (e.g., Cinema, Swimming) are displayed, along with camera/edit options. The flow is a single step with navigation, no branches yet.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <Select Activity menu option> (check if app still navigates or shows activity list without interaction)
+ - V2: Repeat clicking <Select Activity menu option> multiple times (check for repeated navigation or errors)
+
+================= [TaskTest] FDG[7] =================
+[Function] The Diary page displays a list of daily activities with their respective timestamps and durations, allowing users to view and track their activity history.
+
+[Core Logic Task]
+The user starts on page 1 and clicks the 'Diary' menu option (action_ref [1,1]). This action navigates to page 5, where the Diary page displays a list of daily activities with their timestamps and durations, allowing the user to view and track their activity history. There are no further branches or loops as the goal is to reach and display the Diary page content.
+
+[Variant Paths] (5)
+ - V1: Omit clicking <Diary menu option> and check if the Diary page still loads (though this may not be valid as per core logic, but for mutation testing)
+ - V2: Click <Diary menu option> twice (repeat the action to see if it causes any issues like multiple navigations or errors)
+ - V3: Attempt to navigate to the Diary page without clicking <Diary menu option> (simulating a bypass of the intended navigation step)
+ - V4: Click <Diary menu option> and then immediately click it again (testing rapid repeated interaction with the navigation widget)
+ - V5: Wait for a short period (e.g., 5 seconds) and then click <Diary menu option> (testing delayed interaction with the navigation widget)
+
+================= [TaskTest] FDG[8] =================
+[Function] The current page allows users to edit or add a new activity by specifying the activity title and selecting an activity color, with options to save, delete, or cancel the changes.
+
+[Core Logic Task]
+The process starts on page 1, where the user clicks the 'Add Activity' menu option. This action navigates to page 2, which is the activity editing interface where the user can specify the activity title and color, and choose to save, delete, or cancel changes.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <Add Activity menu option> (simulate not starting the add/edit process)
+ - V2: Repeat clicking <Add Activity menu option> (simulate multiple attempts to start the process)
+
+================= [TaskTest] FDG[9] =================
+[Function] The "Manage Activities" page allows users to view, edit, and potentially add (via the '+' icon) different types of daily activities (e.g., Cinema, Cleaning, Cooking) for the purpose of tracking and managing their daily routines.
+
+[Core Logic Task]
+The user starts on page 1 and clicks the 'Edit Activities' menu option. This action navigates them to page 6, the 'Manage Activities' page, where they can view, edit, or add daily activities.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <Edit Activities menu option> (to test if the app still navigates to Manage Activities page without this action, though likely it won't, but it's a mutation of omitting the step)
+ - V2: Repeat clicking <Edit Activities menu option> (to test if multiple clicks cause unexpected behavior like multiple navigations or errors)
+
+================= [TaskTest] FDG[10] =================
+[Function] The Settings page for the Activity Diary app allows users to configure various options including date format, activity selection behavior, crash reporting, image storage and metadata, and conditions for activity sorting and sequencing.
+
+[Core Logic Task]
+The flow starts by clicking the Settings menu option to enter the Settings page. From there, users can click on 'Alphabetical Sort info' or 'Activity Sequence info' (though the latter leads to a configuration dialog). In the Activity Sequence dialog, users can select a radio button (OFF, 1, 3, 5, 10, 15, 20, 30, 50) to set the sequence weight or click CANCEL to return to the Settings page.
+
+[Variant Paths] (5)
+ - V1: Tap <Settings menu option>, Tap <Alphabetical Sort info> (instead of Activity Sequence info)
+ - V2: Tap <Settings menu option>, Tap <Activity Sequence info>, Tap <OFF radio button> (selecting OFF instead of other weights)
+ - V3: Tap <Settings menu option>, Tap <Activity Sequence info>, Tap <50 radio button> (selecting maximum weight instead of a smaller one)
+ - V4: Tap <Settings menu option>, Tap <Activity Sequence info>, Tap <CANCEL button> immediately (omitting radio button selection)
+ - V5: Tap <Settings menu option>, Tap <Activity Sequence info>, Tap <10 radio button>, Tap <10 radio button> (repeating radio button selection)
+
+================= [TaskTest] FDG[11] =================
+[Function] The "About" page of the Activity Diary Debug app provides information about the app's version, a brief description of its functionality, details about its open - source license (GNU General Public License), and contact information for reporting bugs and suggesting improvements.
+
+[Core Logic Task]
+The flow starts on page 1. First, the 'About' menu option is clicked, navigating to page 8 (the About page). Then, the back navigation button on page 8 is clicked, returning to page 0. There are no branches or loops in this flow.
+
+[Variant Paths] (4)
+ - V1: Omit clicking <Back navigation button> after navigating to the About page
+ - V2: Click <Back navigation button> first and then click <About menu option>
+ - V3: Click <About menu option> twice in a row and then click <Back navigation button>
+ - V4: Navigate to the About page, then click <Back navigation button> twice (though the second click may have no effect as we might already be on the initial page)
+
+================= [TaskTest] FDG[12] =================
+[Function] The page functions as a dashboard for tracking and managing daily activities, displaying a current activity (Woodworking) with its duration, providing quick access to common activity categories (e.g., Cinema, Swimming, Sleeping), and offering options to add (via the plus icon), search (via the search icon), or edit/attach media to the current activity (via the pencil and camera icons).
+
+[Core Logic Task]
+The user starts on the activity details page (page 2) for 'Woodworking'. They click the delete activity button (trash icon), which navigates them back to the main dashboard (page 0) where the 'Woodworking' activity is no longer displayed (or its state is updated).
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Delete activity button> and check if 'Woodworking' activity still appears on the main dashboard
+ - V2: Click <Delete activity button> twice and check the result
+ - V3: Click <Delete activity button> and then immediately click it again without waiting for the page to load
+
+================= [TaskTest] FDG[13] =================
+[Function] The page functions as the main interface of the Activity Diary app, allowing users to track and manage daily activities by selecting from predefined activity categories, viewing details of a current activity (Woodworking with a 7 - minute duration), and accessing options to add (via the '+' button), search (via the search button), or edit/attach media to the activity (via the pencil and camera buttons).
+
+[Core Logic Task]
+The user starts on page 4 (with a 'Note' dialog open). They click the OK button in the dialog, which navigates them to page 0 (the main activity diary interface showing 'Woodworking' with a 7 - minute duration and activity categories).
+
+[Variant Paths] (2)
+ - V1: Omit clicking <OK button> and see if the app navigates to page 0 automatically
+ - V2: Click <OK button> multiple times (e.g., twice) to see if there's any unexpected behavior
+
+================= [TaskTest] FDG[14] =================
+[Function] The current page displays a diary of daily activity entries, each showing the activity name, date and time, and duration, allowing users to view and potentially manage their tracked activities.
+
+[Core Logic Task]
+The user starts on the diary page (page 5) displaying activity entries. The core action is clicking on the 'Woodworking' activity entry (at position [537, 470]), which likely allows managing or viewing details of that specific activity. Since there's one action here, the flow is a single step with no branches or loops for now.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[15] =================
+[Function] The page displays a diary of daily activities with details such as activity name, date, time, and duration, allowing users to view and potentially manage their activity entries.
+
+[Core Logic Task]
+The user starts on the Diary page (page 5) which lists daily activity entries. The core action is clicking on a specific activity entry (e.g., 'Cinema') to view or manage its details. There are no branches or loops here as the provided action is a single click on an entry, with the page remaining the same (dst_page_idx = 5) after the click, likely to show detailed info or trigger management options for that entry.
+
+[Variant Paths] (3)
+ - V1: Tap <Cinema activity entry> twice (repeat interaction)
+ - V2: Omit tapping <Cinema activity entry> (skip the core action)
+ - V3: Long - press <Cinema activity entry> (alternative interaction type)
+
+================= [TaskTest] FDG[16] =================
+[Function] The current page displays a diary of daily activity entries, each showing the activity name, date and time, and duration, allowing users to view and potentially manage their tracked activities.
+
+[Core Logic Task]
+The user starts on the diary page (page 5) displaying activity entries. The core action is clicking the orange activity entry, which likely allows interaction with or management of that specific tracked activity. Since there's only one action here, the flow is a single step focused on engaging with the orange entry.
+
+[Variant Paths] (3)
+ - V1: Tap <Orange activity entry> twice (repeat interaction)
+ - V2: Omit tapping <Orange activity entry> (skip the core interaction)
+ - V3: Tap <Orange activity entry> (original, kept as a base for comparison)
+
+================= [TaskTest] FDG[17] =================
+[Function] The current page displays a diary of daily activity entries, each showing the activity name, date and time, and duration, allowing users to view and potentially manage their tracked activities.
+
+[Core Logic Task]
+The user starts on the Diary page (page 5) showing daily activity entries. The core action is clicking on the 'Woodworking' activity entry (at the specified position). This action likely allows interaction with or management of that specific tracked activity, and the flow remains on the same page (page 5) after the click, with no branching or looping in this single-step logic.
+
+[Variant Paths] (3)
+ - V1: Tap <Woodworking activity entry> twice (repeat interaction)
+ - V2: Omit tapping <Woodworking activity entry> (skip the core interaction)
+ - V3: Long-press <Woodworking activity entry> (alternative interaction type instead of tap)
+
+================= [TaskTest] FDG[18] =================
+[Function] The current page displays a diary of daily activities, showing entries with their respective timestamps and durations, and allows interaction with the "Woodworking" activity entry to view or manage its details.
+
+[Core Logic Task]
+The user starts on the Diary page (page 5) which displays daily activity entries with timestamps and durations. The user interacts with the 'Cinema' activity entry (identified by action_ref [5,4]) by clicking on it. Since the action's dst_page_idx is 5, the flow remains on the same page after the click, likely to view or manage details of the 'Cinema' entry.
+
+[Variant Paths] (2)
+ - V1: Tap <Cinema activity entry> twice (repeat interaction)
+ - V2: Omit tapping <Cinema activity entry> (skip the interaction step)
+
+================= [TaskTest] FDG[19] =================
+[Function] The current page displays a diary of daily activities, showing entries with their respective timestamps and durations, and allows users to view detailed information about a selected activity (e.g., Woodworking) by interacting with its entry.
+
+[Core Logic Task]
+The user starts on the diary page (page 5) displaying daily activity entries. The user clicks on the 'Woodworking' activity entry (with timestamp and duration) to view its detailed information. Since there's only one action here, the flow is a single step with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Tap <Woodworking activity entry> twice (repeat interaction)
+ - V2: Omit tapping <Woodworking activity entry> (skip viewing details)
+ - V3: Tap <Woodworking activity entry> with a long-press (alter interaction type, though original is click; assuming long-press is a variant here)
+
+================= [TaskTest] FDG[20] =================
+[Function] This page allows the user to view, edit, or delete the details (title and color) of the "Woodworking" activity, with options to confirm changes, discard them, or remove the activity entirely.
+
+[Core Logic Task]
+The user starts on the 'Manage Activities' page. They click on the 'Woodworking' activity item, which navigates to the 'Woodworking' activity details page where they can view, edit, or delete the activity's title and color, with options to confirm, discard, or remove the activity.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[21] =================
+[Function] This page allows the user to view, edit, delete, or confirm changes to the details (title and color) of the "Woodworking" activity.
+
+[Core Logic Task]
+The user starts on the 'Manage Activities' page (page 6). They click on the 'Woodworking' activity item, which navigates to the 'Woodworking' activity details page (page 2) where they can view, edit, delete, or confirm changes to its title and color.
+
+[Variant Paths] (1)
+ - V1: Tap <Cleaning activity item> instead of the 'Woodworking' activity item from the 'Manage Activities' page (page 6) to see if it navigates to the 'Cleaning' activity details page (checking branch mutation by choosing an alternative activity item widget)
+
+================= [TaskTest] FDG[22] =================
+[Function] This page allows the user to view, edit, or delete the details (title and color) of the "Woodworking" activity, with options to confirm changes, discard them, or remove the activity entirely.
+
+[Core Logic Task]
+The user starts on the 'Manage Activities' page (page 6). They click on the 'Woodworking' activity item (action from page 6 to page 2), which navigates to the 'Woodworking' details page (page 2) where they can view, edit, or delete the activity's details. No branches or loops are present in this initial step of accessing the activity's details.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[23] =================
+[Function] This page allows the user to view, edit, delete, or confirm changes to the details (title and color) of the "Woodworking" activity.
+
+[Core Logic Task]
+The user starts on the 'Manage Activities' page (page 6). They click on the 'Woodworking' activity item (action_ref [6,3]), which navigates to the 'Woodworking' details page (page 2) where they can view, edit, delete, or confirm changes to its title and color. No branches or loops are present in this initial navigation step.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[24] =================
+[Function] This page allows the user to view, edit, delete, or confirm changes to the details (title and color) of the "Woodworking" activity.
+
+[Core Logic Task]
+The user starts on the 'Manage Activities' page. They click on the 'Woodworking' activity item, which navigates to the 'Woodworking' activity details page where they can view, edit, delete, or confirm changes to its title and color.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[25] =================
+[Function] This page allows the user to view, edit, or delete the details (title and color) of the "Woodworking" activity, with options to confirm changes, discard edits, or remove the activity entirely.
+
+[Core Logic Task]
+The user starts on the Manage Activities page (page 6) and clicks the 'Woodworking' activity item. This action navigates to the Woodworking activity details page (page 2), where the user can view, edit, or delete the activity's details (title and color), with options to confirm changes, discard edits, or remove the activity entirely.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[26] =================
+[Function] This page allows the user to view, edit, delete, or confirm changes to the details (title and color) of the "Woodworking" activity.
+
+[Core Logic Task]
+The user starts on the Manage Activities page (page 6). They click on the 'Woodworking' activity item (though the provided action is for 'Sleeping', assuming a typo or oversight, the intended flow is to access Woodworking's details). This action navigates to the Woodworking details page (page 2), where the user can view, edit, delete, or confirm changes to its title and color.
+
+[Variant Paths] (3)
+ - V1: Tap <Sleeping activity item> and then immediately tap it again (repeat interaction)
+ - V2: Omit the step of tapping <Sleeping activity item> (though this may not access the details, testing the omission)
+ - V3: Tap <Sleeping activity item> in a different order (if there were other steps, but here just repeating the tap logic with the given widget)
+
+================= [TaskTest] FDG[27] =================
+[Function] This page allows the user to view, edit, delete, or confirm changes to the details (title and color) of the "Woodworking" activity.
+
+[Core Logic Task]
+The user starts on the 'Manage Activities' page. They click on the 'Woodworking' activity item (not shown in the provided action, but inferring the flow to reach its details). Once on the 'Woodworking' details page, the user can view, edit the title/color, delete via the trash icon, or confirm changes via the checkmark. The provided action is for 'Swimming', but the functional point focuses on 'Woodworking', so the core logic involves interacting with 'Woodworking' to perform view/edit/delete/confirm actions.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[28] =================
+[Function] This page allows the user to view, edit, delete, or confirm changes to the details (title and color) of the "Woodworking" activity, with options to cancel, save, or remove the activity.
+
+[Core Logic Task]
+The user starts on the 'Manage Activities' page. They click the 'Woodworking' activity item, which navigates to the 'Woodworking' details page where they can view, edit, delete, or confirm changes to the activity's title and color, with options to cancel, save, or remove the activity.
+
+[Variant Paths] (3)
+ - V1: Tap <Woodworking activity item> twice
+ - V2: Omit tapping <Woodworking activity item> (though this would not navigate to details, testing if the app handles no interaction)
+ - V3: Tap <Woodworking activity item> then immediately tap it again (repeat interaction)
+
+================= [TaskTest] FDG[29] =================
+[Function] The current page (a modal window within the Settings page) allows the user to configure and confirm the date and time display format for the start of an activity, with options to cancel or save the selected format (e.g., yyyy.MM.dd HH:mm).
+
+[Core Logic Task]
+The user starts on the Settings page (page 7) and clicks to open the Date Format modal. In the modal (page 11), the user can either cancel (returning to Settings) or confirm (saving changes and returning to Settings), or edit the date format (navigating to an input page, though the main flow focuses on cancel/confirm).
+
+[Variant Paths] (5)
+ - V1: Start on Settings page, tap <Date Format display> to open modal, then tap <OK button> (instead of possible cancel, testing confirm branch)
+ - V2: Start on Settings page, tap <Date Format display> to open modal, then tap <CANCEL button> (testing cancel branch)
+ - V3: Start on Settings page, tap <Date Format display> to open modal, input empty string into <Date format input field>, then tap <OK button> (boundary input + confirm)
+ - V4: Start on Settings page, tap <Date Format display> to open modal, input a very long string (e.g., 1000 characters) into <Date format input field>, then tap <OK button> (boundary input + confirm)
+ - V5: Start on Settings page, tap <Date Format display> to open modal, tap <OK button> without interacting with <Date format input field> (omit input step, test save without edit)
+
+================= [TaskTest] FDG[30] =================
+[Function] Select New Activities toggle
+
+[Core Logic Task]
+The process starts on page 7 (Settings). The user clicks the 'Select New Activities' toggle, which transitions the app to page 12. This action completes the task of selecting the toggle.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Select New Activities toggle> (to test if the app still transitions to page 12 without the action, though this should fail as per the core logic)
+ - V2: Tap <Select New Activities toggle> twice (to test if repeated tapping causes any unexpected behavior or multiple transitions)
+ - V3: Tap <Select New Activities toggle> and then immediately tap it again (same as above, emphasizing the repeat action)
+
+================= [TaskTest] FDG[31] =================
+[Function] Crash Reporting toggle
+
+[Core Logic Task]
+The flow starts on the Settings page (page 7). The user clicks the Crash Reporting toggle, which likely toggles its state (on/off) and may navigate to a new page (page 13) or update the current page's UI to reflect the new toggle state. There are no branches or loops as only one action is involved.
+
+[Variant Paths] (3)
+ - V1: Tap <Crash Reporting toggle> twice (repeat the toggle action)
+ - V2: Omit tapping <Crash Reporting toggle> (do nothing to see if state changes or error occurs)
+ - V3: Tap <Crash Reporting toggle> and then immediately tap it again (quick repeated toggle)
+
+================= [TaskTest] FDG[32] =================
+[Function] The current page (a dialog within the Settings page) allows the user to view and potentially modify the directory (folder) where activity - related photos are stored, with the current folder named "ActivityDiary" and options to cancel or confirm the setting.
+
+[Core Logic Task]
+The user starts on the Settings page and clicks to open the Picture Storage Folder dialog (showing the current folder 'ActivityDiary'). In the dialog, the user can either click the input field to modify the folder name, or choose to cancel (returning to Settings) or confirm (saving changes and returning to Settings) via the respective buttons.
+
+[Variant Paths] (5)
+ - V1: Start on Settings page, open Picture Storage Folder dialog. Omit interacting with <ActivityDiary input field>, directly tap <OK button> to save (even if no change).
+ - V2: Start on Settings page, open Picture Storage Folder dialog. Input empty string into <ActivityDiary input field>, then tap <OK button> to save.
+ - V3: Start on Settings page, open Picture Storage Folder dialog. Input very long text (e.g., 1000 'a's) into <ActivityDiary input field>, then tap <OK button> to save.
+ - V4: Start on Settings page, open Picture Storage Folder dialog. Input special chars (e.g., '@#$%') into <ActivityDiary input field>, then tap <OK button> to save.
+ - V5: Start on Settings page, open Picture Storage Folder dialog. Tap <CANCEL button> instead of <OK button> after (or without) modifying <ActivityDiary input field>.
+
+================= [TaskTest] FDG[33] =================
+[Function] Metadata toggle
+
+[Core Logic Task]
+The user starts on the Settings page (page 7). The core action is clicking the Metadata toggle, which likely navigates to or updates a related page (page 15) to adjust metadata settings. There are no branches or loops here as it’s a single click action to interact with the toggle.
+
+[Variant Paths] (3)
+ - V1: Tap <Metadata toggle> twice (repeat the toggle action)
+ - V2: Omit tapping <Metadata toggle> (do nothing on the Settings page related to this toggle)
+ - V3: Tap <Metadata toggle> and then immediately tap <Metadata toggle> again (quick repeated toggle)
+
+[AppTest] Found 31 dependency pairs to test.
+
+==============================================
+[AppTest] Pair 1/31: 0 -> 3
+Producer: Track and manage daily activities
+Consumer: This page allows the user to edit the title and color of a daily activity (specifically "Woodworking") and provides options to save, delete, or cancel the changes.
+
+[Plan]
+Case 1/5
+Producer task:
+ On the activity diary page, click the 'Woodworking' activity tag to track/manage it.
+Consumer task:
+ Click the plus icon to edit the 'Woodworking' activity (from Producer), then edit its title via the input field.
+------------------------------
+Case 2/5
+Producer task:
+ On the activity diary page, click the 'Woodworking' activity tag to track/manage it.
+Consumer task:
+ Click the plus icon to edit the 'Woodworking' activity (from Producer), then adjust its color using the color selection bar.
+------------------------------
+Case 3/5
+Producer task:
+ On the activity diary page, click the 'Woodworking' activity tag to track/manage it.
+Consumer task:
+ Click the plus icon to edit the 'Woodworking' activity (from Producer), then modify the red color slider for its color.
+------------------------------
+Case 4/5
+Producer task:
+ On the activity diary page, click the 'Woodworking' activity tag to track/manage it.
+Consumer task:
+ Click the plus icon to edit the 'Woodworking' activity (from Producer), then confirm the color selection after adjusting sliders.
+------------------------------
+Case 5/5
+Producer task:
+ On the activity diary page, click the 'Woodworking' activity tag to track/manage it.
+Consumer task:
+ Click the plus icon to edit the 'Woodworking' activity (from Producer), then save the changes made to its title or color.
+------------------------------
+
+==============================================
+[AppTest] Pair 2/31: 0 -> 4
+Producer: Track and manage daily activities
+Consumer: This page functions as a camera interface (likely for augmented reality or activity - related photo capture) that is accessed from the daily activity tracking and management page, enabling users to take photos or record videos, possibly for documenting activities or for AR - related tasks.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the activity diary page (page 0), click the 'Woodworking' activity tag (staying on page 0) to track the Woodworking activity.
+Consumer task:
+ From the activity diary page (page 0), click the camera button to navigate to the camera interface (page 3) and use it to capture a photo/video related to the Woodworking activity tracked earlier.
+------------------------------
+
+==============================================
+[AppTest] Pair 3/31: 0 -> 5
+Producer: Track and manage daily activities
+Consumer: The current page (a "Note" dialog) allows the user to input a note related to a daily activity (accessed via the edit button from the activity tracking page) and either confirm the input with "OK" or cancel the action with "CANCEL".
+
+[Plan]
+Case 1/1
+Producer task:
+ On the activity diary page, click the 'Woodworking' activity tag to track or manage the Woodworking activity.
+Consumer task:
+ From the activity tracking page, click the Edit button to open the Note dialog. Then, either input text in the note field (related to the Woodworking activity tracked earlier) or click the CANCEL button to exit the dialog without saving.
+------------------------------
+
+==============================================
+[AppTest] Pair 4/31: 0 -> 7
+Producer: Track and manage daily activities
+Consumer: The Diary page displays a list of daily activities with their respective timestamps and durations, allowing users to view and track their activity history.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the activity diary page (page 0), click the 'Woodworking' activity tag to track/manage the Woodworking activity.
+Consumer task:
+ From page 1, click the 'Diary' menu option to navigate to page 5. On the Diary page (page 5), verify that the 'Woodworking' activity (tracked via the producer task) is displayed with its timestamp and duration.
+------------------------------
+
+==============================================
+[AppTest] Pair 5/31: 0 -> 8
+Producer: Track and manage daily activities
+Consumer: The current page allows users to edit or add a new activity by specifying the activity title and selecting an activity color, with options to save, delete, or cancel the changes.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the activity diary page (page 0), click the 'Woodworking' activity tag to track/manage it.
+Consumer task:
+ On page 1, click 'Add Activity' to navigate to page 2 (activity editing interface). Verify that the activity data for 'Woodworking' (from the producer task) is available for editing or use in specifying the activity title and color.
+------------------------------
+
+==============================================
+[AppTest] Pair 6/31: 0 -> 12
+Producer: Track and manage daily activities
+Consumer: The page functions as a dashboard for tracking and managing daily activities, displaying a current activity (Woodworking) with its duration, providing quick access to common activity categories (e.g., Cinema, Swimming, Sleeping), and offering options to add (via the plus icon), search (via the search icon), or edit/attach media to the current activity (via the pencil and camera icons).
+
+[Plan]
+Case 1/1
+Producer task:
+ On the activity diary page (page 0), click the 'Woodworking' activity tag.
+Consumer task:
+ On the activity details page (page 2) for 'Woodworking', click the delete activity button (trash icon), then check the main dashboard (page 0) to confirm 'Woodworking' is no longer displayed (or its state is updated).
+------------------------------
+
+==============================================
+[AppTest] Pair 7/31: 0 -> 17
+Producer: Track and manage daily activities
+Consumer: The current page displays a diary of daily activity entries, each showing the activity name, date and time, and duration, allowing users to view and potentially manage their tracked activities.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the activity diary page (page 0), click on the 'Woodworking' activity tag to track or manage the Woodworking activity.
+Consumer task:
+ On the Diary page (page 5) showing daily activity entries, click on the 'Woodworking' activity entry (produced by the previous step) to interact with or manage that specific tracked Woodworking activity.
+------------------------------
+
+==============================================
+[AppTest] Pair 8/31: 0 -> 19
+Producer: Track and manage daily activities
+Consumer: The current page displays a diary of daily activities, showing entries with their respective timestamps and durations, and allows users to view detailed information about a selected activity (e.g., Woodworking) by interacting with its entry.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the activity diary page (page 0), click the 'Woodworking' activity tag.
+Consumer task:
+ On the diary page (page 5), click the 'Woodworking' activity entry (with timestamp and duration) to view its detailed information.
+------------------------------
+
+==============================================
+[AppTest] Pair 9/31: 0 -> 21
+Producer: Track and manage daily activities
+Consumer: This page allows the user to view, edit, delete, or confirm changes to the details (title and color) of the "Woodworking" activity.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the activity diary page (page 0), click the 'Woodworking' activity tag to track/manage it.
+Consumer task:
+ On the 'Manage Activities' page (page 6), click the 'Woodworking' activity item (produced by the producer) to navigate to its details page (page 2) and verify its details can be viewed/edited/deleted/confirmed.
+------------------------------
+
+==============================================
+[AppTest] Pair 10/31: 0 -> 27
+Producer: Track and manage daily activities
+Consumer: This page allows the user to view, edit, delete, or confirm changes to the details (title and color) of the "Woodworking" activity.
+
+[Plan]
+Case 1/4
+Producer task:
+ On the activity diary page, click the 'Woodworking' activity tag to track/manage it.
+Consumer task:
+ On the 'Manage Activities' page, click the 'Woodworking' activity item to open its details page, then verify you can view its details (title, color).
+------------------------------
+Case 2/4
+Producer task:
+ On the activity diary page, click the 'Woodworking' activity tag to track/manage it.
+Consumer task:
+ On the 'Manage Activities' page, click the 'Woodworking' activity item to open its details page, then attempt to edit the title (e.g., add a suffix like ' - Hobby') and confirm the change.
+------------------------------
+Case 3/4
+Producer task:
+ On the activity diary page, click the 'Woodworking' activity tag to track/manage it.
+Consumer task:
+ On the 'Manage Activities' page, click the 'Woodworking' activity item to open its details page, then attempt to edit the color (e.g., select a different color) and confirm the change.
+------------------------------
+Case 4/4
+Producer task:
+ On the activity diary page, click the 'Woodworking' activity tag to track/manage it.
+Consumer task:
+ On the 'Manage Activities' page, click the 'Woodworking' activity item to open its details page, then click the trash icon to delete the 'Woodworking' activity and confirm the deletion.
+------------------------------
+
+==============================================
+[AppTest] Pair 11/31: 0 -> 28
+Producer: Track and manage daily activities
+Consumer: This page allows the user to view, edit, delete, or confirm changes to the details (title and color) of the "Woodworking" activity, with options to cancel, save, or remove the activity.
+
+[Plan]
+Case 1/5
+Producer task:
+ On the activity diary page (page 0), click the 'Woodworking' activity tag.
+Consumer task:
+ On the 'Manage Activities' page, click the 'Woodworking' activity item, then verify the activity details (title and color) on the 'Woodworking' details page match the tracked data.
+------------------------------
+Case 2/5
+Producer task:
+ Navigate to the activity diary page (page 0) and click the 'Woodworking' activity tag to track it.
+Consumer task:
+ Go to the 'Manage Activities' page, select the 'Woodworking' activity item, and check if the details page loads with the correct activity data.
+------------------------------
+Case 3/5
+Producer task:
+ From the activity diary page (page 0), perform a click on the 'Woodworking' activity tag to manage it.
+Consumer task:
+ On the 'Manage Activities' page, click the 'Woodworking' activity item, then confirm that the activity's title and color details are accessible for editing/deletion as expected.
+------------------------------
+Case 4/5
+Producer task:
+ Start on the activity diary page (page 0) and click the 'Woodworking' activity tag to update its tracking.
+Consumer task:
+ Navigate to the 'Manage Activities' page, click the 'Woodworking' activity item, and verify that the details page reflects the updated (tracked) Woodworking activity data.
+------------------------------
+Case 5/5
+Producer task:
+ Click the 'Woodworking' activity tag on the activity diary page (page 0) to track the activity.
+Consumer task:
+ On the 'Manage Activities' page, click the 'Woodworking' activity item, then attempt to edit the activity's title/color to ensure the data from the producer is used for modifications.
+------------------------------
+
+==============================================
+[AppTest] Pair 12/31: 4 -> 5
+Producer: This page functions as a camera interface (likely for augmented reality or activity - related photo capture) that is accessed from the daily activity tracking and management page, enabling users to take photos or record videos, possibly for documenting activities or for AR - related tasks.
+Consumer: The current page (a "Note" dialog) allows the user to input a note related to a daily activity (accessed via the edit button from the activity tracking page) and either confirm the input with "OK" or cancel the action with "CANCEL".
+
+[Plan]
+Case 1/5
+Producer task:
+ From the activity diary page (page 0), click the camera button to navigate to the camera interface (page 3) for potential photo capture related to the activity.
+Consumer task:
+ From the activity tracking page, click the Edit button to open the Note dialog. Input a note related to the activity (for which a photo was potentially captured via the camera interface) in the note field and then confirm the input with 'OK'.
+------------------------------
+Case 2/5
+Producer task:
+ Navigate from the activity diary page (page 0) to the camera interface (page 3) by clicking the camera button, preparing for activity - related photo or video capture.
+Consumer task:
+ On the activity tracking page, click the Edit button to open the Note dialog. Click the 'CANCEL' button to exit the dialog without saving the note related to the activity (for which media was potentially captured via the camera interface).
+------------------------------
+Case 3/5
+Producer task:
+ Start on the activity diary page (page 0) and click the camera button to enter the camera interface (page 3) for activity - related media capture.
+Consumer task:
+ From the activity tracking page, access the Note dialog by clicking the Edit button. Input a note about the activity (with potential media from the camera interface) in the note field.
+------------------------------
+Case 4/5
+Producer task:
+ From the activity diary page (page 0), use the camera button to go to the camera interface (page 3) for activity - related photo/video capture.
+Consumer task:
+ Click the Edit button on the activity tracking page to open the Note dialog. Input a note related to the activity (associated with the camera - captured media) in the note field and then click 'OK' to save the note.
+------------------------------
+Case 5/5
+Producer task:
+ Go from the activity diary page (page 0) to the camera interface (page 3) by clicking the camera button, getting ready for activity - related media capture.
+Consumer task:
+ On the activity tracking page, click the Edit button to open the Note dialog. Input a note about the activity (for which media was captured via the camera interface) and then confirm the input with 'OK'.
+------------------------------
+
+==============================================
+[AppTest] Pair 13/31: 4 -> 14
+Producer: This page functions as a camera interface (likely for augmented reality or activity - related photo capture) that is accessed from the daily activity tracking and management page, enabling users to take photos or record videos, possibly for documenting activities or for AR - related tasks.
+Consumer: The current page displays a diary of daily activity entries, each showing the activity name, date and time, and duration, allowing users to view and potentially manage their tracked activities. Delete the photo of activities.
+
+[Plan]
+Case 1/1
+Producer task:
+ From the activity diary page (page 0), click the camera button to navigate to the camera interface (page 3) and prepare to capture a photo related to an activity.
+Consumer task:
+ On the diary page (page 5), click on the 'Woodworking' activity entry (at position [537, 470]) to view or manage its details, and delete that the photo (if captured) related to this activity is reflected or can be managed.
+------------------------------
+
+==============================================
+[AppTest] Pair 14/31: 4 -> 17
+Producer: This page functions as a camera interface (likely for augmented reality or activity - related photo capture) that is accessed from the daily activity tracking and management page, enabling users to take photos or record videos, possibly for documenting activities or for AR - related tasks.
+Consumer: The current page displays a diary of daily activity entries, each showing the activity name, date and time, and duration, allowing users to view and potentially manage their tracked activities.
+
+[Plan]
+Case 1/1
+Producer task:
+ From the activity diary page (page 0), click the camera button to navigate to the camera interface (page 3) and take a photo related to an activity.
+Consumer task:
+ On the Diary page (page 5) showing daily activity entries, click on the 'Woodworking' activity entry (at the specified position) to check if the photo taken via the camera interface (page 3) is associated with or reflected in this Woodworking diary entry.
+------------------------------
+
+==============================================
+[AppTest] Pair 15/31: 4 -> 19
+Producer: This page functions as a camera interface (likely for augmented reality or activity - related photo capture) that is accessed from the daily activity tracking and management page, enabling users to take photos or record videos, possibly for documenting activities or for AR - related tasks.
+Consumer: The current page displays a diary of daily activities, showing entries with their respective timestamps and durations, and allows users to view detailed information about a selected activity (e.g., Woodworking) by interacting with its entry.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on activity diary page (page 0), click camera button to navigate to camera interface (page 3) for photo/video capture related to activities.
+Consumer task:
+ Start on diary page (page 5) displaying daily activity entries, click on 'Woodworking' activity entry (with timestamp and duration) to view its detailed information, ensuring the entry reflects the activity documented via the camera interface (page 3).
+------------------------------
+
+==============================================
+[AppTest] Pair 16/31: 6 -> 9
+Producer: The current page of the Activity Diary Debug app allows users to track and manage daily activities by displaying a current activity (Woodworking with a 7-minute duration) and providing options to select from a list of predefined activities (e.g., Cinema, Swimming, Sleeping) or use camera/editing features.
+Consumer: The "Manage Activities" page allows users to view, edit, and potentially add (via the '+' icon) different types of daily activities (e.g., Cinema, Cleaning, Cooking) for the purpose of tracking and managing their daily routines.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 1 (menu open), click 'Select Activity' menu option to navigate to page 0 (displays current activity 'Woodworking' (7 min) and predefined activity list like Cinema, Swimming, plus camera/edit options).
+Consumer task:
+ Start on page 1, click 'Edit Activities' menu option to navigate to page 6 ('Manage Activities' page). Verify that the activity list (including 'Woodworking' and predefined activities like Cinema, Swimming from Producer's page 0) is visible for viewing, editing, or adding.
+------------------------------
+
+==============================================
+[AppTest] Pair 17/31: 9 -> 20
+Producer: The "Manage Activities" page allows users to view, edit, and potentially add (via the '+' icon) different types of daily activities (e.g., Cinema, Cleaning, Cooking) for the purpose of tracking and managing their daily routines.
+Consumer: This page allows the user to view, edit, or delete the details (title and color) of the "Woodworking" activity, with options to confirm changes, discard them, or remove the activity entirely.
+
+[Plan]
+Case 1/5
+Producer task:
+ Start on page 1, click 'Edit Activities' menu option to navigate to 'Manage Activities' page (page 6) to load the activity list for management.
+Consumer task:
+ On 'Manage Activities' page (page 6), click on the 'Woodworking' activity item to navigate to its details page, then view the activity's title and color, and verify if the 'Woodworking' activity details are correctly loaded as per the data from the 'Manage Activities' page.
+------------------------------
+Case 2/5
+Producer task:
+ Start on page 1, click 'Edit Activities' to go to 'Manage Activities' page (page 6) and add a new 'Cinema' activity (using the '+' icon) to the activity list.
+Consumer task:
+ On 'Manage Activities' page (page 6), click on the 'Woodworking' activity item to navigate to its details page, then check if there's any indication (e.g., in related lists or navigation) that the newly added 'Cinema' activity from the 'Manage Activities' page is properly managed alongside the 'Woodworking' activity details.
+------------------------------
+Case 3/5
+Producer task:
+ Start on page 1, click 'Edit Activities' to navigate to 'Manage Activities' page (page 6), then edit the 'Woodworking' activity's title (e.g., change to 'Woodworking - Updated') in the activity list on this page.
+Consumer task:
+ On 'Manage Activities' page (page 6), click on the 'Woodworking' activity item (with updated title) to navigate to its details page, then verify if the updated title from the 'Manage Activities' page is reflected in the 'Woodworking' activity details page.
+------------------------------
+Case 4/5
+Producer task:
+ Start on page 1, click 'Edit Activities' to go to 'Manage Activities' page (page 6) and ensure the 'Woodworking' activity is present in the loaded activity list for management.
+Consumer task:
+ On 'Manage Activities' page (page 6), click on the 'Woodworking' activity item to navigate to its details page, then try to edit the activity's color (e.g., change to red), confirm the change, and verify if the color change is saved and reflected back in the 'Manage Activities' page's activity list for the 'Woodworking' activity.
+------------------------------
+Case 5/5
+Producer task:
+ Start on page 1, click 'Edit Activities' to navigate to 'Manage Activities' page (page 6) and remove the 'Woodworking' activity from the activity list (using the appropriate delete option if available).
+Consumer task:
+ On 'Manage Activities' page (page 6), check if the 'Woodworking' activity item is no longer present in the activity list, and if clicking on the now - absent 'Woodworking' activity item (to navigate to its details page) is no longer possible, verifying the deletion from the 'Manage Activities' page is reflected in the consumer's ability to access the 'Woodworking' activity details.
+------------------------------
+
+==============================================
+[AppTest] Pair 18/31: 9 -> 21
+Producer: The "Manage Activities" page allows users to view, edit, and potentially add (via the '+' icon) different types of daily activities (e.g., Cinema, Cleaning, Cooking) for the purpose of tracking and managing their daily routines.
+Consumer: This page allows the user to view, edit, delete, or confirm changes to the details (title and color) of the "Woodworking" activity.
+
+[Plan]
+Case 1/5
+Producer task:
+ Start on page 1, click 'Edit Activities' menu option to navigate to page 6 (Manage Activities page) to load the activity list.
+Consumer task:
+ On page 6 (Manage Activities page), click the 'Woodworking' activity item to navigate to page 2 (Woodworking activity details page) to view its title and color.
+------------------------------
+Case 2/5
+Producer task:
+ From page 1, access 'Edit Activities' to reach page 6 (Manage Activities page) and load activities including 'Woodworking'.
+Consumer task:
+ In page 6 (Manage Activities page), select the 'Woodworking' activity to open page 2 and check if its title and color details are as expected from the producer's data.
+------------------------------
+Case 3/5
+Producer task:
+ Navigate from page 1 to page 6 (Manage Activities page) via 'Edit Activities' to get the activity list with 'Woodworking'.
+Consumer task:
+ On page 6, click 'Woodworking' activity to go to page 2 and verify that the activity details (title, color) are correctly loaded from the producer's data.
+------------------------------
+Case 4/5
+Producer task:
+ Start at page 1, use 'Edit Activities' to reach page 6 (Manage Activities page) and load the activity list containing 'Woodworking'.
+Consumer task:
+ From page 6, tap on 'Woodworking' activity to open page 2 and confirm that the activity's title and color are as produced by the producer function.
+------------------------------
+Case 5/5
+Producer task:
+ Go from page 1 to page 6 (Manage Activities page) by clicking 'Edit Activities' to load activities like 'Woodworking'.
+Consumer task:
+ On page 6, click the 'Woodworking' activity item to navigate to page 2 and ensure the activity details (title, color) reflect the data from the producer's output.
+------------------------------
+
+==============================================
+[AppTest] Pair 19/31: 9 -> 23
+Producer: The "Manage Activities" page allows users to view, edit, and potentially add (via the '+' icon) different types of daily activities (e.g., Cinema, Cleaning, Cooking) for the purpose of tracking and managing their daily routines.
+Consumer: This page allows the user to view, edit, delete, or confirm changes to the details (title and color) of the "Woodworking" activity.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 1, click the 'Edit Activities' menu option to navigate to page 6 (Manage Activities page) and load the activity list.
+Consumer task:
+ On the Manage Activities page (page 6), click on the 'Woodworking' activity item to navigate to its details page and verify access to view/edit its title and color.
+------------------------------
+
+==============================================
+[AppTest] Pair 20/31: 9 -> 24
+Producer: The "Manage Activities" page allows users to view, edit, and potentially add (via the '+' icon) different types of daily activities (e.g., Cinema, Cleaning, Cooking) for the purpose of tracking and managing their daily routines.
+Consumer: This page allows the user to view, edit, delete, or confirm changes to the details (title and color) of the "Woodworking" activity.
+
+[Plan]
+Case 1/5
+Producer task:
+ Start on page 1, click 'Edit Activities' menu option to navigate to page 6 (Manage Activities page) and load the activity list.
+Consumer task:
+ On the Manage Activities page, click the 'Woodworking' activity item to navigate to its details page and verify that the activity details (title, color) match the data from the Manage Activities page.
+------------------------------
+Case 2/5
+Producer task:
+ Navigate to page 6 (Manage Activities page) via 'Edit Activities' from page 1, then add a new activity (e.g., 'Gardening') to the activity list.
+Consumer task:
+ On the Manage Activities page, click the newly added 'Gardening' activity item (assuming it's now part of the activity list) to navigate to its details page and check its initial details (title, default color).
+------------------------------
+Case 3/5
+Producer task:
+ Go to page 6 (Manage Activities page) by clicking 'Edit Activities' from page 1, then edit the title of the 'Woodworking' activity to 'Carpentry' in the activity list.
+Consumer task:
+ Click on the 'Carpentry' (previously 'Woodworking') activity item on the Manage Activities page to open its details page and confirm that the title is now 'Carpentry'.
+------------------------------
+Case 4/5
+Producer task:
+ Navigate to the Manage Activities page (page 6) from page 1 using 'Edit Activities', then change the color of the 'Woodworking' activity in the activity list.
+Consumer task:
+ Click the 'Woodworking' activity item on the Manage Activities page to go to its details page and verify that the color matches the updated color from the Manage Activities page.
+------------------------------
+Case 5/5
+Producer task:
+ From page 1, click 'Edit Activities' to reach page 6 (Manage Activities page) and load the activity list, then delete the 'Woodworking' activity from the list (if deletion is allowed in the producer logic).
+Consumer task:
+ Check the Manage Activities page to ensure 'Woodworking' is no longer in the activity list, and attempt to click on it (should not be possible as it's deleted) to confirm it's removed from the details page navigation options.
+------------------------------
+
+==============================================
+[AppTest] Pair 21/31: 9 -> 25
+Producer: The "Manage Activities" page allows users to view, edit, and potentially add (via the '+' icon) different types of daily activities (e.g., Cinema, Cleaning, Cooking) for the purpose of tracking and managing their daily routines.
+Consumer: This page allows the user to view, edit, or delete the details (title and color) of the "Woodworking" activity, with options to confirm changes, discard edits, or remove the activity entirely.
+
+[Plan]
+Case 1/5
+Producer task:
+ From page 1, click the 'Edit Activities' menu option to navigate to the 'Manage Activities' page (page 6) and load the activity list.
+Consumer task:
+ On the 'Manage Activities' page (page 6), click the 'Woodworking' activity item (from the loaded activity list) to navigate to its details page (page 2) and view its details (title and color).
+------------------------------
+Case 2/5
+Producer task:
+ Navigate from page 1 to the 'Manage Activities' page (page 6) by clicking 'Edit Activities' to access and load the activity list for management.
+Consumer task:
+ In the 'Manage Activities' page (page 6), select the 'Woodworking' activity item (from the loaded list) to open its details page (page 2) and check if you can edit its title and color.
+------------------------------
+Case 3/5
+Producer task:
+ Start on page 1, click 'Edit Activities' to go to the 'Manage Activities' page (page 6) and load the activity list including 'Woodworking'.
+Consumer task:
+ From the 'Manage Activities' page (page 6), click the 'Woodworking' activity item (from the loaded list) to enter its details page (page 2) and attempt to delete the activity (using the remove option).
+------------------------------
+Case 4/5
+Producer task:
+ Go from page 1 to the 'Manage Activities' page (page 6) via 'Edit Activities' to load the activity list for management.
+Consumer task:
+ On the 'Manage Activities' page (page 6), click the 'Woodworking' activity item (from the loaded list) to open its details page (page 2) and try to confirm changes after editing its title.
+------------------------------
+Case 5/5
+Producer task:
+ From page 1, access the 'Manage Activities' page (page 6) by clicking 'Edit Activities' to load the activity list with 'Woodworking'.
+Consumer task:
+ In the 'Manage Activities' page (page 6), click the 'Woodworking' activity item (from the loaded list) to navigate to its details page (page 2) and check if you can discard edits after modifying its color.
+------------------------------
+
+==============================================
+[AppTest] Pair 22/31: 9 -> 26
+Producer: The "Manage Activities" page allows users to view, edit, and potentially add (via the '+' icon) different types of daily activities (e.g., Cinema, Cleaning, Cooking) for the purpose of tracking and managing their daily routines.
+Consumer: This page allows the user to view, edit, delete, or confirm changes to the details (title and color) of the "Woodworking" activity.
+
+[Plan]
+Case 1/5
+Producer task:
+ Start on page 1, click 'Edit Activities' menu option to navigate to page 6 (Manage Activities page) and load the activity list.
+Consumer task:
+ On page 6 (Manage Activities page), click the 'Woodworking' activity item to navigate to page 2 (Woodworking details page) and verify that the activity's title and color (from the producer's loaded list) are correctly displayed for viewing, editing, or deletion.
+------------------------------
+Case 2/5
+Producer task:
+ Navigate to page 6 (Manage Activities page) via 'Edit Activities' from page 1, then add a new 'Gardening' activity (using the '+' icon) to the activity list.
+Consumer task:
+ On page 6, click the newly added 'Gardening' activity item (from the producer's updated list) to open its details page (page 2) and confirm the activity's default title and color are loaded for management.
+------------------------------
+Case 3/5
+Producer task:
+ Go to page 6 (Manage Activities page) by clicking 'Edit Activities' from page 1, then edit the 'Cooking' activity’s title to 'Baking' and save the change in the activity list.
+Consumer task:
+ On page 6, click the 'Cooking' (now 'Baking') activity item (from the producer's updated list) to access its details page (page 2) and verify the updated title 'Baking' is displayed correctly for further edits or deletion.
+------------------------------
+Case 4/5
+Producer task:
+ Start on page 1, click 'Edit Activities' to reach page 6 (Manage Activities page) and load the activity list, then delete the 'Cleaning' activity from the list (via edit/delete options on page 6).
+Consumer task:
+ On page 6, attempt to click the 'Cleaning' activity item (now removed from the producer's list) and verify that it no longer exists in the activity list for selection (or confirm the list no longer includes it).
+------------------------------
+Case 5/5
+Producer task:
+ Navigate to page 6 (Manage Activities page) from page 1 via 'Edit Activities', then edit the 'Cinema' activity’s color to 'Purple' and update the activity list.
+Consumer task:
+ On page 6, click the 'Cinema' activity item (from the producer's updated list) to open page 2 (Cinema details page) and verify the updated 'Purple' color is displayed alongside the activity’s title for management.
+------------------------------
+
+==============================================
+[AppTest] Pair 23/31: 10 -> 29
+Producer: The Settings page for the Activity Diary app allows users to configure various options including date format, activity selection behavior, crash reporting, image storage and metadata, and conditions for activity sorting and sequencing.
+Consumer: The current page (a modal window within the Settings page) allows the user to configure and confirm the date and time display format for the start of an activity, with options to cancel or save the selected format (e.g., yyyy.MM.dd HH:mm).
+
+[Plan]
+Case 1/4
+Producer task:
+ Click Settings menu option to load Settings page, then click 'Activity Sequence info' to open its config dialog and select radio button OFF to update activity sequence setting.
+Consumer task:
+ From the loaded Settings page (from Producer), click to open Date Format modal, then confirm (save) the date format setting (using existing or default format) and return to Settings page.
+------------------------------
+Case 2/4
+Producer task:
+ Access Settings page, open Activity Sequence config dialog, select radio button value 15 to update activity sequence setting.
+Consumer task:
+ From the Settings page (from Producer), open Date Format modal, click cancel to return to Settings page (verifying that date format setting remains as before Producer's action, or reflects prior state).
+------------------------------
+Case 3/4
+Producer task:
+ Open Settings page, open Activity Sequence config dialog, select radio button value 30 to update activity sequence setting.
+Consumer task:
+ From the Settings page (from Producer), open Date Format modal, confirm the date format setting (e.g., set to yyyy.MM.dd HH:mm) and save changes, then return to Settings page to verify the updated date format setting is applied.
+------------------------------
+Case 4/4
+Producer task:
+ Load Settings page, open Activity Sequence config dialog, select radio button value 50 to update activity sequence setting.
+Consumer task:
+ From the Settings page (from Producer), open Date Format modal, edit the date format (navigate to input page, modify format like 'yyyy-MM-dd HH:mm') and confirm to save the new date format setting, then return to Settings page.
+------------------------------
+
+==============================================
+[AppTest] Pair 24/31: 10 -> 30
+Producer: The Settings page for the Activity Diary app allows users to configure various options including date format, activity selection behavior, crash reporting, image storage and metadata, and conditions for activity sorting and sequencing.
+Consumer: Select New Activities toggle
+
+[Plan]
+Case 1/5
+Producer task:
+ Click Settings menu option to enter Settings page, then click 'Activity Sequence info' to open configuration dialog, select radio button OFF, then return to Settings page
+Consumer task:
+ On Settings page (page 7), click 'Select New Activities' toggle to transition to page 12
+------------------------------
+Case 2/5
+Producer task:
+ Click Settings menu option to enter Settings page, then click 'Activity Sequence info' to open configuration dialog, select radio button with value 5, then return to Settings page
+Consumer task:
+ On Settings page (page 7), click 'Select New Activities' toggle to transition to page 12
+------------------------------
+Case 3/5
+Producer task:
+ Click Settings menu option to enter Settings page, then click 'Activity Sequence info' to open configuration dialog, select radio button with value 15, then return to Settings page
+Consumer task:
+ On Settings page (page 7), click 'Select New Activities' toggle to transition to page 12
+------------------------------
+Case 4/5
+Producer task:
+ Click Settings menu option to enter Settings page, then click 'Activity Sequence info' to open configuration dialog, select radio button with value 30, then return to Settings page
+Consumer task:
+ On Settings page (page 7), click 'Select New Activities' toggle to transition to page 12
+------------------------------
+Case 5/5
+Producer task:
+ Click Settings menu option to enter Settings page, then click 'Activity Sequence info' to open configuration dialog, select radio button with value 50, then return to Settings page
+Consumer task:
+ On Settings page (page 7), click 'Select New Activities' toggle to transition to page 12
+------------------------------
+
+==============================================
+[AppTest] Pair 25/31: 10 -> 31
+Producer: The Settings page for the Activity Diary app allows users to configure various options including date format, activity selection behavior, crash reporting, image storage and metadata, and conditions for activity sorting and sequencing.
+Consumer: Crash Reporting toggle
+
+[Plan]
+Case 1/5
+Producer task:
+ Click Settings menu option to load Settings page, then click 'Activity Sequence info' to open configuration dialog and select radio button OFF, then return to Settings page.
+Consumer task:
+ On Settings page, click Crash Reporting toggle and verify UI reflects new crash reporting setting state.
+------------------------------
+Case 2/5
+Producer task:
+ Click Settings menu option to load Settings page, then click 'Activity Sequence info' to open configuration dialog and select radio button with value 5, then return to Settings page.
+Consumer task:
+ On Settings page, click Crash Reporting toggle and verify UI reflects new crash reporting setting state.
+------------------------------
+Case 3/5
+Producer task:
+ Click Settings menu option to load Settings page, then click 'Activity Sequence info' to open configuration dialog and select radio button with value 15, then return to Settings page.
+Consumer task:
+ On Settings page, click Crash Reporting toggle and verify UI reflects new crash reporting setting state.
+------------------------------
+Case 4/5
+Producer task:
+ Click Settings menu option to load Settings page, then click 'Activity Sequence info' to open configuration dialog and select radio button with value 30, then return to Settings page.
+Consumer task:
+ On Settings page, click Crash Reporting toggle and verify UI reflects new crash reporting setting state.
+------------------------------
+Case 5/5
+Producer task:
+ Click Settings menu option to load Settings page, then click 'Activity Sequence info' to open configuration dialog and select radio button with value 50, then return to Settings page.
+Consumer task:
+ On Settings page, click Crash Reporting toggle and verify UI reflects new crash reporting setting state.
+------------------------------
+
+==============================================
+[AppTest] Pair 26/31: 10 -> 32
+Producer: The Settings page for the Activity Diary app allows users to configure various options including date format, activity selection behavior, crash reporting, image storage and metadata, and conditions for activity sorting and sequencing.
+Consumer: The current page (a dialog within the Settings page) allows the user to view and potentially modify the directory (folder) where activity - related photos are stored, with the current folder named "ActivityDiary" and options to cancel or confirm the setting.
+
+[Plan]
+Case 1/5
+Producer task:
+ Click Settings menu option to enter Settings page, then click to open Activity Sequence dialog and select OFF radio button, then return to Settings page.
+Consumer task:
+ On Settings page, click to open Picture Storage Folder dialog (showing 'ActivityDiary' folder), then click cancel button to return to Settings page.
+------------------------------
+Case 2/5
+Producer task:
+ Enter Settings page via Settings menu, open Activity Sequence dialog and select value 5 radio button, then go back to Settings page.
+Consumer task:
+ From Settings page, open Picture Storage Folder dialog (with 'ActivityDiary' folder), click input field to modify folder name, then click confirm button to save and return to Settings page.
+------------------------------
+Case 3/5
+Producer task:
+ Access Settings page, open Activity Sequence dialog and select value 15 radio button, then return to Settings page.
+Consumer task:
+ On Settings page, open Picture Storage Folder dialog (current folder 'ActivityDiary'), click confirm button to save (no change) and return to Settings page.
+------------------------------
+Case 4/5
+Producer task:
+ Go to Settings page by clicking Settings menu, open Activity Sequence dialog and select value 30 radio button, then return to Settings page.
+Consumer task:
+ From Settings page, open Picture Storage Folder dialog (showing 'ActivityDiary' folder), click input field to modify folder name, then click confirm button to save changes and return to Settings page.
+------------------------------
+Case 5/5
+Producer task:
+ Click Settings menu to enter Settings page, open Activity Sequence dialog and select value 50 radio button, then return to Settings page.
+Consumer task:
+ On Settings page, click to open Picture Storage Folder dialog (with 'ActivityDiary' folder), then click input field to modify folder name, then click confirm button to save and return to Settings page.
+------------------------------
+
+==============================================
+[AppTest] Pair 27/31: 10 -> 33
+Producer: The Settings page for the Activity Diary app allows users to configure various options including date format, activity selection behavior, crash reporting, image storage and metadata, and conditions for activity sorting and sequencing.
+Consumer: Metadata toggle
+
+[Plan]
+Case 1/5
+Producer task:
+ Click Settings menu option to load Settings page, then click Activity Sequence info to open configuration dialog and select OFF radio button for activity sequence setting.
+Consumer task:
+ On Settings page, click Metadata toggle to update metadata setting (verify dependency by ensuring metadata setting reflects any prior settings context from Producer).
+------------------------------
+Case 2/5
+Producer task:
+ Enter Settings page via Settings menu, open Activity Sequence dialog and select radio button for value 5 as activity sequence setting.
+Consumer task:
+ From Settings page, click Metadata toggle to interact with and update metadata setting (validate that Consumer's metadata setting is processed in context of Producer's activity sequence setting of 5).
+------------------------------
+Case 3/5
+Producer task:
+ Navigate to Settings page by clicking Settings menu, in Activity Sequence dialog select radio button for value 15 as activity sequence setting.
+Consumer task:
+ Click Metadata toggle on Settings page to adjust metadata setting (check that metadata setting is updated with Producer's activity sequence setting of 15 in context).
+------------------------------
+Case 4/5
+Producer task:
+ Open Settings page via Settings menu, in Activity Sequence dialog choose radio button for value 30 as activity sequence setting.
+Consumer task:
+ On Settings page, click Metadata toggle to modify metadata setting (ensure metadata setting's state is consistent with Producer's activity sequence setting of 30).
+------------------------------
+Case 5/5
+Producer task:
+ Access Settings page through Settings menu, in Activity Sequence dialog select radio button for value 50 as activity sequence setting.
+Consumer task:
+ Click Metadata toggle on Settings page to update metadata setting (verify that Consumer's metadata setting operation is dependent on Producer's activity sequence setting of 50).
+------------------------------
+
+==============================================
+[AppTest] Pair 28/31: 12 -> 27
+Producer: The page functions as a dashboard for tracking and managing daily activities, displaying a current activity (Woodworking) with its duration, providing quick access to common activity categories (e.g., Cinema, Swimming, Sleeping), and offering options to add (via the plus icon), search (via the search icon), or edit/attach media to the current activity (via the pencil and camera icons).
+Consumer: This page allows the user to view, edit, delete, or confirm changes to the details (title and color) of the "Woodworking" activity.
+
+[Plan]
+Case 1/5
+Producer task:
+ Navigate to Woodworking activity details page (page 2), click trash icon to delete Woodworking activity, verify return to main dashboard (page 0) with Woodworking no longer displayed.
+Consumer task:
+ On Manage Activities page, attempt to access Woodworking activity details (via clicking its item); verify that Woodworking activity is not available for viewing/editing (since it was deleted by Producer).
+------------------------------
+Case 2/5
+Producer task:
+ Delete Woodworking activity as per core logic (page 2 → trash → page 0, Woodworking removed).
+Consumer task:
+ From Manage Activities, try to edit Woodworking activity's title/color; verify that the edit option for Woodworking is unavailable (due to deletion by Producer).
+------------------------------
+Case 3/5
+Producer task:
+ Perform deletion of Woodworking activity (page 2, trash icon, return to page 0 with Woodworking gone).
+Consumer task:
+ On Manage Activities, attempt to delete Woodworking activity again; verify that the system does not show Woodworking activity to delete (as it was already deleted by Producer).
+------------------------------
+Case 4/5
+Producer task:
+ Delete Woodworking activity (page 2 → trash → page 0, Woodworking no longer present).
+Consumer task:
+ In Manage Activities, check if Woodworking activity is listed; confirm it is not (consistent with Producer's deletion).
+------------------------------
+Case 5/5
+Producer task:
+ Delete Woodworking activity via its details page (page 2, trash icon, navigate back to page 0, Woodworking removed).
+Consumer task:
+ Try to confirm changes for Woodworking activity on its details page; verify that the checkmark action for confirming changes is not applicable (as Woodworking was deleted by Producer, so the activity details page for it is unreachable or shows no data).
+------------------------------
+
+==============================================
+[AppTest] Pair 29/31: 12 -> 28
+Producer: The page functions as a dashboard for tracking and managing daily activities, displaying a current activity (Woodworking) with its duration, providing quick access to common activity categories (e.g., Cinema, Swimming, Sleeping), and offering options to add (via the plus icon), search (via the search icon), or edit/attach media to the current activity (via the pencil and camera icons).
+Consumer: This page allows the user to view, edit, delete, or confirm changes to the details (title and color) of the "Woodworking" activity, with options to cancel, save, or remove the activity.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the activity details page (page 2) for 'Woodworking', click the trash icon (delete activity button) to navigate back to the main dashboard (page 0) where 'Woodworking' is no longer displayed.
+Consumer task:
+ On the 'Manage Activities' page, attempt to click the 'Woodworking' activity item. Verify that 'Woodworking' is not present (or its state reflects deletion) as the Producer deleted it.
+------------------------------
+
+==============================================
+[AppTest] Pair 30/31: 27 -> 28
+Producer: This page allows the user to view, edit, delete, or confirm changes to the details (title and color) of the "Woodworking" activity.
+Consumer: This page allows the user to view, edit, delete, or confirm changes to the details (title and color) of the "Woodworking" activity, with options to cancel, save, or remove the activity.
+
+[Plan]
+Case 1/5
+Producer task:
+ From 'Manage Activities' page, click 'Woodworking' activity, then on its details page, edit the title (e.g., add 'New ' prefix) and confirm changes via checkmark.
+Consumer task:
+ From 'Manage Activities' page, click 'Woodworking' activity, navigate to its details page, and verify the title reflects the updated title from the producer task.
+------------------------------
+Case 2/5
+Producer task:
+ On 'Woodworking' details page (reached from 'Manage Activities'), edit the color (e.g., change to 'Blue') and confirm changes.
+Consumer task:
+ Navigate to 'Woodworking' details page via 'Manage Activities', and check that the color matches the updated color from the producer task.
+------------------------------
+Case 3/5
+Producer task:
+ From 'Manage Activities', open 'Woodworking' details, delete the activity via trash icon, and confirm deletion.
+Consumer task:
+ Go to 'Manage Activities' page, check that 'Woodworking' activity is no longer listed (reflecting the deletion from producer task).
+------------------------------
+Case 4/5
+Producer task:
+ On 'Woodworking' details page, view the current title and color (as initial data), then confirm no changes (to set baseline).
+Consumer task:
+ Navigate to 'Woodworking' details page, view title and color, and verify they match the baseline data from the producer's view action.
+------------------------------
+Case 5/5
+Producer task:
+ From 'Manage Activities', access 'Woodworking' details, edit both title (e.g., 'Advanced Woodworking') and color (e.g., 'Green'), then confirm changes.
+Consumer task:
+ Open 'Woodworking' details from 'Manage Activities', and verify both the updated title and color are displayed as set in the producer task.
+------------------------------
+
+==============================================
+[AppTest] Pair 31/31: 28 -> 27
+Producer: This page allows the user to view, edit, delete, or confirm changes to the details (title and color) of the "Woodworking" activity, with options to cancel, save, or remove the activity.
+Consumer: This page allows the user to view, edit, delete, or confirm changes to the details (title and color) of the "Woodworking" activity.
+
+[Plan]
+Case 1/5
+Producer task:
+ On 'Manage Activities' page, click 'Woodworking' activity to open its details page, then edit the title (e.g., add ' - Hobby' to it) and click 'Save'.
+Consumer task:
+ On 'Manage Activities' page, click 'Woodworking' activity to open its details page, then verify the title reflects the updated text (with ' - Hobby') and view the color remains as set.
+------------------------------
+Case 2/5
+Producer task:
+ On 'Manage Activities' page, click 'Woodworking' activity to open its details page, then change the color (e.g., to blue) and click 'Save'.
+Consumer task:
+ On 'Manage Activities' page, click 'Woodworking' activity to open its details page, then verify the color is updated to blue and the title is as expected.
+------------------------------
+Case 3/5
+Producer task:
+ On 'Manage Activities' page, click 'Woodworking' activity to open its details page, then click the 'Remove' option to delete the activity and confirm deletion.
+Consumer task:
+ On 'Manage Activities' page, check that the 'Woodworking' activity is no longer listed (verify deletion by attempting to click it or checking the activity list).
+------------------------------
+Case 4/5
+Producer task:
+ On 'Manage Activities' page, click 'Woodworking' activity to open its details page, then edit the title to 'Carpentry' and the color to green, then click 'Save'.
+Consumer task:
+ On 'Manage Activities' page, click 'Woodworking' (now titled 'Carpentry'?) activity to open its details page, then verify the title is 'Carpentry' and color is green.
+------------------------------
+Case 5/5
+Producer task:
+ On 'Manage Activities' page, click 'Woodworking' activity to open its details page, then click 'Cancel' after making a title edit (no save) to ensure original title remains.
+Consumer task:
+ On 'Manage Activities' page, click 'Woodworking' activity to open its details page, then verify the title is unchanged (original 'Woodworking' text) and color is as before.
+------------------------------

@@ -1,0 +1,3879 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "小学生作业学习与互动教育平台",
+            "action_refs": [
+                [
+                    0,
+                    6
+                ],
+                [
+                    0,
+                    8
+                ],
+                [
+                    0,
+                    19
+                ],
+                [
+                    0,
+                    23
+                ]
+            ],
+            "data_in": [
+                "语文标签页功能列表",
+                "voice input content"
+            ],
+            "data_out": [
+                "语文标签页功能列表（展示更新）",
+                "voice input result"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The app starts on the main page (page 0). Users can click the '推荐' tab (S1) to stay on the current page, click the '语文' tab (S2) to navigate to page 6, use the '按住说话' voice input button (S3) to interact (staying on page 0), or click the '检查' bottom tab (S4) to stay on page 0. These actions provide navigation and interaction options for the primary school student learning platform.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            6
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click '推荐' tab to stay on current page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            0,
+                            8
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click '语文' tab to navigate to page 6"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            0,
+                            19
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click '按住说话' voice input button"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            0,
+                            23
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click '检查' bottom tab to stay on current page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 1,
+            "function_description": "This page functions as a grade - selection interface within a primary school student homework learning and interactive education platform, enabling users to choose their grade (including preschool, different grades of primary, middle, and high school) and confirm the selection to access grade - appropriate educational content and services.",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ],
+                [
+                    1,
+                    0
+                ],
+                [
+                    1,
+                    2
+                ]
+            ],
+            "data_in": [
+                "grade setting",
+                "年级选择弹窗",
+                "grade selection",
+                "selected grade (一年级)"
+            ],
+            "data_out": [
+                "grade selection interface opened",
+                "年级选择弹窗关闭状态",
+                "updated grade setting",
+                "confirmed grade selection"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "用户从页面0开始，点击年级选择下拉菜单进入页面1的年级选择弹窗。在弹窗中，用户可选择点击关闭按钮（返回页面0）或确认按钮（提交选择并返回页面0），或直接关闭弹窗（返回页面0）。核心流程是打开弹窗、选择操作后返回主页面。",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "点击年级选择下拉菜单，打开年级选择弹窗"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            1,
+                            0
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 22,
+                        "action": "click",
+                        "summary": "点击关闭年级选择弹窗按钮，关闭弹窗"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            1,
+                            2
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "点击确认年级选择按钮，确认选择并返回主页面"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "This page allows users to share the primary school student homework learning and interactive education platform (specifically promoting the \"小猿AI\" homework - checking feature) with friends via various social platforms (WeChat Moments, WeChat, DingTalk, Weibo, QQ) or cancel the sharing operation.",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    2,
+                    1
+                ]
+            ],
+            "data_in": [
+                "app recommendation content",
+                "sharing interface (with options: 朋友圈, 微信, 钉钉, 微博, QQ, and 小猿AI promotion)"
+            ],
+            "data_out": [
+                "recommendation sharing options (social platforms)",
+                "return to previous page (exiting the sharing interface)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on page 0 and clicks the '推荐给好友' (Recommend to Friends) button to enter the sharing options page (page 2). On page 2, the user can either proceed with sharing via social platforms or click the '取消' (Cancel) button to exit the sharing process and return to the previous state.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click '推荐给好友' button to open sharing options page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            2,
+                            1
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 24,
+                        "action": "click",
+                        "summary": "Click '取消' button to cancel sharing and exit"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": null
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "The current page is a daily sign - in reward interface of the \"小猿盲盒机\" (Xiaoyuan Blind Box Machine) in a primary school student homework learning and interactive education platform. It displays the number of gold coins that can be obtained for signing in on each day from Day 1 to Day 7, and provides buttons for users to log in to claim the gold coins or give up the gold coins.",
+            "action_refs": [
+                [
+                    0,
+                    2
+                ]
+            ],
+            "data_in": [
+                "金币领取入口"
+            ],
+            "data_out": [
+                "金币领取界面"
+            ],
+            "data_dependencies": [
+                29
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the main page (page 0) and clicks the '领金币' (claim gold coins) icon button. This action leads to the daily sign - in reward interface (page 3), where the number of gold coins for each day from 1 to 7 is displayed, and options to log in to claim or give up the coins are provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click the '领金币' icon button to enter the daily sign - in reward interface."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "The current page, titled \"学习历史\" (Study History), under the \"拍照检查\" (Photo Check) tab, displays that there is no photo check history and provides a button to start a new photo check task, with additional tabs for other study history categories like photo problem solving, photo translation, essay history, and practice history.",
+            "action_refs": [
+                [
+                    0,
+                    3
+                ],
+                [
+                    4,
+                    0
+                ]
+            ],
+            "data_in": [
+                "message icon button",
+                "learning history page state"
+            ],
+            "data_out": [
+                "learning history page",
+                "navigation back to home page state"
+            ],
+            "data_dependencies": [
+                30
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on page 0. They click the '消息图标按钮' (message icon button) to navigate to page 4. Then, they click the '返回箭头按钮' (back arrow button) to return to page 0, completing the navigation flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the message icon button to go to page 4"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            4,
+                            0
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the back arrow button to return to page 0"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "The current page of the elementary school student homework learning and interactive education platform, accessed via the \"Homework Check\" button, functions as a camera - based interface for homework checking. It enables users to take a photo of an entire page of homework with parallel reference lines for questions, and offers options for oral arithmetic/homework correction and composition correction, along with features like viewing history and examples.",
+            "action_refs": [
+                [
+                    0,
+                    4
+                ],
+                [
+                    5,
+                    0
+                ],
+                [
+                    5,
+                    3
+                ],
+                [
+                    5,
+                    5
+                ],
+                [
+                    31,
+                    1
+                ]
+            ],
+            "data_in": [
+                "作业检查功能入口",
+                "camera view (with guide lines)",
+                "homework correction mode setting",
+                "拍摄目标（题目相关图像）",
+                "photo for question recognition"
+            ],
+            "data_out": [
+                "作业检查功能界面",
+                "home page (educational app)",
+                "homework correction mode setting (unchanged)",
+                "拍摄的题目图像",
+                "识别结果（未找到可识别题目）",
+                "new photo for question recognition"
+            ],
+            "data_dependencies": [
+                71,
+                72
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "用户首先点击首页的“作业检查”按钮进入作业检查界面，在该界面可选择“口算/作业批改”模式，随后点击拍摄按钮进行作业拍摄；若对拍摄结果不满意，可点击重拍按钮重新拍摄，也可点击返回箭头回到首页。",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "点击作业检查功能按钮进入作业检查界面"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            5,
+                            3
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "选择口算/作业批改模式"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            5,
+                            5
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 31,
+                        "action": "click",
+                        "summary": "点击拍摄按钮进行作业拍摄"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            31,
+                            1
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "点击重拍按钮重新拍摄作业"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            5,
+                            0
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "点击返回箭头回到首页"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S5"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S3",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "The current page of the primary school student homework learning and interactive education platform, accessed via the \"Homework Check\" button, functions as a camera interface for capturing an entire page of homework with parallel reference lines for questions, offering options for oral arithmetic/homework correction and composition correction, along with features like viewing history, examples, and other learning tools.",
+            "action_refs": [
+                [
+                    0,
+                    5
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the main page (page 0) and clicks the '拍照解题' (Photo Problem Solving) button. This action navigates to the camera interface (page 5), which is designed for capturing a full page of homework with parallel reference lines, and offers options for oral arithmetic/homework correction and composition correction, along with history and example features.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click the '拍照解题' button to enter the camera interface for homework capture."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "The current page (数学 tab) of the primary school student homework learning and interactive education platform provides various math - related learning and practice functions, including oral arithmetic practice, oral arithmetic PK, math thinking training, error - question book management, unit conversion, vertical calculation, and also offers tools like question printing and calculator, as well as functions such as test paper download, knowledge point explanation, and趣味 animation for math learning.",
+            "action_refs": [
+                [
+                    0,
+                    7
+                ]
+            ],
+            "data_in": [
+                "数学功能入口"
+            ],
+            "data_out": [
+                "数学功能页面加载完成"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the initial page (page 0) and clicks the '数学' (Math) tab button. This action navigates to the Math - related functions page (page 6), where various math - focused learning and practice options become available.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            7
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click the '数学' tab button to switch to the math - related functions page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "The current page of the primary school student homework learning and interactive education platform (under the \"推荐\" (Recommendation) tab) provides a variety of educational tools and features, including homework checking, photo-based problem solving with AI step - by - step explanations, different subject - related learning functions (such as oral arithmetic practice, oral arithmetic PK, word dictation, text reading, etc.), a Q&A interaction area with a chatbot, and promotional activities (like the Christmas blind box machine, uploading exercise books, and the December exercise challenge), aiming to support primary school students' learning and offer interactive educational services.",
+            "action_refs": [
+                [
+                    0,
+                    9
+                ]
+            ],
+            "data_in": [
+                "英语标签页"
+            ],
+            "data_out": [
+                "英语标签页内容加载"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the recommendation page of the educational app. They perform a click action on the '英语' (English) tab button, which likely navigates or updates the content to English - related educational features, while remaining on the same page context (dst_page_idx is 0, indicating no page navigation but content update).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            9
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the '英语' (English) tab button to access English - related educational features on the recommendation page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "This page of the primary school student homework learning and interactive education platform, accessed via the oral arithmetic practice button, actually functions as the \"Little Ape Word Memorization\" interface, enabling users to learn first - grade - synchronized essential English vocabulary using the Ebbinghaus memory method, start word - memorization tasks, and participate in English word PK activities.",
+            "action_refs": [
+                [
+                    0,
+                    10
+                ]
+            ],
+            "data_in": [
+                "口算练习功能入口"
+            ],
+            "data_out": [
+                "进入口算练习功能页面"
+            ],
+            "data_dependencies": [
+                37,
+                58
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the main page and clicks the '口算练习' button, which navigates to the '小猿背单词' interface. Here, the user can access first - grade - synchronized English vocabulary learning with the Ebbinghaus method, start word - memorization tasks, or participate in English word PK activities.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            10
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click the '口算练习' button to navigate to the '小猿背单词' interface"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "This page in the primary school student homework learning and interactive education platform enables users to participate in oral arithmetic, poetry, and word PK competitions, allowing them to start PK challenges, view PK leaderboards, and challenge friends, with grade selection (e.g., first grade) and music control available.",
+            "action_refs": [
+                [
+                    0,
+                    11
+                ],
+                [
+                    8,
+                    0
+                ]
+            ],
+            "data_in": [
+                "口算PK功能入口",
+                "王者争霸赛页面数据"
+            ],
+            "data_out": [
+                "口算PK功能页面",
+                "返回后的主页面数据"
+            ],
+            "data_dependencies": [
+                37,
+                41,
+                67
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on page 0 and clicks the '口算PK' (oral arithmetic PK) button to navigate to page 8. From page 8, the user can click the back button to return to page 6, completing the flow of entering and exiting the PK feature.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            11
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click '口算PK' button to enter PK page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            8,
+                            0
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click back button to return to previous page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "The current page of the primary school student homework learning and interactive education platform's word dictation function allows users to select different units and lessons (such as literacy, Chinese Pinyin, and language gardens) for word dictation practice, with options for free dictation, paper - based dictation, online dictation, and printing, and also provides a leaderboard function.",
+            "action_refs": [
+                [
+                    0,
+                    12
+                ],
+                [
+                    9,
+                    1
+                ]
+            ],
+            "data_in": [
+                "字词听写功能入口",
+                "字词听写页面内容"
+            ],
+            "data_out": [
+                "字词听写功能页面加载",
+                "返回前一页面的导航结果"
+            ],
+            "data_dependencies": [
+                42,
+                43,
+                44,
+                45,
+                46
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on page 0 and clicks the '字词听写' (word dictation) button to navigate to page 9. From page 9, the user can click the back button to return to page 0, creating a simple navigation flow with a return option.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            12
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click the '字词听写' button to enter the word dictation page."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            9,
+                            1
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the back button to return to the previous page (page 0)."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "The current page, accessed via the \"课文点读\" (Text Reading) button from the primary platform, serves as a hub for selecting textbooks (matching 2025新课标) for text reading functionality, allowing users to choose from different subjects (Chinese, English) and editions (e.g., 部编版, 五四版, PEP) for grade 1 (上册), with a directory of textbook content below.",
+            "action_refs": [
+                [
+                    0,
+                    13
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the primary platform page (page 0). The user clicks the '课文点读' (Text Reading) button, which navigates to the Text Reading hub page (page 10). On this hub, users can select textbooks by subject (Chinese/English) and edition (e.g., 部编版, 五四版, PEP) for grade 1 (上册), with a textbook content directory below.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            13
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click the '课文点读' button to navigate to the Text Reading hub page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "The current page, accessed via the \"学练VIP\" button from the primary platform, showcases the \"小猿天天练\" (Xiaoyuan Daily Practice) feature, offering options for textbook - synchronized practice, in - school synchronized courses, Xiaoyuan improvement courses, and special - topic improvement courses, along with a button to immediately experience these services, aiming to provide primary school students with 365 - day synchronized practice and selected video resources for academic enhancement.",
+            "action_refs": [
+                [
+                    0,
+                    14
+                ],
+                [
+                    11,
+                    0
+                ]
+            ],
+            "data_in": [
+                "学练VIP功能入口"
+            ],
+            "data_out": [
+                "学练VIP功能页面"
+            ],
+            "data_dependencies": [
+                49
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the main page (page 0) and clicks the '学练VIP' button to navigate to the feature page (page 11). On the feature page, the user can choose to either explore the services (implicitly by interacting with content) or click the back button to return to the main page. The back button click is an optional step to exit the feature page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            14
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click the '学练VIP' button to navigate to the feature page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            11,
+                            0
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the back button to return to the previous page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": null
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "The \"趣味识字\" (Fun Character Recognition) page in the primary school student homework learning and interactive education platform provides a categorized list of Chinese character learning units (e.g., \"人目耳手足\", \"一二三四五\") for students to select and engage in character recognition learning activities, with an additional \"字卡\" (Character Cards) feature for supplementary learning.",
+            "action_refs": [
+                [
+                    0,
+                    15
+                ],
+                [
+                    12,
+                    0
+                ]
+            ],
+            "data_in": [
+                "趣味识字功能入口",
+                "literacy unit list"
+            ],
+            "data_out": [
+                "趣味识字功能页面加载完成"
+            ],
+            "data_dependencies": [
+                50,
+                51,
+                56
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on page 0 and clicks the '趣味识字' button to navigate to page 12 (the Fun Character Recognition page). From page 12, the user can click the back arrow to return to the previous page (page 0).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            15
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click '趣味识字' button to go to the Fun Character Recognition page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            12,
+                            0
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click back arrow button to return to the previous page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "The current page is the VIP membership page of a primary school student homework learning and interactive education platform, which displays VIP membership benefits (such as topic explanation, text reading, AI - exclusive videos, test paper explanation), provides a function to open VIP for enjoying preferential treatment, and shows some free - to - try topic - explanation video resources.",
+            "action_refs": [
+                [
+                    0,
+                    16
+                ]
+            ],
+            "data_in": [
+                "VIP会员功能入口"
+            ],
+            "data_out": [
+                "VIP会员功能页面加载完成"
+            ],
+            "data_dependencies": [
+                52
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the app's main page (page 0) and clicks the 'VIP会员' button. This action navigates to the VIP membership page (page 13), where VIP benefits, an option to open VIP for discounts, and free - to - try topic - explanation video resources are displayed.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            16
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click the 'VIP会员' button on the main page to enter the VIP membership page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "The current page, titled \"全部功能\" (All Functions), serves as a centralized hub within the primary school student homework learning and interactive education platform, organizing various educational tools and resources into sections like \"最近使用\" (Recently Used), \"VIP会员专区\" (VIP Member Zone), and subject - specific areas (e.g., \"数学学习\" - Math Learning), enabling students to access different learning - related functions such as practice exercises, point - reading features, and video - based topic explanations.",
+            "action_refs": [
+                [
+                    0,
+                    17
+                ],
+                [
+                    14,
+                    0
+                ]
+            ],
+            "data_in": [
+                "全部功能入口"
+            ],
+            "data_out": [
+                "全部功能页面加载完成"
+            ],
+            "data_dependencies": [
+                55
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the main page and clicks the '全部功能' (All Functions) button to navigate to the All Functions page. From there, the user can click the back arrow to return to the previous page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            17
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click the '全部功能' button to navigate to the All Functions page."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            14,
+                            0
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the back arrow to return to the previous page."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "The current page of the primary school student homework learning and interactive education platform (under the \"Recommendation\" tab) provides functions such as homework checking, photo problem - solving, oral arithmetic practice, oral arithmetic PK, word dictation, text reading, and also includes a Q & A interaction area, activity promotion areas (like Christmas blind box machine, uploading exercise books, December exercise challenge), and navigation to other function modules (practice, Xiaoyuan AI, learning and practice, personal center).",
+            "action_refs": [
+                [
+                    0,
+                    18
+                ]
+            ],
+            "data_in": [
+                "question topic list"
+            ],
+            "data_out": [
+                "updated question topic list"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the 'Recommendation' tab of the primary school student homework learning platform. The core logic involves interacting with the Q&A area: clicking the '换个话题' (Change Topic) button in the Q&A section to refresh the displayed questions. This action is a single step with no branches or loops, as it directly triggers a UI update in the Q&A area.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            18
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the '换个话题' button in the Q&A interaction area to change the displayed questions."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "This page allows users to upload new semester exercise books (including Chinese, Math, English workbooks, teaching aids, test papers, etc.), provides a button to upload exercise books, and displays a reward rule (20 gold coins for successfully uploading 3 books, with an extra 10 gold coins if an English exercise book is included) and an upload example to guide users on how to upload by scanning the barcode on the back of the book.",
+            "action_refs": [
+                [
+                    0,
+                    20
+                ],
+                [
+                    16,
+                    0
+                ]
+            ],
+            "data_in": [
+                "练习册",
+                "upload exercise book page state"
+            ],
+            "data_out": [
+                "上传练习册入口页面",
+                "previous page state restored"
+            ],
+            "data_dependencies": [
+                59
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "用户首先在页面0点击“上传练习册-点我上传按钮”进入页面16，之后可选择点击返回按钮回到页面0。",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            20
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "点击上传练习册的“点我上传”按钮，进入上传相关页面"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            16,
+                            0
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "点击返回按钮，回到初始页面"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "This page functions as a login interface for a primary school student homework learning and interactive education platform, allowing users to log in (or register if the phone number is unregistered) by entering a phone number and agreeing to relevant agreements to proceed with the next step, or to log in using a password.",
+            "action_refs": [
+                [
+                    0,
+                    21
+                ],
+                [
+                    17,
+                    1
+                ],
+                [
+                    17,
+                    3
+                ]
+            ],
+            "data_in": [
+                "12月练习挑战活动",
+                "login session",
+                "phone number input",
+                "agreement confirmation state"
+            ],
+            "data_out": [
+                "登录页面加载",
+                "entered phone number"
+            ],
+            "data_dependencies": [
+                62
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts by clicking the '12月挑战-立即领取' button to enter the login page. Then, they input a phone number into the mobile number field. Finally, they click the '下一步' (Next Step) button to proceed, with the system handling registration if the number is unregistered or login otherwise, or they can choose password login.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            21
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click '12月挑战-立即领取' to enter login page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            17,
+                            1
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 27,
+                        "action": "input",
+                        "summary": "Input phone number into mobile number field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            17,
+                            3
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click '下一步' button to proceed"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S3",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": null
+                            },
+                            {
+                                "next_step": null
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "The current page is a daily sign - in reward interface of the \"小猿盲盒机\" (Xiaoyuan Blind Box Machine) in a primary school student homework learning and interactive education platform. It displays the number of gold coins that can be obtained for signing in each day from Day 1 to Day 7, and provides buttons for users to log in to claim the gold coins or give up the gold coins.",
+            "action_refs": [
+                [
+                    0,
+                    22
+                ]
+            ],
+            "data_in": [
+                "圣诞盲盒机活动卡片"
+            ],
+            "data_out": [
+                "小猿盲盒机签到界面"
+            ],
+            "data_dependencies": [
+                29,
+                66
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the main page and clicks the '圣诞盲盒机' (Christmas Blind Box Machine) card to enter the blind box machine page. On the new page, a daily sign - in reward popup appears, showing the gold coins for each day from 1 to 7. Then, the user can choose to click '登录领取金币' (Log in to claim gold coins) to get the coins or '放弃金币' (Give up gold coins) to forgo them.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            22
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click the '圣诞盲盒机' activity card on the main page to enter the blind box machine page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "The current page of the primary school student homework learning and interactive education platform (under the \"Practice\" tab) provides various math practice options (e.g., oral arithmetic, synchronous practice, vertical calculation, unit conversion, listening arithmetic), allows users to set practice scope and quantity, start practice or print practice content, and also features promotional activities and a weekly learning plan.",
+            "action_refs": [
+                [
+                    0,
+                    24
+                ],
+                [
+                    18,
+                    2
+                ],
+                [
+                    18,
+                    6
+                ]
+            ],
+            "data_in": [
+                "练习功能入口",
+                "题目数量设置项"
+            ],
+            "data_out": [
+                "进入练习功能页面",
+                "更新后的题目数量设置"
+            ],
+            "data_dependencies": [
+                63,
+                64,
+                65,
+                68
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the initial page, clicks the 'Practice' tab at the bottom to navigate to the practice page. On the practice page, the user can either click the question quantity selection button to adjust the number of questions or click the subject switch button to change the subject (e.g., from math to Chinese).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            24
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click the 'Practice' tab at the bottom to enter the practice page."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            18,
+                            2
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the question quantity selection button to adjust the number of questions."
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            18,
+                            6
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the subject switch button to change the subject (e.g., from math to Chinese)."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "The current page is the \"小猿AI\" (Xiaoyuan AI) interface of a primary school student homework learning and interactive education platform, where users can interact with the AI learning companion by asking questions, using features like searching encyclopedias, writing essays, using a calculator, and communicating via voice or text input.",
+            "action_refs": [
+                [
+                    0,
+                    25
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the main page (page 0) and clicks the '小猿AI' (Xiaoyuan AI) bottom tab. This action navigates to the Xiaoyuan AI interface (page 19), where the user can interact with the AI companion via voice/text input or use features like searching encyclopedias, writing essays, or using a calculator.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            25
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click the '小猿AI' bottom tab to navigate to the Xiaoyuan AI interface."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "The current page, accessed via the \"学练\" (Study & Practice) bottom tab, presents the \"小猿天天练\" (Xiaoyuan Daily Practice) feature, offering options for textbook - synchronized practice, in - school synchronized courses, Xiaoyuan improvement courses, and special - topic improvement courses, along with a button to start experiencing these learning resources.",
+            "action_refs": [
+                [
+                    0,
+                    26
+                ]
+            ],
+            "data_in": [
+                "学练功能入口"
+            ],
+            "data_out": [
+                "学练功能页面加载完成"
+            ],
+            "data_dependencies": [
+                49
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the initial page and clicks the '学练' (Study & Practice) bottom tab. This action navigates to the '小猿天天练' (Xiaoyuan Daily Practice) page, which presents options for textbook-synchronized practice, in-school synchronized courses, Xiaoyuan improvement courses, and special-topic improvement courses, along with a button to start experiencing these resources. There are no branches or loops as the flow is a straight navigation to the target page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            26
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 20,
+                        "action": "click",
+                        "summary": "Click the '学练' (Study & Practice) bottom tab to navigate to the '小猿天天练' page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "This page functions as a login interface for a primary school student homework learning and interactive education platform, allowing users to log in (or register if the phone number is unregistered) by entering a phone number and agreeing to relevant agreements, with an option for password - based login.",
+            "action_refs": [
+                [
+                    0,
+                    27
+                ]
+            ],
+            "data_in": [
+                "user profile access request"
+            ],
+            "data_out": [
+                "login page entry"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the main page (page 0) and clicks the '我' (Me) tab at the bottom. This action navigates to the login page (page 17), where the login interface is presented with options to enter a phone number, agree to agreements, or use password login.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            27
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click the '我' (Me) tab at the bottom of the main page to navigate to the login page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 25,
+            "function_description": "This page functions as a Q&A chat interface within a primary school student homework learning and interactive education platform, where users can ask questions (e.g., about why auroras have different colors) and receive detailed explanatory answers, and also have the option to record and send voice messages or use the camera feature.",
+            "action_refs": [
+                [
+                    0,
+                    28
+                ],
+                [
+                    21,
+                    0
+                ]
+            ],
+            "data_in": [
+                "问答问题",
+                "chat session"
+            ],
+            "data_out": [
+                "问答结果"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on page 0, where the user clicks the Q&A button to enter the Q&A chat interface (page 21). From the chat interface, the user can choose to either interact with the Q&A features or click the close button to return to the previous page (page 0).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            28
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 21,
+                        "action": "click",
+                        "summary": "Click Q&A button to enter chat interface"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            21,
+                            0
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click close button to return"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": null,
+                                "condition": "User closes the chat interface"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "User continues interacting in the chat interface"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 26,
+            "function_description": "二年级年级选择按钮",
+            "action_refs": [
+                [
+                    1,
+                    1
+                ]
+            ],
+            "data_in": [
+                "年级选择设置"
+            ],
+            "data_out": [
+                "二年级年级设置"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The process starts on page 1. The user clicks the '二年级' (Second Grade) selection button, which navigates to page 23. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            1
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 23,
+                        "action": "click",
+                        "summary": "Click the '二年级' grade selection button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 27,
+            "function_description": "This page functions as a sharing interface for the \"小猿AI\" (Xiaoyuan AI) educational app, allowing users to share the app's promotional content (highlighting its 1 - second homework - checking feature for math, Chinese, and English assignments) to social platforms like Moments (朋友圈), WeChat, DingTalk, Weibo, or QQ, or to cancel the sharing process.",
+            "action_refs": [
+                [
+                    2,
+                    0
+                ]
+            ],
+            "data_in": [
+                "小猿AI推广内容"
+            ],
+            "data_out": [
+                "朋友圈分享内容"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The sharing interface for Xiaoyuan AI is displayed. The user can choose to click the '朋友圈' (Moments) share button to share the app's promotional content, or they can cancel the sharing process. The flow starts with the sharing interface, and the main action is the option to share via Moments or cancel.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            0
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click the '朋友圈' share button to share the app's promotional content."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 28,
+            "function_description": "This page functions as a login interface for a primary school student homework learning and interactive education platform, allowing users to log in via mobile phone number (with automatic registration if the number is unregistered) or password to access features like coin claiming and track children's learning progress.",
+            "action_refs": [
+                [
+                    3,
+                    0
+                ]
+            ],
+            "data_in": [
+                "login session",
+                "sign-in reward (coins)"
+            ],
+            "data_out": [
+                "login session (initiated)",
+                "sign-in reward (coins) (to be claimed after login)"
+            ],
+            "data_dependencies": [
+                29,
+                62
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The user starts on the daily sign - in page. They click the '登录领取金币' (Login to claim coins) button, which takes them to the login page. On the login page, they can choose to log in via mobile number (with automatic registration if unregistered) or password to access features like coin claiming and learning progress tracking.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            0
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click the '登录领取金币' button to proceed to the login page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 29,
+            "function_description": "放弃金币按钮",
+            "action_refs": [
+                [
+                    3,
+                    1
+                ]
+            ],
+            "data_in": [
+                "签到金币奖励"
+            ],
+            "data_out": [
+                "放弃金币操作记录"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The user starts on page 3 (the daily sign - in coin - related page). Then, the user clicks the '放弃金币' (Give up coins) button, and the app navigates to page 25. There are no branch points or loops in this simple flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            1
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 25,
+                        "action": "click",
+                        "summary": "Click the '放弃金币' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 30,
+            "function_description": "The current page, accessed from the \"学习历史\" (Learning History) page via the \"更多选项\" (More Options) button, provides options for batch management and deleting all learning history records, with a default view showing no photo - related learning history and a button to start a new check task.",
+            "action_refs": [
+                [
+                    4,
+                    1
+                ]
+            ],
+            "data_in": [
+                "learning history page",
+                "more options menu"
+            ],
+            "data_out": [
+                "more options menu opened"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The flow starts on the '学习历史' (Learning History) page. The user clicks the '更多选项' (More Options) button, which opens a menu with options for batch management and deleting all learning history. The default view shows no photo - related learning history, and there is a button to start a new check task.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            1
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 29,
+                        "action": "click",
+                        "summary": "Click the '更多选项' (More Options) button on the '学习历史' page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 31,
+            "function_description": "This page displays the \"拍照检查\" (Photo Check) tab within the \"学习历史\" (Learning History) section, showing no photo check history and providing a button to start a new photo check, while also allowing switching to other history types like \"拍照解题\" (Photo Problem Solving) via tabs.",
+            "action_refs": [
+                [
+                    4,
+                    2
+                ]
+            ],
+            "data_in": [
+                "拍照解题历史"
+            ],
+            "data_out": [
+                "拍照解题历史页面"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user starts on the '学习历史' (Learning History) page with the '拍照检查' (Photo Check) tab active, showing no history and a '去检查' (Go Check) button. The user can click the '拍照解题' (Photo Problem Solving) tab to switch to that history type, remaining on the same page structure but with the '拍照解题' tab active.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            2
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the '拍照解题' tab to switch to the Photo Problem Solving history view"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 32,
+            "function_description": "The current page, under the \"拍照解题\" (Photo Problem Solving) tab in the \"学习历史\" (Study History) section, displays the user's photo - based problem - solving history (currently showing no history) and provides a button to initiate a new photo - based problem - solving or checking action.",
+            "action_refs": [
+                [
+                    4,
+                    3
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user starts on the '学习历史' (Study History) page. They click the '去检查' (Go Check) button, which likely initiates a new photo - based problem - solving or checking action. Since there's no history, the flow is a straight line with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            3
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the '去检查' button to start a new photo - based problem - solving or checking action"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 33,
+            "function_description": "The current page, titled \"学习历史\" (Study History), under the \"拍照检查\" (Photo Check) tab, displays the user's photo - check study history (showing a message if there's no history) and provides a button to start a new photo - check task.",
+            "action_refs": [
+                [
+                    5,
+                    1
+                ]
+            ],
+            "data_in": [
+                "learning history setting"
+            ],
+            "data_out": [
+                "learning history page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user starts on page 5 and clicks the '历史记录' (History) button to navigate to the '学习历史' (Study History) page under the '拍照检查' (Photo Check) tab. On this page, the user can view their photo - check study history (or a message if there's none) and has the option to start a new photo - check task by clicking the '去检查' (Go Check) button.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            1
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the '历史记录' button to navigate to the '学习历史' page under the '拍照检查' tab."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 34,
+            "function_description": "This page provides an example of the composition review function, showing a radar chart - based scoring and evaluation of a fourth - grade composition (including aspects like center, structure, content, etc.) and offers a button to experience the composition one - key polishing and professional sentence - by - sentence review function with the example.",
+            "action_refs": [
+                [
+                    5,
+                    2
+                ],
+                [
+                    30,
+                    0
+                ],
+                [
+                    30,
+                    2
+                ]
+            ],
+            "data_in": [
+                "作文点评弹窗"
+            ],
+            "data_out": [
+                "示例体验界面",
+                "作文点评弹窗关闭"
+            ],
+            "data_dependencies": [
+                71,
+                79,
+                81
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user starts on page 5 and clicks the '示例参考' button to navigate to page 30, which shows the composition review example with a radar chart. On page 30, there is a branch: either click the '弹窗关闭' button to go to page 33, or click the '口算/作业批改' button to stay on page 30.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            2
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 30,
+                        "action": "click",
+                        "summary": "Click the '示例参考' button to navigate to the composition review example page (page 30)."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            30,
+                            0
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 33,
+                        "action": "click",
+                        "summary": "Click the '弹窗关闭' button to close the popup and go to page 33."
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            30,
+                            2
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 30,
+                        "action": "click",
+                        "summary": "Click the '口算/作业批改' button to stay on page 30."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 35,
+            "function_description": "The current page provides a demonstration of the composition review feature, including intelligent grading (via a radar chart for aspects like central idea, structure, content, character portrayal, and wording) and options for full-text/phrase - by - phrase reviews, along with a button to experience the example of one - click composition polishing and professional phrase - by - phrase review.",
+            "action_refs": [
+                [
+                    5,
+                    4
+                ]
+            ],
+            "data_in": [
+                "作文批改模式设置"
+            ],
+            "data_out": [
+                "作文批改模式切换状态"
+            ],
+            "data_dependencies": [
+                71,
+                79,
+                81
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The flow starts on page 5, where the user clicks the '作文批改模式' (composition review mode) button. This action navigates to page 30, which displays the composition review feature: a radar chart for intelligent grading (assessing central idea, structure, content, character portrayal, wording) and options for full-text/phrase - by - phrase reviews, along with a button to experience one - click polishing and professional phrase - by - phrase review.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            4
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 30,
+                        "action": "click",
+                        "summary": "Click the '作文批改模式' button to enter the composition review feature page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 36,
+            "function_description": "This page functions as an interface for accessing the camera roll (or prompting to take photos/videos with the camera) to select an image for the homework checking feature in the primary school student homework learning and interactive education platform.",
+            "action_refs": [
+                [
+                    5,
+                    6
+                ],
+                [
+                    32,
+                    0
+                ]
+            ],
+            "data_in": [
+                "相册选择功能",
+                "camera roll page state"
+            ],
+            "data_out": [
+                "进入相机胶卷页面",
+                "previous page state restored"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The flow starts on page 5. First, the user clicks the album selection button (action_ref [5,6]) to navigate to page 32. Then, the user can click the back button (action_ref [32,0]) to return to page 5, creating a loop or back-and-forth between these two pages for selecting or re - selecting an image from the album or camera roll for homework checking.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            6
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 32,
+                        "action": "click",
+                        "summary": "Click the album selection button to go to page 32"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            32,
+                            0
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click the back button to return to page 5"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S1"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "loop",
+                        "branches": [
+                            {
+                                "next_step": "S1"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 37,
+            "function_description": "This page functions as a competitive learning interface for elementary school students (specifically first - graders), enabling them to start PK (competition) activities in oral arithmetic, poetry, and word - related learning content, and also allowing them to challenge friends and view PK rankings.",
+            "action_refs": [
+                [
+                    6,
+                    0
+                ]
+            ],
+            "data_in": [
+                "口算PK功能入口"
+            ],
+            "data_out": [
+                "口算PK功能页面"
+            ],
+            "data_dependencies": [
+                40,
+                41,
+                67
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The core logic starts on page 6 (the main interface for first - graders). The user clicks the '口算PK' (oral arithmetic PK) button. This action navigates to page 8, which is the competitive learning interface for oral arithmetic, poetry, and word - related PK activities, where the user can then start PK, challenge friends, or view rankings.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            0
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click the '口算PK' button on page 6 to enter the competitive learning interface (page 8)."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 38,
+            "function_description": "Start word learning button",
+            "action_refs": [
+                [
+                    7,
+                    0
+                ]
+            ],
+            "data_in": [
+                "word learning plan",
+                "vocabulary list"
+            ],
+            "data_out": [
+                "word learning session"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The user starts on page 7 (the word learning interface). The core action is clicking the 'Start word learning' button (labeled '开始背单词 完成+30') to initiate the word - learning process. There are no branches or loops in this simple flow as it is just a single click action to start the word learning.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            0
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'Start word learning' button (labeled '开始背单词 完成+30') to initiate word learning."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 39,
+            "function_description": "This page enables users to input a PK invitation code from a friend to challenge the friend's performance in oral arithmetic or poetry PK, and also displays records of challenges the user has initiated or participated in.",
+            "action_refs": [
+                [
+                    8,
+                    1
+                ],
+                [
+                    38,
+                    0
+                ]
+            ],
+            "data_in": [
+                "好友挑战功能入口",
+                "邀请口令"
+            ],
+            "data_out": [
+                "好友挑战页面加载完成",
+                "输入的邀请口令"
+            ],
+            "data_dependencies": [
+                40,
+                77,
+                78
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The user starts on page 8 and clicks the '好友挑战' (Friend Challenge) button to navigate to page 38. Then, on page 38, the user inputs an invitation code (e.g., XYZ789) into the invitation code input field, completing the input action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            1
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 38,
+                        "action": "click",
+                        "summary": "Click the '好友挑战' button to navigate to the friend challenge page (page 38)."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            38,
+                            0
+                        ],
+                        "src_page_idx": 38,
+                        "dst_page_idx": 41,
+                        "action": "input",
+                        "summary": "Input the invitation code (e.g., XYZ789) into the invitation code input field."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 40,
+            "function_description": "This page displays the result of a mental arithmetic PK challenge, showing that the user (or the AI) has answered 10 questions correctly, likely serving as a feedback or summary screen for the completed arithmetic quiz activity.",
+            "action_refs": [
+                [
+                    8,
+                    2
+                ],
+                [
+                    39,
+                    0
+                ],
+                [
+                    43,
+                    0
+                ],
+                [
+                    43,
+                    1
+                ]
+            ],
+            "data_in": [
+                "口算PK挑战（20以内数的比大小）",
+                "quiz session",
+                "quiz result",
+                "quiz competition session",
+                "math question",
+                "answer input field"
+            ],
+            "data_out": [
+                "口算PK挑战结果（答对10题）",
+                "quiz result confirmation",
+                "new quiz session",
+                "navigated back to competition selection page",
+                "entered answer"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The user starts by clicking the '口算PK开始按钮' on page 8 to begin the mental arithmetic PK. Then, on page 39, they click the 'PK result modal (答对10题)' to view the result. Finally, they click the 'Back navigation arrow' on page 43 to return to page 8.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            2
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 39,
+                        "action": "click",
+                        "summary": "Click the start button for the mental arithmetic PK."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            39,
+                            0
+                        ],
+                        "src_page_idx": 39,
+                        "dst_page_idx": 43,
+                        "action": "click",
+                        "summary": "Click the PK result modal showing 10 correct answers."
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            43,
+                            0
+                        ],
+                        "src_page_idx": 43,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click the back navigation arrow to return to the previous page."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 41,
+            "function_description": "The current page displays a pop - up message to inform users that the honor list has been upgraded, and that they can compete in the honor list after gaining experience points at the end of practice, with a button for users to confirm that they have received this information.",
+            "action_refs": [
+                [
+                    8,
+                    3
+                ],
+                [
+                    40,
+                    0
+                ]
+            ],
+            "data_in": [
+                "口算PK榜",
+                "honor list upgrade notification"
+            ],
+            "data_out": [
+                "荣誉榜页面加载",
+                "honor list upgrade notification dismissed"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The flow starts on page 8. First, the user clicks the '口算PK榜' button (action_ref [8,3]) to trigger a pop - up message about the honor list upgrade. Then, the user clicks the '我知道啦' confirmation button (action_ref [40,0]) to acknowledge the information. There are no branches or loops in this flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            3
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 40,
+                        "action": "click",
+                        "summary": "Click the '口算PK榜' button to trigger the pop - up message about the honor list upgrade."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            40,
+                            0
+                        ],
+                        "src_page_idx": 40,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '我知道啦' confirmation button to acknowledge the information about the honor list upgrade."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 42,
+            "function_description": "第一单元·识字 选择按钮",
+            "action_refs": [
+                [
+                    9,
+                    0
+                ]
+            ],
+            "data_in": [
+                "第一单元·识字 听写单元选项"
+            ],
+            "data_out": [
+                "第一单元·识字 听写单元选项 已选择"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts on page 9 (字词听写). The core action is clicking the selection button for '第一单元·识字' (Unit 1·Literacy). This action likely selects or focuses on this unit, with no further branching or looping in the captured logic here.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            0
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the selection button for '第一单元·识字'"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 43,
+            "function_description": "自由听写按钮",
+            "action_refs": [
+                [
+                    9,
+                    2
+                ]
+            ],
+            "data_in": [
+                "字词听写单元列表"
+            ],
+            "data_out": [
+                "进入自由听写功能"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts on page 9 (字词听写 page). The core action is clicking the '自由听写' button located at the top right. This click is the primary step to initiate the free dictation functionality, with no branching or looping as only one action is defined here.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            2
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '自由听写' button at the top right of the page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 44,
+            "function_description": "排行榜按钮",
+            "action_refs": [
+                [
+                    9,
+                    3
+                ]
+            ],
+            "data_in": [
+                "排行榜入口"
+            ],
+            "data_out": [
+                "排行榜页面"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts on page 9 (字词听写 page). The core action is clicking the '排行榜' (ranking list) button. This action likely navigates to the ranking page (though dst_page_idx is null here, implying the click triggers the navigation to the ranking - related interface).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            3
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '排行榜' button on page 9"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 45,
+            "function_description": "打印按钮",
+            "action_refs": [
+                [
+                    9,
+                    4
+                ]
+            ],
+            "data_in": [
+                "字词听写内容"
+            ],
+            "data_out": [
+                "打印任务"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The flow starts on page 9 (字词听写). The user clicks the '打印' (Print) button, which is the core action for this functional point. There are no branches or loops as it's a single click action to initiate printing.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            4
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '打印' (Print) button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 46,
+            "function_description": "纸笔听写按钮",
+            "action_refs": [
+                [
+                    9,
+                    5
+                ]
+            ],
+            "data_in": [
+                "字词听写单元列表"
+            ],
+            "data_out": [
+                "纸笔听写功能启动"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts on page 9 (字词听写). The core action is clicking the '纸笔听写' button. This action likely triggers a subsequent flow (though the destination page is null here, implying a transition or action initiation).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            5
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '纸笔听写' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 47,
+            "function_description": "语文(部编版)课本选择卡片",
+            "action_refs": [
+                [
+                    10,
+                    0
+                ]
+            ],
+            "data_in": [
+                "语文(部编版)课本"
+            ],
+            "data_out": [
+                "语文(部编版)课本选择结果"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The user starts on page 10 and clicks the '语文(部编版)' textbook selection card. This action likely leads to further interaction or content related to the selected Chinese textbook (People's Education Edition).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            0
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '语文(部编版)' textbook selection card"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 48,
+            "function_description": "教材同步练课程入口",
+            "action_refs": [
+                [
+                    11,
+                    1
+                ]
+            ],
+            "data_in": [
+                "教材同步练课程入口"
+            ],
+            "data_out": [
+                "进入教材同步练课程页面"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The user starts on page 11. The core action is to click the '教材同步练' (Textbook Synchronized Practice) course entry, which is the target functional point. This click likely leads to the relevant course content or further navigation related to textbook - synchronized practice courses.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            1
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '教材同步练' course entry on page 11."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 49,
+            "function_description": "立即体验按钮",
+            "action_refs": [
+                [
+                    11,
+                    2
+                ]
+            ],
+            "data_in": [
+                "小猿天天练功能入口"
+            ],
+            "data_out": [
+                "进入小猿天天练功能体验"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The user starts on page 11, which displays a promotional interface for a learning app. The core action is to click the '立即体验' (Immediate Experience) button, which likely initiates the app's main functionality or navigates to a new page (though the destination is marked as null here). There are no branches or loops in this simple flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            2
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '立即体验' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 50,
+            "function_description": "字卡 button",
+            "action_refs": [
+                [
+                    12,
+                    1
+                ]
+            ],
+            "data_in": [
+                "趣味识字页面"
+            ],
+            "data_out": [
+                "字卡功能页面"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The user starts on page 12 (趣味识字). The core action is clicking the '字卡' button located at the top right. This click likely triggers a transition or action related to the word card feature, with no branching or looping as only one action is defined here.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            1
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '字卡' button at the top right of page 12"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 51,
+            "function_description": "人目耳手足 unit card",
+            "action_refs": [
+                [
+                    12,
+                    2
+                ]
+            ],
+            "data_in": [
+                "人目耳手足单元卡片"
+            ],
+            "data_out": [
+                "人目耳手足单元内容"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The user starts on page 12 (趣味识字). The core action is clicking the '人目耳手足' unit card, which likely navigates to a related page (though the destination is marked as null here, implying a transition to its content). There are no branches or loops as only one action is present.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            2
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '人目耳手足' unit card"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 52,
+            "function_description": "立即开通VIP按钮",
+            "action_refs": [
+                [
+                    13,
+                    0
+                ]
+            ],
+            "data_in": [
+                "VIP开通选项",
+                "用户账号状态（游客）"
+            ],
+            "data_out": [
+                "VIP开通请求",
+                "用户VIP状态更新（若开通成功）"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 13,
+                "logic": "The core execution logic starts on page 13, where the user clicks the '立即开通VIP' (Instantly Activate VIP) button. This action is the primary step to initiate the VIP activation process, with no branching or looping as it's a single click action to proceed with VIP enrollment.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            13,
+                            0
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '立即开通VIP' button to start the VIP activation process"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 53,
+            "function_description": "100以内数的认识课程视频",
+            "action_refs": [
+                [
+                    13,
+                    1
+                ]
+            ],
+            "data_in": [
+                "100以内数的认识课程视频"
+            ],
+            "data_out": [
+                "100以内数的认识课程视频播放"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 13,
+                "logic": "The user starts on page 13 and clicks on the '100以内数的认识课程视频' element. This action likely initiates the process to access or play the course video about recognizing numbers within 100. There are no branching or looping steps here as it's a single click action to proceed with the video-related functionality.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            13,
+                            1
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the '100以内数的认识课程视频' element to access the related course video."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 54,
+            "function_description": "题目精讲更多按钮",
+            "action_refs": [
+                [
+                    13,
+                    2
+                ]
+            ],
+            "data_in": [
+                "题目精讲模块"
+            ],
+            "data_out": [
+                "题目精讲更多内容"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 13,
+                "logic": "The user starts on page 13. The core action is to click the '更多' (More) button related to '题目精讲' (Topic Explanation). This click is the main step to access additional content or options for topic explanations.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            13,
+                            2
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '题目精讲更多' (Topic Explanation More) button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 55,
+            "function_description": "VIP tab (category switch)",
+            "action_refs": [
+                [
+                    14,
+                    1
+                ]
+            ],
+            "data_in": [
+                "VIP category feature list",
+                "all features page"
+            ],
+            "data_out": [
+                "VIP category feature list (displayed)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The user starts on the '全部功能' (All Functions) page. They perform a click action on the 'VIP' tab in the category switch bar. This action is intended to switch the displayed content to the VIP - related category, likely updating the visible sections and features to those associated with VIP membership.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            1
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the 'VIP' tab in the category switch bar"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 56,
+            "function_description": "趣味识字 (Fun Literacy) button",
+            "action_refs": [
+                [
+                    14,
+                    2
+                ]
+            ],
+            "data_in": [
+                "趣味识字功能入口"
+            ],
+            "data_out": [
+                "进入趣味识字功能页面"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The core execution logic starts on the '全部功能' (All Functions) page. The user clicks the '趣味识字 (Fun Literacy)' button, which is the primary action for this functional point. Since there are no further actions or branches provided, the flow ends after this click.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            2
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '趣味识字 (Fun Literacy)' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 57,
+            "function_description": "视频讲题 (Video Lecture) button",
+            "action_refs": [
+                [
+                    14,
+                    3
+                ]
+            ],
+            "data_in": [
+                "video lecture feature entry"
+            ],
+            "data_out": [
+                "video lecture page loaded"
+            ],
+            "data_dependencies": [
+                73
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The user starts on page 14 (the '全部功能' page). The core action is clicking the '视频讲题 (Video Lecture)' button. Since this is a single-step action (no branches or loops here), the flow is just executing this click.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            3
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '视频讲题 (Video Lecture)' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 58,
+            "function_description": "口算练习 (Oral Arithmetic) button",
+            "action_refs": [
+                [
+                    14,
+                    4
+                ]
+            ],
+            "data_in": [
+                "口算练习功能入口"
+            ],
+            "data_out": [
+                "进入口算练习功能"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The core execution logic starts on the '全部功能' (All Functions) page. The user clicks the '口算练习' (Oral Arithmetic) button, which likely initiates the oral arithmetic practice feature. There are no branches or loops in this initial flow as it's a single click action to access the feature.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            4
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '口算练习' (Oral Arithmetic) button to initiate the oral arithmetic practice feature."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 59,
+            "function_description": "上传练习册按钮",
+            "action_refs": [
+                [
+                    16,
+                    1
+                ]
+            ],
+            "data_in": [
+                "练习册上传入口"
+            ],
+            "data_out": [
+                "练习册上传操作触发"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 16,
+                "logic": "The core execution logic starts on page 16. The user clicks the '上传练习册' (Upload Workbook) button. Since there are no branches or loops here, this is a single-step action to initiate the workbook upload process.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            16,
+                            1
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '上传练习册' button to start uploading a workbook"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 60,
+            "function_description": "关闭登录窗口按钮",
+            "action_refs": [
+                [
+                    17,
+                    0
+                ]
+            ],
+            "data_in": [
+                "login window"
+            ],
+            "data_out": [
+                "login window closed"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 17,
+                "logic": "The user starts on the login page (page 17). The core logic is to click the close login window button (the 'X' icon at the top - left). This action will close the login window and navigate to page 26. There are no branches or loops as it's a single - step action to close the window.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            17,
+                            0
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 26,
+                        "action": "click",
+                        "summary": "Click the close login window button (the 'X' icon) to close the login window and navigate to the destination page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 61,
+            "function_description": "同意协议复选框",
+            "action_refs": [
+                [
+                    17,
+                    2
+                ]
+            ],
+            "data_in": [
+                "agreement consent setting"
+            ],
+            "data_out": [
+                "agreement consent setting enabled"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 17,
+                "logic": "The process starts on page 17 (login page). The user clicks the '同意协议复选框' (agreement checkbox) on this page, which transitions the flow to page 28. This is a single-step action with no branching or looping.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            17,
+                            2
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 28,
+                        "action": "click",
+                        "summary": "Click the agreement checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 62,
+            "function_description": "This page functions as a user login interface for a primary school student homework learning and interactive education platform, allowing users to log in or register via mobile phone number by entering their phone number, agreeing to relevant agreements, and proceeding to the next step, with an option for password login as well.",
+            "action_refs": [
+                [
+                    17,
+                    4
+                ]
+            ],
+            "data_in": [
+                "login session",
+                "password login option"
+            ],
+            "data_out": [
+                "password login page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 17,
+                "logic": "The user starts on the login page. They can choose to log in via password by clicking the '密码登录' button, which likely switches the login method to password-based authentication. Alternatively, they can proceed with mobile number login by entering a phone number, agreeing to terms, and clicking '下一步'.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            17,
+                            4
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click the '密码登录' (password login) button to switch to password login mode."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 63,
+            "function_description": "开始练习按钮",
+            "action_refs": [
+                [
+                    18,
+                    0
+                ]
+            ],
+            "data_in": [
+                "练习设置（范围：5以内的数比大小，数量：10）"
+            ],
+            "data_out": [
+                "练习任务（5以内的数比大小，数量10）"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 18,
+                "logic": "The user starts on page 18. The core action is clicking the '开始练习' (Start Practice) button. Since there's only one action here, the flow is a single step with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            18,
+                            0
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '开始练习' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 64,
+            "function_description": "练习范围选择按钮",
+            "action_refs": [
+                [
+                    18,
+                    1
+                ]
+            ],
+            "data_in": [
+                "练习范围设置"
+            ],
+            "data_out": [
+                "练习范围设置更新"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 18,
+                "logic": "The user starts on page 18 and clicks the '练习范围选择按钮' (practice range selection button). This action likely triggers a change or opens a related interface for selecting the practice range, though the immediate destination page is not specified here.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            18,
+                            1
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the practice range selection button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 65,
+            "function_description": "打印按钮",
+            "action_refs": [
+                [
+                    18,
+                    3
+                ]
+            ],
+            "data_in": [
+                "练习题目设置（范围、数量）"
+            ],
+            "data_out": [
+                "打印任务（含练习题目）"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 18,
+                "logic": "The core execution logic for the '打印' (Print) button involves a single step: clicking the '打印' button located on the page (page index 18). This action is expected to initiate the print functionality, though the destination page after this action is not yet determined (as indicated by dst_page_idx being null).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            18,
+                            3
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '打印' (Print) button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 66,
+            "function_description": "去抽盒按钮",
+            "action_refs": [
+                [
+                    18,
+                    4
+                ]
+            ],
+            "data_in": [
+                "圣诞盲盒机活动入口"
+            ],
+            "data_out": [
+                "进入圣诞盲盒机活动页面"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 18,
+                "logic": "The core execution logic starts on page 18. The user performs a click action on the '去抽盒' button. Since there's only one action here, the flow is a single step with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            18,
+                            4
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '去抽盒' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 67,
+            "function_description": "马上PK按钮",
+            "action_refs": [
+                [
+                    18,
+                    5
+                ]
+            ],
+            "data_in": [
+                "PK道具模式入口"
+            ],
+            "data_out": [
+                "进入PK道具模式"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 18,
+                "logic": "The core execution logic starts on page 18. The user clicks the '马上PK' button (action_ref [18,5]). Since there are no further steps or branches provided, this is a single-step flow with no decision points.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            18,
+                            5
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '马上PK' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 68,
+            "function_description": "同步练习按钮",
+            "action_refs": [
+                [
+                    18,
+                    7
+                ]
+            ],
+            "data_in": [
+                "同步练习功能入口"
+            ],
+            "data_out": [
+                "进入同步练习功能页面"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 18,
+                "logic": "The user starts on page 18 and clicks the '同步练习' (Synchronized Practice) button. This action likely triggers a transition or initiates the synchronized practice functionality, though the destination page is not yet determined from the provided action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            18,
+                            7
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '同步练习' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 69,
+            "function_description": "功能按钮-搜百科",
+            "action_refs": [
+                [
+                    19,
+                    0
+                ]
+            ],
+            "data_in": [
+                "百科搜索功能入口"
+            ],
+            "data_out": [
+                "进入百科搜索页面"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 19,
+                "logic": "The core execution logic starts on page 19. The user clicks the '搜百科' (Search Encyclopedia) function button. Since there are no further actions or branches provided, the flow consists of this single click action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            19,
+                            0
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '搜百科' function button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 70,
+            "function_description": "立即体验按钮",
+            "action_refs": [
+                [
+                    20,
+                    0
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The user starts on page 20. The core action is clicking the '立即体验' (Immediate Experience) button. This action likely initiates the app's main experience flow, though the destination page is not yet determined from the provided action (dst_page_idx is null).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            0
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '立即体验' button on page 20."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 71,
+            "function_description": "This page provides a sample display of homework inspection (such as an essay with批改 marks and comments) and guides users to experience the homework inspection function, including showing full-text and sentence - by - sentence comments, and offering options to log in to save results or start taking photos for homework inspection.",
+            "action_refs": [
+                [
+                    30,
+                    1
+                ],
+                [
+                    34,
+                    0
+                ]
+            ],
+            "data_in": [
+                "作文批改示例",
+                "作文点评信息"
+            ],
+            "data_out": [
+                "作文批改示例体验结果"
+            ],
+            "data_dependencies": [
+                79,
+                81
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 30,
+                "logic": "The flow starts with clicking the '用示例体验一下' button on page 30 to enter the sample homework inspection page (page 34). Then, on page 34, clicking the '点击查看答案解析（代表）' button (or similar interactive element) advances to the next page (page 36) to view detailed comments or analysis of the sample homework. There are no branch points as the flow is a straight sequence of clicks to experience the homework inspection sample.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            30,
+                            1
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 34,
+                        "action": "click",
+                        "summary": "Click '用示例体验一下' to enter the sample homework inspection page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            34,
+                            0
+                        ],
+                        "src_page_idx": 34,
+                        "dst_page_idx": 36,
+                        "action": "click",
+                        "summary": "Click to view detailed analysis of the sample homework"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 72,
+            "function_description": "This page provides a camera - based interface for the composition correction function, enabling users to take photos of composition assignments for correction, and also offers reference lines to assist in taking photos of the entire page of composition topics at once.",
+            "action_refs": [
+                [
+                    30,
+                    3
+                ]
+            ],
+            "data_in": [
+                "作文批改功能入口"
+            ],
+            "data_out": [
+                "作文批改功能界面"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 30,
+                "logic": "The user starts on page 30 and clicks the '作文批改' (Composition Correction) button. This action navigates to page 5, which presents a camera interface with reference lines to assist in capturing the entire page of composition topics for correction.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            30,
+                            3
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click the composition correction button to enter the camera - based composition correction interface."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 73,
+            "function_description": "本题视频选项卡",
+            "action_refs": [
+                [
+                    30,
+                    4
+                ]
+            ],
+            "data_in": [
+                "视频讲题功能入口"
+            ],
+            "data_out": [
+                "进入视频讲题功能页面"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 30,
+                "logic": "The user starts on page 30 and clicks the '本题视频选项卡' (this question's video tab) element. This action navigates to page 35, completing the functional point's core logic as a single-step flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            30,
+                            4
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 35,
+                        "action": "click",
+                        "summary": "Click the '本题视频选项卡' to navigate to the target page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 74,
+            "function_description": "This page functions as a camera - based auxiliary interface for homework checking, enabling users to take photos of homework pages (with options for different types of homework checking like oral arithmetic/homework correction and composition correction) to assist in the subsequent homework checking and problem - solving process.",
+            "action_refs": [
+                [
+                    31,
+                    0
+                ]
+            ],
+            "data_in": [
+                "支持题型信息"
+            ],
+            "data_out": [
+                "支持题型信息展示"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 31,
+                "logic": "The user starts on page 31 and clicks the '查看支持题型' button. This action navigates to page 5, likely to view supported homework problem types for the camera - based homework checking feature.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            31,
+                            0
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click the '查看支持题型' button to navigate to the page showing supported problem types."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 75,
+            "function_description": "This page functions as a camera roll management interface where users can either view existing media (though currently empty) or use the camera to take photos or videos, likely for the purpose of submitting作业 (homework) for checking in the educational platform.",
+            "action_refs": [
+                [
+                    32,
+                    1
+                ]
+            ],
+            "data_in": [
+                "camera",
+                "camera roll"
+            ],
+            "data_out": [
+                "photo",
+                "video"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 32,
+                "logic": "The user starts on the camera roll management page (which is empty). The core action is clicking the camera capture button, likely to open the camera for taking photos/videos (e.g., for homework submission). Since there's only one action here, the flow is a single step of initiating camera use via the button.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            32,
+                            1
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": 32,
+                        "action": "click",
+                        "summary": "Click the camera capture button to initiate taking photos/videos"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 76,
+            "function_description": "This page functions as a camera roll management interface within a primary school student homework learning and interactive education platform, allowing users to take photos or videos with the camera for homework checking purposes.",
+            "action_refs": [
+                [
+                    32,
+                    2
+                ]
+            ],
+            "data_in": [
+                "相册下拉菜单设置"
+            ],
+            "data_out": [
+                "相册下拉菜单展开状态"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 32,
+                "logic": "The user starts on the camera roll management page (page 32). The core action is clicking the album dropdown menu button, which likely reveals options related to the camera roll (e.g., taking photos/videos or managing media). Since there's only one action here, the flow is a single step with no branches or loops yet.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            32,
+                            2
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": 32,
+                        "action": "click",
+                        "summary": "Click the album dropdown menu button to access camera roll - related options (e.g., take photos/videos or manage media)."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 77,
+            "function_description": "This page enables users to input a friend - sent PK invitation code to challenge the friend's PK performance and also allows them to view and manage the PK challenge records they have initiated and participated in.",
+            "action_refs": [
+                [
+                    38,
+                    1
+                ]
+            ],
+            "data_in": [
+                "PK战绩挑战口令",
+                "好友战绩挑战功能"
+            ],
+            "data_out": [
+                "挑战好友战绩请求"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 38,
+                "logic": "The user starts on page 38. They click the '挑战好友战绩' (Challenge Friend's Record) button, which likely triggers the process of inputting the PK invitation code or managing PK challenge records. Since there's only one action, the flow is a single step here, with no branches or loops yet as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            38,
+                            1
+                        ],
+                        "src_page_idx": 38,
+                        "dst_page_idx": 38,
+                        "action": "click",
+                        "summary": "Click the '挑战好友战绩' button to initiate or manage PK challenge actions"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 78,
+            "function_description": "我参与的挑战标签",
+            "action_refs": [
+                [
+                    38,
+                    2
+                ]
+            ],
+            "data_in": [
+                "挑战记录"
+            ],
+            "data_out": [
+                "我参与的挑战记录"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 38,
+                "logic": "The user starts on page 38. They click on the '我参与的挑战' (Challenges I Participated In) tab, which navigates to page 42. This is a straight-line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            38,
+                            2
+                        ],
+                        "src_page_idx": 38,
+                        "dst_page_idx": 42,
+                        "action": "click",
+                        "summary": "Click on the '我参与的挑战' tab to navigate to the corresponding page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 79,
+            "function_description": "This page functions as a camera interface for the homework checking feature, guiding users to take a photo of an entire page of homework with parallel reference lines for problems, and offering options for oral arithmetic/homework correction and composition correction.",
+            "action_refs": [
+                [
+                    34,
+                    1
+                ]
+            ],
+            "data_in": [
+                "作文点评结果"
+            ],
+            "data_out": [
+                "拍照功能启动",
+                "相机界面加载"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 34,
+                "logic": "The flow starts on page 34. The user clicks the '体验完毕，立即拍照' button, transitioning to page 5 (the camera interface for homework checking). On page 5, the camera is ready with parallel reference lines, and options for '口算/作业批改' and '作文批改' are available for further actions (not detailed in the provided action).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            34,
+                            1
+                        ],
+                        "src_page_idx": 34,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click '体验完毕，立即拍照' to enter the camera interface for homework checking."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 80,
+            "function_description": "Draft (草稿) button",
+            "action_refs": [
+                [
+                    43,
+                    2
+                ]
+            ],
+            "data_in": [
+                "draft function",
+                "quiz problem"
+            ],
+            "data_out": [
+                "draft record"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 43,
+                "logic": "The user interacts with the Draft button. The flow starts on page 43, where the user clicks the Draft button. Since there's only one action, the logic is a single step of clicking the Draft button.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            43,
+                            2
+                        ],
+                        "src_page_idx": 43,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the Draft button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 81,
+            "function_description": "This page provides sentence - by - sentence review and analysis of a student's composition, including appreciation of good sentences and analysis of excellent words and sentences, and also offers options for logging in to save results and taking photos for composition review.",
+            "action_refs": [
+                [
+                    36,
+                    0
+                ],
+                [
+                    37,
+                    0
+                ]
+            ],
+            "data_in": [
+                "作文点评（分句点评）",
+                "作文内容",
+                "分句点评内容",
+                "第2页切换按钮"
+            ],
+            "data_out": [
+                "分句点评内容"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 36,
+                "logic": "The user starts on page 36 and clicks the '分句点评' tab to switch to the sentence - by - sentence review page (page 37). On page 37, the user can click the page - switching button for page 2 of the sentence - by - sentence review to view more content of the sentence - by - sentence review.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            36,
+                            0
+                        ],
+                        "src_page_idx": 36,
+                        "dst_page_idx": 37,
+                        "action": "click",
+                        "summary": "Click the '分句点评' tab to enter the sentence - by - sentence review page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            37,
+                            0
+                        ],
+                        "src_page_idx": 37,
+                        "dst_page_idx": 37,
+                        "action": "click",
+                        "summary": "Click the page - switching button for page 2 of the sentence - by - sentence review to view more sentence - by - sentence review content"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        }
+    ]
+}

@@ -1,0 +1,1248 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "Manage data recovery and storage capacity",
+            "action_refs": [],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": false,
+            "core_logic": null
+        },
+        {
+            "index": 1,
+            "function_description": "This page allows users to initiate a scan for recovering photos by tapping the \"Scan\" button, as part of the data recovery and storage capacity management functionality.",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ],
+                [
+                    1,
+                    0
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    7,
+                    0
+                ]
+            ],
+            "data_in": [
+                "photos recovery category",
+                "photos for recovery",
+                "recover photos page state",
+                "scanning status"
+            ],
+            "data_out": [
+                "recover photos page entry",
+                "scanning status update",
+                "scanned photos list",
+                "all recovery page state",
+                "updated scanning status"
+            ],
+            "data_dependencies": [
+                7,
+                8,
+                19
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the 'All Recovery' page, then clicks the 'Photos' recovery category to navigate to the 'Recover Photos' page. From there, the user clicks the 'Scan' button to initiate the photo recovery scan, which then shows a scanning status indicator. Alternatively, the user could click the back arrow to return to the 'All Recovery' page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click 'Photos' recovery category to go to Recover Photos page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            1,
+                            0
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click 'Scan' button to start photo recovery scan"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            1,
+                            1
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click back arrow to return to All Recovery page"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            7,
+                            0
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "View scanning status indicator during scan"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "This page allows users to initiate a scan for recovering deleted or lost videos by tapping the \"Scan\" button, as part of the data recovery process focused on video files.",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    2,
+                    0
+                ]
+            ],
+            "data_in": [
+                "videos recovery category",
+                "recovery feature navigation state"
+            ],
+            "data_out": [
+                "recover videos page entry",
+                "navigation back to all recovery page"
+            ],
+            "data_dependencies": [
+                20
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the 'All Recovery' page. First, they click the 'Videos' recovery category to proceed to the video recovery page. Then, if needed, they can click the back arrow button to return to the 'All Recovery' page. The main flow is selecting the Videos category to initiate video recovery-related actions.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click on the Videos recovery category to navigate to the video recovery page."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            2,
+                            0
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click on the back arrow button to navigate back to the previous page (All Recovery page)."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "This page allows users to initiate a scan for recovering other types of files by tapping the \"Scan\" button, as part of the data recovery functionality focused on file recovery.",
+            "action_refs": [
+                [
+                    0,
+                    2
+                ],
+                [
+                    3,
+                    1
+                ]
+            ],
+            "data_in": [
+                "files recovery category (files)",
+                "recover other files page state"
+            ],
+            "data_out": [
+                "recover other files page entry",
+                "all recovery page state"
+            ],
+            "data_dependencies": [
+                8,
+                21
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the 'All Recovery' page (page 0). First, they click on the 'Files' recovery category (action from page 0, edge 2) to navigate to page 3. If needed, they can click the back arrow (action from page 3, edge 1) to return to the 'All Recovery' page (page 0).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click on the 'Files' recovery category to proceed to file recovery options."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            3,
+                            1
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the back arrow to return to the 'All Recovery' page."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S1",
+                                "condition": "User wants to navigate back to 'All Recovery' page"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "User stays on the file recovery page"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "The page displays recovered files categorized into Photos, Videos, and Other Files, allows users to scan for deleted photos (or other file types via respective tabs), and shows the current status of recovered files (e.g., no photos restored yet).",
+            "action_refs": [
+                [
+                    0,
+                    3
+                ],
+                [
+                    4,
+                    0
+                ]
+            ],
+            "data_in": [
+                "recovered files category (recovered)",
+                "recovered files page state"
+            ],
+            "data_out": [
+                "recovered files view (photos tab)",
+                "navigation back to previous page state"
+            ],
+            "data_dependencies": [
+                9,
+                10,
+                12,
+                22
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the 'All Recovery' page. First, the user clicks a recovered data category (e.g., Photos, Videos, or Files) to view its details. Then, the user can click the back arrow button to return to the previous page. There are no branches or loops as the actions are sequential and optional (back navigation).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click a recovered data category (e.g., Photos, Videos, Files) to view its details."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            4,
+                            0
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the back arrow button to return to the previous page."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "The page displays detailed cloud storage information, including total, used, and available storage, along with a breakdown of storage usage by file type (Photos, Video, Audio) and the number of files in each category.",
+            "action_refs": [
+                [
+                    0,
+                    4
+                ],
+                [
+                    5,
+                    0
+                ]
+            ],
+            "data_in": [
+                "storage capacity summary",
+                "cloud storage data"
+            ],
+            "data_out": [
+                "detailed cloud storage information"
+            ],
+            "data_dependencies": [
+                23
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on page 0 and clicks the 'See Details' button to view detailed cloud storage information on page 5. After reviewing, the user can click the back button to return to the previous page (page 0).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click 'See Details' to view detailed storage info"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            5,
+                            0
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click back button to return to previous page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "The Settings page allows users to configure app preferences such as language, share the app, provide feedback, rate the app, check for updates, and view the privacy policy, along with displaying the app version.",
+            "action_refs": [
+                [
+                    0,
+                    5
+                ],
+                [
+                    6,
+                    0
+                ]
+            ],
+            "data_in": [
+                "settings entry point"
+            ],
+            "data_out": [
+                "settings page loaded"
+            ],
+            "data_dependencies": [
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                24
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the main page (page 0). First, the user clicks the Settings gear icon to navigate to the Settings page (page 6). Then, the user can click the Back arrow button to return to the main page (page 0). There are no branches or loops as the actions are a simple navigation to and from the Settings page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click Settings gear icon to open Settings page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            6,
+                            0
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click Back arrow button to return to main page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "The page notifies the user that the video recovery scan has been completed and no videos were found for recovery, with an \"OK\" button to acknowledge the message.",
+            "action_refs": [
+                [
+                    2,
+                    1
+                ],
+                [
+                    10,
+                    0
+                ]
+            ],
+            "data_in": [
+                "videos for recovery",
+                "scan result"
+            ],
+            "data_out": [
+                "scan result (no videos found)",
+                "confirmed scan result"
+            ],
+            "data_dependencies": [
+                1
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The user starts on the 'Recover Videos' page (page 2) and clicks the 'Scan' button to initiate the video recovery scan. After the scan completes (on page 10, which shows the no-videos-found message), the user clicks the blue 'OK' button to acknowledge the result and conclude the flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            1
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click the 'Scan' button to start the video recovery scan."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            10,
+                            0
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the blue 'OK' button to confirm the scan result (no videos found)."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "The page notifies the user that the scan for recoverable files has been completed, indicating that 3 files were found, and provides an \"OK\" button to proceed.",
+            "action_refs": [
+                [
+                    3,
+                    0
+                ],
+                [
+                    11,
+                    0
+                ],
+                [
+                    12,
+                    0
+                ]
+            ],
+            "data_in": [
+                "recoverable files",
+                "scan result (files for recovery)",
+                "file",
+                "file selection checkbox"
+            ],
+            "data_out": [
+                "scan result (files for recovery)",
+                "transition to file recovery interface",
+                "selected file",
+                "updated file selection checkbox state"
+            ],
+            "data_dependencies": [
+                7,
+                25
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The user starts on the file recovery scan page. First, they click the Scan button to initiate file scanning. After scanning completes (finding 3 files), they click the OK button to confirm the scan completion and proceed. Finally, they can interact with the checkbox for file selection on the next page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            0
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click the Scan button to start file recovery scan"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            11,
+                            0
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click the OK button to confirm scan completion"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            12,
+                            0
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the checkbox for file selection"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "Videos tab button",
+            "action_refs": [
+                [
+                    4,
+                    1
+                ]
+            ],
+            "data_in": [
+                "recovered files (videos category)"
+            ],
+            "data_out": [
+                "recovered videos list (loaded)"
+            ],
+            "data_dependencies": [
+                4
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user starts on page 4 (Recovered Files with Photos tab active). The core action is clicking the Videos tab button. This action is intended to switch the view from Photos to Videos, though the destination page isn't fully resolved here (dst_page_idx is null, but the click initiates the tab switch).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            1
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the Videos tab button to switch from Photos to Videos view"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "Other Files tab button",
+            "action_refs": [
+                [
+                    4,
+                    2
+                ]
+            ],
+            "data_in": [
+                "recovered files (other files category)"
+            ],
+            "data_out": [
+                "displayed other files in recovered files section"
+            ],
+            "data_dependencies": [
+                4
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user starts on the Recovered Files page (page 4). They click the 'Other Files' tab button, which is expected to navigate to the Other Files section (though the destination page is not yet determined from the action, the core action is the click on the tab).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            2
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'Other Files' tab button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "Scan deleted photos button",
+            "action_refs": [
+                [
+                    4,
+                    3
+                ]
+            ],
+            "data_in": [
+                "deleted photos"
+            ],
+            "data_out": [
+                "scanned photos result"
+            ],
+            "data_dependencies": [
+                1,
+                4
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user starts on the Recovered Files (Photos tab) page. They perform a single action: clicking the 'Scan deleted photos' button. This action initiates the process to scan for deleted photos, with no branching or looping in this core logic as described by the provided action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            3
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'Scan deleted photos' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "Three-dot menu button",
+            "action_refs": [
+                [
+                    4,
+                    4
+                ]
+            ],
+            "data_in": [
+                "recovered files page menu"
+            ],
+            "data_out": [
+                "menu options (e.g., settings, help, etc.)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The flow starts on the Recovered Files page. The user clicks the three - dot menu button at the top - right corner of the page. Since this is a single - step action with no further branching or looping shown in the provided actions, the flow consists of just this click action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            4
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the three - dot menu button at the top - right of the Recovered Files page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "Language option",
+            "action_refs": [
+                [
+                    6,
+                    1
+                ]
+            ],
+            "data_in": [
+                "language setting"
+            ],
+            "data_out": [
+                "language setting (to be configured)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on the Settings page (page 6). The core logic involves clicking the 'Language' option, which likely leads to a subpage (though the destination page isn't fully resolved here) to manage language preferences. There are no branches or loops as only one action is defined so far.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            1
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the 'Language' option in the Settings page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "Share app option",
+            "action_refs": [
+                [
+                    6,
+                    2
+                ]
+            ],
+            "data_in": [
+                "share app setting"
+            ],
+            "data_out": [
+                "share app options opened"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The flow starts on the Settings page (page 6). The user clicks the 'Share app' option, which is expected to trigger the app-sharing functionality (e.g., opening a share dialog or options). Since there's only one action here, the flow is a single step with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            2
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'Share app' option on the Settings page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "Feedback option",
+            "action_refs": [
+                [
+                    6,
+                    3
+                ]
+            ],
+            "data_in": [
+                "feedback setting item"
+            ],
+            "data_out": [
+                "feedback page navigation"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on the Settings page (page 6). The core logic involves clicking the 'Feedback' option. This action likely leads to a feedback submission or input interface, though the destination page isn't specified here. The flow is a single step of initiating the feedback process by clicking the option.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            3
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the Feedback option on the Settings page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "Rate app option",
+            "action_refs": [
+                [
+                    6,
+                    4
+                ]
+            ],
+            "data_in": [
+                "rate app setting"
+            ],
+            "data_out": [
+                "rate app request initiated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on the Settings page (page 6). The core logic is to click the 'Rate app' option. This action is the only step in the flow, with no branches or loops as it directly initiates the rate app functionality (or navigates to a related page, though the destination is null here).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            4
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'Rate app' option on the Settings page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "Check for update option",
+            "action_refs": [
+                [
+                    6,
+                    5
+                ]
+            ],
+            "data_in": [
+                "check for update setting"
+            ],
+            "data_out": [
+                "update check result"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on the Settings page (page 6). They perform a single action: clicking the 'Check for update' option. This action likely triggers the app to check for available updates, and since it's a leaf action (no further navigation), the flow ends here.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            5
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'Check for update' option on the Settings page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "Privacy Policy option",
+            "action_refs": [
+                [
+                    6,
+                    6
+                ]
+            ],
+            "data_in": [
+                "privacy policy setting"
+            ],
+            "data_out": [
+                "privacy policy document loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user is on the Settings page (page 6). The core logic involves clicking the 'Privacy Policy' option. This action is expected to lead to the display of the Privacy Policy content (though the destination page is marked as null here, implying the next step is the Privacy Policy view).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            6
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the Privacy Policy option in the Settings page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "This page allows users to initiate a scan for recovering deleted or lost photos by tapping the \"Scan\" button, as part of the data recovery functionality for photos.",
+            "action_refs": [
+                [
+                    9,
+                    0
+                ]
+            ],
+            "data_in": [
+                "photos recovery category"
+            ],
+            "data_out": [
+                "recover photos page entry"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts on the 'All Recovery' page. They click the 'Photos' recovery category card, which navigates to the 'Recover Photos' page. From there, the next step (implied by the functional point) is to tap the 'Scan' button to initiate the photo recovery scan, though the provided action only covers the navigation to the 'Recover Photos' page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            0
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click on the Photos recovery category card to navigate to the Recover Photos page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "The page allows users to initiate a scan for video recovery by tapping the \"Scan\" button, with the purpose of detecting and potentially recovering lost or deleted videos.",
+            "action_refs": [
+                [
+                    9,
+                    1
+                ]
+            ],
+            "data_in": [
+                "videos recovery category"
+            ],
+            "data_out": [
+                "recover videos page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts on the 'All Recovery' page. They click the 'Videos' recovery category card, which navigates to the 'Recover Videos' page. This is the first step in initiating the video recovery scan process.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            1
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click on the Videos recovery category card to navigate to the Recover Videos page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "The current page, titled \"Recover Other Files\", provides a \"Scan\" button that users can tap to initiate a scan for recoverable files, with a prompt indicating this action.",
+            "action_refs": [
+                [
+                    9,
+                    2
+                ]
+            ],
+            "data_in": [
+                "files recovery category"
+            ],
+            "data_out": [
+                "recover other files page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts on the 'All Recovery' page (page 9). They click the 'Files' recovery category card, which navigates to the 'Recover Other Files' page (page 3). On this page, the user can tap the 'Scan' button (implied by the functional point description, though the provided action is the navigation to this page) to initiate a scan for recoverable files, with a prompt guiding this action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            2
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click the 'Files' recovery category card to navigate to the 'Recover Other Files' page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "The page displays the status of recovered files (initially showing no photos restored) and provides a button to scan for deleted photos, with tabs to switch between viewing recovered photos, videos, or other files.",
+            "action_refs": [
+                [
+                    9,
+                    3
+                ]
+            ],
+            "data_in": [
+                "recovered files category card"
+            ],
+            "data_out": [
+                "recovered files page (photos tab)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The flow starts on the 'All Recovery' page. The user clicks the 'Recovered data category card' (specifically the 'Recovered' card, though the action leads to the 'Recovered Files' page). On the 'Recovered Files' page (initially showing 'Photos' tab with no restored photos), the user can either click 'Scan deleted photos' to start a scan or switch tabs (Videos/Other Files) to view other file types. The core logic is navigating to the recovered files view and having options to scan or switch categories.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            3
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the 'Recovered' category card to navigate to the Recovered Files page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "The page provides a detailed overview of cloud storage usage, displaying total, used, and available storage space, along with a breakdown of storage usage by file type (Photos, Video, Audio).",
+            "action_refs": [
+                [
+                    9,
+                    4
+                ]
+            ],
+            "data_in": [
+                "storage capacity summary"
+            ],
+            "data_out": [
+                "detailed cloud storage information"
+            ],
+            "data_dependencies": [
+                5
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The flow starts on page 9. The user clicks the 'See Details' link for storage, which navigates to page 5. On page 5, the cloud storage details (total, used, available space) and file type breakdown (Photos, Video, Audio) are displayed, completing the task of viewing the detailed storage overview.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            4
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click 'See Details' link for storage to navigate to the detailed cloud storage page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "The current page is the Settings page of the data recovery app, allowing users to configure options like language, share the app, provide feedback, rate the app, check for updates, and view the privacy policy.",
+            "action_refs": [
+                [
+                    9,
+                    5
+                ]
+            ],
+            "data_in": [
+                "settings entry"
+            ],
+            "data_out": [
+                "settings page loaded"
+            ],
+            "data_dependencies": [
+                6,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts on the main page (page 9) and clicks the settings gear icon. This action navigates them to the Settings page (page 6), where they can configure options like language, share the app, provide feedback, rate the app, check for updates, or view the privacy policy.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            5
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click the settings gear icon to navigate to the Settings page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 25,
+            "function_description": "All Files (3) navigation arrow",
+            "action_refs": [
+                [
+                    12,
+                    1
+                ]
+            ],
+            "data_in": [
+                "recoverable files"
+            ],
+            "data_out": [
+                "detailed recoverable files list"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The user starts on page 12 (Recover Other Files) and clicks the 'All Files (3)' navigation arrow. This action likely navigates to a related page or expands/collapses a section, though the destination page isn't specified here. The flow is a single step with no branches or loops yet.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            1
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'All Files (3)' navigation arrow"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        }
+    ]
+}

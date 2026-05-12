@@ -1,0 +1,1475 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "Task management with category filtering and task creation",
+            "action_refs": [
+                [
+                    0,
+                    8
+                ]
+            ],
+            "data_in": [
+                "task view"
+            ],
+            "data_out": [
+                "task view"
+            ],
+            "data_dependencies": [
+                1,
+                2,
+                3
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user navigates to the Tasks view. From there, category filtering (via tabs like All, Work, etc.) and task creation (via the + button) can be done, though the provided action only shows the initial navigation to the Tasks view.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            8
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Navigate to the Tasks view"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 1,
+            "function_description": "Displays tasks filtered by the 'All' category (or current selected category), shows a message if no tasks exist in the category, and provides an option to create a new task.",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ]
+            ],
+            "data_in": [
+                "task list",
+                "All category filter"
+            ],
+            "data_out": [
+                "filtered task list (All category)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The app starts on the tasks page. First, it filters tasks by the 'All' category (or the currently selected category). Then, it checks if there are tasks in that category: if there are, it displays them; if not, it shows a message indicating no tasks exist. Finally, it provides a '+' button to create a new task (though the 'create' action's step isn't in the provided actions yet, the filtering and check are captured here with the given action).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Filter tasks by 'All' category (or current selected category)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "Displays tasks filtered by the 'All' category (currently showing no tasks) and provides an option to create a new task via the '+' button, along with category tabs for task filtering and a new user offer banner.",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ]
+            ],
+            "data_in": [
+                "task list",
+                "work category filter"
+            ],
+            "data_out": [
+                "filtered task list (work category)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The app starts on a page showing task categories (All, Work, Personal, Wishlist) and a new user offer banner. The main flow is a straight line: when the 'Work' category tab is clicked, the app filters tasks to show only those in the 'Work' category (currently showing no tasks in this category).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click 'Work' category tab to filter tasks"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "Displays tasks filtered by the 'All' category (currently showing no tasks in the 'Wishlist' sub - category) and provides an option to create a new task.",
+            "action_refs": [
+                [
+                    0,
+                    2
+                ]
+            ],
+            "data_in": [
+                "task list",
+                "Personal category filter"
+            ],
+            "data_out": [
+                "filtered task list (Personal category)"
+            ],
+            "data_dependencies": [
+                2,
+                4
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The app starts on a page showing the 'Wishlist' category with no tasks. The core logic involves filtering tasks by the 'Personal' category (though the initial state is 'Wishlist' with no tasks) and having an option to create a new task (via the '+' button, not in the provided action but implied by the UI). The provided action is clicking to filter by 'Personal', but the main flow here is about the 'All' and 'Wishlist' context: initially, 'Wishlist' has no tasks, and there's a way to create a new task. However, with the given action, the step is to click to filter by 'Personal' (maybe part of exploring categories, but the functional point is about 'All' and 'Wishlist' showing no tasks and new task option). Wait, the provided action is [0,2] with description 'Filter tasks by 'Personal' category'. So the step is to click to filter by 'Personal' category. The logic: The app displays tasks in categories. The 'Wishlist' sub - category (under 'All' context) has no tasks. The user can filter tasks by the 'Personal' category (via the provided click action) and also has the option to create a new task (via the '+' button visible in the UI).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click to filter tasks by 'Personal' category"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "Displays tasks filtered by the 'All' category (currently showing no tasks in the 'Wishlist' sub - category here, but the main function is to show tasks under the 'All' filter) and provides an option to create a new task.",
+            "action_refs": [
+                [
+                    0,
+                    3
+                ]
+            ],
+            "data_in": [
+                "tasks",
+                "Wishlist category"
+            ],
+            "data_out": [
+                "filtered tasks (Wishlist category)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": null
+        },
+        {
+            "index": 5,
+            "function_description": "The current page provides additional task - related options such as managing categories, searching tasks, sorting tasks, printing tasks, toggling subtask visibility, and upgrading to PRO, while also indicating no tasks in the “Wishlist” category and offering a way to create a task.",
+            "action_refs": [
+                [
+                    0,
+                    4
+                ]
+            ],
+            "data_in": [
+                "task management options menu"
+            ],
+            "data_out": [
+                "opened task options menu"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the page showing the 'Wishlist' category with no tasks. The user clicks the additional options menu (three dots) to open a dropdown with task - related actions like managing categories, searching, sorting, printing, toggling subtasks, and upgrading to PRO. There are no branches or loops as it's a single action to open the options.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the three - dot menu to open additional task - related options"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "The current page allows users to input details for a new task (with the \"Wishlist\" category pre - selected) and provides options to set additional task - related details (like date, etc.) before submitting the task creation.",
+            "action_refs": [
+                [
+                    0,
+                    5
+                ],
+                [
+                    2,
+                    0
+                ],
+                [
+                    2,
+                    1
+                ]
+            ],
+            "data_in": [
+                "task input field",
+                "task (new)",
+                "task",
+                "wishlist task input"
+            ],
+            "data_out": [
+                "new task",
+                "task (new, with input text)",
+                "new wishlist task"
+            ],
+            "data_dependencies": [
+                24
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The process starts by clicking to begin creating a new task. Then, the user inputs the task details (e.g., 'Buy concert tickets') into the text field. Finally, the user clicks the submission button to complete the task creation, with the 'Wishlist' category pre - selected throughout.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Initiate new task creation"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            2,
+                            0
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 6,
+                        "action": "input",
+                        "summary": "Enter task details"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            2,
+                            1
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Submit the new task"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "This page allows users to create a new task within the \"Wishlist\" category by entering task details in the input field and optionally setting additional attributes (like date, recurrence, or priority) before submitting.",
+            "action_refs": [
+                [
+                    0,
+                    6
+                ]
+            ],
+            "data_in": [],
+            "data_out": [
+                "new task"
+            ],
+            "data_dependencies": [
+                6,
+                24
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the Wishlist task page (with no tasks). They click the 'Add a new task' button (the + icon) to open the task input interface. This action transitions to the page where task details can be entered, initiating the task creation process for the Wishlist category.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            6
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click the 'Add a new task' button (the + icon) to open the task input interface."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "The current page (side navigation menu of the To-Do List app) provides access to various app - related features and options such as viewing a new user sale, accessing starred tasks, managing categories, customizing the theme, configuring widgets, getting help via FAQ, providing feedback, following the app on social media, donating, exploring family apps, and adjusting settings.",
+            "action_refs": [
+                [
+                    0,
+                    7
+                ]
+            ],
+            "data_in": [],
+            "data_out": [
+                "side navigation menu (opened)"
+            ],
+            "data_dependencies": [
+                11,
+                13
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts by clicking to open the side navigation menu. Once the menu is open, the user can then choose from various options like New User Sale, Starred Tasks, Category management, Theme customization, Widget configuration, FAQ, Feedback, Follow Us, Donate, Family Apps, or Settings, with no branching or looping in this initial step of opening the menu.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            7
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click to open the side navigation menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "The Calendar page allows users to view the monthly calendar (December 2025 here) and provides an option to create a new task by clicking the \"+\" button, enabling clear day - planning through the calendar view.",
+            "action_refs": [
+                [
+                    0,
+                    9
+                ],
+                [
+                    4,
+                    0
+                ]
+            ],
+            "data_in": [
+                "calendar view entry",
+                "calendar date (December 30)"
+            ],
+            "data_out": [
+                "calendar view loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the initial page and clicks to navigate to the Calendar view (showing December 2025). Then, the user can click on a specific calendar date (e.g., December 30) to potentially plan tasks for that day, with an option to create a new task via the '+' button.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            9
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Navigate to Calendar view (December 2025)"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            4,
+                            0
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click on calendar date (December 30)"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "The \"Mine\" page provides a personalized overview of task progress, including completed/pending task counts, daily task completion trends, upcoming tasks, and pending tasks by category, along with a prompt to log in and a new user sale promotion.",
+            "action_refs": [
+                [
+                    0,
+                    10
+                ],
+                [
+                    5,
+                    2
+                ]
+            ],
+            "data_in": [
+                "pending tasks in categories time range setting"
+            ],
+            "data_out": [
+                "pending tasks in categories time range options (dropdown opened)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts by navigating to the 'Mine' page (S1). Once on the 'Mine' page, a branch point (S2) appears for interacting with the time range dropdown, allowing selection of different time ranges (e.g., 'In 30 days', 'In 7 days', 'All') to view pending tasks by category (S3).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            10
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Navigate to the 'Mine' view"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            5,
+                            2
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Interact with the time range dropdown"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": null,
+                        "src_page_idx": 19,
+                        "dst_page_idx": null,
+                        "action": null,
+                        "summary": "View pending tasks by the selected time range"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "The current page is a subscription purchase screen for the to - do list app, which showcases the PRO features (like unlimited checklists, repetitive task customization, etc.), offers different subscription plans (Monthly, Permanent, Annual), has a limited - time special offer with a countdown timer, and provides a “CONTINUE” button to proceed with the purchase, along with links to terms, privacy policy, and a restore option.",
+            "action_refs": [
+                [
+                    3,
+                    0
+                ],
+                [
+                    7,
+                    1
+                ]
+            ],
+            "data_in": [
+                "new user sale menu item",
+                "monthly subscription option"
+            ],
+            "data_out": [
+                "subscription plan page (loaded)"
+            ],
+            "data_dependencies": [
+                15,
+                17,
+                18
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The flow starts by clicking the 'New User Sale' menu item to navigate to the subscription purchase screen. Then, it proceeds to click the 'Monthly subscription tab' to select the Monthly subscription plan, completing the selection of the subscription option.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            0
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click on 'New User Sale' menu item to navigate to the subscription purchase screen"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            7,
+                            1
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click on 'Monthly subscription tab' to select the Monthly subscription plan"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "The current page displays the \"Wishlist\" task category (with no tasks present) and provides access to a dropdown menu for managing categories, searching, sorting, printing, toggling subtasks, and upgrading to PRO, along with an option to create a new task.",
+            "action_refs": [
+                [
+                    3,
+                    1
+                ]
+            ],
+            "data_in": [
+                "category menu item"
+            ],
+            "data_out": [
+                "category menu interaction result"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The flow starts on the 'Wishlist' task category page (with no tasks). The user can click the category dropdown menu item, which navigates to a menu page with various options. This is a straight-line flow with no branches or loops as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            1
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the Category dropdown menu item"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "The Settings page of the to - do list app enables users to configure various options such as account sync, widget settings, notification and reminder preferences, theme selection, calendar sync, task - related audio and subtask auto - completion settings, as well as date and time - related configurations like the first day of the week, time format, date format, and due date settings.",
+            "action_refs": [
+                [
+                    3,
+                    2
+                ]
+            ],
+            "data_in": [
+                "settings menu item"
+            ],
+            "data_out": [
+                "settings page loaded"
+            ],
+            "data_dependencies": [
+                19,
+                20,
+                21
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The user starts on page 3 (menu) and clicks the 'Settings' menu item. This action navigates to the Settings page (page 8), where various configuration options like account sync, widget settings, and date/time preferences are accessible. No branches or loops are present as only this initial navigation step is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            2
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click 'Settings' menu item to navigate to Settings page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "This page allows users to manage Google Drive synchronization for task backup, including logging into Google Drive, viewing sync history, and toggling auto - sync for automatic task backup.",
+            "action_refs": [
+                [
+                    5,
+                    0
+                ]
+            ],
+            "data_in": [
+                "login session"
+            ],
+            "data_out": [
+                "login session (initiated)"
+            ],
+            "data_dependencies": [
+                22,
+                26
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The flow starts on page 5, where the user clicks the 'Click to login' button. This action navigates to page 18, likely to initiate Google Drive login for task backup management, including sync history viewing and auto - sync toggling.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            0
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click the 'Click to login' button to navigate to the next page for Google Drive login - related operations."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "The current page functions as a PRO upgrade page for the task management app, showcasing available PRO features (e.g., unlimited checklist, ad removal) and offering different subscription plans (Monthly, Permanent, Annual) with a limited-time special offer and a \"CONTINUE\" button to proceed with the upgrade.",
+            "action_refs": [
+                [
+                    5,
+                    1
+                ]
+            ],
+            "data_in": [
+                "PRO upgrade option"
+            ],
+            "data_out": [
+                "PRO subscription page loaded"
+            ],
+            "data_dependencies": [
+                17
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The flow starts on page 5 (the main app page). The user clicks the PRO upgrade button (on page 5) to navigate to page 7, which is the PRO upgrade page displaying features, subscription plans, a special offer, and a CONTINUE button. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            1
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click the PRO upgrade button on page 5 to navigate to the PRO upgrade page (page 7)."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "The page functions as a task management interface for the \"Wishlist\" category, showing no tasks and prompting users to create a task via the '+' button, with category filtering tabs and a new user promotional offer banner.",
+            "action_refs": [
+                [
+                    7,
+                    0
+                ]
+            ],
+            "data_in": [
+                "offer page"
+            ],
+            "data_out": [
+                "task management page (Wishlist category)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The flow starts on the offer page (page 7). The user clicks the close button (action_ref [7,0]) to dismiss the offer page, transitioning to the Wishlist task management page (page 0). On this page, the Wishlist tab is active, showing no tasks and prompting task creation via the '+' button, with a new user offer banner visible.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            0
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click close button on offer page to navigate to Wishlist task page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "The current page displays a promotional offer for unlocking PRO features of a to - do list app, with the \"Monthly\" subscription tab selected, and it provides options to choose different subscription plans (Monthly, Permanent, Annual) along with a \"CONTINUE\" button to proceed with the subscription.",
+            "action_refs": [
+                [
+                    7,
+                    2
+                ]
+            ],
+            "data_in": [
+                "subscription plan (permanent)"
+            ],
+            "data_out": [
+                "subscription confirmation process initiated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The flow starts on the promotional offer page for unlocking PRO features. The user can choose a subscription plan (Monthly, Permanent, or Annual) and then clicks the 'CONTINUE' button to proceed with the selected subscription. There are no branches or loops as the main action is clicking the continue button after plan selection.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            2
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click the 'CONTINUE' subscription button to proceed with the selected subscription plan."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "The current page (Monthly subscription tab of New User Sale page) displays PRO features of the to - do list app, offers a monthly subscription option (billed monthly) for unlocking these features, and provides a \"CONTINUE\" button to proceed with the subscription, along with terms, privacy policy, and restore options.",
+            "action_refs": [
+                [
+                    7,
+                    3
+                ]
+            ],
+            "data_in": [
+                "terms document"
+            ],
+            "data_out": [
+                "terms document (viewed)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The flow starts on the Monthly subscription tab of the New User Sale page (page 7), which displays PRO features and subscription options. The user can click the 'TERMS' link (action at S1), and since there are no branches or loops here, the flow is a straight line for this action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            3
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click the TERMS link"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "The page allows users to view and manage tasks within the \"Wishlist\" category, with options to filter tasks by category (All, Work, Personal, Wishlist), create new tasks via a \"+\" button, and navigate to other sections like Calendar and Mine, while also displaying a prompt to create tasks when none exist in the current category.",
+            "action_refs": [
+                [
+                    8,
+                    0
+                ]
+            ],
+            "data_in": [
+                "settings page state"
+            ],
+            "data_out": [
+                "task category page (Wishlist)"
+            ],
+            "data_dependencies": [
+                12,
+                16
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The user starts on the Settings page (page 8) and clicks the back arrow to navigate to the Wishlist tasks page (page 0). On the Wishlist page, if there are no tasks, a prompt to create a task via the '+' button is shown; the user can also filter tasks by category, create new tasks, or navigate to other sections like Calendar or Mine.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            0
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click back arrow to navigate from Settings to Wishlist tasks page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "The Account Sync page in the To-Do List app allows users to manage Google Drive synchronization for their to-do tasks, including options to log in to Google Drive, view sync history, and enable/disable automatic sync for task backups.",
+            "action_refs": [
+                [
+                    8,
+                    1
+                ]
+            ],
+            "data_in": [
+                "account sync setting"
+            ],
+            "data_out": [
+                "account sync page loaded"
+            ],
+            "data_dependencies": [
+                23,
+                25,
+                27
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The flow starts on the Settings page. The user clicks the 'Account Sync' option, navigating to the Account Sync page where Google Drive login, sync history, and auto sync options are available.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            1
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click Account Sync option to navigate to Account Sync page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "Task Completion Tone toggle",
+            "action_refs": [
+                [
+                    8,
+                    2
+                ]
+            ],
+            "data_in": [
+                "task completion tone setting"
+            ],
+            "data_out": [
+                "task completion tone setting disabled"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The flow starts on the Settings page (page 8). The user clicks the 'Task Completion Tone' toggle, which likely toggles its state (on/off) and may navigate to a related page (page 10) or update the UI inline. There are no branches as it’s a single action to interact with the toggle.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            2
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click the Task Completion Tone toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "The page enables users to log in to Google Drive for task synchronization, view sync history, and toggle auto - sync for automatic task backup.",
+            "action_refs": [
+                [
+                    18,
+                    0
+                ]
+            ],
+            "data_in": [
+                "Google Drive login setting"
+            ],
+            "data_out": [
+                "Google Drive login session (initiated)"
+            ],
+            "data_dependencies": [
+                14,
+                26
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 18,
+                "logic": "The flow starts on page 18. The user clicks the Google Drive login button, which navigates to page 9 (presumably the Google Drive login or account sync page). This initiates the process for Google Drive task synchronization, with subsequent steps (not shown here) likely involving logging in, viewing sync history, or toggling auto - sync.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            18,
+                            0
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click Google Drive login button to start Google Drive task sync process"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "Auto Sync toggle switch",
+            "action_refs": [
+                [
+                    18,
+                    1
+                ]
+            ],
+            "data_in": [
+                "auto sync setting"
+            ],
+            "data_out": [
+                "auto sync setting enabled"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 18,
+                "logic": "The user starts on page 18 and clicks the Auto Sync toggle switch. This action transitions the app to page 20, likely reflecting the updated state of the Auto Sync setting (either enabled or disabled based on the toggle's prior state).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            18,
+                            1
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 20,
+                        "action": "click",
+                        "summary": "Click the Auto Sync toggle switch"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "The page allows users to log in to Google Drive for task synchronization, view sync history, and toggle auto - sync for automatic task backup.",
+            "action_refs": [
+                [
+                    18,
+                    2
+                ]
+            ],
+            "data_in": [
+                "task creation interface"
+            ],
+            "data_out": [
+                "new task entry"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 18,
+                "logic": "The user starts on page 18 and clicks the 'Add task button (+)', which navigates to page 9. This action initiates the process related to task addition or synchronization setup as part of the Google Drive task sync functionality.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            18,
+                            2
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click the 'Add task button (+)' to navigate to the next page."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": null
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 25,
+            "function_description": "The current page (FAQ) provides information and guidance related to task sync, including how to enable it and sync account information between devices, along with a contact option for issues.",
+            "action_refs": [
+                [
+                    18,
+                    3
+                ]
+            ],
+            "data_in": [
+                "sync settings page"
+            ],
+            "data_out": [
+                "FAQ page"
+            ],
+            "data_dependencies": [
+                28,
+                30
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 18,
+                "logic": "The user starts on page 18 and clicks the close page button (X), which navigates to page 12 (the FAQ page). On the FAQ page, the user can access sync - related guidance (like how to enable task sync and sync account info between devices) and a contact option for issues. There are no branches or loops as it's a simple navigation to the FAQ page with relevant info.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            18,
+                            3
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click the close page button (X) to navigate to the FAQ page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 26,
+            "function_description": "This page allows users to configure Google Drive account login for syncing to - do list data, view sync history, and toggle the auto - sync option to enable or disable automatic backup of to - dos.",
+            "action_refs": [
+                [
+                    9,
+                    0
+                ]
+            ],
+            "data_in": [
+                "Google Drive login setting"
+            ],
+            "data_out": [
+                "Google Drive login session (initiated)"
+            ],
+            "data_dependencies": [
+                14,
+                22
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The flow starts on the Account Sync page. The user clicks the 'Tap to login' button for Google Drive to initiate the account login process for syncing to - do list data. Since there's only one action provided, the flow is a single - step action for now, but it's the first step in configuring Google Drive sync.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            0
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click Google Drive 'Tap to login' button to start Google Drive account login for to - do list sync"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 27,
+            "function_description": "Auto Sync toggle switch",
+            "action_refs": [
+                [
+                    9,
+                    1
+                ]
+            ],
+            "data_in": [
+                "auto sync setting"
+            ],
+            "data_out": [
+                "auto sync setting enabled"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts on page 9 (Account Sync) and clicks the Auto Sync toggle switch. This action leads to page 11, completing the toggle interaction.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            1
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click the Auto Sync toggle switch"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 28,
+            "function_description": "The page provides FAQ (Frequently Asked Questions) related to the Sync functionality of the to - do list app, including topics like how to enable task sync and syncing account information between devices, and also offers a contact option for users facing problems.",
+            "action_refs": [
+                [
+                    9,
+                    2
+                ]
+            ],
+            "data_in": [
+                "account sync help request"
+            ],
+            "data_out": [
+                "sync FAQ information"
+            ],
+            "data_dependencies": [
+                29,
+                32
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The flow starts on the Account Sync page. The user clicks the help icon (question mark) at the top right, which navigates to the FAQ page containing sync - related questions and a contact option for issues.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            2
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click the help icon (question mark) on the Account Sync page to navigate to the FAQ page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 29,
+            "function_description": "Sync section collapse toggle",
+            "action_refs": [
+                [
+                    12,
+                    0
+                ]
+            ],
+            "data_in": [
+                "sync section (FAQ)"
+            ],
+            "data_out": [
+                "sync section collapsed state"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The user starts on page 12 (FAQ page with Sync section expanded). They click the Sync section collapse toggle, which transitions the app to page 13 (presumably with the Sync section collapsed).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            0
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click the Sync section collapse toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 30,
+            "function_description": "The page provides step - by - step instructions on how to sync tasks between Android devices using Google Drive, and also has a feedback section to ask if the information was helpful.",
+            "action_refs": [
+                [
+                    12,
+                    1
+                ]
+            ],
+            "data_in": [
+                "task sync enable instruction request"
+            ],
+            "data_out": [
+                "task sync enable instructions"
+            ],
+            "data_dependencies": [
+                31
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The user starts on page 12 (FAQ) and clicks the 'How to Enable Task Sync?' button to navigate to page 14. On page 14, the user can read step - by - step instructions for syncing tasks between Android devices via Google Drive. After reading, the user can provide feedback by choosing either 'Not Helpful' or 'Helpful' (though the feedback action steps are not in the provided actions list here, the main flow is accessing the instructions).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            1
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click 'How to Enable Task Sync?' button to view sync instructions"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 31,
+            "function_description": "The page provides step - by - step instructions on how to sync task account information between Android devices using Google Drive, and also has a feedback section to ask if the information was helpful.",
+            "action_refs": [
+                [
+                    12,
+                    2
+                ]
+            ],
+            "data_in": [
+                "sync account information help item"
+            ],
+            "data_out": [
+                "sync account information help content"
+            ],
+            "data_dependencies": [
+                32,
+                33,
+                34
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The user starts on page 12 (FAQ) and clicks the 'Sync account information between devices' button. This navigates to page 14, which displays step - by - step instructions for syncing task account info via Google Drive. At the bottom of page 14, there is a feedback section asking if the information was helpful, with options to mark it as 'Helpful' or 'Not Helpful'.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            2
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click the 'Sync account information between devices' button to view sync instructions and feedback options."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 32,
+            "function_description": "This page functions as an email composition interface for sending sync - related feedback to the TodoList app's support email address, with the recipient, subject, and sender pre - filled, and a text area for the user to input additional feedback.",
+            "action_refs": [
+                [
+                    12,
+                    3
+                ]
+            ],
+            "data_in": [
+                "contact us link",
+                "sync FAQ page content"
+            ],
+            "data_out": [
+                "email composition for support",
+                "support contact email opened"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The user starts on page 12 (FAQ page) and clicks the 'contact us' link. This action navigates to page 15, which is the email composition interface for sending sync - related feedback, with recipient, subject, and sender pre - filled, and a text area for additional input.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            3
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click the 'contact us' link on the FAQ page to navigate to the email composition page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 33,
+            "function_description": "Not Helpful feedback button",
+            "action_refs": [
+                [
+                    14,
+                    0
+                ]
+            ],
+            "data_in": [
+                "feedback request (sync account info)"
+            ],
+            "data_out": [
+                "feedback response (not helpful)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The user starts on page 14 (a help page about syncing account information). The core action is clicking the 'Not Helpful' feedback button, which navigates to page 16. There are no branches or loops as it's a single click action to submit feedback.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            0
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click the 'Not Helpful' feedback button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 34,
+            "function_description": "Helpful feedback button",
+            "action_refs": [
+                [
+                    14,
+                    1
+                ]
+            ],
+            "data_in": [
+                "helpfulness feedback setting",
+                "sync account information help content"
+            ],
+            "data_out": [
+                "helpfulness feedback record (helpful)"
+            ],
+            "data_dependencies": [
+                34
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The user starts on page 14. They click the 'Helpful feedback button' (labeled 'Helpful' with a smiley icon), which navigates to page 17. This is a single-step flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            1
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click the 'Helpful' feedback button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        }
+    ]
+}

@@ -1,0 +1,1491 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "Bus trip booking & city exploration",
+            "action_refs": [
+                [
+                    0,
+                    2
+                ],
+                [
+                    0,
+                    8
+                ]
+            ],
+            "data_in": [
+                "trip search form",
+                "from city",
+                "to city",
+                "booking page content"
+            ],
+            "data_out": [
+                "updated trip search form",
+                "swapped from city",
+                "swapped to city"
+            ],
+            "data_dependencies": [
+                6,
+                7
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the booking page (page 0). First, the user can click the 'Swap cities' button (action [0,2]) to swap the 'From' and 'To' city values, leading to page 3. Alternatively, clicking the 'Booking tab' (action [0,8]) stays on page 0, likely to reaffirm the booking tab selection.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click 'Swap cities' button to swap 'From' and 'To' cities"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            0,
+                            8
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click 'Booking tab' in bottom nav to stay on booking page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 1,
+            "function_description": "Departure city selector",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ]
+            ],
+            "data_in": [
+                "departure city setting"
+            ],
+            "data_out": [
+                "updated departure city setting"
+            ],
+            "data_dependencies": [
+                6,
+                7
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The core execution logic for the departure city selector starts on page 0. The user clicks on the departure city selector (labeled 'From' with 'San Jose, CA' initially), which navigates to page 1. This is a straight - line flow with no branches or loops as there's only one action here.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click on the departure city selector (the 'From' field) to start selecting the departure city."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "Destination city selector",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ]
+            ],
+            "data_in": [
+                "destination city input field"
+            ],
+            "data_out": [
+                "selected destination city"
+            ],
+            "data_dependencies": [
+                6,
+                7
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The core execution logic for the destination city selector starts on page 0. The user clicks on the destination city selector (the 'To' field or its associated area), which transitions the flow to page 2. There are no branches or loops in this initial flow as it's a single click action to access the destination city selection interface.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click on the destination city selector (the 'To' field area) to proceed to the destination city selection page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "Departure date selector",
+            "action_refs": [
+                [
+                    0,
+                    3
+                ]
+            ],
+            "data_in": [
+                "departure date setting"
+            ],
+            "data_out": [
+                "updated departure date setting"
+            ],
+            "data_dependencies": [
+                4,
+                6,
+                12
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on page 0 and clicks the departure date selector (labeled with the current date) to open the date selection interface, transitioning to page 4. This is a single-step flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the departure date selector (showing 'Dec 27, 2025') to open the date selection page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "Return date selector",
+            "action_refs": [
+                [
+                    0,
+                    4
+                ]
+            ],
+            "data_in": [
+                "return date setting",
+                "trip search parameters"
+            ],
+            "data_out": [
+                "return date setting updated"
+            ],
+            "data_dependencies": [
+                6,
+                12
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on page 0 (the booking page). The core logic is to click the 'Return' date selector (labeled 'Tap to add' with a '+' icon) to open the date selection interface, transitioning to page 5. There are no branches or loops as this is a single action to initiate the return date selection.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click the 'Return' date selector (labeled 'Tap to add' with a '+' icon) to open the return date selection interface."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "Passengers/bikes selector",
+            "action_refs": [
+                [
+                    0,
+                    5
+                ]
+            ],
+            "data_in": [
+                "passengers/bikes selection setting"
+            ],
+            "data_out": [
+                "updated passengers/bikes selection"
+            ],
+            "data_dependencies": [
+                6
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The core execution logic starts on page 0. The user clicks the 'Passengers/bikes selector' field, which navigates to page 6. There are no branches or loops as only one action is present.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click on the Passengers/bikes selector field"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "The page allows users to input trip details (departure, destination, dates, passengers) to search for Greyhound bus trips, while also showcasing popular cities to visit and trip inspiration.",
+            "action_refs": [
+                [
+                    0,
+                    6
+                ]
+            ],
+            "data_in": [
+                "trip search criteria"
+            ],
+            "data_out": [
+                "trip search results"
+            ],
+            "data_dependencies": [
+                12
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the trip search page (page 0). The core action is clicking the 'Search' button, which likely triggers the search for trips based on the entered details (departure, destination, dates, passengers) while the page also displays popular cities and trip inspiration. Since there's only one action here, the flow is a single step with no branches.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            6
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the 'Search' button to initiate trip search"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "The page allows the user to pick a departure city from a list of cities (with their distances) for bus trip booking or city exploration, specifically after selecting New York, NY as a popular city.",
+            "action_refs": [
+                [
+                    0,
+                    7
+                ],
+                [
+                    7,
+                    0
+                ],
+                [
+                    7,
+                    1
+                ]
+            ],
+            "data_in": [
+                "New York, NY city card",
+                "trip search form",
+                "departure city option",
+                "San Jose, CA city data"
+            ],
+            "data_out": [
+                "departure city selection (initiated)",
+                "trip search form (updated)",
+                "selected departure city (San Jose, CA)",
+                "navigation to booking page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on page 0 and clicks the New York, NY popular city card (action S1) to navigate to page 7. On page 7, the user can either click the back arrow (action S2) to return to page 0 or click a departure city option like San Jose, CA (action S3) to navigate to page 11. The flow branches at page 7 based on the user’s choice of action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            7
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click New York, NY popular city card to go to page 7"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            7,
+                            0
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click back arrow to return to page 0"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            7,
+                            1
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click San Jose, CA departure city option to go to page 11"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "The Tickets page displays the user's ticket status (indicating no tickets are present) and provides a button to find bookings, allowing users to manage or search for their bus trip tickets.",
+            "action_refs": [
+                [
+                    0,
+                    9
+                ]
+            ],
+            "data_in": [
+                "ticket record"
+            ],
+            "data_out": [
+                "ticket record (loaded)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the Booking page (page 0) and clicks the 'Tickets' tab in the bottom navigation. This navigates to the Tickets page (page 8), where the user sees a message indicating no tickets are present and a 'Find Booking' button to manage or search for tickets.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            9
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click the 'Tickets' tab in the bottom navigation to navigate to the Tickets page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "The page allows users to search for bus stops or cities and displays a list of nearby bus stations with their distances, functioning as a trip tracking interface to locate relevant bus stations.",
+            "action_refs": [
+                [
+                    0,
+                    10
+                ],
+                [
+                    9,
+                    0
+                ]
+            ],
+            "data_in": [
+                "stops or cities search input",
+                "stations nearby list"
+            ],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on page 0 and clicks the 'Trip tracker' tab in the bottom navigation to navigate to page 9. Then, on page 9, the user inputs a location (e.g., 'San Francisco') into the stops/cities search input field, which likely triggers a search for nearby bus stations.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            10
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click Trip tracker tab in bottom nav to go to trip tracker page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            9,
+                            0
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 14,
+                        "action": "input",
+                        "summary": "Input location (e.g., San Francisco) into stops/cities search input"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "The page provides access to various general options and information related to the Greyhound app, including settings, help, legal documents, station locations, app rating, and app details.",
+            "action_refs": [
+                [
+                    0,
+                    11
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the Booking page (page 0). The user clicks the 'More' tab in the bottom navigation, which navigates to the 'More' page (page 10) containing general options like settings, help, legal documents, station locations, app rating, and app details. There are no branches or loops as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            11
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click 'More' tab in bottom navigation to access general options page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "The page allows users to import a ticket into the app by entering their 10 - digit booking number and the corresponding contact information (email address or phone number) used for the booking, and then using the \"Find booking\" button (when enabled) to locate and import the booking.",
+            "action_refs": [
+                [
+                    8,
+                    0
+                ],
+                [
+                    12,
+                    0
+                ],
+                [
+                    12,
+                    1
+                ]
+            ],
+            "data_in": [
+                "ticket booking import form data",
+                "booking number input field",
+                "booking number (to be entered)"
+            ],
+            "data_out": [
+                "ticket list page (tickets section)",
+                "entered booking number"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The user starts on the tickets page (page 8) and clicks the 'Find booking' button to navigate to the find booking page (page 12). On the find booking page, the user inputs a 10 - digit booking number into the booking number input field. After entering the booking number (and likely the contact information, though not shown in the actions here), the user can then use the enabled 'Find booking' button to locate and import the booking. If needed, the user can also click the back arrow to return to the tickets page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            0
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click 'FIND BOOKING' button to go to find booking page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            12,
+                            1
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 13,
+                        "action": "input",
+                        "summary": "Input 10 - digit booking number into booking number field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            12,
+                            0
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click back arrow to return to tickets page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": null
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "The current page displays a map of San Jose Diridon Station along with departure and arrival bus trip details, allowing users to view, filter (by date/time, earlier/later trips), and access specific bus trip information for the station.",
+            "action_refs": [
+                [
+                    9,
+                    1
+                ],
+                [
+                    15,
+                    1
+                ],
+                [
+                    15,
+                    2
+                ],
+                [
+                    15,
+                    4
+                ],
+                [
+                    15,
+                    5
+                ],
+                [
+                    15,
+                    7
+                ]
+            ],
+            "data_in": [
+                "San Jose Diridon Station (station entry)",
+                "map view",
+                "location data",
+                "map (San Jose Diridon Station area)",
+                "departure date input field",
+                "trip search criteria",
+                "departure date",
+                "departure time",
+                "station departure data",
+                "trip departure data",
+                "station departure settings"
+            ],
+            "data_out": [
+                "station details (map, departures/arrivals)",
+                "centered map view",
+                "zoomed map (San Jose Diridon Station area)",
+                "updated departure date",
+                "updated trip search results",
+                "earlier trip list",
+                "later trip departure data"
+            ],
+            "data_dependencies": [
+                14
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts by selecting San Jose Diridon Station from the nearby stations list. Once on the station’s page, they can interact with the map (center or zoom), input a departure date, or filter trips by showing earlier or later options. The flow allows for map interactions, date input, and trip filtering to view relevant bus trip details.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            1
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Select San Jose Diridon Station from nearby stations"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            15,
+                            1
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Center map on station location"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            15,
+                            2
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Zoom map in on station"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            15,
+                            4
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 16,
+                        "action": "input",
+                        "summary": "Input departure date"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            15,
+                            5
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Show earlier trips for the station"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            15,
+                            7
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Show later trips for the station"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S5",
+                        "to": "S6"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "The Settings page in the Greyhound app allows users to configure preferences such as currency, distance unit, and manage privacy choices related to data sharing.",
+            "action_refs": [
+                [
+                    10,
+                    0
+                ],
+                [
+                    20,
+                    0
+                ]
+            ],
+            "data_in": [
+                "settings menu item"
+            ],
+            "data_out": [
+                "settings page access"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The user starts on page 10 and clicks the 'Settings' menu option to navigate to page 20 (the Settings page). From the Settings page, the user can click the back navigation arrow to return to page 10. There are no branches or loops as the flow is a simple navigate-to-settings-and-back sequence.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            0
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 20,
+                        "action": "click",
+                        "summary": "Click 'Settings' menu option to go to Settings page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            20,
+                            0
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click back arrow to return to previous page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "This page in the Greyhound app (under the Trip tracker tab) allows users to search for bus stops or cities via a search bar and also displays a list of nearby bus stations with their respective distances for easy selection to track trips or view station - related trip information.",
+            "action_refs": [
+                [
+                    15,
+                    0
+                ]
+            ],
+            "data_in": [
+                "station details (San Jose Diridon Station)"
+            ],
+            "data_out": [
+                "station list (nearby stations)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user starts on a station details page (page 15). They perform a click action labeled 'Back to station list', which navigates them to the station list page (page 9) where they can search for stops/cities or view nearby stations. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            0
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click 'Back to station list' to navigate from station details page to station list page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "The page displays the map of San Jose Diridon Station, along with departure and arrival bus trip details (including date, time, and specific bus trips) for the station, allowing users to view and explore bus schedules.",
+            "action_refs": [
+                [
+                    15,
+                    3
+                ]
+            ],
+            "data_in": [
+                "station arrival trips data"
+            ],
+            "data_out": [
+                "station arrival trips data (displayed)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user starts on the San Jose Diridon Station page, which shows the station map and bus departure details. To explore arrival schedules, the user clicks the 'Arrivals' tab to switch the view from departures to arrivals, allowing them to see arrival - related bus trip information (date, time, specific trips) for the station.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            3
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click 'Arrivals' tab to switch from departures to arrivals view"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "Displays the map-based route, departure/arrival times, and stop information for a bus trip from San Francisco Bus Station to San Jose Diridon Station, with an option to view stops and times and a notice about real - time information availability.",
+            "action_refs": [
+                [
+                    15,
+                    6
+                ],
+                [
+                    17,
+                    2
+                ]
+            ],
+            "data_in": [
+                "trip (US0831)"
+            ],
+            "data_out": [
+                "trip details (route, schedule)"
+            ],
+            "data_dependencies": [
+                21
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The flow starts by clicking 'View trip details' to transition to the trip details page, which displays the map - based route, departure/arrival times, and a real - time info notice. Then, there's an option to click the home icon to navigate back home.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            6
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click 'View trip details' to see trip details including map, times, and real - time notice"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            17,
+                            2
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click home icon to navigate home"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "The current page (a modal dialog) allows the user to select the distance unit (either miles or kilometers) for the app's settings, with an option to cancel the selection.",
+            "action_refs": [
+                [
+                    20,
+                    1
+                ],
+                [
+                    21,
+                    1
+                ]
+            ],
+            "data_in": [
+                "distance unit setting"
+            ],
+            "data_out": [
+                "updated distance unit setting"
+            ],
+            "data_dependencies": [
+                18
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The user starts on the settings page (page 20) and clicks the 'Distance unit' option (action_ref [20,1]) to open the modal dialog (page 21). From the modal, the user can either select a distance unit (not shown in actions) or click the 'Cancel' button (action_ref [21,1]) to exit the modal and return to the previous state (page 24).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            1
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 21,
+                        "action": "click",
+                        "summary": "Click 'Distance unit' to open the modal dialog"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            21,
+                            1
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": 24,
+                        "action": "click",
+                        "summary": "Click 'Cancel' button to close the modal and return"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "This page allows the user to select the distance unit (either miles or kilometers) for the app's distance-related displays, as part of the app's settings configuration.",
+            "action_refs": [
+                [
+                    20,
+                    2
+                ]
+            ],
+            "data_in": [
+                "distance unit setting"
+            ],
+            "data_out": [
+                "distance unit setting (mi - Miles selected)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The user starts on the Settings page (page 20). They click on the 'Distance unit' setting (displayed as 'mi - Miles'), which opens a selection dialog (page 21) with options to choose between miles or kilometers. This action initiates the process of modifying the distance unit configuration.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            2
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 21,
+                        "action": "click",
+                        "summary": "Click on 'Distance unit' setting (mi - Miles) to open the unit selection dialog"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "The page allows users to manage their privacy settings by selecting and deactivating various tags, trackers, and analytic tools (categorized as Marketing, Functional, Essential) used on the Greyhound website, with options to accept all or save selected service preferences.",
+            "action_refs": [
+                [
+                    20,
+                    3
+                ],
+                [
+                    22,
+                    3
+                ]
+            ],
+            "data_in": [
+                "your privacy choices setting",
+                "services privacy settings"
+            ],
+            "data_out": [
+                "privacy settings page loaded",
+                "saved services privacy settings"
+            ],
+            "data_dependencies": [
+                25
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The flow starts on the Settings page. First, the user clicks the 'Your Privacy Choices' option to navigate to the privacy management page. Then, after managing privacy settings (implied by the app's context), the user clicks the 'Save Services settings button' to save preferences and return to the Settings page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            3
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 22,
+                        "action": "click",
+                        "summary": "Click 'Your Privacy Choices' to access privacy settings page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            22,
+                            3
+                        ],
+                        "src_page_idx": 22,
+                        "dst_page_idx": 20,
+                        "action": "click",
+                        "summary": "Click 'Save Services settings button' to save privacy preferences and return"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "OK button to dismiss notification",
+            "action_refs": [
+                [
+                    17,
+                    0
+                ]
+            ],
+            "data_in": [
+                "notification"
+            ],
+            "data_out": [
+                "dismissed notification"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 17,
+                "logic": "The flow starts on page 17 where a notification is visible. The user clicks the OK button (on page 17) to dismiss the notification, leading to page 18. There are no branches or loops as it is a single action to dismiss the notification.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            17,
+                            0
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click the OK button to dismiss the notification"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "Displays the stops and times (including departure and arrival details, route direction, and punctuality status) for a selected bus trip between San Francisco Bus Station and San Jose Diridon Station, along with a map of the route.",
+            "action_refs": [
+                [
+                    17,
+                    1
+                ],
+                [
+                    19,
+                    0
+                ]
+            ],
+            "data_in": [
+                "trip schedule",
+                "trip stops and times data",
+                "route stops information"
+            ],
+            "data_out": [
+                "expanded trip stops and times details"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 17,
+                "logic": "The flow starts on the initial page (page 17). First, the user clicks the 'Stops and Times' dropdown button (action [17,1]) to navigate to page 19, which displays stops and times details. Then, on page 19, the user clicks the '2 stops' dropdown button (action [19,0]) to view or interact with the stops list, completing the logic to access and explore the bus trip's stops and times along with the route map.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            17,
+                            1
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click 'Stops and Times' dropdown button to navigate to stops/times details page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            19,
+                            0
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click '2 stops' dropdown button to interact with the stops list"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "Currency option (CAD - Canadian Dollar)",
+            "action_refs": [
+                [
+                    21,
+                    0
+                ]
+            ],
+            "data_in": [
+                "currency setting"
+            ],
+            "data_out": [
+                "currency setting updated to CAD - Canadian Dollar"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 21,
+                "logic": "The flow starts on page 21. The user clicks on the 'Currency option (CAD - Canadian Dollar)' element, which navigates to page 23. This is a straight-line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            21,
+                            0
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": 23,
+                        "action": "click",
+                        "summary": "Click on Currency option (CAD - Canadian Dollar)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "Marketing tracking toggle switch",
+            "action_refs": [
+                [
+                    22,
+                    0
+                ]
+            ],
+            "data_in": [
+                "marketing tracking setting"
+            ],
+            "data_out": [
+                "marketing tracking setting (toggled state)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 22,
+                "logic": "The flow starts on page 22 (Privacy Settings). The user clicks the Marketing tracking toggle switch, which leads to page 25. This action toggles the switch’s state (e.g., from on to off or vice versa) to manage marketing tracking preferences.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            22,
+                            0
+                        ],
+                        "src_page_idx": 22,
+                        "dst_page_idx": 25,
+                        "action": "click",
+                        "summary": "Click the Marketing tracking toggle switch"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "This page allows users to manage and adjust their privacy tracking preferences for services-related tags, trackers, and analytic tools used by the Greyhound app, with options to enable/disable different categories and save or accept all settings.",
+            "action_refs": [
+                [
+                    22,
+                    1
+                ]
+            ],
+            "data_in": [
+                "privacy settings (services tab)"
+            ],
+            "data_out": [
+                "privacy settings (services tab) loaded"
+            ],
+            "data_dependencies": [
+                25
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 22,
+                "logic": "The user starts on the Privacy Settings page. They click the 'Services' privacy tab to switch to the Services - related privacy tracking preferences section, where they can then manage (enable/disable) different categories and save or accept all settings.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            22,
+                            1
+                        ],
+                        "src_page_idx": 22,
+                        "dst_page_idx": 22,
+                        "action": "click",
+                        "summary": "Click on the Services privacy tab to access services - related privacy tracking preferences."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 25,
+            "function_description": "The current page is the Settings page of the Greyhound app, allowing users to manage app settings such as currency, distance unit, and access privacy choices to manage data sharing preferences.",
+            "action_refs": [
+                [
+                    22,
+                    2
+                ]
+            ],
+            "data_in": [
+                "privacy settings (marketing, functional, essential)"
+            ],
+            "data_out": [
+                "privacy settings accepted"
+            ],
+            "data_dependencies": [
+                26
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 22,
+                "logic": "The user starts on the Privacy Settings page (page 22). They click the 'Accept All' button, which navigates them back to the main Settings page (page 20) to finalize privacy preferences.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            22,
+                            2
+                        ],
+                        "src_page_idx": 22,
+                        "dst_page_idx": 20,
+                        "action": "click",
+                        "summary": "Click 'Accept All' button to accept privacy settings"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 26,
+            "function_description": "The page allows users to manage app settings including currency, distance unit, and access privacy choices to control data sharing preferences.",
+            "action_refs": [
+                [
+                    22,
+                    4
+                ]
+            ],
+            "data_in": [
+                "privacy modal"
+            ],
+            "data_out": [
+                "closed privacy modal",
+                "settings page (displayed)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 22,
+                "logic": "The user starts on the privacy modal page (page 22). They perform a click action on the close privacy modal button, which navigates them back to the settings page (page 20) where they can manage other app settings like currency, distance unit, or revisit privacy choices.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            22,
+                            4
+                        ],
+                        "src_page_idx": 22,
+                        "dst_page_idx": 20,
+                        "action": "click",
+                        "summary": "Click the close privacy modal button to return to the settings page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 27,
+            "function_description": "The current page (Greyhound app Privacy Policy) is being opened, and the user is prompted to choose an app (Chrome or WebView Browser Tester) to view the Privacy Policy document, which likely details the app's data collection, usage, and privacy practices.",
+            "action_refs": [
+                [
+                    22,
+                    5
+                ]
+            ],
+            "data_in": [
+                "privacy policy document"
+            ],
+            "data_out": [
+                "opened privacy policy document"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 22,
+                "logic": "The user starts on the Privacy Settings page (page 22). They click the 'Privacy Policy' link, which triggers an app selection dialog. At this point, the user must choose between opening the document with Chrome (with options 'JUST ONCE' or 'ALWAYS') or using the WebView Browser Tester app to view the Privacy Policy details.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            22,
+                            5
+                        ],
+                        "src_page_idx": 22,
+                        "dst_page_idx": 26,
+                        "action": "click",
+                        "summary": "Click the Privacy Policy link to trigger app selection"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": null,
+                                "condition": "Choose to open with Chrome (JUST ONCE/ALWAYS)"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "Choose to open with WebView Browser Tester"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 28,
+            "function_description": "The current page (triggered by selecting the Privacy Policy link) is a privacy settings interface where users can select and deactivate various tracking tags, trackers, and analytic tools used on the Greyhound website, with options to manage Marketing, Functional, and Essential tracking categories, and is currently prompting the user to choose an app (e.g., Chrome, WebView Browser Tester) to open the related privacy policy or settings content.",
+            "action_refs": [
+                [
+                    22,
+                    6
+                ]
+            ],
+            "data_in": [
+                "online terms of use document"
+            ],
+            "data_out": [
+                "launched online terms of use document (in browser)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 22,
+                "logic": "The flow starts on the Privacy Settings page (page 22). The user clicks the 'Online Terms of Use' link, which triggers a dialog to choose an app (e.g., Chrome, WebView Browser Tester) to open the related content, leading to page 26. There are no branches or loops as the action is a single click to open the app selection dialog.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            22,
+                            6
+                        ],
+                        "src_page_idx": 22,
+                        "dst_page_idx": 26,
+                        "action": "click",
+                        "summary": "Click the Online Terms of Use link to trigger app selection for opening related content"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        }
+    ]
+}

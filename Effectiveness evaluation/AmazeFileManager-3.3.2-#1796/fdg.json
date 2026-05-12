@@ -1,0 +1,4894 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "Browse files and directories",
+            "action_refs": [],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": false,
+            "core_logic": null
+        },
+        {
+            "index": 1,
+            "function_description": "The current page is a navigation menu in a file manager app, providing options to access different storage locations, quick access sections, server management, app management, and settings.",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ]
+            ],
+            "data_in": [
+                "navigation menu trigger (file manager)"
+            ],
+            "data_out": [
+                "navigation menu (file manager)"
+            ],
+            "data_dependencies": [
+                16
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the main file manager page (page 0). The user clicks the navigation menu button, which opens the navigation menu (page 1) containing options for storage, quick access, server management, app management, and settings. This is a straight - line flow with no branches or loops as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the navigation menu button to open the navigation menu for file management"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "The current page provides a file and folder search interface within the \"/storage/emulated/0\" directory, allowing users to search for specific files or folders among the listed 13 folders and 32 files, and also enabling navigation back or clearing the search, along with options to interact with each folder via the three - dot menu and a button to add new items.",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    2,
+                    0
+                ]
+            ],
+            "data_in": [
+                "files",
+                "folders",
+                "search query",
+                "file system entries"
+            ],
+            "data_out": [
+                "search results (files/folders)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the main directory page (page 0). First, the user clicks the search button to enter the file/folder search interface (page 2). Then, the user clicks the search input field to begin typing a search query. There are no branches as the actions form a linear sequence to access the search functionality.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click search button to open file/folder search interface"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            2,
+                            0
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 82,
+                        "action": "click",
+                        "summary": "Click search input field to prepare for entering search text"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "The current page in the Amaze file manager app displays the contents of the home directory (\"/storage/emulated/0\"), showing a list of folders (e.g., Alarms, Android, DCIM) with their modification dates and options for additional actions, allowing users to browse, manage, and access files and directories within the home storage.",
+            "action_refs": [
+                [
+                    0,
+                    2
+                ]
+            ],
+            "data_in": [
+                "home directory navigation request"
+            ],
+            "data_out": [
+                "home directory content"
+            ],
+            "data_dependencies": [
+                2,
+                4,
+                5,
+                6,
+                7,
+                16,
+                22,
+                49,
+                50
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The app starts at the home directory page (\"/storage/emulated/0\"). When the \"Go to home directory\" action is triggered (e.g., by clicking the home icon), the app navigates (or refreshes) to display the home directory's contents, including folders with modification dates and action options. This is a single step as the flow is to reach and display the home directory's file structure.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Navigate to (or refresh) the home directory to display its contents (folders, modification dates, action options)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "The current page's more options menu in the file manager provides additional actions such as sorting, viewing history, switching to grid view, setting the current directory as home, or exiting the app.",
+            "action_refs": [
+                [
+                    0,
+                    3
+                ],
+                [
+                    3,
+                    0
+                ]
+            ],
+            "data_in": [
+                "file manager configuration",
+                "sort setting"
+            ],
+            "data_out": [
+                "opened more options menu",
+                "sort submenu options"
+            ],
+            "data_dependencies": [
+                21
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts by clicking the more options menu in the file manager (page 0). After opening the menu, a branch point appears where the user can choose to click the 'Sort' option (leading to page 83) or other available options (not shown here).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click the more options menu in the file manager"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            3,
+                            0
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 83,
+                        "action": "click",
+                        "summary": "Click the 'Sort' option in the more options menu"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": null
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "The current page in the Amaze file manager app displays a list of folders within the \"/storage/emulated/0\" directory and provides a context menu with operations (Cut, Copy, Delete, Rename, Encrypt, Properties, Add to Bookmark) for managing a selected folder.",
+            "action_refs": [
+                [
+                    0,
+                    4
+                ]
+            ],
+            "data_in": [
+                "folder",
+                "folder operation options"
+            ],
+            "data_out": [
+                "folder operation menu (opened)"
+            ],
+            "data_dependencies": [
+                24,
+                25,
+                26,
+                27,
+                28,
+                29,
+                30
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the folder list page of /storage/emulated/0. A click on a folder's options menu (three dots) opens a context menu with operations like Cut, Copy, Delete, Rename, Encrypt, Properties, and Add to Bookmark. This is a single step with no branching as the action just reveals the menu options.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the three-dot menu of a folder to open its operation options menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "The current page in the Amaze file manager app provides options to create a new folder, a new file, or set up a cloud connection within the /storage/emulated/0 directory, while also displaying existing folders and files in that directory.",
+            "action_refs": [
+                [
+                    0,
+                    5
+                ]
+            ],
+            "data_in": [
+                "file system (root directory)"
+            ],
+            "data_out": [
+                "new item creation options (folder, file, cloud connection)"
+            ],
+            "data_dependencies": [
+                31,
+                32,
+                33
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the /storage/emulated/0 directory page in Amaze, which displays existing folders/files. The user clicks the 'Create new item' menu (from the pink '+' button), which opens a submenu with options to create a folder, a file, or set up a cloud connection. The flow then branches based on which option the user selects from this submenu.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click the 'Create new item' menu (via the pink '+' button) to open options for creating a folder, file, or cloud connection."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": null,
+                                "condition": "User selects 'Folder' to create a new folder"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "User selects 'File' to create a new file"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "User selects 'Cloud Connection' to set up a cloud connection"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "The current page in the Amaze file manager app displays the contents (folders and files) of the \"/storage/emulated/0\" directory, allowing users to browse, manage (via the three - dot menu for each item), and potentially create new items (via the plus button) within this storage location.",
+            "action_refs": [
+                [
+                    1,
+                    0
+                ]
+            ],
+            "data_in": [
+                "storage navigation item"
+            ],
+            "data_out": [
+                "storage content (folders, files)"
+            ],
+            "data_dependencies": [
+                2,
+                5,
+                6,
+                22,
+                49,
+                50
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user starts on page 1 (navigation menu) and clicks the 'Storage' navigation item. This action navigates to page 0, which displays the contents of the \"/storage/emulated/0\" directory, enabling file/folder browsing, management via three - dot menus, or new item creation via the plus button.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            0
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the 'Storage' navigation item to navigate to the \"/storage/emulated/0\" directory page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "The current page in the Amaze file manager app displays the contents (folders) of the \"/storage/0000-0000\" directory, allowing users to browse, manage (via the three - dot menu on each folder), and potentially create new items (via the plus button) within this specific storage location.",
+            "action_refs": [
+                [
+                    1,
+                    1
+                ]
+            ],
+            "data_in": [
+                "storage folder (0000-0000)"
+            ],
+            "data_out": [
+                "browsed storage content (0000-0000)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user starts on the main storage navigation page. They click the '0000-0000' navigation item to browse the folders within the '/storage/0000-0000' directory, transitioning to the page displaying its contents (folders like Android and LOST.DIR) for further management or creation actions.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            1
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click '0000-0000' navigation item to browse its storage folders"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "Displays the contents (folders and files) of the \"/storage/emulated/0\" directory, allowing users to browse, manage (via context menus), and create new items (via the plus button) within this storage location.",
+            "action_refs": [
+                [
+                    1,
+                    2
+                ]
+            ],
+            "data_in": [
+                "Download folder"
+            ],
+            "data_out": [
+                "Download folder contents"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The app starts at the navigation menu (page 1). The user clicks the 'Download' navigation item, which navigates to the main storage directory page (page 0) displaying folders/files. From here, the user can browse, manage items via context menus, or create new items via the plus button.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            2
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click 'Download' navigation item to navigate to storage directory page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "The current page in the file manager app displays the contents of the \"Videos\" directory (which currently has 0 folders and 0 files) and provides an option to add new items via a floating action button.",
+            "action_refs": [
+                [
+                    1,
+                    3
+                ]
+            ],
+            "data_in": [
+                "Movies folder"
+            ],
+            "data_out": [
+                "Movies folder content"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts on page 1. The user clicks on the Videos navigation item, which navigates to the Videos directory (page 7) that shows 0 folders and 0 files, with a floating action button to add new items.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            3
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click Videos navigation item to navigate to Videos directory"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "The current page in the file manager application displays the contents of the \"Videos\" directory, showing that there are 0 folders and 0 files, with an option to add new items via a floating action button.",
+            "action_refs": [
+                [
+                    1,
+                    4
+                ]
+            ],
+            "data_in": [
+                "Music folder"
+            ],
+            "data_out": [
+                "Music folder contents"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts on page 1. The user clicks the 'Videos' navigation item, which navigates to page 7. On page 7, the 'Videos' directory is displayed with 0 folders and 0 files, and a floating action button to add new items is visible.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            4
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click 'Videos' navigation item to navigate to Videos directory page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "The current page in the Amaze file manager app displays the contents of the \"Pictures\" directory, allowing users to view, manage (e.g., open, delete, share), and organize folders and image files within this directory.",
+            "action_refs": [
+                [
+                    1,
+                    5
+                ]
+            ],
+            "data_in": [
+                "Pictures directory"
+            ],
+            "data_out": [
+                "Pictures directory content (files/folders)"
+            ],
+            "data_dependencies": [
+                34,
+                99
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user starts on the storage navigation page. They click the 'Pictures' navigation item, which navigates to the Pictures directory page. On this page, the user can view, manage (open, delete, share), and organize the folders and image files listed.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            5
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click on the 'Pictures' navigation item to navigate to the Pictures directory page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "The current page in the Amaze file manager displays the contents of the \"Videos\" directory, showing that there are 0 folders and 0 files, with an option to add new items via the floating action button.",
+            "action_refs": [
+                [
+                    1,
+                    6
+                ]
+            ],
+            "data_in": [
+                "quick access navigation item"
+            ],
+            "data_out": [
+                "video file list (updated)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts on page 1 (navigation menu). The user clicks the 'Videos' quick access item (action_ref [1,6]), navigating to page 7 (Videos directory). On page 7, the Videos directory is displayed with 0 folders and 0 files, and a floating action button to add new items is visible.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            6
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click 'Videos' quick access item in navigation menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "The current page in the Amaze app displays a list of recent files (including their names, dates, and additional options via three - dot menus) for users to view, and likely manage (such as open, delete, or share) these recently accessed files.",
+            "action_refs": [
+                [
+                    1,
+                    7
+                ]
+            ],
+            "data_in": [
+                "recent files navigation item"
+            ],
+            "data_out": [
+                "recent files list"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user starts on page 1 and clicks the 'Recent files' navigation item. This action navigates to page 9, where the recent files list (with names, dates, and three - dot menus) is displayed for further management or viewing.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            7
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click on 'Recent files' navigation item to view recent files"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "The current page in the Amaze app displays and allows management (e.g., viewing, accessing options via the three - dot menu) of image files, showing a list of image files with their names, dates, and additional action options.",
+            "action_refs": [
+                [
+                    1,
+                    8
+                ]
+            ],
+            "data_in": [
+                "image file",
+                "Amaze file manager navigation state"
+            ],
+            "data_out": [
+                "image file list (loaded)",
+                "Amaze file manager current view (Images section)"
+            ],
+            "data_dependencies": [
+                34,
+                81,
+                82,
+                83,
+                84,
+                85,
+                86,
+                91,
+                99
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user starts on page 1 and clicks the 'Images' navigation item. This action navigates to page 10, where the list of image files (with names, dates, and action options) is displayed for management.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            8
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click 'Images' navigation item to navigate to image files list page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "The current page in the Amaze file manager displays the contents of the \"Videos\" directory, showing that it currently contains 0 folders and 0 files, with options to search, navigate home, access more options, and add new items.",
+            "action_refs": [
+                [
+                    1,
+                    9
+                ]
+            ],
+            "data_in": [
+                "navigation menu",
+                "videos feature entry"
+            ],
+            "data_out": [
+                "videos file list"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts on the main navigation page of Amaze file manager. The user clicks on the 'Videos' navigation item, which navigates to the 'Videos' directory page. On this page, the directory’s contents (0 folders, 0 files) are displayed, along with options to search, navigate home, access more options, or add new items.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            9
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click on the 'Videos' navigation item to navigate to the Videos directory page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "The FTP Server page allows users to view the server's status, credentials, port, and shared path, and provides a button to start the FTP server.",
+            "action_refs": [
+                [
+                    1,
+                    10
+                ],
+                [
+                    11,
+                    1
+                ],
+                [
+                    11,
+                    2
+                ]
+            ],
+            "data_in": [
+                "FTP Server navigation item",
+                "FTP server settings",
+                "FTP server configuration",
+                "FTP server status"
+            ],
+            "data_out": [
+                "FTP Server settings page",
+                "FTP server settings (dropdown opened)",
+                "updated FTP server status",
+                "running FTP server instance"
+            ],
+            "data_dependencies": [
+                35,
+                54,
+                55,
+                56,
+                57
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user first navigates to the FTP Server page by clicking its navigation item. On the FTP Server page, they can view the server's status, credentials, port, and shared path. Then, they can either access additional options via the dropdown menu or start the FTP server by clicking the 'Start FTP Server' button.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            10
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Navigate to FTP Server page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            11,
+                            1
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Open FTP Server settings dropdown"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            11,
+                            2
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Start the FTP Server"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "The App Manager page displays a list of installed applications with their storage sizes and provides a menu (via three-dot icons) for each app to perform management actions such as uninstalling, viewing details, or other app - specific operations.",
+            "action_refs": [
+                [
+                    1,
+                    11
+                ]
+            ],
+            "data_in": [
+                "app manager navigation item"
+            ],
+            "data_out": [
+                "app manager page (with installed applications list)"
+            ],
+            "data_dependencies": [
+                36,
+                37,
+                59
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts on the main menu page. The user clicks the 'App Manager' navigation item, which navigates to the App Manager page. On this page, a list of installed apps with their storage sizes is displayed, and each app has a three - dot menu for management actions. There are no branches or loops in this initial flow as only the navigation to the App Manager page is captured by the provided action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            11
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click on the App Manager navigation item to navigate to the App Manager page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "The current page is the settings page for the Amaze app, allowing users to configure various interface and general preferences such as theme, icon style, sign - in options, and visibility of different UI components.",
+            "action_refs": [
+                [
+                    1,
+                    12
+                ]
+            ],
+            "data_in": [
+                "settings navigation item"
+            ],
+            "data_out": [
+                "settings page (Amaze app)"
+            ],
+            "data_dependencies": [
+                39,
+                40,
+                41,
+                42,
+                43,
+                44,
+                45,
+                46,
+                47,
+                48
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user starts on page 1 (Amaze app's main menu) and clicks the 'Settings' navigation item. This action navigates to page 13, the Amaze app's settings page, where interface and general preferences can be configured.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            12
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click 'Settings' navigation item to open Amaze app's settings page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "The current page (History dialog) in the file manager app displays the navigation history of visited directories, with options to clear the history or cancel the action.",
+            "action_refs": [
+                [
+                    3,
+                    1
+                ]
+            ],
+            "data_in": [
+                "navigation history setting"
+            ],
+            "data_out": [
+                "displayed navigation history"
+            ],
+            "data_dependencies": [
+                51
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The flow starts by clicking the 'History' option from the menu (on page 3) to open the History dialog (page 84), which displays the navigation history and presents options to clear or cancel. The dialog is the endpoint here, with no further actions defined in the provided steps.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            1
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 84,
+                        "action": "click",
+                        "summary": "Click 'History' option to open the History dialog showing navigation history and options to clear/cancel"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "Grid View option",
+            "action_refs": [
+                [
+                    3,
+                    2
+                ]
+            ],
+            "data_in": [
+                "grid view setting",
+                "file manager configuration"
+            ],
+            "data_out": [
+                "updated grid view setting",
+                "file display layout (grid)"
+            ],
+            "data_dependencies": [
+                4
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The flow starts on page 3. The user clicks on the 'Grid View' option, which leads to page 85. There are no branches or loops in this simple execution flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            2
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 85,
+                        "action": "click",
+                        "summary": "Click on Grid View option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "Set As Home option",
+            "action_refs": [
+                [
+                    3,
+                    3
+                ]
+            ],
+            "data_in": [
+                "current directory",
+                "home directory setting"
+            ],
+            "data_out": [
+                "updated home directory setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The user starts on page 3 (a file manager interface with a menu open). The core action is clicking the 'Set As Home' option in the menu, which navigates to page 86. There are no branches or loops as this is a single, direct action to set the home location.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            3
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 86,
+                        "action": "click",
+                        "summary": "Click the 'Set As Home' option in the menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "Exit option",
+            "action_refs": [
+                [
+                    3,
+                    4
+                ]
+            ],
+            "data_in": [
+                "file manager session"
+            ],
+            "data_out": [
+                "terminated file manager session"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The user starts on page 3 (a file manager interface). The core logic is a single step: clicking the 'Exit' option (from the dropdown menu) to navigate to page 87, likely exiting the app or returning to a previous state. There are no branches or loops as it’s a direct action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            4
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 87,
+                        "action": "click",
+                        "summary": "Click the 'Exit' option in the dropdown menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "Cut folder",
+            "action_refs": [
+                [
+                    4,
+                    0
+                ]
+            ],
+            "data_in": [
+                "folder"
+            ],
+            "data_out": [
+                "cut operation state",
+                "folder (marked for cut)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The process starts on page 4 (a file manager view). The user performs a click action to select the 'Cut folder' option, which transitions the flow to page 91. This single step completes the core action of initiating the cut operation for the folder.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            0
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 91,
+                        "action": "click",
+                        "summary": "Click the 'Cut folder' option to initiate the cut operation"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 25,
+            "function_description": "Copy folder",
+            "action_refs": [
+                [
+                    4,
+                    1
+                ]
+            ],
+            "data_in": [
+                "folder"
+            ],
+            "data_out": [
+                "copied folder"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The core execution logic for copying a folder starts on page 4. The user performs a click action to initiate the copy folder operation, transitioning to page 92. This is a straight-line flow with no branches or loops as only one action is involved.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            1
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 92,
+                        "action": "click",
+                        "summary": "Click to copy folder"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 26,
+            "function_description": "Delete folder",
+            "action_refs": [
+                [
+                    4,
+                    2
+                ]
+            ],
+            "data_in": [
+                "folder"
+            ],
+            "data_out": [
+                "deleted folder"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The core execution logic for deleting a folder starts at page 4. The user clicks the 'Delete folder' option, which transitions the flow to page 93, completing the deletion action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            2
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 93,
+                        "action": "click",
+                        "summary": "Click the 'Delete folder' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 27,
+            "function_description": "The current page (dialog) allows the user to enter a name for a new file and provides options to either cancel the operation or create the new file with the entered name.",
+            "action_refs": [
+                [
+                    4,
+                    3
+                ],
+                [
+                    94,
+                    0
+                ],
+                [
+                    94,
+                    1
+                ]
+            ],
+            "data_in": [
+                "folder",
+                "folder name input field",
+                "new folder creation context",
+                "folder name (input)"
+            ],
+            "data_out": [
+                "renamed folder",
+                "entered folder name"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user starts by clicking to open the rename dialog (or new file dialog). Then, the user can either input the new name in the text field or choose to save (create) the file with the entered name. There's a branch at the dialog step where the user can decide to cancel (implicitly by not proceeding) or proceed to create the file after entering the name.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            3
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 94,
+                        "action": "click",
+                        "summary": "Open the rename/new file dialog"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            94,
+                            0
+                        ],
+                        "src_page_idx": 94,
+                        "dst_page_idx": 97,
+                        "action": "click",
+                        "summary": "Input the new file name"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            94,
+                            1
+                        ],
+                        "src_page_idx": 94,
+                        "dst_page_idx": 98,
+                        "action": "click",
+                        "summary": "Create the file with the entered name"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": null
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 28,
+            "function_description": "The current page (dialog) allows the user to enter a name for a new file and provides options to either cancel the operation or create the new file.",
+            "action_refs": [
+                [
+                    4,
+                    4
+                ]
+            ],
+            "data_in": [
+                "folder"
+            ],
+            "data_out": [
+                "encrypted folder"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": null
+        },
+        {
+            "index": 29,
+            "function_description": "The current page displays the properties of the \"Alarms\" folder, including its name, location, size, date, and a visual representation of storage usage (total, used, free space) within the parent directory.",
+            "action_refs": [
+                [
+                    4,
+                    5
+                ],
+                [
+                    95,
+                    0
+                ]
+            ],
+            "data_in": [
+                "folder (Alarms)",
+                "folder properties dialog"
+            ],
+            "data_out": [
+                "folder properties (Alarms)",
+                "closed folder properties dialog"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "First, click to view the properties of the 'Alarms' folder, which opens the properties dialog showing details like name, location, size, date, and storage usage. Then, click to close the properties dialog, ending the interaction with the folder's properties.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            5
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 95,
+                        "action": "click",
+                        "summary": "Click to view 'Alarms' folder properties"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            95,
+                            0
+                        ],
+                        "src_page_idx": 95,
+                        "dst_page_idx": 99,
+                        "action": "click",
+                        "summary": "Click to close the properties dialog"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 30,
+            "function_description": "Add to Bookmark",
+            "action_refs": [
+                [
+                    4,
+                    6
+                ]
+            ],
+            "data_in": [
+                "folder (e.g., selected folder)"
+            ],
+            "data_out": [
+                "bookmark entry (for the folder)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The core execution logic for 'Add to Bookmark' starts on page 4. The user performs a click action on the 'Add to Bookmark' option, which transitions the flow to page 96. There are no branches or loops as it is a single-step action to add the item to bookmarks.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            6
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 96,
+                        "action": "click",
+                        "summary": "Click on 'Add to Bookmark' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 31,
+            "function_description": "This page (a dialog in a file manager app) allows the user to enter a name for a new folder (or file, based on the dialog title \"New File\" but the context from the path was creating a new folder) and then either cancel the operation or create the new item with the entered name.",
+            "action_refs": [
+                [
+                    5,
+                    0
+                ]
+            ],
+            "data_in": [
+                "folder creation interface",
+                "current directory (storage/emulated/0)"
+            ],
+            "data_out": [
+                "new folder (to be created)",
+                "updated folder list (after creation)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user starts on the file manager page (page 5) and clicks the 'Create new folder' button. This action opens a 'New File' dialog (page 94) where the user can enter a name for the new item, then choose to cancel or create it. The core flow begins with the initial click to open the dialog.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            0
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 94,
+                        "action": "click",
+                        "summary": "Click 'Create new folder' button to open the 'New File' dialog."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 32,
+            "function_description": "This page allows the user to enter a name for a new folder (or file) and provides options to either cancel the operation or create the new item with the entered name.",
+            "action_refs": [
+                [
+                    5,
+                    1
+                ]
+            ],
+            "data_in": [
+                "file creation interface",
+                "current directory (storage/emulated/0)"
+            ],
+            "data_out": [
+                "new file (to be created)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user starts on page 5 and clicks the 'Create new file' option (action_ref [5,1]), which navigates to page 94. This action initiates the process of creating a new file (or folder), likely opening a dialog to enter a name and choose between canceling or creating the item.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            1
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 94,
+                        "action": "click",
+                        "summary": "Click 'Create new file' to start the new item creation process"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 33,
+            "function_description": "The page allows the user to create a new cloud connection, offering options for an SMB Connection or to get a Cloud plugin, likely within a file management application.",
+            "action_refs": [
+                [
+                    5,
+                    2
+                ]
+            ],
+            "data_in": [
+                "cloud connection option"
+            ],
+            "data_out": [
+                "new cloud connection options"
+            ],
+            "data_dependencies": [
+                52,
+                53
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user starts on page 5 and clicks the 'Cloud Connection' option. This action opens a menu with two options: 'SMB Connection' and 'Get Cloud plugin', allowing the user to choose between setting up an SMB connection or obtaining a cloud plugin for the new cloud connection.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            2
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 100,
+                        "action": "click",
+                        "summary": "Click on Cloud Connection to open New Cloud Connection options"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 34,
+            "function_description": "The current page in the Amaze file manager app, within the Pictures directory, displays a list of folders and image files, and when a file's options menu is opened (as shown for an image file), it provides file operation options such as Open with, Cut, Copy, Delete, Rename, Encrypt, Properties, and Share to manage the selected file.",
+            "action_refs": [
+                [
+                    8,
+                    0
+                ],
+                [
+                    103,
+                    0
+                ],
+                [
+                    103,
+                    7
+                ]
+            ],
+            "data_in": [
+                "image file"
+            ],
+            "data_out": [
+                "file operation options menu"
+            ],
+            "data_dependencies": [
+                24,
+                25,
+                26,
+                27,
+                28,
+                29,
+                30,
+                81,
+                82,
+                83,
+                84,
+                85,
+                86,
+                90,
+                91
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "In the Amaze file manager’s Pictures directory, first open a file’s options menu. Then, at the menu, choose between actions like 'Open with' (to select an app for opening) or 'Share' (to access sharing options), with the flow branching based on the chosen option.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            0
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 103,
+                        "action": "click",
+                        "summary": "Open the options menu of a file in the Pictures directory"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            103,
+                            0
+                        ],
+                        "src_page_idx": 103,
+                        "dst_page_idx": 104,
+                        "action": "click",
+                        "summary": "Select 'Open with' option from the file options menu"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            103,
+                            7
+                        ],
+                        "src_page_idx": 103,
+                        "dst_page_idx": 110,
+                        "action": "click",
+                        "summary": "Select 'Share' option from the file options menu"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 35,
+            "function_description": "The page allows users to view and manage FTP Server settings, including status, username, password, port, shared path, and provides a button to start the FTP server.",
+            "action_refs": [
+                [
+                    11,
+                    0
+                ]
+            ],
+            "data_in": [
+                "FTP server configuration"
+            ],
+            "data_out": [
+                "filtered FTP server options"
+            ],
+            "data_dependencies": [
+                17,
+                54,
+                55,
+                56,
+                57
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The user is on the FTP Server settings page. They can view details like status, username, password, port, and shared path. The main action is clicking the 'START' button (not in the provided action, but the given action is clicking filter options). Wait, the provided action is clicking filter options. So the step is clicking the filter options on the FTP Server page, staying on the same page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            0
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click the filter options button on the FTP Server page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 36,
+            "function_description": "The current page allows the user to sort the list of installed applications in the App Manager by different criteria (Name, Last Modified, Size) and choose the sorting order (Ascending or Descending).",
+            "action_refs": [
+                [
+                    12,
+                    0
+                ],
+                [
+                    33,
+                    0
+                ],
+                [
+                    33,
+                    1
+                ],
+                [
+                    33,
+                    2
+                ],
+                [
+                    33,
+                    3
+                ],
+                [
+                    33,
+                    4
+                ]
+            ],
+            "data_in": [
+                "app list",
+                "sort by setting",
+                "app list sort configuration",
+                "sort direction setting"
+            ],
+            "data_out": [
+                "sorted app list",
+                "updated sort by setting (name)",
+                "updated sort by setting (Last Modified)",
+                "updated sort by setting (Size)",
+                "updated sort direction setting",
+                "updated app list sort configuration"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The user starts on the App Manager page and clicks the 'Sort apps' option to open the sorting menu. In the menu, they can choose a sorting criterion (Name, Last Modified, or Size) via radio buttons, and then select a sort direction (Ascending or Descending) via buttons. The flow branches at the sorting menu to handle the different criterion and direction choices.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            0
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 33,
+                        "action": "click",
+                        "summary": "Open the sort apps menu"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            33,
+                            0
+                        ],
+                        "src_page_idx": 33,
+                        "dst_page_idx": 36,
+                        "action": "click",
+                        "summary": "Select 'Name' as sort criterion"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            33,
+                            1
+                        ],
+                        "src_page_idx": 33,
+                        "dst_page_idx": 37,
+                        "action": "click",
+                        "summary": "Select 'Last Modified' as sort criterion"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            33,
+                            2
+                        ],
+                        "src_page_idx": 33,
+                        "dst_page_idx": 38,
+                        "action": "click",
+                        "summary": "Select 'Size' as sort criterion"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            33,
+                            3
+                        ],
+                        "src_page_idx": 33,
+                        "dst_page_idx": 39,
+                        "action": "click",
+                        "summary": "Select 'Ascending' sort direction"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            33,
+                            4
+                        ],
+                        "src_page_idx": 33,
+                        "dst_page_idx": 40,
+                        "action": "click",
+                        "summary": "Select 'Descending' sort direction"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S6"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            },
+                            {
+                                "next_step": "S6"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 37,
+            "function_description": "The current page, within the App Manager, displays a list of installed applications with their storage sizes and provides a three - dot menu for each app to access additional management options, along with an \"Exit\" button to leave the App Manager.",
+            "action_refs": [
+                [
+                    12,
+                    1
+                ]
+            ],
+            "data_in": [
+                "app manager options"
+            ],
+            "data_out": [
+                "app manager options dropdown (with Exit)"
+            ],
+            "data_dependencies": [
+                59
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The App Manager page displays installed apps with storage sizes. Clicking the three - dot menu (More options) reveals an 'Exit' button. The main flow is to interact with the menu to access the exit option, with no major decision or loop points as the action is straightforward.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            1
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 34,
+                        "action": "click",
+                        "summary": "Click the three - dot menu (More options) in the App Manager to access additional options including the 'Exit' button."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 38,
+            "function_description": "The current page's functionality is to display the app options menu for the \"Amaze\" application, providing actions such as Open, Backup, Uninstall, Properties, Play store, and Share.",
+            "action_refs": [
+                [
+                    12,
+                    2
+                ]
+            ],
+            "data_in": [
+                "Amaze app"
+            ],
+            "data_out": [
+                "Amaze app options menu"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The flow starts on the App Manager page (page 12). The user clicks the app options menu (three-dot icon) for the 'Amaze' app, which opens a menu with actions like Open, Backup, Uninstall, Properties, Play store, and Share. This is a single step with no branches as it directly displays the menu.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            2
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 35,
+                        "action": "click",
+                        "summary": "Click the app options menu (three-dot icon) for the 'Amaze' app to open its options menu."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 39,
+            "function_description": "The page allows users to customize the color settings of various UI components (such as primary colors for tabs, accent color, icon color) and toggle related options (like icon colorization, colored navigation bar, random skin) in the Amaze app.",
+            "action_refs": [
+                [
+                    13,
+                    0
+                ],
+                [
+                    48,
+                    0
+                ],
+                [
+                    48,
+                    3
+                ],
+                [
+                    58,
+                    0
+                ]
+            ],
+            "data_in": [
+                "color setting",
+                "primary color (left tab) setting",
+                "icon color setting"
+            ],
+            "data_out": [
+                "color setting (entered color configuration page)",
+                "updated primary color (left tab) setting",
+                "updated icon color setting",
+                "updated color setting"
+            ],
+            "data_dependencies": [
+                66,
+                67,
+                68,
+                69,
+                70
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 13,
+                "logic": "The user starts on the Settings page and clicks the 'Color' option to enter the Color customization page. From there, the user can choose to customize different UI component colors (like Primary Color or Icon Color) by clicking the respective options. For example, clicking 'Primary Color (Left Tab)' or 'Icon Color' leads to a color selection page, where the user can reset the color to default if needed.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            13,
+                            0
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 48,
+                        "action": "click",
+                        "summary": "Click 'Color' option to access UI component color settings"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            48,
+                            0
+                        ],
+                        "src_page_idx": 48,
+                        "dst_page_idx": 58,
+                        "action": "click",
+                        "summary": "Click 'Primary Color (Left Tab)' to customize its color"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            48,
+                            3
+                        ],
+                        "src_page_idx": 48,
+                        "dst_page_idx": 58,
+                        "action": "click",
+                        "summary": "Click 'Icon Color' to customize icon color"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            58,
+                            0
+                        ],
+                        "src_page_idx": 58,
+                        "dst_page_idx": 62,
+                        "action": "click",
+                        "summary": "Click 'Reset to default color' to reset the selected color"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 40,
+            "function_description": "Use circular icons toggle",
+            "action_refs": [
+                [
+                    13,
+                    1
+                ]
+            ],
+            "data_in": [
+                "use circular icons setting"
+            ],
+            "data_out": [
+                "updated use circular icons setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 13,
+                "logic": "The user starts on the Settings page (page 13). They perform a click action on the 'Use circular icons' toggle. This action likely toggles the state of the circular icons setting, and the flow ends here as the action is marked as a leaf (no further navigation implied).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            13,
+                            1
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 49,
+                        "action": "click",
+                        "summary": "Click the 'Use circular icons' toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 41,
+            "function_description": "Show Dividers toggle",
+            "action_refs": [
+                [
+                    13,
+                    2
+                ]
+            ],
+            "data_in": [
+                "show dividers setting"
+            ],
+            "data_out": [
+                "updated show dividers setting state"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 13,
+                "logic": "The flow starts on the Settings page (page 13). The user performs a click action on the 'Show Dividers' toggle. This action likely toggles the state of the 'Show Dividers' setting, and the flow ends after this click (as the action is marked as a leaf).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            13,
+                            2
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 50,
+                        "action": "click",
+                        "summary": "Click the 'Show Dividers' toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 42,
+            "function_description": "Show Headers toggle",
+            "action_refs": [
+                [
+                    13,
+                    3
+                ]
+            ],
+            "data_in": [
+                "show headers setting"
+            ],
+            "data_out": [
+                "updated show headers setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 13,
+                "logic": "The flow starts on the Settings page (page 13). The user clicks the 'Show Headers' toggle, which transitions to page 51. This action toggles the state of the 'Show Headers' option in the app's settings.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            13,
+                            3
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 51,
+                        "action": "click",
+                        "summary": "Click the 'Show Headers' toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 43,
+            "function_description": "Intellihide Toolbar toggle",
+            "action_refs": [
+                [
+                    13,
+                    4
+                ]
+            ],
+            "data_in": [
+                "intellihide toolbar setting"
+            ],
+            "data_out": [
+                "updated intellihide toolbar setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 13,
+                "logic": "The process starts on the Settings page (page 13). The user clicks the 'Intellihide Toolbar' toggle, which likely toggles its state (on/off) and navigates to page 52. There are no branches or loops as it's a single toggle action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            13,
+                            4
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 52,
+                        "action": "click",
+                        "summary": "Click the Intellihide Toolbar toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 44,
+            "function_description": "Show shortcuts toggle",
+            "action_refs": [
+                [
+                    13,
+                    5
+                ]
+            ],
+            "data_in": [
+                "show shortcuts setting"
+            ],
+            "data_out": [
+                "updated show shortcuts setting state"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 13,
+                "logic": "The process starts on page 13 (Settings). The user performs a click action on the 'Show shortcuts toggle' element. This action leads to page 53, completing the task of interacting with the 'Show shortcuts' toggle.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            13,
+                            5
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 53,
+                        "action": "click",
+                        "summary": "Click on 'Show shortcuts toggle' on page 13"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 45,
+            "function_description": "Show quick accesses toggle",
+            "action_refs": [
+                [
+                    13,
+                    6
+                ]
+            ],
+            "data_in": [
+                "show quick accesses setting"
+            ],
+            "data_out": [
+                "updated show quick accesses setting state"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 13,
+                "logic": "The process starts on the Settings page (page 13). The user clicks the 'Show quick accesses toggle' (action_ref [13,6]), which leads to a new page (page 54). This action toggles the 'Show quick accesses' option, likely changing its state (e.g., from on to off or vice versa) and navigating to the destination page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            13,
+                            6
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 54,
+                        "action": "click",
+                        "summary": "Click the 'Show quick accesses toggle' to toggle its state and navigate to page 54"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 46,
+            "function_description": "The current page (Theme selection dialog) allows the user to select the theme for the Amaze app from the available options: Material Light, Material Dark, and Daytime.",
+            "action_refs": [
+                [
+                    13,
+                    7
+                ],
+                [
+                    55,
+                    0
+                ],
+                [
+                    55,
+                    1
+                ],
+                [
+                    55,
+                    2
+                ]
+            ],
+            "data_in": [
+                "theme setting"
+            ],
+            "data_out": [
+                "theme selection dialog (opened)",
+                "updated theme setting (Material Light)",
+                "updated theme setting (Material Dark)",
+                "updated theme setting (Daytime)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 13,
+                "logic": "The user starts on the Settings page and clicks to open the Theme selection dialog. Then, based on the desired theme, the user selects either Material Light, Material Dark, or Daytime from the dialog, with each selection leading to a distinct outcome.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            13,
+                            7
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 55,
+                        "action": "click",
+                        "summary": "Open Theme selection dialog"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            55,
+                            0
+                        ],
+                        "src_page_idx": 55,
+                        "dst_page_idx": 63,
+                        "action": "click",
+                        "summary": "Select Material Light theme"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            55,
+                            1
+                        ],
+                        "src_page_idx": 55,
+                        "dst_page_idx": 64,
+                        "action": "click",
+                        "summary": "Select Material Dark theme"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            55,
+                            2
+                        ],
+                        "src_page_idx": 55,
+                        "dst_page_idx": 65,
+                        "action": "click",
+                        "summary": "Select Daytime theme"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 47,
+            "function_description": "The page allows users to manage sidebar shortcuts by editing, deleting existing shortcuts (Download, Movies, Music, Pictures), and adding new items.",
+            "action_refs": [
+                [
+                    13,
+                    8
+                ]
+            ],
+            "data_in": [
+                "sidebar shortcuts setting"
+            ],
+            "data_out": [
+                "sidebar shortcuts configuration"
+            ],
+            "data_dependencies": [
+                71,
+                72,
+                73
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 13,
+                "logic": "The flow starts on the settings page. The user clicks the 'Shortcuts' option to navigate to the sidebar shortcuts management page, where they can edit, delete existing shortcuts (Download, Movies, Music, Pictures), or add new items.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            13,
+                            8
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 56,
+                        "action": "click",
+                        "summary": "Click 'Shortcuts' option to open sidebar shortcuts management page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 48,
+            "function_description": "The page allows users to configure which items (Quick access, Recent files, Images, Videos, Audio, Documents, Apks) are enabled for quick access in the sidebar of the Amaze file manager app.",
+            "action_refs": [
+                [
+                    13,
+                    9
+                ]
+            ],
+            "data_in": [
+                "quick accesses setting"
+            ],
+            "data_out": [
+                "sidebar quick access configuration"
+            ],
+            "data_dependencies": [
+                74,
+                75,
+                76,
+                77,
+                78,
+                79,
+                80
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 13,
+                "logic": "The user starts on the Settings page. They click the 'Quick accesses' option, which navigates to the Sidebar quick access configuration page. On this page, the user can configure which items (Quick access, Recent files, Images, Videos, Audio, Documents, Apks) are enabled for quick access in the sidebar.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            13,
+                            9
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 57,
+                        "action": "click",
+                        "summary": "Click 'Quick accesses' option to navigate to sidebar quick access configuration page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 49,
+            "function_description": "Sort By option",
+            "action_refs": [
+                [
+                    83,
+                    0
+                ]
+            ],
+            "data_in": [
+                "file list",
+                "sort by setting"
+            ],
+            "data_out": [
+                "updated file list",
+                "updated sort by setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 83,
+                "logic": "The core execution logic for the Sort By option starts on page 83. The user clicks on the 'Sort By' option, which leads to page 88. There are no branches or loops in this flow as it is a single action leading to a new page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            83,
+                            0
+                        ],
+                        "src_page_idx": 83,
+                        "dst_page_idx": 88,
+                        "action": "click",
+                        "summary": "Click on the 'Sort By' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 50,
+            "function_description": "Directory Sort Mode option",
+            "action_refs": [
+                [
+                    83,
+                    1
+                ]
+            ],
+            "data_in": [
+                "directory sort mode setting"
+            ],
+            "data_out": [
+                "updated directory sort mode setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 83,
+                "logic": "The user starts on page 83 (a file directory view). The core action is clicking the 'Directory Sort Mode' option, which navigates to page 89. There are no branches or loops as this is a single-step navigation to access the directory sort mode.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            83,
+                            1
+                        ],
+                        "src_page_idx": 83,
+                        "dst_page_idx": 89,
+                        "action": "click",
+                        "summary": "Click on 'Directory Sort Mode' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 51,
+            "function_description": "Clear history",
+            "action_refs": [
+                [
+                    84,
+                    0
+                ]
+            ],
+            "data_in": [
+                "history records"
+            ],
+            "data_out": [
+                "cleared history records"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 84,
+                "logic": "The user initiates the clear history process by clicking the 'Clear history' option. This action likely leads to a confirmation or execution step to complete the history clearing.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            84,
+                            0
+                        ],
+                        "src_page_idx": 84,
+                        "dst_page_idx": 90,
+                        "action": "click",
+                        "summary": "Click the 'Clear history' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 52,
+            "function_description": "SMB Connection option",
+            "action_refs": [
+                [
+                    100,
+                    0
+                ]
+            ],
+            "data_in": [
+                "SMB connection option"
+            ],
+            "data_out": [
+                "SMB connection configuration"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 100,
+                "logic": "The flow starts on page 100. The user clicks on the 'SMB Connection' option, which navigates to page 101. There are no branches or loops as this is a single action to initiate the SMB connection process.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            100,
+                            0
+                        ],
+                        "src_page_idx": 100,
+                        "dst_page_idx": 101,
+                        "action": "click",
+                        "summary": "Click on SMB Connection option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 53,
+            "function_description": "Get Cloud plugin option",
+            "action_refs": [
+                [
+                    100,
+                    1
+                ]
+            ],
+            "data_in": [
+                "cloud plugin option"
+            ],
+            "data_out": [
+                "cloud plugin option"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 100,
+                "logic": "The flow starts on page 100. The user performs a click action to select the 'Get Cloud plugin' option, which navigates to page 102. There are no branches or loops as this is a single-step action to access the cloud plugin option.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            100,
+                            1
+                        ],
+                        "src_page_idx": 100,
+                        "dst_page_idx": 102,
+                        "action": "click",
+                        "summary": "Click on 'Get Cloud plugin' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 54,
+            "function_description": "The current page is a dialog for configuring the FTP port, allowing the user to enter a new port number and either cancel the action or confirm the change to update the FTP server's port setting.",
+            "action_refs": [
+                [
+                    15,
+                    0
+                ],
+                [
+                    17,
+                    0
+                ],
+                [
+                    17,
+                    1
+                ]
+            ],
+            "data_in": [
+                "FTP port setting",
+                "FTP server port setting",
+                "port input value"
+            ],
+            "data_out": [
+                "FTP port configuration dialog",
+                "FTP port setting (to be updated)",
+                "updated FTP port setting",
+                "updated FTP server port setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user first clicks the FTP port option to open the configuration dialog. Then, in the dialog, the user can either click the input field to modify the port number or click the CHANGE button to confirm the port change. This creates a branch where the flow diverges based on the user's choice to either edit the port or confirm the current/modified port.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            0
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Open FTP port configuration dialog"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            17,
+                            0
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 22,
+                        "action": "click",
+                        "summary": "Click FTP port input field to edit port"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            17,
+                            1
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 23,
+                        "action": "click",
+                        "summary": "Click CHANGE button to confirm port change"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2",
+                                "condition": "User chooses to edit the FTP port"
+                            },
+                            {
+                                "next_step": "S3",
+                                "condition": "User chooses to confirm the FTP port change"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 55,
+            "function_description": "The current page (Shared Path configuration dialog) allows the user to view, edit, and confirm changes to the shared path for the FTP Server, with options to cancel the action or change the path.",
+            "action_refs": [
+                [
+                    15,
+                    1
+                ],
+                [
+                    18,
+                    0
+                ],
+                [
+                    18,
+                    1
+                ]
+            ],
+            "data_in": [
+                "shared path setting",
+                "file path (input)"
+            ],
+            "data_out": [
+                "updated shared path setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user starts on the FTP Server page and clicks the 'Shared Path' option to open the configuration dialog. In the dialog, the user can either click the input field to edit the path or click the 'CHANGE' button to confirm changes. These are two mutually exclusive actions (edit or confirm) from the dialog.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            1
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Open Shared Path configuration dialog"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            18,
+                            0
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 24,
+                        "action": "click",
+                        "summary": "Edit Shared Path via input field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            18,
+                            1
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 25,
+                        "action": "click",
+                        "summary": "Confirm Shared Path change"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 56,
+            "function_description": "The current page is an FTP login configuration dialog that allows users to input a username, password, and select options like anonymous login or secure connection to configure FTP server login settings.",
+            "action_refs": [
+                [
+                    15,
+                    2
+                ],
+                [
+                    19,
+                    0
+                ],
+                [
+                    19,
+                    1
+                ],
+                [
+                    19,
+                    4
+                ]
+            ],
+            "data_in": [
+                "FTP login configuration",
+                "login credentials (username)",
+                "login credentials (password)",
+                "FTP server login credentials",
+                "FTP server login options"
+            ],
+            "data_out": [
+                "updated FTP login configuration",
+                "updated login credentials (username)",
+                "updated FTP server login settings"
+            ],
+            "data_dependencies": [
+                87,
+                88
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user starts by opening the FTP login configuration dialog via the 'Login' option. Then, they can choose to input the username, input the password, or directly confirm the settings with the 'SET' button. These input steps are optional and can be done in any order before finalizing the configuration.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            2
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Open FTP login configuration dialog"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            19,
+                            0
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 26,
+                        "action": "click",
+                        "summary": "Input username"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            19,
+                            1
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 27,
+                        "action": "click",
+                        "summary": "Input password"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            19,
+                            4
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 30,
+                        "action": "click",
+                        "summary": "Confirm and set FTP login settings"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 57,
+            "function_description": "This page allows the user to set the idle timeout (in seconds) for the FTP server by entering a value and confirming it with the \"SET\" button or canceling the action with the \"CANCEL\" button.",
+            "action_refs": [
+                [
+                    15,
+                    3
+                ],
+                [
+                    20,
+                    0
+                ]
+            ],
+            "data_in": [
+                "idle timeout setting"
+            ],
+            "data_out": [
+                "updated idle timeout setting"
+            ],
+            "data_dependencies": [
+                89
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user starts on page 15 and clicks the 'Idle timeout' option to navigate to page 20. Then, on page 20, the user clicks the input field to enter the idle timeout value, moving to page 31. There are no branches in this flow as it is a linear sequence of actions to set the FTP server idle timeout.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            3
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 20,
+                        "action": "click",
+                        "summary": "Click 'Idle timeout' option to navigate to idle timeout setup page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            20,
+                            0
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 31,
+                        "action": "click",
+                        "summary": "Click input field to enter idle timeout value"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 58,
+            "function_description": "Exit option",
+            "action_refs": [
+                [
+                    15,
+                    4
+                ]
+            ],
+            "data_in": [
+                "exit option"
+            ],
+            "data_out": [
+                "app exit state"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user starts on page 15 (FTP Server page). The core logic is to click the 'Exit' option (from the menu) to navigate to page 21. There are no branches or loops here as it's a single action to trigger the exit navigation.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            4
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 21,
+                        "action": "click",
+                        "summary": "Click the 'Exit' option in the menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 59,
+            "function_description": "Exit option",
+            "action_refs": [
+                [
+                    34,
+                    0
+                ]
+            ],
+            "data_in": [
+                "app manager session"
+            ],
+            "data_out": [
+                "exited app manager session"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 34,
+                "logic": "The user starts on page 34 (App Manager). The core logic is a single step: clicking the 'Exit' option (action_ref [34,0]) to navigate to page 41. There are no branches or loops as it's a direct exit action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            34,
+                            0
+                        ],
+                        "src_page_idx": 34,
+                        "dst_page_idx": 41,
+                        "action": "click",
+                        "summary": "Click the 'Exit' option to proceed to the next page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 60,
+            "function_description": "Open the app",
+            "action_refs": [
+                [
+                    35,
+                    0
+                ]
+            ],
+            "data_in": [
+                "Amaze app"
+            ],
+            "data_out": [
+                "launched Amaze app"
+            ],
+            "data_dependencies": [
+                38,
+                61,
+                62,
+                63,
+                64,
+                65
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 35,
+                "logic": "The core execution logic for opening the app starts at page 35. A click action is performed on the 'Open' option (from the app's context menu), which navigates to page 42, completing the app opening process. There are no branches or loops in this flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            35,
+                            0
+                        ],
+                        "src_page_idx": 35,
+                        "dst_page_idx": 42,
+                        "action": "click",
+                        "summary": "Click the 'Open' option to open the app"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 61,
+            "function_description": "Backup the app",
+            "action_refs": [
+                [
+                    35,
+                    1
+                ]
+            ],
+            "data_in": [
+                "Amaze app"
+            ],
+            "data_out": [
+                "Amaze app backup"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 35,
+                "logic": "The process starts on the App Manager page (page 35). The user clicks the 'Backup' option (from the app's menu) to initiate the app backup. This action leads to the next page (page 43), completing the core logic of triggering the app backup.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            35,
+                            1
+                        ],
+                        "src_page_idx": 35,
+                        "dst_page_idx": 43,
+                        "action": "click",
+                        "summary": "Click the 'Backup' option to start backing up the app"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 62,
+            "function_description": "Uninstall the app",
+            "action_refs": [
+                [
+                    35,
+                    2
+                ]
+            ],
+            "data_in": [
+                "Amaze app"
+            ],
+            "data_out": [
+                "uninstalled Amaze app"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 35,
+                "logic": "The process starts on the App Manager page (page 35). The user clicks the 'Uninstall' option (from the app's menu) to initiate the app uninstallation, leading to the next page (page 44). There are no branches or loops in this flow as it’s a single action to trigger uninstallation.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            35,
+                            2
+                        ],
+                        "src_page_idx": 35,
+                        "dst_page_idx": 44,
+                        "action": "click",
+                        "summary": "Click the 'Uninstall' option to start the app uninstallation process"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 63,
+            "function_description": "View app properties",
+            "action_refs": [
+                [
+                    35,
+                    3
+                ]
+            ],
+            "data_in": [
+                "Amaze app"
+            ],
+            "data_out": [
+                "Amaze app properties"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 35,
+                "logic": "The user starts on page 35 (App Manager). They perform a click action to view app properties, which transitions the flow to page 45. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            35,
+                            3
+                        ],
+                        "src_page_idx": 35,
+                        "dst_page_idx": 45,
+                        "action": "click",
+                        "summary": "Click to view app properties"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 64,
+            "function_description": "Open in Play store",
+            "action_refs": [
+                [
+                    35,
+                    4
+                ]
+            ],
+            "data_in": [
+                "Amaze app"
+            ],
+            "data_out": [
+                "navigation to Play Store for Amaze app"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 35,
+                "logic": "The process starts on page 35 (App Manager). A click action is performed on the 'Open in Play store' option, which navigates to page 46 (Play Store page for the app). There are no branches or loops as it is a single-step flow to open the app's Play Store page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            35,
+                            4
+                        ],
+                        "src_page_idx": 35,
+                        "dst_page_idx": 46,
+                        "action": "click",
+                        "summary": "Click 'Open in Play store' to navigate to the app's Play Store page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 65,
+            "function_description": "Share the app",
+            "action_refs": [
+                [
+                    35,
+                    5
+                ]
+            ],
+            "data_in": [
+                "app (Amaze)"
+            ],
+            "data_out": [
+                "shared app (Amaze)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 35,
+                "logic": "The process starts on the app management page (page 35). The user clicks the 'Share' option (from the app's menu) to initiate sharing the app, which navigates to the sharing interface (page 47). There are no branches or loops in this simple flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            35,
+                            5
+                        ],
+                        "src_page_idx": 35,
+                        "dst_page_idx": 47,
+                        "action": "click",
+                        "summary": "Click the 'Share' option to start sharing the app"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 66,
+            "function_description": "This page allows the user to select a color from a grid of color options (with a \"DEFAULT\" and \"CANCEL\" option) for setting the primary color of UI elements related to the left tab in the Amaze app's settings.",
+            "action_refs": [
+                [
+                    48,
+                    1
+                ]
+            ],
+            "data_in": [
+                "primary color (right tab) setting"
+            ],
+            "data_out": [
+                "updated primary color (right tab) setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 48,
+                "logic": "The user starts on the color settings page. They click on the 'Primary Color (Right Tab)' option, which opens a color selection dialog with a grid of colors, a 'DEFAULT' option, and a 'CANCEL' option. This action initiates the process of selecting a color for the right tab's primary UI elements.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            48,
+                            1
+                        ],
+                        "src_page_idx": 48,
+                        "dst_page_idx": 58,
+                        "action": "click",
+                        "summary": "Click on 'Primary Color (Right Tab)' setting to open color selection dialog"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 67,
+            "function_description": "This page allows the user to select a color from a grid of color options (with a \"DEFAULT\" and \"CANCEL\" option) to set the primary color for the left tab in the Amaze app's UI.",
+            "action_refs": [
+                [
+                    48,
+                    2
+                ]
+            ],
+            "data_in": [
+                "accent color setting"
+            ],
+            "data_out": [
+                "updated accent color setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 48,
+                "logic": "The user starts on page 48 and clicks the 'Accent Color' setting, which navigates to page 58 (the color selection dialog). This action initiates the process of selecting a color for the UI element, leading to the color grid and options like DEFAULT and CANCEL.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            48,
+                            2
+                        ],
+                        "src_page_idx": 48,
+                        "dst_page_idx": 58,
+                        "action": "click",
+                        "summary": "Click on Accent Color setting to open color selection dialog"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 68,
+            "function_description": "Colorize Icons toggle",
+            "action_refs": [
+                [
+                    48,
+                    4
+                ]
+            ],
+            "data_in": [
+                "colorize icons setting"
+            ],
+            "data_out": [
+                "updated colorize icons setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 48,
+                "logic": "The flow starts on page 48. The user clicks the 'Colorize Icons' toggle, which leads to page 59. This is a single-step action with no branches or loops, as the toggle interaction is a direct click to (presumably) change its state or confirm its current setting.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            48,
+                            4
+                        ],
+                        "src_page_idx": 48,
+                        "dst_page_idx": 59,
+                        "action": "click",
+                        "summary": "Click the Colorize Icons toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 69,
+            "function_description": "Colored Navigation bar toggle",
+            "action_refs": [
+                [
+                    48,
+                    5
+                ]
+            ],
+            "data_in": [
+                "colored navigation bar setting"
+            ],
+            "data_out": [
+                "updated colored navigation bar setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 48,
+                "logic": "The user starts on page 48 (Color settings) and clicks the 'Colored Navigation bar' toggle. This action leads to page 60, completing the toggle interaction for the colored navigation bar feature.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            48,
+                            5
+                        ],
+                        "src_page_idx": 48,
+                        "dst_page_idx": 60,
+                        "action": "click",
+                        "summary": "Click the 'Colored Navigation bar' toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 70,
+            "function_description": "Random Skin toggle",
+            "action_refs": [
+                [
+                    48,
+                    6
+                ]
+            ],
+            "data_in": [
+                "random skin setting"
+            ],
+            "data_out": [
+                "updated random skin setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 48,
+                "logic": "The user starts on page 48 (Color settings) and clicks the 'Random Skin' toggle. This action likely toggles the setting (e.g., from off to on or vice versa) and may navigate to page 61, completing the toggle operation.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            48,
+                            6
+                        ],
+                        "src_page_idx": 48,
+                        "dst_page_idx": 61,
+                        "action": "click",
+                        "summary": "Click the Random Skin toggle to change its state"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 71,
+            "function_description": "This page allows the user to edit the name and directory path of a sidebar shortcut in the Amaze file manager app, with options to cancel or confirm the changes.",
+            "action_refs": [
+                [
+                    56,
+                    0
+                ],
+                [
+                    66,
+                    0
+                ],
+                [
+                    66,
+                    1
+                ],
+                [
+                    66,
+                    2
+                ]
+            ],
+            "data_in": [
+                "sidebar shortcut (Download)",
+                "shortcut name",
+                "shortcut directory",
+                "shortcut directory setting",
+                "shortcut (Download)"
+            ],
+            "data_out": [
+                "updated sidebar shortcut (Download)",
+                "updated shortcut directory setting",
+                "updated shortcut (Download)"
+            ],
+            "data_dependencies": [
+                72,
+                73
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 56,
+                "logic": "The user starts by clicking to edit a sidebar shortcut, opening the edit dialog. Then, they can choose to click the name input field, the directory input field, or the edit confirmation button. These are mutually exclusive actions to modify the shortcut's name, directory, or confirm changes.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            56,
+                            0
+                        ],
+                        "src_page_idx": 56,
+                        "dst_page_idx": 66,
+                        "action": "click",
+                        "summary": "Click to edit a sidebar shortcut, opening the edit dialog"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            66,
+                            0
+                        ],
+                        "src_page_idx": 66,
+                        "dst_page_idx": 69,
+                        "action": "click",
+                        "summary": "Click the name input field to edit the shortcut's name"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            66,
+                            1
+                        ],
+                        "src_page_idx": 66,
+                        "dst_page_idx": 70,
+                        "action": "click",
+                        "summary": "Click the directory input field to edit the shortcut's directory"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            66,
+                            2
+                        ],
+                        "src_page_idx": 66,
+                        "dst_page_idx": 71,
+                        "action": "click",
+                        "summary": "Click the edit confirmation button to save changes"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 72,
+            "function_description": "Delete shortcut",
+            "action_refs": [
+                [
+                    56,
+                    1
+                ]
+            ],
+            "data_in": [
+                "shortcut (e.g., Download/Movies/Music/Pictures shortcut)"
+            ],
+            "data_out": [
+                "deleted shortcut",
+                "updated sidebar shortcuts list"
+            ],
+            "data_dependencies": [
+                73
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 56,
+                "logic": "The process starts on the 'Sidebar shortcuts' page (page 56). The user clicks the 'Delete shortcut' button (trash icon) for a specific shortcut. This action likely leads to the deletion of the shortcut, with the flow ending after this click (as the action is marked as a leaf).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            56,
+                            1
+                        ],
+                        "src_page_idx": 56,
+                        "dst_page_idx": 67,
+                        "action": "click",
+                        "summary": "Click the 'Delete shortcut' (trash) button for a shortcut on the Sidebar shortcuts page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 73,
+            "function_description": "The page allows users to input a name and select a directory to create a new sidebar shortcut within the Amaze app's sidebar shortcuts management interface.",
+            "action_refs": [
+                [
+                    56,
+                    2
+                ],
+                [
+                    68,
+                    0
+                ],
+                [
+                    68,
+                    1
+                ],
+                [
+                    68,
+                    2
+                ]
+            ],
+            "data_in": [
+                "sidebar shortcuts list",
+                "shortcut name input",
+                "shortcut directory input",
+                "shortcut creation form",
+                "shortcut creation form data"
+            ],
+            "data_out": [
+                "new sidebar shortcut",
+                "updated shortcut creation form (directory input)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 56,
+                "logic": "The process starts on the Sidebar shortcuts page. First, the user clicks to add a new shortcut, opening the Create shortcut dialog. Then, the user clicks the Name input field to enter a name, followed by clicking the Directory input field to select a directory. Finally, the user clicks the Create shortcut button to finalize the new sidebar shortcut.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            56,
+                            2
+                        ],
+                        "src_page_idx": 56,
+                        "dst_page_idx": 68,
+                        "action": "click",
+                        "summary": "Click to add a new sidebar shortcut, opening the Create shortcut dialog"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            68,
+                            0
+                        ],
+                        "src_page_idx": 68,
+                        "dst_page_idx": 72,
+                        "action": "click",
+                        "summary": "Click the Name input field to prepare for entering the shortcut name"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            68,
+                            1
+                        ],
+                        "src_page_idx": 68,
+                        "dst_page_idx": 73,
+                        "action": "click",
+                        "summary": "Click the Directory input field to prepare for selecting the target directory"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            68,
+                            2
+                        ],
+                        "src_page_idx": 68,
+                        "dst_page_idx": 74,
+                        "action": "click",
+                        "summary": "Click the Create shortcut button to create the new sidebar shortcut"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 74,
+            "function_description": "Quick access toggle",
+            "action_refs": [
+                [
+                    57,
+                    0
+                ]
+            ],
+            "data_in": [
+                "quick access setting"
+            ],
+            "data_out": [
+                "updated quick access setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 57,
+                "logic": "The user starts on page 57 and clicks the 'Quick access toggle' action. This action leads to page 75, completing the quick access toggle functionality.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            57,
+                            0
+                        ],
+                        "src_page_idx": 57,
+                        "dst_page_idx": 75,
+                        "action": "click",
+                        "summary": "Click the Quick access toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 75,
+            "function_description": "Recent files toggle",
+            "action_refs": [
+                [
+                    57,
+                    1
+                ]
+            ],
+            "data_in": [
+                "recent files setting"
+            ],
+            "data_out": [
+                "updated recent files setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 57,
+                "logic": "The user starts on page 57 (Sidebar quick access). They perform a click action on the 'Recent files' toggle, which transitions the app to page 76. This action toggles the state of the 'Recent files' option in the quick access settings.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            57,
+                            1
+                        ],
+                        "src_page_idx": 57,
+                        "dst_page_idx": 76,
+                        "action": "click",
+                        "summary": "Click on the 'Recent files' toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 76,
+            "function_description": "Images toggle",
+            "action_refs": [
+                [
+                    57,
+                    2
+                ]
+            ],
+            "data_in": [
+                "images quick access setting"
+            ],
+            "data_out": [
+                "updated images quick access setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 57,
+                "logic": "The user starts on page 57 (Sidebar quick access). They perform a click action on the 'Images' toggle, which transitions the app to page 77. This action toggles the Images option in the quick access settings.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            57,
+                            2
+                        ],
+                        "src_page_idx": 57,
+                        "dst_page_idx": 77,
+                        "action": "click",
+                        "summary": "Click on the Images toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 77,
+            "function_description": "Videos toggle",
+            "action_refs": [
+                [
+                    57,
+                    3
+                ]
+            ],
+            "data_in": [
+                "videos quick access setting"
+            ],
+            "data_out": [
+                "updated videos quick access setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 57,
+                "logic": "The user starts on page 57 (Sidebar quick access) and clicks the 'Videos' toggle. This action leads to page 78, completing the toggle interaction for the Videos option.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            57,
+                            3
+                        ],
+                        "src_page_idx": 57,
+                        "dst_page_idx": 78,
+                        "action": "click",
+                        "summary": "Click the Videos toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 78,
+            "function_description": "Audio toggle",
+            "action_refs": [
+                [
+                    57,
+                    4
+                ]
+            ],
+            "data_in": [
+                "audio quick access setting"
+            ],
+            "data_out": [
+                "updated audio quick access setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 57,
+                "logic": "The user starts on page 57 (Sidebar quick access). They perform a click action on the Audio toggle, which transitions the app to page 79. This single step toggles the Audio quick access setting.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            57,
+                            4
+                        ],
+                        "src_page_idx": 57,
+                        "dst_page_idx": 79,
+                        "action": "click",
+                        "summary": "Click the Audio toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 79,
+            "function_description": "Documents toggle",
+            "action_refs": [
+                [
+                    57,
+                    5
+                ]
+            ],
+            "data_in": [
+                "documents quick access setting"
+            ],
+            "data_out": [
+                "updated documents quick access setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 57,
+                "logic": "The user starts on page 57 (Sidebar quick access) and clicks the 'Documents' toggle. This action leads to page 80, completing the toggle interaction for the Documents option.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            57,
+                            5
+                        ],
+                        "src_page_idx": 57,
+                        "dst_page_idx": 80,
+                        "action": "click",
+                        "summary": "Click the Documents toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 80,
+            "function_description": "Apks toggle",
+            "action_refs": [
+                [
+                    57,
+                    6
+                ]
+            ],
+            "data_in": [
+                "Apks quick access setting"
+            ],
+            "data_out": [
+                "updated Apks quick access setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 57,
+                "logic": "The user starts on page 57 (Sidebar quick access) and clicks the 'Apks' toggle, which navigates to page 81. This is a single-step flow with no branches or loops, focusing on toggling the Apks option and navigating to the resulting page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            57,
+                            6
+                        ],
+                        "src_page_idx": 57,
+                        "dst_page_idx": 81,
+                        "action": "click",
+                        "summary": "Click the Apks toggle on page 57, navigating to page 81"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 81,
+            "function_description": "Cut option",
+            "action_refs": [
+                [
+                    103,
+                    1
+                ]
+            ],
+            "data_in": [
+                "image file"
+            ],
+            "data_out": [
+                "cut operation state",
+                "image file (marked for cut)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 103,
+                "logic": "The core execution logic for the Cut option starts on page 103. The user performs a click action on the 'Cut' option, which transitions the flow to page 105. This is a straight - line flow with no branches or loops as it's a single action to initiate the cut operation.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            103,
+                            1
+                        ],
+                        "src_page_idx": 103,
+                        "dst_page_idx": 105,
+                        "action": "click",
+                        "summary": "Click on the Cut option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 82,
+            "function_description": "Copy option",
+            "action_refs": [
+                [
+                    103,
+                    2
+                ]
+            ],
+            "data_in": [
+                "image file"
+            ],
+            "data_out": [
+                "copied image file"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 103,
+                "logic": "The core execution logic for the copy option starts on page 103. The user performs a click action on the 'Copy' option, which transitions the flow to page 106. This is a straightforward, single-step flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            103,
+                            2
+                        ],
+                        "src_page_idx": 103,
+                        "dst_page_idx": 106,
+                        "action": "click",
+                        "summary": "Click on the Copy option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 83,
+            "function_description": "Delete option",
+            "action_refs": [
+                [
+                    103,
+                    3
+                ]
+            ],
+            "data_in": [
+                "image file"
+            ],
+            "data_out": [
+                "deleted image file"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 103,
+                "logic": "The user initiates the delete process by clicking the 'Delete option' (likely a context menu item or button) on the source page (103). This action leads to the destination page (107), completing the core logic of selecting the delete option.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            103,
+                            3
+                        ],
+                        "src_page_idx": 103,
+                        "dst_page_idx": 107,
+                        "action": "click",
+                        "summary": "Click the Delete option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 84,
+            "function_description": "Displays a warning dialog informing the user about the risk of being unable to decrypt content if the security pattern is changed in System settings, with options to dismiss the warning or prevent future displays.",
+            "action_refs": [
+                [
+                    103,
+                    4
+                ],
+                [
+                    108,
+                    0
+                ],
+                [
+                    108,
+                    1
+                ]
+            ],
+            "data_in": [
+                "image file",
+                "filename input (for new file)",
+                "file"
+            ],
+            "data_out": [
+                "renamed image file",
+                "updated filename input (for new file)",
+                "renamed file"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 103,
+                "logic": "A warning dialog appears, informing the user about decryption risks if the security pattern is changed. The user can then choose to dismiss the warning (by clicking 'GOT IT!') or prevent future displays (by clicking 'DON'T INFORM AGAIN').",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            103,
+                            4
+                        ],
+                        "src_page_idx": 103,
+                        "dst_page_idx": 108,
+                        "action": "click",
+                        "summary": "Trigger the warning dialog (e.g., by initiating an action like Rename that requires security context)"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": null,
+                        "src_page_idx": 108,
+                        "dst_page_idx": null,
+                        "action": "display",
+                        "summary": "Show warning dialog about decryption risk on security pattern change"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": null,
+                        "src_page_idx": 108,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click 'GOT IT!' to dismiss the warning"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": null,
+                        "src_page_idx": 108,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click 'DON'T INFORM AGAIN' to dismiss and prevent future warnings"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3",
+                                "condition": "User clicks 'GOT IT!'"
+                            },
+                            {
+                                "next_step": "S4",
+                                "condition": "User clicks 'DON'T INFORM AGAIN'"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 85,
+            "function_description": "Displays a warning dialog about the risk of being unable to decrypt content when changing the security pattern from System settings, with options to dismiss the warning or prevent future warnings.",
+            "action_refs": [
+                [
+                    103,
+                    5
+                ]
+            ],
+            "data_in": [
+                "image file"
+            ],
+            "data_out": [
+                "encrypted image file",
+                "warning message (for encryption)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 103,
+                "logic": "The flow starts with clicking the Encrypt option. This triggers a warning dialog about decryption risks when changing the security pattern. At this point, the user can choose to dismiss the warning (via 'GOT IT!') or prevent future warnings (via 'DON'T INFORM AGAIN').",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            103,
+                            5
+                        ],
+                        "src_page_idx": 103,
+                        "dst_page_idx": 108,
+                        "action": "click",
+                        "summary": "Click the Encrypt option to initiate encryption, triggering a warning dialog."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": null,
+                                "condition": "User clicks 'GOT IT!' to dismiss the warning"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "User clicks 'DON'T INFORM AGAIN' to prevent future warnings"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 86,
+            "function_description": "The current page displays the properties of a selected file (including name, location, size, date, and storage usage details) within the Pictures directory in a file management application.",
+            "action_refs": [
+                [
+                    103,
+                    6
+                ],
+                [
+                    109,
+                    0
+                ]
+            ],
+            "data_in": [
+                "image file",
+                "image file properties"
+            ],
+            "data_out": [
+                "file properties (displayed)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 103,
+                "logic": "The flow starts on the Pictures directory page. First, the 'Properties' option is clicked to open the file properties dialog (displaying details like name, location, etc.). Then, the 'Close properties dialog' action is performed to exit the properties view. There are no branches or loops as it is a linear sequence of actions.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            103,
+                            6
+                        ],
+                        "src_page_idx": 103,
+                        "dst_page_idx": 109,
+                        "action": "click",
+                        "summary": "Click 'Properties' to open file properties dialog"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            109,
+                            0
+                        ],
+                        "src_page_idx": 109,
+                        "dst_page_idx": 119,
+                        "action": "click",
+                        "summary": "Click to close the properties dialog"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 87,
+            "function_description": "Anonymous checkbox",
+            "action_refs": [
+                [
+                    19,
+                    2
+                ]
+            ],
+            "data_in": [
+                "anonymous login setting"
+            ],
+            "data_out": [
+                "updated anonymous login setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 19,
+                "logic": "The user interacts with the 'Anonymous' checkbox on the Login dialog. Clicking this checkbox (which may toggle its state) leads to a transition to page 28. There are no branches or loops here, as it's a single action triggering a navigation.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            19,
+                            2
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 28,
+                        "action": "click",
+                        "summary": "Click the 'Anonymous' checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 88,
+            "function_description": "Secure Connection checkbox",
+            "action_refs": [
+                [
+                    19,
+                    3
+                ]
+            ],
+            "data_in": [
+                "secure connection setting"
+            ],
+            "data_out": [
+                "updated secure connection setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 19,
+                "logic": "The flow starts on page 19. The user clicks the 'Secure Connection' checkbox, which leads to page 29. There are no branches or loops in this logic as it is a single action to interact with the checkbox.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            19,
+                            3
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 29,
+                        "action": "click",
+                        "summary": "Click the Secure Connection checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 89,
+            "function_description": "Set idle timeout",
+            "action_refs": [
+                [
+                    20,
+                    1
+                ]
+            ],
+            "data_in": [
+                "idle timeout setting"
+            ],
+            "data_out": [
+                "updated idle timeout setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The process starts on page 20. The user clicks on the 'Set idle timeout' option, which leads to page 32 (the idle timeout dialog). This action initiates the process of configuring the idle timeout, and the flow is a straight line with no branching or looping.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            1
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 32,
+                        "action": "click",
+                        "summary": "Click on 'Set idle timeout' to open the idle timeout configuration dialog"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 90,
+            "function_description": "Open as Text",
+            "action_refs": [
+                [
+                    104,
+                    0
+                ]
+            ],
+            "data_in": [
+                "file"
+            ],
+            "data_out": [
+                "file opened as text"
+            ],
+            "data_dependencies": [
+                90,
+                92,
+                93,
+                94,
+                95,
+                96,
+                97,
+                98,
+                100,
+                101
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 104,
+                "logic": "The functional point starts on page 104. The user performs a click action on the 'Open as Text' option. This action leads to the destination page 111, completing the 'Open as Text' functionality in a single step with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            104,
+                            0
+                        ],
+                        "src_page_idx": 104,
+                        "dst_page_idx": 111,
+                        "action": "click",
+                        "summary": "Click on 'Open as Text' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 91,
+            "function_description": "Open as Image",
+            "action_refs": [
+                [
+                    104,
+                    1
+                ]
+            ],
+            "data_in": [
+                "image file"
+            ],
+            "data_out": [
+                "opened image file"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 104,
+                "logic": "The process starts on page 104. The user clicks the 'Open as Image' option, which navigates to page 112. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            104,
+                            1
+                        ],
+                        "src_page_idx": 104,
+                        "dst_page_idx": 112,
+                        "action": "click",
+                        "summary": "Click the 'Open as Image' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 92,
+            "function_description": "Open as Video",
+            "action_refs": [
+                [
+                    104,
+                    2
+                ]
+            ],
+            "data_in": [
+                "file"
+            ],
+            "data_out": [
+                "file (opened as video)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 104,
+                "logic": "The functional point starts on page 104. The user performs a click action on the 'Open as Video' option, which navigates to page 113. There are no branches or loops as it is a single-step flow to open the content as a video.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            104,
+                            2
+                        ],
+                        "src_page_idx": 104,
+                        "dst_page_idx": 113,
+                        "action": "click",
+                        "summary": "Click on 'Open as Video' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 93,
+            "function_description": "Open as Audio",
+            "action_refs": [
+                [
+                    104,
+                    3
+                ]
+            ],
+            "data_in": [
+                "file"
+            ],
+            "data_out": [
+                "file (opened as audio)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 104,
+                "logic": "The process starts on page 104. The user performs a click action on the 'Open as Audio' option. This action leads to the destination page 114, completing the 'Open as Audio' functional point execution.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            104,
+                            3
+                        ],
+                        "src_page_idx": 104,
+                        "dst_page_idx": 114,
+                        "action": "click",
+                        "summary": "Click on 'Open as Audio' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 94,
+            "function_description": "Open as Database",
+            "action_refs": [
+                [
+                    104,
+                    4
+                ]
+            ],
+            "data_in": [
+                "file"
+            ],
+            "data_out": [
+                "file (opened as database)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 104,
+                "logic": "The process starts on page 104. The user performs a click action labeled 'Open as Database', which navigates to page 115. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            104,
+                            4
+                        ],
+                        "src_page_idx": 104,
+                        "dst_page_idx": 115,
+                        "action": "click",
+                        "summary": "Click 'Open as Database' to navigate to the destination page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 95,
+            "function_description": "Open as Other",
+            "action_refs": [
+                [
+                    104,
+                    5
+                ]
+            ],
+            "data_in": [
+                "file"
+            ],
+            "data_out": [
+                "file (opened with 'Other' type)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 104,
+                "logic": "The user initiates the 'Open as Other' action by clicking the 'Other' option in the 'Open As' dialog. This action transitions the app to the destination page associated with opening the item as 'Other'.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            104,
+                            5
+                        ],
+                        "src_page_idx": 104,
+                        "dst_page_idx": 116,
+                        "action": "click",
+                        "summary": "Click 'Other' in the 'Open As' dialog to proceed with opening as Other."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 96,
+            "function_description": "Save to Drive option",
+            "action_refs": [
+                [
+                    110,
+                    0
+                ]
+            ],
+            "data_in": [
+                "file"
+            ],
+            "data_out": [
+                "file (saved to Drive)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 110,
+                "logic": "The flow starts on page 110 (a share dialog). The user clicks the 'Save to Drive' option, which transitions the app to page 120. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            110,
+                            0
+                        ],
+                        "src_page_idx": 110,
+                        "dst_page_idx": 120,
+                        "action": "click",
+                        "summary": "Click the 'Save to Drive' option in the share dialog"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 97,
+            "function_description": "Add to Maps option",
+            "action_refs": [
+                [
+                    110,
+                    1
+                ]
+            ],
+            "data_in": [
+                "file",
+                "share options"
+            ],
+            "data_out": [
+                "map entry (from file)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 110,
+                "logic": "The user initiates the process on page 110. The core action is clicking the 'Add to Maps' option in the share dialog, which transitions to page 121. There are no branches or loops as it's a single-step flow to execute the 'Add to Maps' action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            110,
+                            1
+                        ],
+                        "src_page_idx": 110,
+                        "dst_page_idx": 121,
+                        "action": "click",
+                        "summary": "Click on the 'Add to Maps' option in the share dialog"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 98,
+            "function_description": "Messenger option",
+            "action_refs": [
+                [
+                    110,
+                    2
+                ]
+            ],
+            "data_in": [
+                "file",
+                "share options"
+            ],
+            "data_out": [
+                "shared file via Messenger"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 110,
+                "logic": "The process starts on page 110 (a share menu). The user clicks the Messenger option, which navigates to page 122. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            110,
+                            2
+                        ],
+                        "src_page_idx": 110,
+                        "dst_page_idx": 122,
+                        "action": "click",
+                        "summary": "Click the Messenger option in the share menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 99,
+            "function_description": "Upload to Photos option",
+            "action_refs": [
+                [
+                    110,
+                    3
+                ]
+            ],
+            "data_in": [
+                "picture file"
+            ],
+            "data_out": [
+                "uploaded picture (to Google Photos)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 110,
+                "logic": "The flow starts on page 110 (a share dialog). The user clicks the 'Upload to Photos' option, which transitions the app to page 123. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            110,
+                            3
+                        ],
+                        "src_page_idx": 110,
+                        "dst_page_idx": 123,
+                        "action": "click",
+                        "summary": "Click the 'Upload to Photos' option in the share dialog"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 100,
+            "function_description": "Gmail option",
+            "action_refs": [
+                [
+                    110,
+                    4
+                ]
+            ],
+            "data_in": [
+                "file"
+            ],
+            "data_out": [
+                "email draft (with attached file)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 110,
+                "logic": "The flow starts on page 110. The user clicks the 'Gmail' option in the share dialog, which navigates to page 124. There are no branches or loops as this is a single action to select Gmail for sharing.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            110,
+                            4
+                        ],
+                        "src_page_idx": 110,
+                        "dst_page_idx": 124,
+                        "action": "click",
+                        "summary": "Click the Gmail option in the share dialog"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 101,
+            "function_description": "Save as... option",
+            "action_refs": [
+                [
+                    110,
+                    5
+                ]
+            ],
+            "data_in": [
+                "file"
+            ],
+            "data_out": [
+                "saved file"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 110,
+                "logic": "The user initiates the 'Save as...' process by clicking the 'Save as...' option in the Share dialog. This action transitions to the next page (125) to continue the save operation.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            110,
+                            5
+                        ],
+                        "src_page_idx": 110,
+                        "dst_page_idx": 125,
+                        "action": "click",
+                        "summary": "Click the 'Save as...' option in the Share dialog"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        }
+    ]
+}

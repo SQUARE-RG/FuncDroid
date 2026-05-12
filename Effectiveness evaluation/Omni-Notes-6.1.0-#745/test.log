@@ -1,0 +1,1201 @@
+
+================= [TaskTest] FDG[0] =================
+[Function] Manage and view notes (empty state)
+
+[Core Logic Task]
+The user starts on the Notes page (empty state: 'Nothing here!'). They click the 'More options' icon (three vertical dots) at the top right. Since there's only one action here, the flow is a single step with no branches.
+
+[Variant Paths] (3)
+ - V1: Tap <More options icon> twice (repeat operation)
+ - V2: Omit tapping <More options icon> (skip the only step)
+ - V3: Long-press <More options icon> instead of tapping (alternative interaction type)
+
+================= [TaskTest] FDG[1] =================
+[Function] The current page is a side navigation menu in the Omni Notes Alpha app, providing options to navigate to the notes management page or access the app's settings.
+
+[Core Logic Task]
+The flow starts on the main notes page. The user clicks the hamburger menu icon, which opens the side navigation menu. From the menu, the user can then choose to navigate to the notes management page or access the app's settings, creating a branch point for these two mutually exclusive options.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[2] =================
+[Function] The current page (search page) allows users to search for existing notes (though none are present in the empty state) within the notes management application.
+
+[Core Logic Task]
+The user starts on the notes page (empty state). They click the search icon, which likely opens a search input field or initiates a search action (though no notes exist to search).
+
+[Variant Paths] (3)
+ - V1: Tap <Search icon> twice (repeat the search action)
+ - V2: Omit tapping <Search icon> (simulate not initiating search)
+ - V3: Tap <Search icon> and then immediately tap it again (order mutation with repeated action)
+
+================= [TaskTest] FDG[3] =================
+[Function] The current page (a Google voice input dialog) allows the user to attempt voice - based input again to search for notes, with the option to tap the microphone icon to speak after a previous attempt, within the context of a note - management app.
+
+[Core Logic Task]
+The user starts on the notes page (page 0). They click the sort icon (action at [0,2]), which leads to page 2. This action likely initiates or relates to the voice input flow for searching notes, with the option to retry voice input by tapping the microphone icon.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Sort icon> and see if voice input for searching notes is still triggered
+ - V2: Tap <Sort icon> multiple times (e.g., twice) to see if it affects the voice input flow for searching notes
+ - V3: Tap <Sort icon> and then immediately tap it again before the voice input dialog fully loads
+
+================= [TaskTest] FDG[4] =================
+[Function] This page allows the user to create a new note by selecting from options like Photo, Checklist, or Text note, while also providing a search bar for notes and an empty state indication when no notes are present.
+
+[Core Logic Task]
+The user starts on the notes page (with empty state). First, they click the red circular add button to open the note creation menu. Then, they can click the close menu button to return to the main notes page.
+
+[Variant Paths] (3)
+ - V1: Tap <Red circular add button> and then immediately tap <Red circular add button> again instead of <Close menu button>
+ - V2: Omit tapping <Red circular add button> and directly try to interact with <Close menu button> (though this may not be functional but is a mutation)
+ - V3: Tap <Close menu button> first and then tap <Red circular add button>
+
+================= [TaskTest] FDG[5] =================
+[Function] The current page (side navigation menu) provides options to navigate to the "Notes" section (to manage and view notes) or to the "SETTINGS" section (to configure app preferences) within the Omni Notes Alpha application.
+
+[Core Logic Task]
+The user starts on the side navigation menu page (page 1). From here, the user can click the 'Notes' option to navigate to the Notes section (though the destination page is still 1 in the action, implying a transition to the Notes - related page). There's also an option to click 'SETTINGS' (not included in the given action but part of the functional point's description, but since only the 'Notes' action is provided, the core logic here is the click on 'Notes' to navigate to the Notes management/viewing area).
+
+[Variant Paths] (3)
+ - V1: Tap <Notes navigation option> twice
+ - V2: Omit tapping <Notes navigation option> (simulate not navigating to Notes)
+ - V3: Tap <Notes navigation option> with a long press (if long press is a plausible mutation, assuming the widget supports it; since the original is a tap, changing the interaction type)
+
+================= [TaskTest] FDG[6] =================
+[Function] The current page is a side navigation menu in the Omni Notes Alpha app, providing options to navigate to the notes management page or access the app's settings.
+
+[Core Logic Task]
+The flow starts on the side navigation menu (page 1). First, the user clicks the 'Settings' option (action [1,1]) to navigate to the settings page (page 4). On the settings page, the user can choose to click 'Preferences' (action [4,0], staying on page 4), 'Data' (action [4,1] to page 5), or 'App tour' (action [4,9] to page 13). If 'Data' is clicked, from page 5, the user can click 'Sync and Backups' (action [5,0] to page 15) or 'Erase all data' (action [5,3] to page 13). From page 13, clicking 'CONFIRM' (action [13,0]) navigates to page 9. The flow branches based on which settings option is selected at page 4 and subsequent pages.
+
+[Variant Paths] (3)
+ - V1: Tap <Settings navigation option>, then tap <Preferences option> (branch mutation: choose Preferences instead of Data/App tour)
+ - V2: Tap <Settings navigation option>, then tap <App tour option> (branch mutation: choose App tour instead of Data/Preferences)
+ - V3: Tap <Settings navigation option>, tap <Data option>, then tap <Erase all data option> (branch mutation: choose Erase all data instead of Sync and Backups)
+
+================= [TaskTest] FDG[7] =================
+[Function] This page functions as a camera interface for creating a photo note, allowing the user to capture an image (via the blue shutter button), switch camera modes (via the rotate icon), adjust settings (via the left icon), or exit the camera (via the 'X' button).
+
+[Core Logic Task]
+The flow starts on the notes page (page 3). The user clicks the 'Photo' option (action_ref [3,0]), which navigates to the camera interface (page 84) for creating a photo note. Once in the camera interface, the user can then choose to capture an image, switch camera modes, adjust settings, or exit the camera.
+
+[Variant Paths] (3)
+ - V1: On the notes page, long-press <Photo note option> instead of clicking it to see if it navigates to the camera interface
+ - V2: On the notes page, click <Photo note option> twice in a row to see if it has any different behavior
+ - V3: On the notes page, omit clicking <Photo note option> and see if the camera interface can be accessed in another way
+
+================= [TaskTest] FDG[8] =================
+[Function] This page allows users to create and manage a checklist - style note, including setting a title, adding checklist items, and viewing or modifying the reminder for the note.
+
+[Core Logic Task]
+To create a checklist note, start by clicking the 'Checklist note option' to open the note editor. Then, you can click the 'Title input field' to set a title, the 'New item checkbox' to add checklist items, or the 'Add reminder button' to set a reminder. For reminders, you can adjust time (via the clock picker, AM/PM toggle) or date (via navigation arrows, date selection, and confirm/cancel buttons), with options to switch between time and date pickers.
+
+[Variant Paths] (3)
+ - V1: Tap <Checklist note option>, omit interacting with <Title input field>, then tap <New item checkbox> to add items and <Add reminder button> to set reminder
+ - V2: Tap <Checklist note option>, input empty string into <Title input field>, tap <New item checkbox> to add items, then tap <Add reminder button> to set reminder
+ - V3: Tap <Checklist note option>, tap <Add reminder button> first, then tap <Title input field> to set title and <New item checkbox> to add items
+
+================= [TaskTest] FDG[9] =================
+[Function] This page allows users to create and manage a checklist - style note, including setting a title, adding checklist items, and viewing or modifying the reminder for the note.
+
+[Core Logic Task]
+The flow starts on page 3, where the user clicks the 'Text note' option. This action navigates to page 85, which is the checklist - style note creation/management page with a title field, checklist item input, and reminder display. There are no branches or loops in this initial part of the flow as only one action is provided.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <Text note option> (to test if the app still navigates to page 85 without this action, though likely it won't, but it's a mutation of omitting the step)
+ - V2: Repeat clicking <Text note option> (to test if multiple clicks cause unexpected behavior like multiple navigations or errors)
+
+================= [TaskTest] FDG[10] =================
+[Function] The Interface settings page allows users to configure various visual and interaction-related preferences for the application, including language, text size, color scheme, and toggle options for features like the floating action button, date/time selection interface, attachment display, and date formatting.
+
+[Core Logic Task]
+The user starts on page 4 and clicks the 'Interface option' to navigate to page 6, where interface settings (like language, text size, toggles) are accessible. This is a linear flow to enter the interface configuration screen.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Interface option> (test if the app still navigates to page 6 without interaction)
+ - V2: Repeat clicking <Interface option> multiple times (test if repeated clicks cause unexpected behavior or navigation)
+ - V3: Click <Interface option> in a different order (though in this simple flow, the only order is to click it, but if there were other steps, swap; here, simulate a different 'order' by maybe clicking it after a non - existent step, but since only this, just note as a mutation of order conceptually)
+
+================= [TaskTest] FDG[11] =================
+[Function] The current page allows users to configure navigation - related settings such as enabling/disabling dynamic menu, note count display, grouping of uncategorized notes, and navigation menu behavior on exit.
+
+[Core Logic Task]
+The user starts on page 4 and clicks the 'Navigation' option (action_ref [4,3]), which navigates to page 7. On page 7, the user can configure navigation - related settings like dynamic menu, note count, grouping of uncategorized notes, and navigation menu behavior on exit.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Navigation option> (test if navigation to page 7 still occurs without this action)
+ - V2: Repeat clicking <Navigation option> multiple times (test if multiple clicks cause unexpected behavior like repeated navigation or errors)
+ - V3: Try clicking <Navigation option> in a different context (e.g., if there were other states, but here just test the action's repetition)
+
+================= [TaskTest] FDG[12] =================
+[Function] The Behaviors page allows users to configure various functional settings for the note - taking app, including options related to checklists, search, note - swiping actions, location addition to new notes, and video attachment size limits.
+
+[Core Logic Task]
+The flow starts by navigating to the Behaviors page. Then, the Checklists setting is accessed, leading to a dialog with three radio options (Keep position, Move to end of list, Move to end of unchecked) and a CANCEL button. The user can choose one of the radio options or cancel to return to the Behaviors page.
+
+[Variant Paths] (3)
+ - V1: Navigate to <Behaviors option>, access <Checklists (Keep position)>, tap <Move to end of list radio option> then <CANCEL button>
+ - V2: Navigate to <Behaviors option>, access <Checklists (Keep position)>, tap <CANCEL button> without selecting a radio option
+ - V3: Navigate to <Behaviors option>, access <Checklists (Keep position)>, tap <Move to end of unchecked radio option> then <CANCEL button>
+
+================= [TaskTest] FDG[13] =================
+[Function] The Notifications page allows users to configure notification - related settings, including toggling vibration, selecting a ringtone, and setting the second reminder delay.
+
+[Core Logic Task]
+The flow starts by clicking the Notifications option to enter the Notifications page. Then, it proceeds by clicking the Second reminder delay option, likely to configure its settings. The flow is a straight line with no branches or loops shown in the provided actions.
+
+[Variant Paths] (3)
+ - V1: Tap <Second reminder delay option> first, then tap <Notifications option>
+ - V2: Tap <Notifications option> and then immediately tap <Notifications option> again
+ - V3: Tap <Notifications option> but omit tapping <Second reminder delay option>
+
+================= [TaskTest] FDG[14] =================
+[Function] The Privacy page allows users to toggle settings for error reporting (sending crash reports to the developer) and sharing anonymous data (sending non - sensitive data to improve the app).
+
+[Core Logic Task]
+The user starts on page 4 and clicks the Privacy option (action_ref [4,6]) to navigate to the Privacy page (page 10). On the Privacy page, the user can toggle the Error reporting and Share anonymous data settings, though the provided action only captures the navigation to the Privacy page.
+
+[Variant Paths] (3)
+ - V1: Start on page 4, long - press <Privacy option> (instead of click) to see if it navigates to the Privacy page
+ - V2: Start on page 4, click <Privacy option> twice (repeat the click) to check navigation to the Privacy page
+ - V3: Start on page 4, omit clicking <Privacy option> to see if the app navigates to the Privacy page on its own
+
+================= [TaskTest] FDG[15] =================
+[Function] This page is in the process of loading the Google+ beta sign - in or related configuration interface, likely for the purpose of enabling or configuring the Google+ beta feature within the app.
+
+[Core Logic Task]
+The process starts on page 4. The user clicks the 'Google+ beta option' (action_ref [4,7]), which navigates to page 11 (likely loading the Google+ beta sign - in or configuration interface). There are no branch points as only this single action is present.
+
+[Variant Paths] (3)
+ - V1: Tap <Google+ beta option> twice (repeat the action)
+ - V2: Omit tapping <Google+ beta option> (skip the step)
+ - V3: Tap <Google+ beta option> and then immediately tap it again (order mutation with repeat, though order swap not applicable here, so focus on repeat)
+
+================= [TaskTest] FDG[16] =================
+[Function] The current page functions as the user guide for the Omni - Notes application, offering information and instructions related to notes management (such as creation) and categories management, along with options to edit the page, create a new page, and access revision history.
+
+[Core Logic Task]
+The flow starts on page 4. The user clicks the 'Online manual option' (action_ref [4,8]), which navigates to page 12 (the Omni Notes user guide page). On page 12, the guide provides info on notes/categories management and options to edit, create a new page, or view revisions. There are no branches or loops here as it’s a single navigation step to access the guide.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Online manual option> (to test if the guide is accessible another way, though per core logic it's the only way here, but this is a repeat/omit mutation)
+ - V2: Tap <Online manual option> twice (repeat mutation, though the app may handle it the same, but it's a mutation)
+ - V3: Tap <Online manual option> (original, but since the core logic has no branches, we use repeat/omit and the only widget here)
+
+================= [TaskTest] FDG[17] =================
+[Function] The current page displays the changelog, providing a detailed list of new features, improvements, and fixes for different versions of the application to inform users about recent updates.
+
+[Core Logic Task]
+The user starts on page 4 and clicks the Changelog option to navigate to page 14, where the changelog is displayed. Then, the user clicks the OK button on page 14 to close the changelog and return to page 19.
+
+[Variant Paths] (3)
+ - V1: Start on page 4, omit clicking <Changelog option> and directly click <OK button to close changelog> (even though it's out of context to test boundary of not navigating to changelog first)
+ - V2: Start on page 4, click <App tour option> instead of <Changelog option> to see if it affects the changelog flow (branch mutation)
+ - V3: Start on page 4, click <Changelog option>, then click <Changelog option> again instead of <OK button to close changelog> (repeat mutation)
+
+================= [TaskTest] FDG[18] =================
+[Function] This page allows the user to set, modify, or remove a password for securing notes, along with setting a password recovery question and answer, to ensure notes are not viewed or modified by others.
+
+[Core Logic Task]
+The user starts by clicking the Password option to access the password setup page. Then, they can insert a new password, confirm it, input a recovery question, input the answer, confirm the answer, and finally click OK to save the changes. Each input step is sequential, and the OK button finalizes the process.
+
+[Variant Paths] (3)
+ - V1: Tap <Password option>, omit inserting a new password, tap <OK button> (test saving without password)
+ - V2: Tap <Password option>, input a very long password (e.g., 100 characters) into <Insert a new password input>, input the same long password into <Confirm the new password input>, input a question into <Question input field>, input an answer into <Answer input field>, input the same answer into <Confirm answer input field>, tap <OK button>
+ - V3: Tap <Password option>, input a password with special chars (e.g.,!@#$%) into <Insert a new password input>, input the same password into <Confirm the new password input>, input a question into <Question input field>, input an answer into <Answer input field>, input the same answer into <Confirm answer input field>, tap <OK button>
+
+================= [TaskTest] FDG[19] =================
+[Function] Request password on access toggle
+
+[Core Logic Task]
+The flow starts on page 5. The user clicks the 'Request password on access toggle' element, which navigates to page 17. There are no branches or loops in this single-step flow.
+
+[Variant Paths] (3)
+ - V1: Tap <Request password on access toggle> twice
+ - V2: Omit tapping <Request password on access toggle> (though this skips the core action, testing the absence of the trigger)
+ - V3: Tap <Request password on access toggle> and then immediately tap it again (repetition mutation)
+
+================= [TaskTest] FDG[20] =================
+[Function] The current page is a side navigation menu in the Omni Notes Alpha app, providing options to navigate to the notes management page or the settings page.
+
+[Core Logic Task]
+The flow starts on the settings page (page 6). A click action is performed on the 'Language setting (English, United States)' option, which navigates to the interface settings page (page 1).
+
+[Variant Paths] (3)
+ - V1: Tap <Language setting (English, United States)> twice
+ - V2: Omit tapping <Language setting (English, United States)> (stay on page 6)
+ - V3: Tap <Language setting (English, United States)> and then tap it again (repeat navigation)
+
+================= [TaskTest] FDG[21] =================
+[Function] The current page (side navigation menu) in the Omni Notes Alpha app provides options to navigate to the main notes page or access the settings page for configuring app preferences.
+
+[Core Logic Task]
+The flow starts on the side navigation menu (page 6). A click action is performed on the 'Text size setting (Default)' option, leading to the destination page 1. This action likely navigates to a relevant settings sub - page or triggers a change related to text size configuration.
+
+[Variant Paths] (3)
+ - V1: Long - press <Text size setting (Default)> instead of tapping it
+ - V2: Tap <Text size setting (Default)> twice in a row
+ - V3: Omit tapping <Text size setting (Default)> and see if any default navigation or action occurs
+
+================= [TaskTest] FDG[22] =================
+[Function] The page allows the user to select the "Settings" option from the side navigation menu of the Omni Notes Alpha app to access configuration options.
+
+[Core Logic Task]
+The user starts on page 6 (Interface settings) and clicks on the 'Application color scheme (Strip only)' option, which navigates to page 1 (the side navigation menu with Settings). This action is part of accessing configuration options via the Settings path.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Application color scheme (Strip only)> and check if the side navigation menu with Settings is still accessible
+ - V2: Repeat clicking <Application color scheme (Strip only)> multiple times to see if it repeatedly navigates to the side navigation menu with Settings
+ - V3: Try clicking <Application color scheme (Strip only)> in a different order (e.g., after some other non - existent but assumed independent step, but since only this widget is available, just re - order the single step in a way that tests the flow, like click it twice in a row)
+
+================= [TaskTest] FDG[23] =================
+[Function] Floating action button toggle
+
+[Core Logic Task]
+On the Interface settings page (page 6), the user clicks the 'Floating action button' toggle. This action navigates to page 78, completing the toggle interaction for the floating action button option.
+
+[Variant Paths] (3)
+ - V1: On the Interface settings page (page 6), long - press <Floating action button toggle> (mutation: change tap to long - press)
+ - V2: On the Interface settings page (page 6), tap <Floating action button toggle> twice (mutation: repeat the tap operation)
+ - V3: On the Interface settings page (page 6), omit tapping <Floating action button toggle> (mutation: omit the step)
+
+================= [TaskTest] FDG[24] =================
+[Function] Simple calendar and time toggle
+
+[Core Logic Task]
+The user starts on the Interface settings page (page 6). The core action is clicking the 'Simple calendar and time' toggle, which likely toggles its state (e.g., from off to on or vice versa) and navigates to page 79. There are no branches or loops as it’s a single toggle action.
+
+[Variant Paths] (3)
+ - V1: Tap <Simple calendar and time toggle> twice (repeat the toggle action)
+ - V2: Omit tapping <Simple calendar and time toggle> (skip the core action)
+ - V3: Tap <Simple calendar and time toggle> and then immediately tap it again (order doesn't matter here but repeat the action)
+
+================= [TaskTest] FDG[25] =================
+[Function] Attachments on bottom toggle
+
+[Core Logic Task]
+The user starts on the Interface settings page (page 6). They perform a single action: clicking the 'Attachments on bottom' toggle, which navigates to page 80. This action toggles the setting for showing attachments above or below note content.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Attachments on bottom toggle> and check if navigation to page 80 still occurs (though expected to not happen, testing the necessity of the toggle click)
+ - V2: Click <Attachments on bottom toggle> twice (testing if repeated toggling has unexpected behavior, like multiple navigations or state issues)
+ - V3: Attempt to click <Attachments on bottom toggle> without being on the Interface settings page (though contextually the user starts there, testing boundary of page context - but since widget is only on that page, maybe just check if the toggle works when not in the expected starting state, but as per widget, only interact with the toggle, so maybe click it when already on page 80 to see if it toggles back and navigates)
+
+================= [TaskTest] FDG[26] =================
+[Function] Prettified dates toggle
+
+[Core Logic Task]
+The user starts on page 6 (Interface settings) and clicks the 'Prettified dates' toggle, transitioning to page 81. This action toggles the setting for displaying dates in a simpler format.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[27] =================
+[Function] Dynamic menu toggle
+
+[Core Logic Task]
+The user starts on page 7 (Navigation settings) and clicks the 'Dynamic menu toggle' (a switch). This action likely toggles the dynamic menu setting, with the destination page being 54 (presumably reflecting the updated state of the toggle).
+
+[Variant Paths] (3)
+ - V1: Tap <Dynamic menu toggle> twice (repeating the toggle action)
+ - V2: Omit tapping <Dynamic menu toggle> and check if the page still navigates to 54 (though this might not be valid as per core logic, but for mutation testing)
+ - V3: Tap <Dynamic menu toggle> and then immediately tap it again before the page navigates (order and repeat mutation)
+
+================= [TaskTest] FDG[28] =================
+[Function] Note count toggle
+
+[Core Logic Task]
+The user starts on page 7 (Navigation settings). The core logic is to click the 'Note count' toggle, which likely toggles its state (on/off) and may navigate to page 55 (or update the current page). This is a single action step with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Tap <Note count toggle> twice (repeat the toggle action)
+ - V2: Omit tapping <Note count toggle> (do nothing, check if the state remains as initial)
+ - V3: Tap <Note count toggle> (original action, included for comparison context)
+
+================= [TaskTest] FDG[29] =================
+[Function] Group not categorized toggle
+
+[Core Logic Task]
+The user starts on the page with index 7 (Navigation settings). The core action is clicking the 'Group not categorized' toggle, which transitions to page 56. There are no branches or loops as this is a single click action to interact with the toggle.
+
+[Variant Paths] (3)
+ - V1: Tap <Group not categorized toggle> twice (repeat the toggle action)
+ - V2: Omit tapping <Group not categorized toggle> (skip the core action)
+ - V3: Tap <Group not categorized toggle> and then tap it again immediately (another repeat variation)
+
+================= [TaskTest] FDG[30] =================
+[Function] Navigation menu on exit toggle
+
+[Core Logic Task]
+The user starts on page 7 (Navigation settings). They click the 'Navigation menu on exit' toggle, which likely toggles its state (e.g., from off to on or vice versa) and navigates to page 57. There are no branches as it's a single action with a defined destination.
+
+[Variant Paths] (3)
+ - V1: Tap <Navigation menu on exit toggle> twice (repeat the toggle action)
+ - V2: Omit tapping <Navigation menu on exit toggle> and check if navigation to page 57 still occurs (though this might not be valid behavior but is a mutation attempt)
+ - V3: Tap <Navigation menu on exit toggle> and then immediately tap it again before navigation completes (repeat with timing variation)
+
+================= [TaskTest] FDG[31] =================
+[Function] Instant search toggle
+
+[Core Logic Task]
+The user starts on page 8 (Behaviors settings). They perform a click action on the 'Instant search' toggle, which likely toggles its state (e.g., from off to on or vice versa) and navigates to page 59. This is a single-step flow with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Tap <Instant search toggle> twice (repeating the toggle action)
+ - V2: Omit tapping <Instant search toggle> (simulating not performing the toggle)
+ - V3: Tap <Instant search toggle> and then immediately tap <Instant search toggle> again (repeating the toggle action)
+
+================= [TaskTest] FDG[32] =================
+[Function] Swipe notes toggle
+
+[Core Logic Task]
+On the Behaviors page (page 8), the user clicks the 'Swipe notes' toggle switch. This action toggles the setting and navigates to page 60, completing the toggle operation.
+
+[Variant Paths] (3)
+ - V1: Tap <Swipe notes toggle> twice (repeat to see if it toggles back and navigates correctly)
+ - V2: Omit tapping <Swipe notes toggle> (check if navigation or default state changes)
+ - V3: Tap <Swipe notes toggle> (original action for comparison, but as a mutation variant to ensure coverage)
+
+================= [TaskTest] FDG[33] =================
+[Function] Swipe to trash toggle
+
+[Core Logic Task]
+The user starts on page 8 (Behaviors settings). They perform a click action on the 'Swipe to trash' toggle, which likely toggles its state (e.g., from off to on or vice versa) and navigates to page 61. There are no branches or loops as it’s a single action flow.
+
+[Variant Paths] (3)
+ - V1: Tap <Swipe to trash toggle> twice (repeat the toggle action)
+ - V2: Omit tapping <Swipe to trash toggle> (simulate not performing the toggle)
+ - V3: Tap <Swipe to trash toggle> and then immediately tap it again (repeat the toggle operation)
+
+================= [TaskTest] FDG[34] =================
+[Function] Automatic location toggle
+
+[Core Logic Task]
+The user starts on the Behaviors page. They perform a click action on the 'Automatic location' toggle, which likely toggles its state (e.g., from off to on or vice versa) to enable or disable automatic location addition for new notes. This is a single-step action with no branching or looping.
+
+[Variant Paths] (3)
+ - V1: Tap <Automatic location toggle> twice (repeat the toggle action)
+ - V2: Omit tapping <Automatic location toggle> (do nothing, check if state remains)
+ - V3: Tap <Automatic location toggle> (original action, for comparison)
+
+================= [TaskTest] FDG[35] =================
+[Function] The current page (a dialog box) allows the user to input or set a value for video attachments within the behaviors settings of a note - management application, with options to confirm (OK) or cancel (CANCEL) the input.
+
+[Core Logic Task]
+The user starts on the Behaviors page (page 8) and clicks the 'Video attachments' option to open its dialog (page 63). In the dialog, the user can either click the input field to enter a value, or choose to click 'CANCEL' (to discard changes and return to page 8) or 'OK' (to confirm changes and return to page 8).
+
+[Variant Paths] (3)
+ - V1: Start on Behaviors page, click <Video attachments (size: not set)> to open dialog, then click <CANCEL button> (instead of possible OK or input)
+ - V2: Start on Behaviors page, click <Video attachments (size: not set)> to open dialog, input empty string into <Video attachments input field>, then click <OK button> (boundary input mutation)
+ - V3: Start on Behaviors page, click <Video attachments (size: not set)> to open dialog, click <Video attachments input field> (omit confirming or canceling step)
+
+================= [TaskTest] FDG[36] =================
+[Function] Vibration toggle switch
+
+[Core Logic Task]
+The user starts on page 9 (Notifications screen) and clicks the Vibration toggle switch. This action toggles the vibration setting and navigates to page 68, completing the functional point's execution.
+
+[Variant Paths] (3)
+ - V1: Start on page 9 (Notifications screen), long-press <Vibration toggle switch> (mutation: incorrect interaction type instead of tap)
+ - V2: Start on page 9 (Notifications screen), tap <Vibration toggle switch>, then tap <Vibration toggle switch> again (mutation: repeat the toggle action)
+ - V3: Start on page 9 (Notifications screen), omit tapping <Vibration toggle switch> (mutation: omit the core action)
+
+================= [TaskTest] FDG[37] =================
+[Function] This page allows the user to select a ringtone from a list of available options for notifications, with options to confirm the selection or cancel the action.
+
+[Core Logic Task]
+The user starts on the Notifications page. They click the Ringtone option, which opens the Ringtones selection dialog. Here, the user can choose a ringtone from the list, then either confirm with OK or cancel the selection.
+
+[Variant Paths] (3)
+ - V1: Start on Notifications page, long-press <Ringtone option> (instead of click) and see if Ringtones selection dialog opens
+ - V2: Start on Notifications page, click <Ringtone option>, then immediately click <Ringtone option> again without selecting a ringtone
+ - V3: Start on Notifications page, click <Ringtone option>, then try to confirm selection without actually choosing a ringtone from the list
+
+================= [TaskTest] FDG[38] =================
+[Function] The Notifications settings page allows users to configure notification - related preferences such as enabling or disabling vibration, setting a ringtone, and adjusting the second reminder delay.
+
+[Core Logic Task]
+The user starts on the Notifications settings page. They perform a click action to enable the notifications persistence option, and the flow ends on the same page after this action.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Enable notifications persistence option> (check if page state changes without enabling)
+ - V2: Tap <Enable notifications persistence option> twice (test repeated enabling)
+ - V3: Tap <Enable notifications persistence option> then tap it again immediately (test rapid repeated interaction)
+
+================= [TaskTest] FDG[39] =================
+[Function] Error reporting toggle switch
+
+[Core Logic Task]
+The user starts on page 10 and clicks the Error reporting toggle switch, which leads to page 82. This action toggles the switch's state (on/off) to enable or disable error reporting when the app crashes.
+
+[Variant Paths] (3)
+ - V1: Tap <Error reporting toggle switch> twice (repeating the tap to see if it toggles back as expected)
+ - V2: Omit tapping <Error reporting toggle switch> (simulate not performing the toggle action)
+ - V3: Tap <Error reporting toggle switch> once (original action for comparison, but as a mutation check if the flow still works as supposed)
+
+================= [TaskTest] FDG[40] =================
+[Function] Share anonymous data toggle switch
+
+[Core Logic Task]
+The user starts on page 10 (Privacy settings) and clicks the 'Share anonymous data' toggle switch. This action leads to page 83, completing the interaction with the toggle.
+
+[Variant Paths] (3)
+ - V1: Start on page 10 (Privacy settings), long - press <Share anonymous data toggle switch> (instead of click)
+ - V2: Start on page 10 (Privacy settings), omit clicking <Share anonymous data toggle switch> (no interaction with the toggle)
+ - V3: Start on page 10 (Privacy settings), click <Share anonymous data toggle switch>, then click <Share anonymous data toggle switch> again (repeat the click operation)
+
+================= [TaskTest] FDG[41] =================
+[Function] The page (within the Sync and Backups settings of Omni Notes FOSS) is currently prompting the user to grant or deny the app permission to access photos, media, and files on the device, with options to backup, restore/delete backups, or import notes from Springpad once permission is handled.
+
+[Core Logic Task]
+The flow starts on the Sync and Backups settings page. The user is prompted to grant or deny file access. After handling the permission (implied by the backup option becoming actionable), the user can click the Backup option to proceed with backup functionality. There are no explicit branches or loops shown in the provided action, so the flow is a straight line after permission is resolved.
+
+[Variant Paths] (2)
+ - V1: Omit handling the permission (if possible, though implied as needed) and directly Tap <Backup option> to see if it errors or behaves unexpectedly
+ - V2: Tap <Backup option> multiple times in quick succession to test for duplicate backup or error handling
+
+================= [TaskTest] FDG[42] =================
+[Function] The current page (Restore or delete backups) in the Omni Notes Alpha app allows users to manage their backup data by either restoring backups to retrieve previous note data or deleting backups to remove stored backup files.
+
+[Core Logic Task]
+The user starts on page 15 and clicks the 'Restore or delete backups' option, navigating to page 1. This action initiates the process of managing backup data (restoring or deleting backups).
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Restore or delete backups option> (to test if the app still navigates to backup management without this action, though likely invalid but for mutation)
+ - V2: Click <Restore or delete backups option> twice (repeat the action to see if it causes unexpected behavior like multiple navigations or errors)
+ - V3: Click <Restore or delete backups option> in a different order (but since there's only one widget, this is a bit forced; maybe consider if there was a prior step, but as per given, just click it out of order contextually)
+
+================= [TaskTest] FDG[43] =================
+[Function] The current page (Settings page) provides a list of configuration categories (Preferences, Beta, Help, About) and specific options (e.g., Data, Interface, Opt - In, Online manual) for customizing the app's settings.
+
+[Core Logic Task]
+The user starts on the Settings page (page 15). They perform a click action on the 'Import notes from Springpad option' (though the screenshots suggest the main Settings navigation, the action provided is followed). This click leads to a new page (page 19), completing the flow for this action. There are no branches or loops as only one action is provided.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Import notes from Springpad option> and stay on the Settings page
+ - V2: Tap <Import notes from Springpad option> twice (repeat the action)
+ - V3: Tap <Import notes from Springpad option> and then immediately tap it again (repeat the operation)
+
+================= [TaskTest] FDG[44] =================
+[Function] This page is a side navigation menu in the Omni Notes Alpha app, providing options to navigate to the main notes page or access the app's settings.
+
+[Core Logic Task]
+The flow starts on page 16 (a password-related dialog). The user clicks the 'PASSWORD FORGOTTEN' link, which navigates to page 1 (the main side navigation menu of Omni Notes Alpha, with 'Notes' and 'SETTINGS' options).
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[45] =================
+[Function] The current page is a side navigation menu in the Omni Notes Alpha app, providing options to navigate to the main notes page or access the app's settings.
+
+[Core Logic Task]
+The flow starts on page 16 (a password - related dialog). The user clicks the 'REMOVE PASSWORD' link. This action leads to page 1, which is the side navigation menu of the Omni Notes Alpha app, offering options to navigate to the main notes page or access the app's settings.
+
+[Variant Paths] (3)
+ - V1: Tap <REMOVE PASSWORD link> twice
+ - V2: Omit tapping <REMOVE PASSWORD link> (though this would not follow the normal flow but is a mutation of omitting the step)
+ - V3: Tap <REMOVE PASSWORD link> and then immediately tap <REMOVE PASSWORD link> again (same as repeating the tap)
+
+================= [TaskTest] FDG[46] =================
+[Function] The Data page allows users to manage app data-related settings, including sync/backup operations, password configuration (editing and access request), and the option to erase all data.
+
+[Core Logic Task]
+The user starts on page 19 (Privacy settings) and clicks the 'Data' option. This action navigates to page 20 (Data settings), where options like Sync/Backups, Password configuration, and Erase all data are available. No branches or loops are present in this initial flow as only the navigation to the Data page is captured.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <Data option> (staying on page 19 instead of navigating to page 20)
+ - V2: Repeat clicking <Data option> multiple times (unintended repeated navigation attempt)
+
+================= [TaskTest] FDG[47] =================
+[Function] The Interface settings page allows users to configure application interface preferences, including language, color scheme, floating action button behavior, attachment display location, and date formatting.
+
+[Core Logic Task]
+The user starts on a settings page (page 19) and clicks the 'Interface' option. This action navigates to the Interface settings page (page 21), where interface preferences like language, color scheme, and toggles for button behavior, attachment location, and date formatting can be configured.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <Interface option> (staying on page 19 instead of navigating to page 21)
+ - V2: Repeat clicking <Interface option> multiple times (e.g., click <Interface option> twice in a row)
+
+================= [TaskTest] FDG[48] =================
+[Function] The Navigation settings page allows users to configure options related to the app's navigation menu, such as enabling/disabling dynamic menu item hiding, note count display, grouping of uncategorized notes, and navigation menu behavior on exit.
+
+[Core Logic Task]
+The user starts on a page (page 19) and clicks the 'Navigation' option. This action navigates them to the Navigation settings page (page 7), where they can configure navigation-related options like dynamic menu hiding, note count display, and more.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[49] =================
+[Function] The Behaviors page allows users to configure various functional settings related to note - taking, such as checklist position, search behavior, note - swiping actions, location addition for new notes, and the maximum size of video attachments.
+
+[Core Logic Task]
+The user starts on page 19 and clicks the 'Behaviors' option, navigating to page 8 (the Behaviors settings page) to configure note - taking related functional settings like checklist position, search behavior, etc.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Behaviors option> and stay on page 19
+ - V2: Click <Behaviors option> twice (repeat the navigation action)
+ - V3: Click a non - existent option instead of <Behaviors option> (branch mutation, though there are no other options here, but simulating the wrong choice)
+
+================= [TaskTest] FDG[50] =================
+[Function] The Notifications page allows users to configure notification - related settings, including toggling vibration, selecting a ringtone, and setting the second reminder delay.
+
+[Core Logic Task]
+The user starts on a settings page and clicks the 'Notifications' option to navigate to the Notifications page, where they can configure vibration, ringtone, and second reminder delay settings.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Notifications option> (test if the Notifications page is accessible without this action)
+ - V2: Repeat clicking <Notifications option> (test if multiple clicks cause any issues or different behavior)
+ - V3: Click <Notifications option> and then immediately click it again (similar to repeat but with immediate re - click)
+
+================= [TaskTest] FDG[51] =================
+[Function] The Privacy page allows users to configure options related to error reporting, sharing anonymous data, and saving app logs to a file, with toggle switches to enable or disable each feature.
+
+[Core Logic Task]
+The user starts on page 19 and clicks the 'Privacy' option (action_ref [19,6]) to navigate to page 22, where privacy-related toggles (error reporting, anonymous data sharing, log saving) are available for configuration. No branches or loops are present as only the navigation to the Privacy page is captured here.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Privacy option> (check if page 22 is still accessible without this action)
+ - V2: Repeat clicking <Privacy option> multiple times (observe if it navigates to page 22 each time or has a different behavior)
+ - V3: Click <Privacy option> in a different context (if applicable, e.g., from a different starting state)
+
+================= [TaskTest] FDG[52] =================
+[Function] The current page (Privacy section within the settings) allows users to access and configure privacy - related settings, and also provides access to other setting categories like Preferences, Data, Interface, Navigation, Behaviors, Notifications, along with beta program options, help resources, and app - related information such as the changelog.
+
+[Core Logic Task]
+The user starts on the Privacy settings page. They can click on the 'Beta' category label (or other categories/options like Preferences, Data, etc.). In this case, the action is clicking the Beta label, which likely leads to related beta program settings or info, though the destination page here remains 19 (possibly a UI state or pending navigation).
+
+[Variant Paths] (3)
+ - V1: Long-press <Beta category label> (instead of tap)
+ - V2: Tap <Beta category label> twice (repeat the tap)
+ - V3: Omit tapping <Beta category label> (do nothing on this widget)
+
+================= [TaskTest] FDG[53] =================
+[Function] This page appears to be a loading or intermediate page for Google account sign - in or related authentication processes, likely facilitating user authentication or account - related actions.
+
+[Core Logic Task]
+The process starts on page 19. The user clicks the 'Opt-In' option, which navigates to page 11 (a Google account sign - in related loading page). There are no branches or loops in this flow as it's a single - step navigation action.
+
+[Variant Paths] (2)
+ - V1: Omit tapping <Opt-In option> (to test if the page navigates automatically or shows an error)
+ - V2: Tap <Opt-In option> twice (to test if multiple taps cause unexpected behavior like multiple navigations or errors)
+
+================= [TaskTest] FDG[54] =================
+[Function] The current page functions as the online manual (user guide) for the Omni - Notes application, providing information on aspects like notes management, creation, and categories management, and is hosted on a GitHub repository page for the Omni - Notes project.
+
+[Core Logic Task]
+The flow starts on page 19. The user clicks the 'Online manual' option, which navigates to page 12 (the GitHub-hosted Omni - Notes user guide page) to access information about notes management, creation, and categories management.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <Online manual option> (to test if the app still navigates to the manual page without this action, though expected to fail)
+ - V2: Repeat clicking <Online manual option> multiple times (to test if repeated clicks cause unexpected behavior like multiple navigations or errors)
+
+================= [TaskTest] FDG[55] =================
+[Function] The current page (changelog popup) displays a list of version - by - version updates for the app, including new features, improvements, and fixes, and has an "OK" button to close the popup.
+
+[Core Logic Task]
+The user starts on page 19 (Privacy page) and clicks the 'Changelog' option. This action opens the changelog popup, which displays version-by-version updates. The popup has an 'OK' button to close it, but the provided action only covers opening the changelog. The flow is a straight line from clicking 'Changelog' to viewing the popup content.
+
+[Variant Paths] (3)
+ - V1: Tap <Changelog option> twice (repeat the action)
+ - V2: Omit tapping <Changelog option> (skip opening the changelog popup)
+ - V3: Tap <Changelog option> and then immediately tap <Changelog option> again (repeat and re - open)
+
+================= [TaskTest] FDG[56] =================
+[Function] The current page is a side navigation menu in the Omni Notes Alpha app, providing options to navigate to the notes section or access the settings page.
+
+[Core Logic Task]
+The user starts on the side navigation menu (page 20). They click the 'Sync and Backups' option, which navigates to the Data settings page (page 15). This is a straight - line flow with no branches or loops.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[57] =================
+[Function] The current page is a side navigation menu in the Omni Notes Alpha app, providing options to navigate to the main notes page or access the app's settings.
+
+[Core Logic Task]
+The flow starts on page 20 (a settings page). The user clicks the 'Password' option, which navigates to page 15. This is a straight - line flow with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Password option> (staying on page 20 instead of navigating to page 15)
+ - V2: Repeat clicking <Password option> multiple times (attempting to navigate to page 15 repeatedly)
+ - V3: Click <Password option> and then immediately click <Password option> again (swapping the order of a non - existent second step with the click, but simulating an incorrect repeated action)
+
+================= [TaskTest] FDG[58] =================
+[Function] Request password on access toggle
+
+[Core Logic Task]
+The user starts on page 20 (Data settings). They perform a click action on the 'Request password on access' toggle, which leads to page 23. This action enables (or toggles) the request password on access feature.
+
+[Variant Paths] (3)
+ - V1: Tap <Request password on access toggle> twice (repeating the toggle action)
+ - V2: Omit tapping <Request password on access toggle> (simulating not enabling the feature)
+ - V3: Tap <Request password on access toggle> and then immediately tap it again (testing rapid toggling)
+
+================= [TaskTest] FDG[59] =================
+[Function] The current page (a confirmation dialog) functions to ask the user to confirm the erasure of all the app's data while preserving backups, with a "CONFIRM" button to proceed with the data erasure.
+
+[Core Logic Task]
+The user starts on the Data page and clicks the 'Erase all data' option to open a confirmation dialog. Then, the user clicks the 'CONFIRM' button in the dialog to proceed with erasing the app's data while preserving backups.
+
+[Variant Paths] (3)
+ - V1: Start on the Data page, tap <CANCEL button> instead of <CONFIRM button> in the confirmation dialog
+ - V2: Start on the Data page, tap <Erase all data option> twice (repeat operation) and then tap <CONFIRM button> in the confirmation dialog
+ - V3: Start on the Data page, omit tapping <Erase all data option> and directly try to tap <CONFIRM button> (though this may not be functional, it's a mutation of omitting a step)
+
+================= [TaskTest] FDG[60] =================
+[Function] The page functions as a language selection interface where users can choose their preferred language from a list of available options (e.g., English, Finnish, French, etc.) to set the app's display language, with a "CANCEL" button to exit without making changes.
+
+[Core Logic Task]
+The flow starts by clicking the Language setting to open the language selection menu. Once in the menu, the user can either select a language (e.g., English, German, Hindi, etc.) via their respective radio buttons or click the CANCEL button to exit without changing the language. The selection of a language or CANCEL are mutually exclusive choices at the language menu step.
+
+[Variant Paths] (3)
+ - V1: Tap <Language setting>, then tap <CANCEL button> (omits language selection)
+ - V2: Tap <Language setting>, then tap <日本語 (Japanese) radio button> (selects a different language than default, boundary: less common language)
+ - V3: Tap <Language setting>, tap <Deutsch (German) radio button>, then tap <CANCEL button> (repeats interaction with CANCEL after selecting a language, conflicting action)
+
+================= [TaskTest] FDG[61] =================
+[Function] The current page (a popup) allows the user to select the application color scheme from options including Disabled, Strip only, Notes list only, or Complete.
+
+[Core Logic Task]
+The user starts on page 21 and clicks to open the application color scheme popup (step S1). At the popup (step S2), the user can choose one of four color scheme options (Disabled, Strip only, Notes list only, Complete) or cancel. Selecting an option (S3-S6) applies it, while canceling (S7) returns to the previous page.
+
+[Variant Paths] (3)
+ - V1: Start on page 21, click <Application color scheme setting> to open the popup (S1). At the popup (S2), tap <CANCEL button> (S7) to return to the previous page (branch mutation: choose cancel instead of a color option).
+ - V2: Start on page 21, click <Application color scheme setting> to open the popup (S1). At the popup (S2), tap <Disabled color scheme option> (S3) to apply it. Then, repeat the process: click <Application color scheme setting> again (S1 repeated), and at the popup (S2), tap <Strip only color scheme option> (S4) to apply it (repeat/omit mutation: repeat the opening and selection steps).
+ - V3: Start on page 21, click <Application color scheme setting> to open the popup (S1). At the popup (S2), tap <Complete color scheme option> (S6) to apply it. Then, swap the order: instead of applying first, try canceling after applying? No, better: Start on page 21, click <Application color scheme setting> (S1), at popup (S2), tap <CANCEL button> (S7) to return, then click <Application color scheme setting> (S1) again and tap <Notes list only color scheme option> (S5) to apply (order mutation: cancel first then select, though original flow is select or cancel, but this is a different order of cancel and then select).
+
+================= [TaskTest] FDG[62] =================
+[Function] Floating action button toggle
+
+[Core Logic Task]
+The user starts on page 21 (Interface settings) and clicks the 'Floating action button' toggle. This action likely toggles the state of the floating action button option, with the flow ending after this click (as the action is a leaf node).
+
+[Variant Paths] (3)
+ - V1: Start on page 21 (Interface settings), long-press <Floating action button toggle> (instead of click)
+ - V2: Start on page 21 (Interface settings), click <Floating action button toggle> twice (repeat the click)
+ - V3: Start on page 21 (Interface settings), omit clicking <Floating action button toggle> (do nothing)
+
+================= [TaskTest] FDG[63] =================
+[Function] Attachments on bottom toggle
+
+[Core Logic Task]
+The user starts on the Interface settings page (page 21). They perform a click action on the 'Attachments on bottom' toggle, which likely toggles its state (e.g., from off to on or vice versa) and navigates to page 33. This is a single-step flow with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Tap <Attachments on bottom toggle> twice (repeat the toggle action)
+ - V2: Omit tapping <Attachments on bottom toggle> (simulate not performing the toggle)
+ - V3: Tap <Attachments on bottom toggle> and then immediately tap it again (quick repeated toggle)
+
+================= [TaskTest] FDG[64] =================
+[Function] Prettified dates toggle
+
+[Core Logic Task]
+The user interacts with the 'Prettified dates' toggle. The flow starts on the Interface settings page (page 21), where the user clicks the 'Prettified dates' toggle. This action likely toggles the setting (e.g., from on to off or vice versa) and may navigate to a new page (page 34) or update the current page's state.
+
+[Variant Paths] (3)
+ - V1: Tap <Prettified dates toggle> twice in a row (repeat operation)
+ - V2: Omit tapping <Prettified dates toggle> (skip the core action)
+ - V3: Tap <Prettified dates toggle> and then immediately tap it again (order mutation with repeated step)
+
+================= [TaskTest] FDG[65] =================
+[Function] Error reporting toggle switch
+
+[Core Logic Task]
+The user starts on page 22 (Privacy settings). The core action is clicking the Error reporting toggle switch, which transitions to page 70. This single step toggles the error reporting setting, with no branches or loops as only one action is involved.
+
+[Variant Paths] (3)
+ - V1: Tap <Error reporting toggle switch> twice (repeat the toggle operation)
+ - V2: Omit tapping <Error reporting toggle switch> (simulate not performing the toggle action)
+ - V3: Tap <Error reporting toggle switch> and then immediately tap it again (quick repeated toggle)
+
+================= [TaskTest] FDG[66] =================
+[Function] Share anonymous data toggle switch
+
+[Core Logic Task]
+The user starts on page 22 (Privacy settings) and clicks the 'Share anonymous data' toggle switch. This action likely toggles the switch's state (on/off) to enable or disable sharing anonymous data, with the flow ending after this click.
+
+[Variant Paths] (2)
+ - V1: Tap <Share anonymous data toggle switch> twice (repeating the tap to see if it toggles back as expected)
+ - V2: Omit tapping <Share anonymous data toggle switch> (simulate not performing the action to check the default state)
+
+================= [TaskTest] FDG[67] =================
+[Function] Save logs to file toggle switch
+
+[Core Logic Task]
+The user interacts with the 'Save logs to file' toggle switch. The flow starts on page 22 (Privacy settings) and, upon clicking the toggle, transitions to page 72. This action toggles the switch to enable or disable saving logs to a file.
+
+[Variant Paths] (3)
+ - V1: Tap <Save logs to file toggle switch> twice in a row (repeating the tap to see if it toggles back as expected)
+ - V2: Omit tapping <Save logs to file toggle switch> (check if the state remains unchanged without interaction)
+ - V3: Tap <Save logs to file toggle switch> and then immediately tap it again (simulating a rapid toggle to test stability)
+
+================= [TaskTest] FDG[68] =================
+[Function] Suomi (Finnish) radio button
+
+[Core Logic Task]
+The flow starts on the language selection page (page 30). The user clicks the 'Suomi (Finnish)' radio button, which transitions the app to page 36. This is a straight - line flow with no branches or loops as it involves a single click action to select the Finnish language option.
+
+[Variant Paths] (2)
+ - V1: Omit tapping <Suomi (Finnish) radio button> and check if the app still transitions to page 36 (though this is against the normal flow, testing the necessity of the action)
+ - V2: Tap <Suomi (Finnish) radio button> twice (repeating the action to see if it causes any unexpected behavior or repeated transition)
+
+================= [TaskTest] FDG[69] =================
+[Function] Français (French) radio button
+
+[Core Logic Task]
+The process starts on the language selection page (page 30). The user clicks the 'Français (French)' radio button, which transitions the app to page 37. This is a single-step flow with no branches or loops, as the action directly selects the French language option.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[70] =================
+[Function] ភាសាខ្មែរ (Khmer) radio button
+
+[Core Logic Task]
+The process starts on the language selection page (page 30). The user clicks the 'ភាសាខ្មែរ (Khmer)' radio button, which leads to the next page (page 38). There are no branches or loops in this flow as it is a single action to select the language.
+
+[Variant Paths] (2)
+ - V1: Omit tapping <ភាសាខ្មែរ (Khmer) radio button> and try to proceed to page 38
+ - V2: Tap <ភាសាខ្មែរ (Khmer) radio button> multiple times (e.g., tap it twice) before proceeding to page 38
+
+================= [TaskTest] FDG[71] =================
+[Function] Galego (Galician) radio button
+
+[Core Logic Task]
+The flow starts on page 30 (Language selection). The user clicks the 'Galego (Galician)' radio button, which transitions the app to page 40. This is a single-step flow with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Galego (Galician) radio button> and check if the app still transitions to page 40
+ - V2: Tap <Galego (Galician) radio button> twice and check the app's behavior
+ - V3: Tap a non - existent radio button (simulated mutation by not using the given widget) and check the app's response (note: this is a mutation of not using the correct widget as per the flow)
+
+================= [TaskTest] FDG[72] =================
+[Function] ελληνικά (Greek) radio button
+
+[Core Logic Task]
+The user starts on the language selection page (page 30). The core action is clicking the 'ελληνικά (Greek)' radio button, which transitions the app to page 41. There are no branches or loops as this is a single, direct action to select the Greek language option.
+
+[Variant Paths] (3)
+ - V1: Tap <ελληνικά (Greek) radio button> twice
+ - V2: Omit tapping <ελληνικά (Greek) radio button> (simulate not selecting Greek language)
+ - V3: Tap <ελληνικά (Greek) radio button> after a short delay (testing timing-related mutation, though action is same but timing is altered in terms of interaction sequence)
+
+================= [TaskTest] FDG[73] =================
+[Function] (Hebrew) עברית radio button
+
+[Core Logic Task]
+The user starts on page 30 (the language selection menu). The core action is clicking the (Hebrew) עברית radio button, which transitions the app to page 42. There are no branches or loops in this logic.
+
+[Variant Paths] (3)
+ - V1: Tap <(Hebrew) עברית radio button> twice
+ - V2: Omit tapping <(Hebrew) עברית radio button> (simulate not selecting Hebrew)
+ - V3: Tap <(Hebrew) עברית radio button> after a short delay (simulate a timing variation)
+
+================= [TaskTest] FDG[74] =================
+[Function] Magyar (Hungarian) radio button
+
+[Core Logic Task]
+The flow starts on page 30 (the Language selection page). The user performs a click action on the 'Magyar (Hungarian)' radio button, which leads to page 44. There are no branches or loops in this simple flow.
+
+[Variant Paths] (3)
+ - V1: Tap <Magyar (Hungarian) radio button> twice
+ - V2: Omit tapping <Magyar (Hungarian) radio button> (simulate not selecting it)
+ - V3: Tap <Magyar (Hungarian) radio button> after a short delay (to test timing-related issues, though the core action is still the same button)
+
+================= [TaskTest] FDG[75] =================
+[Function] ສາບາລາວ (Lao) radio button
+
+[Core Logic Task]
+The process starts on the language selection page (page 30). The user clicks the 'ສາບາລາວ (Lao)' radio button, which transitions the app to a new page (page 48). There are no branches or loops as this is a single action to select the Lao language.
+
+[Variant Paths] (3)
+ - V1: Tap <ສາບາລາວ (Lao) radio button> twice
+ - V2: Omit tapping <ສາບາລາວ (Lao) radio button> (though this would not select Lao language, but it's a mutation of omitting the step)
+ - V3: Tap <ສາບາລາວ (Lao) radio button> after a short delay (simulating a different interaction timing)
+
+
+[AppTest] Found 29 dependency pairs to test.
+
+==============================================
+[AppTest] Pair 1/29: 2 -> 3
+Producer: The current page (search page) allows users to search for existing notes (though none are present in the empty state) within the notes management application.
+Consumer: The current page (a Google voice input dialog) allows the user to attempt voice - based input again to search for notes, with the option to tap the microphone icon to speak after a previous attempt, within the context of a note - management app.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on the notes page (empty state). Click the search icon to open the search interface for notes.
+Consumer task:
+ Start on the notes page (page 0). Click the sort icon (action at [0,2]) to go to page 2. Then, tap the microphone icon to attempt voice - based input to search for the notes (using the search interface produced by the producer).
+------------------------------
+
+==============================================
+[AppTest] Pair 2/29: 4 -> 7
+Producer: This page allows the user to create a new note by selecting from options like Photo, Checklist, or Text note, while also providing a search bar for notes and an empty state indication when no notes are present.
+Consumer: This page functions as a camera interface for creating a photo note, allowing the user to capture an image (via the blue shutter button), switch camera modes (via the rotate icon), adjust settings (via the left icon), or exit the camera (via the 'X' button).
+
+[Plan]
+Case 1/1
+Producer task:
+ On the notes page (with empty state), click the red circular add button to open the note creation menu, then click the 'Photo' option to select it for note creation.
+Consumer task:
+ After the producer task, navigate to the camera interface (as triggered by selecting 'Photo' in the producer task) and verify that the camera interface for creating a photo note is loaded, with options to capture an image, switch camera modes, adjust settings, or exit the camera available.
+------------------------------
+
+==============================================
+[AppTest] Pair 3/29: 6 -> 13
+Producer: The current page is a side navigation menu in the Omni Notes Alpha app, providing options to navigate to the notes management page or access the app's settings.
+Consumer: The Notifications page allows users to configure notification - related settings, including toggling vibration, selecting a ringtone, and setting the second reminder delay.
+
+[Plan]
+Case 1/1
+Producer task:
+ 1. On the side navigation menu, click 'Settings' to go to the settings page. 2. On the settings page, find and click the option to access notification - related settings (to reach the page where second reminder delay can be set). 3. Set the second reminder delay setting (e.g., change it to a new value).
+Consumer task:
+ 1. Enter the Notifications page by clicking the Notifications option. 2. Click the Second reminder delay option. 3. Verify that the second reminder delay setting shown is the same as the one set in the producer task (the updated second reminder delay setting).
+------------------------------
+
+==============================================
+[AppTest] Pair 4/29: 6 -> 17
+Producer: The current page is a side navigation menu in the Omni Notes Alpha app, providing options to navigate to the notes management page or access the app's settings.
+Consumer: The current page displays the changelog, providing a detailed list of new features, improvements, and fixes for different versions of the application to inform users about recent updates.
+
+[Plan]
+Case 1/1
+Producer task:
+ From the side navigation menu (page 1), click 'Settings' (action [1,1]) to go to the settings page (page 4). Then, on page 4, click 'Preferences' (action [4,0]) to stay on page 4 and update the second reminder delay setting.
+Consumer task:
+ From page 4 (settings page), click the Changelog option to navigate to page 14 (changelog page). Verify that the changelog reflects the update related to the second reminder delay setting, then click the OK button to close the changelog and return to page 19.
+------------------------------
+
+==============================================
+[AppTest] Pair 5/29: 12 -> 35
+Producer: The Behaviors page allows users to configure various functional settings for the note - taking app, including options related to checklists, search, note - swiping actions, location addition to new notes, and video attachment size limits.
+Consumer: The current page (a dialog box) allows the user to input or set a value for video attachments within the behaviors settings of a note - management application, with options to confirm (OK) or cancel (CANCEL) the input.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to the Behaviors page, access the Checklists setting, and select the 'Keep position' radio option (then confirm or cancel as needed to finalize the checklist behavior setting).
+Consumer task:
+ From the Behaviors page (after producer actions), click the 'Video attachments' option to open its dialog. In the dialog, click the input field to enter a value (or use CANCEL/OK as needed) and verify the dialog reflects the video attachments setting context from the Behaviors page.
+------------------------------
+
+==============================================
+[AppTest] Pair 6/29: 13 -> 6
+Producer: The Notifications page allows users to configure notification - related settings, including toggling vibration, selecting a ringtone, and setting the second reminder delay.
+Consumer: The current page is a side navigation menu in the Omni Notes Alpha app, providing options to navigate to the notes management page or access the app's settings.
+
+[Plan]
+Case 1/1
+Producer task:
+ Click Notifications option to enter Notifications page, then click Second reminder delay option to configure its settings (e.g., set delay to 10).
+Consumer task:
+ On side navigation menu, click 'Settings' to go to settings page. Then click 'Preferences' (or relevant path) to verify the second reminder delay setting (set to 10) is reflected in the settings related to notifications.
+------------------------------
+
+==============================================
+[AppTest] Pair 7/29: 13 -> 17
+Producer: The Notifications page allows users to configure notification - related settings, including toggling vibration, selecting a ringtone, and setting the second reminder delay.
+Consumer: The current page displays the changelog, providing a detailed list of new features, improvements, and fixes for different versions of the application to inform users about recent updates.
+
+[Plan]
+Case 1/1
+Producer task:
+ Click the Notifications option to enter the Notifications page, then click the Second reminder delay option to configure its settings.
+Consumer task:
+ Start on page 4, click the Changelog option to navigate to page 14 (where the changelog, including the updated second reminder delay setting, is displayed), then click the OK button on page 14 to close the changelog and return to page 19.
+------------------------------
+
+==============================================
+[AppTest] Pair 8/29: 13 -> 36
+Producer: The Notifications page allows users to configure notification - related settings, including toggling vibration, selecting a ringtone, and setting the second reminder delay.
+Consumer: Vibration toggle switch
+
+[Plan]
+Case 1/1
+Producer task:
+ Click Notifications option to enter Notifications page, then click Second reminder delay option to configure its settings (producing updated second reminder delay setting and updated notifications setting).
+Consumer task:
+ On Notifications screen (page 9), click Vibration toggle switch to verify it reflects the vibration setting produced by the Notifications page configuration.
+------------------------------
+
+==============================================
+[AppTest] Pair 9/29: 13 -> 37
+Producer: The Notifications page allows users to configure notification - related settings, including toggling vibration, selecting a ringtone, and setting the second reminder delay.
+Consumer: This page allows the user to select a ringtone from a list of available options for notifications, with options to confirm the selection or cancel the action.
+
+[Plan]
+Case 1/2
+Producer task:
+ Click Notifications option to enter Notifications page, then click Ringtone option to open Ringtones selection dialog.
+Consumer task:
+ In the Ringtones selection dialog, select a ringtone (e.g., Classic) and confirm with OK; then return to Notifications page to verify the ringtone setting reflects the selected ringtone.
+------------------------------
+Case 2/2
+Producer task:
+ Navigate to Notifications page by clicking Notifications option, then click Second reminder delay option to set a delay (e.g., 5 minutes).
+Consumer task:
+ After setting the second reminder delay, go to the Ringtone selection dialog (via Ringtone option on Notifications page), select a new ringtone (e.g., Chime), confirm, and check that both the ringtone and second reminder delay settings are correctly updated on the Notifications page.
+------------------------------
+
+==============================================
+[AppTest] Pair 10/29: 13 -> 38
+Producer: The Notifications page allows users to configure notification - related settings, including toggling vibration, selecting a ringtone, and setting the second reminder delay.
+Consumer: The Notifications settings page allows users to configure notification - related preferences such as enabling or disabling vibration, setting a ringtone, and adjusting the second reminder delay.
+
+[Plan]
+Case 1/1
+Producer task:
+ Click Notifications option to enter Notifications page, then click Second reminder delay option to configure its settings (updating second reminder delay setting).
+Consumer task:
+ On Notifications settings page, verify that the second reminder delay setting (produced by Producer) is reflected, then perform click action to enable notifications persistence option (using the updated notifications context).
+------------------------------
+
+==============================================
+[AppTest] Pair 11/29: 14 -> 39
+Producer: The Privacy page allows users to toggle settings for error reporting (sending crash reports to the developer) and sharing anonymous data (sending non - sensitive data to improve the app).
+Consumer: Error reporting toggle switch
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 4, click the Privacy option (action_ref [4,6]) to navigate to the Privacy page (page 10).
+Consumer task:
+ On page 10, click the Error reporting toggle switch (which leads to page 82) to toggle its state (on/off) for enabling or disabling error reporting when the app crashes. Verify that the switch's state reflects the change made (e.g., if it was off, it should now be on, and vice versa).
+------------------------------
+
+==============================================
+[AppTest] Pair 12/29: 14 -> 40
+Producer: The Privacy page allows users to toggle settings for error reporting (sending crash reports to the developer) and sharing anonymous data (sending non - sensitive data to improve the app).
+Consumer: Share anonymous data toggle switch
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 4, click the Privacy option (action_ref [4,6]) to navigate to the Privacy page (page 10).
+Consumer task:
+ On the Privacy page (page 10, produced by the Producer), click the 'Share anonymous data' toggle switch, which should lead to page 83.
+------------------------------
+
+==============================================
+[AppTest] Pair 13/29: 14 -> 65
+Producer: The Privacy page allows users to toggle settings for error reporting (sending crash reports to the developer) and sharing anonymous data (sending non - sensitive data to improve the app).
+Consumer: Error reporting toggle switch
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 4, click the Privacy option (action_ref [4,6]) to navigate to the Privacy page (page 10).
+Consumer task:
+ On the Privacy settings page (page 22), click the Error reporting toggle switch to toggle the error reporting setting (as produced by the Privacy page navigation and settings availability).
+------------------------------
+
+==============================================
+[AppTest] Pair 14/29: 14 -> 66
+Producer: The Privacy page allows users to toggle settings for error reporting (sending crash reports to the developer) and sharing anonymous data (sending non - sensitive data to improve the app).
+Consumer: Share anonymous data toggle switch
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 4, click the Privacy option (action_ref [4,6]) to navigate to the Privacy page (page 10).
+Consumer task:
+ On the Privacy settings page (page 10, accessed via the producer task), click the 'Share anonymous data' toggle switch to change its state (on/off).
+------------------------------
+
+==============================================
+[AppTest] Pair 15/29: 14 -> 67
+Producer: The Privacy page allows users to toggle settings for error reporting (sending crash reports to the developer) and sharing anonymous data (sending non - sensitive data to improve the app).
+Consumer: Save logs to file toggle switch
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 4, click the Privacy option (action_ref [4,6]) to navigate to the Privacy page (page 10).
+Consumer task:
+ On the Privacy settings page (page 22), interact with the 'Save logs to file' toggle switch to enable or disable saving logs to a file, and verify the toggle state reflects the intended action.
+------------------------------
+
+==============================================
+[AppTest] Pair 16/29: 16 -> 54
+Producer: The current page functions as the user guide for the Omni - Notes application, offering information and instructions related to notes management (such as creation) and categories management, along with options to edit the page, create a new page, and access revision history.
+Consumer: The current page functions as the online manual (user guide) for the Omni - Notes application, providing information on aspects like notes management, creation, and categories management, and is hosted on a GitHub repository page for the Omni - Notes project.
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 4, click the 'Online manual option' to navigate to page 12 (the Omni Notes user guide page) with notes/categories management info and edit/new page/revision options.
+Consumer task:
+ On page 19, click the 'Online manual' option to navigate to page 12 (the GitHub - hosted Omni - Notes user guide page) and verify it shows the same notes management, creation, and categories management info as the producer - loaded page.
+------------------------------
+
+==============================================
+[AppTest] Pair 17/29: 16 -> 55
+Producer: The current page functions as the user guide for the Omni - Notes application, offering information and instructions related to notes management (such as creation) and categories management, along with options to edit the page, create a new page, and access revision history.
+Consumer: The current page (changelog popup) displays a list of version - by - version updates for the app, including new features, improvements, and fixes, and has an "OK" button to close the popup.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 4. Click the 'Online manual option' (action_ref [4,8]) to navigate to page 12 (Omni Notes user guide page) to load the online manual page.
+Consumer task:
+ Start on page 19 (Privacy page). Click the 'Changelog' option (using the 'changelog option' data_in) to open the changelog popup and view the version - by - version updates for the app.
+------------------------------
+
+==============================================
+[AppTest] Pair 18/29: 18 -> 45
+Producer: This page allows the user to set, modify, or remove a password for securing notes, along with setting a password recovery question and answer, to ensure notes are not viewed or modified by others.
+Consumer: The current page is a side navigation menu in the Omni Notes Alpha app, providing options to navigate to the main notes page or access the app's settings.
+
+[Plan]
+Case 1/1
+Producer task:
+ Click Password option to access password setup page, insert new password, confirm it, input recovery question, input answer, confirm answer, then click OK to save password setting changes.
+Consumer task:
+ On password - related dialog (page 16), click 'REMOVE PASSWORD' link. Verify that the resulting page (page 1, side navigation menu) reflects the password setting state produced by the producer (e.g., if password was set, the remove option is available as expected).
+------------------------------
+
+==============================================
+[AppTest] Pair 19/29: 18 -> 57
+Producer: This page allows the user to set, modify, or remove a password for securing notes, along with setting a password recovery question and answer, to ensure notes are not viewed or modified by others.
+Consumer: The current page is a side navigation menu in the Omni Notes Alpha app, providing options to navigate to the main notes page or access the app's settings.
+
+[Plan]
+Case 1/1
+Producer task:
+ Click the Password option to access the password setup page. Insert a new password, confirm it, input a recovery question, input the answer, confirm the answer, then click OK to save the password setting changes.
+Consumer task:
+ From the settings page (page 20), click the 'Password' option. Verify that the navigation to page 15 (password setup page) reflects the updated password setting produced earlier.
+------------------------------
+
+==============================================
+[AppTest] Pair 20/29: 19 -> 58
+Producer: Request password on access toggle
+Consumer: Request password on access toggle
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 5. Click the 'Request password on access toggle' element to navigate to page 17 (updating the request password on access setting).
+Consumer task:
+ Start on page 20 (Data settings). Click the 'Request password on access' toggle (using the updated request password on access setting from the producer) to navigate to page 23 and verify the feature is toggled as expected.
+------------------------------
+
+==============================================
+[AppTest] Pair 21/29: 41 -> 42
+Producer: The page (within the Sync and Backups settings of Omni Notes FOSS) is currently prompting the user to grant or deny the app permission to access photos, media, and files on the device, with options to backup, restore/delete backups, or import notes from Springpad once permission is handled.
+Consumer: The current page (Restore or delete backups) in the Omni Notes Alpha app allows users to manage their backup data by either restoring backups to retrieve previous note data or deleting backups to remove stored backup files.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the Sync and Backups settings page, handle the file access permission prompt (grant/deny as needed so the Backup option becomes actionable), then click the Backup option to initiate backup functionality.
+Consumer task:
+ From the current page, click the 'Restore or delete backups' option (this uses the initiated backup data from the producer task) to navigate to the page for managing backup data (restoring or deleting backups).
+------------------------------
+
+==============================================
+[AppTest] Pair 22/29: 60 -> 68
+Producer: The page functions as a language selection interface where users can choose their preferred language from a list of available options (e.g., English, Finnish, French, etc.) to set the app's display language, with a "CANCEL" button to exit without making changes.
+Consumer: Suomi (Finnish) radio button
+
+[Plan]
+Case 1/2
+Producer task:
+ Click the Language setting to open the language selection menu, then select a language (e.g., English) via its radio button
+Consumer task:
+ On the language selection page, click the 'Suomi (Finnish)' radio button and verify the app transitions to page 36, ensuring the language setting from the producer (e.g., English) is considered/updated as per app logic
+------------------------------
+Case 2/2
+Producer task:
+ Click the Language setting to open the language selection menu, then click the CANCEL button to exit without changing the language
+Consumer task:
+ On the language selection page, click the 'Suomi (Finnish)' radio button and verify the app transitions to page 36, checking if the language setting remains as it was before the producer's cancel action
+------------------------------
+
+==============================================
+[AppTest] Pair 23/29: 60 -> 69
+Producer: The page functions as a language selection interface where users can choose their preferred language from a list of available options (e.g., English, Finnish, French, etc.) to set the app's display language, with a "CANCEL" button to exit without making changes.
+Consumer: Français (French) radio button
+
+[Plan]
+Case 1/1
+Producer task:
+ Click the Language setting to open the language selection menu, then click the 'Français (French)' radio button to set the language to French.
+Consumer task:
+ Verify that after clicking the 'Français (French)' radio button in the language selection menu (produced by the Producer task), the app transitions to page 37 and the language setting is updated to French.
+------------------------------
+
+==============================================
+[AppTest] Pair 24/29: 60 -> 70
+Producer: The page functions as a language selection interface where users can choose their preferred language from a list of available options (e.g., English, Finnish, French, etc.) to set the app's display language, with a "CANCEL" button to exit without making changes.
+Consumer: ភាសាខ្មែរ (Khmer) radio button
+
+[Plan]
+Case 1/1
+Producer task:
+ Open the language selection menu by clicking the Language setting, then select the 'ភាសាខ្មែរ (Khmer)' radio button to set the app's display language.
+Consumer task:
+ On the language selection page (page 30), click the 'ភាសាខ្មែរ (Khmer)' radio button (using the language setting produced by the Producer) and verify navigation to page 38.
+------------------------------
+
+==============================================
+[AppTest] Pair 25/29: 60 -> 71
+Producer: The page functions as a language selection interface where users can choose their preferred language from a list of available options (e.g., English, Finnish, French, etc.) to set the app's display language, with a "CANCEL" button to exit without making changes.
+Consumer: Galego (Galician) radio button
+
+[Plan]
+Case 1/1
+Producer task:
+ Click Language setting to open language selection menu, then click 'Galego (Galician)' radio button to set app's display language to Galego (Galician)
+Consumer task:
+ On page 30 (Language selection), click 'Galego (Galician)' radio button (using the language setting produced by Producer) and verify transition to page 40
+------------------------------
+
+==============================================
+[AppTest] Pair 26/29: 60 -> 72
+Producer: The page functions as a language selection interface where users can choose their preferred language from a list of available options (e.g., English, Finnish, French, etc.) to set the app's display language, with a "CANCEL" button to exit without making changes.
+Consumer: ελληνικά (Greek) radio button
+
+[Plan]
+Case 1/1
+Producer task:
+ Open the language selection menu by clicking the Language setting, then select a language (e.g., English) via its radio button
+Consumer task:
+ On the language selection page, click the 'ελληνικά (Greek)' radio button and verify the app transitions to page 41 with the language setting reflecting the prior selection (e.g., English) or the new Greek selection as appropriate
+------------------------------
+
+==============================================
+[AppTest] Pair 27/29: 60 -> 73
+Producer: The page functions as a language selection interface where users can choose their preferred language from a list of available options (e.g., English, Finnish, French, etc.) to set the app's display language, with a "CANCEL" button to exit without making changes.
+Consumer: (Hebrew) עברית radio button
+
+[Plan]
+Case 1/1
+Producer task:
+ Click the Language setting to open the language selection menu, then click the (Hebrew) עברית radio button to set the language to Hebrew.
+Consumer task:
+ On the language selection menu (page 30), click the (Hebrew) עברית radio button (which should reflect the updated language setting from the producer task) and verify the app transitions to page 42.
+------------------------------
+
+==============================================
+[AppTest] Pair 28/29: 60 -> 74
+Producer: The page functions as a language selection interface where users can choose their preferred language from a list of available options (e.g., English, Finnish, French, etc.) to set the app's display language, with a "CANCEL" button to exit without making changes.
+Consumer: Magyar (Hungarian) radio button
+
+[Plan]
+Case 1/1
+Producer task:
+ Click Language setting to open language selection menu, then click 'Magyar (Hungarian)' radio button to set the app's display language to Hungarian
+Consumer task:
+ On the Language selection page (page 30), click the 'Magyar (Hungarian)' radio button (which should reflect the updated language setting from the producer task) and verify navigation to page 44
+------------------------------
+
+==============================================
+[AppTest] Pair 29/29: 60 -> 75
+Producer: The page functions as a language selection interface where users can choose their preferred language from a list of available options (e.g., English, Finnish, French, etc.) to set the app's display language, with a "CANCEL" button to exit without making changes.
+Consumer: ສາບາລາວ (Lao) radio button
+
+[Plan]
+Case 1/1
+Producer task:
+ Open the language selection menu by clicking the Language setting, then select a language (e.g., English) via its radio button to update the language setting.
+Consumer task:
+ On the language selection page, click the 'ສາບາລາວ (Lao)' radio button, and verify that the app transitions to page 48, reflecting the Lao language selection based on the prior updated language setting context.
+------------------------------

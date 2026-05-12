@@ -1,0 +1,2398 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "Manage PDF files (navigation, actions, tabs)",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ],
+                [
+                    0,
+                    8
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on page 0. First, a click action triggers the menu via the Adobe app logo. Then, another click action navigates to the Home tab using the bottom navigation. These are sequential steps with no branching or looping.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click Adobe app logo to trigger menu"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            0,
+                            8
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click Home tab in bottom navigation"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 1,
+            "function_description": "The Settings page in the Adobe Acrobat app allows users to sign in, access information about Adobe Acrobat, adjust preferences, manage subscriptions, and get help & support, along with an option to unlock premium tools.",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ]
+            ],
+            "data_in": [
+                "user profile icon"
+            ],
+            "data_out": [
+                "settings page loaded"
+            ],
+            "data_dependencies": [
+                10
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the Welcome page (page 0). The user clicks the user profile icon (action_ref [0,1]), which navigates to the Settings page (page 1). From the Settings page, the user can then choose to interact with options like Sign In, About Adobe Acrobat, Preferences, Subscriptions, Help & Support, or unlock premium tools, though the initial flow here is just the navigation to Settings via the profile icon click.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click user profile icon to navigate to Settings page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "This page, accessed via the Adobe app logo from the PDF file management page, displays the \"Starred\" tab under the \"Welcome\" section, showing no starred files and prompting users to star files for easier future access, with navigation options for Home, Files, and Search at the bottom.",
+            "action_refs": [
+                [
+                    0,
+                    2
+                ]
+            ],
+            "data_in": [
+                "recent files tab",
+                "file list (recent)"
+            ],
+            "data_out": [
+                "displayed recent files"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the PDF file management page. The user clicks the Adobe app logo (or navigates via it) to reach the Welcome page’s Starred tab, which shows no starred files and prompts to star files. Navigation options (Home, Files, Search) are available at the bottom. There are no branches or loops as the action leads directly to the Starred tab view.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click to navigate to the Welcome page’s Starred tab (or related navigation via the Adobe logo context)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "Displays the \"Starred\" tab of the PDF management app, showing no starred files and providing guidance to star files for easier future access, with navigation options to other sections (Home, Files, Search) and a button to add new items.",
+            "action_refs": [
+                [
+                    0,
+                    3
+                ]
+            ],
+            "data_in": [
+                "starred files tab",
+                "file management context"
+            ],
+            "data_out": [
+                "starred files view loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The app starts on the Welcome page. The user clicks on the 'Starred' tab, which displays a message indicating no starred files and provides guidance to star files for easier access later. Navigation options to Home, Files, and Search, as well as an add button, are available.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click on the 'Starred' tab to view its content"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "The page provides options to change the view (Grid view) and sort order (Sort by name, Sort by date) of PDF files in the app, accessible via the main app menu from the PDF file management page.",
+            "action_refs": [
+                [
+                    0,
+                    4
+                ]
+            ],
+            "data_in": [
+                "file list view settings"
+            ],
+            "data_out": [
+                "updated file list view settings (sort by date)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "From the PDF file management page (entry page 0), the user clicks the main app menu (three dots). This action opens a menu with options to change the view (Grid view) and sort order (Sort by name, Sort by date) of PDF files. The flow then allows selecting one of these options to modify the file display settings.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click the main app menu (three dots) to open the menu with view and sort options"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "The current page's menu (accessed via the three - dot icon) provides options to change the view of PDF files (to grid view) and sort the PDF files either by name or by date (with sorting by date currently selected).",
+            "action_refs": [
+                [
+                    0,
+                    5
+                ]
+            ],
+            "data_in": [
+                "file display settings"
+            ],
+            "data_out": [
+                "updated file display settings menu"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The process starts on the initial page. First, the three - dot menu (file options) is clicked. This action opens a menu that presents options to change the PDF view to grid view and to sort the PDF files either by name or by date (with sorting by date currently selected).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click the three - dot file options menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "Displays the \"Starred\" tab of the Adobe app's file management interface, showing no starred files and providing guidance to star files for easier future access, with navigation options for Home, Files, and Search, and a menu trigger via the Adobe logo.",
+            "action_refs": [
+                [
+                    0,
+                    6
+                ]
+            ],
+            "data_in": [
+                "Welcome PDF file"
+            ],
+            "data_out": [
+                "opened Welcome PDF file"
+            ],
+            "data_dependencies": [
+                38
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The app starts on the 'Starred' tab (under Welcome), showing no starred files and guidance to star files. The bottom navigation has Home, Files, Search, and a blue + button. The Adobe logo (top left) and a profile icon (top right) are present. The action here is to open the 'Welcome' PDF file (though the current view is the Starred tab with no files, the action references opening the Welcome PDF).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            6
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click to open 'Welcome' PDF file"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "The page provides options to open, edit, create, combine PDF files, and use an AI assistant, likely as part of a PDF management application's action menu for adding or creating PDF - related content.",
+            "action_refs": [
+                [
+                    0,
+                    7
+                ]
+            ],
+            "data_in": [],
+            "data_out": [
+                "action menu (create/open/edit options)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the welcome page (page 0). The user clicks the 'Add/Create action button' (a blue plus button) at a specific position. This action opens a menu (on page 3) with options like Open file, Ask AI Assistant, Edit PDF, Create PDF, and Combine files, allowing the user to choose a PDF - related task.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            7
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click the Add/Create action button (blue plus) to open the PDF - related action menu."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "The current page (Files tab) in the PDF management app allows users to access, add, or manage PDF files from various storage sources (device, Photos, cloud storages like Adobe, Google Drive, OneDrive, Dropbox, Gmail emails) and provides an option to browse more files.",
+            "action_refs": [
+                [
+                    0,
+                    9
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the Home page (page 0) and clicks the 'Files' tab in the bottom navigation. This action navigates to the Files page (page 4), where various storage sources (device, Photos, cloud services, Gmail) and a 'Browse more files' option are available for accessing, adding, or managing PDF files.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            9
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click 'Files' tab in bottom navigation to navigate to Files page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "The page allows users to search for PDF files across the device, shared files, and Adobe cloud storage, displaying a message if there are no recent searches and providing a search bar with a microphone icon for input.",
+            "action_refs": [
+                [
+                    0,
+                    10
+                ],
+                [
+                    5,
+                    0
+                ],
+                [
+                    5,
+                    2
+                ]
+            ],
+            "data_in": [
+                "files",
+                "search query",
+                "file search session"
+            ],
+            "data_out": [
+                "search results (pending)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the home page and clicks the Search tab in the bottom navigation to enter the search page, which shows a 'No recent searches' message. Then, the user can input a file name (like 'invoice.pdf') into the search field. Optionally, the user can click the back button to return to the home page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            10
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click Search tab in bottom navigation to open search page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            5,
+                            0
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 5,
+                        "action": "input",
+                        "summary": "Input file name (e.g., invoice.pdf) into search field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            5,
+                            2
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click back button to return to home page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "The page displays the \"Starred\" tab of the Adobe Acrobat app's file management section, showing a message that there are no starred files and providing guidance to star files for easier future access, with options to navigate to other sections (Home, Files, Search) and add new items.",
+            "action_refs": [
+                [
+                    1,
+                    0
+                ]
+            ],
+            "data_in": [
+                "settings page state"
+            ],
+            "data_out": [
+                "home page state"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts on the Settings page (page 1). The user clicks the back arrow button, which navigates to the 'Starred' tab of the file management section (page 0), where a message about no starred files and guidance to star files is displayed, along with navigation and add options.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            0
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the back arrow button on the Settings page to navigate to the 'Starred' tab page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "The page functions as a subscription signup interface for Adobe Acrobat Premium, allowing users to compare free and premium features, select a yearly or monthly billing plan, and start a 7 - day free trial of the premium service.",
+            "action_refs": [
+                [
+                    1,
+                    1
+                ]
+            ],
+            "data_in": [
+                "premium features promotion"
+            ],
+            "data_out": [
+                "premium trial page loaded"
+            ],
+            "data_dependencies": [
+                35
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user starts on the settings page. They click the 'Try now' button, which navigates to the Acrobat Premium trial page where they can compare features and select a billing plan to start the free trial.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            1
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click 'Try now' button to navigate to Acrobat Premium trial page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "The page enables users to sign in to Adobe cloud storage (for free file storage/sharing) via Google, Facebook, Apple, or an existing Adobe ID to access, store, and share files online or on mobile devices.",
+            "action_refs": [
+                [
+                    1,
+                    2
+                ]
+            ],
+            "data_in": [
+                "sign in option"
+            ],
+            "data_out": [
+                "sign in page"
+            ],
+            "data_dependencies": [
+                23,
+                26,
+                35,
+                40
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts on the Settings page. The user clicks the 'Sign In' row, which navigates to the Adobe cloud storage sign - in page. On this page, the user can then choose from multiple sign - in options (Google, Facebook, Apple, or Adobe ID) to proceed with signing in to access Adobe cloud storage features.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            2
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click the 'Sign In' row on the Settings page to navigate to the Adobe cloud storage sign - in page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "The \"About Adobe Acrobat\" page provides the app's version number, legal links (Terms of Use, Privacy Policy, etc.), and copyright/trademark information for Adobe Acrobat.",
+            "action_refs": [
+                [
+                    1,
+                    3
+                ]
+            ],
+            "data_in": [
+                "About Adobe Acrobat setting item"
+            ],
+            "data_out": [
+                "About Adobe Acrobat page content loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts on the Settings page. The user clicks the 'About Adobe Acrobat' row, which navigates to the 'About Adobe Acrobat' page. This page displays the app's version, legal links, and copyright/trademark information. There are no branches or loops in this flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            3
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click the 'About Adobe Acrobat' row on the Settings page to navigate to the About page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "Grid view toggle",
+            "action_refs": [
+                [
+                    2,
+                    0
+                ]
+            ],
+            "data_in": [
+                "grid view setting"
+            ],
+            "data_out": [
+                "grid view setting updated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The user starts on page 2. They perform a click action on the Grid view toggle element. This action leads to page 27, completing the grid view toggle functionality.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            0
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 27,
+                        "action": "click",
+                        "summary": "Click the Grid view toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "Sort by name option",
+            "action_refs": [
+                [
+                    2,
+                    1
+                ]
+            ],
+            "data_in": [
+                "file list sort setting"
+            ],
+            "data_out": [
+                "file list sort setting (sorted by name)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The flow starts on page 2. The user performs a click action on the 'Sort by name' option. This action likely leads to the content being sorted by name, with the destination page being 28. There are no branches or loops as it's a single action to trigger the sort by name functionality.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            1
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 28,
+                        "action": "click",
+                        "summary": "Click on the 'Sort by name' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "Sort by date option",
+            "action_refs": [
+                [
+                    2,
+                    2
+                ]
+            ],
+            "data_in": [
+                "file list sort setting"
+            ],
+            "data_out": [
+                "file list sorted by date"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The user starts on page 2. Then, the user clicks the 'Sort by date' option, which leads to page 29. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            2
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 29,
+                        "action": "click",
+                        "summary": "Click the 'Sort by date' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "This page allows the user to select a file to open by providing access to various file storage locations (recent files, device storage, cloud services like Google Drive, OneDrive, etc.) and options to browse or connect additional storage sources.",
+            "action_refs": [
+                [
+                    3,
+                    0
+                ]
+            ],
+            "data_in": [
+                "file"
+            ],
+            "data_out": [
+                "file selection interface"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The user starts on the welcome page (page 3) and clicks the 'Open file' button. This action navigates to the 'Select a file to open' page (page 30), where various file storage options (recent, device, cloud services, etc.) are presented for further file selection.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            0
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 30,
+                        "action": "click",
+                        "summary": "Click 'Open file' button to navigate to file selection page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "The current page (within a PDF management app) displays the \"Starred\" tab under the \"Welcome\" section, showing a message that there are no starred files and prompting the user to star files for easier future access, with options to switch to the \"Recent\" tab and a floating action button for adding or creating content.",
+            "action_refs": [
+                [
+                    4,
+                    0
+                ]
+            ],
+            "data_in": [
+                "home navigation item"
+            ],
+            "data_out": [
+                "home page view"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The flow starts on the 'Files' page (page 4). The user clicks the 'On this device' option, which navigates to the 'Welcome' page (page 0) with the 'Starred' tab active, showing no starred files and a prompt to star files. This is a straight-line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            0
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click 'On this device' to navigate to the Welcome page with Starred tab."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "This page allows users to search for PDF files across the device, shared files, and Adobe cloud storage, with an interface showing no recent searches and a search input field at the top.",
+            "action_refs": [
+                [
+                    5,
+                    1
+                ]
+            ],
+            "data_in": [
+                "file search interface",
+                "voice search setting"
+            ],
+            "data_out": [
+                "voice search activation"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user starts on the search page (showing no recent searches) and can initiate a voice search by clicking the voice search button. This is a single action flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            1
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click the voice search button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "The Adobe Acrobat settings page allows users to sign in, access information about Adobe Acrobat, adjust preferences, manage subscriptions, and get help & support, while also offering a \"Try now\" option to unlock premium tools.",
+            "action_refs": [
+                [
+                    6,
+                    0
+                ]
+            ],
+            "data_in": [
+                "premium trial modal"
+            ],
+            "data_out": [
+                "premium trial modal closed",
+                "settings page displayed"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The flow starts on the premium trial modal page. The user clicks to close the premium trial modal, which navigates to the Adobe Acrobat settings page where options like sign in, access app info, adjust preferences, manage subscriptions, and get help are available, along with a 'Try now' button for premium tools.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            0
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Close the premium trial modal by clicking the close button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "Monthly subscription option",
+            "action_refs": [
+                [
+                    6,
+                    1
+                ]
+            ],
+            "data_in": [
+                "subscription plan setting",
+                "monthly subscription option"
+            ],
+            "data_out": [
+                "updated subscription plan setting (monthly selected)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The flow starts on page 6. The user clicks the 'Monthly subscription option' (the 'Monthly: $14.99' radio button), which navigates to page 9. This is a single step with no branches, as the action directly selects the monthly subscription and moves to the next page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            1
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click the Monthly subscription option (radio button) to select it and navigate to the next page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "This page prompts the user to sign in (via Google, Facebook, Apple, or Adobe ID) to proceed with starting the 7 - day free trial of Adobe Acrobat Premium.",
+            "action_refs": [
+                [
+                    6,
+                    2
+                ]
+            ],
+            "data_in": [
+                "Acrobat Premium trial setup",
+                "user account authentication request"
+            ],
+            "data_out": [
+                "sign-in prompt (modal)",
+                "authentication options presented"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on the Acrobat Premium trial page (page 6). They click the 'Start 7-day free trial' button, which triggers a sign-in prompt (page 10) with options to sign in via Google, Facebook, Apple, or Adobe ID. The flow moves from the trial page to the sign-in prompt upon clicking the trial button.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            2
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click 'Start 7-day free trial' button to proceed to sign-in prompt"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "This page prompts the user to sign in (via Google, Facebook, Apple, or Adobe ID) to proceed with starting the Adobe Acrobat Premium 7 - day free trial.",
+            "action_refs": [
+                [
+                    6,
+                    3
+                ]
+            ],
+            "data_in": [
+                "sign in option"
+            ],
+            "data_out": [
+                "sign in session"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The flow starts on the Acrobat Premium trial page (page 6). The user clicks the 'Sign in' link, which opens a sign-in dialog (page 10) with options to sign in via Google, Facebook, Apple, or Adobe ID. This action is the key step to proceed toward starting the free trial by authenticating.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            3
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click the 'Sign in' link to open the sign-in dialog"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "The current page (Adobe Acrobat Premium trial subscription page) provides a comparison of features between the Free and Premium versions of Adobe Acrobat, and when the \"Terms of use\" link is clicked, it prompts the user to open the linked content with a browser app (e.g., Chrome or WebView Browser Tester) to view the terms of use for the Acrobat Premium trial.",
+            "action_refs": [
+                [
+                    6,
+                    4
+                ]
+            ],
+            "data_in": [
+                "terms of use document"
+            ],
+            "data_out": [
+                "opened terms of use document"
+            ],
+            "data_dependencies": [
+                28
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on the Adobe Acrobat Premium trial subscription page. They click the 'Terms of use' link, which triggers a dialog to open the content with a browser app (e.g., Chrome or WebView Browser Tester). The flow then branches based on the app selection (e.g., choosing Chrome or another browser) to view the terms.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            4
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click the 'Terms of use' link on the subscription page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": null,
+                                "condition": "Select Chrome to open terms"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "Select WebView Browser Tester or another app to open terms"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 25,
+            "function_description": "The current page allows the user to choose an application (e.g., Chrome, WebView Browser Tester) to open the Adobe Acrobat Premium trial's Terms of Use document, with options to set the app as the default for this action or use it just once.",
+            "action_refs": [
+                [
+                    6,
+                    5
+                ]
+            ],
+            "data_in": [
+                "privacy policy document"
+            ],
+            "data_out": [
+                "opened privacy policy document"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on the Acrobat Premium trial page (page 6). They click the Privacy policy link (or likely the Terms of Use link, given the functional point context) to trigger an app selection dialog. The flow then involves choosing an app (Chrome, WebView Browser Tester) and deciding between 'JUST ONCE' or 'ALWAYS' (though the provided action is the initial click to open the dialog).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            5
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click the link (e.g., Terms of Use/Privacy policy) to open the app selection dialog."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 26,
+            "function_description": "This page allows the user to choose a Google account (or add a new one) to sign in to Adobe Acrobat, with Google sharing account details (name, email, profile picture) with Adobe Acrobat for authentication.",
+            "action_refs": [
+                [
+                    7,
+                    0
+                ]
+            ],
+            "data_in": [
+                "Google sign-in option",
+                "Adobe cloud storage sign-in context"
+            ],
+            "data_out": [
+                "Account selection prompt",
+                "Google account sharing context"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The user starts on page 7 and clicks the 'Sign in with Google' button. This action leads to a page (13) where the user can choose an existing Google account or add a new one, with Google sharing account details (name, email, profile picture) with Adobe Acrobat for authentication.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            0
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click 'Sign in with Google' button to proceed to account selection."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 27,
+            "function_description": "This page enables users to sign in to their Adobe account by entering their email address, with options to create an account, get help signing in, and access additional account - related or support resources.",
+            "action_refs": [
+                [
+                    7,
+                    1
+                ],
+                [
+                    16,
+                    0
+                ],
+                [
+                    16,
+                    1
+                ]
+            ],
+            "data_in": [
+                "Adobe account sign-in/sign-up option",
+                "email address input field",
+                "sign in session",
+                "email address",
+                "login session"
+            ],
+            "data_out": [
+                "Sign-in page (Adobe account)",
+                "entered email address",
+                "login session (updated)"
+            ],
+            "data_dependencies": [
+                31,
+                32,
+                33,
+                34,
+                37,
+                42,
+                52,
+                53
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The flow starts by clicking the 'Sign in or sign up' link (from page 7 to 16). Then, the user inputs their email address in the email field (on page 16). Finally, the user clicks the 'Continue' button (on page 16, which may stay on the same page or proceed, but the action is to click it).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            1
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click 'Sign in or sign up' link to navigate to sign-in page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            16,
+                            0
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 17,
+                        "action": "input",
+                        "summary": "Input email address into the email field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            16,
+                            1
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click 'Continue' button"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 28,
+            "function_description": "The page allows the user to open the Adobe Acrobat Terms of Use document in a web browser, presenting options to choose a browser app (e.g., Chrome, WebView Browser Tester) and set a default opening behavior.",
+            "action_refs": [
+                [
+                    8,
+                    0
+                ]
+            ],
+            "data_in": [
+                "terms of use document"
+            ],
+            "data_out": [
+                "document open request"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The user starts on the 'About Adobe Acrobat' page. They click the 'Terms of Use' link, which triggers a browser selection dialog to appear, offering options to open the document with a browser app (e.g., Chrome) and set a default behavior (Just Once/Always) or use a different app (e.g., WebView Browser Tester).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            0
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 26,
+                        "action": "click",
+                        "summary": "Click 'Terms of Use' link to open browser selection dialog"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 29,
+            "function_description": "This page displays a list of recently accessed PDF files, allowing users to quickly locate and open previously used PDF documents.",
+            "action_refs": [
+                [
+                    30,
+                    0
+                ]
+            ],
+            "data_in": [
+                "recent files navigation option"
+            ],
+            "data_out": [
+                "recent files list"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 30,
+                "logic": "The user starts on page 30. They click the 'Recent files' navigation option, which navigates to page 31. On page 31, the list of recently accessed PDF files is displayed, allowing the user to locate and open a desired file.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            30,
+                            0
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 31,
+                        "action": "click",
+                        "summary": "Click 'Recent files' navigation option to navigate to the recent files page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 30,
+            "function_description": "Close sign-in modal icon",
+            "action_refs": [
+                [
+                    10,
+                    0
+                ]
+            ],
+            "data_in": [
+                "sign-in modal"
+            ],
+            "data_out": [
+                "sign-in modal closed"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The flow starts on the page with the sign-in modal (page 10). The user clicks the close icon (X) on the sign-in modal. This action closes the modal and navigates to the destination page (page 12). There are no branches or loops as it is a single, direct action to close the modal.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            0
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click the close (X) icon on the sign-in modal"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 31,
+            "function_description": "This page allows the user to choose a Google account (or add a new one) to authenticate and proceed with accessing the Adobe Acrobat Premium trial, facilitating the sign - in process by leveraging Google account credentials.",
+            "action_refs": [
+                [
+                    10,
+                    1
+                ]
+            ],
+            "data_in": [
+                "login session",
+                "Google account"
+            ],
+            "data_out": [
+                "initiated Google sign - in process",
+                "account selection prompt"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The user starts on the sign - in prompt page. They click the 'Sign in with Google' button, which leads to the Google account selection page. Here, the user can either choose an existing Google account or add a new one to authenticate and proceed with accessing the Adobe Acrobat Premium trial.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            1
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click the 'Sign in with Google' button to proceed to the Google account selection page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 32,
+            "function_description": "This page functions as the Facebook login interface, allowing users to enter their mobile number/email and password to log in, or to initiate account recovery or creation processes.",
+            "action_refs": [
+                [
+                    10,
+                    2
+                ]
+            ],
+            "data_in": [
+                "login session",
+                "Facebook sign-in option"
+            ],
+            "data_out": [
+                "initiated Facebook login flow"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The flow starts on page 10. The user clicks the 'Sign in with Facebook' button, which navigates to the Facebook login page (page 14) where they can enter credentials, recover an account, or create a new one.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            2
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click 'Sign in with Facebook' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 33,
+            "function_description": "This page allows the user to select a browser (Chrome or WebView Browser Tester) to open the Adobe Acrobat sign - in page for the Premium trial, with options to set the selection as temporary (\"JUST ONCE\") or permanent (\"ALWAYS\").",
+            "action_refs": [
+                [
+                    10,
+                    3
+                ]
+            ],
+            "data_in": [
+                "login session (Apple sign in)"
+            ],
+            "data_out": [
+                "login session (Apple sign in) initiated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The user starts on page 10 and clicks the 'Sign in with Apple' button. This action triggers a browser selection dialog (page 15) with options to open the sign - in page using Chrome or WebView Browser Tester, along with 'JUST ONCE' or 'ALWAYS' settings for the selection.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            3
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click the 'Sign in with Apple' button to initiate the sign - in process, which brings up the browser selection dialog."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 34,
+            "function_description": "This page functions as the Adobe Acrobat sign - in interface, enabling users to either sign in using their email address or create a new account to proceed with accessing the Acrobat Premium trial.",
+            "action_refs": [
+                [
+                    10,
+                    4
+                ]
+            ],
+            "data_in": [
+                "Adobe account sign - in / sign - up option"
+            ],
+            "data_out": [
+                "Adobe sign - in page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The flow starts on the sign - in prompt page (page 10). The user clicks the 'Sign in or sign up' link. This action navigates to the Adobe sign - in page (page 16), where the user can either sign in with an email or create a new account to access the Acrobat Premium trial.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            4
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click the 'Sign in or sign up' link to navigate to the Adobe sign - in page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 35,
+            "function_description": "The page presents a comparison of free and premium features of Adobe Acrobat, offers yearly and monthly subscription plans for Acrobat Premium with a free trial option, and provides links for signing in, terms of use, and privacy policy.",
+            "action_refs": [
+                [
+                    16,
+                    2
+                ]
+            ],
+            "data_in": [
+                "sign in page",
+                "subscription promotion page"
+            ],
+            "data_out": [
+                "subscription promotion page closed (navigated away from sign in page)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 16,
+                "logic": "The flow starts on page 16 (Sign in page) and involves clicking the Close button. This action navigates to page 6, which displays the Acrobat Premium feature comparison, subscription plans, and links for sign in, terms of use, and privacy policy.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            16,
+                            2
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click the Close button to navigate to the Acrobat Premium feature comparison and subscription page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 36,
+            "function_description": "This page allows users to create an Adobe account by entering an email address and password and then proceeding by clicking the \"Continue\" button, with an option to sign in if they already have an account.",
+            "action_refs": [
+                [
+                    16,
+                    3
+                ],
+                [
+                    18,
+                    0
+                ],
+                [
+                    18,
+                    1
+                ],
+                [
+                    18,
+                    4
+                ],
+                [
+                    20,
+                    0
+                ],
+                [
+                    22,
+                    0
+                ]
+            ],
+            "data_in": [
+                "account creation form",
+                "email address input field",
+                "password input",
+                "account creation form data",
+                "email address input (for account creation)"
+            ],
+            "data_out": [
+                "account creation session",
+                "entered email address (in form)",
+                "filled password input",
+                "password validation status",
+                "validation error messages",
+                "disabled continue button state",
+                "updated password input in account creation form",
+                "entered email address (for account creation)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 16,
+                "logic": "The user starts on the sign-in page and clicks the 'Create an account' link to navigate to the account creation page. On this page, the user first inputs an email address and then a password. Finally, the user clicks the 'Continue' button to proceed with account creation. There is also an option to sign in if the user already has an account, but the main flow focuses on creating a new account via email and password entry followed by continuing.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            16,
+                            3
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click 'Create an account' link to navigate to account creation page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            18,
+                            0
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 18,
+                        "action": "input",
+                        "summary": "Input email address in the email field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            18,
+                            1
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 20,
+                        "action": "input",
+                        "summary": "Input password in the password field"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            18,
+                            4
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 22,
+                        "action": "click",
+                        "summary": "Click 'Continue' button to proceed with account creation"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 37,
+            "function_description": "The page provides help options for Adobe account sign - in issues, including finding the account and resetting the password, along with a link to return to the sign - in page.",
+            "action_refs": [
+                [
+                    16,
+                    4
+                ]
+            ],
+            "data_in": [
+                "sign in help request"
+            ],
+            "data_out": [
+                "sign in help page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 16,
+                "logic": "The flow starts on the Adobe sign - in page. The user clicks the 'Get help signing in' link, which navigates to the 'Get help' page. On this page, options for finding the account, resetting the password, and a link to return to the sign - in page are available.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            16,
+                            4
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click the 'Get help signing in' link to navigate to the help page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 38,
+            "function_description": "The page displays the \"Welcome to Adobe Acrobat\" PDF, providing five tips for using Acrobat and offering PDF - editing tools (such as Comment, Highlight, Draw, Text, Fill & Sign, and More tools) along with an AI Assistant feature.",
+            "action_refs": [
+                [
+                    31,
+                    0
+                ]
+            ],
+            "data_in": [
+                "Welcome PDF file"
+            ],
+            "data_out": [
+                "opened Welcome PDF file"
+            ],
+            "data_dependencies": [
+                6,
+                43,
+                44,
+                45,
+                46,
+                47
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 31,
+                "logic": "The flow starts on the 'Recent' page (page 31). The user clicks on the 'Welcome' PDF file entry, which navigates to the 'Welcome to Adobe Acrobat' PDF page (page 32). This page displays five tips for using Acrobat and provides PDF - editing tools (Comment, Highlight, Draw, Text, Fill & Sign, More tools) along with an AI Assistant feature.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            31,
+                            0
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": 32,
+                        "action": "click",
+                        "summary": "Click on the 'Welcome' PDF file entry on the 'Recent' page to open the 'Welcome to Adobe Acrobat' PDF page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 39,
+            "function_description": "Password visibility toggle",
+            "action_refs": [
+                [
+                    18,
+                    2
+                ]
+            ],
+            "data_in": [
+                "password visibility setting",
+                "password input"
+            ],
+            "data_out": [
+                "updated password visibility setting",
+                "visible password input"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 18,
+                "logic": "The flow starts on the account creation page (page 18). The user clicks the password visibility toggle icon (near the password field). This action toggles the visibility of the entered password, and the flow ends on the same or updated page (page 21) reflecting the new visibility state.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            18,
+                            2
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 21,
+                        "action": "click",
+                        "summary": "Click the password visibility toggle icon"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 40,
+            "function_description": "This page enables users to sign in to their Adobe account by entering their email address and proceeding, while also offering options to create an account, get help signing in, and access legal/privacy information.",
+            "action_refs": [
+                [
+                    18,
+                    3
+                ]
+            ],
+            "data_in": [
+                "sign in option",
+                "account creation context"
+            ],
+            "data_out": [
+                "sign in page loaded"
+            ],
+            "data_dependencies": [
+                27
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 18,
+                "logic": "The flow starts on the 'Create an account' page (page 18). The user clicks the 'Sign in' link, which navigates to the 'Sign in' page (page 16). On the 'Sign in' page, the user can enter an email address, proceed with 'Continue', create an account, get help signing in, or access legal/privacy info.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            18,
+                            3
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click 'Sign in' link on Create an account page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 41,
+            "function_description": "This page provides access to Adobe's chat support functionality, triggered from the Adobe account creation (step 1) page, and prompts the user to select a browser to open the chat support interface.",
+            "action_refs": [
+                [
+                    18,
+                    5
+                ]
+            ],
+            "data_in": [
+                "chat support feature entry"
+            ],
+            "data_out": [
+                "chat support interaction initiated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 18,
+                "logic": "On the Adobe account creation (step 1) page, the user clicks the chat support icon. This triggers a dialog to appear, prompting the user to select a browser (e.g., Chrome, WebView Browser Tester) to open the chat support interface. The flow is a straight line with the click action initiating the browser selection prompt.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            18,
+                            5
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 23,
+                        "action": "click",
+                        "summary": "Click the chat support icon on the account creation page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 42,
+            "function_description": "This page allows users to sign in to their Adobe account by entering their email address and proceeding, or to create a new account or get help with signing in.",
+            "action_refs": [
+                [
+                    19,
+                    0
+                ]
+            ],
+            "data_in": [
+                "account recovery option"
+            ],
+            "data_out": [
+                "account recovery initiation"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 19,
+                "logic": "The flow starts on the help page (page 19). The user clicks the 'Find your account' option, which navigates to the sign-in page (page 16) where they can enter an email or get further sign-in help. This action initiates a transition from the help interface to the sign-in interface.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            19,
+                            0
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click 'Find your account' option to navigate to sign-in page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 43,
+            "function_description": "The AI Assistant page enables users to interact with an AI tool to read, understand, and work with their PDF documents more efficiently by providing suggested actions (e.g., summarizing key points, creating email summaries) and a text input field to ask custom questions about the document.",
+            "action_refs": [
+                [
+                    32,
+                    0
+                ],
+                [
+                    33,
+                    2
+                ],
+                [
+                    33,
+                    3
+                ],
+                [
+                    35,
+                    0
+                ],
+                [
+                    35,
+                    1
+                ]
+            ],
+            "data_in": [
+                "document",
+                "document question input field",
+                "voice query input",
+                "question query"
+            ],
+            "data_out": [
+                "AI Assistant interaction interface",
+                "document question input (updated state)",
+                "AI assistant response",
+                "sign in prompt",
+                "document question input (updated)",
+                "AI response"
+            ],
+            "data_dependencies": [
+                46,
+                47,
+                48
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 32,
+                "logic": "The user starts by clicking the AI Assistant button to open the assistant page. On the AI Assistant page, they can either input a custom document-related question via text or use the voice query button. After entering the question (or using voice), they click the send query button to submit the query for the AI to process.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            32,
+                            0
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": 33,
+                        "action": "click",
+                        "summary": "Click AI Assistant button to open the assistant page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            33,
+                            2
+                        ],
+                        "src_page_idx": 33,
+                        "dst_page_idx": 35,
+                        "action": "input",
+                        "summary": "Input a custom document question (e.g., 'What's the document's purpose?')"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            33,
+                            3
+                        ],
+                        "src_page_idx": 33,
+                        "dst_page_idx": 35,
+                        "action": "click",
+                        "summary": "Click voice query button to use voice for the question"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            35,
+                            0
+                        ],
+                        "src_page_idx": 35,
+                        "dst_page_idx": 37,
+                        "action": "input",
+                        "summary": "Input the document question in the input field"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            35,
+                            1
+                        ],
+                        "src_page_idx": 35,
+                        "dst_page_idx": 35,
+                        "action": "click",
+                        "summary": "Click send query button (paper plane) to submit the query"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S5"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 44,
+            "function_description": "The current page functions as a PDF viewer (for the \"Welcome to Adobe Acrobat\" document) with annotation tools (Comment, Highlight, Draw, etc.) and AI - related features, enabling users to view, annotate the PDF, and interact with the AI Assistant.",
+            "action_refs": [
+                [
+                    32,
+                    1
+                ]
+            ],
+            "data_in": [
+                "pdf document"
+            ],
+            "data_out": [
+                "comment tool activated"
+            ],
+            "data_dependencies": [
+                43
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 32,
+                "logic": "The user starts on the PDF viewer page for the 'Welcome to Adobe Acrobat' document. The core logic involves interacting with the annotation tools, beginning with clicking the Comment tool button. There are no branches or loops here as only one action is provided, representing a single step in the PDF viewing/annotation workflow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            32,
+                            1
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": 32,
+                        "action": "click",
+                        "summary": "Click the Comment tool button to initiate using the Comment annotation tool."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 45,
+            "function_description": "This page functions as a PDF viewer for the \"Welcome to Adobe Acrobat\" document, providing annotation tools (Comment, Highlight, Draw, Text, Fill & Sign, More tools) and an AI Assistant for interacting with or analyzing the PDF content.",
+            "action_refs": [
+                [
+                    32,
+                    2
+                ]
+            ],
+            "data_in": [
+                "search feature entry"
+            ],
+            "data_out": [
+                "search interface (to be loaded)"
+            ],
+            "data_dependencies": [
+                43
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 32,
+                "logic": "The user starts on the PDF viewer page for 'Welcome to Adobe Acrobat'. They can interact with the document using annotation tools (Comment, Highlight, Draw, Text, Fill & Sign, More tools) or the AI Assistant. The flow includes a step to click the Search icon, likely to search within the PDF content. There are no branches or loops as only one action is provided, but the core logic involves using the viewer’s features to engage with the document.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            32,
+                            2
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": 32,
+                        "action": "click",
+                        "summary": "Click the Search icon to initiate a search within the PDF document."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 46,
+            "function_description": "This page functions as a PDF viewer for the \"Welcome to Adobe Acrobat\" document, displaying introductory tips for using Adobe Acrobat and providing access to annotation/AI tools (now with the AI Assistant closed, returning to the core PDF viewing and basic interaction state).",
+            "action_refs": [
+                [
+                    33,
+                    0
+                ],
+                [
+                    34,
+                    0
+                ]
+            ],
+            "data_in": [
+                "AI Assistant session",
+                "Adobe Acrobat tips page"
+            ],
+            "data_out": [
+                "exited AI Assistant session",
+                "navigation back to home page"
+            ],
+            "data_dependencies": [
+                43
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 33,
+                "logic": "The flow starts on the AI Assistant page. First, the AI Assistant is closed via a click action. Then, a back arrow is clicked to navigate away from the resulting page, completing the return to the core PDF viewing state.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            33,
+                            0
+                        ],
+                        "src_page_idx": 33,
+                        "dst_page_idx": 34,
+                        "action": "click",
+                        "summary": "Click to close AI Assistant"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            34,
+                            0
+                        ],
+                        "src_page_idx": 34,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click back arrow to navigate"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 47,
+            "function_description": "The AI Assistant page enables users to interact with their document (e.g., the \"Welcome PDF\") by providing suggestions for document - related queries (like extracting key points) and allowing users to ask custom questions to enhance document reading, understanding, and work efficiency.",
+            "action_refs": [
+                [
+                    33,
+                    1
+                ]
+            ],
+            "data_in": [
+                "document",
+                "AI Assistant suggestion request"
+            ],
+            "data_out": [
+                "list of 5 important points (document)"
+            ],
+            "data_dependencies": [
+                43
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 33,
+                "logic": "The user starts on the AI Assistant page for the 'Welcome PDF' document. The core action is clicking the suggestion button to get the 5 most important points from the document, with no branching or looping as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            33,
+                            1
+                        ],
+                        "src_page_idx": 33,
+                        "dst_page_idx": 33,
+                        "action": "click",
+                        "summary": "Click the 'Provide a list of the 5 most important points' suggestion button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 48,
+            "function_description": "The current page functions as an AI Assistant interface for interacting with a document, allowing users to ask questions about the document, sign in to enable full functionality, and view a prompt to generate key points from the document.",
+            "action_refs": [
+                [
+                    33,
+                    4
+                ]
+            ],
+            "data_in": [
+                "query option",
+                "AI Assistant session"
+            ],
+            "data_out": [
+                "selected query option",
+                "AI Assistant activation prompt"
+            ],
+            "data_dependencies": [
+                43
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 33,
+                "logic": "The flow starts on the AI Assistant page (page 33). The user clicks the 'Provide a list of the 5 most important points' option (action_ref [33,4]), which leads to a new page (page 35) with a sign-in prompt and an 'Agree' button. This action initiates the process to generate key points from the document, with a branch (implicitly) to sign in or proceed after agreeing.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            33,
+                            4
+                        ],
+                        "src_page_idx": 33,
+                        "dst_page_idx": 35,
+                        "action": "click",
+                        "summary": "Click 'Provide a list of the 5 most important points' to trigger key points generation (and sign-in prompt)."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": null,
+                                "condition": "User agrees to sign-in prompt (implicit branch to proceed with key points generation)"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "User does not agree (implicit branch to cancel key points generation)"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 49,
+            "function_description": "The page functions as a file-opening dialog, allowing the user to choose an app (e.g., Chrome, WebView Browser Tester) to open content related to the AI Assistant's \"AI accuracy info\" link, with options for one - time or default app selection.",
+            "action_refs": [
+                [
+                    33,
+                    5
+                ]
+            ],
+            "data_in": [
+                "AI accuracy info link"
+            ],
+            "data_out": [
+                "opened AI accuracy info page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 33,
+                "logic": "The user starts on the AI Assistant page (page 33). They click the 'AI accuracy info' link (action S1), which triggers a file-opening dialog (page 36) to choose an app (e.g., Chrome, WebView Browser Tester) with options for one - time or default app selection. The flow then depends on the app and option chosen, but the initial step is the link click.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            33,
+                            5
+                        ],
+                        "src_page_idx": 33,
+                        "dst_page_idx": 36,
+                        "action": "click",
+                        "summary": "Click the 'AI accuracy info' link to open the app selection dialog."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 50,
+            "function_description": "This page enables users to sign in (via Google, Facebook, Apple, or Adobe ID) to access the AI Assistant's generative AI features for PDF interaction.",
+            "action_refs": [
+                [
+                    35,
+                    2
+                ]
+            ],
+            "data_in": [
+                "user guidelines agreement",
+                "AI Assistant setup"
+            ],
+            "data_out": [
+                "agreement confirmation",
+                "AI Assistant sign-in prompt"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 35,
+                "logic": "The user starts on the AI Assistant welcome page. They click the 'Agree to terms button' to proceed, which navigates to the sign - in page where options like Google, Facebook, Apple, or Adobe ID sign - in are available.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            35,
+                            2
+                        ],
+                        "src_page_idx": 35,
+                        "dst_page_idx": 38,
+                        "action": "click",
+                        "summary": "Click the 'Agree' button to accept terms and move to sign - in options."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 51,
+            "function_description": "This page allows the user to choose an app (e.g., Chrome, WebView Browser Tester) to open the \"User Guidelines\" link from the AI Assistant's query input page, with options to set the app as the default for such actions or use it just once.",
+            "action_refs": [
+                [
+                    35,
+                    3
+                ]
+            ],
+            "data_in": [
+                "user guidelines document"
+            ],
+            "data_out": [
+                "user guidelines document opened (in browser)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 35,
+                "logic": "The user starts on the AI Assistant page. They click the 'User Guidelines' link, which triggers an app selection dialog to open. The dialog presents options to open the link with an app (e.g., Chrome) either just once or set it as the default, or use a different app like WebView Browser Tester.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            35,
+                            3
+                        ],
+                        "src_page_idx": 35,
+                        "dst_page_idx": 39,
+                        "action": "click",
+                        "summary": "Click the 'User Guidelines' link to trigger app selection dialog"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 52,
+            "function_description": "This page allows the user to choose a Google account (or add a new one) to sign in to Adobe Acrobat, enabling the use of the AI Assistant feature after agreeing to terms and completing the sign - in process.",
+            "action_refs": [
+                [
+                    38,
+                    0
+                ]
+            ],
+            "data_in": [
+                "login session",
+                "Google account"
+            ],
+            "data_out": [
+                "initiated login process",
+                "account selection prompt"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 38,
+                "logic": "The user starts on the AI Assistant sign - in page. They click the 'Sign in with Google' button, which leads to the Google account selection page. Here, the user can either choose an existing Google account or add a new one to proceed with signing in to Adobe Acrobat for using the AI Assistant.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            38,
+                            0
+                        ],
+                        "src_page_idx": 38,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click the 'Sign in with Google' button to navigate to the Google account selection page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 53,
+            "function_description": "This page functions as an Adobe sign - in interface, enabling users to enter their email address and either sign in to their existing Adobe account or create a new one to access the AI Assistant feature for PDF documents.",
+            "action_refs": [
+                [
+                    38,
+                    1
+                ]
+            ],
+            "data_in": [
+                "login session",
+                "Adobe ID sign in/sign up option"
+            ],
+            "data_out": [
+                "sign in page (Adobe ID)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 38,
+                "logic": "The flow starts on the AI Assistant page (page 38). The user clicks the 'Sign in or sign up' link, which navigates to the Adobe sign - in page (page 16) where they can enter their email to sign in or create a new account.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            38,
+                            1
+                        ],
+                        "src_page_idx": 38,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click the 'Sign in or sign up' link to navigate to the Adobe sign - in page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        }
+    ]
+}

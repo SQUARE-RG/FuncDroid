@@ -1,0 +1,2630 @@
+
+================= [TaskTest] FDG[1] =================
+[Function] The current page is a navigation menu in a file manager app, providing options to access different storage locations, quick access sections, server management, app management, and settings.
+
+[Core Logic Task]
+The flow starts on the main file manager page (page 0). The user clicks the navigation menu button, which opens the navigation menu (page 1) containing options for storage, quick access, server management, app management, and settings. This is a straight - line flow with no branches or loops as only one action is provided.
+
+[Variant Paths] (3)
+ - V1: Tap <Open navigation menu,Navigation menu for file management> twice (repeat operation)
+ - V2: Omit tapping <Open navigation menu,Navigation menu for file management> (omit step)
+ - V3: Tap <Open navigation menu,Navigation menu for file management> and then immediately tap it again (order mutation with repeat)
+
+================= [TaskTest] FDG[2] =================
+[Function] The current page provides a file and folder search interface within the "/storage/emulated/0" directory, allowing users to search for specific files or folders among the listed 13 folders and 32 files, and also enabling navigation back or clearing the search, along with options to interact with each folder via the three - dot menu and a button to add new items.
+
+[Core Logic Task]
+The flow starts on the main directory page (page 0). First, the user clicks the search button to enter the file/folder search interface (page 2). Then, the user clicks the search input field to begin typing a search query. There are no branches as the actions form a linear sequence to access the search functionality.
+
+[Variant Paths] (3)
+ - V1: Omit the step of clicking <Search input field> after entering the <Search files/folders,File and folder search interface>
+ - V2: Input an extremely long string (e.g., a string with 1000 characters) into the <Search input field> after entering the <Search files/folders,File and folder search interface>
+ - V3: Input special characters (e.g., @#$%) into the <Search input field> after entering the <Search files/folders,File and folder search interface>
+
+================= [TaskTest] FDG[3] =================
+[Function] The current page in the Amaze file manager app displays the contents of the home directory ("/storage/emulated/0"), showing a list of folders (e.g., Alarms, Android, DCIM) with their modification dates and options for additional actions, allowing users to browse, manage, and access files and directories within the home storage.
+
+[Core Logic Task]
+The app starts at the home directory page ("/storage/emulated/0"). When the "Go to home directory" action is triggered (e.g., by clicking the home icon), the app navigates (or refreshes) to display the home directory's contents, including folders with modification dates and action options. This is a single step as the flow is to reach and display the home directory's file structure.
+
+[Variant Paths] (3)
+ - V1: Omit triggering <Go to home directory> and check if the app still displays the home directory (repeat/omit mutation: omit the trigger step)
+ - V2: Trigger <Go to home directory> twice in a row and observe if the app navigates/refreshes the home directory each time (repeat/omit mutation: repeat the trigger step)
+ - V3: Wait for a while and then trigger <Go to home directory> to see if the app's behavior changes with a time delay before the trigger (order mutation: introduce a delay before the trigger step, though the core step is still triggering <Go to home directory>)
+
+================= [TaskTest] FDG[4] =================
+[Function] The current page's more options menu in the file manager provides additional actions such as sorting, viewing history, switching to grid view, setting the current directory as home, or exiting the app.
+
+[Core Logic Task]
+The flow starts by clicking the more options menu in the file manager (page 0). After opening the menu, a branch point appears where the user can choose to click the 'Sort' option (leading to page 83) or other available options (not shown here).
+
+[Variant Paths] (3)
+ - V1: Tap <More options menu,More options menu for file manager> and then omit clicking <Sort option,Sorting options submenu> (explore other unshown options implicitly)
+ - V2: Tap <More options menu,More options menu for file manager> twice (repeat opening the menu) and then click <Sort option,Sorting options submenu>
+ - V3: Tap <Sort option,Sorting options submenu> without first tapping <More options menu,More options menu for file manager> (invalid flow mutation to test error handling)
+
+================= [TaskTest] FDG[5] =================
+[Function] The current page in the Amaze file manager app displays a list of folders within the "/storage/emulated/0" directory and provides a context menu with operations (Cut, Copy, Delete, Rename, Encrypt, Properties, Add to Bookmark) for managing a selected folder.
+
+[Core Logic Task]
+The flow starts on the folder list page of /storage/emulated/0. A click on a folder's options menu (three dots) opens a context menu with operations like Cut, Copy, Delete, Rename, Encrypt, Properties, and Add to Bookmark. This is a single step with no branching as the action just reveals the menu options.
+
+[Variant Paths] (3)
+ - V1: Long - press <Folder options menu> instead of tapping it to open the context menu
+ - V2: Tap <Folder operation options menu> multiple times (repeat the tap operation) to see if the context menu behavior changes
+ - V3: Omit tapping <Folder options menu> and check if the context menu appears by some other implicit action (though this is less likely, but for mutation testing, we consider this omission)
+
+================= [TaskTest] FDG[6] =================
+[Function] The current page in the Amaze file manager app provides options to create a new folder, a new file, or set up a cloud connection within the /storage/emulated/0 directory, while also displaying existing folders and files in that directory.
+
+[Core Logic Task]
+The user starts on the /storage/emulated/0 directory page in Amaze, which displays existing folders/files. The user clicks the 'Create new item' menu (from the pink '+' button), which opens a submenu with options to create a folder, a file, or set up a cloud connection. The flow then branches based on which option the user selects from this submenu.
+
+[Variant Paths] (3)
+ - V1: Tap <Create new item,Create new item options menu> and immediately close it without selecting any option
+ - V2: Tap <Create new item,Create new item options menu> twice in quick succession
+ - V3: Omit interacting with <Create new item,Create new item options menu> and instead try to navigate away from the /storage/emulated/0 directory
+
+================= [TaskTest] FDG[7] =================
+[Function] The current page in the Amaze file manager app displays the contents (folders and files) of the "/storage/emulated/0" directory, allowing users to browse, manage (via the three - dot menu for each item), and potentially create new items (via the plus button) within this storage location.
+
+[Core Logic Task]
+The user starts on page 1 (navigation menu) and clicks the 'Storage' navigation item. This action navigates to page 0, which displays the contents of the "/storage/emulated/0" directory, enabling file/folder browsing, management via three - dot menus, or new item creation via the plus button.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <Storage navigation item> (to test if navigation to page 0 still occurs without this action)
+ - V2: Repeat clicking <Storage navigation item> multiple times (to test if repeated navigation causes unexpected behavior)
+
+================= [TaskTest] FDG[8] =================
+[Function] The current page in the Amaze file manager app displays the contents (folders) of the "/storage/0000-0000" directory, allowing users to browse, manage (via the three - dot menu on each folder), and potentially create new items (via the plus button) within this specific storage location.
+
+[Core Logic Task]
+The user starts on the main storage navigation page. They click the '0000-0000' navigation item to browse the folders within the '/storage/0000-0000' directory, transitioning to the page displaying its contents (folders like Android and LOST.DIR) for further management or creation actions.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <0000-0000 navigation item,Browse storage folders> and attempt to manage folders without navigating to the directory
+ - V2: Tap <0000-0000 navigation item,Browse storage folders> twice in a row to see if repeated navigation has an effect
+ - V3: Tap <0000-0000 navigation item,Browse storage folders> and then immediately tap it again before the page fully loads
+
+================= [TaskTest] FDG[9] =================
+[Function] Displays the contents (folders and files) of the "/storage/emulated/0" directory, allowing users to browse, manage (via context menus), and create new items (via the plus button) within this storage location.
+
+[Core Logic Task]
+The app starts at the navigation menu (page 1). The user clicks the 'Download' navigation item, which navigates to the main storage directory page (page 0) displaying folders/files. From here, the user can browse, manage items via context menus, or create new items via the plus button.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Download navigation item> to see if the app still shows the storage directory contents (branch mutation: skip the navigation step)
+ - V2: Click <Download navigation item> twice (repeat mutation: repeat the navigation step)
+ - V3: Attempt to interact with non - existent widgets after clicking <Download navigation item> to test error handling
+
+================= [TaskTest] FDG[10] =================
+[Function] The current page in the file manager app displays the contents of the "Videos" directory (which currently has 0 folders and 0 files) and provides an option to add new items via a floating action button.
+
+[Core Logic Task]
+The flow starts on page 1. The user clicks on the Videos navigation item, which navigates to the Videos directory (page 7) that shows 0 folders and 0 files, with a floating action button to add new items.
+
+[Variant Paths] (3)
+ - V1: Tap <Movies navigation item,Navigate Movies directory in file manager> instead of the Videos navigation item to see if it navigates to the Movies directory
+ - V2: Tap <Movies navigation item,Navigate Movies directory in file manager> twice in a row to check if it still navigates to the Movies directory each time
+ - V3: Omit tapping any navigation item and check the current directory's contents
+
+================= [TaskTest] FDG[11] =================
+[Function] The current page in the file manager application displays the contents of the "Videos" directory, showing that there are 0 folders and 0 files, with an option to add new items via a floating action button.
+
+[Core Logic Task]
+The flow starts on page 1. The user clicks the 'Videos' navigation item, which navigates to page 7. On page 7, the 'Videos' directory is displayed with 0 folders and 0 files, and a floating action button to add new items is visible.
+
+[Variant Paths] (3)
+ - V1: Tap <Music navigation item> instead of the 'Videos' navigation item to see if it navigates to a different directory
+ - V2: Tap <Music navigation item> twice in a row to check for any repeated navigation behavior
+ - V3: Omit tapping the 'Videos' navigation item and directly check the current page's contents, then tap <Music navigation item>
+
+================= [TaskTest] FDG[12] =================
+[Function] The current page in the Amaze file manager app displays the contents of the "Pictures" directory, allowing users to view, manage (e.g., open, delete, share), and organize folders and image files within this directory.
+
+[Core Logic Task]
+The user starts on the storage navigation page. They click the 'Pictures' navigation item, which navigates to the Pictures directory page. On this page, the user can view, manage (open, delete, share), and organize the folders and image files listed.
+
+[Variant Paths] (3)
+ - V1: Tap <Pictures navigation item> twice (repeat navigation step)
+ - V2: Omit tapping <Pictures navigation item> and try to manage files (omit navigation step)
+ - V3: Tap <Pictures navigation item> then immediately tap it again before managing files (repeat and reorder)
+
+================= [TaskTest] FDG[13] =================
+[Function] The current page in the Amaze file manager displays the contents of the "Videos" directory, showing that there are 0 folders and 0 files, with an option to add new items via the floating action button.
+
+[Core Logic Task]
+The flow starts on page 1 (navigation menu). The user clicks the 'Videos' quick access item (action_ref [1,6]), navigating to page 7 (Videos directory). On page 7, the Videos directory is displayed with 0 folders and 0 files, and a floating action button to add new items is visible.
+
+[Variant Paths] (3)
+ - V1: Tap <Quick access navigation item> twice in a row (repeating the navigation action)
+ - V2: Omit tapping <Quick access navigation item> (simulating not navigating to Videos directory)
+ - V3: Tap <Quick access navigation item> and then immediately tap it again (repeated navigation)
+
+================= [TaskTest] FDG[14] =================
+[Function] The current page in the Amaze app displays a list of recent files (including their names, dates, and additional options via three - dot menus) for users to view, and likely manage (such as open, delete, or share) these recently accessed files.
+
+[Core Logic Task]
+The user starts on page 1 and clicks the 'Recent files' navigation item. This action navigates to page 9, where the recent files list (with names, dates, and three - dot menus) is displayed for further management or viewing.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[15] =================
+[Function] The current page in the Amaze app displays and allows management (e.g., viewing, accessing options via the three - dot menu) of image files, showing a list of image files with their names, dates, and additional action options.
+
+[Core Logic Task]
+The user starts on page 1 and clicks the 'Images' navigation item. This action navigates to page 10, where the list of image files (with names, dates, and action options) is displayed for management.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Images navigation item,Manage image files in Amaze> and check if page 10 (image files list) is still displayed
+ - V2: Click <Images navigation item,Manage image files in Amaze> twice and check the result on page 10
+ - V3: Click <Images navigation item,Manage image files in Amaze> and then immediately click it again to see if there's any abnormal behavior in displaying the image files list
+
+================= [TaskTest] FDG[16] =================
+[Function] The current page in the Amaze file manager displays the contents of the "Videos" directory, showing that it currently contains 0 folders and 0 files, with options to search, navigate home, access more options, and add new items.
+
+[Core Logic Task]
+The flow starts on the main navigation page of Amaze file manager. The user clicks on the 'Videos' navigation item, which navigates to the 'Videos' directory page. On this page, the directory’s contents (0 folders, 0 files) are displayed, along with options to search, navigate home, access more options, or add new items.
+
+[Variant Paths] (2)
+ - V1: Tap <Videos navigation item> twice (repeat the navigation action)
+ - V2: Omit tapping <Videos navigation item> (simulate not navigating to Videos directory, though this is a negative case for the flow)
+
+================= [TaskTest] FDG[17] =================
+[Function] The FTP Server page allows users to view the server's status, credentials, port, and shared path, and provides a button to start the FTP server.
+
+[Core Logic Task]
+The user first navigates to the FTP Server page by clicking its navigation item. On the FTP Server page, they can view the server's status, credentials, port, and shared path. Then, they can either access additional options via the dropdown menu or start the FTP server by clicking the 'Start FTP Server' button.
+
+[Variant Paths] (3)
+ - V1: Navigate to <FTP Server navigation item,Manage FTP Server settings>, then tap <Additional options,FTP Server settings dropdown menu> (instead of starting the server)
+ - V2: Tap <Start FTP Server> first, then navigate to <FTP Server navigation item,Manage FTP Server settings> (swap order)
+ - V3: Navigate to <FTP Server navigation item,Manage FTP Server settings> and tap <Start FTP Server> twice (repeat start)
+
+================= [TaskTest] FDG[18] =================
+[Function] The App Manager page displays a list of installed applications with their storage sizes and provides a menu (via three-dot icons) for each app to perform management actions such as uninstalling, viewing details, or other app - specific operations.
+
+[Core Logic Task]
+The flow starts on the main menu page. The user clicks the 'App Manager' navigation item, which navigates to the App Manager page. On this page, a list of installed apps with their storage sizes is displayed, and each app has a three - dot menu for management actions. There are no branches or loops in this initial flow as only the navigation to the App Manager page is captured by the provided action.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <App Manager navigation item,Manage installed applications> (check if page still loads, though likely fails as per core logic but is a mutation of omitting the step)
+ - V2: Click <App Manager navigation item,Manage installed applications> twice (mutation of repeating the step, though UI behavior may vary but is a valid mutation attempt)
+
+================= [TaskTest] FDG[19] =================
+[Function] The current page is the settings page for the Amaze app, allowing users to configure various interface and general preferences such as theme, icon style, sign - in options, and visibility of different UI components.
+
+[Core Logic Task]
+The user starts on page 1 (Amaze app's main menu) and clicks the 'Settings' navigation item. This action navigates to page 13, the Amaze app's settings page, where interface and general preferences can be configured.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[20] =================
+[Function] The current page (History dialog) in the file manager app displays the navigation history of visited directories, with options to clear the history or cancel the action.
+
+[Core Logic Task]
+The flow starts by clicking the 'History' option from the menu (on page 3) to open the History dialog (page 84), which displays the navigation history and presents options to clear or cancel. The dialog is the endpoint here, with no further actions defined in the provided steps.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[21] =================
+[Function] Grid View option
+
+[Core Logic Task]
+The flow starts on page 3. The user clicks on the 'Grid View' option, which leads to page 85. There are no branches or loops in this simple execution flow.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <Grid View option> (check if page remains on 3)
+ - V2: Repeat clicking <Grid View option> (click it multiple times to see if it still leads to page 85 each time)
+
+================= [TaskTest] FDG[22] =================
+[Function] Set As Home option
+
+[Core Logic Task]
+The user starts on page 3 (a file manager interface with a menu open). The core action is clicking the 'Set As Home' option in the menu, which navigates to page 86. There are no branches or loops as this is a single, direct action to set the home location.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Set As Home option> and check if navigation to page 86 still occurs (though expected to fail as per core logic)
+ - V2: Tap <Set As Home option> twice (repeat the action to see if it causes any unexpected behavior like multiple navigations or errors)
+ - V3: Try to navigate to page 86 without tapping <Set As Home option> (to test if the navigation is solely dependent on this action)
+
+================= [TaskTest] FDG[23] =================
+[Function] Exit option
+
+[Core Logic Task]
+The user starts on page 3 (a file manager interface). The core logic is a single step: clicking the 'Exit' option (from the dropdown menu) to navigate to page 87, likely exiting the app or returning to a previous state. There are no branches or loops as it’s a direct action.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[24] =================
+[Function] Cut folder
+
+[Core Logic Task]
+The process starts on page 4 (a file manager view). The user performs a click action to select the 'Cut folder' option, which transitions the flow to page 91. This single step completes the core action of initiating the cut operation for the folder.
+
+[Variant Paths] (3)
+ - V1: Tap <Cut folder> twice (repeat operation)
+ - V2: Omit tapping <Cut folder> (skip the core action)
+ - V3: Tap <Cut folder> after a 10-second delay (simulate timing variation, though widget interaction is still just tapping it)
+
+================= [TaskTest] FDG[25] =================
+[Function] Copy folder
+
+[Core Logic Task]
+The core execution logic for copying a folder starts on page 4. The user performs a click action to initiate the copy folder operation, transitioning to page 92. This is a straight-line flow with no branches or loops as only one action is involved.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Copy folder> (test if the operation still proceeds without initiation)
+ - V2: Repeat tapping <Copy folder> (test if multiple initiations cause issues)
+ - V3: Tap <Copy folder> twice in quick succession (test for unexpected behavior from repeated initiation)
+
+================= [TaskTest] FDG[26] =================
+[Function] Delete folder
+
+[Core Logic Task]
+The core execution logic for deleting a folder starts at page 4. The user clicks the 'Delete folder' option, which transitions the flow to page 93, completing the deletion action.
+
+[Variant Paths] (3)
+ - V1: Omit the step of clicking <Delete folder> (intended to see if deletion occurs without triggering the action)
+ - V2: Repeat clicking <Delete folder> multiple times (to check for unexpected behavior like multiple deletions or errors)
+ - V3: Click <Delete folder> in a different order (though there's only one step here, this is a stretch to meet order mutation by considering if there were other steps, but in this case, just re-express the action as a mutation attempt)
+
+================= [TaskTest] FDG[27] =================
+[Function] The current page (dialog) allows the user to enter a name for a new file and provides options to either cancel the operation or create the new file with the entered name.
+
+[Core Logic Task]
+The user starts by clicking to open the rename dialog (or new file dialog). Then, the user can either input the new name in the text field or choose to save (create) the file with the entered name. There's a branch at the dialog step where the user can decide to cancel (implicitly by not proceeding) or proceed to create the file after entering the name.
+
+[Variant Paths] (3)
+ - V1: Tap <Save renamed folder> without inputting into <Text input for new folder name>
+ - V2: Input a very long string (e.g., 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa') into <Text input for new folder name> then Tap <Save renamed folder>
+ - V3: Tap <Rename folder,Rename folder dialog> again after already opening it (repeat the open dialog step)
+
+================= [TaskTest] FDG[29] =================
+[Function] The current page displays the properties of the "Alarms" folder, including its name, location, size, date, and a visual representation of storage usage (total, used, free space) within the parent directory.
+
+[Core Logic Task]
+First, click to view the properties of the 'Alarms' folder, which opens the properties dialog showing details like name, location, size, date, and storage usage. Then, click to close the properties dialog, ending the interaction with the folder's properties.
+
+[Variant Paths] (3)
+ - V1: Omit step: Do not click <Close properties dialog> after viewing folder properties using <View folder properties,View folder properties>
+ - V2: Repeat step: Click <View folder properties,View folder properties> twice and then click <Close properties dialog>
+ - V3: Order mutation (not applicable here as only two steps and second is dependent on first, so alternative: Click <View folder properties,View folder properties> and then immediately click <View folder properties,View folder properties> again before clicking <Close properties dialog>)
+
+================= [TaskTest] FDG[30] =================
+[Function] Add to Bookmark
+
+[Core Logic Task]
+The core execution logic for 'Add to Bookmark' starts on page 4. The user performs a click action on the 'Add to Bookmark' option, which transitions the flow to page 96. There are no branches or loops as it is a single-step action to add the item to bookmarks.
+
+[Variant Paths] (3)
+ - V1: Omit the step: Do not tap <Add to Bookmark> and check if the item is still added to bookmarks (though this is against the normal flow, testing the system's reaction to omitted action)
+ - V2: Repeat the step: Tap <Add to Bookmark> twice and check if the item is added multiple times or if there's an error handling duplicate adds
+ - V3: Boundary case (though no input, but check if the action still works as expected when maybe the item state is at a boundary, like already bookmarked: Tap <Add to Bookmark> when the item is already bookmarked to see the system's reaction)
+
+================= [TaskTest] FDG[31] =================
+[Function] This page (a dialog in a file manager app) allows the user to enter a name for a new folder (or file, based on the dialog title "New File" but the context from the path was creating a new folder) and then either cancel the operation or create the new item with the entered name.
+
+[Core Logic Task]
+The user starts on the file manager page (page 5) and clicks the 'Create new folder' button. This action opens a 'New File' dialog (page 94) where the user can enter a name for the new item, then choose to cancel or create it. The core flow begins with the initial click to open the dialog.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[32] =================
+[Function] This page allows the user to enter a name for a new folder (or file) and provides options to either cancel the operation or create the new item with the entered name.
+
+[Core Logic Task]
+The user starts on page 5 and clicks the 'Create new file' option (action_ref [5,1]), which navigates to page 94. This action initiates the process of creating a new file (or folder), likely opening a dialog to enter a name and choose between canceling or creating the item.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Create new file> and stay on page 5
+ - V2: Click <Create new file> twice in a row (repeat operation)
+ - V3: Click <Create new file> and then immediately click it again before page 94 loads (if possible, though timing - related, but as a mutation case)
+
+================= [TaskTest] FDG[33] =================
+[Function] The page allows the user to create a new cloud connection, offering options for an SMB Connection or to get a Cloud plugin, likely within a file management application.
+
+[Core Logic Task]
+The user starts on page 5 and clicks the 'Cloud Connection' option. This action opens a menu with two options: 'SMB Connection' and 'Get Cloud plugin', allowing the user to choose between setting up an SMB connection or obtaining a cloud plugin for the new cloud connection.
+
+[Variant Paths] (3)
+ - V1: Start on page 5, long - press <Cloud Connection option,New Cloud Connection options> (instead of tap)
+ - V2: Start on page 5, omit clicking <Cloud Connection option,New Cloud Connection options> (to test what happens without initiating the cloud connection setup)
+ - V3: Start on page 5, click <Cloud Connection option,New Cloud Connection options> twice (repeat the click operation)
+
+================= [TaskTest] FDG[34] =================
+[Function] The current page in the Amaze file manager app, within the Pictures directory, displays a list of folders and image files, and when a file's options menu is opened (as shown for an image file), it provides file operation options such as Open with, Cut, Copy, Delete, Rename, Encrypt, Properties, and Share to manage the selected file.
+
+[Core Logic Task]
+In the Amaze file manager’s Pictures directory, first open a file’s options menu. Then, at the menu, choose between actions like 'Open with' (to select an app for opening) or 'Share' (to access sharing options), with the flow branching based on the chosen option.
+
+[Variant Paths] (3)
+ - V1: In the Amaze file manager’s Pictures directory, open a file’s options menu and then choose <Share option> to access file sharing options dialog (branch mutation: choosing Share instead of Open with)
+ - V2: In the Amaze file manager’s Pictures directory, choose <Share option> first and then open a file’s options menu (order mutation: swapping the order of opening options menu and choosing Share)
+ - V3: In the Amaze file manager’s Pictures directory, open a file’s options menu and then repeat choosing <Open with option> (repeat mutation: repeating the Open with action)
+
+================= [TaskTest] FDG[35] =================
+[Function] The page allows users to view and manage FTP Server settings, including status, username, password, port, shared path, and provides a button to start the FTP server.
+
+[Core Logic Task]
+The user is on the FTP Server settings page. They can view details like status, username, password, port, and shared path. The main action is clicking the 'START' button (not in the provided action, but the given action is clicking filter options). Wait, the provided action is clicking filter options. So the step is clicking the filter options on the FTP Server page, staying on the same page.
+
+[Variant Paths] (3)
+ - V1: Tap <Filter options> twice (repeat operation)
+ - V2: Omit tapping <Filter options> (skip the step)
+ - V3: Tap <Filter options> and then immediately tap <Filter options> again (repeat with immediate re - tap)
+
+================= [TaskTest] FDG[36] =================
+[Function] The current page allows the user to sort the list of installed applications in the App Manager by different criteria (Name, Last Modified, Size) and choose the sorting order (Ascending or Descending).
+
+[Core Logic Task]
+The user starts on the App Manager page and clicks the 'Sort apps' option to open the sorting menu. In the menu, they can choose a sorting criterion (Name, Last Modified, or Size) via radio buttons, and then select a sort direction (Ascending or Descending) via buttons. The flow branches at the sorting menu to handle the different criterion and direction choices.
+
+[Variant Paths] (3)
+ - V1: Start on App Manager page, Tap <Sort apps,Sort apps by criteria>, Tap <Sort by Last Modified radio button> (instead of Name), then Tap <DESCENDING sort direction button> (instead of ASCENDING)
+ - V2: Start on App Manager page, Tap <Sort apps,Sort apps by criteria>, Tap <DESCENDING sort direction button> first, then Tap <Sort by Size radio button> (order mutation: swap direction and criterion selection)
+ - V3: Start on App Manager page, Tap <Sort apps,Sort apps by criteria>, Tap <Sort by Name radio button> but omit tapping a sort direction button (repeat/omit: try to sort without direction)
+
+================= [TaskTest] FDG[37] =================
+[Function] The current page, within the App Manager, displays a list of installed applications with their storage sizes and provides a three - dot menu for each app to access additional management options, along with an "Exit" button to leave the App Manager.
+
+[Core Logic Task]
+The App Manager page displays installed apps with storage sizes. Clicking the three - dot menu (More options) reveals an 'Exit' button. The main flow is to interact with the menu to access the exit option, with no major decision or loop points as the action is straightforward.
+
+[Variant Paths] (3)
+ - V1: Tap <More options,App Manager options dropdown> twice
+ - V2: Omit tapping <More options,App Manager options dropdown> and directly look for the 'Exit' button (though this may not be possible as per the core logic, but it's a mutation attempt)
+ - V3: Tap <More options,App Manager options dropdown> and then immediately tap it again without waiting for any menu to load (if applicable)
+
+================= [TaskTest] FDG[38] =================
+[Function] The current page's functionality is to display the app options menu for the "Amaze" application, providing actions such as Open, Backup, Uninstall, Properties, Play store, and Share.
+
+[Core Logic Task]
+The flow starts on the App Manager page (page 12). The user clicks the app options menu (three-dot icon) for the 'Amaze' app, which opens a menu with actions like Open, Backup, Uninstall, Properties, Play store, and Share. This is a single step with no branches as it directly displays the menu.
+
+[Variant Paths] (3)
+ - V1: Long-press <App options menu,App options menu for Amaze> (instead of normal tap)
+ - V2: Tap <App options menu,App options menu for Amaze> twice (repeat the tap operation)
+ - V3: Omit tapping <App options menu,App options menu for Amaze> (try to access the menu without the tap)
+
+================= [TaskTest] FDG[39] =================
+[Function] The page allows users to customize the color settings of various UI components (such as primary colors for tabs, accent color, icon color) and toggle related options (like icon colorization, colored navigation bar, random skin) in the Amaze app.
+
+[Core Logic Task]
+The user starts on the Settings page and clicks the 'Color' option to enter the Color customization page. From there, the user can choose to customize different UI component colors (like Primary Color or Icon Color) by clicking the respective options. For example, clicking 'Primary Color (Left Tab)' or 'Icon Color' leads to a color selection page, where the user can reset the color to default if needed.
+
+[Variant Paths] (3)
+ - V1: Start on Settings page, click <Icon Color setting> instead of <Primary Color (Left Tab) setting> to enter color customization for icon color
+ - V2: Start on Settings page, click <Set color to various UI components> then immediately click <Reset to default color> without selecting a specific component color first
+ - V3: Start on Settings page, click <Primary Color (Left Tab) setting>, then click <Reset to default color>, then click <Primary Color (Left Tab) setting> again (repeating the reset - select sequence)
+
+================= [TaskTest] FDG[40] =================
+[Function] Use circular icons toggle
+
+[Core Logic Task]
+The user starts on the Settings page (page 13). They perform a click action on the 'Use circular icons' toggle. This action likely toggles the state of the circular icons setting, and the flow ends here as the action is marked as a leaf (no further navigation implied).
+
+[Variant Paths] (3)
+ - V1: Tap <Use circular icons toggle> twice (repeat the toggle action)
+ - V2: Omit tapping <Use circular icons toggle> (simulate not performing the toggle action)
+ - V3: Tap <Use circular icons toggle> (original action, included for completeness as a base case comparison)
+
+================= [TaskTest] FDG[41] =================
+[Function] Show Dividers toggle
+
+[Core Logic Task]
+The flow starts on the Settings page (page 13). The user performs a click action on the 'Show Dividers' toggle. This action likely toggles the state of the 'Show Dividers' setting, and the flow ends after this click (as the action is marked as a leaf).
+
+[Variant Paths] (3)
+ - V1: Tap <Show Dividers toggle> twice (repeat the toggle action)
+ - V2: Omit tapping <Show Dividers toggle> (do not perform the toggle action)
+ - V3: Tap <Show Dividers toggle> once (original action, included for comparison but as a mutation variant considering if the original is a single tap, this is the base but here as a variant to check if the system reacts the same)
+
+================= [TaskTest] FDG[42] =================
+[Function] Show Headers toggle
+
+[Core Logic Task]
+The flow starts on the Settings page (page 13). The user clicks the 'Show Headers' toggle, which transitions to page 51. This action toggles the state of the 'Show Headers' option in the app's settings.
+
+[Variant Paths] (3)
+ - V1: Tap <Show Headers toggle> twice (repeat the toggle action to see if state toggles back)
+ - V2: Omit tapping <Show Headers toggle> (check if the state remains unchanged without interaction)
+ - V3: Tap <Show Headers toggle> and then immediately tap it again (simulate rapid repeated toggling)
+
+================= [TaskTest] FDG[43] =================
+[Function] Intellihide Toolbar toggle
+
+[Core Logic Task]
+The process starts on the Settings page (page 13). The user clicks the 'Intellihide Toolbar' toggle, which likely toggles its state (on/off) and navigates to page 52. There are no branches or loops as it's a single toggle action.
+
+[Variant Paths] (3)
+ - V1: Tap <Intellihide Toolbar toggle> twice (repeat the toggle action)
+ - V2: Omit tapping <Intellihide Toolbar toggle> (skip the core action)
+ - V3: Tap <Intellihide Toolbar toggle> and then immediately tap it again (quick repeated toggle)
+
+================= [TaskTest] FDG[44] =================
+[Function] Show shortcuts toggle
+
+[Core Logic Task]
+The process starts on page 13 (Settings). The user performs a click action on the 'Show shortcuts toggle' element. This action leads to page 53, completing the task of interacting with the 'Show shortcuts' toggle.
+
+[Variant Paths] (3)
+ - V1: On page 13 (Settings), long - press <Show shortcuts toggle> (instead of click)
+ - V2: On page 13 (Settings), click <Show shortcuts toggle> twice (repeat the click)
+ - V3: Omit clicking <Show shortcuts toggle> on page 13 (Settings) and check if the task still progresses
+
+================= [TaskTest] FDG[45] =================
+[Function] Show quick accesses toggle
+
+[Core Logic Task]
+The process starts on the Settings page (page 13). The user clicks the 'Show quick accesses toggle' (action_ref [13,6]), which leads to a new page (page 54). This action toggles the 'Show quick accesses' option, likely changing its state (e.g., from on to off or vice versa) and navigating to the destination page.
+
+[Variant Paths] (2)
+ - V1: On the Settings page (page 13), long - press <Show quick accesses toggle> instead of clicking it to see if it still toggles the 'Show quick accesses' option and navigates to page 54
+ - V2: On the Settings page (page 13), click <Show quick accesses toggle> twice in a row to see the resulting state of the 'Show quick accesses' option and the navigation
+
+================= [TaskTest] FDG[46] =================
+[Function] The current page (Theme selection dialog) allows the user to select the theme for the Amaze app from the available options: Material Light, Material Dark, and Daytime.
+
+[Core Logic Task]
+The user starts on the Settings page and clicks to open the Theme selection dialog. Then, based on the desired theme, the user selects either Material Light, Material Dark, or Daytime from the dialog, with each selection leading to a distinct outcome.
+
+[Variant Paths] (3)
+ - V1: Start on Settings page, open <Select the Theme,Theme selection dialog>, then select <Material Dark theme> (branch mutation: chose Material Dark instead of default or another option)
+ - V2: Start on Settings page, open <Select the Theme,Theme selection dialog>, then select <Daytime theme> (branch mutation: chose Daytime instead of default or another option)
+ - V3: Start on Settings page, open <Select the Theme,Theme selection dialog>, then omit selecting a theme (repeat/omit mutation: omitted the selection step)
+
+================= [TaskTest] FDG[47] =================
+[Function] The page allows users to manage sidebar shortcuts by editing, deleting existing shortcuts (Download, Movies, Music, Pictures), and adding new items.
+
+[Core Logic Task]
+The flow starts on the settings page. The user clicks the 'Shortcuts' option to navigate to the sidebar shortcuts management page, where they can edit, delete existing shortcuts (Download, Movies, Music, Pictures), or add new items.
+
+[Variant Paths] (3)
+ - V1: Omit step: Navigate to the settings page and directly try to edit a shortcut without clicking <Shortcuts option,Manage sidebar shortcuts>
+ - V2: Repeat step: Click <Shortcuts option,Manage sidebar shortcuts> twice before attempting to manage shortcuts
+ - V3: Boundary input (not applicable here as no input widgets, so alternative: Try to manage a non - existing shortcut (e.g., a made - up one) after clicking <Shortcuts option,Manage sidebar shortcuts>)
+
+================= [TaskTest] FDG[48] =================
+[Function] The page allows users to configure which items (Quick access, Recent files, Images, Videos, Audio, Documents, Apks) are enabled for quick access in the sidebar of the Amaze file manager app.
+
+[Core Logic Task]
+The user starts on the Settings page. They click the 'Quick accesses' option, which navigates to the Sidebar quick access configuration page. On this page, the user can configure which items (Quick access, Recent files, Images, Videos, Audio, Documents, Apks) are enabled for quick access in the sidebar.
+
+[Variant Paths] (3)
+ - V1: Start on the Settings page, then long - press <Quick accesses option,Configure sidebar quick access options> (instead of click)
+ - V2: Omit clicking <Quick accesses option,Configure sidebar quick access options> and try to configure sidebar quick access options directly from the Settings page (though this may not work as per app logic, but it's a mutation attempt)
+ - V3: Click <Quick accesses option,Configure sidebar quick access options> multiple times (e.g., twice) before starting to configure the items
+
+================= [TaskTest] FDG[49] =================
+[Function] Sort By option
+
+[Core Logic Task]
+The core execution logic for the Sort By option starts on page 83. The user clicks on the 'Sort By' option, which leads to page 88. There are no branches or loops in this flow as it is a single action leading to a new page.
+
+[Variant Paths] (3)
+ - V1: Tap <Sort By option> twice
+ - V2: Omit tapping <Sort By option> (simulate not triggering the sort action)
+ - V3: Tap <Sort By option> and then immediately tap <Sort By option> again (repeated action)
+
+================= [TaskTest] FDG[50] =================
+[Function] Directory Sort Mode option
+
+[Core Logic Task]
+The user starts on page 83 (a file directory view). The core action is clicking the 'Directory Sort Mode' option, which navigates to page 89. There are no branches or loops as this is a single-step navigation to access the directory sort mode.
+
+[Variant Paths] (3)
+ - V1: Tap <Directory Sort Mode option> twice
+ - V2: Omit tapping <Directory Sort Mode option> (stay on page 83)
+ - V3: Tap <Directory Sort Mode option> after a short delay (simulating a timing mutation)
+
+================= [TaskTest] FDG[51] =================
+[Function] Clear history
+
+[Core Logic Task]
+The user initiates the clear history process by clicking the 'Clear history' option. This action likely leads to a confirmation or execution step to complete the history clearing.
+
+[Variant Paths] (3)
+ - V1: Tap <Clear history> twice (repeat operation)
+ - V2: Omit tapping <Clear history> (skip the step)
+ - V3: Tap <Clear history> with a delay between taps (simulate repeated action with pause)
+
+================= [TaskTest] FDG[52] =================
+[Function] SMB Connection option
+
+[Core Logic Task]
+The flow starts on page 100. The user clicks on the 'SMB Connection' option, which navigates to page 101. There are no branches or loops as this is a single action to initiate the SMB connection process.
+
+[Variant Paths] (2)
+ - V1: Omit tapping <SMB Connection option> (to test if the app still navigates to page 101 without this action, though logically it shouldn't)
+ - V2: Tap <SMB Connection option> twice (to test if repeated tapping causes unexpected behavior like multiple navigations or errors)
+
+================= [TaskTest] FDG[53] =================
+[Function] Get Cloud plugin option
+
+[Core Logic Task]
+The flow starts on page 100. The user performs a click action to select the 'Get Cloud plugin' option, which navigates to page 102. There are no branches or loops as this is a single-step action to access the cloud plugin option.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Get Cloud plugin option> (to test if the app still navigates to page 102 without this action, though expected to fail)
+ - V2: Tap <Get Cloud plugin option> twice (to test if repeated action causes unexpected behavior like multiple navigations or errors)
+ - V3: Tap a non - existent option (but since only <Get Cloud plugin option> is available, this is a mutation of choosing an invalid alternative, though in practice we can't do that, so we can consider a mis - tap scenario where we try to tap near <Get Cloud plugin option> instead of on it)
+
+================= [TaskTest] FDG[54] =================
+[Function] The current page is a dialog for configuring the FTP port, allowing the user to enter a new port number and either cancel the action or confirm the change to update the FTP server's port setting.
+
+[Core Logic Task]
+The user first clicks the FTP port option to open the configuration dialog. Then, in the dialog, the user can either click the input field to modify the port number or click the CHANGE button to confirm the port change. This creates a branch where the flow diverges based on the user's choice to either edit the port or confirm the current/modified port.
+
+[Variant Paths] (3)
+ - V1: Tap <FTP port option,FTP port configuration dialog>, then omit interacting with <FTP port input field> and directly tap <CHANGE button>
+ - V2: Tap <FTP port option,FTP port configuration dialog>, input an empty string into <FTP port input field>, then tap <CHANGE button>
+ - V3: Tap <FTP port option,FTP port configuration dialog>, input a very long string (e.g., 1000 characters) into <FTP port input field>, then tap <CHANGE button>
+
+================= [TaskTest] FDG[55] =================
+[Function] The current page (Shared Path configuration dialog) allows the user to view, edit, and confirm changes to the shared path for the FTP Server, with options to cancel the action or change the path.
+
+[Core Logic Task]
+The user starts on the FTP Server page and clicks the 'Shared Path' option to open the configuration dialog. In the dialog, the user can either click the input field to edit the path or click the 'CHANGE' button to confirm changes. These are two mutually exclusive actions (edit or confirm) from the dialog.
+
+[Variant Paths] (3)
+ - V1: Start on FTP Server page, click <Shared Path option,Shared Path configuration dialog>, then omit interacting with <Shared Path input field> and directly click <CHANGE button> (test confirm without edit)
+ - V2: Start on FTP Server page, click <Shared Path option,Shared Path configuration dialog>, repeat clicking <Shared Path input field> multiple times then click <CHANGE button> (test repeated edit then confirm)
+ - V3: Start on FTP Server page, click <Shared Path option,Shared Path configuration dialog>, input empty string into <Shared Path input field> then click <CHANGE button> (test empty input then confirm)
+
+================= [TaskTest] FDG[56] =================
+[Function] The current page is an FTP login configuration dialog that allows users to input a username, password, and select options like anonymous login or secure connection to configure FTP server login settings.
+
+[Core Logic Task]
+The user starts by opening the FTP login configuration dialog via the 'Login' option. Then, they can choose to input the username, input the password, or directly confirm the settings with the 'SET' button. These input steps are optional and can be done in any order before finalizing the configuration.
+
+[Variant Paths] (3)
+ - V1: Open <Login option,FTP login configuration dialog>, then directly tap <SET button> (omit username and password input)
+ - V2: Open <Login option,FTP login configuration dialog>, input very long text (e.g., 1000 characters) into <Username input field>, input very long text (e.g., 1000 characters) into <Password input field>, then tap <SET button> (boundary input mutation)
+ - V3: Open <Login option,FTP login configuration dialog>, input password into <Password input field>, input username into <Username input field>, then tap <SET button> (order mutation: swap username and password input order)
+
+================= [TaskTest] FDG[57] =================
+[Function] This page allows the user to set the idle timeout (in seconds) for the FTP server by entering a value and confirming it with the "SET" button or canceling the action with the "CANCEL" button.
+
+[Core Logic Task]
+The user starts on page 15 and clicks the 'Idle timeout' option to navigate to page 20. Then, on page 20, the user clicks the input field to enter the idle timeout value, moving to page 31. There are no branches in this flow as it is a linear sequence of actions to set the FTP server idle timeout.
+
+[Variant Paths] (3)
+ - V1: Start on page 15, omit clicking <Idle timeout option,Set idle timeout for FTP server> and directly try to input value into <Input idle timeout value>
+ - V2: Start on page 15, click <Idle timeout option,Set idle timeout for FTP server> to page 20, then input empty value into <Input idle timeout value>
+ - V3: Start on page 15, click <Idle timeout option,Set idle timeout for FTP server> to page 20, then input a very long string (e.g., 10000000000000000000) into <Input idle timeout value>
+
+================= [TaskTest] FDG[58] =================
+[Function] Exit option
+
+[Core Logic Task]
+The user starts on page 15 (FTP Server page). The core logic is to click the 'Exit' option (from the menu) to navigate to page 21. There are no branches or loops here as it's a single action to trigger the exit navigation.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Exit option> (check if navigation still occurs, though expected to fail)
+ - V2: Tap <Exit option> twice (check if multiple exits have unexpected behavior)
+ - V3: Tap <Exit option> after a short delay (simulate timing variation in interaction)
+
+================= [TaskTest] FDG[59] =================
+[Function] Exit option
+
+[Core Logic Task]
+The user starts on page 34 (App Manager). The core logic is a single step: clicking the 'Exit' option (action_ref [34,0]) to navigate to page 41. There are no branches or loops as it's a direct exit action.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Exit option> (stays on page 34 instead of navigating to 41)
+ - V2: Repeat clicking <Exit option> (click it multiple times, though expected to still reach page 41 each time)
+ - V3: Tap <Exit option> twice in quick succession (testing if repeated exit actions cause any deviation)
+
+================= [TaskTest] FDG[60] =================
+[Function] Open the app
+
+[Core Logic Task]
+The core execution logic for opening the app starts at page 35. A click action is performed on the 'Open' option (from the app's context menu), which navigates to page 42, completing the app opening process. There are no branches or loops in this flow.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[61] =================
+[Function] Backup the app
+
+[Core Logic Task]
+The process starts on the App Manager page (page 35). The user clicks the 'Backup' option (from the app's menu) to initiate the app backup. This action leads to the next page (page 43), completing the core logic of triggering the app backup.
+
+[Variant Paths] (3)
+ - V1: Omit the step: On the App Manager page (page 35), do not click <Backup the app> and check if the backup still occurs
+ - V2: Repeat the step: On the App Manager page (page 35), click <Backup the app> twice and observe the result on page 43
+ - V3: Boundary case (though input not applicable here, but for mutation context): Try to trigger <Backup the app> in a scenario where the app has no data to backup (simulated by assuming no app data) and check the backup outcome on page 43
+
+================= [TaskTest] FDG[62] =================
+[Function] Uninstall the app
+
+[Core Logic Task]
+The process starts on the App Manager page (page 35). The user clicks the 'Uninstall' option (from the app's menu) to initiate the app uninstallation, leading to the next page (page 44). There are no branches or loops in this flow as it’s a single action to trigger uninstallation.
+
+[Variant Paths] (3)
+ - V1: Omit the step: Tap <Uninstall the app> (simulate not initiating uninstallation)
+ - V2: Repeat the step: Tap <Uninstall the app> twice (simulate repeated uninstall trigger)
+ - V3: Boundary case (though no input, but try a different interaction timing: Tap <Uninstall the app> after a long delay)
+
+================= [TaskTest] FDG[63] =================
+[Function] View app properties
+
+[Core Logic Task]
+The user starts on page 35 (App Manager). They perform a click action to view app properties, which transitions the flow to page 45. This is a straight - line flow with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Tap <View app properties> twice (repeat operation)
+ - V2: Omit tapping <View app properties> (though this would not view app properties, testing the omission)
+ - V3: Tap <View app properties> (original flow, included for comparison as a base case mutation check)
+
+================= [TaskTest] FDG[64] =================
+[Function] Open in Play store
+
+[Core Logic Task]
+The process starts on page 35 (App Manager). A click action is performed on the 'Open in Play store' option, which navigates to page 46 (Play Store page for the app). There are no branches or loops as it is a single-step flow to open the app's Play Store page.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[65] =================
+[Function] Share the app
+
+[Core Logic Task]
+The process starts on the app management page (page 35). The user clicks the 'Share' option (from the app's menu) to initiate sharing the app, which navigates to the sharing interface (page 47). There are no branches or loops in this simple flow.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Share the app> (try to see if sharing can be done without this action)
+ - V2: Tap <Share the app> twice (repeat the share action to see if it causes any issues or different behavior)
+ - V3: Tap <Share the app> and then immediately tap <Share the app> again (similar to repeating but with quick successive taps)
+
+================= [TaskTest] FDG[66] =================
+[Function] This page allows the user to select a color from a grid of color options (with a "DEFAULT" and "CANCEL" option) for setting the primary color of UI elements related to the left tab in the Amaze app's settings.
+
+[Core Logic Task]
+The user starts on the color settings page. They click on the 'Primary Color (Right Tab)' option, which opens a color selection dialog with a grid of colors, a 'DEFAULT' option, and a 'CANCEL' option. This action initiates the process of selecting a color for the right tab's primary UI elements.
+
+[Variant Paths] (3)
+ - V1: Tap <Primary Color (Right Tab) setting> and then immediately tap <Primary Color (Right Tab) setting> again (repeating the tap)
+ - V2: Omit tapping <Primary Color (Right Tab) setting> (not performing the action to open the color selection dialog)
+ - V3: Tap <Primary Color (Right Tab) setting> and then try to input an invalid value (though there's no input field, simulating a wrong interaction attempt after opening the dialog)
+
+================= [TaskTest] FDG[67] =================
+[Function] This page allows the user to select a color from a grid of color options (with a "DEFAULT" and "CANCEL" option) to set the primary color for the left tab in the Amaze app's UI.
+
+[Core Logic Task]
+The user starts on page 48 and clicks the 'Accent Color' setting, which navigates to page 58 (the color selection dialog). This action initiates the process of selecting a color for the UI element, leading to the color grid and options like DEFAULT and CANCEL.
+
+[Variant Paths] (3)
+ - V1: Start on page 48, long - press <Accent Color setting> instead of clicking it, then check if it navigates to page 58
+ - V2: Start on page 48, click <Accent Color setting> twice in a row, then check the behavior of the color selection dialog
+ - V3: Start on page 48, omit clicking <Accent Color setting> and check if the color selection dialog (page 58) can be accessed in another way
+
+================= [TaskTest] FDG[68] =================
+[Function] Colorize Icons toggle
+
+[Core Logic Task]
+The flow starts on page 48. The user clicks the 'Colorize Icons' toggle, which leads to page 59. This is a single-step action with no branches or loops, as the toggle interaction is a direct click to (presumably) change its state or confirm its current setting.
+
+[Variant Paths] (3)
+ - V1: Long-press <Colorize Icons toggle> (instead of tap, testing if long-press triggers the same or different behavior)
+ - V2: Tap <Colorize Icons toggle> twice (repeating the tap to see if it toggles back or has unexpected behavior)
+ - V3: Omit tapping <Colorize Icons toggle> (testing if the app proceeds without interacting with the toggle, though since the flow is supposed to start with this, it's a boundary case of skipping the required action)
+
+================= [TaskTest] FDG[69] =================
+[Function] Colored Navigation bar toggle
+
+[Core Logic Task]
+The user starts on page 48 (Color settings) and clicks the 'Colored Navigation bar' toggle. This action leads to page 60, completing the toggle interaction for the colored navigation bar feature.
+
+[Variant Paths] (3)
+ - V1: Start on page 48 (Color settings), long - press <Colored Navigation bar toggle> (instead of click)
+ - V2: Start on page 48 (Color settings), omit clicking <Colored Navigation bar toggle> (check if the app still navigates to page 60)
+ - V3: Start on page 48 (Color settings), click <Colored Navigation bar toggle> twice (repeat the click operation)
+
+================= [TaskTest] FDG[70] =================
+[Function] Random Skin toggle
+
+[Core Logic Task]
+The user starts on page 48 (Color settings) and clicks the 'Random Skin' toggle. This action likely toggles the setting (e.g., from off to on or vice versa) and may navigate to page 61, completing the toggle operation.
+
+[Variant Paths] (3)
+ - V1: Tap <Random Skin toggle> twice (repeat the toggle action to see if it reverts or has unexpected behavior)
+ - V2: Omit tapping <Random Skin toggle> (check if the app still navigates or has default behavior without toggling)
+ - V3: Tap <Random Skin toggle> and then immediately tap it again (rapid repeated toggling to test stability)
+
+================= [TaskTest] FDG[71] =================
+[Function] This page allows the user to edit the name and directory path of a sidebar shortcut in the Amaze file manager app, with options to cancel or confirm the changes.
+
+[Core Logic Task]
+The user starts by clicking to edit a sidebar shortcut, opening the edit dialog. Then, they can choose to click the name input field, the directory input field, or the edit confirmation button. These are mutually exclusive actions to modify the shortcut's name, directory, or confirm changes.
+
+[Variant Paths] (3)
+ - V1: Tap <Edit shortcut,Edit sidebar shortcut details>, then Tap <Edit confirmation button> without interacting with <Name input field> or <Directory input field> (omit input steps)
+ - V2: Tap <Edit shortcut,Edit sidebar shortcut details>, Input empty string into <Name input field>, then Tap <Edit confirmation button> (boundary input for name)
+ - V3: Tap <Edit shortcut,Edit sidebar shortcut details>, Tap <Directory input field>, then Tap <Edit confirmation button> (alternative input field choice)
+
+================= [TaskTest] FDG[72] =================
+[Function] Delete shortcut
+
+[Core Logic Task]
+The process starts on the 'Sidebar shortcuts' page (page 56). The user clicks the 'Delete shortcut' button (trash icon) for a specific shortcut. This action likely leads to the deletion of the shortcut, with the flow ending after this click (as the action is marked as a leaf).
+
+[Variant Paths] (3)
+ - V1: On the 'Sidebar shortcuts' page, long - press <Delete shortcut> (instead of clicking)
+ - V2: On the 'Sidebar shortcuts' page, click <Delete shortcut> twice (repeating the delete action)
+ - V3: On the 'Sidebar shortcuts' page, omit clicking <Delete shortcut> (not performing the deletion)
+
+================= [TaskTest] FDG[73] =================
+[Function] The page allows users to input a name and select a directory to create a new sidebar shortcut within the Amaze app's sidebar shortcuts management interface.
+
+[Core Logic Task]
+The process starts on the Sidebar shortcuts page. First, the user clicks to add a new shortcut, opening the Create shortcut dialog. Then, the user clicks the Name input field to enter a name, followed by clicking the Directory input field to select a directory. Finally, the user clicks the Create shortcut button to finalize the new sidebar shortcut.
+
+[Variant Paths] (3)
+ - V1: Tap <Add new shortcut item,Create sidebar shortcut>, omit input into <Name input field>, tap <Directory input field>, tap <Create shortcut button>
+ - V2: Tap <Add new shortcut item,Create sidebar shortcut>, input a very long string (e.g., 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa') into <Name input field>, tap <Directory input field>, tap <Create shortcut button>
+ - V3: Tap <Add new shortcut item,Create sidebar shortcut>, tap <Directory input field>, tap <Name input field>, input 'test' into <Name input field>, tap <Create shortcut button>
+
+================= [TaskTest] FDG[74] =================
+[Function] Quick access toggle
+
+[Core Logic Task]
+The user starts on page 57 and clicks the 'Quick access toggle' action. This action leads to page 75, completing the quick access toggle functionality.
+
+[Variant Paths] (3)
+ - V1: Start on page 57, long-press <Quick access toggle> (instead of click)
+ - V2: Start on page 57, click <Quick access toggle> twice (repeat the action)
+ - V3: Omit clicking <Quick access toggle> and check if page 75 is still reached (though this may not work as per core logic, but it's a mutation attempt)
+
+================= [TaskTest] FDG[75] =================
+[Function] Recent files toggle
+
+[Core Logic Task]
+The user starts on page 57 (Sidebar quick access). They perform a click action on the 'Recent files' toggle, which transitions the app to page 76. This action toggles the state of the 'Recent files' option in the quick access settings.
+
+[Variant Paths] (3)
+ - V1: Tap <Recent files toggle> twice in a row (repeat operation to see if state toggles back)
+ - V2: Omit tapping <Recent files toggle> (check if app stays on page 57 without action)
+ - V3: Tap <Recent files toggle> with a long-press (incorrect interaction type mutation)
+
+================= [TaskTest] FDG[76] =================
+[Function] Images toggle
+
+[Core Logic Task]
+The user starts on page 57 (Sidebar quick access). They perform a click action on the 'Images' toggle, which transitions the app to page 77. This action toggles the Images option in the quick access settings.
+
+[Variant Paths] (3)
+ - V1: Tap <Images toggle> twice (repeat the toggle action)
+ - V2: Omit tapping <Images toggle> (stay on page 57)
+ - V3: Tap <Images toggle> and then immediately tap <Images toggle> again (order mutation with repeated toggle)
+
+================= [TaskTest] FDG[77] =================
+[Function] Videos toggle
+
+[Core Logic Task]
+The user starts on page 57 (Sidebar quick access) and clicks the 'Videos' toggle. This action leads to page 78, completing the toggle interaction for the Videos option.
+
+[Variant Paths] (3)
+ - V1: Start on page 57 (Sidebar quick access), long-press <Videos toggle> (instead of click)
+ - V2: Start on page 57 (Sidebar quick access), click <Videos toggle> twice (repeat click)
+ - V3: Omit starting on page 57 (Sidebar quick access) and directly click <Videos toggle> (though this may not be valid in app context but follows omit mutation)
+
+================= [TaskTest] FDG[78] =================
+[Function] Audio toggle
+
+[Core Logic Task]
+The user starts on page 57 (Sidebar quick access). They perform a click action on the Audio toggle, which transitions the app to page 79. This single step toggles the Audio quick access setting.
+
+[Variant Paths] (3)
+ - V1: Tap <Audio toggle> twice (repeating the toggle action)
+ - V2: Omit tapping <Audio toggle> (checking if the app still transitions or behaves differently without the action)
+ - V3: Long-press <Audio toggle> (trying an alternative interaction instead of a single tap)
+
+================= [TaskTest] FDG[79] =================
+[Function] Documents toggle
+
+[Core Logic Task]
+The user starts on page 57 (Sidebar quick access) and clicks the 'Documents' toggle. This action leads to page 80, completing the toggle interaction for the Documents option.
+
+[Variant Paths] (3)
+ - V1: Tap <Documents toggle> twice
+ - V2: Omit tapping <Documents toggle> (though this doesn't complete the interaction as per original, but is a mutation of omitting the step)
+ - V3: Tap <Documents toggle> then tap it again immediately (repeat mutation)
+
+================= [TaskTest] FDG[80] =================
+[Function] Apks toggle
+
+[Core Logic Task]
+The user starts on page 57 (Sidebar quick access) and clicks the 'Apks' toggle, which navigates to page 81. This is a single-step flow with no branches or loops, focusing on toggling the Apks option and navigating to the resulting page.
+
+[Variant Paths] (3)
+ - V1: Tap <Apks toggle> twice (repeat the toggle action)
+ - V2: Omit tapping <Apks toggle> (skip the navigation trigger)
+ - V3: Tap <Apks toggle> and then immediately tap <Apks toggle> again (repeat the toggle in quick succession)
+
+================= [TaskTest] FDG[81] =================
+[Function] Cut option
+
+[Core Logic Task]
+The core execution logic for the Cut option starts on page 103. The user performs a click action on the 'Cut' option, which transitions the flow to page 105. This is a straight - line flow with no branches or loops as it's a single action to initiate the cut operation.
+
+[Variant Paths] (3)
+ - V1: Tap <Cut option> twice (repeat the operation)
+ - V2: Omit tapping <Cut option> (skip the step)
+ - V3: Tap <Cut option> (original flow, included for comparison)
+
+================= [TaskTest] FDG[82] =================
+[Function] Copy option
+
+[Core Logic Task]
+The core execution logic for the copy option starts on page 103. The user performs a click action on the 'Copy' option, which transitions the flow to page 106. This is a straightforward, single-step flow with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Copy option> (to test if the flow still transitions to page 106 without the action)
+ - V2: Tap <Copy option> twice (to test if repeated action causes unexpected behavior)
+ - V3: Tap a non - existent option instead of <Copy option> (but since only <Copy option> is available, this is a mutation of choosing an invalid alternative, though in reality only <Copy option> is present)
+
+================= [TaskTest] FDG[83] =================
+[Function] Delete option
+
+[Core Logic Task]
+The user initiates the delete process by clicking the 'Delete option' (likely a context menu item or button) on the source page (103). This action leads to the destination page (107), completing the core logic of selecting the delete option.
+
+[Variant Paths] (3)
+ - V1: Tap <Delete option> twice
+ - V2: Omit tapping <Delete option> (simulate not initiating delete)
+ - V3: Tap <Delete option> and then immediately tap <Delete option> again
+
+================= [TaskTest] FDG[84] =================
+[Function] Displays a warning dialog informing the user about the risk of being unable to decrypt content if the security pattern is changed in System settings, with options to dismiss the warning or prevent future displays.
+
+[Core Logic Task]
+A warning dialog appears, informing the user about decryption risks if the security pattern is changed. The user can then choose to dismiss the warning (by clicking 'GOT IT!') or prevent future displays (by clicking 'DON'T INFORM AGAIN').
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[85] =================
+[Function] Displays a warning dialog about the risk of being unable to decrypt content when changing the security pattern from System settings, with options to dismiss the warning or prevent future warnings.
+
+[Core Logic Task]
+The flow starts with clicking the Encrypt option. This triggers a warning dialog about decryption risks when changing the security pattern. At this point, the user can choose to dismiss the warning (via 'GOT IT!') or prevent future warnings (via 'DON'T INFORM AGAIN').
+
+[Variant Paths] (3)
+ - V1: Tap <Encrypt option> and then tap <DON'T INFORM AGAIN> (instead of the usual 'GOT IT!')
+ - V2: Tap <Encrypt option> twice (repeating the trigger step)
+ - V3: Tap <Encrypt option> and omit interacting with either warning option (leaving the dialog open)
+
+================= [TaskTest] FDG[86] =================
+[Function] The current page displays the properties of a selected file (including name, location, size, date, and storage usage details) within the Pictures directory in a file management application.
+
+[Core Logic Task]
+The flow starts on the Pictures directory page. First, the 'Properties' option is clicked to open the file properties dialog (displaying details like name, location, etc.). Then, the 'Close properties dialog' action is performed to exit the properties view. There are no branches or loops as it is a linear sequence of actions.
+
+[Variant Paths] (3)
+ - V1: On the Pictures directory page, omit clicking <Properties option,Display file properties> and directly perform <Close properties dialog>
+ - V2: On the Pictures directory page, click <Properties option,Display file properties> twice and then perform <Close properties dialog>
+ - V3: On the Pictures directory page, perform <Close properties dialog> first and then click <Properties option,Display file properties>
+
+================= [TaskTest] FDG[87] =================
+[Function] Anonymous checkbox
+
+[Core Logic Task]
+The user interacts with the 'Anonymous' checkbox on the Login dialog. Clicking this checkbox (which may toggle its state) leads to a transition to page 28. There are no branches or loops here, as it's a single action triggering a navigation.
+
+[Variant Paths] (3)
+ - V1: Tap <Anonymous checkbox> twice (repeat the tap operation)
+ - V2: Omit tapping <Anonymous checkbox> and check if navigation to page 28 still occurs (though expected to fail, this is an omit mutation)
+ - V3: Tap <Anonymous checkbox> once (original behavior, included for comparison context but mutation here is about alternative executions)
+
+================= [TaskTest] FDG[88] =================
+[Function] Secure Connection checkbox
+
+[Core Logic Task]
+The flow starts on page 19. The user clicks the 'Secure Connection' checkbox, which leads to page 29. There are no branches or loops in this logic as it is a single action to interact with the checkbox.
+
+[Variant Paths] (2)
+ - V1: Omit tapping <Secure Connection checkbox> (check if page navigation still occurs or not)
+ - V2: Tap <Secure Connection checkbox> twice (check if multiple taps have any side effect on page navigation or checkbox state)
+
+================= [TaskTest] FDG[89] =================
+[Function] Set idle timeout
+
+[Core Logic Task]
+The process starts on page 20. The user clicks on the 'Set idle timeout' option, which leads to page 32 (the idle timeout dialog). This action initiates the process of configuring the idle timeout, and the flow is a straight line with no branching or looping.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[90] =================
+[Function] Open as Text
+
+[Core Logic Task]
+The functional point starts on page 104. The user performs a click action on the 'Open as Text' option. This action leads to the destination page 111, completing the 'Open as Text' functionality in a single step with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Tap <Open as Text> twice (repeat the click operation)
+ - V2: Omit tapping <Open as Text> (skip the core action)
+ - V3: Tap <Open as Text> after a short delay (simulate a timing variation in the click)
+
+================= [TaskTest] FDG[91] =================
+[Function] Open as Image
+
+[Core Logic Task]
+The process starts on page 104. The user clicks the 'Open as Image' option, which navigates to page 112. This is a straight - line flow with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Open as Image> (intended to see if the app still navigates to page 112 without this action, though likely it won't, but it's a mutation test)
+ - V2: Tap <Open as Image> twice (repeat the action to see if the app behaves differently, e.g., multiple navigations or errors)
+ - V3: Tap <Open as Image> and then immediately tap <Open as Image> again (similar to repeating but with quick succession to test responsiveness)
+
+================= [TaskTest] FDG[92] =================
+[Function] Open as Video
+
+[Core Logic Task]
+The functional point starts on page 104. The user performs a click action on the 'Open as Video' option, which navigates to page 113. There are no branches or loops as it is a single-step flow to open the content as a video.
+
+[Variant Paths] (3)
+ - V1: Tap <Open as Video> twice (repeat operation)
+ - V2: Omit tapping <Open as Video> (omit step)
+ - V3: Tap <Open as Video> after a short delay (simulate timing variation, though single - step, this is a mutation of the original single - step flow)
+
+================= [TaskTest] FDG[93] =================
+[Function] Open as Audio
+
+[Core Logic Task]
+The process starts on page 104. The user performs a click action on the 'Open as Audio' option. This action leads to the destination page 114, completing the 'Open as Audio' functional point execution.
+
+[Variant Paths] (3)
+ - V1: Tap <Open as Audio> twice (repeat the action)
+ - V2: Omit tapping <Open as Audio> (skip the core action)
+ - V3: Long - press <Open as Audio> instead of tapping (branch mutation with alternative interaction type)
+
+================= [TaskTest] FDG[94] =================
+[Function] Open as Database
+
+[Core Logic Task]
+The process starts on page 104. The user performs a click action labeled 'Open as Database', which navigates to page 115. This is a straight - line flow with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Tap <Open as Database> twice
+ - V2: Omit tapping <Open as Database> (simulate not performing the action)
+ - V3: Tap <Open as Database> after a short delay (simulate a timing - related mutation, though the action is the same, the context of when it's done is mutated)
+
+================= [TaskTest] FDG[95] =================
+[Function] Open as Other
+
+[Core Logic Task]
+The user initiates the 'Open as Other' action by clicking the 'Other' option in the 'Open As' dialog. This action transitions the app to the destination page associated with opening the item as 'Other'.
+
+[Variant Paths] (3)
+ - V1: Tap <Open as Other> twice (repeat operation)
+ - V2: Omit tapping <Open as Other> (skip the core action)
+ - V3: Tap <Open as Other> after a short delay (simulate timing variation, though widget interaction is same but contextually a mutation in usage flow)
+
+================= [TaskTest] FDG[96] =================
+[Function] Save to Drive option
+
+[Core Logic Task]
+The flow starts on page 110 (a share dialog). The user clicks the 'Save to Drive' option, which transitions the app to page 120. This is a straight - line flow with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Save to Drive option> (check if the app stays on page 110 without transition)
+ - V2: Tap <Save to Drive option> twice (check if the app still transitions to page 120 or has unexpected behavior)
+ - V3: Tap <Save to Drive option> after a short delay (simulate a different interaction timing to see if the transition is affected)
+
+================= [TaskTest] FDG[97] =================
+[Function] Add to Maps option
+
+[Core Logic Task]
+The user initiates the process on page 110. The core action is clicking the 'Add to Maps' option in the share dialog, which transitions to page 121. There are no branches or loops as it's a single-step flow to execute the 'Add to Maps' action.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <Add to Maps option> (to test if the flow still proceeds without this action, though expected to fail as per core logic)
+ - V2: Repeat clicking <Add to Maps option> (to test if multiple clicks cause any unexpected behavior like duplicate entries or errors)
+
+================= [TaskTest] FDG[98] =================
+[Function] Messenger option
+
+[Core Logic Task]
+The process starts on page 110 (a share menu). The user clicks the Messenger option, which navigates to page 122. This is a straight - line flow with no branches or loops.
+
+[Variant Paths] (2)
+ - V1: Omit tapping <Messenger option> (check if the flow still proceeds or errors)
+ - V2: Tap <Messenger option> twice (check if it navigates to page 122 twice or behaves unexpectedly)
+
+================= [TaskTest] FDG[99] =================
+[Function] Upload to Photos option
+
+[Core Logic Task]
+The flow starts on page 110 (a share dialog). The user clicks the 'Upload to Photos' option, which transitions the app to page 123. This is a straight - line flow with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Upload to Photos option> and check if the app still transitions to page 123 (though expected to stay on page 110)
+ - V2: Click <Upload to Photos option> twice (unlikely to change flow but tests repetition)
+ - V3: Click <Upload to Photos option> after a short delay (tests timing - related mutation, though flow is straight - line)
+
+================= [TaskTest] FDG[100] =================
+[Function] Gmail option
+
+[Core Logic Task]
+The flow starts on page 110. The user clicks the 'Gmail' option in the share dialog, which navigates to page 124. There are no branches or loops as this is a single action to select Gmail for sharing.
+
+[Variant Paths] (2)
+ - V1: Omit tapping <Gmail option> (to test if sharing fails without selecting Gmail)
+ - V2: Repeat tapping <Gmail option> (to test if multiple taps cause unexpected behavior like multiple navigation attempts or errors)
+
+================= [TaskTest] FDG[101] =================
+[Function] Save as... option
+
+[Core Logic Task]
+The user initiates the 'Save as...' process by clicking the 'Save as...' option in the Share dialog. This action transitions to the next page (125) to continue the save operation.
+
+[Variant Paths] (3)
+ - V1: Tap <Save as... option> twice
+ - V2: Omit tapping <Save as... option> (simulate not initiating the save process)
+ - V3: Tap <Save as... option> after a short delay (simulate timing variation in interaction)
+
+
+[AppTest] Found 118 dependency pairs to test.
+
+==============================================
+[AppTest] Pair 1/118: 1 -> 16
+Producer: The current page is a navigation menu in a file manager app, providing options to access different storage locations, quick access sections, server management, app management, and settings.
+Consumer: The current page in the Amaze file manager displays the contents of the "Videos" directory, showing that it currently contains 0 folders and 0 files, with options to search, navigate home, access more options, and add new items.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the main file manager page (page 0), click the navigation menu button to open the navigation menu (page 1) with storage, quick access, server management, app management, and settings options.
+Consumer task:
+ From the opened navigation menu (produced by the producer), click on the 'Videos' navigation item. Verify that the page navigates to the 'Videos' directory and displays 0 folders, 0 files, along with search, home navigation, more options, and add new items options.
+------------------------------
+
+==============================================
+[AppTest] Pair 2/118: 3 -> 2
+Producer: The current page in the Amaze file manager app displays the contents of the home directory ("/storage/emulated/0"), showing a list of folders (e.g., Alarms, Android, DCIM) with their modification dates and options for additional actions, allowing users to browse, manage, and access files and directories within the home storage.
+Consumer: The current page provides a file and folder search interface within the "/storage/emulated/0" directory, allowing users to search for specific files or folders among the listed 13 folders and 32 files, and also enabling navigation back or clearing the search, along with options to interact with each folder via the three - dot menu and a button to add new items.
+
+[Plan]
+Case 1/1
+Producer task:
+ Trigger the 'Go to home directory' action (e.g., click the home icon) to navigate to and display the home directory ("/storage/emulated/0") contents, including folders with modification dates and action options.
+Consumer task:
+ From the home directory page, click the search button to enter the file/folder search interface. Then, click the search input field and type a search query (e.g., the name of a folder from the home directory contents produced by the Producer) to verify the searchable items match the home directory's files and folders.
+------------------------------
+
+==============================================
+[AppTest] Pair 3/118: 3 -> 4
+Producer: The current page in the Amaze file manager app displays the contents of the home directory ("/storage/emulated/0"), showing a list of folders (e.g., Alarms, Android, DCIM) with their modification dates and options for additional actions, allowing users to browse, manage, and access files and directories within the home storage.
+Consumer: The current page's more options menu in the file manager provides additional actions such as sorting, viewing history, switching to grid view, setting the current directory as home, or exiting the app.
+
+[Plan]
+Case 1/1
+Producer task:
+ Trigger the 'Go to home directory' action (e.g., click the home icon) to navigate to and display the home directory ("/storage/emulated/0") contents, including folders with modification dates and action options.
+Consumer task:
+ From the home directory page, click the more options menu. Then, click the 'Sort' option to verify that the sort setting is applied to the home directory content (folders with modification dates) displayed earlier.
+------------------------------
+
+==============================================
+[AppTest] Pair 4/118: 3 -> 5
+Producer: The current page in the Amaze file manager app displays the contents of the home directory ("/storage/emulated/0"), showing a list of folders (e.g., Alarms, Android, DCIM) with their modification dates and options for additional actions, allowing users to browse, manage, and access files and directories within the home storage.
+Consumer: The current page in the Amaze file manager app displays a list of folders within the "/storage/emulated/0" directory and provides a context menu with operations (Cut, Copy, Delete, Rename, Encrypt, Properties, Add to Bookmark) for managing a selected folder.
+
+[Plan]
+Case 1/1
+Producer task:
+ Trigger the 'Go to home directory' action (e.g., click the home icon) to navigate to and display the home directory ("/storage/emulated/0") contents, including folders with modification dates and action options.
+Consumer task:
+ On the home directory ("/storage/emulated/0") folder list page, click the three - dots options menu of a folder to open the context menu and verify it contains operations (Cut, Copy, Delete, Rename, Encrypt, Properties, Add to Bookmark) for the selected folder.
+------------------------------
+
+==============================================
+[AppTest] Pair 5/118: 3 -> 6
+Producer: The current page in the Amaze file manager app displays the contents of the home directory ("/storage/emulated/0"), showing a list of folders (e.g., Alarms, Android, DCIM) with their modification dates and options for additional actions, allowing users to browse, manage, and access files and directories within the home storage.
+Consumer: The current page in the Amaze file manager app provides options to create a new folder, a new file, or set up a cloud connection within the /storage/emulated/0 directory, while also displaying existing folders and files in that directory.
+
+[Plan]
+Case 1/1
+Producer task:
+ Trigger the 'Go to home directory' action (e.g., click the home icon) to navigate to and display the home directory ("/storage/emulated/0") contents, including folders with modification dates and action options.
+Consumer task:
+ From the home directory ("/storage/emulated/0") page, click the pink '+' button to open the 'Create new item' menu, then verify the submenu shows options to create a folder, a file, or set up a cloud connection (while existing home directory folders/files remain visible).
+------------------------------
+
+==============================================
+[AppTest] Pair 6/118: 3 -> 7
+Producer: The current page in the Amaze file manager app displays the contents of the home directory ("/storage/emulated/0"), showing a list of folders (e.g., Alarms, Android, DCIM) with their modification dates and options for additional actions, allowing users to browse, manage, and access files and directories within the home storage.
+Consumer: The current page in the Amaze file manager app displays the contents (folders and files) of the "/storage/emulated/0" directory, allowing users to browse, manage (via the three - dot menu for each item), and potentially create new items (via the plus button) within this storage location.
+
+[Plan]
+Case 1/1
+Producer task:
+ Trigger the 'Go to home directory' action (e.g., click the home icon) to navigate to and display the contents of the home directory ("/storage/emulated/0"), including folders with modification dates and action options.
+Consumer task:
+ Start on page 1 (navigation menu) and click the 'Storage' navigation item (which should correspond to the home directory content produced by the producer) to navigate to page 0 and verify that the displayed contents of "/storage/emulated/0" match the home directory content from the producer, with folders, modification dates, and action options as expected.
+------------------------------
+
+==============================================
+[AppTest] Pair 7/118: 3 -> 16
+Producer: The current page in the Amaze file manager app displays the contents of the home directory ("/storage/emulated/0"), showing a list of folders (e.g., Alarms, Android, DCIM) with their modification dates and options for additional actions, allowing users to browse, manage, and access files and directories within the home storage.
+Consumer: The current page in the Amaze file manager displays the contents of the "Videos" directory, showing that it currently contains 0 folders and 0 files, with options to search, navigate home, access more options, and add new items.
+
+[Plan]
+Case 1/1
+Producer task:
+ Trigger the 'Go to home directory' action (e.g., click the home icon) to display the home directory ("/storage/emulated/0") contents with folders, modification dates, and action options.
+Consumer task:
+ From the home directory page, click on the 'Videos' navigation item to navigate to the 'Videos' directory page and verify it displays 0 folders, 0 files, along with search, home navigation, more options, and add new items options.
+------------------------------
+
+==============================================
+[AppTest] Pair 8/118: 3 -> 22
+Producer: The current page in the Amaze file manager app displays the contents of the home directory ("/storage/emulated/0"), showing a list of folders (e.g., Alarms, Android, DCIM) with their modification dates and options for additional actions, allowing users to browse, manage, and access files and directories within the home storage.
+Consumer: Set As Home option
+
+[Plan]
+Case 1/1
+Producer task:
+ Trigger the 'Go to home directory' action (e.g., click the home icon) to navigate to and display the home directory ("/storage/emulated/0") contents, including folders with modification dates and action options.
+Consumer task:
+ From the home directory page (page 3), open the menu and click the 'Set As Home' option, then verify navigation to page 86 (confirming the home location is set using the home directory data from the producer).
+------------------------------
+
+==============================================
+[AppTest] Pair 9/118: 3 -> 49
+Producer: The current page in the Amaze file manager app displays the contents of the home directory ("/storage/emulated/0"), showing a list of folders (e.g., Alarms, Android, DCIM) with their modification dates and options for additional actions, allowing users to browse, manage, and access files and directories within the home storage.
+Consumer: Sort By option
+
+[Plan]
+Case 1/1
+Producer task:
+ In the Amaze file manager app, click the home icon to navigate to and display the home directory ("/storage/emulated/0") contents, including folders with modification dates and action options.
+Consumer task:
+ On the home directory page (with the file list produced by the Producer), click the 'Sort By' option to navigate to the Sort By page (page 88), verifying the file list from the home directory is used as the data_in for the Sort By functionality.
+------------------------------
+
+==============================================
+[AppTest] Pair 10/118: 3 -> 50
+Producer: The current page in the Amaze file manager app displays the contents of the home directory ("/storage/emulated/0"), showing a list of folders (e.g., Alarms, Android, DCIM) with their modification dates and options for additional actions, allowing users to browse, manage, and access files and directories within the home storage.
+Consumer: Directory Sort Mode option
+
+[Plan]
+Case 1/1
+Producer task:
+ Trigger the 'Go to home directory' action (e.g., click home icon) to navigate to and display the home directory ("/storage/emulated/0") contents, including folders with modification dates and action options.
+Consumer task:
+ On the home directory page (file directory view), click the 'Directory Sort Mode' option to navigate to the directory sort mode page, using the home directory's file directory view as the starting point.
+------------------------------
+
+==============================================
+[AppTest] Pair 11/118: 4 -> 21
+Producer: The current page's more options menu in the file manager provides additional actions such as sorting, viewing history, switching to grid view, setting the current directory as home, or exiting the app.
+Consumer: Grid View option
+
+[Plan]
+Case 1/1
+Producer task:
+ Click the more options menu in the file manager (page 0) to open it, then click the 'Sort' option (leading to page 83).
+Consumer task:
+ On page 3, click the 'Grid View' option (which uses the file manager configuration from the producer's actions) and verify it leads to page 85.
+------------------------------
+
+==============================================
+[AppTest] Pair 12/118: 5 -> 24
+Producer: The current page in the Amaze file manager app displays a list of folders within the "/storage/emulated/0" directory and provides a context menu with operations (Cut, Copy, Delete, Rename, Encrypt, Properties, Add to Bookmark) for managing a selected folder.
+Consumer: Cut folder
+
+[Plan]
+Case 1/1
+Producer task:
+ On the folder list page of /storage/emulated/0, click the three - dots options menu of a folder to open its context menu (containing operations like Cut, Copy, etc.).
+Consumer task:
+ On the file manager view (page 4), click on the 'Cut folder' option related to the folder for which the context menu was opened by the producer task, and verify the transition to page 91.
+------------------------------
+
+==============================================
+[AppTest] Pair 13/118: 5 -> 25
+Producer: The current page in the Amaze file manager app displays a list of folders within the "/storage/emulated/0" directory and provides a context menu with operations (Cut, Copy, Delete, Rename, Encrypt, Properties, Add to Bookmark) for managing a selected folder.
+Consumer: Copy folder
+
+[Plan]
+Case 1/1
+Producer task:
+ On the folder list page of /storage/emulated/0, click the three - dots options menu of a folder to open its context menu.
+Consumer task:
+ From the opened context menu of the folder (produced by the producer task), click the 'Copy' option to initiate the copy folder operation.
+------------------------------
+
+==============================================
+[AppTest] Pair 14/118: 5 -> 26
+Producer: The current page in the Amaze file manager app displays a list of folders within the "/storage/emulated/0" directory and provides a context menu with operations (Cut, Copy, Delete, Rename, Encrypt, Properties, Add to Bookmark) for managing a selected folder.
+Consumer: Delete folder
+
+[Plan]
+Case 1/1
+Producer task:
+ On the /storage/emulated/0 folder list page, click the three - dots options menu of a folder to open its context menu with operations like Cut, Copy, Delete, etc.
+Consumer task:
+ From the opened context menu of the folder (produced by the producer task), click the 'Delete folder' option. Then verify that the flow transitions to page 93 and the folder deletion action is completed.
+------------------------------
+
+==============================================
+[AppTest] Pair 15/118: 5 -> 27
+Producer: The current page in the Amaze file manager app displays a list of folders within the "/storage/emulated/0" directory and provides a context menu with operations (Cut, Copy, Delete, Rename, Encrypt, Properties, Add to Bookmark) for managing a selected folder.
+Consumer: The current page (dialog) allows the user to enter a name for a new file and provides options to either cancel the operation or create the new file with the entered name.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the /storage/emulated/0 folder list page, click the three - dots options menu of a folder to open its context menu (which contains operations like Rename).
+Consumer task:
+ From the opened folder context menu, select the Rename option to open the rename dialog. Then, input a new name in the folder name input field and click the create (save) option to rename the folder with the newly entered name.
+------------------------------
+
+==============================================
+[AppTest] Pair 16/118: 5 -> 28
+Producer: The current page in the Amaze file manager app displays a list of folders within the "/storage/emulated/0" directory and provides a context menu with operations (Cut, Copy, Delete, Rename, Encrypt, Properties, Add to Bookmark) for managing a selected folder.
+Consumer: The current page (dialog) allows the user to enter a name for a new file and provides options to either cancel the operation or create the new file.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the /storage/emulated/0 folder list page in Amaze file manager, click the three - dots options menu of a folder to open its context menu with operations like Cut, Copy, etc.
+Consumer task:
+ After opening the folder's context menu (from the producer step), in the new file name entry dialog (consumer's page), use the folder (from the producer's data) as a reference to enter a relevant name for a new file and then click the create option to check if the new file is created within the context of that folder.
+------------------------------
+
+==============================================
+[AppTest] Pair 17/118: 5 -> 29
+Producer: The current page in the Amaze file manager app displays a list of folders within the "/storage/emulated/0" directory and provides a context menu with operations (Cut, Copy, Delete, Rename, Encrypt, Properties, Add to Bookmark) for managing a selected folder.
+Consumer: The current page displays the properties of the "Alarms" folder, including its name, location, size, date, and a visual representation of storage usage (total, used, free space) within the parent directory.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the /storage/emulated/0 folder list page in Amaze file manager, click the three - dots options menu of the 'Alarms' folder to open its context menu.
+Consumer task:
+ From the opened context menu of the 'Alarms' folder, select the option to view its properties. Verify that the properties dialog shows the 'Alarms' folder's name, location, size, date, and storage usage details. Then click to close the properties dialog.
+------------------------------
+
+==============================================
+[AppTest] Pair 18/118: 5 -> 30
+Producer: The current page in the Amaze file manager app displays a list of folders within the "/storage/emulated/0" directory and provides a context menu with operations (Cut, Copy, Delete, Rename, Encrypt, Properties, Add to Bookmark) for managing a selected folder.
+Consumer: Add to Bookmark
+
+[Plan]
+Case 1/1
+Producer task:
+ On the folder list page of "/storage/emulated/0" in Amaze file manager, click the three - dots options menu of a folder to open its context menu.
+Consumer task:
+ From the opened context menu of the selected folder (the one for which the context menu was opened in the producer task), click the 'Add to Bookmark' option, and verify the transition to page 96.
+------------------------------
+
+==============================================
+[AppTest] Pair 19/118: 6 -> 31
+Producer: The current page in the Amaze file manager app provides options to create a new folder, a new file, or set up a cloud connection within the /storage/emulated/0 directory, while also displaying existing folders and files in that directory.
+Consumer: This page (a dialog in a file manager app) allows the user to enter a name for a new folder (or file, based on the dialog title "New File" but the context from the path was creating a new folder) and then either cancel the operation or create the new item with the entered name.
+
+[Plan]
+Case 1/1
+Producer task:
+ In Amaze file manager on /storage/emulated/0 directory, click the pink '+' button to open the 'Create new item' submenu, then select 'Create new folder' option.
+Consumer task:
+ In the opened 'New File' dialog (for folder creation), enter a name like 'TestFolder' for the new folder, then click the 'Create' button to verify the new folder is created in /storage/emulated/0 directory.
+------------------------------
+
+==============================================
+[AppTest] Pair 20/118: 6 -> 32
+Producer: The current page in the Amaze file manager app provides options to create a new folder, a new file, or set up a cloud connection within the /storage/emulated/0 directory, while also displaying existing folders and files in that directory.
+Consumer: This page allows the user to enter a name for a new folder (or file) and provides options to either cancel the operation or create the new item with the entered name.
+
+[Plan]
+Case 1/1
+Producer task:
+ In Amaze file manager, navigate to /storage/emulated/0 directory. Click the pink '+' button to open the 'Create new item' menu, then select 'Create new file' option.
+Consumer task:
+ Verify that after selecting 'Create new file' from the producer's menu, the app navigates to the file creation interface (page 94) where a name can be entered, and options to cancel or create the file are available, with the current directory being /storage/emulated/0.
+------------------------------
+
+==============================================
+[AppTest] Pair 21/118: 6 -> 33
+Producer: The current page in the Amaze file manager app provides options to create a new folder, a new file, or set up a cloud connection within the /storage/emulated/0 directory, while also displaying existing folders and files in that directory.
+Consumer: The page allows the user to create a new cloud connection, offering options for an SMB Connection or to get a Cloud plugin, likely within a file management application.
+
+[Plan]
+Case 1/1
+Producer task:
+ In Amaze file manager, navigate to /storage/emulated/0 directory. Click the pink '+' button to open the 'Create new item' menu, then select the 'Cloud Connection' option from the submenu.
+Consumer task:
+ From the current page, click the 'Cloud Connection' option (produced earlier). Verify that the menu with 'SMB Connection' and 'Get Cloud plugin' options is displayed.
+------------------------------
+
+==============================================
+[AppTest] Pair 22/118: 7 -> 2
+Producer: The current page in the Amaze file manager app displays the contents (folders and files) of the "/storage/emulated/0" directory, allowing users to browse, manage (via the three - dot menu for each item), and potentially create new items (via the plus button) within this storage location.
+Consumer: The current page provides a file and folder search interface within the "/storage/emulated/0" directory, allowing users to search for specific files or folders among the listed 13 folders and 32 files, and also enabling navigation back or clearing the search, along with options to interact with each folder via the three - dot menu and a button to add new items.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to the main directory page (page 0) by clicking the 'Storage' navigation item from the navigation menu (page 1) to view the storage content (folders, files) of "/storage/emulated/0".
+Consumer task:
+ From the main directory page (page 0), click the search button to enter the file/folder search interface (page 2). Then click the search input field and type a search query (e.g., a folder or file name present in the storage content from the producer task) to verify the search shows relevant files/folders from the "/storage/emulated/0" directory.
+------------------------------
+
+==============================================
+[AppTest] Pair 23/118: 7 -> 5
+Producer: The current page in the Amaze file manager app displays the contents (folders and files) of the "/storage/emulated/0" directory, allowing users to browse, manage (via the three - dot menu for each item), and potentially create new items (via the plus button) within this storage location.
+Consumer: The current page in the Amaze file manager app displays a list of folders within the "/storage/emulated/0" directory and provides a context menu with operations (Cut, Copy, Delete, Rename, Encrypt, Properties, Add to Bookmark) for managing a selected folder.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate from the navigation menu (page 1) to the /storage/emulated/0 directory page (page 0) by clicking the 'Storage' navigation item, which displays the storage content (folders, files).
+Consumer task:
+ On the /storage/emulated/0 directory page (with its folder list), click the three - dot options menu of a folder. Verify that the context menu with operations (Cut, Copy, Delete, Rename, Encrypt, Properties, Add to Bookmark) is displayed, using the folder and its operation options produced by the Producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 24/118: 7 -> 6
+Producer: The current page in the Amaze file manager app displays the contents (folders and files) of the "/storage/emulated/0" directory, allowing users to browse, manage (via the three - dot menu for each item), and potentially create new items (via the plus button) within this storage location.
+Consumer: The current page in the Amaze file manager app provides options to create a new folder, a new file, or set up a cloud connection within the /storage/emulated/0 directory, while also displaying existing folders and files in that directory.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to the /storage/emulated/0 directory: Start on the navigation menu page, click the 'Storage' navigation item to load and display the contents of /storage/emulated/0 (folders, files).
+Consumer task:
+ Use the 'Create new item' menu: On the /storage/emulated/0 directory page (with the folders/files from the Producer step), click the pink '+' (Create new item) button. Verify the submenu appears with options to create a folder, a file, or set up a cloud connection (using the directory's context from the Producer).
+------------------------------
+
+==============================================
+[AppTest] Pair 25/118: 7 -> 22
+Producer: The current page in the Amaze file manager app displays the contents (folders and files) of the "/storage/emulated/0" directory, allowing users to browse, manage (via the three - dot menu for each item), and potentially create new items (via the plus button) within this storage location.
+Consumer: Set As Home option
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 1 (navigation menu), click the 'Storage' navigation item to navigate to page 0 (displays "/storage/emulated/0" directory contents).
+Consumer task:
+ Start on page 3 (file manager interface with menu open), click the 'Set As Home' option in the menu (this should set the home location to the directory from the producer task, navigating to page 86).
+------------------------------
+
+==============================================
+[AppTest] Pair 26/118: 7 -> 49
+Producer: The current page in the Amaze file manager app displays the contents (folders and files) of the "/storage/emulated/0" directory, allowing users to browse, manage (via the three - dot menu for each item), and potentially create new items (via the plus button) within this storage location.
+Consumer: Sort By option
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 1 (navigation menu), click the 'Storage' navigation item to navigate to page 0 (displays "/storage/emulated/0" directory contents).
+Consumer task:
+ From the page showing "/storage/emulated/0" directory contents (page 0), click the 'Sort By' option to navigate to page 88 (verify the file list from the producer's storage content is available for sorting).
+------------------------------
+
+==============================================
+[AppTest] Pair 27/118: 7 -> 50
+Producer: The current page in the Amaze file manager app displays the contents (folders and files) of the "/storage/emulated/0" directory, allowing users to browse, manage (via the three - dot menu for each item), and potentially create new items (via the plus button) within this storage location.
+Consumer: Directory Sort Mode option
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 1 (navigation menu), click the 'Storage' navigation item to navigate to page 0 (displays /storage/emulated/0 directory contents).
+Consumer task:
+ From page 0 (directory with /storage/emulated/0 contents), ensure it's a file directory view (page 83 equivalent), then click the 'Directory Sort Mode' option to navigate to page 89 and verify access to the sort mode (using the directory context from the producer's data).
+------------------------------
+
+==============================================
+[AppTest] Pair 28/118: 12 -> 34
+Producer: The current page in the Amaze file manager app displays the contents of the "Pictures" directory, allowing users to view, manage (e.g., open, delete, share), and organize folders and image files within this directory.
+Consumer: The current page in the Amaze file manager app, within the Pictures directory, displays a list of folders and image files, and when a file's options menu is opened (as shown for an image file), it provides file operation options such as Open with, Cut, Copy, Delete, Rename, Encrypt, Properties, and Share to manage the selected file.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on the storage navigation page. Click the 'Pictures' navigation item to navigate to the Pictures directory page and view its files/folders.
+Consumer task:
+ In the Pictures directory page (from Producer), open the options menu of an image file. Then, select 'Open with' to choose an app for opening the image file (produced by Producer).
+------------------------------
+
+==============================================
+[AppTest] Pair 29/118: 12 -> 99
+Producer: The current page in the Amaze file manager app displays the contents of the "Pictures" directory, allowing users to view, manage (e.g., open, delete, share), and organize folders and image files within this directory.
+Consumer: Upload to Photos option
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on storage navigation page, click 'Pictures' navigation item to open Pictures directory page and identify a picture file.
+Consumer task:
+ From share dialog (page 110), click 'Upload to Photos' option, and verify the uploaded file is the picture file identified from Pictures directory.
+------------------------------
+
+==============================================
+[AppTest] Pair 30/118: 15 -> 34
+Producer: The current page in the Amaze app displays and allows management (e.g., viewing, accessing options via the three - dot menu) of image files, showing a list of image files with their names, dates, and additional action options.
+Consumer: The current page in the Amaze file manager app, within the Pictures directory, displays a list of folders and image files, and when a file's options menu is opened (as shown for an image file), it provides file operation options such as Open with, Cut, Copy, Delete, Rename, Encrypt, Properties, and Share to manage the selected file.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on the initial page of the Amaze app and click the 'Images' navigation item to navigate to the page displaying the list of image files with their names, dates, and action options.
+Consumer task:
+ In the Amaze file manager's Pictures directory (where the image file list from the producer task is displayed), open the options menu of an image file and then choose either the 'Open with' option to select an app for opening the image or the 'Share' option to access sharing options for the image.
+------------------------------
+
+==============================================
+[AppTest] Pair 31/118: 15 -> 81
+Producer: The current page in the Amaze app displays and allows management (e.g., viewing, accessing options via the three - dot menu) of image files, showing a list of image files with their names, dates, and additional action options.
+Consumer: Cut option
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 1, click the 'Images' navigation item to navigate to page 10 and load the image file list.
+Consumer task:
+ On page 10 (where the image file list is displayed), select an image file, then access the three - dot menu and click the 'Cut' option to transition to page 105, verifying the cut operation uses the selected image file from the producer's image list.
+------------------------------
+
+==============================================
+[AppTest] Pair 32/118: 15 -> 82
+Producer: The current page in the Amaze app displays and allows management (e.g., viewing, accessing options via the three - dot menu) of image files, showing a list of image files with their names, dates, and additional action options.
+Consumer: Copy option
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 1, click the 'Images' navigation item to navigate to page 10 and load the image file list with names, dates, and action options.
+Consumer task:
+ On page 10 (where the image file list is displayed), click the 'Copy' option for a specific image file to transition the flow to page 106, verifying that the copy action is applied to the image file from the list loaded by the producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 33/118: 15 -> 83
+Producer: The current page in the Amaze app displays and allows management (e.g., viewing, accessing options via the three - dot menu) of image files, showing a list of image files with their names, dates, and additional action options.
+Consumer: Delete option
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 1, click the 'Images' navigation item to navigate to page 10 where the image file list is displayed.
+Consumer task:
+ On page 10 (the source page with the image file list from the producer), click the 'Delete option' (context menu item or button) for an image file to initiate the delete process and navigate to page 107.
+------------------------------
+
+==============================================
+[AppTest] Pair 34/118: 15 -> 84
+Producer: The current page in the Amaze app displays and allows management (e.g., viewing, accessing options via the three - dot menu) of image files, showing a list of image files with their names, dates, and additional action options.
+Consumer: Displays a warning dialog informing the user about the risk of being unable to decrypt content if the security pattern is changed in System settings, with options to dismiss the warning or prevent future displays.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 1, click the 'Images' navigation item to navigate to page 10 and load the list of image files with their names, dates, and action options.
+Consumer task:
+ After the image file list is loaded in the Amaze app's Images section, trigger the action that causes the security pattern change warning dialog to appear (e.g., attempt an action related to file security/decryption), then verify the dialog appears with the correct decryption risk message and options to dismiss ('GOT IT!') or prevent future displays ('DON'T INFORM AGAIN').
+------------------------------
+
+==============================================
+[AppTest] Pair 35/118: 15 -> 85
+Producer: The current page in the Amaze app displays and allows management (e.g., viewing, accessing options via the three - dot menu) of image files, showing a list of image files with their names, dates, and additional action options.
+Consumer: Displays a warning dialog about the risk of being unable to decrypt content when changing the security pattern from System settings, with options to dismiss the warning or prevent future warnings.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 1, click the 'Images' navigation item to navigate to page 10 and load the image file list with names, dates, and action options.
+Consumer task:
+ From the image file list (loaded in the Images section), select an image file and click the Encrypt option. Then, verify the appearance of the warning dialog about decryption risks when changing the security pattern, with options to dismiss (via 'GOT IT!') or prevent future warnings (via 'DON'T INFORM AGAIN').
+------------------------------
+
+==============================================
+[AppTest] Pair 36/118: 15 -> 86
+Producer: The current page in the Amaze app displays and allows management (e.g., viewing, accessing options via the three - dot menu) of image files, showing a list of image files with their names, dates, and additional action options.
+Consumer: The current page displays the properties of a selected file (including name, location, size, date, and storage usage details) within the Pictures directory in a file management application.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on the initial page and click the 'Images' navigation item to navigate to the page displaying the list of image files with their names, dates, and action options.
+Consumer task:
+ On the page with the image file list (from the producer task), select an image file, click the 'Properties' option to open the file properties dialog (displaying details like name, location, size, date, and storage usage), then click the option to close the properties dialog.
+------------------------------
+
+==============================================
+[AppTest] Pair 37/118: 15 -> 91
+Producer: The current page in the Amaze app displays and allows management (e.g., viewing, accessing options via the three - dot menu) of image files, showing a list of image files with their names, dates, and additional action options.
+Consumer: Open as Image
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 1, click the 'Images' navigation item to navigate to page 10 and load the image file list.
+Consumer task:
+ On page 10 (where the image file list is), click the 'Open as Image' option to navigate to page 112, using the image file from the list produced by the Producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 38/118: 15 -> 99
+Producer: The current page in the Amaze app displays and allows management (e.g., viewing, accessing options via the three - dot menu) of image files, showing a list of image files with their names, dates, and additional action options.
+Consumer: Upload to Photos option
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 1, click the 'Images' navigation item to navigate to page 10 and load the image file list in the Images section.
+Consumer task:
+ From the image file list in the Images section (page 10), select a picture file, open the share dialog (page 110), then click the 'Upload to Photos' option to transition to page 123.
+------------------------------
+
+==============================================
+[AppTest] Pair 39/118: 17 -> 35
+Producer: The FTP Server page allows users to view the server's status, credentials, port, and shared path, and provides a button to start the FTP server.
+Consumer: The page allows users to view and manage FTP Server settings, including status, username, password, port, shared path, and provides a button to start the FTP server.
+
+[Plan]
+Case 1/2
+Producer task:
+ Navigate to the FTP Server page by clicking its navigation item, then click the 'Start FTP Server' button to start the FTP server.
+Consumer task:
+ On the FTP Server settings page, view the server's status to verify it reflects the running FTP server instance started by the producer task.
+------------------------------
+Case 2/2
+Producer task:
+ Navigate to the FTP Server page by clicking its navigation item, then open the dropdown menu to access additional options.
+Consumer task:
+ On the FTP Server page, click the filter options (while staying on the same page) and verify the FTP server configuration (including status, credentials, etc.) reflects the settings accessed via the producer's dropdown.
+------------------------------
+
+==============================================
+[AppTest] Pair 40/118: 17 -> 54
+Producer: The FTP Server page allows users to view the server's status, credentials, port, and shared path, and provides a button to start the FTP server.
+Consumer: The current page is a dialog for configuring the FTP port, allowing the user to enter a new port number and either cancel the action or confirm the change to update the FTP server's port setting.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to the FTP Server page by clicking its navigation item. Then, click the 'Start FTP Server' button to start the FTP server.
+Consumer task:
+ Click the FTP port option to open the configuration dialog. In the dialog, click the input field to modify the port number, then click the CHANGE button to confirm the port change using the FTP server port setting from the Producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 41/118: 17 -> 55
+Producer: The FTP Server page allows users to view the server's status, credentials, port, and shared path, and provides a button to start the FTP server.
+Consumer: The current page (Shared Path configuration dialog) allows the user to view, edit, and confirm changes to the shared path for the FTP Server, with options to cancel the action or change the path.
+
+[Plan]
+Case 1/2
+Producer task:
+ Navigate to the FTP Server page by clicking its navigation item, then click the 'Shared Path' option to open the configuration dialog (to set the initial shared path context for the consumer).
+Consumer task:
+ In the Shared Path configuration dialog (opened by the producer), click the input field to edit the shared path (verifying the consumer uses the producer - provided shared path setting for editing).
+------------------------------
+Case 2/2
+Producer task:
+ Navigate to the FTP Server page by clicking its navigation item, modify the shared path via the appropriate means on the FTP Server page (to update the shared path setting), then click the 'Shared Path' option to open the configuration dialog.
+Consumer task:
+ In the Shared Path configuration dialog (opened after the producer updated the shared path), click the 'CHANGE' button to confirm the updated shared path (verifying the consumer uses the producer - updated shared path setting for confirmation).
+------------------------------
+
+==============================================
+[AppTest] Pair 42/118: 17 -> 56
+Producer: The FTP Server page allows users to view the server's status, credentials, port, and shared path, and provides a button to start the FTP server.
+Consumer: The current page is an FTP login configuration dialog that allows users to input a username, password, and select options like anonymous login or secure connection to configure FTP server login settings.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to the FTP Server page by clicking its navigation item. Then, click the 'Start FTP Server' button to start the FTP server and update its status to running.
+Consumer task:
+ Open the FTP login configuration dialog via the 'Login' option. Input the username and password (using the credentials from the FTP Server page) and then click the 'SET' button to confirm the FTP login configuration with the running server's credentials.
+------------------------------
+
+==============================================
+[AppTest] Pair 43/118: 17 -> 57
+Producer: The FTP Server page allows users to view the server's status, credentials, port, and shared path, and provides a button to start the FTP server.
+Consumer: This page allows the user to set the idle timeout (in seconds) for the FTP server by entering a value and confirming it with the "SET" button or canceling the action with the "CANCEL" button.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to the FTP Server page by clicking its navigation item, then click the 'Start FTP Server' button to start the FTP server.
+Consumer task:
+ Start on page 15, click the 'Idle timeout' option to navigate to page 20, click the input field to enter the idle timeout value (using the FTP server started by the producer), and proceed to page 31 to set the idle timeout for the running FTP server.
+------------------------------
+
+==============================================
+[AppTest] Pair 44/118: 18 -> 36
+Producer: The App Manager page displays a list of installed applications with their storage sizes and provides a menu (via three-dot icons) for each app to perform management actions such as uninstalling, viewing details, or other app - specific operations.
+Consumer: The current page allows the user to sort the list of installed applications in the App Manager by different criteria (Name, Last Modified, Size) and choose the sorting order (Ascending or Descending).
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to the App Manager page by clicking the 'App Manager' navigation item from the main menu page. Verify the App Manager page displays the list of installed apps with storage sizes and three - dot menus for each app.
+Consumer task:
+ On the App Manager page (with the app list from the producer), click the 'Sort apps' option to open the sorting menu. Select the 'Name' sorting criterion via radio button and 'Ascending' sort direction via button. Verify the app list is sorted by name in ascending order.
+------------------------------
+
+==============================================
+[AppTest] Pair 45/118: 18 -> 37
+Producer: The App Manager page displays a list of installed applications with their storage sizes and provides a menu (via three-dot icons) for each app to perform management actions such as uninstalling, viewing details, or other app - specific operations.
+Consumer: The current page, within the App Manager, displays a list of installed applications with their storage sizes and provides a three - dot menu for each app to access additional management options, along with an "Exit" button to leave the App Manager.
+
+[Plan]
+Case 1/1
+Producer task:
+ From the main menu page, click the 'App Manager' navigation item to navigate to the App Manager page, where the list of installed apps with their storage sizes and three - dot menus for each app are displayed.
+Consumer task:
+ On the App Manager page (produced by the Producer), click the three - dot menu (More options) of any app to reveal the 'Exit' button.
+------------------------------
+
+==============================================
+[AppTest] Pair 46/118: 18 -> 59
+Producer: The App Manager page displays a list of installed applications with their storage sizes and provides a menu (via three-dot icons) for each app to perform management actions such as uninstalling, viewing details, or other app - specific operations.
+Consumer: Exit option
+
+[Plan]
+Case 1/1
+Producer task:
+ From the main menu page, click the 'App Manager' navigation item to navigate to the App Manager page (where the list of installed apps with storage sizes and three - dot menus for each app are displayed).
+Consumer task:
+ On the App Manager page (the one produced by the Producer task), click the 'Exit' option to navigate to page 41 and verify the navigation occurs as expected.
+------------------------------
+
+==============================================
+[AppTest] Pair 47/118: 19 -> 39
+Producer: The current page is the settings page for the Amaze app, allowing users to configure various interface and general preferences such as theme, icon style, sign - in options, and visibility of different UI components.
+Consumer: The page allows users to customize the color settings of various UI components (such as primary colors for tabs, accent color, icon color) and toggle related options (like icon colorization, colored navigation bar, random skin) in the Amaze app.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on Amaze app's main menu (page 1), then click the 'Settings' navigation item to navigate to the settings page (page 13).
+Consumer task:
+ On the Amaze app's settings page (from Producer), click the 'Color' option to enter the Color customization page. Then, click 'Primary Color (Left Tab)' to access its color selection page and verify the color settings reflect the current (or default) configuration.
+------------------------------
+
+==============================================
+[AppTest] Pair 48/118: 19 -> 40
+Producer: The current page is the settings page for the Amaze app, allowing users to configure various interface and general preferences such as theme, icon style, sign - in options, and visibility of different UI components.
+Consumer: Use circular icons toggle
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on Amaze app's main menu (page 1), click the 'Settings' navigation item to navigate to the Amaze app's settings page (page 13).
+Consumer task:
+ On the Amaze app's settings page (page 13), perform a click action on the 'Use circular icons' toggle to toggle the state of the 'use circular icons' setting.
+------------------------------
+
+==============================================
+[AppTest] Pair 49/118: 19 -> 41
+Producer: The current page is the settings page for the Amaze app, allowing users to configure various interface and general preferences such as theme, icon style, sign - in options, and visibility of different UI components.
+Consumer: Show Dividers toggle
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on Amaze app's main menu (page 1), click the 'Settings' navigation item to navigate to the settings page (page 13).
+Consumer task:
+ On the settings page (page 13), click the 'Show Dividers' toggle to toggle the state of the 'show dividers setting' produced by the settings page navigation.
+------------------------------
+
+==============================================
+[AppTest] Pair 50/118: 19 -> 42
+Producer: The current page is the settings page for the Amaze app, allowing users to configure various interface and general preferences such as theme, icon style, sign - in options, and visibility of different UI components.
+Consumer: Show Headers toggle
+
+[Plan]
+Case 1/1
+Producer task:
+ From Amaze app's main menu (page 1), click the 'Settings' navigation item to navigate to the settings page (page 13).
+Consumer task:
+ On the settings page (page 13), click the 'Show Headers' toggle to verify it transitions to page 51 and the 'Show Headers' option's state is toggled.
+------------------------------
+
+==============================================
+[AppTest] Pair 51/118: 19 -> 43
+Producer: The current page is the settings page for the Amaze app, allowing users to configure various interface and general preferences such as theme, icon style, sign - in options, and visibility of different UI components.
+Consumer: Intellihide Toolbar toggle
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on Amaze app's main menu (page 1), click 'Settings' to navigate to the settings page (page 13).
+Consumer task:
+ On the settings page (page 13), click the 'Intellihide Toolbar' toggle to change its state (on/off) and navigate to page 52.
+------------------------------
+
+==============================================
+[AppTest] Pair 52/118: 19 -> 44
+Producer: The current page is the settings page for the Amaze app, allowing users to configure various interface and general preferences such as theme, icon style, sign - in options, and visibility of different UI components.
+Consumer: Show shortcuts toggle
+
+[Plan]
+Case 1/1
+Producer task:
+ From Amaze app's main menu (page 1), click the 'Settings' navigation item to navigate to the settings page (page 13).
+Consumer task:
+ On the Amaze app's settings page (page 13), click the 'Show shortcuts toggle' element.
+------------------------------
+
+==============================================
+[AppTest] Pair 53/118: 19 -> 45
+Producer: The current page is the settings page for the Amaze app, allowing users to configure various interface and general preferences such as theme, icon style, sign - in options, and visibility of different UI components.
+Consumer: Show quick accesses toggle
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on Amaze app's main menu (page 1), then click the 'Settings' navigation item to navigate to the settings page (page 13).
+Consumer task:
+ On the Amaze app's settings page (page 13), click the 'Show quick accesses toggle' (action_ref [13,6]) to toggle the 'Show quick accesses' option and navigate to page 54.
+------------------------------
+
+==============================================
+[AppTest] Pair 54/118: 19 -> 46
+Producer: The current page is the settings page for the Amaze app, allowing users to configure various interface and general preferences such as theme, icon style, sign - in options, and visibility of different UI components.
+Consumer: The current page (Theme selection dialog) allows the user to select the theme for the Amaze app from the available options: Material Light, Material Dark, and Daytime.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on Amaze app's main menu (page 1), then click the 'Settings' navigation item to navigate to the Amaze app's settings page (page 13).
+Consumer task:
+ On the Amaze app's settings page (from producer), click to open the Theme selection dialog. Then select 'Material Light' from the available theme options (Material Light, Material Dark, Daytime) and verify the theme is applied as expected.
+------------------------------
+
+==============================================
+[AppTest] Pair 55/118: 19 -> 47
+Producer: The current page is the settings page for the Amaze app, allowing users to configure various interface and general preferences such as theme, icon style, sign - in options, and visibility of different UI components.
+Consumer: The page allows users to manage sidebar shortcuts by editing, deleting existing shortcuts (Download, Movies, Music, Pictures), and adding new items.
+
+[Plan]
+Case 1/1
+Producer task:
+ From Amaze app's main menu, click the 'Settings' navigation item to navigate to the Amaze app's settings page.
+Consumer task:
+ On the Amaze app's settings page, click the 'Shortcuts' option to navigate to the sidebar shortcuts management page. Verify that the sidebar shortcuts (Download, Movies, Music, Pictures) are accessible for editing, deleting, or adding new items, as these are the settings related to the sidebar shortcuts produced by the settings page navigation.
+------------------------------
+
+==============================================
+[AppTest] Pair 56/118: 19 -> 48
+Producer: The current page is the settings page for the Amaze app, allowing users to configure various interface and general preferences such as theme, icon style, sign - in options, and visibility of different UI components.
+Consumer: The page allows users to configure which items (Quick access, Recent files, Images, Videos, Audio, Documents, Apks) are enabled for quick access in the sidebar of the Amaze file manager app.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on Amaze app's main menu (page 1), click the 'Settings' navigation item to navigate to the settings page (page 13).
+Consumer task:
+ On the Amaze app's settings page (from producer), click the 'Quick accesses' option to navigate to the Sidebar quick access configuration page. Verify that the page allows configuring which items (Quick access, Recent files, Images, Videos, Audio, Documents, Apks) are enabled for quick access in the sidebar, using the settings page context from the producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 57/118: 20 -> 51
+Producer: The current page (History dialog) in the file manager app displays the navigation history of visited directories, with options to clear the history or cancel the action.
+Consumer: Clear history
+
+[Plan]
+Case 1/1
+Producer task:
+ Click 'History' from the menu (on page 3) to open the History dialog (page 84) and view the displayed navigation history.
+Consumer task:
+ In the History dialog (page 84) opened via the Producer task, click the 'Clear history' option to clear the displayed navigation history.
+------------------------------
+
+==============================================
+[AppTest] Pair 58/118: 21 -> 4
+Producer: Grid View option
+Consumer: The current page's more options menu in the file manager provides additional actions such as sorting, viewing history, switching to grid view, setting the current directory as home, or exiting the app.
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 3, click the 'Grid View' option to navigate to page 85 (updating the grid view setting and file display layout to grid).
+Consumer task:
+ Click the more options menu in the file manager (on page 0). Verify that the file manager configuration reflects the updated grid view setting (from the producer) and check the 'Sort' option (which uses the sort setting data_in) is accessible for further actions.
+------------------------------
+
+==============================================
+[AppTest] Pair 59/118: 33 -> 52
+Producer: The page allows the user to create a new cloud connection, offering options for an SMB Connection or to get a Cloud plugin, likely within a file management application.
+Consumer: SMB Connection option
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 5, click 'Cloud Connection' to open the menu with 'SMB Connection' and 'Get Cloud plugin' options.
+Consumer task:
+ Start on page 100, click the 'SMB Connection' option (produced by the Producer's menu) to navigate to page 101.
+------------------------------
+
+==============================================
+[AppTest] Pair 60/118: 33 -> 53
+Producer: The page allows the user to create a new cloud connection, offering options for an SMB Connection or to get a Cloud plugin, likely within a file management application.
+Consumer: Get Cloud plugin option
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 5, click 'Cloud Connection' to open menu with 'SMB Connection' and 'Get Cloud plugin' options.
+Consumer task:
+ Start on page 100, click 'Get Cloud plugin' (from producer's menu) to navigate to page 102.
+------------------------------
+
+==============================================
+[AppTest] Pair 61/118: 34 -> 24
+Producer: The current page in the Amaze file manager app, within the Pictures directory, displays a list of folders and image files, and when a file's options menu is opened (as shown for an image file), it provides file operation options such as Open with, Cut, Copy, Delete, Rename, Encrypt, Properties, and Share to manage the selected file.
+Consumer: Cut folder
+
+[Plan]
+Case 1/1
+Producer task:
+ In Amaze file manager's Pictures directory, open the options menu of a folder (by long - pressing or tapping the menu icon for the folder).
+Consumer task:
+ From the opened options menu of the folder (produced by the producer task), click on the 'Cut folder' option to initiate the cut operation for the folder.
+------------------------------
+
+==============================================
+[AppTest] Pair 62/118: 34 -> 25
+Producer: The current page in the Amaze file manager app, within the Pictures directory, displays a list of folders and image files, and when a file's options menu is opened (as shown for an image file), it provides file operation options such as Open with, Cut, Copy, Delete, Rename, Encrypt, Properties, and Share to manage the selected file.
+Consumer: Copy folder
+
+[Plan]
+Case 1/1
+Producer task:
+ In Amaze file manager's Pictures directory, open the options menu of a folder (by long-pressing or tapping the menu icon for the folder) to access file operation options like Copy.
+Consumer task:
+ On page 4 of the app, click the option to initiate the copy folder operation (using the folder whose options menu was opened by the producer task) and verify the transition to page 92 to confirm the copy process starts with the correct folder data.
+------------------------------
+
+==============================================
+[AppTest] Pair 63/118: 34 -> 26
+Producer: The current page in the Amaze file manager app, within the Pictures directory, displays a list of folders and image files, and when a file's options menu is opened (as shown for an image file), it provides file operation options such as Open with, Cut, Copy, Delete, Rename, Encrypt, Properties, and Share to manage the selected file.
+Consumer: Delete folder
+
+[Plan]
+Case 1/1
+Producer task:
+ In Amaze file manager's Pictures directory, open the options menu of a folder (to access file operation options including Delete).
+Consumer task:
+ From the folder's options menu, select the 'Delete folder' option (using the menu opened by the Producer) to initiate and complete the folder deletion.
+------------------------------
+
+==============================================
+[AppTest] Pair 64/118: 34 -> 27
+Producer: The current page in the Amaze file manager app, within the Pictures directory, displays a list of folders and image files, and when a file's options menu is opened (as shown for an image file), it provides file operation options such as Open with, Cut, Copy, Delete, Rename, Encrypt, Properties, and Share to manage the selected file.
+Consumer: The current page (dialog) allows the user to enter a name for a new file and provides options to either cancel the operation or create the new file with the entered name.
+
+[Plan]
+Case 1/1
+Producer task:
+ In Amaze file manager’s Pictures directory, open a file’s options menu and select 'Rename' to initiate renaming the file.
+Consumer task:
+ In the rename dialog (new file dialog context), input the new name for the file (using the folder name input field) and then create the file with the entered name to verify the renamed file reflects the new name.
+------------------------------
+
+==============================================
+[AppTest] Pair 65/118: 34 -> 28
+Producer: The current page in the Amaze file manager app, within the Pictures directory, displays a list of folders and image files, and when a file's options menu is opened (as shown for an image file), it provides file operation options such as Open with, Cut, Copy, Delete, Rename, Encrypt, Properties, and Share to manage the selected file.
+Consumer: The current page (dialog) allows the user to enter a name for a new file and provides options to either cancel the operation or create the new file.
+
+[Plan]
+Case 1/1
+Producer task:
+ In Amaze file manager's Pictures directory, open the options menu of a folder (from the list of folders), then select 'Rename' to initiate renaming the folder.
+Consumer task:
+ In the new file name dialog (for the renamed folder), enter a new name and tap 'Create' to confirm the renaming and verify the folder now uses the new name.
+------------------------------
+
+==============================================
+[AppTest] Pair 66/118: 34 -> 29
+Producer: The current page in the Amaze file manager app, within the Pictures directory, displays a list of folders and image files, and when a file's options menu is opened (as shown for an image file), it provides file operation options such as Open with, Cut, Copy, Delete, Rename, Encrypt, Properties, and Share to manage the selected file.
+Consumer: The current page displays the properties of the "Alarms" folder, including its name, location, size, date, and a visual representation of storage usage (total, used, free space) within the parent directory.
+
+[Plan]
+Case 1/1
+Producer task:
+ In Amaze file manager's Pictures directory, open the options menu of the 'Alarms' folder (treating it as a file-like entity here for menu access). Then, from the menu, identify actions related to viewing properties (if available; adjust if needed to align with folder property access).
+Consumer task:
+ Click to view the properties of the 'Alarms' folder (the same folder whose options menu was opened in the producer step). Verify the properties dialog shows details like name, location, size, date, and storage usage, then close the dialog.
+------------------------------
+
+==============================================
+[AppTest] Pair 67/118: 34 -> 30
+Producer: The current page in the Amaze file manager app, within the Pictures directory, displays a list of folders and image files, and when a file's options menu is opened (as shown for an image file), it provides file operation options such as Open with, Cut, Copy, Delete, Rename, Encrypt, Properties, and Share to manage the selected file.
+Consumer: Add to Bookmark
+
+[Plan]
+Case 1/1
+Producer task:
+ In Amaze file manager's Pictures directory, open the options menu of a folder (e.g., by long - pressing or tapping the menu icon of the folder).
+Consumer task:
+ On the page where the folder's options are, click the 'Add to Bookmark' option (using the folder whose options menu was opened by the producer) to add it to bookmarks.
+------------------------------
+
+==============================================
+[AppTest] Pair 68/118: 34 -> 81
+Producer: The current page in the Amaze file manager app, within the Pictures directory, displays a list of folders and image files, and when a file's options menu is opened (as shown for an image file), it provides file operation options such as Open with, Cut, Copy, Delete, Rename, Encrypt, Properties, and Share to manage the selected file.
+Consumer: Cut option
+
+[Plan]
+Case 1/1
+Producer task:
+ In Amaze file manager's Pictures directory, open the options menu of an image file (to access file operation options like Cut, Copy, etc.).
+Consumer task:
+ From the opened options menu of the image file (produced by the Producer), click on the 'Cut' option to initiate the cut operation for that image file.
+------------------------------
+
+==============================================
+[AppTest] Pair 69/118: 34 -> 82
+Producer: The current page in the Amaze file manager app, within the Pictures directory, displays a list of folders and image files, and when a file's options menu is opened (as shown for an image file), it provides file operation options such as Open with, Cut, Copy, Delete, Rename, Encrypt, Properties, and Share to manage the selected file.
+Consumer: Copy option
+
+[Plan]
+Case 1/1
+Producer task:
+ In Amaze file manager's Pictures directory, open the options menu of an image file.
+Consumer task:
+ From the opened options menu of the image file, click on the 'Copy' option.
+------------------------------
+
+==============================================
+[AppTest] Pair 70/118: 34 -> 83
+Producer: The current page in the Amaze file manager app, within the Pictures directory, displays a list of folders and image files, and when a file's options menu is opened (as shown for an image file), it provides file operation options such as Open with, Cut, Copy, Delete, Rename, Encrypt, Properties, and Share to manage the selected file.
+Consumer: Delete option
+
+[Plan]
+Case 1/1
+Producer task:
+ In Amaze file manager's Pictures directory, open the options menu of an image file.
+Consumer task:
+ From the opened options menu of the image file, click the 'Delete' option to initiate the delete process.
+------------------------------
+
+==============================================
+[AppTest] Pair 71/118: 34 -> 84
+Producer: The current page in the Amaze file manager app, within the Pictures directory, displays a list of folders and image files, and when a file's options menu is opened (as shown for an image file), it provides file operation options such as Open with, Cut, Copy, Delete, Rename, Encrypt, Properties, and Share to manage the selected file.
+Consumer: Displays a warning dialog informing the user about the risk of being unable to decrypt content if the security pattern is changed in System settings, with options to dismiss the warning or prevent future displays.
+
+[Plan]
+Case 1/1
+Producer task:
+ In Amaze file manager’s Pictures directory, open the options menu of an image file (to access file operation options like Encrypt). Then, select the 'Encrypt' option from the menu to initiate file encryption.
+Consumer task:
+ After attempting to encrypt the image file (from Producer step), trigger a scenario that would show the decryption risk warning dialog (e.g., navigate to System settings to change security pattern). Then, verify the warning dialog appears (informing about decryption risk for the encrypted image file) and test dismissing it by clicking 'GOT IT!' or preventing future displays by clicking 'DON'T INFORM AGAIN'.
+------------------------------
+
+==============================================
+[AppTest] Pair 72/118: 34 -> 85
+Producer: The current page in the Amaze file manager app, within the Pictures directory, displays a list of folders and image files, and when a file's options menu is opened (as shown for an image file), it provides file operation options such as Open with, Cut, Copy, Delete, Rename, Encrypt, Properties, and Share to manage the selected file.
+Consumer: Displays a warning dialog about the risk of being unable to decrypt content when changing the security pattern from System settings, with options to dismiss the warning or prevent future warnings.
+
+[Plan]
+Case 1/1
+Producer task:
+ In Amaze file manager's Pictures directory, open the options menu of an image file, then select the 'Encrypt' option from the menu.
+Consumer task:
+ After the Producer's Encrypt action, check that the warning dialog about decryption risks (for the encrypted image file) appears, then verify the options 'GOT IT!' (to dismiss) and 'DON'T INFORM AGAIN' (to prevent future warnings) are present.
+------------------------------
+
+==============================================
+[AppTest] Pair 73/118: 34 -> 86
+Producer: The current page in the Amaze file manager app, within the Pictures directory, displays a list of folders and image files, and when a file's options menu is opened (as shown for an image file), it provides file operation options such as Open with, Cut, Copy, Delete, Rename, Encrypt, Properties, and Share to manage the selected file.
+Consumer: The current page displays the properties of a selected file (including name, location, size, date, and storage usage details) within the Pictures directory in a file management application.
+
+[Plan]
+Case 1/1
+Producer task:
+ In Amaze file manager's Pictures directory, open the options menu of an image file.
+Consumer task:
+ From the image file's options menu, click 'Properties' to open the file properties dialog (displaying details like name, location, size, date, storage usage), then click 'Close properties dialog' to exit the properties view.
+------------------------------
+
+==============================================
+[AppTest] Pair 74/118: 34 -> 90
+Producer: The current page in the Amaze file manager app, within the Pictures directory, displays a list of folders and image files, and when a file's options menu is opened (as shown for an image file), it provides file operation options such as Open with, Cut, Copy, Delete, Rename, Encrypt, Properties, and Share to manage the selected file.
+Consumer: Open as Text
+
+[Plan]
+Case 1/1
+Producer task:
+ In Amaze file manager's Pictures directory, open the options menu of an image file (to access file operation options like Open with, Share, etc.).
+Consumer task:
+ From the opened options menu of the image file (produced by the Producer), click on the 'Open as Text' option to navigate to page 111 and complete the 'Open as Text' functionality.
+------------------------------
+
+==============================================
+[AppTest] Pair 75/118: 34 -> 91
+Producer: The current page in the Amaze file manager app, within the Pictures directory, displays a list of folders and image files, and when a file's options menu is opened (as shown for an image file), it provides file operation options such as Open with, Cut, Copy, Delete, Rename, Encrypt, Properties, and Share to manage the selected file.
+Consumer: Open as Image
+
+[Plan]
+Case 1/1
+Producer task:
+ In Amaze file manager's Pictures directory, open the options menu of an image file.
+Consumer task:
+ From the image file's options menu, click 'Open with' to select an app, then ensure the 'Open as Image' option (if available) is used to navigate to the expected page (page 112) as per the consumer flow.
+------------------------------
+
+==============================================
+[AppTest] Pair 76/118: 35 -> 17
+Producer: The page allows users to view and manage FTP Server settings, including status, username, password, port, shared path, and provides a button to start the FTP server.
+Consumer: The FTP Server page allows users to view the server's status, credentials, port, and shared path, and provides a button to start the FTP server.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the FTP Server settings page, click the filter options to generate filtered FTP server options.
+Consumer task:
+ Navigate to the FTP Server page by clicking its navigation item. On this page, view the FTP server settings (including status, credentials, port, and shared path) to verify they reflect the filtered options produced earlier.
+------------------------------
+
+==============================================
+[AppTest] Pair 77/118: 35 -> 54
+Producer: The page allows users to view and manage FTP Server settings, including status, username, password, port, shared path, and provides a button to start the FTP server.
+Consumer: The current page is a dialog for configuring the FTP port, allowing the user to enter a new port number and either cancel the action or confirm the change to update the FTP server's port setting.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the FTP Server settings page, click the filter options (to generate filtered FTP server options).
+Consumer task:
+ Click the FTP port option to open its configuration dialog. In the dialog, check that the port setting reflects the context related to the filtered FTP server options (e.g., if filtering affected port - related metadata, verify the port input value or display aligns with the filtered state from the Producer step).
+------------------------------
+
+==============================================
+[AppTest] Pair 78/118: 35 -> 55
+Producer: The page allows users to view and manage FTP Server settings, including status, username, password, port, shared path, and provides a button to start the FTP server.
+Consumer: The current page (Shared Path configuration dialog) allows the user to view, edit, and confirm changes to the shared path for the FTP Server, with options to cancel the action or change the path.
+
+[Plan]
+Case 1/2
+Producer task:
+ On the FTP Server settings page, click the filter options to generate filtered FTP server options.
+Consumer task:
+ From the FTP Server page, click the 'Shared Path' option to open the configuration dialog. In the dialog, click the input field to edit the shared path setting, ensuring it reflects the context of the filtered FTP server options from the producer step.
+------------------------------
+Case 2/2
+Producer task:
+ On the FTP Server settings page, click the filter options to generate filtered FTP server options.
+Consumer task:
+ From the FTP Server page, click the 'Shared Path' option to open the configuration dialog. In the dialog, click the 'CHANGE' button to confirm changes to the shared path setting, verifying the change is applied in the context of the filtered FTP server options from the producer step.
+------------------------------
+
+==============================================
+[AppTest] Pair 79/118: 35 -> 56
+Producer: The page allows users to view and manage FTP Server settings, including status, username, password, port, shared path, and provides a button to start the FTP server.
+Consumer: The current page is an FTP login configuration dialog that allows users to input a username, password, and select options like anonymous login or secure connection to configure FTP server login settings.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the FTP Server settings page, click the filter options to generate filtered FTP server options.
+Consumer task:
+ Open the FTP login configuration dialog via the 'Login' option. Then, use the filtered FTP server options (from the Producer) to input the corresponding username and password, and optionally configure other login options before clicking the 'SET' button to confirm the FTP login configuration.
+------------------------------
+
+==============================================
+[AppTest] Pair 80/118: 35 -> 57
+Producer: The page allows users to view and manage FTP Server settings, including status, username, password, port, shared path, and provides a button to start the FTP server.
+Consumer: This page allows the user to set the idle timeout (in seconds) for the FTP server by entering a value and confirming it with the "SET" button or canceling the action with the "CANCEL" button.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the FTP Server settings page, click the filter options to generate filtered FTP server options.
+Consumer task:
+ From the starting page, click the 'Idle timeout' option to go to page 20. Then click the input field to enter the idle timeout value (using the context of the FTP server setup influenced by the producer's filtered options) and proceed to page 31.
+------------------------------
+
+==============================================
+[AppTest] Pair 81/118: 37 -> 59
+Producer: The current page, within the App Manager, displays a list of installed applications with their storage sizes and provides a three - dot menu for each app to access additional management options, along with an "Exit" button to leave the App Manager.
+Consumer: Exit option
+
+[Plan]
+Case 1/1
+Producer task:
+ In App Manager, click the three - dot menu (More options) of an installed app to reveal the menu with the 'Exit' button.
+Consumer task:
+ From the App Manager session, click the 'Exit' option (from the revealed menu) to navigate to page 41.
+------------------------------
+
+==============================================
+[AppTest] Pair 82/118: 39 -> 66
+Producer: The page allows users to customize the color settings of various UI components (such as primary colors for tabs, accent color, icon color) and toggle related options (like icon colorization, colored navigation bar, random skin) in the Amaze app.
+Consumer: This page allows the user to select a color from a grid of color options (with a "DEFAULT" and "CANCEL" option) for setting the primary color of UI elements related to the left tab in the Amaze app's settings.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on Settings page, click 'Color' to enter Color customization page, then click 'Primary Color (Left Tab)' to access color selection for left tab.
+Consumer task:
+ From color settings page, click 'Primary Color (Right Tab)' to open color selection dialog for right tab's primary UI elements, verifying the color selection process is initiated as per data dependency.
+------------------------------
+
+==============================================
+[AppTest] Pair 83/118: 39 -> 67
+Producer: The page allows users to customize the color settings of various UI components (such as primary colors for tabs, accent color, icon color) and toggle related options (like icon colorization, colored navigation bar, random skin) in the Amaze app.
+Consumer: This page allows the user to select a color from a grid of color options (with a "DEFAULT" and "CANCEL" option) to set the primary color for the left tab in the Amaze app's UI.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on Settings page, click 'Color' to enter Color customization page, then click 'Primary Color (Left Tab)' to access color selection page.
+Consumer task:
+ Start on page 48, click 'Accent Color' setting (using the color setting context from Producer), navigate to page 58 (color selection dialog) and verify the color selection grid with DEFAULT and CANCEL options reflects the updated color context from Producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 84/118: 39 -> 68
+Producer: The page allows users to customize the color settings of various UI components (such as primary colors for tabs, accent color, icon color) and toggle related options (like icon colorization, colored navigation bar, random skin) in the Amaze app.
+Consumer: Colorize Icons toggle
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on Settings page, click 'Color' to enter Color customization page, then click 'Icon Color' to access icon color settings (to ensure icon color - related setup is in place, which is related to the Colorize Icons toggle's context).
+Consumer task:
+ Start on page 48, click the 'Colorize Icons' toggle (which should now reflect the context of the icon color settings configured by the Producer, verifying the data dependency between icon color - related settings and the Colorize Icons toggle state).
+------------------------------
+
+==============================================
+[AppTest] Pair 85/118: 39 -> 69
+Producer: The page allows users to customize the color settings of various UI components (such as primary colors for tabs, accent color, icon color) and toggle related options (like icon colorization, colored navigation bar, random skin) in the Amaze app.
+Consumer: Colored Navigation bar toggle
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on Settings page, click 'Color' to enter Color customization page, then click 'Colored Navigation bar' toggle to reach page 60 (completing toggle interaction).
+Consumer task:
+ After producer's action, check that the colored navigation bar setting (toggled state) is reflected as expected (e.g., UI shows the navigation bar with the intended color or toggle state is updated).
+------------------------------
+
+==============================================
+[AppTest] Pair 86/118: 39 -> 70
+Producer: The page allows users to customize the color settings of various UI components (such as primary colors for tabs, accent color, icon color) and toggle related options (like icon colorization, colored navigation bar, random skin) in the Amaze app.
+Consumer: Random Skin toggle
+
+[Plan]
+Case 1/2
+Producer task:
+ Start on Settings page, click 'Color' to enter Color customization page, then click 'Random Skin' toggle (to set initial state)
+Consumer task:
+ On Color customization page, click 'Random Skin' toggle again, verify it reflects the updated state (e.g., toggled from previous state) and check if navigation to page 61 occurs as expected
+------------------------------
+Case 2/2
+Producer task:
+ Navigate to Settings -> Color page, click 'Primary Color (Left Tab)' to enter color selection, reset to default, then return to Color page
+Consumer task:
+ On Color page, click 'Random Skin' toggle, verify the toggle works (state change) and any UI changes (like colored navigation bar) reflect the updated primary color setting from Producer
+------------------------------
+
+==============================================
+[AppTest] Pair 87/118: 47 -> 71
+Producer: The page allows users to manage sidebar shortcuts by editing, deleting existing shortcuts (Download, Movies, Music, Pictures), and adding new items.
+Consumer: This page allows the user to edit the name and directory path of a sidebar shortcut in the Amaze file manager app, with options to cancel or confirm the changes.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to the settings page, click the 'Shortcuts' option to open the sidebar shortcuts management page, then select the 'Download' shortcut to prepare for editing.
+Consumer task:
+ In the edit dialog for the 'Download' shortcut, click the name input field (or directory input field, or confirmation button) to modify the shortcut's name (or directory, or confirm changes), then verify the updated 'Download' shortcut reflects the changes made.
+------------------------------
+
+==============================================
+[AppTest] Pair 88/118: 47 -> 72
+Producer: The page allows users to manage sidebar shortcuts by editing, deleting existing shortcuts (Download, Movies, Music, Pictures), and adding new items.
+Consumer: Delete shortcut
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to settings page, click 'Shortcuts' to open sidebar shortcuts management page, then identify an existing shortcut (e.g., Download) to prepare for deletion.
+Consumer task:
+ On the 'Sidebar shortcuts' page, click the 'Delete shortcut' button (trash icon) for the previously identified shortcut (e.g., Download) and verify the shortcut is removed from the sidebar shortcuts list.
+------------------------------
+
+==============================================
+[AppTest] Pair 89/118: 47 -> 73
+Producer: The page allows users to manage sidebar shortcuts by editing, deleting existing shortcuts (Download, Movies, Music, Pictures), and adding new items.
+Consumer: The page allows users to input a name and select a directory to create a new sidebar shortcut within the Amaze app's sidebar shortcuts management interface.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to the settings page, then click the 'Shortcuts' option to open the sidebar shortcuts management page.
+Consumer task:
+ On the Sidebar shortcuts page, click to add a new shortcut (using the sidebar shortcuts configuration from the Producer), enter a name in the Name input field, select a directory in the Directory input field, and click the Create shortcut button to create the new sidebar shortcut.
+------------------------------
+
+==============================================
+[AppTest] Pair 90/118: 48 -> 74
+Producer: The page allows users to configure which items (Quick access, Recent files, Images, Videos, Audio, Documents, Apks) are enabled for quick access in the sidebar of the Amaze file manager app.
+Consumer: Quick access toggle
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on Settings page, click 'Quick accesses' to go to Sidebar quick access config page, enable 'Quick access' item.
+Consumer task:
+ Start on page 57, click 'Quick access toggle' (should reflect the enabled setting from producer), verify navigation to page 75 with the updated quick access state.
+------------------------------
+
+==============================================
+[AppTest] Pair 91/118: 48 -> 75
+Producer: The page allows users to configure which items (Quick access, Recent files, Images, Videos, Audio, Documents, Apks) are enabled for quick access in the sidebar of the Amaze file manager app.
+Consumer: Recent files toggle
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on Settings page, click 'Quick accesses' to open Sidebar quick access configuration page.
+Consumer task:
+ On Sidebar quick access configuration page, click 'Recent files' toggle to check if it reflects the configured state from Producer (e.g., if Producer enabled it, Consumer toggle should show enabled; if disabled, show disabled).
+------------------------------
+
+==============================================
+[AppTest] Pair 92/118: 48 -> 76
+Producer: The page allows users to configure which items (Quick access, Recent files, Images, Videos, Audio, Documents, Apks) are enabled for quick access in the sidebar of the Amaze file manager app.
+Consumer: Images toggle
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on Settings page, click 'Quick accesses' to navigate to Sidebar quick access configuration page, then enable the 'Images' item for quick access.
+Consumer task:
+ Start on page 57 (Sidebar quick access), click the 'Images' toggle (using the setting configured by the Producer), and verify the app transitions to page 77 with the Images quick access setting toggled as per the Producer's configuration.
+------------------------------
+
+==============================================
+[AppTest] Pair 93/118: 48 -> 77
+Producer: The page allows users to configure which items (Quick access, Recent files, Images, Videos, Audio, Documents, Apks) are enabled for quick access in the sidebar of the Amaze file manager app.
+Consumer: Videos toggle
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on Settings page, click 'Quick accesses' to navigate to Sidebar quick access configuration page, then enable Videos for quick access.
+Consumer task:
+ Start on Sidebar quick access page (page 57), click the 'Videos' toggle (using the enabled state from Producer's configuration) to complete the toggle interaction for the Videos option.
+------------------------------
+
+==============================================
+[AppTest] Pair 94/118: 48 -> 78
+Producer: The page allows users to configure which items (Quick access, Recent files, Images, Videos, Audio, Documents, Apks) are enabled for quick access in the sidebar of the Amaze file manager app.
+Consumer: Audio toggle
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on Settings page, click 'Quick accesses' to navigate to Sidebar quick access configuration page, then enable the Audio item for quick access.
+Consumer task:
+ Start on the Sidebar quick access page (page 57), click the Audio toggle, and verify that the Audio quick access setting (enabled as per producer) is toggled (now disabled, or confirm state change reflects the producer's configuration).
+------------------------------
+
+==============================================
+[AppTest] Pair 95/118: 48 -> 79
+Producer: The page allows users to configure which items (Quick access, Recent files, Images, Videos, Audio, Documents, Apks) are enabled for quick access in the sidebar of the Amaze file manager app.
+Consumer: Documents toggle
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on Settings page, click 'Quick accesses' to navigate to Sidebar quick access configuration page, then enable the 'Documents' item for quick access.
+Consumer task:
+ Start on the Sidebar quick access configuration page (page 57), click the 'Documents' toggle, and verify the toggle interaction leads to page 80 (using the quick access setting for Documents produced earlier).
+------------------------------
+
+==============================================
+[AppTest] Pair 96/118: 48 -> 80
+Producer: The page allows users to configure which items (Quick access, Recent files, Images, Videos, Audio, Documents, Apks) are enabled for quick access in the sidebar of the Amaze file manager app.
+Consumer: Apks toggle
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on Settings page, click 'Quick accesses' to open Sidebar quick access configuration page, then enable the Apks item.
+Consumer task:
+ Start on Sidebar quick access configuration page (page 57), click the 'Apks' toggle (using the Apks quick access setting from Producer), and verify navigation to page 81.
+------------------------------
+
+==============================================
+[AppTest] Pair 97/118: 56 -> 87
+Producer: The current page is an FTP login configuration dialog that allows users to input a username, password, and select options like anonymous login or secure connection to configure FTP server login settings.
+Consumer: Anonymous checkbox
+
+[Plan]
+Case 1/2
+Producer task:
+ Open FTP login configuration dialog via 'Login' option, then check the 'Anonymous' checkbox (to set anonymous login) and click 'SET' to save the FTP login configuration.
+Consumer task:
+ On the Login dialog, check the state of the 'Anonymous' checkbox to verify it reflects the anonymous login setting produced by the Producer (i.e., it is checked as configured).
+------------------------------
+Case 2/2
+Producer task:
+ Open FTP login configuration dialog via 'Login' option, input a username (e.g., 'testuser'), leave 'Anonymous' checkbox unchecked, and click 'SET' to save the FTP login configuration with non - anonymous credentials.
+Consumer task:
+ On the Login dialog, check the state of the 'Anonymous' checkbox to verify it reflects the non - anonymous login setting produced by the Producer (i.e., it is unchecked as configured).
+------------------------------
+
+==============================================
+[AppTest] Pair 98/118: 56 -> 88
+Producer: The current page is an FTP login configuration dialog that allows users to input a username, password, and select options like anonymous login or secure connection to configure FTP server login settings.
+Consumer: Secure Connection checkbox
+
+[Plan]
+Case 1/1
+Producer task:
+ Open FTP login config dialog via 'Login' option, check 'Secure Connection' option, then click 'SET' button to update FTP login configuration
+Consumer task:
+ On page 19, click the 'Secure Connection' checkbox (should reflect the 'secure connection' setting updated by the Producer) and verify navigation to page 29
+------------------------------
+
+==============================================
+[AppTest] Pair 99/118: 57 -> 89
+Producer: This page allows the user to set the idle timeout (in seconds) for the FTP server by entering a value and confirming it with the "SET" button or canceling the action with the "CANCEL" button.
+Consumer: Set idle timeout
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 15, click 'Idle timeout' to go to page 20. On page 20, click the input field, enter an idle timeout value (e.g., 60), and proceed (this sets the updated idle timeout setting).
+Consumer task:
+ Start on page 20, click 'Set idle timeout' to open page 32 (idle timeout dialog). Verify that the idle timeout dialog reflects the updated idle timeout setting (e.g., 60 seconds) set by the producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 100/118: 60 -> 38
+Producer: Open the app
+Consumer: The current page's functionality is to display the app options menu for the "Amaze" application, providing actions such as Open, Backup, Uninstall, Properties, Play store, and Share.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the App Manager page (page 12), click the app options menu (three - dot icon) for the 'Amaze' app, then click the 'Open' option to launch the Amaze app.
+Consumer task:
+ On the App Manager page (page 12), click the app options menu (three - dot icon) for the 'Amaze' app (the app that was just launched by the producer task) to verify that the menu with actions like Open, Backup, Uninstall, Properties, Play store, and Share is displayed.
+------------------------------
+
+==============================================
+[AppTest] Pair 101/118: 60 -> 61
+Producer: Open the app
+Consumer: Backup the app
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 35, click the 'Open' option from the Amaze app's context menu, then navigate to page 42 to open the Amaze app.
+Consumer task:
+ On the App Manager page (page 35), click the 'Backup' option from the Amaze app's menu (the app opened by the Producer) to initiate the backup and navigate to page 43.
+------------------------------
+
+==============================================
+[AppTest] Pair 102/118: 60 -> 62
+Producer: Open the app
+Consumer: Uninstall the app
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 35, click the 'Open' option in Amaze app's context menu, then navigate to page 42 to confirm the app is launched (data_out: launched Amaze app).
+Consumer task:
+ On the App Manager page (page 35), click the 'Uninstall' option for the Amaze app (the one just launched) to initiate its uninstallation, then verify navigation to page 44.
+------------------------------
+
+==============================================
+[AppTest] Pair 103/118: 60 -> 63
+Producer: Open the app
+Consumer: View app properties
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 35 (App Manager), click the 'Open' option in the Amaze app's context menu to navigate to page 42 and open the Amaze app.
+Consumer task:
+ On page 35 (App Manager), click to view the properties of the Amaze app (the one just opened) and verify the flow transitions to page 45.
+------------------------------
+
+==============================================
+[AppTest] Pair 104/118: 60 -> 64
+Producer: Open the app
+Consumer: Open in Play store
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 35, click the 'Open' option from Amaze app's context menu to open the app (navigates to page 42).
+Consumer task:
+ On page 35 (App Manager), click 'Open in Play store' for the Amaze app to open its Play Store page (navigates to page 46).
+------------------------------
+
+==============================================
+[AppTest] Pair 105/118: 60 -> 65
+Producer: Open the app
+Consumer: Share the app
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 35, click the 'Open' option in the Amaze app's context menu to open the app (navigates to page 42).
+Consumer task:
+ On the app management page (page 35), click the 'Share' option in the Amaze app's menu to share the app (navigates to page 47), ensuring the app to share is the one opened by the producer task.
+------------------------------
+
+==============================================
+[AppTest] Pair 106/118: 71 -> 72
+Producer: This page allows the user to edit the name and directory path of a sidebar shortcut in the Amaze file manager app, with options to cancel or confirm the changes.
+Consumer: Delete shortcut
+
+[Plan]
+Case 1/1
+Producer task:
+ Edit the 'Download' sidebar shortcut: click to open the edit dialog, then click the edit confirmation button to save changes (ensuring the shortcut is updated).
+Consumer task:
+ On the 'Sidebar shortcuts' page, click the trash icon (Delete shortcut button) for the updated 'Download' shortcut to attempt its deletion.
+------------------------------
+
+==============================================
+[AppTest] Pair 107/118: 71 -> 73
+Producer: This page allows the user to edit the name and directory path of a sidebar shortcut in the Amaze file manager app, with options to cancel or confirm the changes.
+Consumer: The page allows users to input a name and select a directory to create a new sidebar shortcut within the Amaze app's sidebar shortcuts management interface.
+
+[Plan]
+Case 1/1
+Producer task:
+ Click to edit the 'Download' sidebar shortcut, open the edit dialog, then click the edit confirmation button to update the shortcut.
+Consumer task:
+ On the Sidebar shortcuts page, click to add a new shortcut, open the Create shortcut dialog. Click the Name input field and enter the name of the updated 'Download' shortcut. Click the Directory input field and select the directory of the updated 'Download' shortcut. Finally, click the Create shortcut button to finalize the new sidebar shortcut.
+------------------------------
+
+==============================================
+[AppTest] Pair 108/118: 72 -> 73
+Producer: Delete shortcut
+Consumer: The page allows users to input a name and select a directory to create a new sidebar shortcut within the Amaze app's sidebar shortcuts management interface.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the 'Sidebar shortcuts' page (page 56), click the 'Delete shortcut' button (trash icon) for a specific shortcut to delete it.
+Consumer task:
+ On the Sidebar shortcuts page, click to add a new shortcut, open the Create shortcut dialog, click the Name input field to enter a name, click the Directory input field to select a directory, and then click the Create shortcut button to create a new sidebar shortcut, verifying that the updated sidebar shortcuts list (after deletion) is reflected in the interface during this process.
+------------------------------
+
+==============================================
+[AppTest] Pair 109/118: 90 -> 90
+Producer: Open as Text
+Consumer: Open as Text
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 104, click the 'Open as Text' option to open a file as text (leading to page 111).
+Consumer task:
+ On page 104, click the 'Open as Text' option to open the file (that was opened as text by the producer) as text, verifying it leads to page 111.
+------------------------------
+
+==============================================
+[AppTest] Pair 110/118: 90 -> 92
+Producer: Open as Text
+Consumer: Open as Video
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 104, click the 'Open as Text' option to open the file as text (navigates to page 111).
+Consumer task:
+ On page 104, click the 'Open as Video' option to open the same file (from Producer) as video, navigating to page 113.
+------------------------------
+
+==============================================
+[AppTest] Pair 111/118: 90 -> 93
+Producer: Open as Text
+Consumer: Open as Audio
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 104, click the 'Open as Text' option to open the file as text (completing on page 111).
+Consumer task:
+ On page 104, click the 'Open as Audio' option to open the file (that was opened as text by the producer) as audio (completing on page 114).
+------------------------------
+
+==============================================
+[AppTest] Pair 112/118: 90 -> 94
+Producer: Open as Text
+Consumer: Open as Database
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 104, click the 'Open as Text' option to open the file as text (navigates to page 111).
+Consumer task:
+ On page 104, click the 'Open as Database' option to open the file (that was opened as text by the producer) as a database (navigates to page 115).
+------------------------------
+
+==============================================
+[AppTest] Pair 113/118: 90 -> 95
+Producer: Open as Text
+Consumer: Open as Other
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 104, click the 'Open as Text' option to open the file as text (navigates to page 111).
+Consumer task:
+ In the 'Open As' dialog, click the 'Other' option to open the file (that was opened as text by the Producer) as 'Other' and verify the transition to the associated destination page.
+------------------------------
+
+==============================================
+[AppTest] Pair 114/118: 90 -> 96
+Producer: Open as Text
+Consumer: Save to Drive option
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 104, click the 'Open as Text' option to open the file as text (completing on page 111).
+Consumer task:
+ On page 110 (share dialog), click the 'Save to Drive' option to save the file (that was opened as text by the Producer) to Drive (transitioning to page 120).
+------------------------------
+
+==============================================
+[AppTest] Pair 115/118: 90 -> 97
+Producer: Open as Text
+Consumer: Add to Maps option
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 104, click the 'Open as Text' option to open the file as text (navigates to page 111).
+Consumer task:
+ On page 110, in the share dialog, click the 'Add to Maps' option, ensuring the file (opened as text) is used in this action (transitions to page 121).
+------------------------------
+
+==============================================
+[AppTest] Pair 116/118: 90 -> 98
+Producer: Open as Text
+Consumer: Messenger option
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 104, click the 'Open as Text' option to open the file as text (navigates to page 111).
+Consumer task:
+ On page 110 (share menu), click the Messenger option (using the file opened as text in the share options) to navigate to page 122.
+------------------------------
+
+==============================================
+[AppTest] Pair 117/118: 90 -> 100
+Producer: Open as Text
+Consumer: Gmail option
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 104, click the 'Open as Text' option to open the file as text (navigates to page 111).
+Consumer task:
+ On page 110, in the share dialog, click the 'Gmail' option to share the file (opened as text by the Producer) and navigate to page 124.
+------------------------------
+
+==============================================
+[AppTest] Pair 118/118: 90 -> 101
+Producer: Open as Text
+Consumer: Save as... option
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 104, click the 'Open as Text' option to open the file as text (navigates to page 111).
+Consumer task:
+ After the file is opened as text (from the producer step), open the Share dialog, click the 'Save as...' option to initiate saving the opened text file (transitions to page 125).
+------------------------------

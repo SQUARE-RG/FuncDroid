@@ -1,0 +1,769 @@
+
+================= [TaskTest] FDG[0] =================
+[Function] Launch page for services and search
+
+[Core Logic Task]
+The flow starts on page 0 (launch page) with various service icons (e.g., FRVR Games, Booking.com, KKday, etc.). Clicking a service icon (like FRVR Games or Booking.com) navigates to page 4. From page 4, actions like clicking Home (back to page 0), Refresh/Search (to page 5), or Menu (to page 13) are possible. From page 5, Search or Menu actions lead to page 5 (leaf for Search) or page 13. From page 13, actions like Turbo mode, Block images, Settings, or Exit navigate back to page 4 or to page 20 (for Block images).
+
+[Variant Paths] (3)
+ - V1: Tap <FRVR Games icon>, then tap <Block images button> (skipping intermediate steps to test boundary navigation)
+ - V2: Tap <Booking.com icon>, then tap <Refresh button>, then tap <Turbo mode button> (altered action sequence from original flow)
+ - V3: Tap <Search icon button> directly from page 0 (omitting service icon click to test alternative entry)
+
+================= [TaskTest] FDG[1] =================
+[Function] The current page, under the "Travel" section with "Explore" tab active, is in a loading state, likely fetching and preparing to display travel - related exploration content (with a "Bucket List" tab also available for switching).
+
+[Core Logic Task]
+The flow starts by clicking the airplane icon to navigate to the Travel section. Once there, with the Explore tab active, a click on the Explore tab triggers the app to fetch and load travel - related exploration content, likely entering a loading state as it prepares the content for display.
+
+[Variant Paths] (3)
+ - V1: Tap <Airplane icon> to navigate to Travel section, then omit tapping <Explore tab> and check if loading state occurs
+ - V2: Tap <Explore tab> first, then tap <Airplane icon> to navigate to Travel section and check loading state
+ - V3: Tap <Airplane icon> to navigate to Travel section, then tap <Explore tab> twice and check loading state
+
+================= [TaskTest] FDG[2] =================
+[Function] The current page, accessed via the News icon from the launch page, is intended to display news content (currently loading or empty) with a refresh functionality available.
+
+[Core Logic Task]
+The flow starts on the launch page (page 0). The user clicks the News icon, navigating to the News page (page 2) which displays news content (currently loading or empty) with a refresh option. There are no branches or loops as only one action is defined.
+
+[Variant Paths] (3)
+ - V1: Tap <News icon> twice (repeat the navigation action)
+ - V2: Omit tapping <News icon> (check if news page loads without interaction, though likely not functional but for mutation testing)
+ - V3: Tap <News icon> then immediately tap <News icon> again (simulate rapid repeated navigation)
+
+================= [TaskTest] FDG[3] =================
+[Function] The current page, accessed via the Games icon from the launch page, is loading content under the "Instant play" tab (with a "Download to play" tab also available) to display games that can be played instantly or downloaded.
+
+[Core Logic Task]
+The flow starts on the launch page (page 0). The user clicks the 'Games icon' (action S1), which navigates to the Games page (page 3). On this page, the 'Instant play' tab is active, and content begins loading (as indicated by the spinner in the screenshot). There are no branches or loops here as the main action is navigation and initial loading.
+
+[Variant Paths] (2)
+ - V1: Omit <Games icon> click (simulate app starting directly on Games page, bypassing launch page navigation)
+ - V2: Repeat clicking <Games icon> multiple times (e.g., click <Games icon>, then immediately click <Games icon> again while page is loading)
+
+================= [TaskTest] FDG[4] =================
+[Function] The current page (within Firefox Lite) functions as a search interface where the user can input a query (e.g., "travel tips") to search for information, with quick access to various services/apps (like travel, news, games, and e - commerce platforms) and social media shortcuts also available on the screen.
+
+[Core Logic Task]
+The user starts on page 0. They input 'travel tips' into the search bar. After inputting, the flow proceeds to page 6. There are no decision or loop points in this core logic.
+
+[Variant Paths] (3)
+ - V1: Input empty string into <Search bar>
+ - V2: Input a very long string (e.g., 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa') into <Search bar>
+ - V3: Input special characters (e.g., '!@#$%^&*()') into <Search bar>
+
+================= [TaskTest] FDG[5] =================
+[Function] The page allows users to enter a product name to initiate a price comparison across popular shopping sites, with a focus on facilitating easy price comparison.
+
+[Core Logic Task]
+The user starts on page 0 and clicks the shopping bag icon (action_ref [0,12]) to navigate to page 7. Then, on page 7, the user clicks the product name input field (action_ref [7,0]) to proceed to page 26, likely to enter a product name for price comparison.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Product name input field> after clicking <Shopping bag icon>
+ - V2: Click <Product name input field> first, then click <Shopping bag icon>
+ - V3: Input an extremely long string (e.g., 1000 repeated 'a's) into <Product name input field> after clicking <Shopping bag icon>
+
+================= [TaskTest] FDG[6] =================
+[Function] The current page is a menu in Firefox Lite that provides access to various browser functions such as bookmarks, downloads, history, and settings, as well as features like turbo mode, private tab, and night mode.
+
+[Core Logic Task]
+The flow starts on the initial page (page 0). The user clicks the menu icon (three dots) at the top-right. This action opens the Firefox Lite menu (page 8), which provides access to functions like bookmarks, downloads, history, and features like turbo mode, private tab, night mode, etc.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Menu icon (three dots)> (staying on page 0 instead of opening the menu)
+ - V2: Tap <Menu icon (three dots)> twice (repeating the menu - opening action)
+ - V3: Tap <Menu icon (three dots)> and then immediately tap <Menu icon (three dots)> again (order and repeat mutation)
+
+================= [TaskTest] FDG[7] =================
+[Function] The current page is a loading state of the Travel section (specifically the Explore tab) where travel - related content is being fetched, and there is a refresh option available to reload the content.
+
+[Core Logic Task]
+The app starts on the Travel section’s Explore tab in a loading state. A refresh icon is available. Clicking the refresh icon triggers a reload of the travel - related content on this page.
+
+[Variant Paths] (3)
+ - V1: Tap <Refresh icon> twice (repeat operation)
+ - V2: Omit tapping <Refresh icon> (do not refresh)
+ - V3: Tap <Refresh icon> immediately after the page starts loading (early refresh)
+
+================= [TaskTest] FDG[8] =================
+[Function] The current page (Travel - Bucket List) allows users to view their travel bucket list (currently empty with a prompt to "Explore a city" to add destinations) and provides an option to explore cities to populate the bucket list.
+
+[Core Logic Task]
+The user starts on the Travel page (Explore tab, loading). They click the 'Bucket List' tab, navigating to the Bucket List page, which shows an empty state with a prompt to 'Explore a city' to add destinations.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Bucket List tab> and stay on the previous page (Explore tab) instead of navigating to the Bucket List page
+ - V2: Tap <Bucket List tab> twice (repeat the operation) to see if there's any change in the page state
+ - V3: Tap <Bucket List tab> and then immediately tap it again (order mutation with repetition)
+
+================= [TaskTest] FDG[9] =================
+[Function] The current page is a news page that allows users to view news content and has a refresh functionality (via the refresh icon) to update the news feed.
+
+[Core Logic Task]
+The user starts on the news page (page 2). The core action is clicking the refresh icon, which triggers the app to update the news feed. After the click, the page remains the same (dst_page_idx 2) as the refresh process executes, likely fetching and displaying updated news content.
+
+[Variant Paths] (3)
+ - V1: Tap <Refresh icon> twice (repeat the refresh action)
+ - V2: Omit tapping <Refresh icon> (do not refresh the news feed)
+ - V3: Tap <Refresh icon> and then immediately tap <Refresh icon> again (quick repeated refresh)
+
+================= [TaskTest] FDG[10] =================
+[Function] The current page is a loading screen for the "Game" section, specifically for the "Instant play" tab, where game content is being fetched (with a refresh option available to reload the page).
+
+[Core Logic Task]
+The flow starts on the loading screen of the 'Instant play' tab in the 'Game' section. The user can click the refresh icon (at step S1) to reload the page, which remains on the same loading screen (dst_page_idx 3) to fetch game content again. There are no branches or loops beyond this refresh action for now.
+
+[Variant Paths] (3)
+ - V1: Tap <Refresh icon> twice in a row to see if repeated refreshing works
+ - V2: Omit tapping <Refresh icon> and wait to see if the page loads automatically
+ - V3: Tap <Refresh icon> immediately upon page load (simulating quick refresh)
+
+================= [TaskTest] FDG[11] =================
+[Function] The current page functions as a tab management interface, allowing users to view, switch between, close individual tabs, or close all open tabs, with options to open a new tab or use private browsing.
+
+[Core Logic Task]
+The flow starts on page 4. The user clicks the 'Tabs button' (action_ref [4,3]), which navigates to page 12 (the tab management interface). From there, the tab management interface allows further actions like viewing, switching, closing tabs, opening new tabs, or using private browsing, though only the initial navigation step is captured here.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Tabs button> (to test if the app still navigates to tab management without this action, though likely invalid but a mutation attempt)
+ - V2: Click <Tabs button> twice (repeat the navigation action to see if it causes unexpected behavior like multiple tab management pages opening)
+ - V3: Click <Tabs button> then immediately click it again (similar to repeat, testing the app's response to rapid repeated navigation to the tab management interface)
+
+================= [TaskTest] FDG[12] =================
+[Function] The page displays a list of "10 Leak Groups" with entries showing group identifiers (like "MainActivity.mViewModelStore" with counts), and their latest update timestamps, likely for monitoring or analyzing memory leak - related groups.
+
+[Core Logic Task]
+The flow starts on a detailed leak group page. The user clicks the home icon button, which navigates them back to the '10 Leak Groups' list page, where leak groups with identifiers and timestamps are displayed. This is a single-step navigation flow with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Home icon button> (stay on the detailed leak group page instead of navigating back)
+ - V2: Tap <Home icon button> twice (repeat the navigation action, though the result may be the same as tapping once in this case)
+ - V3: Tap <Home icon button> and then immediately tap it again (same as repeating the action)
+
+================= [TaskTest] FDG[13] =================
+[Function] Displays detailed information about memory leaks related to `MainActivity.mDialogFragment`, including the leak type (`ListPanelDialog Leaked`), timestamps, and the status of the `MainActivity` (Leaking: NO).
+
+[Core Logic Task]
+The flow starts on page 5. The user clicks the refresh icon button, which navigates to page 4. This action likely refreshes the memory leak details for MainActivity.mDialogFragment, including leak type, timestamps, and MainActivity's status, ensuring the displayed information is up - to - date.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Refresh icon button> and check if the memory leak details for MainActivity.mDialogFragment are still displayed as expected
+ - V2: Tap <Refresh icon button> multiple times (e.g., three times) and observe if the memory leak details for MainActivity.mDialogFragment update each time
+ - V3: Tap <Refresh icon button> and then immediately tap it again without waiting for the page to fully load or update, and check the memory leak details for MainActivity.mDialogFragment
+
+================= [TaskTest] FDG[14] =================
+[Function] The current page is a web browser tab loading the URL "https://frvr.com/mozilla/", allowing the user to access and view the content of that webpage once loading completes.
+
+[Core Logic Task]
+The user starts on page 5 and clicks the Tabs icon button. This action navigates to page 14, where the browser tab loading 'https://frvr.com/mozilla/' is accessed. The page then loads, allowing the user to view the webpage content.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Tabs icon button> and check if the tab loads automatically
+ - V2: Click <Tabs icon button> multiple times (e.g., twice) before waiting for the tab to load
+ - V3: Click <Tabs icon button> and then immediately click it again while the page is loading
+
+================= [TaskTest] FDG[15] =================
+[Function] Search input field
+
+[Core Logic Task]
+The user interacts with the search input field by clicking on it (from page 6). This action leads to a transition to page 24, likely to display search-related content or results. There are no branches or loops as only one action is defined for this functional point.
+
+[Variant Paths] (3)
+ - V1: Tap <Search input field> twice
+ - V2: Omit tapping <Search input field> (though this skips the core action, testing if the app behaves without initiating search interaction)
+ - V3: Tap <Search input field> and then immediately tap <Search input field> again (repeating the interaction)
+
+================= [TaskTest] FDG[16] =================
+[Function] Displays a detailed breakdown of 8 memory leaks in the MainActivity.mViewModelStore, including the hierarchy of related objects and their leak status (e.g., Leaking: NO, UNKNOWN) to help identify and troubleshoot memory leak issues in the application.
+
+[Core Logic Task]
+The user starts on page 6 and clicks the 'Close search icon' to navigate to page 25, where the detailed breakdown of 8 memory leaks in MainActivity.mViewModelStore (including object hierarchy and leak status) is displayed. There are no branches or loops in this flow.
+
+[Variant Paths] (3)
+ - V1: Start on page 6, omit clicking <Close search icon> and check if the detailed breakdown page (page 25) is still reached
+ - V2: Start on page 6, click <Close search icon> twice and observe if the detailed breakdown page (page 25) is reached or if there's an unexpected behavior
+ - V3: Start on a different page (not page 6, if possible within the app's context) and click <Close search icon> to see if the detailed breakdown page (page 25) is reached
+
+================= [TaskTest] FDG[17] =================
+[Function] Displays a detailed breakdown of memory leak information for "MainActivity.mViewModelStore", including the hierarchy of related objects and their leak status (e.g., Leaking: NO/UNKNOWN) to help diagnose memory issues.
+
+[Core Logic Task]
+The user starts on page 6 and clicks the Facebook shortcut button, which navigates to page 25. This action likely initiates a process related to the app's interaction with Facebook, though the exact后续 flow (if any) isn't fully detailed here.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Facebook shortcut button> and stay on page 6
+ - V2: Click <Facebook shortcut button> twice (repeat the action)
+ - V3: Click <Facebook shortcut button> and then immediately click it again (order mutation with repeat)
+
+================= [TaskTest] FDG[18] =================
+[Function] Displays a detailed breakdown of memory leak information for "MainActivity.mViewModelStore", including the hierarchy of related objects and their leak statuses to help identify and analyze memory leak causes.
+
+[Core Logic Task]
+The user starts on page 6 and clicks the YouTube shortcut button. This action navigates to page 25, where the detailed breakdown of memory leak information for 'MainActivity.mViewModelStore' (including object hierarchy and leak statuses) is displayed. There are no branches or loops in this flow.
+
+[Variant Paths] (3)
+ - V1: Start on page 6, omit clicking <YouTube shortcut button> (to see if the memory leak info still appears, testing if the button is necessary)
+ - V2: Start on page 6, click <YouTube shortcut button> twice (testing if repeated clicks cause issues or different behavior)
+ - V3: Start on a different page (not page 6) and click <YouTube shortcut button> (testing if the starting page affects the navigation)
+
+================= [TaskTest] FDG[19] =================
+[Function] Displays a detailed breakdown of memory leak information for "MainActivity.mViewModelStore", including the hierarchy of related objects and their leak status (e.g., Leaking: NO/UNKNOWN) to help diagnose memory issues.
+
+[Core Logic Task]
+The user starts on page 6 and clicks the Instagram shortcut button, which navigates to page 25. This action likely initiates a flow related to the app's functionality, though the exact subsequent steps (if any) are not provided here.
+
+[Variant Paths] (3)
+ - V1: Tap <Instagram shortcut button> twice
+ - V2: Omit tapping <Instagram shortcut button> (stay on page 6)
+ - V3: Tap <Instagram shortcut button> and then immediately tap <Instagram shortcut button> again
+
+================= [TaskTest] FDG[20] =================
+[Function] Displays detailed information about memory leaks in the MainActivity's ViewModelStore, including the leak group's likely causes and the leaking status of related components.
+
+[Core Logic Task]
+The user clicks the Bookmarks icon on page 8, which navigates to page 25. On page 25, detailed information about memory leaks in MainActivity's ViewModelStore is displayed, including leak group causes and component leaking statuses.
+
+[Variant Paths] (3)
+ - V1: Tap <Bookmarks icon> twice (repeat the tap operation)
+ - V2: Omit tapping <Bookmarks icon> (try to see if the page 25 with memory leak info appears without tapping the icon)
+ - V3: Tap <Bookmarks icon> and then immediately tap it again (another form of repeat operation)
+
+================= [TaskTest] FDG[21] =================
+[Function] Displays a detailed breakdown of memory leak information for "MainActivity.mViewModelStore", including the hierarchy of related objects and their leak statuses.
+
+[Core Logic Task]
+The process starts on page 8. The user clicks the Downloads icon, which navigates to page 25. On page 25, the detailed breakdown of memory leak information for 'MainActivity.mViewModelStore' is displayed, including the hierarchy of related objects and their leak statuses.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <Downloads icon> and check if the detailed breakdown page (page 25) is still displayed
+ - V2: Click <Downloads icon> twice and check the resulting page (page 25) for any changes in the memory leak breakdown display
+
+================= [TaskTest] FDG[22] =================
+[Function] Displays the details of memory leaks related to "MainActivity.mViewModelStore", including the hierarchy of related objects and their leak status (e.g., Leaking: NO/UNKNOWN) to help diagnose memory issues in the application.
+
+[Core Logic Task]
+The flow starts on page 8. The user clicks the History icon (action on page 8, edge 2), which navigates to page 25. On page 25, the details of memory leaks related to 'MainActivity.mViewModelStore' (including object hierarchy and leak status) are displayed. There are no branches or loops as this is a single navigation and display step.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <History icon> and check if memory leak details still appear (though likely won't, testing omission)
+ - V2: Tap <History icon> twice (testing repeat action to see if multiple navigations or displays occur)
+ - V3: Tap <History icon> but then immediately tap it again before page 25 loads (testing interaction during loading state)
+
+================= [TaskTest] FDG[23] =================
+[Function] Displays detailed information about memory leaks in the MainActivity's ViewModelStore, including the leak group's likely causes and the leaking status of related objects and their fields.
+
+[Core Logic Task]
+The flow starts on page 8. The user clicks the 'My shots' icon, which navigates to page 25. On page 25, the detailed memory leak information for MainActivity's ViewModelStore is displayed, including leak group causes and leaking status of related objects/fields.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <My shots icon> and check if memory leak info is still displayed on page 8
+ - V2: Click <My shots icon> twice and observe if it navigates to page 25 both times and displays the memory leak info
+ - V3: Click <My shots icon> and then immediately click it again before page 25 loads to see if the navigation is affected
+
+================= [TaskTest] FDG[24] =================
+[Function] Turbo mode icon
+
+[Core Logic Task]
+The user starts on page 8. They perform a click action on the Turbo mode icon, which leads to page 27. This is a straight - line flow with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Tap <Turbo mode icon> twice
+ - V2: Omit tapping <Turbo mode icon> (stay on page 8)
+ - V3: Tap <Turbo mode icon> and then immediately tap <Turbo mode icon> again
+
+================= [TaskTest] FDG[25] =================
+[Function] Private tab icon
+
+[Core Logic Task]
+The user starts on page 8. They perform a click action on the Private tab icon. This action navigates them to page 28, completing the functional point's core logic.
+
+[Variant Paths] (3)
+ - V1: Tap <Private tab icon> twice
+ - V2: Omit tapping <Private tab icon> (staying on page 8)
+ - V3: Tap <Private tab icon> after a short delay (simulating timing variation)
+
+================= [TaskTest] FDG[26] =================
+[Function] Night mode icon
+
+[Core Logic Task]
+The flow starts on page 8. The user clicks the Night mode icon, which transitions the app to page 29. This is a single-step flow with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Night mode icon> (check if app stays on page 8 without transition)
+ - V2: Tap <Night mode icon> twice (check if app transitions to page 29 and maybe has unexpected behavior with repeated tap)
+ - V3: Tap <Night mode icon> after a very short delay (simulate rapid interaction to check stability)
+
+================= [TaskTest] FDG[27] =================
+[Function] Block images icon
+
+[Core Logic Task]
+The user starts on page 8 and clicks the 'Block images' icon. This action transitions the app to page 30, completing the functional point of interacting with the Block images icon.
+
+[Variant Paths] (3)
+ - V1: Start on page 8, long - press <Block images icon>
+ - V2: Start on page 8, tap <Block images icon> twice
+ - V3: Start on page 8, omit tapping <Block images icon> (to see if app stays on page 8)
+
+================= [TaskTest] FDG[28] =================
+[Function] Displays detailed information about memory leaks in the MainActivity's ViewModelStore, including the leak group's likely causes and the leaking status of related objects and their fields.
+
+[Core Logic Task]
+The user starts on page 8 and clicks the 'Clear cache' icon, which navigates to page 25. On page 25, the detailed memory leak information for MainActivity's ViewModelStore is displayed, including leak group causes and leaking status of related objects/fields.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <Clear cache icon> and check if memory leak information is still displayed (repeat/omit mutation: omit the clear cache step)
+ - V2: Click <Clear cache icon> twice (repeat/omit mutation: repeat the clear cache operation) and then check the memory leak information on page 25
+
+================= [TaskTest] FDG[29] =================
+[Function] Displays a detailed breakdown of memory leak information for "MainActivity.mViewModelStore", including the hierarchy of related objects and their leak statuses.
+
+[Core Logic Task]
+The process starts on page 8. The user clicks the Settings icon (position [662, 2030]), which navigates to page 25. On page 25, the detailed breakdown of memory leak information for 'MainActivity.mViewModelStore' (including the hierarchy of related objects and their leak statuses) is displayed.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Settings icon> and check if the memory leak breakdown still appears
+ - V2: Click <Settings icon> twice and observe if the memory leak breakdown is displayed correctly both times
+ - V3: Click <Settings icon> and then immediately click it again before the page navigates to page 25
+
+================= [TaskTest] FDG[30] =================
+[Function] Displays detailed information about memory leaks in the MainActivity's ViewModelStore, including the hierarchy of related objects and their leak statuses.
+
+[Core Logic Task]
+The user starts on page 8 and clicks the Exit icon (action at [8,10]). This action navigates to page 25, where detailed memory leak information for MainActivity's ViewModelStore (including object hierarchy and leak statuses) is displayed. There are no branches or loops in this flow.
+
+[Variant Paths] (3)
+ - V1: Start on page 8, omit clicking <Exit icon> (check if leak info still appears or page remains on 8)
+ - V2: Start on page 8, click <Exit icon> twice (check if navigation behaves unexpectedly or duplicates info)
+ - V3: Start on a different page (e.g., page 5 instead of 8), then click <Exit icon> (check if navigation/leak info is affected by starting page)
+
+================= [TaskTest] FDG[31] =================
+[Function] The current page provides a text input field labeled "Enter a destination" to allow users to input a city or location name, likely to search for travel - related information or options for that destination.
+
+[Core Logic Task]
+The flow starts on page 9. First, the user clicks the 'Explore a city' link (action from page 9 to 10). Then, the user clicks the destination input field (action from page 10 to 11) to begin entering a location name. There are no branches or loops in this core logic.
+
+[Variant Paths] (3)
+ - V1: Omit the step of clicking <Explore a city link> and directly click <Destination input field> to try entering a location name
+ - V2: Click <Destination input field> first and then click <Explore a city link>
+ - V3: Input an extremely long string (e.g., a string with 1000 characters) into <Destination input field> after clicking <Explore a city link>
+
+================= [TaskTest] FDG[32] =================
+[Function] This page displays details of memory leaks related to `MainActivity.mDialogFragment`, including the leak type ("ListPanelDialog Leaked") and timestamps for each occurrence, along with information about the likely cause of the leak group.
+
+[Core Logic Task]
+The flow starts on page 12. A click action is performed on the 'New tab (+) button' (position [537, 2203]), which navigates to page 4. On page 4, the details of memory leaks related to `MainActivity.mDialogFragment` are displayed, including leak types and timestamps, along with the likely cause of the leak group.
+
+[Variant Paths] (3)
+ - V1: Tap <New tab (+) button> twice (repeat operation)
+ - V2: Omit tapping <New tab (+) button> (check if page 4 is still reached without the tap)
+ - V3: Tap <New tab (+) button> and then immediately tap it again (order and repeat mutation)
+
+================= [TaskTest] FDG[33] =================
+[Function] Displays details of memory leaks related to MainActivity.mDialogFragment, including known likely causes and a list of "ListPanelDialog Leaked" events with timestamps.
+
+[Core Logic Task]
+The process starts on page 12. A click action is performed on the 'CLOSE ALL' button, which navigates to page 4. On page 4, the details of memory leaks related to MainActivity.mDialogFragment are displayed, including known likely causes and a list of 'ListPanelDialog Leaked' events with timestamps.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <CLOSE ALL button> and check if memory leak details for MainActivity.mDialogFragment are still displayed on page 12
+ - V2: Click <CLOSE ALL button> twice and check if memory leak details for MainActivity.mDialogFragment are displayed on page 4 (repeating the click)
+ - V3: Perform a long - press on <CLOSE ALL button> instead of a click to see if memory leak details for MainActivity.mDialogFragment are displayed (branch mutation by changing the interaction type)
+
+================= [TaskTest] FDG[34] =================
+[Function] The page displays details of memory leaks related to `MainActivity.mDialogFragment`, including the leak type ("ListPanelDialog Leaked") and timestamps for each leak instance, along with information about the likely cause of the leak group.
+
+[Core Logic Task]
+The user starts on page 12 and clicks the 'Representative tab entry' to navigate to page 4, where the details of memory leaks related to MainActivity.mDialogFragment (including leak type and timestamps) are displayed, along with the likely cause of the leak group.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Representative tab entry> and check if the memory leak details page (page 4) is still displayed
+ - V2: Click <Representative tab entry> multiple times (e.g., 3 times) and observe if the memory leak details page (page 4) is displayed each time
+ - V3: Click <Representative tab entry> and then immediately click it again (swap the order of a single click and re - click, though it's a bit of a stretch) and check if the memory leak details page (page 4) is displayed
+
+================= [TaskTest] FDG[35] =================
+[Function] This page displays detailed information about memory leaks related to `MainActivity.mDialogFragment`, including the leak type (`ListPanelDialog Leaked`), timestamps of each leak occurrence, and the status of whether `MainActivity` is leaking.
+
+[Core Logic Task]
+The flow starts on page 12, where a click action (closing a tab) is performed. This action navigates to page 4, which displays detailed memory leak information for MainActivity.mDialogFragment, including leak types, timestamps, and the MainActivity leaking status. There are no branches or loops as it is a straight - line flow from the initial page to the leak - info page via the click action.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Close tab (X) button> and check if the leak info page still appears (though this may not be valid as per original flow, but as a mutation to test dependency on this action)
+ - V2: Click <Close tab (X) button> twice (repeat action to see if it causes any different behavior or error, e.g., multiple navigations)
+ - V3: Click <Close tab (X) button> and then immediately click it again (similar to repeat but with quick succession, testing for any state issues)
+
+================= [TaskTest] FDG[36] =================
+[Function] This page displays the browser's downloads section (showing no active downloads) while also indicating a failed attempt to load the FRVR Games webpage, with options to navigate to other browser - related sections like bookmarks, history, or tabs.
+
+[Core Logic Task]
+The flow starts on a page (page 13) and involves clicking the Bookmarks button. This action navigates to another page (page 15), likely related to browser bookmarks, as part of exploring browser - related sections while the downloads section shows no active downloads and a webpage load failed.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[37] =================
+[Function] The current page (Browser Bookmarks section) displays the "Downloads" tab with a message indicating no downloads are present, and also shows an error for a failed web page load in the background.
+
+[Core Logic Task]
+The flow starts on page 13. The user clicks the Downloads button (action_ref [13,1]), which navigates to page 15. On page 15, the Downloads tab is displayed with a 'No downloads' message, and a failed web page load error is visible in the background. There are no branches or loops as the logic is a straight - line flow to display the required state.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Downloads button> and check if the Downloads tab with 'No downloads' message and the failed load error are still visible on the current page
+ - V2: Click <Downloads button> twice and observe if the page state changes or if there are any errors
+ - V3: Click <Downloads button> and then immediately try to interact with the background failed load error (even though interaction might not be possible, check for any response)
+
+================= [TaskTest] FDG[38] =================
+[Function] The current page displays the browser's history section, allowing users to view, manage (e.g., clear), and interact with their browsing history entries, while also showing a "Webpage not available" message for the FRVR Games page due to a connectivity or address issue.
+
+[Core Logic Task]
+The user starts on page 13 and clicks the History button. This action navigates to page 16, where the browsing history is displayed, including an entry for the FRVR Games page that shows a 'Webpage not available' message due to connectivity or address issues. There are no branches or loops in this flow as it is a straight - line navigation to view the history.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <History button> (to see if the history page still loads or if an error occurs)
+ - V2: Click <History button> twice (to check if it navigates to the history page again or causes an issue)
+
+================= [TaskTest] FDG[39] =================
+[Function] The "My shots" page in the browser menu displays a message indicating no screenshots are available and provides instructions on how to capture an entire web page.
+
+[Core Logic Task]
+The user starts on page 13 and clicks the 'My shots' button. This action navigates to page 17, where the 'My shots' page displays a message indicating no screenshots are available and provides instructions on capturing an entire web page. There are no branches or loops in this flow.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <My shots button> (to see if the 'My shots' page still appears or if an error occurs)
+ - V2: Click <My shots button> twice (to check if duplicate navigation or unexpected behavior occurs)
+ - V3: Click <My shots button> and then immediately click it again (similar to repeating the action)
+
+================= [TaskTest] FDG[40] =================
+[Function] The page provides an introduction to Firefox Lite's Advanced Private Browsing feature, explaining its benefits (no history/passwords recorded, anti - tracking) and includes a search bar for private browsing.
+
+[Core Logic Task]
+The flow starts on page 13. The user clicks the Private tab button, which navigates to page 18, likely the private browsing interface with a search bar and feature introduction.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Private tab button> (check if page 13 already has private browsing elements)
+ - V2: Click <Private tab button> twice (test repeated navigation)
+ - V3: Click <Private tab button> then immediately click it again (test rapid repeated action)
+
+================= [TaskTest] FDG[41] =================
+[Function] The current page allows the user to adjust the brightness or toggle night mode for the browser while viewing the FRVR Games web page.
+
+[Core Logic Task]
+The user starts on page 13 and clicks the night mode button (action S1) to navigate to page 19. Then, the user clicks the night mode brightness slider (action S2) on page 19, which completes the adjustment of brightness or toggling of night mode for the browser while viewing the FRVR Games web page.
+
+[Variant Paths] (3)
+ - V1: Start on page 13, click <Night mode brightness slider> (omit S1), then check if brightness adjustment/toggle works
+ - V2: Start on page 13, click <Night mode button> to go to page 19, then click <Night mode button> again (repeat S1) and then click <Night mode brightness slider>
+ - V3: Start on page 13, click <Night mode brightness slider> and then click <Night mode button> (swap order of S1 and S2 related actions)
+
+================= [TaskTest] FDG[42] =================
+[Function] Displays details of 4 leaks related to MainActivity.mDialogFragment, including known likely causes and a list of ListPanelDialog Leaked events with their timestamps.
+
+[Core Logic Task]
+The app starts on page 13. The user clicks the 'Find in page' button, which navigates to page 4. On page 4, the details of 4 leaks related to MainActivity.mDialogFragment are displayed, including known likely causes and a list of ListPanelDialog Leaked events with their timestamps.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Find in page button> and check if page 4 with leak details is still displayed
+ - V2: Click <Find in page button> multiple times (e.g., twice) and observe if page 4 with leak details is displayed each time or if there's an error
+ - V3: Click <Find in page button> and then immediately click it again before page 4 loads completely to see if the navigation behavior changes
+
+================= [TaskTest] FDG[43] =================
+[Function] This page displays detailed information about memory leaks related to `MainActivity.mDialogFragment`, including the leak group's likely causes and a list of specific `ListPanelDialog Leaked` events with their timestamps.
+
+[Core Logic Task]
+The process starts on page 13. The user clicks the 'Clear cache button' (action from page 13 to 4), which likely navigates to page 4. This action is part of the flow to manage or view details related to memory leaks for MainActivity.mDialogFragment, with the click triggering a navigation to another page (page 4) as the next step.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Clear cache button> and stay on page 13 to see if memory leak details still load
+ - V2: Click <Clear cache button> twice in a row to see if navigation or behavior changes
+ - V3: Click <Clear cache button> but then immediately try to go back to page 13 before page 4 loads
+
+================= [TaskTest] FDG[44] =================
+[Function] The page displays a list of "10 Leak Groups" with entries showing component names (e.g., MainActivity.mViewModelStore) along with a count in parentheses and the latest update timestamp for each group, likely for monitoring or analyzing memory leak - related groups.
+
+[Core Logic Task]
+The flow starts on page 14. The user clicks the blue drop indicator, which navigates to page 0. On page 0, the '10 Leak Groups' list is displayed, showing component names, counts, and latest update timestamps for each leak group.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <Blue drop indicator> and check if page 0 with '10 Leak Groups' list is still accessible
+ - V2: Click <Blue drop indicator> multiple times (e.g., twice) and observe if navigation to page 0 and display of '10 Leak Groups' list is affected
+
+================= [TaskTest] FDG[45] =================
+[Function] Displays details of 4 leaks in MainActivity.mDialogFragment, including known likely causes and a list of ListPanelDialog Leaked events with their timestamps.
+
+[Core Logic Task]
+The flow starts on page 15. A click action is performed on the 'Bookmarks section with no bookmarks' element, navigating to page 4. On page 4, the details of 4 leaks in MainActivity.mDialogFragment are displayed, including known likely causes and a list of ListPanelDialog Leaked events with their timestamps.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Bookmarks section with no bookmarks> and check if page 4 with leak details is still displayed
+ - V2: Click <Bookmarks section with no bookmarks> twice and observe if page 4 with leak details is displayed both times
+ - V3: Click <Bookmarks section with no bookmarks> and then immediately click it again to see if there's any change in the leak details display
+
+================= [TaskTest] FDG[46] =================
+[Function] The page displays details of memory leaks related to `MainActivity.mDialogFragment`, including known likely causes and a list of `ListPanelDialog Leaked` events with their respective timestamps.
+
+[Core Logic Task]
+The flow starts on page 16. A click action (on the 'CLEAR BROWSING HISTORY' button) transitions to page 4, where details of memory leaks related to MainActivity.mDialogFragment (including likely causes and leaked events with timestamps) are displayed. There are no branches or loops as it’s a straight-line transition to view the leak details.
+
+[Variant Paths] (2)
+ - V1: Omit tapping <CLEAR BROWSING HISTORY button> and check if the leak details page (page 4) is still accessible or shows different content
+ - V2: Tap <CLEAR BROWSING HISTORY button> multiple times (e.g., twice) and observe if the leak details page behavior changes (e.g., duplicate entries, error messages)
+
+================= [TaskTest] FDG[47] =================
+[Function] The page displays a list of leak occurrences related to "MainActivity.mDialogFragment" with details including the leak type ("ListPanelDialog Leaked") and corresponding timestamps, along with information about the likely cause of the leak group.
+
+[Core Logic Task]
+The flow starts on page 16. A click action on the three-dot menu for a history entry (at page 16) navigates to page 4, which displays the list of leak occurrences related to 'MainActivity.mDialogFragment' with details like leak type and timestamps, along with the likely cause of the leak group. There are no branches or loops as it's a straight navigation to the target page.
+
+[Variant Paths] (2)
+ - V1: Tap <Three-dot menu for history entry> twice (repeat the tap)
+ - V2: Omit tapping <Three-dot menu for history entry> (try to access page 4 without the required action)
+
+================= [TaskTest] FDG[48] =================
+[Function] Displays a list of leak occurrences for "MainActivity.mDialogFragment" with timestamps, along with information about the likely causes of the leak group.
+
+[Core Logic Task]
+The flow starts on page 17. A click action is performed on the Bookmarks button, which navigates to page 4. On page 4, the list of leak occurrences for 'MainActivity.mDialogFragment' with timestamps and the likely causes of the leak group are displayed.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Bookmarks button> and check if the leak occurrences and causes are still displayed on page 17
+ - V2: Click <Bookmarks button> twice and check the display on page 4
+ - V3: Click <Bookmarks button> and then immediately click it again before page 4 loads to see the effect on the display
+
+================= [TaskTest] FDG[49] =================
+[Function] Displays details of memory leaks related to `MainActivity.mDialogFragment`, including the leak type ("ListPanelDialog Leaked") and timestamps for each occurrence, along with information about the likely cause of the leak group.
+
+[Core Logic Task]
+The flow starts on page 17. A click action is performed on the 'Downloads button' (position [421, 2208]), which navigates to page 4. On page 4, the details of memory leaks related to MainActivity.mDialogFragment are displayed, including leak types, timestamps, and likely cause information.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Downloads button> and check if memory leak details are still displayed on page 17
+ - V2: Click <Downloads button> multiple times (e.g., 3 times) and observe if the memory leak details on page 4 are affected
+ - V3: Click <Downloads button> and then immediately click it again before the navigation to page 4 completes to see if the memory leak details display is disrupted
+
+================= [TaskTest] FDG[50] =================
+[Function] Displays detailed information about memory leaks related to `MainActivity.mDialogFragment`, including the type of leak (ListPanelDialog Leaked) and their timestamps.
+
+[Core Logic Task]
+The user starts on page 17 and clicks the History button. This action navigates to page 4, where detailed memory leak information about MainActivity.mDialogFragment (including ListPanelDialog Leaked entries and timestamps) is displayed. There are no branches or loops in this flow.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <History button> and check if the memory leak details page (page 4) still loads
+ - V2: Click <History button> twice in a row and observe if the memory leak details page (page 4) behaves as expected (e.g., duplicate loading or error)
+ - V3: Click <History button> and then immediately click it again before the page navigation completes and check the result
+
+================= [TaskTest] FDG[51] =================
+[Function] Displays a list of leak occurrences for "MainActivity.mDialogFragment" with timestamps, providing details on known likely causes of the leak group and individual leak events.
+
+[Core Logic Task]
+The flow starts on page 17. A click action (on the 'My shots' button) transitions to page 4, where the list of leak occurrences for 'MainActivity.mDialogFragment' (with timestamps and leak group details) is displayed. There are no branches or loops as the flow is a straight line from the click to viewing the leak details.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <My shots button> and check if leak details are still displayed (though this may not be valid as per core logic, but for mutation testing)
+ - V2: Click <My shots button> twice (repeat the click action) and observe if leak details are displayed correctly or duplicated
+ - V3: Click <My shots button> but then immediately try to navigate away (if possible) to see if the leak details loading is interrupted or behaves unexpectedly
+
+================= [TaskTest] FDG[52] =================
+[Function] Purple mask icon button
+
+[Core Logic Task]
+The user starts on page 18. The core action is clicking the purple mask icon button, which navigates to page 21. There are no branches or loops as it's a single-step flow with a direct navigation.
+
+[Variant Paths] (3)
+ - V1: Tap <Purple mask icon button> twice
+ - V2: Omit tapping <Purple mask icon button> (simulate not performing the navigation action)
+ - V3: Tap <Purple mask icon button> after a short delay (testing timing-related mutation, though functionality is same but timing varies)
+
+================= [TaskTest] FDG[53] =================
+[Function] Search input field
+
+[Core Logic Task]
+The user starts on page 18 and clicks the search input field, which leads to page 22. This is a single-step flow with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Long-press <Search input field> instead of tapping (branch mutation: alternative interaction with the same widget)
+ - V2: Tap <Search input field> twice (repeat mutation: repeat the tap operation)
+ - V3: Omit tapping <Search input field> (omit mutation: skip the only step)
+
+
+[AppTest] Found 14 dependency pairs to test.
+
+==============================================
+[AppTest] Pair 1/14: 0 -> 13
+Producer: Launch page for services and search
+Consumer: Displays detailed information about memory leaks related to `MainActivity.mDialogFragment`, including the leak type (`ListPanelDialog Leaked`), timestamps, and the status of the `MainActivity` (Leaking: NO).
+
+[Plan]
+Case 1/1
+Producer task:
+ On the launch page (page 0), click a service icon (e.g., FRVR Games) to navigate to page 4. Then, from page 4, click the Refresh/Search option to go to page 5.
+Consumer task:
+ On page 5, click the refresh icon button to navigate back to page 4. Then, verify that the detailed memory leak information for MainActivity.mDialogFragment (including leak type, timestamps, and MainActivity's status) is updated and matches the refreshed leak report data produced earlier.
+------------------------------
+
+==============================================
+[AppTest] Pair 2/14: 12 -> 4
+Producer: The page displays a list of "10 Leak Groups" with entries showing group identifiers (like "MainActivity.mViewModelStore" with counts), and their latest update timestamps, likely for monitoring or analyzing memory leak - related groups.
+Consumer: The current page (within Firefox Lite) functions as a search interface where the user can input a query (e.g., "travel tips") to search for information, with quick access to various services/apps (like travel, news, games, and e - commerce platforms) and social media shortcuts also available on the screen.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the detailed leak group page, click the home icon button to navigate back to the '10 Leak Groups' list page (to produce the leak groups list).
+Consumer task:
+ On the search interface (page 0), input a search query (e.g., 'travel tips') into the search bar. Then, check if the flow proceeds to page 6 while also ensuring the leak groups list (produced earlier) is accessible or reflected as needed in the context (e.g., if there's a way to reference it during/after search).
+------------------------------
+
+==============================================
+[AppTest] Pair 3/14: 12 -> 6
+Producer: The page displays a list of "10 Leak Groups" with entries showing group identifiers (like "MainActivity.mViewModelStore" with counts), and their latest update timestamps, likely for monitoring or analyzing memory leak - related groups.
+Consumer: The current page is a menu in Firefox Lite that provides access to various browser functions such as bookmarks, downloads, history, and settings, as well as features like turbo mode, private tab, and night mode.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the detailed leak group page, click the home icon button to navigate back to the '10 Leak Groups' list page (where leak groups with identifiers and timestamps are displayed).
+Consumer task:
+ On the initial page (page 0), click the menu icon (three dots) at the top - right to open the Firefox Lite menu (page 8) and check if the menu provides access to functions (bookmarks, downloads, history, etc.) and features (turbo mode, private tab, night mode, etc.) as expected, with the 'leak groups list' data contextually relevant to the app's overall data handling (e.g., if the app's data management includes leak group data, ensure the menu's functionality is consistent with that data context).
+------------------------------
+
+==============================================
+[AppTest] Pair 4/14: 12 -> 44
+Producer: The page displays a list of "10 Leak Groups" with entries showing group identifiers (like "MainActivity.mViewModelStore" with counts), and their latest update timestamps, likely for monitoring or analyzing memory leak - related groups.
+Consumer: The page displays a list of "10 Leak Groups" with entries showing component names (e.g., MainActivity.mViewModelStore) along with a count in parentheses and the latest update timestamp for each group, likely for monitoring or analyzing memory leak - related groups.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the detailed leak group page, click the home icon button to navigate back to the '10 Leak Groups' list page (to produce the leak groups list).
+Consumer task:
+ On page 14, click the blue drop indicator to navigate to page 0. On page 0, verify that the '10 Leak Groups' list displayed matches the leak groups list produced by the producer (check component names, counts, and latest update timestamps for each group).
+------------------------------
+
+==============================================
+[AppTest] Pair 5/14: 13 -> 0
+Producer: Displays detailed information about memory leaks related to `MainActivity.mDialogFragment`, including the leak type (`ListPanelDialog Leaked`), timestamps, and the status of the `MainActivity` (Leaking: NO).
+Consumer: Launch page for services and search
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 5, click the refresh icon button to navigate to page 4 and refresh the memory leak details for MainActivity.mDialogFragment.
+Consumer task:
+ From page 4, click the Menu action to navigate to page 13 and verify that the leak report data (including leak type, timestamps, and MainActivity's status) displayed on page 13 reflects the refreshed data from the producer task.
+------------------------------
+
+==============================================
+[AppTest] Pair 6/14: 21 -> 49
+Producer: Displays a detailed breakdown of memory leak information for "MainActivity.mViewModelStore", including the hierarchy of related objects and their leak statuses.
+Consumer: Displays details of memory leaks related to `MainActivity.mDialogFragment`, including the leak type ("ListPanelDialog Leaked") and timestamps for each occurrence, along with information about the likely cause of the leak group.
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 8, click the Downloads icon to navigate to page 25 and view the memory leak breakdown for 'MainActivity.mViewModelStore'.
+Consumer task:
+ On page 17, click the 'Downloads button' at [421, 2208] to navigate to page 4. Verify the displayed memory leak details for `MainActivity.mDialogFragment` (using the downloads feature entry from the producer's action).
+------------------------------
+
+==============================================
+[AppTest] Pair 7/14: 26 -> 41
+Producer: Night mode icon
+Consumer: The current page allows the user to adjust the brightness or toggle night mode for the browser while viewing the FRVR Games web page.
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 8, click the Night mode icon to transition the app to page 29 (updating the night mode setting).
+Consumer task:
+ Start on page 13, click the night mode button (action S1) to navigate to page 19. Then, click the night mode brightness slider (action S2) on page 19 to verify the night mode setting (updated by the producer) is reflected and can be adjusted for the browser while viewing the FRVR Games web page.
+------------------------------
+
+==============================================
+[AppTest] Pair 8/14: 28 -> 43
+Producer: Displays detailed information about memory leaks in the MainActivity's ViewModelStore, including the leak group's likely causes and the leaking status of related objects and their fields.
+Consumer: This page displays detailed information about memory leaks related to `MainActivity.mDialogFragment`, including the leak group's likely causes and a list of specific `ListPanelDialog Leaked` events with their timestamps.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 8, click the 'Clear cache' icon to navigate to page 25 and view detailed memory leak info for MainActivity's ViewModelStore (including cleared cache data).
+Consumer task:
+ Start on page 13, click the 'Clear cache button' (using the cleared cache data from Producer) to navigate to page 4 and verify details related to memory leaks for MainActivity.mDialogFragment.
+------------------------------
+
+==============================================
+[AppTest] Pair 9/14: 34 -> 51
+Producer: The page displays details of memory leaks related to `MainActivity.mDialogFragment`, including the leak type ("ListPanelDialog Leaked") and timestamps for each leak instance, along with information about the likely cause of the leak group.
+Consumer: Displays a list of leak occurrences for "MainActivity.mDialogFragment" with timestamps, providing details on known likely causes of the leak group and individual leak events.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 12, click the 'Representative tab entry' to navigate to page 4 and view the memory leak details related to MainActivity.mDialogFragment (including leak type, timestamps, and likely cause of the leak group).
+Consumer task:
+ Start on page 17, click the 'My shots' button to navigate to page 4 and verify that the list of leak occurrences for 'MainActivity.mDialogFragment' (with timestamps and leak group details) matches the leak report produced by the producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 10/14: 38 -> 46
+Producer: The current page displays the browser's history section, allowing users to view, manage (e.g., clear), and interact with their browsing history entries, while also showing a "Webpage not available" message for the FRVR Games page due to a connectivity or address issue.
+Consumer: The page displays details of memory leaks related to `MainActivity.mDialogFragment`, including known likely causes and a list of `ListPanelDialog Leaked` events with their respective timestamps.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 13, click the History button to navigate to page 16 and view the browsing history (including the FRVR Games 'Webpage not available' entry).
+Consumer task:
+ On page 16 (with the browsing history), click the 'CLEAR BROWSING HISTORY' button to transition to page 4 and verify the memory leak details related to MainActivity.mDialogFragment (using the browsing history context from the producer step).
+------------------------------
+
+==============================================
+[AppTest] Pair 11/14: 41 -> 26
+Producer: The current page allows the user to adjust the brightness or toggle night mode for the browser while viewing the FRVR Games web page.
+Consumer: Night mode icon
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 13, click the night mode button (S1) to go to page 19, then click the night mode brightness slider (S2) to adjust night mode settings.
+Consumer task:
+ Start on page 8, click the Night mode icon (which should reflect the updated night mode setting from the producer) to transition to page 29.
+------------------------------
+
+==============================================
+[AppTest] Pair 12/14: 42 -> 16
+Producer: Displays details of 4 leaks related to MainActivity.mDialogFragment, including known likely causes and a list of ListPanelDialog Leaked events with their timestamps.
+Consumer: Displays a detailed breakdown of 8 memory leaks in the MainActivity.mViewModelStore, including the hierarchy of related objects and their leak status (e.g., Leaking: NO, UNKNOWN) to help identify and troubleshoot memory leak issues in the application.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 13, click the 'Find in page' button to navigate to page 4 and view the details of 4 leaks related to MainActivity.mDialogFragment (including known likely causes and ListPanelDialog Leaked events with timestamps).
+Consumer task:
+ Start on page 6, click the 'Close search icon' to navigate to page 25 and view the detailed breakdown of 8 memory leaks in MainActivity.mViewModelStore (including object hierarchy and leak status), using the search interface from the producer task.
+------------------------------
+
+==============================================
+[AppTest] Pair 13/14: 43 -> 28
+Producer: This page displays detailed information about memory leaks related to `MainActivity.mDialogFragment`, including the leak group's likely causes and a list of specific `ListPanelDialog Leaked` events with their timestamps.
+Consumer: Displays detailed information about memory leaks in the MainActivity's ViewModelStore, including the leak group's likely causes and the leaking status of related objects and their fields.
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 13, click the 'Clear cache button' to navigate to page 4 (to manage/view memory leak details for MainActivity.mDialogFragment and clear cache data).
+Consumer task:
+ On page 8, click the 'Clear cache' icon to navigate to page 25. Verify that the detailed memory leak information for MainActivity's ViewModelStore (including leak group causes and leaking status of related objects/fields) reflects the cache data cleared by the producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 14/14: 51 -> 42
+Producer: Displays a list of leak occurrences for "MainActivity.mDialogFragment" with timestamps, providing details on known likely causes of the leak group and individual leak events.
+Consumer: Displays details of 4 leaks related to MainActivity.mDialogFragment, including known likely causes and a list of ListPanelDialog Leaked events with their timestamps.
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 17, click the 'My shots' button to navigate to page 4 and view the list of leak occurrences for 'MainActivity.mDialogFragment' (with timestamps and leak group details).
+Consumer task:
+ On page 13, click the 'Find in page' button to navigate to page 4. Verify that the details of 4 leaks related to MainActivity.mDialogFragment (including known likely causes and a list of ListPanelDialog Leaked events with their timestamps) match the leak report content produced by the Producer.
+------------------------------

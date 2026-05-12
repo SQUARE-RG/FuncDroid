@@ -1,0 +1,374 @@
+
+================= [TaskTest] FDG[0] =================
+[Function] Home page with contributions and nearby
+
+[Core Logic Task]
+The flow starts on the Home page. The user clicks the 'Contributions' tab, which remains on the Home page (likely refreshing or confirming the Contributions view). There are no branches or loops as only one action is defined.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Contributions tab> (since original flow has only this action, omitting it is a mutation to see if the app still shows Contributions view by default)
+ - V2: Tap <Contributions tab> twice (repeat the only action to check if repeated tapping has different behavior, e.g., multiple refreshes or errors)
+ - V3: Tap <Contributions tab> (original action, included here as a baseline for comparison, but since mutation needs change, maybe adjust: Wait 5 seconds then tap <Contributions tab> (order mutation with a delay step, though delay isn't a widget, but if we consider the action order, adding a delay before the tap is a mutation of the original immediate tap))
+
+================= [TaskTest] FDG[1] =================
+[Function] The current page is a navigation menu (hamburger menu) that provides access to various app sections including Home, Explore, Bookmarks, Notifications, Settings, About, Tutorial, Feedback, and Logout, allowing the user to navigate to different functional areas of the app.
+
+[Core Logic Task]
+The user starts on the Home page (page 0). They click the hamburger menu button, which opens the navigation menu (page 1) containing various app sections like Home, Explore, and others. This is a straight - line flow with no branches or loops as only one action is involved here.
+
+[Variant Paths] (3)
+ - V1: Tap <Hamburger menu button,Navigation menu for app sections> twice (repeat the tap operation)
+ - V2: Omit tapping <Hamburger menu button,Navigation menu for app sections> (try to access the menu without tapping the button, though this may not be valid UI behavior but is a mutation attempt)
+ - V3: Tap <Hamburger menu button,Navigation menu for app sections> and then immediately tap it again (similar to repeat but with immediate re - tap)
+
+================= [TaskTest] FDG[2] =================
+[Function] The Notifications page displays a list of recent notifications (e.g., first edit confirmation, talk page message, welcome message) with timestamps, allowing the user to view updates and interactions related to their activity on the platform.
+
+[Core Logic Task]
+The user starts on the Home page. They click the notifications bell icon, which navigates to the Notifications page. On the Notifications page, the user can view a list of recent notifications (like edit confirmations, talk page messages, welcome messages) with timestamps, completing the flow to access and view these updates.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Notifications bell icon,View notifications> and try to view notifications directly from the Home page (though this should fail as per core logic, testing the dependency on the bell icon)
+ - V2: Tap <Notifications bell icon,View notifications> multiple times (e.g., 3 times) to see if repeated taps affect navigation or the Notifications page display
+ - V3: Swap the order (though in this simple flow there's only one main step, but hypothetically: View notifications first (impossible normally, but testing if the system allows) then tap <Notifications bell icon,View notifications>)
+
+================= [TaskTest] FDG[3] =================
+[Function] The current page is a loading screen for the "Nearby" tab on the home page, where it is retrieving and preparing to display nearby - related content.
+
+[Core Logic Task]
+The process starts on the home page (page 0). The user clicks the 'Nearby' tab, which triggers the app to load the Nearby tab's content. The app then displays a loading screen (page 3) as it retrieves and prepares the nearby-related content for display.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[4] =================
+[Function] The current page (Nearby tab on the Home page) is intended to explore and display location - related content or points of interest near the user's location, with a button to center the view on the user's current location.
+
+[Core Logic Task]
+The user starts on the Home page (page 0). They click the 'NEARBY' tab (action_ref [0,4]) to navigate to the nearby location exploration page (page 4), where location - related content or points of interest near the user's location are displayed, and there is a button to center the view on the user's current location.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[5] =================
+[Function] The current page (Home page) displays contributions (with a failed attempt labeled "Failed 123") and nearby location details (e.g., "Genetic Information Research Ins..." 463m away), and provides floating action button options (camera, image, and close) for actions like capturing or managing content.
+
+[Core Logic Task]
+The flow starts on the Home page, which displays contributions (including a failed attempt) and nearby location details. The user clicks the floating action button, which reveals options (camera, image, close) for managing or capturing content. This is a straight - line flow with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Tap <Floating action button> twice (repeat the tap operation)
+ - V2: Omit tapping <Floating action button> (skip the action to see if the app behaves as expected without interacting with the floating action button)
+ - V3: Tap <Floating action button> and then immediately tap <Floating action button> again (repeat the interaction with the floating action button in quick succession)
+
+================= [TaskTest] FDG[6] =================
+[Function] Displays detailed information (including an image and a title field with "123") for a specific item accessed from the home page's contributions or nearby section.
+
+[Core Logic Task]
+The process starts on the home page. First, the user clicks on the picture to view detailed item information, navigating to a new page. Then, the user interacts with the text input field on that page.
+
+[Variant Paths] (3)
+ - V1: Tap <picture,View detailed item information>, then Input "" into <Text input field>
+ - V2: Tap <picture,View detailed item information>, then Input "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" into <Text input field>
+ - V3: Tap <picture,View detailed item information>, then Input "!@#$%^&*()" into <Text input field>
+
+================= [TaskTest] FDG[7] =================
+[Function] The Home page displays contributions and nearby location details (e.g., "Genetic Information Research Ins..." 463m away), shows a failed attempt with the number 123, and provides a button to add new content.
+
+[Core Logic Task]
+The flow starts by navigating to the Home page. On the Home page, contributions and nearby location details (like 'Genetic Information Research Ins...' 463m away) are displayed, along with a failed attempt labeled '123'. A button to add new content is also present, but no branching or looping occurs in this core logic as only one action is provided.
+
+[Variant Paths] (3)
+ - V1: Omit <Navigate to Home page> (though this may not load the page, testing if the app handles missing navigation)
+ - V2: Repeat <Navigate to Home page> twice (testing if multiple navigations have side effects)
+ - V3: Navigate to Home page and then attempt to navigate again immediately (testing for race conditions or duplicate navigation handling)
+
+================= [TaskTest] FDG[8] =================
+[Function] The Explore page allows users to browse and view a collection of media items (such as photos) with associated titles and uploader information, and includes a search function for finding specific content.
+
+[Core Logic Task]
+The user starts on page 1 and clicks to navigate to the Explore section (page 7). Once in the Explore section, the user can browse media items with titles and uploader info, or use the search function (implied by the functional point description, but only the navigation step is provided here).
+
+[Variant Paths] (3)
+ - V1: Omit <Explore media items> step after navigating to Explore section
+ - V2: Repeat <Navigate to Explore section> twice then <Explore media items>
+ - V3: First <Explore media items> (though not starting on Explore page, simulating wrong order) then <Navigate to Explore section>
+
+================= [TaskTest] FDG[9] =================
+[Function] The Bookmarks page allows users to manage (view, add, or organize) their bookmarked pictures and locations, with the current view showing no added bookmarks under the "PICTURES" tab and an option to switch to the "LOCATIONS" tab.
+
+[Core Logic Task]
+The flow starts on page 1. The user clicks to navigate to the Bookmarks page (page 8), where the 'PICTURES' tab is active and shows no added bookmarks, with an option to switch to the 'LOCATIONS' tab.
+
+[Variant Paths] (2)
+ - V1: Omit navigating to Bookmarks: Try to manage bookmarks without first navigating to the Bookmarks page (though this may not be possible in reality, but as a mutation test case, we consider omitting the <Navigate to Bookmarks,Manage bookmarks for pictures/locations> step)
+ - V2: Repeat navigating to Bookmarks: Tap <Navigate to Bookmarks,Manage bookmarks for pictures/locations> twice in a row to see if there are any changes or errors
+
+================= [TaskTest] FDG[10] =================
+[Function] The Notifications page displays a list of messages (e.g., edit confirmation, talk page message, welcome) with timestamps, allowing users to view recent updates and interactions related to their activity on the app.
+
+[Core Logic Task]
+The user starts on page 1 and clicks the 'Notifications' option (from the side menu) to navigate to page 2. On page 2, the Notifications page displays a list of messages with timestamps, allowing the user to view recent updates and interactions. There are no branches or loops as the flow is a straight navigation to the Notifications page to view the list.
+
+[Variant Paths] (3)
+ - V1: Omit <Navigate to Notifications> and check if Notifications page is still accessible (though likely not, but testing omission)
+ - V2: Repeat <Navigate to Notifications> twice to see if it causes any issues (e.g., multiple navigations, errors)
+ - V3: Tap <Navigate to Notifications> and then immediately tap it again (order mutation with repetition)
+
+================= [TaskTest] FDG[11] =================
+[Function] The current page is the app's settings page, which allows users to configure various app preferences such as appearance (night mode), general settings (default license, external storage usage, upload limits, notifications, location permissions, campaign visibility), and feedback options (beta tester enrollment).
+
+[Core Logic Task]
+The user starts on page 1 (likely a menu or home page) and clicks the 'Settings' option. This action navigates them to page 9, which is the app's settings page where various preferences (appearance, general, feedback) can be configured. There are no branches or loops here as it's a single navigation step to the settings page.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[12] =================
+[Function] The "About" page of the Wikimedia Commons app provides app information (version, description), links for bug reports, social media, and additional resources (rate, privacy, translate, credits, FAQ).
+
+[Core Logic Task]
+The user starts on page 1 and clicks the 'About' option (action_ref [1,5]). This action navigates to the About page (page 10), where app information (version, description) and links (bug reports, social media, rate, privacy, translate, credits, FAQ) are displayed. There are no further branches or loops as this step completes the navigation to the About page with all relevant content.
+
+[Variant Paths] (3)
+ - V1: Omit <Navigate to About section> and check if app information and links are displayed
+ - V2: Repeat <Navigate to About section> twice and then check <Display app information and links>
+ - V3: First check <Display app information and links> and then perform <Navigate to About section>
+
+================= [TaskTest] FDG[13] =================
+[Function] The current page serves as a tutorial screen for Wikimedia Commons, providing information about its role in hosting images used in Wikipedia and emphasizing how user-contributed images aid global education.
+
+[Core Logic Task]
+The user starts on page 1 and clicks the 'Tutorial' option (action_ref [1,6]). This action navigates to page 11, which displays the Wikimedia Commons tutorial content about hosting Wikipedia images and user contributions to education. There are no branches or loops as the flow is a direct navigation to the tutorial page.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Navigate to Tutorial,Tutorial page for Wikimedia Commons> and stay on the original page
+ - V2: Click <Navigate to Tutorial,Tutorial page for Wikimedia Commons> twice (repeat the navigation action)
+ - V3: Click <Navigate to Tutorial,Tutorial page for Wikimedia Commons> and then immediately click it again (repeated navigation)
+
+================= [TaskTest] FDG[14] =================
+[Function] The page serves as a welcome introduction for the Gmail app, presenting its purpose ("One app for all of your email") and providing navigation options (skip or proceed to the next introduction screen).
+
+[Core Logic Task]
+The flow starts at page 1. A click action navigates from page 1 to page 12, which is the Gmail welcome introduction page. This is a single-step navigation to reach the target page.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Navigate to Feedback,Gmail welcome introduction page> to see if the app still navigates to the Gmail welcome introduction page
+ - V2: Click <Navigate to Feedback,Gmail welcome introduction page> twice to check if it navigates to the Gmail welcome introduction page multiple times or behaves unexpectedly
+ - V3: Click <Navigate to Feedback,Gmail welcome introduction page> and then immediately click it again to see if there's any different behavior in navigation to the Gmail welcome introduction page
+
+================= [TaskTest] FDG[15] =================
+[Function] Logout from account
+
+[Core Logic Task]
+The user initiates the logout process by clicking the 'Logout' option. This action transitions the app to the destination page associated with logging out, completing the logout flow in a single step without branches or loops.
+
+[Variant Paths] (3)
+ - V1: Tap <Logout from account> twice
+ - V2: Omit tapping <Logout from account> (simulate not initiating logout)
+ - V3: Tap <Logout from account> and then immediately tap <Logout from account> again (repeat action)
+
+================= [TaskTest] FDG[16] =================
+[Function] The current page, labeled "Achievements," is intended to display user achievements but currently shows an error message indicating a problem occurred while attempting to load or display the achievements content.
+
+[Core Logic Task]
+The user starts on page 1 and clicks the 'achievements' option. This action navigates to page 14, where an error message is displayed instead of the expected achievements content. There are no further branches or loops as the flow ends with the error display.
+
+[Variant Paths] (3)
+ - V1: Tap <achievements> twice (repeat the action to see if the error persists or resolves)
+ - V2: Omit tapping <achievements> (simulate not attempting to access achievements to check the default state, though in this case the initial page is page 1 without achievements shown, but this is a mutation of omitting the access step)
+ - V3: Tap <achievements> with a long press (unusual interaction to see if it affects the error state)
+
+================= [TaskTest] FDG[17] =================
+[Function] The page displays a list of notifications related to user activity and interactions on Wikimedia Commons, including messages about a first edit, a talk page message, and a welcome note, with options to view more details for truncated messages.
+
+[Core Logic Task]
+The user starts on page 3 and clicks the 'Toggle list view' button. This action navigates to page 2, where a list of notifications (like first edit, talk page message, welcome note) is displayed. For truncated messages, there’s an option to view more details, but the core flow here is the toggle action leading to the notifications list.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Toggle list view> and check if the notifications list is still accessible (though core flow says toggle is needed, testing omission)
+ - V2: Click <Toggle list view> twice (repeat the toggle action to see if it navigates back to page 3 and then again to page 2, testing repeat)
+ - V3: Click <Toggle list view> and then immediately click it again (order mutation with repeated action, testing if the navigation behaves as expected with quick repeated toggles)
+
+================= [TaskTest] FDG[18] =================
+[Function] The current page, accessed via the "Nearby" tab and its info icon, displays information about nearby places that require pictures to illustrate their Wikipedia articles.
+
+[Core Logic Task]
+The user starts on page 3 (the 'Nearby' tab page). The core action is clicking the 'Nearby' info icon, which triggers the display of information about nearby places needing pictures for Wikipedia articles. This is a single-step flow with no branches or loops.
+
+[Variant Paths] (2)
+ - V1: Tap <Nearby info icon,Displays info about nearby places> twice (repeat operation)
+ - V2: Omit tapping <Nearby info icon,Displays info about nearby places> (skip the core step)
+
+================= [TaskTest] FDG[19] =================
+[Function] The current page functions as a camera view interface that allows the user to take a photo, with additional options for adjusting settings or switching camera modes.
+
+[Core Logic Task]
+The user starts on the camera view page (page 5). The core action is clicking the take photo button, which transitions the app to page 36. This is a straight-line flow with no branches or loops, focusing on capturing a photo from the camera interface.
+
+[Variant Paths] (3)
+ - V1: Tap <Take photo button,Camera view for taking photos> twice (repeat operation)
+ - V2: Omit tapping <Take photo button,Camera view for taking photos> (omit core step)
+ - V3: Tap <Take photo button,Camera view for taking photos> after waiting 10 seconds (simulate delayed interaction, though widget is same, timing mutation)
+
+================= [TaskTest] FDG[20] =================
+[Function] The current page, labeled "Recent," functions as a gallery or file browser interface to display and allow interaction with recently captured or saved images, showing a thumbnail, filename, and timestamp for each image.
+
+[Core Logic Task]
+The process starts on page 5. The user clicks the 'Select image button,View recent images' to navigate to the 'Recent' page (page 37), where recent images with thumbnails, filenames, and timestamps are displayed. This is a straight - line flow with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Select image button,View recent images> and check if the 'Recent' page is still accessible (though this may not be possible as per core logic, but testing omission)
+ - V2: Click <Select image button,View recent images> twice (testing repeat operation)
+ - V3: Click <Select image button,View recent images> and then immediately click it again (testing rapid repeat)
+
+================= [TaskTest] FDG[21] =================
+[Function] The current page, titled "Bookmarks", allows users to manage their bookmarks by categories (PICTURES and LOCATIONS), and currently indicates that no bookmarks have been added.
+
+[Core Logic Task]
+The user starts on page 6 and clicks a refresh/manage bookmarks action. This action navigates to the Bookmarks page (page 18), where the page shows categories (PICTURES, LOCATIONS) and indicates no bookmarks have been added. The flow is a straight line with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Refresh page,Manage bookmarks by categories> and check if the Bookmarks page still loads
+ - V2: Click <Refresh page,Manage bookmarks by categories> twice in a row and observe the Bookmarks page behavior
+ - V3: Click <Refresh page,Manage bookmarks by categories> and then immediately click it again to see if there's any repeated effect on the Bookmarks page
+
+================= [TaskTest] FDG[22] =================
+[Function] The current page, titled "Bookmarks", allows users to manage their bookmarks by viewing and potentially organizing them into two categories: "PICTURES" and "LOCATIONS", with a message indicating no bookmarks have been added yet.
+
+[Core Logic Task]
+The user starts on page 6 and clicks the 'More options menu' (action_ref [6,1]), navigating to page 18 (the 'Bookmarks' page). On the Bookmarks page, the user can view the two categories ('PICTURES' and 'LOCATIONS') and a message indicating no bookmarks have been added. There are no further branching or looping actions here as only one action is provided.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <More options menu> (staying on page 6 instead of navigating to Bookmarks page)
+ - V2: Repeat clicking <More options menu> multiple times (navigating to Bookmarks page repeatedly)
+
+================= [TaskTest] FDG[23] =================
+[Function] The page functions as a search interface for Commons content, allowing users to input search queries and displaying a message indicating no recent searches have been made.
+
+[Core Logic Task]
+The user starts on page 7 (Explore) and clicks the search function to navigate to the Commons search page (page 15). Then, the user clicks the search input field on page 15 to prepare for entering a search query. If no recent searches are present, a message indicating this is displayed (implied by the functional point description, though the actions here focus on accessing the search interface and input field).
+
+[Variant Paths] (3)
+ - V1: Start on page 7 (Explore), then omit clicking <Search function,Search page for Commons content> and directly try to interact with <Search input field> (invalid path to test error handling)
+ - V2: Start on page 7 (Explore), click <Search function,Search page for Commons content> twice (repeat operation to test state handling), then click <Search input field>
+ - V3: Start on page 7 (Explore), click <Search input field> first (wrong order to test error handling), then click <Search function,Search page for Commons content>
+
+================= [TaskTest] FDG[24] =================
+[Function] The page displays an error dialog notifying the user that the "Commons" app has crashed, prompting the user to describe what they were doing (in a text input field) and then either confirm (via "OK") or cancel (via "Cancel") the process of sharing this information to help fix the issue.
+
+[Core Logic Task]
+The app crash error dialog appears, prompting the user to describe their actions. The user can then choose to either confirm (via 'OK') to share the information or cancel (via 'Cancel') the process. The flow starts with the dialog display and branches based on the user's button selection.
+
+[Variant Paths] (3)
+ - V1: The error dialog <Media item preview,Error dialog for app crash> appears, the user omits describing actions and taps <OK> to share information
+ - V2: The error dialog <Media item preview,Error dialog for app crash> appears, the user inputs a very long text and taps <Cancel>
+ - V3: The error dialog <Media item preview,Error dialog for app crash> appears, the user inputs empty text and taps <OK>
+
+================= [TaskTest] FDG[25] =================
+[Function] Displays a home - related page with a visual (checkerboard - patterned and with a green square) and a text field labeled "Title" containing "123", likely for viewing or managing home - related bookmarked locations (after switching to the LOCATIONS tab in the bookmarks management section).
+
+[Core Logic Task]
+The flow starts on the Bookmarks page (page 8). The user clicks to switch to the LOCATIONS tab, which navigates to the Home - related page (page 6) displaying the checkerboard - patterned visual with a green square and the text field labeled 'Title' containing '123'.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[26] =================
+[Function] Toggle night mode
+
+[Core Logic Task]
+The user starts on the Settings page (page 9). They perform a single action: clicking the 'Night mode' toggle. This action toggles the night mode setting, and the app transitions to the updated state (page 20). There are no branches or loops, as the flow is a straight-line action to toggle the setting.
+
+[Variant Paths] (3)
+ - V1: Tap <Toggle night mode> twice (repeat the toggle action to see if it reverts correctly)
+ - V2: Omit tapping <Toggle night mode> (check if the app stays in the original state without any toggle action)
+ - V3: Tap <Toggle night mode> (original action, included as a base for comparison)
+
+================= [TaskTest] FDG[27] =================
+[Function] Toggle external storage use
+
+[Core Logic Task]
+The process starts on the Settings page (page 9). The user performs a click action to toggle the 'Use external storage' option, which likely changes its state (on/off) and may navigate to a new page (page 21) or update the current page's UI to reflect the new toggle state.
+
+[Variant Paths] (3)
+ - V1: Tap <Toggle external storage use> twice (repeat toggle)
+ - V2: Omit tapping <Toggle external storage use> (do nothing)
+ - V3: Tap <Toggle external storage use> (original action as a base, but here included for a valid mutation set with the other two)
+
+================= [TaskTest] FDG[28] =================
+[Function] Toggle nearby notification display
+
+[Core Logic Task]
+The user starts on the Settings page (page 9). They perform a single action: clicking the toggle for 'Display nearby notification' to change its state (either enabling or disabling the feature), which navigates to page 22. There are no branches or loops as this is a direct toggle action.
+
+[Variant Paths] (2)
+ - V1: Omit the step: Do not tap <Toggle nearby notification display> and check if navigation to page 22 still occurs
+ - V2: Repeat the step: Tap <Toggle nearby notification display> twice in a row and observe the state changes and navigation to page 22
+
+================= [TaskTest] FDG[29] =================
+[Function] Toggle location permission display
+
+[Core Logic Task]
+The process starts on the Settings page (page 9). The user performs a click action to toggle the 'Display location permission' setting, which results in navigating to page 23. This single action completes the task of toggling the location permission display.
+
+[Variant Paths] (3)
+ - V1: Tap <Toggle location permission display> twice (repeat the toggle action)
+ - V2: Omit tapping <Toggle location permission display> (simulate not performing the toggle)
+ - V3: Tap <Toggle location permission display> and then immediately tap it again (quick repeated toggle)
+
+================= [TaskTest] FDG[30] =================
+[Function] Toggle campaigns display
+
+[Core Logic Task]
+The user starts on the Settings page (page 9). They perform a click action to toggle the 'Display campaigns' setting, which navigates to page 24. This single step toggles the campaigns display state, with no branching or looping in the flow.
+
+[Variant Paths] (3)
+ - V1: Tap <Toggle campaigns display> twice (repeat the toggle operation)
+ - V2: Omit tapping <Toggle campaigns display> (skip the toggle step)
+ - V3: Tap <Toggle campaigns display> and then immediately tap it again (swap order of a virtual repeat, though single step here, simulate repeated toggle)
+
+================= [TaskTest] FDG[31] =================
+[Function] The current page (a modal within the app settings) allows the user to select a default license from a list of options (CC0, Attribution 3.0, Attribution 4.0, Attribution - ShareAlike 3.0, Attribution - ShareAlike 4.0) to configure the app's default licensing for relevant content or contributions.
+
+[Core Logic Task]
+The user starts on the settings page and clicks to open the default license selection modal. Once in the modal, the user can choose one of five licenses (CC0, Attribution 3.0, Attribution 4.0, Attribution - ShareAlike 3.0, Attribution - ShareAlike 4.0) by clicking the corresponding option, which finalizes the selection.
+
+[Variant Paths] (3)
+ - V1: Open <Default License,Select default license> and select <Select Attribution 3.0 license> (branch mutation: alternative license option)
+ - V2: Open <Default License,Select default license>, repeat opening it (repeat mutation: re-open the modal), then select <Select CC0 license>
+ - V3: Open <Default License,Select default license> and omit selecting a license (omit mutation: skip final selection step)
+
+================= [TaskTest] FDG[32] =================
+[Function] The page allows the user to set the limit for recent uploads by entering a numerical value and confirming or canceling the action via the "OK" or "CANCEL" buttons.
+
+[Core Logic Task]
+The user starts by clicking the 'Set Recent Upload Limit' option. Then, they can input a numerical value in the provided field. Finally, they choose to either confirm the change by clicking 'OK' or cancel the action by clicking 'CANCEL', with the flow branching based on this choice.
+
+[Variant Paths] (3)
+ - V1: Tap <Set Recent Upload Limit,Set recent upload limit>, omit input into <Input field for upload limit>, tap <OK confirmation button>
+ - V2: Tap <Set Recent Upload Limit,Set recent upload limit>, input "99999999999999999999" into <Input field for upload limit>, tap <OK confirmation button>
+ - V3: Tap <Set Recent Upload Limit,Set recent upload limit>, input "" into <Input field for upload limit>, tap <OK confirmation button>
+
+================= [TaskTest] FDG[33] =================
+[Function] This page functions as a Google account sign - in interface, enabling users to input their email or phone number to start the sign - in process, and also providing options like account recovery, guest mode information, and account creation.
+
+[Core Logic Task]
+The flow starts on the settings page (page 9). The user clicks the 'Become a Beta Tester' option, which navigates to the Google account sign - in page (page 27). On this sign - in page, the user can input an email/phone, or use options like account recovery, guest mode info, or account creation to proceed with the sign - in process or related actions.
+
+[Variant Paths] (3)
+ - V1: On the settings page (page 9), long - press <Become a Beta Tester> instead of tapping it, then proceed on the Google account sign - in page as usual.
+ - V2: Omit clicking <Become a Beta Tester> on the settings page (page 9) and directly try to access the Google account sign - in page (page 27) (if possible within the app's logic).
+ - V3: On the settings page (page 9), click <Become a Beta Tester> multiple times before navigating to the Google account sign - in page (page 27).
+
+
+[AppTest] Found 1 dependency pairs to test.
+
+==============================================
+[AppTest] Pair 1/1: 15 -> 15
+Producer: Logout from account
+Consumer: Logout from account
+
+[Plan]
+Case 1/1
+Producer task:
+ Click the 'Logout' option to initiate the logout process and end the login session.
+Consumer task:
+ Click the 'Logout' option again; verify that the app transitions to the logout destination page, confirming the login session (ended by the producer) is used to complete the logout flow.
+------------------------------

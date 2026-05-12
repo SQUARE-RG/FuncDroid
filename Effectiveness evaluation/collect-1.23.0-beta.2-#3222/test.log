@@ -1,0 +1,2653 @@
+
+================= [TaskTest] FDG[1] =================
+[Function] The page functions as the main menu for ODK Collect, providing options to fill, edit, send, view, get, or delete data collection forms, along with a dropdown for additional settings and information.
+
+[Core Logic Task]
+The main menu of ODK Collect is the entry point. From here, the user can click the 'more options' dropdown (three dots) to open a menu with additional settings and information options like About, General Settings, or Admin Settings. This action initiates the flow to access these supplementary options.
+
+[Variant Paths] (3)
+ - V1: Tap <Open more options,Dropdown menu for additional options> twice
+ - V2: Omit tapping <Open more options,Dropdown menu for additional options>
+ - V3: Tap <Open more options,Dropdown menu for additional options> and then tap it again immediately
+
+================= [TaskTest] FDG[2] =================
+[Function] The "Fill Blank Form" page is intended to display and allow interaction with blank data collection forms, but currently shows a message indicating no forms are available and suggests obtaining and filling out a blank form.
+
+[Core Logic Task]
+The user starts on the Main Menu page and clicks the 'Fill Blank Form' button. This navigates to the Fill Blank Form page, which displays a message indicating no forms are available and suggests getting a blank form. There are no further interactive steps here as the form list is empty.
+
+[Variant Paths] (3)
+ - V1: Tap <Fill blank form,Fill blank form management page> twice in a row
+ - V2: Omit tapping <Fill blank form,Fill blank form management page> (though this would not reach the Fill Blank Form page, representing a mutation of omitting the navigation step)
+ - V3: Tap <Fill blank form,Fill blank form management page> and then immediately tap it again (similar to repeat mutation)
+
+================= [TaskTest] FDG[3] =================
+[Function] The "Edit Saved Form" page is intended to display and allow editing of previously saved data collection forms, but currently shows a message indicating no saved forms are available and suggests getting a blank form to fill out.
+
+[Core Logic Task]
+The user starts on the Main Menu page. They click the 'Edit Saved Form' button, which navigates to the Edit Saved Form page. On this page, a message indicates no saved forms are available, and suggests getting a blank form to fill out. There are no further interactive steps here as the page has no editable content.
+
+[Variant Paths] (3)
+ - V1: Tap <Edit saved form,Edit saved forms management page> twice in a row (repeat operation)
+ - V2: Omit tapping <Edit saved form,Edit saved forms management page> (though this skips the page, testing if the app handles no navigation here)
+ - V3: Attempt to long - press <Edit saved form,Edit saved forms management page> (using an alternative interaction type for the widget)
+
+================= [TaskTest] FDG[4] =================
+[Function] The "Send Finalized Form" page is used to send finalized data collection forms, and currently indicates there are no finalized forms available to send, prompting the user to finalize saved forms first.
+
+[Core Logic Task]
+The user starts on the Main Menu page and clicks 'Send Finalized Form' to navigate to the Send Finalized Form page. On this page, the user sees a message indicating no finalized forms are available, prompting them to finalize saved forms first. The user can then click the menu icon to access additional options like settings or view changes.
+
+[Variant Paths] (3)
+ - V1: Start on Main Menu page, long - press <Send finalized form,Send finalized forms management page> instead of clicking to navigate to Send Finalized Form page, then click <Menu icon,Menu options for settings and view>
+ - V2: Start on Main Menu page, click <Menu icon,Menu options for settings and view> first, then click <Send finalized form,Send finalized forms management page> to navigate to Send Finalized Form page
+ - V3: Start on Main Menu page, click <Send finalized form,Send finalized forms management page> to navigate to Send Finalized Form page, then repeat clicking <Menu icon,Menu options for settings and view>
+
+================= [TaskTest] FDG[5] =================
+[Function] The "View Sent Form" page is intended to display previously sent data collection forms, but currently shows a message indicating no sent forms are available to display and suggests sending finalized forms first.
+
+[Core Logic Task]
+The user starts on the Main Menu page. They click the 'View Sent Form' button, which navigates to the 'View Sent Form' page. On this page, a message is displayed indicating no sent forms are available and suggesting to send finalized forms first. There are no further actions or branches here as the flow ends with viewing the message.
+
+[Variant Paths] (3)
+ - V1: Tap <View sent form,View sent forms interface> twice (repeat the tap operation)
+ - V2: Omit tapping <View sent form,View sent forms interface> (though this skips the intended action, testing the absence of navigation to the page)
+ - V3: Tap <View sent form,View sent forms interface> and then immediately tap it again (another form of repeat mutation)
+
+================= [TaskTest] FDG[6] =================
+[Function] The current page is the main menu of ODK Collect, providing options to fill, edit, send, view, get, or delete data collection forms, and in this context, it is in the process of connecting to a server to retrieve a blank form after the "Get Blank Form" action was initiated from the "Manage data collection forms" page.
+
+[Core Logic Task]
+The process starts on the main menu page of ODK Collect. The user initiates the 'Get Blank Form' action by clicking the corresponding button. This action triggers a transition to a state where a 'Connecting to server' dialog is displayed, indicating the app is attempting to retrieve the blank form from the server.
+
+[Variant Paths] (3)
+ - V1: Omit initiating <Get blank form> and directly interact with <Connecting to server dialog> (though this is an invalid workflow mutation to test boundary behavior)
+ - V2: Repeat initiating <Get blank form> multiple times while <Connecting to server dialog> is active (test repeat operation impact)
+ - V3: Initiate <Get blank form> and then immediately try to interact with <Get blank form> again before <Connecting to server dialog> completes (order/boundary mutation)
+
+================= [TaskTest] FDG[7] =================
+[Function] The page allows users to view and potentially delete saved data collection forms, with a current state showing no saved forms are available to display.
+
+[Core Logic Task]
+The user starts on the main menu page and clicks the 'Delete Saved Form' button to navigate to the deletion page. On the deletion page, the user clicks to switch to the 'Saved Forms' tab, where the UI shows no saved forms are available to display.
+
+[Variant Paths] (3)
+ - V1: Start on main menu page, omit clicking <Delete saved form,Page for deleting saved forms> and check if the 'Saved Forms' tab state is still accessible (though this may not be possible as per core logic, but as a mutation to omit the navigation step)
+ - V2: Start on main menu page, click <Delete saved form,Page for deleting saved forms> twice (repeat navigation) then switch to <Saved Forms tab>
+ - V3: Start on main menu page, switch to <Saved Forms tab> first (order mutation) then click <Delete saved form,Page for deleting saved forms>
+
+================= [TaskTest] FDG[8] =================
+[Function] The "About" page of ODK Collect provides options to visit the ODK website, join the ODK forum, share the app, leave a Play Store review, and view open source libraries/licenses, along with brief descriptions of each option's purpose.
+
+[Core Logic Task]
+The flow starts on the Main Menu page. The user clicks the 'About' option, which navigates to the About page of ODK Collect. On the About page, options like visiting the ODK website, joining the forum, sharing the app, leaving a review, and viewing open source details are presented, each with a descriptive purpose.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[9] =================
+[Function] The General Settings page allows users to configure various app - wide settings including Server, User interface, Maps, Form management, and User and device identity.
+
+[Core Logic Task]
+The flow starts at the Main Menu page. The user clicks on the 'General Settings' option, which navigates to the General Settings page where various app - wide settings (Server, User interface, Maps, Form management, User and device identity) can be configured. There are no branches or loops in this initial flow as only one action is provided.
+
+[Variant Paths] (3)
+ - V1: Tap <General Settings option,Manage general app settings> twice (repeat the navigation step)
+ - V2: Omit tapping <General Settings option,Manage general app settings> (skip the navigation to General Settings page)
+ - V3: Tap <General Settings option,Manage general app settings> and then immediately tap it again (order mutation with repeated step)
+
+================= [TaskTest] FDG[10] =================
+[Function] The Admin Settings page provides options for administrators to manage various system settings including general settings, password, application reset, import/export, user access control, main menu, user settings, and form entry settings.
+
+[Core Logic Task]
+The flow starts by clicking the Admin Settings option from the main menu to access the admin settings page. Then, the 'Reset application...' option is clicked to navigate to the data reset selection page. Finally, the 'Toggle map layers reset' action is performed to manage the map layers reset setting.
+
+[Variant Paths] (3)
+ - V1: Tap <Admin Settings option,Admin settings management page>, omit clicking <Reset application... option,Select data to reset permanently> and directly perform <Toggle map layers reset>
+ - V2: Tap <Reset application... option,Select data to reset permanently> first, then tap <Admin Settings option,Admin settings management page>, and finally perform <Toggle map layers reset>
+ - V3: Tap <Admin Settings option,Admin settings management page>, tap <Reset application... option,Select data to reset permanently> twice, and then perform <Toggle map layers reset>
+
+================= [TaskTest] FDG[11] =================
+[Function] The current page provides sorting options (by name in ascending/descending order, by date newest/oldest first) for blank forms within the "Fill Blank Form" management section, and indicates there are no forms available to display currently.
+
+[Core Logic Task]
+The user starts on the 'Fill Blank Form' page (which shows no forms available). First, they click the menu navigation control to open the sorting options for blank forms. Then, at the sorting options page, they can choose to sort by Name A-Z or Name Z-A (the flow branches here based on the selected sorting option).
+
+[Variant Paths] (3)
+ - V1: Start on 'Fill Blank Form' page. Tap <Menu navigation control,Sorting options for blank forms> to open sorting options. Then tap <Sort by Name, Z-A> (mutated from original A-Z choice for branch mutation).
+ - V2: Start on 'Fill Blank Form' page. Tap <Sort by Name, A-Z> (omit opening menu first, invalid but for mutation test: try sorting without opening menu, though UI likely prevents but as mutation). Then tap <Menu navigation control,Sorting options for blank forms> (order mutation: swap menu open and sort tap, though logically flawed but mutation).
+ - V3: Start on 'Fill Blank Form' page. Tap <Menu navigation control,Sorting options for blank forms> to open sorting options. Then tap <Sort by Name, A-Z> twice (repeat the sort tap operation for repeat mutation).
+
+================= [TaskTest] FDG[12] =================
+[Function] This page provides a search interface to look for blank forms within the data collection form management system, with a message indicating no forms are currently available to display and a suggestion to get and fill out a blank form.
+
+[Core Logic Task]
+The user starts on page 2 and clicks the search function control to search for blank forms, navigating to page 108. Then, on page 108, the user clicks the search input field, moving to page 113. The flow is a straight sequence with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Start on page 2, click <Search input field> first (omitting the initial search function control click), then attempt to navigate (mutation: order and omit)
+ - V2: Start on page 2, click <Search function control,Search for blank forms> twice (mutation: repeat), then click <Search input field>
+ - V3: Start on page 2, click <Search input field> (skip the first search control click), then try to proceed as if on page 113 (mutation: omit and order)
+
+================= [TaskTest] FDG[13] =================
+[Function] The current page provides sorting options (by name, date, or status) for saved forms within the "Edit Saved Form" management interface, allowing users to organize how saved forms are displayed.
+
+[Core Logic Task]
+The user starts on the 'Edit Saved Form' page (page 3) and clicks the menu icon to open the sorting options (page 114). At the sorting options page, the user can choose one of multiple sorting methods (e.g., Name A-Z, Name Z-A, Status finalized first), each leading back to the main form list page (page 3) with the selected sorting applied.
+
+[Variant Paths] (3)
+ - V1: Start on 'Edit Saved Form' page, tap <Sort by Name, Z-A> (instead of other sort options) to apply reverse name sorting to saved forms
+ - V2: Start on 'Edit Saved Form' page, tap <Menu icon for options,Sorting options for saved forms>, then tap <Sort by Status, finalized first> to sort saved forms by status with finalized first
+ - V3: Start on 'Edit Saved Form' page, omit tapping the menu icon and directly try to apply sorting (though this may not work, testing the omission of the menu step)
+
+================= [TaskTest] FDG[14] =================
+[Function] This page provides a search functionality to locate saved data collection forms, with a message indicating no forms are currently available to display and suggesting the user get and fill out a blank form.
+
+[Core Logic Task]
+The user starts on page 3 and clicks the search icon to initiate form search (step S1), which navigates to page 115. Then, on page 115, the user clicks the search input field (step S2). The flow is a straight sequence with no branches, as the actions lead from the search trigger to the input interaction.
+
+[Variant Paths] (3)
+ - V1: Omit step S1: On page 115, directly click <Search input field> (skipping the initial search icon click)
+ - V2: Repeat step S1: On page 3, click <Search icon for finding forms,Search for saved forms> twice, then proceed to page 115 and click <Search input field>
+ - V3: Boundary input (if applicable, though no input step described, but assuming search input): On page 115, click <Search input field> and input an extremely long string (e.g., 1000 characters of 'a') instead of normal input
+
+================= [TaskTest] FDG[15] =================
+[Function] The page provides sorting options (by name alphabetically, by date) for finalized forms in the "Send Finalized Form" management interface, allowing users to organize the list of forms to send.
+
+[Core Logic Task]
+The process starts on the 'Send Finalized Form' page. The user clicks the filter icon (which provides sorting options) to open the sorting menu. This action leads to a new page (or menu) where sorting options for finalized forms are presented, allowing the user to choose a sorting criterion (e.g., by name alphabetically or by date) to organize the list of forms to send.
+
+[Variant Paths] (3)
+ - V1: Tap <Filter icon,Sorting options for finalized forms> and choose an alternative sorting option (e.g., if original was by name, choose by date, or vice versa)
+ - V2: Omit tapping <Filter icon,Sorting options for finalized forms> and check if the forms are sorted by a default criterion
+ - V3: Tap <Filter icon,Sorting options for finalized forms> multiple times (e.g., twice) and observe if the sorting toggles or remains the same
+
+================= [TaskTest] FDG[16] =================
+[Function] The page allows users to search for finalized forms that are ready to be sent, with a message indicating no forms are currently available and prompting to finalize saved forms first.
+
+[Core Logic Task]
+The user starts on page 4 and clicks the search icon to initiate a search for finalized forms (step S1). This action navigates to page 119, where the user then clicks the search input field (step S2). After this, the app displays a message indicating no forms are available and prompts to finalize saved forms first.
+
+[Variant Paths] (3)
+ - V1: Omit step S2: Start on page 4, click <Search icon,Search for finalized forms> and observe the result without interacting with <Search input field>.
+ - V2: Repeat step S1: Start on page 4, click <Search icon,Search for finalized forms>, then click <Search icon,Search for finalized forms> again, and then click <Search input field>.
+ - V3: Boundary input (if applicable, but since no input is described in core logic, this is a stretch: Assume <Search input field> accepts input, input empty string into <Search input field> after step S1 and S2)
+
+================= [TaskTest] FDG[17] =================
+[Function] The page provides sorting options (by name in ascending/descending order, by date newest/oldest first) for organizing the list of sent data collection forms within the "View Sent Form" interface.
+
+[Core Logic Task]
+The user starts on the 'View Sent Form' page (page 5). They click the menu icon (sorting options menu) to open the sorting menu, which navigates to page 125. The sorting menu provides options to sort sent forms by name (A-Z, Z-A) or date (newest first, oldest first), though the flow here captures the initial action to open the menu.
+
+[Variant Paths] (3)
+ - V1: Tap <Menu icon,Sorting options menu> twice (repeat the menu opening action)
+ - V2: Omit tapping <Menu icon,Sorting options menu> (skip opening the sorting menu)
+ - V3: Tap <Menu icon,Sorting options menu> and then immediately tap it again (repeated menu interaction)
+
+================= [TaskTest] FDG[18] =================
+[Function] The page provides a search interface to look for sent data collection forms, with a message indicating no forms are available to display and suggesting to send finalized forms first.
+
+[Core Logic Task]
+The process starts on page 5. First, the search icon is clicked to open the search interface for sent forms (navigating to page 126). Then, the search input field is clicked (on page 126, leading to page 127). The interface then shows a message if no forms are available, suggesting to send finalized forms first.
+
+[Variant Paths] (3)
+ - V1: Tap <Search icon,Search interface for sent forms>, then omit clicking <Search input field> and check the message
+ - V2: Omit tapping <Search icon,Search interface for sent forms> and directly check the original page for the message (though this might not reach the intended interface, but as a mutation)
+ - V3: Tap <Search icon,Search interface for sent forms>, then tap <Search input field> multiple times (e.g., twice) before checking the message
+
+================= [TaskTest] FDG[19] =================
+[Function] The current page, under the "Blank Forms" tab, is used to display blank data collection forms, but currently shows no available forms to display.
+
+[Core Logic Task]
+The user starts on page 7 and clicks the 'Blank Forms' tab to switch to it. After switching, the 'Blank Forms' page (page 128) is displayed, and it shows 'Nothing available to display' with no blank data collection forms present.
+
+[Variant Paths] (3)
+ - V1: Omit switching to <Blank Forms tab,Manage forms (saved/blank)> and check if the page still shows no forms
+ - V2: Repeat switching to <Blank Forms tab,Manage forms (saved/blank)> twice and check the form display
+ - V3: Switch to <Blank Forms tab,Manage forms (saved/blank)> and then immediately switch back and forth to observe form display changes
+
+================= [TaskTest] FDG[20] =================
+[Function] The page provides sorting options (by name alphabetically or by date) for saved forms within the "Delete Saved Form" section, allowing users to organize how saved forms are displayed.
+
+[Core Logic Task]
+The user starts on the 'Delete Saved Form' page (page 7). They click the menu icon to open the sort options for saved forms, which navigates to the sort menu page (page 129). At this point, the user can choose a sorting option (e.g., by name or date) to organize the saved forms, though the specific choice is not captured in the single action provided.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Open menu,Sort saved forms options> and try to sort saved forms directly on page 7
+ - V2: Click <Open menu,Sort saved forms options> multiple times (e.g., twice) before choosing a sorting option
+ - V3: Click <Open menu,Sort saved forms options> but do not select any sorting option and navigate back to page 7
+
+================= [TaskTest] FDG[21] =================
+[Function] The page allows users to search for saved or blank data collection forms, with tabs to switch between viewing saved forms and blank forms, and currently shows no forms available for display.
+
+[Core Logic Task]
+The user starts on page 7 and clicks the search option to navigate to the form search page (page 130). On page 130, the user clicks the search input field. The page shows no forms available for display, with tabs to switch between saved and blank forms, but no further actions are needed as the display is empty.
+
+[Variant Paths] (3)
+ - V1: The user starts on page 7 and clicks the <Search,Search saved or blank forms> option to navigate to the form search page (page 130). On page 130, the user omits clicking the <Search input field> and checks the tabs for saved and blank forms.
+ - V2: The user starts on page 7, clicks the <Search,Search saved or blank forms> option to navigate to the form search page (page 130). On page 130, the user repeats clicking the <Search input field> twice and then checks the tabs for saved and blank forms.
+ - V3: The user starts on page 7, clicks the <Search,Search saved or blank forms> option to navigate to the form search page (page 130). On page 130, the user inputs an empty string into the <Search input field> and checks the tabs for saved and blank forms.
+
+================= [TaskTest] FDG[22] =================
+[Function] The page allows the user to select an application (e.g., Chrome, WebView Browser Tester) to open the link for visiting the ODK website from the ODK Collect about information page.
+
+[Core Logic Task]
+On the ODK Collect about page, the user clicks the 'Visit the ODK website' option. This triggers a dialog to select an app (e.g., Chrome, WebView Browser Tester) to open the link, allowing the user to choose how to navigate to the ODK website.
+
+[Variant Paths] (3)
+ - V1: Tap <Visit the ODK website> and then long-press <Select app to open link> (unexpected interaction)
+ - V2: Omit tapping <Visit the ODK website> and directly long-press <Select app to open link> (invalid flow)
+ - V3: Tap <Visit the ODK website> twice and then interact with <Select app to open link> (repeating a step)
+
+================= [TaskTest] FDG[23] =================
+[Function] The current page allows the user to select an application (either Chrome or WebView Browser Tester) to open the link for visiting the ODK website from the ODK Collect about information page.
+
+[Core Logic Task]
+The user starts on the ODK Collect about page. They click the 'Visit the ODK website' option, which triggers an 'Open with' dialog to appear, offering two browser choices: Chrome or WebView Browser Tester. The user then selects one of these browsers to open the ODK website link.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[24] =================
+[Function] The page provides options to share the ODK Collect app via different methods such as copying to clipboard, Gmail, Hangouts, Messenger, or saving to Drive.
+
+[Core Logic Task]
+The flow starts on the 'About' page. The user clicks the 'Share ODK Collect' option, which opens a sharing menu with multiple methods (Copy to clipboard, Gmail, Hangouts, Messenger, Save to Drive). The user can then choose one of these methods to share the app.
+
+[Variant Paths] (3)
+ - V1: Tap <Share ODK Collect> then select <Copy to clipboard> (instead of other share options)
+ - V2: Tap <Share ODK Collect> then select <Gmail> (branch mutation to choose Gmail as share method)
+ - V3: Tap <Share ODK Collect> then select <Save to Drive> (branch mutation to choose Save to Drive)
+
+================= [TaskTest] FDG[25] =================
+[Function] The current page allows the user to select a browser application (from options like Chrome or WebView Browser Tester) to open the link for visiting the ODK website, as part of the ODK Collect app's "About" section functionality.
+
+[Core Logic Task]
+The user starts on the 'About' page of ODK Collect. They click on 'Visit the ODK website', which triggers a dialog to open the link with a browser. Then, the user selects a browser (Chrome or WebView Browser Tester) from the 'Open with' dialog to proceed to the ODK website.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[26] =================
+[Function] The page displays a list of open source libraries and their respective licenses used in the ODK Collect application.
+
+[Core Logic Task]
+The user starts on page 8 (About page). They click the 'Open source libraries/licenses' option, which navigates to page 13. On page 13, the list of open source libraries and their licenses is displayed. There are no branches or loops as the flow is a single click to view the list.
+
+[Variant Paths] (3)
+ - V1: The user starts on page 8 (About page). Long - press <Open source libraries/licenses,Display open source licenses list> (instead of click) to navigate to page 13 and view the list of open source libraries and their licenses.
+ - V2: The user starts on page 8 (About page). Click <Open source libraries/licenses,Display open source licenses list>, then click <Open source libraries/licenses,Display open source licenses list> again (repeat the click) and check if the list of open source libraries and their licenses is still displayed on page 13.
+ - V3: The user skips starting on page 8 (About page) (omit the start step) and directly click <Open source libraries/licenses,Display open source licenses list> to see if it navigates to page 13 and displays the list of open source libraries and their licenses (though this may not be a valid app flow, but it's a mutation for testing).
+
+================= [TaskTest] FDG[27] =================
+[Function] The current page, "Server Settings", allows users to configure the server connection settings, including specifying the server type (ODK Aggregate), server URL, username, and password for the app's server connection.
+
+[Core Logic Task]
+The user starts by clicking the 'Server settings' option to enter the Server Settings page. On this page, they can click the 'Username' or 'Password' fields to input credentials (with a dialog for each), or click the 'Type' option to select the server platform (choosing between ODK Aggregate or Other). The flow includes branches for entering username/password and selecting the server type.
+
+[Variant Paths] (3)
+ - V1: Tap <Server settings option,Configure server settings,Configure server connection settings,Configure server connection settings> to enter Server Settings page, then Tap <Type option,Select server platform> and Select <Other> (instead of ODK Aggregate), then Input credentials into <Username input field,ODK Username input dialog> and <Password input field>, then Tap <OK confirmation button>
+ - V2: Tap <Server settings option,Configure server settings,Configure server connection settings,Configure server connection settings> to enter Server Settings page, then Input credentials into <Password input field> first, then Input credentials into <Username input field,ODK Username input dialog> (swap username/password input order), then Tap <Type option,Select server platform> and Select <ODK Aggregate>, then Tap <OK confirmation button>
+ - V3: Tap <Server settings option,Configure server settings,Configure server connection settings,Configure server connection settings> to enter Server Settings page, then Try to Tap <OK confirmation button> without inputting username/password or selecting server type (omit input/selection steps)
+
+================= [TaskTest] FDG[28] =================
+[Function] The current page allows users to configure user interface settings including theme, language, text font size, navigation method, splash screen visibility, and selected splash image.
+
+[Core Logic Task]
+The flow starts with clicking the user interface settings option (S1) to enter the UI settings page. Then, at the UI settings page, the user can choose to configure the theme (S2) or text font size (S3). For the theme branch (S2), the user can select either Light (S4) or Dark (S5) theme. For the text font size branch (S3), the user can select from Extra Large (S6), Large (S7), Medium (S8), Small (S9), or Extra Small (S10) font sizes.
+
+[Variant Paths] (3)
+ - V1: Tap <User interface settings option,User interface settings configuration.>, then Tap <Text font size setting,Text font size selection dialog>, then Select <Extra Small font size option> (boundary input for font size, smallest option)
+ - V2: Tap <User interface settings option,User interface settings configuration.>, then Tap <Theme setting,Theme selection dialog>, then Select <Dark theme> (branch mutation: choose Dark instead of default Light)
+ - V3: Tap <User interface settings option,User interface settings configuration.>, then Tap <Text font size setting,Text font size selection dialog>, then Select <Extra Large font size option> (branch mutation: choose Extra Large instead of default Medium)
+
+================= [TaskTest] FDG[29] =================
+[Function] The current page allows users to configure map settings, including selecting the Mapping SDK (e.g., Google Maps SDK) and the Basemap type (e.g., Streets).
+
+[Core Logic Task]
+The user starts on the General Settings page. They click the 'Maps' option to navigate to the Maps settings page, where they can configure the Mapping SDK and Basemap type. This is a straight - line flow with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Maps settings option,Configure map settings> and try to configure map settings directly from the General Settings page
+ - V2: Click <Maps settings option,Configure map settings> twice in a row before attempting to configure map settings
+ - V3: Click <Maps settings option,Configure map settings> and then immediately click it again without doing any configuration
+
+================= [TaskTest] FDG[30] =================
+[Function] The current page, "Form management," allows users to configure various settings related to form updates (e.g., periodic checks, automatic download, hiding old versions), form submission (e.g., auto send, delete after send), and form filling (e.g., default to finalized, constraint processing) for data collection forms.
+
+[Core Logic Task]
+The flow starts by navigating to Form management settings. Then, it proceeds to configure auto send options for form submission. At the auto send configuration step, there are mutually exclusive branches to select different auto send modes (Off, Wifi only, Cellular only, or Wifi or cellular). Additionally, there is a step to set the form to default to finalized.
+
+[Variant Paths] (3)
+ - V1: Tap <Form management settings option,Manage form-related settings>, then Tap <Default form to finalized>, then Tap <Select Off for auto send>
+ - V2: Tap <Form management settings option,Manage form-related settings>, then Tap <Select Cellular only for auto send>, then Tap <Default form to finalized>
+ - V3: Tap <Form management settings option,Manage form-related settings>, then Tap <Set auto send for form submission>, then Omit setting auto send mode and Tap <Default form to finalized>
+
+================= [TaskTest] FDG[31] =================
+[Function] The page allows users to manage user and device identity settings, including configuring form metadata for identifying data submitters and toggling the collection of anonymous usage data to assist the ODK team in prioritizing fixes and features.
+
+[Core Logic Task]
+The user starts on the General Settings page. They click the 'User and device identity' option, which navigates to the User and device identity settings page. This page allows managing form metadata for data submitter identification and toggling anonymous usage data collection.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[32] =================
+[Function] The General Settings page provides access to configure various system - related settings including Server, User interface, Maps, Form management, and User and device identity for the application.
+
+[Core Logic Task]
+The flow starts on the Admin Settings page. The user clicks on the 'General Settings' option, which navigates to the General Settings page. This page provides access to configure various system - related settings including Server, User interface, Maps, Form management, and User and device identity.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <General Settings access> (check if page still navigates to General Settings)
+ - V2: Repeat clicking <General Settings access> multiple times (check if it causes any issues or different behavior)
+ - V3: Tap <General Settings access> in a different order (e.g., if there were other steps, but here just tap it out of the original expected flow context)
+
+================= [TaskTest] FDG[33] =================
+[Function] The current page is the main menu of the ODK Collect app, providing options to fill, edit, send, view, get, or delete data collection forms, along with access to additional options via a dropdown menu.
+
+[Core Logic Task]
+The flow starts on the Admin Settings page. First, the user clicks the 'Admin Password' option to open the password change dialog. Then, at the dialog, the user can either click the new password input field to enter a password or click the OK button to confirm the change, with these two actions being mutually exclusive choices.
+
+[Variant Paths] (3)
+ - V1: Start on Admin Settings page, click <OK confirmation button> without interacting with <New password input field>
+ - V2: Start on Admin Settings page, click <New password input field> and input a very long password (e.g., 1000 characters) then click <OK confirmation button>
+ - V3: Start on Admin Settings page, click <New password input field> and input an empty password then click <OK confirmation button>
+
+================= [TaskTest] FDG[34] =================
+[Function] The Import/Export Settings page enables users to manage the import and export of settings (via QR code or SD card) and handle sensitive information like admin and server passwords associated with the QR code.
+
+[Core Logic Task]
+The flow starts by clicking to access the Import/Export Settings page. Once on this page, a user can either save settings (a leaf action) or select a code from the SD card (which triggers an app selection dialog). The main branch point is at the Import/Export Settings page, where the user chooses between saving settings or selecting a code from the SD card.
+
+[Variant Paths] (3)
+ - V1: Tap <Import/Export settings,Manage import/export settings>, then omit selecting either <Save settings option> or <Select code from SD card,Choose app to complete action> (simulate leaving the page without action)
+ - V2: Tap <Import/Export settings,Manage import/export settings>, then repeat tapping <Save settings option> (try saving settings multiple times)
+ - V3: Tap <Import/Export settings,Manage import/export settings>, then swap the order: first attempt to <Select code from SD card,Choose app to complete action> then <Save settings option> (even if the order is illogical, it's a mutation of order)
+
+================= [TaskTest] FDG[35] =================
+[Function] The page allows users to manage the visibility of main menu items related to data collection forms by checking or unchecking options to show or hide them from the main menu.
+
+[Core Logic Task]
+The user starts on the Admin Settings page. They click on 'Main Menu Settings' to navigate to the page where they can manage the visibility of main menu items related to data collection forms. On the Main Menu Settings page, they can then check or uncheck the listed form-related menu items to show or hide them from the main menu.
+
+[Variant Paths] (3)
+ - V1: Start on Admin Settings page, omit clicking <Main Menu Settings,Manage main menu item visibility> and try to manage form visibility directly
+ - V2: Start on Admin Settings page, click <Main Menu Settings,Manage main menu item visibility> twice in a row before managing form visibility
+ - V3: Start on a different page (simulated mutation), then click <Main Menu Settings,Manage main menu item visibility> to manage form visibility
+
+================= [TaskTest] FDG[36] =================
+[Function] The User Settings page allows users to manage the visibility of various settings (e.g., Server, Theme, Language) by checking or unchecking options to show or hide them from General Settings.
+
+[Core Logic Task]
+The flow starts on the Admin Settings page. The user clicks on the 'User Settings' option, which navigates to the User Settings page. On this page, the user can manage the visibility of various settings (like Server, Theme, Language) by checking or unchecking their respective checkboxes to show or hide them from General Settings.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[37] =================
+[Function] The Form Entry Settings page allows users to enable or disable various form entry-related options (e.g., Moving backwards, General Settings, Change Language, etc.) by checking or unchecking corresponding checkboxes.
+
+[Core Logic Task]
+The user starts on the Admin Settings page. They click on the 'Form Entry Settings' option, which navigates to the Form Entry Settings page where various form entry - related options (like Moving backwards, General Settings, etc.) can be enabled or disabled via checkboxes.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[38] =================
+[Function] Sort by Date, newest first
+
+[Core Logic Task]
+On the initial page (page 107), the user performs a click action on the 'Sort by Date, newest first' option. This action transitions the app to the destination page (page 111), completing the sorting setup to display items in the newest-first date order.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[39] =================
+[Function] Sort by Date, oldest first
+
+[Core Logic Task]
+On the source page (page 107), the user performs a click action on the 'Sort by Date, oldest first' option. This action navigates to the destination page (page 112), completing the sorting operation as intended.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[40] =================
+[Function] The current page, reached after sorting saved forms by Name in reverse alphabetical order (Z - A) from the edit saved forms management page, displays a message indicating no saved forms are available and suggests getting and filling out a blank form.
+
+[Core Logic Task]
+The process starts on the edit saved forms management page. A click action is performed to sort the saved forms by 'Date, newest first'. After this action, the page updates to display a message indicating no saved forms are available and suggests getting and filling out a blank form.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Sort by Date, newest first> and check if the no saved forms message still appears
+ - V2: Tap <Sort by Date, newest first> twice and check the page state
+ - V3: Tap <Sort by Date, newest first> and then immediately tap it again (repeat the sort action)
+
+================= [TaskTest] FDG[41] =================
+[Function] The page allows users to view and potentially edit saved forms, with sorting options (like sorting by name in reverse alphabetical order) and a message indicating no saved forms are available, prompting users to get and fill out a blank form.
+
+[Core Logic Task]
+The user starts on the 'Edit Saved Form' page. They can click the sort menu (e.g., to select 'Date, oldest first') to sort saved forms. If no forms are saved, a message prompts them to get a blank form. The flow includes sorting actions and checking for saved forms.
+
+[Variant Paths] (3)
+ - V1: Tap <Sort by Date, oldest first> twice (repeat sorting action)
+ - V2: Omit tapping <Sort by Date, oldest first> and check the saved forms list as is
+ - V3: Tap <Sort by Date, oldest first> and then immediately tap it again (order mutation with repeated step)
+
+================= [TaskTest] FDG[42] =================
+[Function] The current page, reached after sorting saved forms by Name in Z - A order, displays a message indicating no saved forms are available and suggests getting and filling out a blank form, while also providing options for menu and search functionality related to saved forms.
+
+[Core Logic Task]
+The process starts on page 114. A click action is performed to sort saved forms by Status (unfinalized first), leading to page 3. On page 3, the UI displays a message that no saved forms are available and suggests filling a blank form, with menu and search options present.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Sort by Status, unfinalized first> and check if the no saved forms message still appears on the current page
+ - V2: Click <Sort by Status, unfinalized first> twice and observe the page state
+ - V3: Click <Sort by Status, unfinalized first> and then immediately click it again to see if there's any change in the UI
+
+================= [TaskTest] FDG[43] =================
+[Function] The General Settings page provides options to configure settings related to Server, User interface, Maps, Form management, and User and device identity for the data collection form management application.
+
+[Core Logic Task]
+The flow starts at the entry page (page 120). The user clicks on the 'General Settings' option, which navigates to the General Settings page (page 9) where configuration options for Server, User interface, Maps, Form management, and User and device identity are available. There are no branches or loops in this initial flow as only one action is provided.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <General Settings option> (check if the app still navigates to General Settings page without this action)
+ - V2: Repeat clicking <General Settings option> multiple times (check if it causes any error or unexpected navigation)
+ - V3: Click <General Settings option> twice in a row (check if it navigates to General Settings page both times or has a different behavior)
+
+================= [TaskTest] FDG[44] =================
+[Function] The current page provides a "Change View" dialog with options to filter the display of forms as either "Show Unsent Forms" or "Show Sent and Unsent Forms" for the finalized forms management interface.
+
+[Core Logic Task]
+The process starts on the finalized forms management page (page 120). The user clicks the 'Change View' option, which opens a dialog (page 122) with two filtering options: 'Show Unsent Forms' and 'Show Sent and Unsent Forms'. The flow now branches based on which option the user selects to filter the form display.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[45] =================
+[Function] The page allows users to configure server connection settings for an ODK Aggregate server, including viewing or editing the server URL, username, and password, and accessing ODK Aggregate specific settings.
+
+[Core Logic Task]
+On the Server Settings page (page 14), the user clicks the 'ODK Aggregate settings' link. This action likely navigates to (or opens) the ODK Aggregate - specific settings page, allowing further configuration of server - related details for ODK Aggregate.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <ODK Aggregate settings link> and check if the page remains on Server Settings without any change
+ - V2: Click <ODK Aggregate settings link> twice to see if it navigates to the ODK Aggregate - specific settings page or has any unexpected behavior
+ - V3: Try to long - press <ODK Aggregate settings link> instead of clicking it to see if it still navigates to the ODK Aggregate - specific settings page or triggers a different action
+
+================= [TaskTest] FDG[46] =================
+[Function] This page allows the user to select the app's language from a list of available languages, with an option to use the device's language.
+
+[Core Logic Task]
+The user starts on page 15 and clicks the 'Language' setting to navigate to page 27. Then, on page 27, the user clicks a language option to complete the selection (page 33).
+
+[Variant Paths] (3)
+ - V1: Start on page 15, omit clicking <Language setting,Select app language> and check if language selection proceeds
+ - V2: Start on page 15, click <Language setting,Select app language> to go to page 27, then repeat clicking <Select language option> multiple times
+ - V3: Start on page 15, click <Language setting,Select app language> to go to page 27, then click a different <Select language option> than intended
+
+================= [TaskTest] FDG[47] =================
+[Function] The page functions as a dialog for selecting the mapping SDK (Google Maps SDK, OpenStreetMap SDK, or Mapbox Maps SDK) to be used within the app's navigation or mapping-related features.
+
+[Core Logic Task]
+The flow starts by clicking the Navigation setting to open the option selection dialog. Then, from the dialog, the user can choose one of three navigation options: horizontal swipes, forward/backward buttons, or both swipes and buttons, with each choice leading to a distinct page.
+
+[Variant Paths] (3)
+ - V1: Tap <Navigation setting,Navigation option selection dialog>, then select <Use forward/backward buttons option> (branch mutation: alternative option instead of default)
+ - V2: Tap <Navigation setting,Navigation option selection dialog>, then select <Use swipes and buttons option> (branch mutation: alternative option instead of default)
+ - V3: Tap <Navigation setting,Navigation option selection dialog>, omit selecting any option (repeat/omit mutation: skip selection step)
+
+================= [TaskTest] FDG[48] =================
+[Function] Splash screen toggle
+
+[Core Logic Task]
+The user starts on page 15 (User interface settings). The core logic is to perform a click action on the 'Splash screen toggle' option, which likely toggles the splash screen setting (e.g., enabling or disabling it) and may navigate to a new page (30) or update the current page's state. There are no branches or loops here as it's a single action to toggle the setting.
+
+[Variant Paths] (3)
+ - V1: Tap <Splash screen toggle> twice (repeat the toggle action)
+ - V2: Omit tapping <Splash screen toggle> (do nothing to see if the setting changes or if there's an error)
+ - V3: Tap <Splash screen toggle> and then immediately tap it again (quick repeated toggle)
+
+================= [TaskTest] FDG[49] =================
+[Function] The current page, within the user interface settings of the app, allows the user to configure the selected splash image (along with other UI settings like theme, language, text font size, navigation, and splash screen visibility).
+
+[Core Logic Task]
+The user starts on the User interface settings page. The core logic involves clicking on the 'Selected splash image' setting, which likely allows configuration of the splash image (though the current action is a click to access or modify this setting). There are no branches or loops here as only one action is present.
+
+[Variant Paths] (3)
+ - V1: Tap <Selected splash image setting> twice (repeat the tap operation)
+ - V2: Omit tapping <Selected splash image setting> (skip the core action)
+ - V3: Tap <Selected splash image setting> and then immediately tap it again (order mutation with repeated tap)
+
+================= [TaskTest] FDG[50] =================
+[Function] The current page allows the user to select a Mapping SDK (Google Maps SDK, OpenStreetMap SDK, or Mapbox Maps SDK) for the app's map functionality.
+
+[Core Logic Task]
+The user starts on page 16 (Maps settings). They click the 'Mapping SDK' setting, which opens a dialog (dst page 29) with options to select Google Maps SDK, OpenStreetMap SDK, or Mapbox Maps SDK. This click initiates the process of choosing a mapping SDK for the app's map functionality.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Mapping SDK setting> and stay on page 16
+ - V2: Click <Mapping SDK setting> twice in a row
+ - V3: Click <Mapping SDK setting> and then immediately click it again before the dialog fully loads (if possible)
+
+================= [TaskTest] FDG[51] =================
+[Function] The current page allows the user to select the type of basemap (Streets, Satellite, Terrain, Hybrid) for the map settings within the app.
+
+[Core Logic Task]
+The user starts on page 16 and clicks to open the basemap selection menu (step S1). Then, at the basemap selection page (step S2), the user chooses one of four options: Streets (S3), Satellite (S4), Terrain (S5), or Hybrid (S6), with each choice leading to a distinct destination page.
+
+[Variant Paths] (3)
+ - V1: Start on page 16, tap <Basemap setting,Select basemap type> (S1), then at basemap selection page, tap <Select Satellite basemap> (S4) instead of default Streets
+ - V2: Start on page 16, tap <Basemap setting,Select basemap type> (S1), then at basemap selection page, tap <Select Terrain basemap> (S5) instead of default Streets
+ - V3: Start on page 16, tap <Basemap setting,Select basemap type> (S1), then at basemap selection page, tap <Select Hybrid basemap> (S6) instead of default Streets
+
+================= [TaskTest] FDG[52] =================
+[Function] This page allows the user to configure the frequency (e.g., Never, Every fifteen minutes, Every hour, etc.) at which the app checks for periodic form updates within the form management settings.
+
+[Core Logic Task]
+The user starts on the form management page and clicks to open the periodic form updates check settings. Then, from the list of frequency options (Never, Every fifteen minutes, Every hour, Every six hours, Every 24 hours), the user selects one to configure the update check frequency.
+
+[Variant Paths] (3)
+ - V1: Start on form management page, tap <Set periodic form updates check>, then select <Never> (branch mutation: choosing a different frequency option)
+ - V2: Start on form management page, tap <Set periodic form updates check>, then select <Every 24 hours> (branch mutation: choosing a different frequency option)
+ - V3: Start on form management page, tap <Set periodic form updates check>, then tap <Every fifteen minutes> twice (repeat mutation: repeating a frequency selection)
+
+================= [TaskTest] FDG[53] =================
+[Function] Enable automatic form download
+
+[Core Logic Task]
+The process starts on the Form management page. The user performs a click action to enable the automatic form download feature, which likely toggles the associated checkbox or setting to activate automatic downloads of updated form versions.
+
+[Variant Paths] (3)
+ - V1: Tap <Enable automatic form download> twice (repeat the enable action)
+ - V2: Omit tapping <Enable automatic form download> (simulate not enabling the feature)
+ - V3: Tap <Enable automatic form download> after a short delay (test timing variation in interaction)
+
+================= [TaskTest] FDG[54] =================
+[Function] Hide old form versions
+
+[Core Logic Task]
+The process starts on the Form management page. The user clicks on the 'Hide old form versions' option, which likely toggles its state (e.g., enabling or disabling the hiding of old form versions). This action completes the functional point of hiding old form versions.
+
+[Variant Paths] (3)
+ - V1: Tap <Hide old form versions> twice (to toggle and then toggle back)
+ - V2: Omit tapping <Hide old form versions> (simulate not performing the action)
+ - V3: Tap <Hide old form versions> (original action as a reference, but here it's part of mutation testing to check if the action is necessary)
+
+================= [TaskTest] FDG[55] =================
+[Function] Delete forms after sending
+
+[Core Logic Task]
+The user starts on the Form management page. They perform a click action on the 'Delete forms after sending' option (likely a checkbox or toggle) to enable or configure the deletion of forms after they are sent. This action transitions to the next page (51), completing the setup for this functionality.
+
+[Variant Paths] (3)
+ - V1: Tap <Delete forms after sending> twice (repeat the tap operation)
+ - V2: Omit tapping <Delete forms after sending> (skip the configuration step)
+ - V3: Tap <Delete forms after sending> and then immediately tap it again (order mutation with repeated tap)
+
+================= [TaskTest] FDG[56] =================
+[Function] The current page allows the user to configure the constraint processing behavior for forms, with options to validate upon forward swipe or defer validation until finalized.
+
+[Core Logic Task]
+The user starts on the form management page and clicks to open the constraint processing behavior settings. Then, at the settings page, the user chooses between two options: validate upon forward swipe or defer validation until finalized, with each choice leading to a confirmation of the selected behavior.
+
+[Variant Paths] (3)
+ - V1: Start on form management page, tap <Set constraint processing,Constraint processing behavior settings>, then tap <Defer validation until finalized> (branch mutation: choose alternative option)
+ - V2: Start on form management page, tap <Defer validation until finalized> (omit opening settings page step, invalid but mutation attempt)
+ - V3: Start on form management page, tap <Set constraint processing,Constraint processing behavior settings>, tap <Validate upon forward swipe>, then tap <Validate upon forward swipe> again (repeat selection step)
+
+================= [TaskTest] FDG[57] =================
+[Function] Collect anonymous usage data checkbox
+
+[Core Logic Task]
+The user interacts with the 'Collect anonymous usage data' checkbox by clicking it. This action likely toggles the checkbox's state (checked/unchecked) and may navigate to a different page (dst_page_idx 65) or update the setting.
+
+[Variant Paths] (2)
+ - V1: Tap <Collect anonymous usage data checkbox> twice (repeat the tap to see if it toggles back and forth as expected)
+ - V2: Omit tapping <Collect anonymous usage data checkbox> (simulate not interacting with the checkbox to see the default state behavior)
+
+================= [TaskTest] FDG[58] =================
+[Function] Show password checkbox
+
+[Core Logic Task]
+The flow starts on page 66. The user performs a click action on the 'Show password checkbox' element, which leads to page 73. There are no branches or loops as this is a single-step action to interact with the checkbox.
+
+[Variant Paths] (3)
+ - V1: Tap <Show password checkbox> twice (repeat interaction)
+ - V2: Omit tapping <Show password checkbox> (skip the step)
+ - V3: Tap <Show password checkbox> (original step, included for completeness as a base comparison)
+
+================= [TaskTest] FDG[59] =================
+[Function] Toggle all settings reset
+
+[Core Logic Task]
+The flow starts on page 67. The user performs a click action to toggle the 'All settings (internal settings, saved settings)' option in the 'Select what to reset' dialog. This action is the core step to initiate the all settings reset process.
+
+[Variant Paths] (3)
+ - V1: Tap <Toggle all settings reset> twice (repeat the toggle action)
+ - V2: Omit tapping <Toggle all settings reset> (simulate not initiating the toggle)
+ - V3: Tap <Toggle all settings reset> and then immediately tap it again (quick repeated toggle)
+
+================= [TaskTest] FDG[60] =================
+[Function] Toggle saved forms reset
+
+[Core Logic Task]
+The process starts on page 67. The user clicks the 'Toggle saved forms reset' element, which navigates to page 76. This action likely toggles the selection of the 'Saved forms' option in the reset dialog to prepare for resetting saved forms data.
+
+[Variant Paths] (3)
+ - V1: Tap <Toggle saved forms reset> twice (repeat the toggle action)
+ - V2: Omit tapping <Toggle saved forms reset> (test if the reset state changes without the action)
+ - V3: Tap <Toggle saved forms reset> and then immediately tap it again (simulate rapid repeated toggling)
+
+================= [TaskTest] FDG[61] =================
+[Function] Toggle blank forms reset
+
+[Core Logic Task]
+The flow starts on page 67. The user performs a click action to toggle the 'Blank forms reset' option, which navigates to page 77. This is a single-step flow with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Tap <Toggle blank forms reset> twice (repeat the toggle action)
+ - V2: Omit tapping <Toggle blank forms reset> (skip the toggle step)
+ - V3: Tap <Toggle blank forms reset> and then tap it again immediately (repeat the toggle action in quick succession)
+
+================= [TaskTest] FDG[62] =================
+[Function] Toggle form load cache reset
+
+[Core Logic Task]
+The process starts on page 67. The user clicks the 'Toggle form load cache reset' option, which navigates to page 78. This action likely initiates the process of toggling the form load cache reset setting, possibly opening a confirmation or selection dialog for resetting the form load cache.
+
+[Variant Paths] (3)
+ - V1: Tap <Toggle form load cache reset> twice in a row
+ - V2: Omit tapping <Toggle form load cache reset> (though this might not achieve the goal, it's a mutation)
+ - V3: Tap <Toggle form load cache reset> and then immediately tap it again (repeat)
+
+================= [TaskTest] FDG[63] =================
+[Function] Toggle OSM tile cache reset
+
+[Core Logic Task]
+The process starts on page 67. The user clicks the 'Toggle OSM tile cache reset' option, which navigates to page 80. This action initiates the process of toggling the OSM tile cache reset functionality.
+
+[Variant Paths] (3)
+ - V1: Tap <Toggle OSM tile cache reset> twice in a row
+ - V2: Omit tapping <Toggle OSM tile cache reset> (simulate not performing the action)
+ - V3: Tap <Toggle OSM tile cache reset> and then immediately tap it again
+
+================= [TaskTest] FDG[64] =================
+[Function] Reset selected data
+
+[Core Logic Task]
+The process starts on page 67. The user clicks the 'Reset selected data' option, which leads to page 81 (the 'Select what to reset' dialog). This action initiates the workflow to choose and reset selected data categories.
+
+[Variant Paths] (3)
+ - V1: On page 67, long - press <Reset selected data> (instead of click) to see if it leads to page 81
+ - V2: On page 67, click <Reset selected data> twice (repeat the operation) to check the behavior
+ - V3: Omit clicking <Reset selected data> on page 67 and see if the workflow to page 81 still occurs
+
+================= [TaskTest] FDG[65] =================
+[Function] The page provides options to share a QR code (associated with import/export settings) via various apps like Add to Maps, Gmail, Hangouts, Messenger, Save to Drive, and Upload to Photos.
+
+[Core Logic Task]
+On the Import/Export Settings page (with the QR code), the user clicks the share option. This opens a share menu with multiple app options (Add to Maps, Gmail, Hangouts, Messenger, Save to Drive, Upload to Photos) for sharing the QR code. The flow then allows selecting any of these apps to proceed with sharing.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Share settings option> and directly try to interact with <Share QR code options>
+ - V2: Tap <Share settings option> twice before interacting with <Share QR code options>
+ - V3: Tap <Share QR code options> first and then <Share settings option>
+
+================= [TaskTest] FDG[66] =================
+[Function] This page functions as a barcode scanning viewfinder interface, guiding the user to place a barcode within the viewfinder rectangle to scan it.
+
+[Core Logic Task]
+The process starts on the Import/Export Settings page. The user clicks the 'Scan code from other device' button, which navigates to the barcode scanning viewfinder interface. Here, the user is guided to place a barcode within the viewfinder rectangle to scan it, with no further branching or looping in this initial flow.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[67] =================
+[Function] Remove passwords option
+
+[Core Logic Task]
+The process starts on the Import/Export Settings page. The user clicks the 'Remove passwords option' (at the bottom of the screen, as a tap target in the warning banner). This action likely leads to a new page (dst_page_idx 85) where the passwords are removed or the QR code is updated without them.
+
+[Variant Paths] (3)
+ - V1: Tap <Remove passwords option> twice (repeat operation)
+ - V2: Omit tapping <Remove passwords option> (skip the core action)
+ - V3: Tap <Remove passwords option> with a long-press (incorrect interaction type, mutation)
+
+================= [TaskTest] FDG[68] =================
+[Function] Toggle menu item visibility
+
+[Core Logic Task]
+The process starts on the Main Menu Settings page. A click action is performed to toggle the visibility of a menu item, which transitions the app to a new page (or updates the current page's state) to reflect the change in menu item visibility.
+
+[Variant Paths] (3)
+ - V1: Tap <Toggle menu item visibility> twice (repeating the toggle action)
+ - V2: Omit tapping <Toggle menu item visibility> (simulating not performing the toggle)
+ - V3: Tap <Toggle menu item visibility> and then immediately tap it again (order mutation with repeated action)
+
+================= [TaskTest] FDG[69] =================
+[Function] Server setting checkbox
+
+[Core Logic Task]
+The user starts on the User Settings page (page 70). They perform a click action on the 'Server' setting checkbox. This action leads to a new page (page 87), completing the interaction with the server setting checkbox.
+
+[Variant Paths] (3)
+ - V1: Tap <Server setting checkbox> twice
+ - V2: Omit tapping <Server setting checkbox> (though this doesn't complete the interaction as per original logic, but is a mutation of omitting the step)
+ - V3: Tap <Server setting checkbox> then tap <Server setting checkbox> again (same as repeat mutation)
+
+================= [TaskTest] FDG[70] =================
+[Function] Theme setting checkbox
+
+[Core Logic Task]
+The user starts on the User Settings page (page 70). They perform a click action on the Theme setting checkbox, which results in navigating to page 88. This action toggles the Theme setting's state (checked/unchecked) as part of the app's theme configuration logic.
+
+[Variant Paths] (3)
+ - V1: Tap <Theme setting checkbox> twice (repeating the tap to see if it toggles back and affects navigation)
+ - V2: Omit tapping <Theme setting checkbox> and check if navigation to page 88 still occurs (though likely not, but testing the dependency)
+ - V3: Tap <Theme setting checkbox> and immediately tap it again before any navigation completes (testing rapid repeated interaction)
+
+================= [TaskTest] FDG[71] =================
+[Function] Language setting checkbox
+
+[Core Logic Task]
+The user starts on the User Settings page (page 70). They perform a click action on the Language setting checkbox. This action leads to a new page (page 89), completing the interaction with the Language setting checkbox.
+
+[Variant Paths] (3)
+ - V1: Tap <Language setting checkbox> twice
+ - V2: Omit tapping <Language setting checkbox> (stay on page 70)
+ - V3: Tap <Language setting checkbox> then immediately tap it again (simulate rapid repeated interaction)
+
+================= [TaskTest] FDG[72] =================
+[Function] Text font size checkbox
+
+[Core Logic Task]
+The user starts on the User Settings page (page 70). They perform a click action on the 'Text font size' checkbox, which results in navigating to page 90. This action toggles the checkbox's state (either enabling or disabling the text font size option in settings).
+
+[Variant Paths] (3)
+ - V1: Start on User Settings page (page 70). Tap <Text font size checkbox> twice (repeating the tap to see if it toggles back and affects navigation or state).
+ - V2: Start on User Settings page (page 70). Omit tapping <Text font size checkbox> and check if navigation to page 90 still occurs (though expected to not happen, testing the necessity of the step).
+ - V3: Start on User Settings page (page 70). Tap <Text font size checkbox> and then immediately tap it again before navigation completes (testing if rapid repeated taps have unexpected behavior).
+
+================= [TaskTest] FDG[73] =================
+[Function] Navigation setting checkbox
+
+[Core Logic Task]
+The user starts on the User Settings page (page 70). They perform a click action on the Navigation setting checkbox, which leads to a transition to page 91. This action toggles the checkbox's state (either enabling or disabling the Navigation setting in the app's settings).
+
+[Variant Paths] (3)
+ - V1: Tap <Navigation setting checkbox> twice (repeating the tap to see if it toggles back and affects the transition)
+ - V2: Omit tapping <Navigation setting checkbox> and check if the page still transitions to page 91 (though this might not be expected behavior, testing omission)
+ - V3: Tap <Navigation setting checkbox> and immediately tap it again before the page transition completes (testing repeated interaction during transition)
+
+================= [TaskTest] FDG[74] =================
+[Function] Splash screen checkbox
+
+[Core Logic Task]
+The user starts on the User Settings page (page 70). They perform a click action on the Splash screen checkbox. This action leads to a transition to page 92, completing the interaction with the Splash screen checkbox.
+
+[Variant Paths] (3)
+ - V1: The user starts on the User Settings page (page 70). They perform a long - press action on <Splash screen checkbox>. This action leads to a transition to page 92, completing the interaction with the Splash screen checkbox.
+ - V2: The user starts on the User Settings page (page 70). They perform a click action on <Splash screen checkbox> twice. This action leads to a transition to page 92, completing the interaction with the Splash screen checkbox.
+ - V3: The user starts on the User Settings page (page 70). They omit performing an action on <Splash screen checkbox> and directly try to transition to page 92.
+
+================= [TaskTest] FDG[75] =================
+[Function] Show Map SDK Options checkbox
+
+[Core Logic Task]
+The flow starts on the User Settings page (page 70). The user performs a click action on the 'Show Map SDK Options' checkbox. This action leads to a transition to page 93, completing the interaction with this checkbox.
+
+[Variant Paths] (3)
+ - V1: Tap <Show Map SDK Options checkbox> twice
+ - V2: Omit tapping <Show Map SDK Options checkbox> (stay on page 70)
+ - V3: Tap <Show Map SDK Options checkbox> then tap it again immediately
+
+================= [TaskTest] FDG[76] =================
+[Function] Show Basemap Options checkbox
+
+[Core Logic Task]
+The user starts on page 70 (User Settings) and clicks the 'Show Basemap Options' checkbox. This action leads to page 94, completing the interaction with this checkbox.
+
+[Variant Paths] (3)
+ - V1: Start on page 70 (User Settings), long-press <Show Basemap Options checkbox> (instead of tap)
+ - V2: Start on page 70 (User Settings), omit clicking <Show Basemap Options checkbox> (check if the app behaves without this action)
+ - V3: Start on page 70 (User Settings), click <Show Basemap Options checkbox> twice (repeat the click operation)
+
+================= [TaskTest] FDG[77] =================
+[Function] Periodic form updates check checkbox
+
+[Core Logic Task]
+The user starts on the User Settings page (page 70). They perform a click action on the 'Periodic form updates check' checkbox, which transitions the app to page 95. This action toggles the checkbox's state (either enabling or disabling the periodic form updates check feature).
+
+[Variant Paths] (3)
+ - V1: Tap <Periodic form updates check checkbox> twice in a row (repeating the tap to see if it toggles back as expected)
+ - V2: Omit tapping <Periodic form updates check checkbox> and see if the app still transitions to page 95 (though this may not be expected behavior, testing the omission)
+ - V3: Tap <Periodic form updates check checkbox> and then immediately tap it again before the app can fully transition to page 95 (testing rapid repeated interaction)
+
+================= [TaskTest] FDG[78] =================
+[Function] Automatic download checkbox
+
+[Core Logic Task]
+The user starts on the User Settings page. They perform a click action on the 'Automatic download' checkbox, which likely toggles its state (checked/unchecked) and may navigate to a new page (page 96) or update the current settings. This is a single-step interaction with the checkbox to modify the automatic download setting.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[79] =================
+[Function] Hide old form versions checkbox
+
+[Core Logic Task]
+The user starts on page 70 (User Settings). They perform a click action on the 'Hide old form versions' checkbox, which transitions the app to page 97. This action toggles the checkbox's state to manage the visibility of old form versions.
+
+[Variant Paths] (3)
+ - V1: Tap <Hide old form versions checkbox> twice in a row
+ - V2: Omit tapping <Hide old form versions checkbox> and check if the app still transitions to page 97 (though this may not be valid behavior but is a mutation attempt)
+ - V3: Tap <Hide old form versions checkbox> and then immediately tap it again before the app transitions fully
+
+================= [TaskTest] FDG[80] =================
+[Function] Auto send setting checkbox
+
+[Core Logic Task]
+The flow starts on the User Settings page (page 70). The user clicks the 'Auto send' setting checkbox, which transitions the app to a new page (page 98). This action toggles the Auto send setting, completing the functional point's execution.
+
+[Variant Paths] (3)
+ - V1: On the User Settings page (page 70), long - press <Auto send setting checkbox> (instead of click) to see if it toggles the Auto send setting and transitions to page 98.
+ - V2: On the User Settings page (page 70), click <Auto send setting checkbox> twice in a row to check if the setting toggles as expected and transitions to page 98 each time.
+ - V3: On the User Settings page (page 70), omit clicking <Auto send setting checkbox> and check if the app still transitions to page 98 (this is to test the boundary case of no interaction with the checkbox).
+
+================= [TaskTest] FDG[81] =================
+[Function] Delete after send checkbox
+
+[Core Logic Task]
+The user starts on page 70 (User Settings) and clicks the 'Delete after send' checkbox. This action likely toggles the checkbox's state (checked/unchecked) and may navigate to page 99, completing the interaction with this checkbox.
+
+[Variant Paths] (3)
+ - V1: Tap <Delete after send checkbox> twice (repeating the tap to see if state toggles back)
+ - V2: Omit tapping <Delete after send checkbox> (simulate not interacting with it)
+ - V3: Tap <Delete after send checkbox> and then immediately tap it again (order mutation with repeated tap)
+
+================= [TaskTest] FDG[82] =================
+[Function] Toggle Moving backwards
+
+[Core Logic Task]
+On the Form Entry Settings page, the user clicks the 'Moving backwards' toggle. This action toggles the state of the 'Moving backwards' option, likely changing its visibility or functionality in Form Entry.
+
+[Variant Paths] (3)
+ - V1: Tap <Toggle Moving backwards> twice (repeat the toggle operation)
+ - V2: Omit tapping <Toggle Moving backwards> (do not perform the toggle action)
+ - V3: Tap <Toggle Moving backwards> once (original action as a reference, but here it's a mutation by considering if the initial state was misassumed, like toggling when it's already in the desired state)
+
+================= [TaskTest] FDG[83] =================
+[Function] Toggle General Settings
+
+[Core Logic Task]
+The process starts on the Form Entry Settings page. The user clicks to toggle the General Settings option, which likely changes its checked/unchecked state. This is a single-step action with no branching or looping.
+
+[Variant Paths] (3)
+ - V1: Tap <Toggle General Settings> twice (repeat toggle)
+ - V2: Omit tapping <Toggle General Settings> (no action)
+ - V3: Tap <Toggle General Settings> once (original, included for completeness but mutation could be seen as base vs others)
+
+================= [TaskTest] FDG[84] =================
+[Function] Toggle Change Language
+
+[Core Logic Task]
+The process starts on the Form Entry Settings page (page 71). The user clicks the 'Change Language' toggle, which results in navigating to page 102. This action toggles the state of the 'Change Language' option.
+
+[Variant Paths] (3)
+ - V1: Tap <Toggle Change Language> twice (repeat the toggle operation)
+ - V2: Omit tapping <Toggle Change Language> (check if the app navigates or changes state without the action)
+ - V3: Tap <Toggle Change Language> and then immediately tap it again (simulate rapid toggling)
+
+================= [TaskTest] FDG[85] =================
+[Function] Toggle Go To Prompt
+
+[Core Logic Task]
+The user starts on the Form Entry Settings page (page 71). They perform a click action on the 'Go To Prompt' toggle. This action toggles the state of the 'Go To Prompt' setting, and the flow ends after this single action as it is a leaf action.
+
+[Variant Paths] (3)
+ - V1: Tap <Toggle Go To Prompt> twice (repeating the toggle action to see if it reverts correctly)
+ - V2: Omit tapping <Toggle Go To Prompt> (checking the default state without interaction)
+ - V3: Tap <Toggle Go To Prompt> (original action for comparison)
+
+================= [TaskTest] FDG[86] =================
+[Function] Toggle Save Form
+
+[Core Logic Task]
+The user starts on the Form Entry Settings page. They perform a click action to toggle the 'Save Form' option, which likely changes its checked/unchecked state. This action transitions to a new page (or updates the current page's state) to reflect the toggle.
+
+[Variant Paths] (3)
+ - V1: Tap <Toggle Save Form> twice (repeating the toggle action)
+ - V2: Omit tapping <Toggle Save Form> (check if the default state is as expected without interaction)
+ - V3: Tap <Toggle Save Form> (original action for comparison)
+
+================= [TaskTest] FDG[87] =================
+[Function] Toggle Name this form
+
+[Core Logic Task]
+The user starts on the Form Entry Settings page. They perform a click action to toggle the 'Name this form' option, which likely changes its checked state (enabled/disabled) and navigates to a new page (or updates the current page).
+
+[Variant Paths] (3)
+ - V1: Tap <Toggle Name this form> twice (repeat the toggle action)
+ - V2: Omit tapping <Toggle Name this form> (do not perform the toggle)
+ - V3: Tap <Toggle Name this form> and then immediately tap it again (quick repeated toggle)
+
+================= [TaskTest] FDG[88] =================
+[Function] Toggle Mark form as finalized
+
+[Core Logic Task]
+On the Form Entry Settings page, the user clicks the 'Mark form as finalized' toggle. This action likely toggles the form's finalized status, with the flow proceeding to the destination page (106) after the click.
+
+[Variant Paths] (3)
+ - V1: Tap <Toggle Mark form as finalized> twice (repeating the toggle action)
+ - V2: Omit tapping <Toggle Mark form as finalized> and attempt to proceed to the destination page (106)
+ - V3: Tap <Toggle Mark form as finalized> and then immediately tap it again before proceeding
+
+================= [TaskTest] FDG[89] =================
+[Function] Show Unsent Forms option
+
+[Core Logic Task]
+The user initiates the process on page 122. Then, they perform a click action on the 'Show Unsent Forms' option, which transitions the app to page 123. This action is the core step to enable the view that shows only unsent forms.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Show Unsent Forms option> and check if the app still transitions to page 123
+ - V2: Click <Show Unsent Forms option> twice and check the resulting page
+ - V3: Try to click <Show Unsent Forms option> without first being on page 122 (if possible in the app's flow)
+
+================= [TaskTest] FDG[90] =================
+[Function] Show Sent and Unsent Forms option
+
+[Core Logic Task]
+The user starts on page 122 and clicks the 'Show Sent and Unsent Forms' option. This action transitions the app to page 124, completing the task of selecting this view option.
+
+[Variant Paths] (3)
+ - V1: Start on page 122, long - press <Show Sent and Unsent Forms option> (instead of click)
+ - V2: Start on page 122, omit clicking <Show Sent and Unsent Forms option> (task not completed)
+ - V3: Start on page 122, click <Show Sent and Unsent Forms option> twice (repeat the click action)
+
+================= [TaskTest] FDG[91] =================
+[Function] Select Google Drive, Google Sheets
+
+[Core Logic Task]
+The user starts on page 20 (Server Settings with a Platform dialog). The core action is to click the 'Google Drive, Google Sheets' option in the Platform dialog, which navigates to page 24. There are no branches or loops here as it's a single selection action.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Select Google Drive, Google Sheets> and check if navigation to page 24 still occurs
+ - V2: Tap <Select Google Drive, Google Sheets> twice and observe if it navigates to page 24 or has other behavior
+ - V3: Try to navigate to page 24 without tapping <Select Google Drive, Google Sheets> (if possible in the app's flow)
+
+
+[AppTest] Found 123 dependency pairs to test.
+
+==============================================
+[AppTest] Pair 1/123: 2 -> 11
+Producer: The "Fill Blank Form" page is intended to display and allow interaction with blank data collection forms, but currently shows a message indicating no forms are available and suggests obtaining and filling out a blank form.
+Consumer: The current page provides sorting options (by name in ascending/descending order, by date newest/oldest first) for blank forms within the "Fill Blank Form" management section, and indicates there are no forms available to display currently.
+
+[Plan]
+Case 1/2
+Producer task:
+ From the Main Menu page, click the 'Fill Blank Form' button to navigate to the Fill Blank Form page (which shows a message indicating no forms are available).
+Consumer task:
+ On the Fill Blank Form page (with no forms available), click the menu navigation control to open the sorting options for blank forms, then select the 'Name A-Z' sorting option to verify the sorting option is applied (even though no forms are present to sort).
+------------------------------
+Case 2/2
+Producer task:
+ From the Main Menu page, click the 'Fill Blank Form' button to navigate to the Fill Blank Form page (which shows a message indicating no forms are available).
+Consumer task:
+ On the Fill Blank Form page (with no forms available), click the menu navigation control to open the sorting options for blank forms, then select the 'Name Z-A' sorting option to verify the sorting option is applied (even though no forms are present to sort).
+------------------------------
+
+==============================================
+[AppTest] Pair 2/123: 2 -> 12
+Producer: The "Fill Blank Form" page is intended to display and allow interaction with blank data collection forms, but currently shows a message indicating no forms are available and suggests obtaining and filling out a blank form.
+Consumer: This page provides a search interface to look for blank forms within the data collection form management system, with a message indicating no forms are currently available to display and a suggestion to get and fill out a blank form.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the Main Menu page, click the 'Fill Blank Form' button to navigate to the Fill Blank Form page (which shows no forms available).
+Consumer task:
+ From the Fill Blank Form page (page 2), click the search function control to navigate to page 108, then click the search input field to move to page 113. Verify that the search interface still reflects no blank forms available (consistent with the Producer's data that no forms are present).
+------------------------------
+
+==============================================
+[AppTest] Pair 3/123: 2 -> 19
+Producer: The "Fill Blank Form" page is intended to display and allow interaction with blank data collection forms, but currently shows a message indicating no forms are available and suggests obtaining and filling out a blank form.
+Consumer: The current page, under the "Blank Forms" tab, is used to display blank data collection forms, but currently shows no available forms to display.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the Main Menu page, click the 'Fill Blank Form' button to navigate to the Fill Blank Form page (which shows no forms available).
+Consumer task:
+ On page 7, click the 'Blank Forms' tab to switch to page 128. Verify the 'Blank Forms' page shows 'Nothing available to display' (consistent with the Fill Blank Form page’s no - forms state).
+------------------------------
+
+==============================================
+[AppTest] Pair 4/123: 2 -> 21
+Producer: The "Fill Blank Form" page is intended to display and allow interaction with blank data collection forms, but currently shows a message indicating no forms are available and suggests obtaining and filling out a blank form.
+Consumer: The page allows users to search for saved or blank data collection forms, with tabs to switch between viewing saved forms and blank forms, and currently shows no forms available for display.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the Main Menu page, click the 'Fill Blank Form' button to navigate to the Fill Blank Form page (which shows no forms available).
+Consumer task:
+ From page 7, click the search option to go to the form search page (page 130). Then click the search input field. Verify that the blank forms tab (or relevant area for blank forms) reflects the same 'no forms available' state as the Fill Blank Form page (produced by the Producer).
+------------------------------
+
+==============================================
+[AppTest] Pair 5/123: 3 -> 13
+Producer: The "Edit Saved Form" page is intended to display and allow editing of previously saved data collection forms, but currently shows a message indicating no saved forms are available and suggests getting a blank form to fill out.
+Consumer: The current page provides sorting options (by name, date, or status) for saved forms within the "Edit Saved Form" management interface, allowing users to organize how saved forms are displayed.
+
+[Plan]
+Case 1/1
+Producer task:
+ From Main Menu, click 'Edit Saved Form' to navigate to the Edit Saved Form page (verify the 'no saved forms' message is shown).
+Consumer task:
+ On the Edit Saved Form page (from Producer), click the menu icon to open sorting options, then select a sorting method (e.g., Name A-Z) and verify the form list (even if empty) reflects the sorting configuration.
+------------------------------
+
+==============================================
+[AppTest] Pair 6/123: 3 -> 14
+Producer: The "Edit Saved Form" page is intended to display and allow editing of previously saved data collection forms, but currently shows a message indicating no saved forms are available and suggests getting a blank form to fill out.
+Consumer: This page provides a search functionality to locate saved data collection forms, with a message indicating no forms are currently available to display and suggesting the user get and fill out a blank form.
+
+[Plan]
+Case 1/1
+Producer task:
+ From Main Menu, click 'Edit Saved Form' to navigate to the Edit Saved Form page and confirm the 'no saved forms' message and blank form suggestion.
+Consumer task:
+ From the Edit Saved Form page (page 3), click the search icon (step S1) to go to page 115, then click the search input field (step S2); verify the 'no forms available' message and blank form suggestion reflects the lack of saved forms from the Producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 7/123: 3 -> 20
+Producer: The "Edit Saved Form" page is intended to display and allow editing of previously saved data collection forms, but currently shows a message indicating no saved forms are available and suggests getting a blank form to fill out.
+Consumer: The page provides sorting options (by name alphabetically or by date) for saved forms within the "Delete Saved Form" section, allowing users to organize how saved forms are displayed.
+
+[Plan]
+Case 1/1
+Producer task:
+ From Main Menu, click 'Edit Saved Form' to navigate to the Edit Saved Form page and confirm the 'no saved forms' message (verifying data_out: saved form list is empty).
+Consumer task:
+ On the Delete Saved Form page, click the menu icon to open the sort options. Verify that the sort menu page reflects an empty saved form list (consistent with producer’s data_out of no saved forms).
+------------------------------
+
+==============================================
+[AppTest] Pair 8/123: 3 -> 21
+Producer: The "Edit Saved Form" page is intended to display and allow editing of previously saved data collection forms, but currently shows a message indicating no saved forms are available and suggests getting a blank form to fill out.
+Consumer: The page allows users to search for saved or blank data collection forms, with tabs to switch between viewing saved forms and blank forms, and currently shows no forms available for display.
+
+[Plan]
+Case 1/1
+Producer task:
+ From Main Menu, click 'Edit Saved Form' to navigate to the Edit Saved Form page (verify the 'no saved forms' message and suggestion to get a blank form).
+Consumer task:
+ From page 7, click the search option to go to the form search page (page 130). Click the search input field. Verify that the saved forms tab (and blank forms tab) shows no forms available (consistent with the Producer's 'no saved forms' state).
+------------------------------
+
+==============================================
+[AppTest] Pair 9/123: 3 -> 40
+Producer: The "Edit Saved Form" page is intended to display and allow editing of previously saved data collection forms, but currently shows a message indicating no saved forms are available and suggests getting a blank form to fill out.
+Consumer: The current page, reached after sorting saved forms by Name in reverse alphabetical order (Z - A) from the edit saved forms management page, displays a message indicating no saved forms are available and suggests getting and filling out a blank form.
+
+[Plan]
+Case 1/1
+Producer task:
+ From Main Menu, click 'Edit Saved Form' to navigate to the Edit Saved Form page (verify the 'no saved forms' message and suggestion).
+Consumer task:
+ On the Edit Saved Form page (from Producer), perform the 'sort by Date, newest first' click action; verify the page still shows 'no saved forms' and the fill - blank - form suggestion (using the saved form list from Producer and the new sorting config).
+------------------------------
+
+==============================================
+[AppTest] Pair 10/123: 3 -> 41
+Producer: The "Edit Saved Form" page is intended to display and allow editing of previously saved data collection forms, but currently shows a message indicating no saved forms are available and suggests getting a blank form to fill out.
+Consumer: The page allows users to view and potentially edit saved forms, with sorting options (like sorting by name in reverse alphabetical order) and a message indicating no saved forms are available, prompting users to get and fill out a blank form.
+
+[Plan]
+Case 1/1
+Producer task:
+ From Main Menu, click 'Edit Saved Form' button to navigate to Edit Saved Form page (where no saved forms message is shown).
+Consumer task:
+ On Edit Saved Form page, check the saved form list (should show no saved forms as per producer) and attempt to use sort menu (e.g., select 'Date, oldest first') to verify sorting behavior with empty list.
+------------------------------
+
+==============================================
+[AppTest] Pair 11/123: 3 -> 42
+Producer: The "Edit Saved Form" page is intended to display and allow editing of previously saved data collection forms, but currently shows a message indicating no saved forms are available and suggests getting a blank form to fill out.
+Consumer: The current page, reached after sorting saved forms by Name in Z - A order, displays a message indicating no saved forms are available and suggests getting and filling out a blank form, while also providing options for menu and search functionality related to saved forms.
+
+[Plan]
+Case 1/1
+Producer task:
+ From Main Menu, click 'Edit Saved Form' to navigate to the Edit Saved Form page (page 3) where the 'no saved forms' message is shown.
+Consumer task:
+ On the page reached after sorting (page 3, same as producer's page), verify the UI shows the 'no saved forms' message, blank form suggestion, and has menu/search options (matching the producer's data_out context).
+------------------------------
+
+==============================================
+[AppTest] Pair 12/123: 4 -> 5
+Producer: The "Send Finalized Form" page is used to send finalized data collection forms, and currently indicates there are no finalized forms available to send, prompting the user to finalize saved forms first.
+Consumer: The "View Sent Form" page is intended to display previously sent data collection forms, but currently shows a message indicating no sent forms are available to display and suggests sending finalized forms first.
+
+[Plan]
+Case 1/1
+Producer task:
+ From Main Menu, click 'Send Finalized Form' to navigate to its page (verify no finalized forms message, then click menu icon to access options like General Settings, Change View).
+Consumer task:
+ From Main Menu, click 'View Sent Form' to navigate to its page. Verify the message indicates no sent forms are available (due to no forms sent via Producer's flow).
+------------------------------
+
+==============================================
+[AppTest] Pair 13/123: 4 -> 15
+Producer: The "Send Finalized Form" page is used to send finalized data collection forms, and currently indicates there are no finalized forms available to send, prompting the user to finalize saved forms first.
+Consumer: The page provides sorting options (by name alphabetically, by date) for finalized forms in the "Send Finalized Form" management interface, allowing users to organize the list of forms to send.
+
+[Plan]
+Case 1/1
+Producer task:
+ From Main Menu, click 'Send Finalized Form' to navigate to its page (verify no finalized forms message, then click menu icon to access options like settings).
+Consumer task:
+ On 'Send Finalized Form' page, click filter icon to open sorting menu, then select a sorting option (e.g., by name/date) to organize the (previously produced) finalized form list.
+------------------------------
+
+==============================================
+[AppTest] Pair 14/123: 5 -> 17
+Producer: The "View Sent Form" page is intended to display previously sent data collection forms, but currently shows a message indicating no sent forms are available to display and suggests sending finalized forms first.
+Consumer: The page provides sorting options (by name in ascending/descending order, by date newest/oldest first) for organizing the list of sent data collection forms within the "View Sent Form" interface.
+
+[Plan]
+Case 1/1
+Producer task:
+ From Main Menu, click 'View Sent Form' button to navigate to 'View Sent Form' page and view the message about no sent forms.
+Consumer task:
+ On 'View Sent Form' page (from Producer), click the menu icon to open the sorting options menu for the sent form list (even if list is empty, verify menu opens as expected for the sent form list context).
+------------------------------
+
+==============================================
+[AppTest] Pair 15/123: 5 -> 18
+Producer: The "View Sent Form" page is intended to display previously sent data collection forms, but currently shows a message indicating no sent forms are available to display and suggests sending finalized forms first.
+Consumer: The page provides a search interface to look for sent data collection forms, with a message indicating no forms are available to display and suggesting to send finalized forms first.
+
+[Plan]
+Case 1/1
+Producer task:
+ From Main Menu, click 'View Sent Form' button to navigate to 'View Sent Form' page and view the no sent forms message.
+Consumer task:
+ From 'View Sent Form' page (page 5), click search icon to open sent forms search interface (page 126), then click search input field (page 127); verify the message about no available sent forms (matching the producer's no sent forms state) is shown.
+------------------------------
+
+==============================================
+[AppTest] Pair 16/123: 6 -> 2
+Producer: The current page is the main menu of ODK Collect, providing options to fill, edit, send, view, get, or delete data collection forms, and in this context, it is in the process of connecting to a server to retrieve a blank form after the "Get Blank Form" action was initiated from the "Manage data collection forms" page.
+Consumer: The "Fill Blank Form" page is intended to display and allow interaction with blank data collection forms, but currently shows a message indicating no forms are available and suggests obtaining and filling out a blank form.
+
+[Plan]
+Case 1/1
+Producer task:
+ On ODK Collect main menu, click 'Get Blank Form' button to trigger server connection for retrieving a blank form (wait for 'Connecting to server' dialog to confirm retrieval process starts).
+Consumer task:
+ After producer retrieves the blank form, from main menu, click 'Fill Blank Form' button. Verify the Fill Blank Form page now displays the retrieved blank form (not the 'no forms available' message).
+------------------------------
+
+==============================================
+[AppTest] Pair 17/123: 6 -> 12
+Producer: The current page is the main menu of ODK Collect, providing options to fill, edit, send, view, get, or delete data collection forms, and in this context, it is in the process of connecting to a server to retrieve a blank form after the "Get Blank Form" action was initiated from the "Manage data collection forms" page.
+Consumer: This page provides a search interface to look for blank forms within the data collection form management system, with a message indicating no forms are currently available to display and a suggestion to get and fill out a blank form.
+
+[Plan]
+Case 1/1
+Producer task:
+ On ODK Collect main menu, click 'Get Blank Form' button to start retrieving a blank form (wait for 'Connecting to server' dialog to appear).
+Consumer task:
+ After producer retrieves the blank form, go to the form management search interface, click the search function control, then click the search input field, and verify the retrieved blank form is available in the search results (or reflected in the form data context).
+------------------------------
+
+==============================================
+[AppTest] Pair 18/123: 6 -> 19
+Producer: The current page is the main menu of ODK Collect, providing options to fill, edit, send, view, get, or delete data collection forms, and in this context, it is in the process of connecting to a server to retrieve a blank form after the "Get Blank Form" action was initiated from the "Manage data collection forms" page.
+Consumer: The current page, under the "Blank Forms" tab, is used to display blank data collection forms, but currently shows no available forms to display.
+
+[Plan]
+Case 1/1
+Producer task:
+ On ODK Collect main menu, click 'Get Blank Form' button to trigger server connection for blank form retrieval (wait for 'Connecting to server' dialog).
+Consumer task:
+ Navigate to 'Blank Forms' tab (from relevant page), then check the 'Blank Forms' page to verify if the retrieved blank form (from Producer) is now displayed (should no longer show 'Nothing available to display' if form retrieval succeeded).
+------------------------------
+
+==============================================
+[AppTest] Pair 19/123: 6 -> 21
+Producer: The current page is the main menu of ODK Collect, providing options to fill, edit, send, view, get, or delete data collection forms, and in this context, it is in the process of connecting to a server to retrieve a blank form after the "Get Blank Form" action was initiated from the "Manage data collection forms" page.
+Consumer: The page allows users to search for saved or blank data collection forms, with tabs to switch between viewing saved forms and blank forms, and currently shows no forms available for display.
+
+[Plan]
+Case 1/1
+Producer task:
+ On ODK Collect main menu, click 'Get Blank Form' to start retrieving a blank form (wait for 'Connecting to server' dialog to appear).
+Consumer task:
+ Navigate to the form search page (via search option from page 7), then click the 'Blank Forms' tab to check if the retrieved blank form is listed (expect it to appear if retrieval was successful, or confirm no forms if retrieval failed).
+------------------------------
+
+==============================================
+[AppTest] Pair 20/123: 7 -> 3
+Producer: The page allows users to view and potentially delete saved data collection forms, with a current state showing no saved forms are available to display.
+Consumer: The "Edit Saved Form" page is intended to display and allow editing of previously saved data collection forms, but currently shows a message indicating no saved forms are available and suggests getting a blank form to fill out.
+
+[Plan]
+Case 1/1
+Producer task:
+ From main menu, click 'Delete Saved Form' to go to deletion page. Then switch to 'Saved Forms' tab to confirm no saved forms are shown.
+Consumer task:
+ From main menu, click 'Edit Saved Form' to open the page. Verify the message about no saved forms (matching the producer's state) and the suggestion to get a blank form.
+------------------------------
+
+==============================================
+[AppTest] Pair 21/123: 7 -> 13
+Producer: The page allows users to view and potentially delete saved data collection forms, with a current state showing no saved forms are available to display.
+Consumer: The current page provides sorting options (by name, date, or status) for saved forms within the "Edit Saved Form" management interface, allowing users to organize how saved forms are displayed.
+
+[Plan]
+Case 1/1
+Producer task:
+ From main menu, click 'Delete Saved Form' to go to deletion page. Then switch to 'Saved Forms' tab (verify no saved forms are shown).
+Consumer task:
+ Go to 'Edit Saved Form' page. Click menu icon to open sorting options. Select 'Name, A-Z' sorting. Verify the (empty) saved form list reflects this sorting (since no forms exist, the sorted list remains empty but sorting config is applied).
+------------------------------
+
+==============================================
+[AppTest] Pair 22/123: 7 -> 14
+Producer: The page allows users to view and potentially delete saved data collection forms, with a current state showing no saved forms are available to display.
+Consumer: This page provides a search functionality to locate saved data collection forms, with a message indicating no forms are currently available to display and suggesting the user get and fill out a blank form.
+
+[Plan]
+Case 1/1
+Producer task:
+ From the main menu page, click the 'Delete Saved Form' button to go to the deletion page. Then, on the deletion page, click to switch to the 'Saved Forms' tab (verify no saved forms are shown).
+Consumer task:
+ From page 3, click the search icon (step S1) to navigate to page 115. Then, on page 115, click the search input field (step S2). Verify the search page shows no saved forms (consistent with the producer's 'no saved forms' state).
+------------------------------
+
+==============================================
+[AppTest] Pair 23/123: 7 -> 20
+Producer: The page allows users to view and potentially delete saved data collection forms, with a current state showing no saved forms are available to display.
+Consumer: The page provides sorting options (by name alphabetically or by date) for saved forms within the "Delete Saved Form" section, allowing users to organize how saved forms are displayed.
+
+[Plan]
+Case 1/1
+Producer task:
+ From the main menu page, click the 'Delete Saved Form' button to go to the deletion page. Then, on the deletion page, click to switch to the 'Saved Forms' tab (verify no saved forms are shown).
+Consumer task:
+ On the 'Delete Saved Form' page (from the producer task), click the menu icon to open the sort options for saved forms (confirm the sort menu page is reached, noting the context of no saved forms from the producer step).
+------------------------------
+
+==============================================
+[AppTest] Pair 24/123: 7 -> 21
+Producer: The page allows users to view and potentially delete saved data collection forms, with a current state showing no saved forms are available to display.
+Consumer: The page allows users to search for saved or blank data collection forms, with tabs to switch between viewing saved forms and blank forms, and currently shows no forms available for display.
+
+[Plan]
+Case 1/1
+Producer task:
+ From main menu, click 'Delete Saved Form' to go to deletion page, then switch to 'Saved Forms' tab (verify no saved forms are shown).
+Consumer task:
+ From deletion page (page 7), click search option to go to form search page (page 130). Click search input field. Verify no saved forms (from producer's deleted state) are available in the saved forms tab, and blank forms tab also shows no forms.
+------------------------------
+
+==============================================
+[AppTest] Pair 25/123: 7 -> 40
+Producer: The page allows users to view and potentially delete saved data collection forms, with a current state showing no saved forms are available to display.
+Consumer: The current page, reached after sorting saved forms by Name in reverse alphabetical order (Z - A) from the edit saved forms management page, displays a message indicating no saved forms are available and suggests getting and filling out a blank form.
+
+[Plan]
+Case 1/1
+Producer task:
+ From main menu, click 'Delete Saved Form' to go to deletion page. Then click 'Saved Forms' tab (UI shows no saved forms).
+Consumer task:
+ On edit saved forms management page, click to sort by 'Date, newest first'. Verify page shows no saved forms (matches producer's data_out state).
+------------------------------
+
+==============================================
+[AppTest] Pair 26/123: 7 -> 41
+Producer: The page allows users to view and potentially delete saved data collection forms, with a current state showing no saved forms are available to display.
+Consumer: The page allows users to view and potentially edit saved forms, with sorting options (like sorting by name in reverse alphabetical order) and a message indicating no saved forms are available, prompting users to get and fill out a blank form.
+
+[Plan]
+Case 1/1
+Producer task:
+ From main menu, click 'Delete Saved Form' to go to deletion page. Then click 'Saved Forms' tab to confirm no saved forms are displayed.
+Consumer task:
+ Go to 'Edit Saved Form' page. Check for saved forms (should match producer's 'no saved forms' state) and attempt to sort (e.g., select 'Date, oldest first')—verify the 'no saved forms' message remains consistent with producer's output.
+------------------------------
+
+==============================================
+[AppTest] Pair 27/123: 7 -> 42
+Producer: The page allows users to view and potentially delete saved data collection forms, with a current state showing no saved forms are available to display.
+Consumer: The current page, reached after sorting saved forms by Name in Z - A order, displays a message indicating no saved forms are available and suggests getting and filling out a blank form, while also providing options for menu and search functionality related to saved forms.
+
+[Plan]
+Case 1/1
+Producer task:
+ From main menu, click 'Delete Saved Form' to go to deletion page. Then switch to 'Saved Forms' tab (verify no saved forms shown).
+Consumer task:
+ On page 114, click to sort saved forms by Status (unfinalized first). On resulting page, verify message 'no saved forms available' (matches producer's no saved forms state).
+------------------------------
+
+==============================================
+[AppTest] Pair 28/123: 8 -> 22
+Producer: The "About" page of ODK Collect provides options to visit the ODK website, join the ODK forum, share the app, leave a Play Store review, and view open source libraries/licenses, along with brief descriptions of each option's purpose.
+Consumer: The page allows the user to select an application (e.g., Chrome, WebView Browser Tester) to open the link for visiting the ODK website from the ODK Collect about information page.
+
+[Plan]
+Case 1/1
+Producer task:
+ From the Main Menu page, click the 'About' option to navigate to the ODK Collect About page (where options like visiting the ODK website are presented).
+Consumer task:
+ On the ODK Collect About page, click the 'Visit the ODK website' option. Then, verify that a dialog appears to select an app (e.g., Chrome, WebView Browser Tester) to open the ODK website link produced by the About page.
+------------------------------
+
+==============================================
+[AppTest] Pair 29/123: 8 -> 23
+Producer: The "About" page of ODK Collect provides options to visit the ODK website, join the ODK forum, share the app, leave a Play Store review, and view open source libraries/licenses, along with brief descriptions of each option's purpose.
+Consumer: The current page allows the user to select an application (either Chrome or WebView Browser Tester) to open the link for visiting the ODK website from the ODK Collect about information page.
+
+[Plan]
+Case 1/1
+Producer task:
+ From the Main Menu page, click the 'About' option to navigate to the ODK Collect About page (where options like visiting the ODK website are presented).
+Consumer task:
+ On the ODK Collect About page, click the 'Visit the ODK website' option; when the 'Open with' dialog appears (with Chrome and WebView Browser Tester), select one browser to open the ODK website link (ensuring the link is from the About page’s data).
+------------------------------
+
+==============================================
+[AppTest] Pair 30/123: 8 -> 24
+Producer: The "About" page of ODK Collect provides options to visit the ODK website, join the ODK forum, share the app, leave a Play Store review, and view open source libraries/licenses, along with brief descriptions of each option's purpose.
+Consumer: The page provides options to share the ODK Collect app via different methods such as copying to clipboard, Gmail, Hangouts, Messenger, or saving to Drive.
+
+[Plan]
+Case 1/1
+Producer task:
+ From the Main Menu page, click the 'About' option to navigate to the ODK Collect About page (where sharing option is available).
+Consumer task:
+ On the ODK Collect About page, click the 'Share ODK Collect' option to open the sharing menu and verify it contains methods like Copy to clipboard, Gmail, Hangouts, Messenger, Save to Drive (using the sharing option produced by the About page).
+------------------------------
+
+==============================================
+[AppTest] Pair 31/123: 8 -> 25
+Producer: The "About" page of ODK Collect provides options to visit the ODK website, join the ODK forum, share the app, leave a Play Store review, and view open source libraries/licenses, along with brief descriptions of each option's purpose.
+Consumer: The current page allows the user to select a browser application (from options like Chrome or WebView Browser Tester) to open the link for visiting the ODK website, as part of the ODK Collect app's "About" section functionality.
+
+[Plan]
+Case 1/1
+Producer task:
+ From ODK Collect's Main Menu, click the 'About' option to navigate to the About page, where options like visiting the ODK website are presented.
+Consumer task:
+ On the ODK Collect About page, click 'Visit the ODK website' to trigger the 'Open with' dialog, then select a browser (Chrome or WebView Browser Tester) to open the ODK website link produced by the About page navigation.
+------------------------------
+
+==============================================
+[AppTest] Pair 32/123: 8 -> 26
+Producer: The "About" page of ODK Collect provides options to visit the ODK website, join the ODK forum, share the app, leave a Play Store review, and view open source libraries/licenses, along with brief descriptions of each option's purpose.
+Consumer: The page displays a list of open source libraries and their respective licenses used in the ODK Collect application.
+
+[Plan]
+Case 1/1
+Producer task:
+ From the Main Menu page, click the 'About' option to navigate to the ODK Collect About page.
+Consumer task:
+ On the ODK Collect About page, click the 'Open source libraries/licenses' option to view the list of open source libraries and their respective licenses (ensuring the data from the About page's option is used to display the correct list).
+------------------------------
+
+==============================================
+[AppTest] Pair 33/123: 10 -> 34
+Producer: The Admin Settings page provides options for administrators to manage various system settings including general settings, password, application reset, import/export, user access control, main menu, user settings, and form entry settings.
+Consumer: The Import/Export Settings page enables users to manage the import and export of settings (via QR code or SD card) and handle sensitive information like admin and server passwords associated with the QR code.
+
+[Plan]
+Case 1/1
+Producer task:
+ 1. Click Admin Settings from main menu to open admin settings page. 2. Click 'Reset application...' to go to data reset selection page. 3. Perform 'Toggle map layers reset' action.
+Consumer task:
+ 1. Click to access Import/Export Settings page. 2. Verify that the Import/Export Settings page reflects the system state after the map layers reset action (e.g., check if settings import/export options are consistent with the reset context).
+------------------------------
+
+==============================================
+[AppTest] Pair 34/123: 10 -> 35
+Producer: The Admin Settings page provides options for administrators to manage various system settings including general settings, password, application reset, import/export, user access control, main menu, user settings, and form entry settings.
+Consumer: The page allows users to manage the visibility of main menu items related to data collection forms by checking or unchecking options to show or hide them from the main menu.
+
+[Plan]
+Case 1/1
+Producer task:
+ Click Admin Settings from main menu to open admin settings page, then click 'Reset application...' to go to data reset selection page, and perform 'Toggle map layers reset' action.
+Consumer task:
+ From the admin settings page (accessed via Producer's first step), click 'Main Menu Settings' to open the page, then check/uncheck form - related menu items (using the main menu settings item data from Producer's admin settings context) to manage their visibility.
+------------------------------
+
+==============================================
+[AppTest] Pair 35/123: 10 -> 36
+Producer: The Admin Settings page provides options for administrators to manage various system settings including general settings, password, application reset, import/export, user access control, main menu, user settings, and form entry settings.
+Consumer: The User Settings page allows users to manage the visibility of various settings (e.g., Server, Theme, Language) by checking or unchecking options to show or hide them from General Settings.
+
+[Plan]
+Case 1/1
+Producer task:
+ 1. Click Admin Settings from main menu to open admin settings page. 2. Click 'Reset application...' to go to data reset selection page. 3. Perform 'Toggle map layers reset' action.
+Consumer task:
+ 1. From Admin Settings page, click 'User Settings' to open User Settings page. 2. Verify that the user settings items (Server, Theme, Language visibility options) reflect the state influenced by the map layers reset setting from the Producer steps.
+------------------------------
+
+==============================================
+[AppTest] Pair 36/123: 10 -> 37
+Producer: The Admin Settings page provides options for administrators to manage various system settings including general settings, password, application reset, import/export, user access control, main menu, user settings, and form entry settings.
+Consumer: The Form Entry Settings page allows users to enable or disable various form entry-related options (e.g., Moving backwards, General Settings, Change Language, etc.) by checking or unchecking corresponding checkboxes.
+
+[Plan]
+Case 1/1
+Producer task:
+ Click Admin Settings from main menu to open admin settings page, then click 'Reset application...' to go to data reset selection page, and perform 'Toggle map layers reset' action.
+Consumer task:
+ From the Admin Settings page (accessed via producer's first step), click 'Form Entry Settings' option (using the form entry settings option data from producer's context) to navigate to Form Entry Settings page and verify form entry - related options (like Moving backwards, General Settings) can be enabled/disabled via checkboxes.
+------------------------------
+
+==============================================
+[AppTest] Pair 37/123: 10 -> 59
+Producer: The Admin Settings page provides options for administrators to manage various system settings including general settings, password, application reset, import/export, user access control, main menu, user settings, and form entry settings.
+Consumer: Toggle all settings reset
+
+[Plan]
+Case 1/1
+Producer task:
+ 1. Click Admin Settings from main menu to open admin settings page. 2. Click 'Reset application...' to go to data reset selection page. 3. Perform 'Toggle map layers reset' action.
+Consumer task:
+ 1. On page 67, in 'Select what to reset' dialog, click to toggle 'All settings (internal settings, saved settings)' option. Verify this action reflects the reset context (including map layers reset from Producer) in the all settings reset process.
+------------------------------
+
+==============================================
+[AppTest] Pair 38/123: 10 -> 60
+Producer: The Admin Settings page provides options for administrators to manage various system settings including general settings, password, application reset, import/export, user access control, main menu, user settings, and form entry settings.
+Consumer: Toggle saved forms reset
+
+[Plan]
+Case 1/1
+Producer task:
+ 1. Click Admin Settings from main menu to open admin settings page. 2. Click 'Reset application...' to go to data reset selection page. 3. Perform 'Toggle map layers reset' action.
+Consumer task:
+ 1. On page 67, click 'Toggle saved forms reset' element (navigates to page 76). 2. Verify that the 'Saved forms' reset option (consuming the reset - related context from producer's data reset setup) is toggled as expected for reset preparation.
+------------------------------
+
+==============================================
+[AppTest] Pair 39/123: 10 -> 61
+Producer: The Admin Settings page provides options for administrators to manage various system settings including general settings, password, application reset, import/export, user access control, main menu, user settings, and form entry settings.
+Consumer: Toggle blank forms reset
+
+[Plan]
+Case 1/1
+Producer task:
+ 1. Click Admin Settings from main menu to open admin settings page. 2. Click 'Reset application...' to go to data reset selection page. 3. Perform 'Toggle map layers reset' action to manage map layers reset setting.
+Consumer task:
+ 1. On page 67, click to toggle the 'Blank forms reset' option (using the blank forms reset setting produced by the Producer) and navigate to page 77.
+------------------------------
+
+==============================================
+[AppTest] Pair 40/123: 10 -> 62
+Producer: The Admin Settings page provides options for administrators to manage various system settings including general settings, password, application reset, import/export, user access control, main menu, user settings, and form entry settings.
+Consumer: Toggle form load cache reset
+
+[Plan]
+Case 1/1
+Producer task:
+ 1. Click 'Admin Settings' from main menu to open admin settings page. 2. Click 'Reset application...' to go to data reset selection page. 3. Perform 'Toggle map layers reset' action to manage map layers reset setting.
+Consumer task:
+ 1. On page 67, click 'Toggle form load cache reset' option (using the reset selection context from Producer’s data reset setup) to navigate to page 78. 2. Verify the form load cache reset setting reflects the expected state based on the Producer’s reset-related actions.
+------------------------------
+
+==============================================
+[AppTest] Pair 41/123: 10 -> 63
+Producer: The Admin Settings page provides options for administrators to manage various system settings including general settings, password, application reset, import/export, user access control, main menu, user settings, and form entry settings.
+Consumer: Toggle OSM tile cache reset
+
+[Plan]
+Case 1/1
+Producer task:
+ Click Admin Settings from main menu to open admin settings page, then click 'Reset application...' to go to data reset selection page, and perform 'Toggle map layers reset' action.
+Consumer task:
+ On page 67, click the 'Toggle OSM tile cache reset' option (using the OSM tile cache reset option from the producer's data) to navigate to page 80 and initiate toggling the OSM tile cache reset functionality.
+------------------------------
+
+==============================================
+[AppTest] Pair 42/123: 11 -> 38
+Producer: The current page provides sorting options (by name in ascending/descending order, by date newest/oldest first) for blank forms within the "Fill Blank Form" management section, and indicates there are no forms available to display currently.
+Consumer: Sort by Date, newest first
+
+[Plan]
+Case 1/2
+Producer task:
+ On the 'Fill Blank Form' page (with no forms), click the menu navigation control to open sorting options, then select 'Name A - Z' to set the sort configuration for blank forms.
+Consumer task:
+ On the initial page, click the 'Sort by Date, newest first' option, then verify that the form list (after sorting by name A - Z in producer) is now sorted in newest - first date order on the destination page.
+------------------------------
+Case 2/2
+Producer task:
+ On the 'Fill Blank Form' page (with no forms), click the menu navigation control to open sorting options, then select 'Name Z - A' to update the sort setting for blank forms.
+Consumer task:
+ On the initial page, click the 'Sort by Date, newest first' option, then check that the sorted form list (from producer's Name Z - A sort) is displayed in newest - first date order on the destination page.
+------------------------------
+
+==============================================
+[AppTest] Pair 43/123: 11 -> 39
+Producer: The current page provides sorting options (by name in ascending/descending order, by date newest/oldest first) for blank forms within the "Fill Blank Form" management section, and indicates there are no forms available to display currently.
+Consumer: Sort by Date, oldest first
+
+[Plan]
+Case 1/1
+Producer task:
+ On the 'Fill Blank Form' page (with no forms), click the menu navigation control to open blank form sorting options, then select 'Name A - Z' sorting.
+Consumer task:
+ On page 107, click the 'Sort by Date, oldest first' option, then verify on page 112 that the form list (if any) is sorted by date oldest first, using the sorting configuration context from the producer's 'Name A - Z' sort setup.
+------------------------------
+
+==============================================
+[AppTest] Pair 44/123: 13 -> 40
+Producer: The current page provides sorting options (by name, date, or status) for saved forms within the "Edit Saved Form" management interface, allowing users to organize how saved forms are displayed.
+Consumer: The current page, reached after sorting saved forms by Name in reverse alphabetical order (Z - A) from the edit saved forms management page, displays a message indicating no saved forms are available and suggests getting and filling out a blank form.
+
+[Plan]
+Case 1/2
+Producer task:
+ On the 'Edit Saved Form' page (page 3), click the menu icon to open sorting options (page 114), then select 'Name, Z - A' sorting method to apply it and return to the main form list page (page 3) with the sorted list.
+Consumer task:
+ On the edit saved forms management page (after producer's sorting), check if the page displays a message indicating no saved forms are available and suggests getting and filling out a blank form, using the sorted saved form list and sorting configuration from the producer.
+------------------------------
+Case 2/2
+Producer task:
+ On the 'Edit Saved Form' page (page 3), click the menu icon to open sorting options (page 114), then select 'Date, newest first' sorting method to apply it and return to the main form list page (page 3) with the sorted list.
+Consumer task:
+ On the edit saved forms management page (after producer's sorting), check if the page updates to display a message indicating no saved forms are available and suggests getting and filling out a blank form, using the saved form list and sorting configuration from the producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 45/123: 13 -> 41
+Producer: The current page provides sorting options (by name, date, or status) for saved forms within the "Edit Saved Form" management interface, allowing users to organize how saved forms are displayed.
+Consumer: The page allows users to view and potentially edit saved forms, with sorting options (like sorting by name in reverse alphabetical order) and a message indicating no saved forms are available, prompting users to get and fill out a blank form.
+
+[Plan]
+Case 1/2
+Producer task:
+ On the 'Edit Saved Form' page, click the menu icon to open sorting options, then select 'Name, A-Z' to apply sorting and return to the main form list page.
+Consumer task:
+ On the 'Edit Saved Form' page, check the saved form list to verify it is sorted by Name in A-Z order (matching the producer's sorting configuration).
+------------------------------
+Case 2/2
+Producer task:
+ On the 'Edit Saved Form' page, open sorting options via the menu icon, choose 'Status, finalized first' to sort, and return to the main form list page.
+Consumer task:
+ On the 'Edit Saved Form' page, view the saved form list to confirm it is sorted with finalized forms first (reflecting the producer's updated sorting configuration).
+------------------------------
+
+==============================================
+[AppTest] Pair 46/123: 13 -> 42
+Producer: The current page provides sorting options (by name, date, or status) for saved forms within the "Edit Saved Form" management interface, allowing users to organize how saved forms are displayed.
+Consumer: The current page, reached after sorting saved forms by Name in Z - A order, displays a message indicating no saved forms are available and suggests getting and filling out a blank form, while also providing options for menu and search functionality related to saved forms.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the 'Edit Saved Form' page (page 3), click the menu icon to open sorting options (page 114), then select 'Status (unfinalized first)' to apply sorting and return to page 3.
+Consumer task:
+ On page 3 (after producer's sorting), verify the UI shows a 'no saved forms available' message, suggests filling a blank form, and has menu/search options as described.
+------------------------------
+
+==============================================
+[AppTest] Pair 47/123: 15 -> 44
+Producer: The page provides sorting options (by name alphabetically, by date) for finalized forms in the "Send Finalized Form" management interface, allowing users to organize the list of forms to send.
+Consumer: The current page provides a "Change View" dialog with options to filter the display of forms as either "Show Unsent Forms" or "Show Sent and Unsent Forms" for the finalized forms management interface.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the 'Send Finalized Form' page, click the filter icon to open the sorting menu, then select a sorting criterion (e.g., by name alphabetically) to set the sorting configuration for finalized forms.
+Consumer task:
+ On the finalized forms management page, click the 'Change View' option to open the dialog, then verify that the form view setting (filtering options) is presented, and check if the forms displayed reflect the sorting configuration set by the Producer (e.g., forms are sorted as per the selected criterion while using the chosen view filter).
+------------------------------
+
+==============================================
+[AppTest] Pair 48/123: 19 -> 2
+Producer: The current page, under the "Blank Forms" tab, is used to display blank data collection forms, but currently shows no available forms to display.
+Consumer: The "Fill Blank Form" page is intended to display and allow interaction with blank data collection forms, but currently shows a message indicating no forms are available and suggests obtaining and filling out a blank form.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 7, click the 'Blank Forms' tab to switch to page 128, and confirm the 'Blank Forms' page shows 'Nothing available to display' with no blank forms present.
+Consumer task:
+ Start on the Main Menu page, click the 'Fill Blank Form' button to navigate to the Fill Blank Form page, and verify it displays the message about no forms being available (consistent with the blank form list from the Producer showing nothing available).
+------------------------------
+
+==============================================
+[AppTest] Pair 49/123: 19 -> 11
+Producer: The current page, under the "Blank Forms" tab, is used to display blank data collection forms, but currently shows no available forms to display.
+Consumer: The current page provides sorting options (by name in ascending/descending order, by date newest/oldest first) for blank forms within the "Fill Blank Form" management section, and indicates there are no forms available to display currently.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 7, click the 'Blank Forms' tab to switch to page 128 and confirm it shows 'Nothing available to display' with no blank forms.
+Consumer task:
+ From the 'Fill Blank Form' page (with no forms), click the menu navigation control to open sorting options, then select 'Name A-Z' and verify the (empty) form list reflects this sort (still no forms, correct sort state indicated).
+------------------------------
+
+==============================================
+[AppTest] Pair 50/123: 19 -> 12
+Producer: The current page, under the "Blank Forms" tab, is used to display blank data collection forms, but currently shows no available forms to display.
+Consumer: This page provides a search interface to look for blank forms within the data collection form management system, with a message indicating no forms are currently available to display and a suggestion to get and fill out a blank form.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 7, click the 'Blank Forms' tab to switch to page 128 (Blank Forms page) and verify it shows 'Nothing available to display' with no blank forms.
+Consumer task:
+ Start on page 2, click the search function control to navigate to page 108, then click the search input field to go to page 113. Verify the search interface for blank forms shows no forms available (consistent with the Blank Forms tab's data that no blank forms exist).
+------------------------------
+
+==============================================
+[AppTest] Pair 51/123: 19 -> 21
+Producer: The current page, under the "Blank Forms" tab, is used to display blank data collection forms, but currently shows no available forms to display.
+Consumer: The page allows users to search for saved or blank data collection forms, with tabs to switch between viewing saved forms and blank forms, and currently shows no forms available for display.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 7, click the 'Blank Forms' tab to switch to page 128 and confirm the blank form list shows 'Nothing available to display'.
+Consumer task:
+ Start on page 7, click the search option to go to page 130, click the search input field, and verify the blank form tab (from the producer's data) shows no forms available for display.
+------------------------------
+
+==============================================
+[AppTest] Pair 52/123: 19 -> 38
+Producer: The current page, under the "Blank Forms" tab, is used to display blank data collection forms, but currently shows no available forms to display.
+Consumer: Sort by Date, newest first
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 7, click the 'Blank Forms' tab to switch to page 128, verifying it shows 'Nothing available to display' with no blank forms.
+Consumer task:
+ On page 107, click 'Sort by Date, newest first' to transition to page 111, then check if the (blank) form list (from the 'Blank Forms' tab) is sorted by newest date first (even with no forms, confirm sorting setup applies).
+------------------------------
+
+==============================================
+[AppTest] Pair 53/123: 19 -> 39
+Producer: The current page, under the "Blank Forms" tab, is used to display blank data collection forms, but currently shows no available forms to display.
+Consumer: Sort by Date, oldest first
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 7, click the 'Blank Forms' tab to switch to page 128, confirming the blank form list shows 'Nothing available to display'.
+Consumer task:
+ On page 107 (source page of the blank form list), click 'Sort by Date, oldest first' to navigate to page 112, verifying the blank form list (from the Producer) is sorted by date, oldest first.
+------------------------------
+
+==============================================
+[AppTest] Pair 54/123: 27 -> 45
+Producer: The current page, "Server Settings", allows users to configure the server connection settings, including specifying the server type (ODK Aggregate), server URL, username, and password for the app's server connection.
+Consumer: The page allows users to configure server connection settings for an ODK Aggregate server, including viewing or editing the server URL, username, and password, and accessing ODK Aggregate specific settings.
+
+[Plan]
+Case 1/2
+Producer task:
+ Click 'Server settings' to enter the page, then click 'Type' and select 'ODK Aggregate' as the server platform.
+Consumer task:
+ On the Server Settings page, click the 'ODK Aggregate settings' link (using the updated server type setting from Producer) to access ODK Aggregate - specific server settings.
+------------------------------
+Case 2/2
+Producer task:
+ Enter the Server Settings page, click the 'Password' field, input a password (triggering the password input dialog), and save to update server settings with password.
+Consumer task:
+ On the Server Settings page, click the 'ODK Aggregate settings' link (using the updated server settings with password from Producer) to view/edit ODK Aggregate server connection details including the password.
+------------------------------
+
+==============================================
+[AppTest] Pair 55/123: 27 -> 58
+Producer: The current page, "Server Settings", allows users to configure the server connection settings, including specifying the server type (ODK Aggregate), server URL, username, and password for the app's server connection.
+Consumer: Show password checkbox
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to 'Server Settings' page, click 'Password' field to input a password (triggering the password input dialog), then save the password setting.
+Consumer task:
+ On page 66, click the 'Show password checkbox' to verify if the password (input during producer task) is now visible as expected.
+------------------------------
+
+==============================================
+[AppTest] Pair 56/123: 27 -> 69
+Producer: The current page, "Server Settings", allows users to configure the server connection settings, including specifying the server type (ODK Aggregate), server URL, username, and password for the app's server connection.
+Consumer: Server setting checkbox
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to 'Server Settings' page, then click 'Type' option to select 'ODK Aggregate' as server platform, and also click 'Password' field to input a password (completing password setup).
+Consumer task:
+ From User Settings page, click the 'Server' setting checkbox (which should reflect the updated server settings including ODK Aggregate type and password from Producer) and verify navigation to page 87.
+------------------------------
+
+==============================================
+[AppTest] Pair 57/123: 27 -> 91
+Producer: The current page, "Server Settings", allows users to configure the server connection settings, including specifying the server type (ODK Aggregate), server URL, username, and password for the app's server connection.
+Consumer: Select Google Drive, Google Sheets
+
+[Plan]
+Case 1/1
+Producer task:
+ Go to Server Settings page, click 'Type' option, select 'ODK Aggregate' as server platform to update platform setting.
+Consumer task:
+ On Server Settings page's Platform dialog, click 'Google Drive, Google Sheets' option and verify navigation to page 24 (using the updated platform setting context).
+------------------------------
+
+==============================================
+[AppTest] Pair 58/123: 28 -> 27
+Producer: The current page allows users to configure user interface settings including theme, language, text font size, navigation method, splash screen visibility, and selected splash image.
+Consumer: The current page, "Server Settings", allows users to configure the server connection settings, including specifying the server type (ODK Aggregate), server URL, username, and password for the app's server connection.
+
+[Plan]
+Case 1/2
+Producer task:
+ Click the user interface settings option to enter the UI settings page, then select 'Light' theme (S1→S2→S4).
+Consumer task:
+ Click the 'Server settings' option to enter the Server Settings page, then verify that the server settings page loads (uses the app's UI with the updated Light theme).
+------------------------------
+Case 2/2
+Producer task:
+ Click the user interface settings option to enter the UI settings page, then select 'Extra Large' text font size (S1→S3→S6).
+Consumer task:
+ Click the 'Server settings' option to enter the Server Settings page, then verify that text (e.g., labels, input fields) in the server settings page reflects the Extra Large font size.
+------------------------------
+
+==============================================
+[AppTest] Pair 59/123: 28 -> 46
+Producer: The current page allows users to configure user interface settings including theme, language, text font size, navigation method, splash screen visibility, and selected splash image.
+Consumer: This page allows the user to select the app's language from a list of available languages, with an option to use the device's language.
+
+[Plan]
+Case 1/1
+Producer task:
+ Click the user interface settings option to enter the UI settings page, then configure the theme (select Light or Dark theme) or text font size (select from Extra Large, Large, Medium, Small, or Extra Small font sizes).
+Consumer task:
+ Start on page 15, click the 'Language' setting to navigate to page 27, then click a language option to complete the selection (page 33), ensuring the language setting reflects the context set by the producer's UI configuration.
+------------------------------
+
+==============================================
+[AppTest] Pair 60/123: 28 -> 48
+Producer: The current page allows users to configure user interface settings including theme, language, text font size, navigation method, splash screen visibility, and selected splash image.
+Consumer: Splash screen toggle
+
+[Plan]
+Case 1/1
+Producer task:
+ Click the user interface settings option to enter the UI settings page, then locate and interact with the splash screen visibility setting (e.g., enable it) and select a splash image (if applicable).
+Consumer task:
+ On the User interface settings page (page 15), click the 'Splash screen toggle' option and verify that the splash screen setting (enabled/disabled as set by the Producer) is reflected/updated correctly (e.g., if enabled by Producer, toggling disables it and vice versa).
+------------------------------
+
+==============================================
+[AppTest] Pair 61/123: 28 -> 49
+Producer: The current page allows users to configure user interface settings including theme, language, text font size, navigation method, splash screen visibility, and selected splash image.
+Consumer: The current page, within the user interface settings of the app, allows the user to configure the selected splash image (along with other UI settings like theme, language, text font size, navigation, and splash screen visibility).
+
+[Plan]
+Case 1/2
+Producer task:
+ Click the user interface settings option to enter the UI settings page, then click on the 'Selected splash image' setting to configure and select a specific splash image (e.g., 'Nature Scene' splash image).
+Consumer task:
+ On the User interface settings page, check the 'Selected splash image' setting to verify that it reflects the splash image (e.g., 'Nature Scene') selected by the Producer.
+------------------------------
+Case 2/2
+Producer task:
+ Enter the UI settings page by clicking the user interface settings option. Then, configure the theme to 'Dark theme' and also configure the 'Selected splash image' to a different splash image (e.g., 'Cityscape' splash image).
+Consumer task:
+ Navigate to the User interface settings page and check the 'Selected splash image' setting to confirm that it shows the 'Cityscape' splash image set by the Producer, while also verifying the 'Dark theme' setting is as configured.
+------------------------------
+
+==============================================
+[AppTest] Pair 62/123: 28 -> 70
+Producer: The current page allows users to configure user interface settings including theme, language, text font size, navigation method, splash screen visibility, and selected splash image.
+Consumer: Theme setting checkbox
+
+[Plan]
+Case 1/2
+Producer task:
+ Click the user interface settings option to enter the UI settings page, then select the Light theme (S4) in the theme configuration section.
+Consumer task:
+ On the User Settings page, click the Theme setting checkbox (which should reflect the Light theme setting produced earlier) to verify the theme state toggles and navigation to page 88 occurs.
+------------------------------
+Case 2/2
+Producer task:
+ Click the user interface settings option to enter the UI settings page, then select the Dark theme (S5) in the theme configuration section.
+Consumer task:
+ On the User Settings page, click the Theme setting checkbox (which should reflect the Dark theme setting produced earlier) to verify the theme state toggles and navigation to page 88 occurs.
+------------------------------
+
+==============================================
+[AppTest] Pair 63/123: 28 -> 71
+Producer: The current page allows users to configure user interface settings including theme, language, text font size, navigation method, splash screen visibility, and selected splash image.
+Consumer: Language setting checkbox
+
+[Plan]
+Case 1/1
+Producer task:
+ Click the user interface settings option to enter the UI settings page, then configure the theme (e.g., select Light theme) or text font size (e.g., select Extra Large).
+Consumer task:
+ Start on the User Settings page, click the Language setting checkbox, and verify navigation to page 89, ensuring the language setting reflects any prior UI configuration context.
+------------------------------
+
+==============================================
+[AppTest] Pair 64/123: 28 -> 72
+Producer: The current page allows users to configure user interface settings including theme, language, text font size, navigation method, splash screen visibility, and selected splash image.
+Consumer: Text font size checkbox
+
+[Plan]
+Case 1/2
+Producer task:
+ 1. Click the user interface settings option to enter the UI settings page. 2. On the UI settings page, select the text font size configuration (S3). 3. Choose 'Extra Large' (S6) as the text font size setting.
+Consumer task:
+ 1. Start on the User Settings page (page 70). 2. Click the 'Text font size' checkbox. 3. Verify that the checkbox's state reflects the 'Extra Large' text font size setting configured by the producer, and that the navigation to page 90 occurs as expected.
+------------------------------
+Case 2/2
+Producer task:
+ 1. Click the user interface settings option to enter the UI settings page. 2. On the UI settings page, select the text font size configuration (S3). 3. Choose 'Small' (S9) as the text font size setting.
+Consumer task:
+ 1. Start on the User Settings page (page 70). 2. Click the 'Text font size' checkbox. 3. Verify that the checkbox's state reflects the 'Small' text font size setting configured by the producer, and that the navigation to page 90 occurs as expected.
+------------------------------
+
+==============================================
+[AppTest] Pair 65/123: 28 -> 73
+Producer: The current page allows users to configure user interface settings including theme, language, text font size, navigation method, splash screen visibility, and selected splash image.
+Consumer: Navigation setting checkbox
+
+[Plan]
+Case 1/2
+Producer task:
+ Click the user interface settings option to enter the UI settings page, then select the Light theme (S1→S2→S4).
+Consumer task:
+ On the User Settings page, click the Navigation setting checkbox (which should reflect the app's settings including the updated Light theme configuration).
+------------------------------
+Case 2/2
+Producer task:
+ Click the user interface settings option to enter the UI settings page, then select Extra Large text font size (S1→S3→S6).
+Consumer task:
+ On the User Settings page, click the Navigation setting checkbox (which should reflect the app's settings including the updated Extra Large text font size configuration).
+------------------------------
+
+==============================================
+[AppTest] Pair 66/123: 28 -> 74
+Producer: The current page allows users to configure user interface settings including theme, language, text font size, navigation method, splash screen visibility, and selected splash image.
+Consumer: Splash screen checkbox
+
+[Plan]
+Case 1/1
+Producer task:
+ Click the user interface settings option to enter the UI settings page, then configure the splash screen setting (e.g., enable/disable it) as part of the UI configuration.
+Consumer task:
+ On the User Settings page, click the Splash screen checkbox and verify that the splash screen setting (enabled/disabled) reflects the configuration made in the UI settings page (producer step).
+------------------------------
+
+==============================================
+[AppTest] Pair 67/123: 28 -> 84
+Producer: The current page allows users to configure user interface settings including theme, language, text font size, navigation method, splash screen visibility, and selected splash image.
+Consumer: Toggle Change Language
+
+[Plan]
+Case 1/2
+Producer task:
+ Click the user interface settings option to enter the UI settings page, then select Light theme from the theme configuration options.
+Consumer task:
+ On the Form Entry Settings page, click the 'Change Language' toggle (verify that the UI reflects the updated Light theme setting while performing this action).
+------------------------------
+Case 2/2
+Producer task:
+ Click the user interface settings option to enter the UI settings page, then select Extra Large text font size from the font size configuration options.
+Consumer task:
+ On the Form Entry Settings page, click the 'Change Language' toggle (verify that the UI reflects the updated Extra Large text font size setting while performing this action).
+------------------------------
+
+==============================================
+[AppTest] Pair 68/123: 29 -> 27
+Producer: The current page allows users to configure map settings, including selecting the Mapping SDK (e.g., Google Maps SDK) and the Basemap type (e.g., Streets).
+Consumer: The current page, "Server Settings", allows users to configure the server connection settings, including specifying the server type (ODK Aggregate), server URL, username, and password for the app's server connection.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on General Settings page, click 'Maps' to navigate to Maps settings page and configure Mapping SDK and Basemap type.
+Consumer task:
+ Click 'Server settings' to enter Server Settings page, then click 'Type' to select server platform (ODK Aggregate or Other), and use the configured map settings context while setting up server connection.
+------------------------------
+
+==============================================
+[AppTest] Pair 69/123: 29 -> 47
+Producer: The current page allows users to configure map settings, including selecting the Mapping SDK (e.g., Google Maps SDK) and the Basemap type (e.g., Streets).
+Consumer: The page functions as a dialog for selecting the mapping SDK (Google Maps SDK, OpenStreetMap SDK, or Mapbox Maps SDK) to be used within the app's navigation or mapping-related features.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on General Settings page, click 'Maps' option to navigate to Maps settings page to configure Mapping SDK and Basemap type.
+Consumer task:
+ Click Navigation setting to open option selection dialog, then check if the mapping SDK setting (from Maps settings page) is reflected in the dialog's SDK selection options.
+------------------------------
+
+==============================================
+[AppTest] Pair 70/123: 29 -> 50
+Producer: The current page allows users to configure map settings, including selecting the Mapping SDK (e.g., Google Maps SDK) and the Basemap type (e.g., Streets).
+Consumer: The current page allows the user to select a Mapping SDK (Google Maps SDK, OpenStreetMap SDK, or Mapbox Maps SDK) for the app's map functionality.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate from General Settings to Maps settings page by clicking 'Maps' option.
+Consumer task:
+ On Maps settings page, click 'Mapping SDK' setting to open dialog and verify it reflects the SDK configured in Maps settings.
+------------------------------
+
+==============================================
+[AppTest] Pair 71/123: 29 -> 51
+Producer: The current page allows users to configure map settings, including selecting the Mapping SDK (e.g., Google Maps SDK) and the Basemap type (e.g., Streets).
+Consumer: The current page allows the user to select the type of basemap (Streets, Satellite, Terrain, Hybrid) for the map settings within the app.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on General Settings page, click 'Maps' to navigate to Maps settings page to configure Mapping SDK and Basemap type.
+Consumer task:
+ Start on page 16, click to open basemap selection menu (S1), then at basemap selection page (S2), choose the Basemap type (e.g., Streets) that was configured in the Maps settings page (from producer task) among the four options (S3 - S6).
+------------------------------
+
+==============================================
+[AppTest] Pair 72/123: 29 -> 75
+Producer: The current page allows users to configure map settings, including selecting the Mapping SDK (e.g., Google Maps SDK) and the Basemap type (e.g., Streets).
+Consumer: Show Map SDK Options checkbox
+
+[Plan]
+Case 1/1
+Producer task:
+ From General Settings page, click 'Maps' to navigate to Maps settings page and configure Mapping SDK and Basemap type.
+Consumer task:
+ From User Settings page (page 70), click 'Show Map SDK Options' checkbox to verify transition to page 93 with map settings applied.
+------------------------------
+
+==============================================
+[AppTest] Pair 73/123: 29 -> 76
+Producer: The current page allows users to configure map settings, including selecting the Mapping SDK (e.g., Google Maps SDK) and the Basemap type (e.g., Streets).
+Consumer: Show Basemap Options checkbox
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on General Settings page, click 'Maps' option to navigate to Maps settings page (to configure map settings like Mapping SDK and Basemap type).
+Consumer task:
+ Start on User Settings page (page 70), click the 'Show Basemap Options' checkbox (using the basemap - related settings context from the Maps settings page) and verify navigation to page 94.
+------------------------------
+
+==============================================
+[AppTest] Pair 74/123: 30 -> 27
+Producer: The current page, "Form management," allows users to configure various settings related to form updates (e.g., periodic checks, automatic download, hiding old versions), form submission (e.g., auto send, delete after send), and form filling (e.g., default to finalized, constraint processing) for data collection forms.
+Consumer: The current page, "Server Settings", allows users to configure the server connection settings, including specifying the server type (ODK Aggregate), server URL, username, and password for the app's server connection.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to Form management settings, then configure auto send to 'Off' for form submission.
+Consumer task:
+ Click 'Server settings' to enter the page, then click 'Type' to select ODK Aggregate as the server platform (using the form management's auto send 'Off' setting context).
+------------------------------
+
+==============================================
+[AppTest] Pair 75/123: 30 -> 52
+Producer: The current page, "Form management," allows users to configure various settings related to form updates (e.g., periodic checks, automatic download, hiding old versions), form submission (e.g., auto send, delete after send), and form filling (e.g., default to finalized, constraint processing) for data collection forms.
+Consumer: This page allows the user to configure the frequency (e.g., Never, Every fifteen minutes, Every hour, etc.) at which the app checks for periodic form updates within the form management settings.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to Form management settings, then configure auto send options (e.g., set to Off) and set form to default to finalized.
+Consumer task:
+ From Form management page, open periodic form updates check settings, then select a frequency (e.g., Every fifteen minutes) to configure, ensuring the form management settings context (from Producer) is used.
+------------------------------
+
+==============================================
+[AppTest] Pair 76/123: 30 -> 53
+Producer: The current page, "Form management," allows users to configure various settings related to form updates (e.g., periodic checks, automatic download, hiding old versions), form submission (e.g., auto send, delete after send), and form filling (e.g., default to finalized, constraint processing) for data collection forms.
+Consumer: Enable automatic form download
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to Form management settings, then configure auto send options (e.g., set to Off) and set form to default to finalized.
+Consumer task:
+ On the Form management page, click to enable the automatic form download feature, then verify the automatic download setting reflects the enabled state using the form management settings configured earlier.
+------------------------------
+
+==============================================
+[AppTest] Pair 77/123: 30 -> 54
+Producer: The current page, "Form management," allows users to configure various settings related to form updates (e.g., periodic checks, automatic download, hiding old versions), form submission (e.g., auto send, delete after send), and form filling (e.g., default to finalized, constraint processing) for data collection forms.
+Consumer: Hide old form versions
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to Form management settings, then configure auto send options (select a mode like Off, Wifi only, etc.) and set form to default to finalized.
+Consumer task:
+ On the Form management page, click on the 'Hide old form versions' option to toggle its state, then verify that the hiding of old form versions is enabled/disabled as expected (using the form management settings configured by the Producer).
+------------------------------
+
+==============================================
+[AppTest] Pair 78/123: 30 -> 55
+Producer: The current page, "Form management," allows users to configure various settings related to form updates (e.g., periodic checks, automatic download, hiding old versions), form submission (e.g., auto send, delete after send), and form filling (e.g., default to finalized, constraint processing) for data collection forms.
+Consumer: Delete forms after sending
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to Form management settings, then configure auto send options (e.g., set to Off) and set form to default to finalized.
+Consumer task:
+ On Form management page, click 'Delete forms after sending' option (checkbox/toggle) to enable deletion of forms after sending, using the form settings (including auto send config) produced earlier.
+------------------------------
+
+==============================================
+[AppTest] Pair 79/123: 30 -> 56
+Producer: The current page, "Form management," allows users to configure various settings related to form updates (e.g., periodic checks, automatic download, hiding old versions), form submission (e.g., auto send, delete after send), and form filling (e.g., default to finalized, constraint processing) for data collection forms.
+Consumer: The current page allows the user to configure the constraint processing behavior for forms, with options to validate upon forward swipe or defer validation until finalized.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to Form management settings, then set the form to default to finalized.
+Consumer task:
+ From the form management page, open constraint processing behavior settings, then choose 'defer validation until finalized' (to align with the producer's default to finalized setting) and confirm the selected behavior.
+------------------------------
+
+==============================================
+[AppTest] Pair 80/123: 30 -> 77
+Producer: The current page, "Form management," allows users to configure various settings related to form updates (e.g., periodic checks, automatic download, hiding old versions), form submission (e.g., auto send, delete after send), and form filling (e.g., default to finalized, constraint processing) for data collection forms.
+Consumer: Periodic form updates check checkbox
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to Form management settings, then configure auto send options (e.g., set to Off) and set form to default to finalized.
+Consumer task:
+ From User Settings page, click 'Periodic form updates check' checkbox (using the periodic form updates check setting from Form management) to toggle its state and transition to page 95.
+------------------------------
+
+==============================================
+[AppTest] Pair 81/123: 30 -> 78
+Producer: The current page, "Form management," allows users to configure various settings related to form updates (e.g., periodic checks, automatic download, hiding old versions), form submission (e.g., auto send, delete after send), and form filling (e.g., default to finalized, constraint processing) for data collection forms.
+Consumer: Automatic download checkbox
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to Form management settings, then configure the auto send option (e.g., set to Off), and also set the form to default to finalized.
+Consumer task:
+ On the User Settings page, click the 'Automatic download' checkbox to toggle its state, then verify that the automatic download setting reflects the updated configuration from the Form management settings.
+------------------------------
+
+==============================================
+[AppTest] Pair 82/123: 30 -> 79
+Producer: The current page, "Form management," allows users to configure various settings related to form updates (e.g., periodic checks, automatic download, hiding old versions), form submission (e.g., auto send, delete after send), and form filling (e.g., default to finalized, constraint processing) for data collection forms.
+Consumer: Hide old form versions checkbox
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to Form management settings, then configure auto send options (e.g., set to Off) and set form to default to finalized.
+Consumer task:
+ From User Settings (page 70), click 'Hide old form versions' checkbox (using the form management settings data context) to toggle its state and transition to page 97, verifying the checkbox reflects the intended state based on prior form management config.
+------------------------------
+
+==============================================
+[AppTest] Pair 83/123: 30 -> 80
+Producer: The current page, "Form management," allows users to configure various settings related to form updates (e.g., periodic checks, automatic download, hiding old versions), form submission (e.g., auto send, delete after send), and form filling (e.g., default to finalized, constraint processing) for data collection forms.
+Consumer: Auto send setting checkbox
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to Form management settings, then configure auto send option to 'Off' for form submission.
+Consumer task:
+ On User Settings page, click 'Auto send' setting checkbox (which should reflect the 'Off' setting configured by Producer) to toggle and transition to page 98.
+------------------------------
+
+==============================================
+[AppTest] Pair 84/123: 30 -> 81
+Producer: The current page, "Form management," allows users to configure various settings related to form updates (e.g., periodic checks, automatic download, hiding old versions), form submission (e.g., auto send, delete after send), and form filling (e.g., default to finalized, constraint processing) for data collection forms.
+Consumer: Delete after send checkbox
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to Form management settings, then configure the auto send option (e.g., set to Off, Wifi only, etc.) and also set the form to default to finalized.
+Consumer task:
+ From page 70 (User Settings), click the 'Delete after send' checkbox, then verify that the checkbox's state (checked/unchecked) reflects the form management settings (specifically the delete after send setting) produced by the Producer, and check if it navigates to page 99.
+------------------------------
+
+==============================================
+[AppTest] Pair 85/123: 31 -> 27
+Producer: The page allows users to manage user and device identity settings, including configuring form metadata for identifying data submitters and toggling the collection of anonymous usage data to assist the ODK team in prioritizing fixes and features.
+Consumer: The current page, "Server Settings", allows users to configure the server connection settings, including specifying the server type (ODK Aggregate), server URL, username, and password for the app's server connection.
+
+[Plan]
+Case 1/1
+Producer task:
+ From General Settings, click 'User and device identity' to navigate to its settings page and configure form metadata for data submitter identification (e.g., enter relevant identity details) and toggle anonymous usage data collection as needed.
+Consumer task:
+ Click 'Server settings' to enter the Server Settings page. Then, click 'Password' field to input the password (ensuring it aligns with the identity - related configurations from the User and device identity settings) or click 'Type' to select the server platform (e.g., ODK Aggregate) which should be consistent with the usage context set by the Producer's anonymous usage data toggle and identity configurations.
+------------------------------
+
+==============================================
+[AppTest] Pair 86/123: 31 -> 57
+Producer: The page allows users to manage user and device identity settings, including configuring form metadata for identifying data submitters and toggling the collection of anonymous usage data to assist the ODK team in prioritizing fixes and features.
+Consumer: Collect anonymous usage data checkbox
+
+[Plan]
+Case 1/2
+Producer task:
+ Navigate to General Settings, click 'User and device identity' to open its settings page, then set the 'Collect anonymous usage data' checkbox to checked.
+Consumer task:
+ Go to the 'Collect anonymous usage data' checkbox and verify that it is checked (reflecting the producer's action).
+------------------------------
+Case 2/2
+Producer task:
+ Navigate to General Settings, click 'User and device identity' to open its settings page, then set the 'Collect anonymous usage data' checkbox to unchecked.
+Consumer task:
+ Go to the 'Collect anonymous usage data' checkbox and verify that it is unchecked (reflecting the producer's action).
+------------------------------
+
+==============================================
+[AppTest] Pair 87/123: 34 -> 65
+Producer: The Import/Export Settings page enables users to manage the import and export of settings (via QR code or SD card) and handle sensitive information like admin and server passwords associated with the QR code.
+Consumer: The page provides options to share a QR code (associated with import/export settings) via various apps like Add to Maps, Gmail, Hangouts, Messenger, Save to Drive, and Upload to Photos.
+
+[Plan]
+Case 1/1
+Producer task:
+ Click to access the Import/Export Settings page, then save the import/export settings (to generate the associated QR code).
+Consumer task:
+ On the Import/Export Settings page (where the saved settings' QR code is present), click the share option. Then verify that the share menu with apps (Add to Maps, Gmail, Hangouts, Messenger, Save to Drive, Upload to Photos) appears for sharing the QR code of the saved import/export settings.
+------------------------------
+
+==============================================
+[AppTest] Pair 88/123: 34 -> 67
+Producer: The Import/Export Settings page enables users to manage the import and export of settings (via QR code or SD card) and handle sensitive information like admin and server passwords associated with the QR code.
+Consumer: Remove passwords option
+
+[Plan]
+Case 1/1
+Producer task:
+ Access the Import/Export Settings page, then save the import/export settings (or select a code from SD card to generate relevant data including passwords in QR code)
+Consumer task:
+ On the Import/Export Settings page, click the 'Remove passwords option' (in the warning banner at the bottom) and verify the passwords (from the QR code generated/saved by Producer) are removed or the QR code is updated without them
+------------------------------
+
+==============================================
+[AppTest] Pair 89/123: 35 -> 68
+Producer: The page allows users to manage the visibility of main menu items related to data collection forms by checking or unchecking options to show or hide them from the main menu.
+Consumer: Toggle menu item visibility
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on Admin Settings page, click 'Main Menu Settings', then check a form - related menu item to set its visibility.
+Consumer task:
+ On Main Menu Settings page, click the same menu item to toggle its visibility and verify the change reflects the producer - set state.
+------------------------------
+
+==============================================
+[AppTest] Pair 90/123: 37 -> 82
+Producer: The Form Entry Settings page allows users to enable or disable various form entry-related options (e.g., Moving backwards, General Settings, Change Language, etc.) by checking or unchecking corresponding checkboxes.
+Consumer: Toggle Moving backwards
+
+[Plan]
+Case 1/1
+Producer task:
+ From Admin Settings page, click 'Form Entry Settings' to navigate to the Form Entry Settings page.
+Consumer task:
+ On the Form Entry Settings page (from Producer), click the 'Moving backwards' toggle to verify its state changes as expected.
+------------------------------
+
+==============================================
+[AppTest] Pair 91/123: 37 -> 83
+Producer: The Form Entry Settings page allows users to enable or disable various form entry-related options (e.g., Moving backwards, General Settings, Change Language, etc.) by checking or unchecking corresponding checkboxes.
+Consumer: Toggle General Settings
+
+[Plan]
+Case 1/1
+Producer task:
+ From Admin Settings page, click 'Form Entry Settings' to navigate to Form Entry Settings page.
+Consumer task:
+ On Form Entry Settings page (from Producer step), click to toggle the General Settings option.
+------------------------------
+
+==============================================
+[AppTest] Pair 92/123: 37 -> 84
+Producer: The Form Entry Settings page allows users to enable or disable various form entry-related options (e.g., Moving backwards, General Settings, Change Language, etc.) by checking or unchecking corresponding checkboxes.
+Consumer: Toggle Change Language
+
+[Plan]
+Case 1/1
+Producer task:
+ From Admin Settings page, click 'Form Entry Settings' to navigate to Form Entry Settings page with form entry options (checkboxes).
+Consumer task:
+ On Form Entry Settings page (from Producer), click 'Change Language' toggle to navigate to page 102 and toggle its state (verify it reflects the Producer's page's setting change).
+------------------------------
+
+==============================================
+[AppTest] Pair 93/123: 37 -> 85
+Producer: The Form Entry Settings page allows users to enable or disable various form entry-related options (e.g., Moving backwards, General Settings, Change Language, etc.) by checking or unchecking corresponding checkboxes.
+Consumer: Toggle Go To Prompt
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on Admin Settings page, click 'Form Entry Settings' to navigate to Form Entry Settings page.
+Consumer task:
+ On Form Entry Settings page, click 'Go To Prompt' toggle to verify it reflects the current (produced) setting state.
+------------------------------
+
+==============================================
+[AppTest] Pair 94/123: 37 -> 86
+Producer: The Form Entry Settings page allows users to enable or disable various form entry-related options (e.g., Moving backwards, General Settings, Change Language, etc.) by checking or unchecking corresponding checkboxes.
+Consumer: Toggle Save Form
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on Admin Settings page, click 'Form Entry Settings' to navigate to Form Entry Settings page.
+Consumer task:
+ On Form Entry Settings page (from Producer), click to toggle 'Save Form' option; verify state change (checked/unchecked) reflects the toggle.
+------------------------------
+
+==============================================
+[AppTest] Pair 95/123: 37 -> 87
+Producer: The Form Entry Settings page allows users to enable or disable various form entry-related options (e.g., Moving backwards, General Settings, Change Language, etc.) by checking or unchecking corresponding checkboxes.
+Consumer: Toggle Name this form
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on Admin Settings page, click 'Form Entry Settings' to navigate to Form Entry Settings page.
+Consumer task:
+ On Form Entry Settings page, click to toggle 'Name this form' option (verify its state reflects the toggle, using the form entry settings page context).
+------------------------------
+
+==============================================
+[AppTest] Pair 96/123: 37 -> 88
+Producer: The Form Entry Settings page allows users to enable or disable various form entry-related options (e.g., Moving backwards, General Settings, Change Language, etc.) by checking or unchecking corresponding checkboxes.
+Consumer: Toggle Mark form as finalized
+
+[Plan]
+Case 1/1
+Producer task:
+ From Admin Settings page, click 'Form Entry Settings' to navigate to the Form Entry Settings page.
+Consumer task:
+ On the Form Entry Settings page (from Producer), click the 'Mark form as finalized' toggle to check its behavior.
+------------------------------
+
+==============================================
+[AppTest] Pair 97/123: 43 -> 27
+Producer: The General Settings page provides options to configure settings related to Server, User interface, Maps, Form management, and User and device identity for the data collection form management application.
+Consumer: The current page, "Server Settings", allows users to configure the server connection settings, including specifying the server type (ODK Aggregate), server URL, username, and password for the app's server connection.
+
+[Plan]
+Case 1/1
+Producer task:
+ From the entry page (page 120), click on the 'General Settings' option to navigate to the General Settings page (page 9).
+Consumer task:
+ From the General Settings page, click on the 'Server settings' option to enter the Server Settings page. On this page, click the 'Type' option to select the server platform (e.g., ODK Aggregate), and/or click the 'Username' or 'Password' fields to input credentials (using the respective dialogs) to configure the server connection settings as per the data from the General Settings navigation.
+------------------------------
+
+==============================================
+[AppTest] Pair 98/123: 43 -> 28
+Producer: The General Settings page provides options to configure settings related to Server, User interface, Maps, Form management, and User and device identity for the data collection form management application.
+Consumer: The current page allows users to configure user interface settings including theme, language, text font size, navigation method, splash screen visibility, and selected splash image.
+
+[Plan]
+Case 1/2
+Producer task:
+ From entry page (page 120), click 'General Settings' to navigate to General Settings page (page 9).
+Consumer task:
+ On General Settings page (page 9), click user interface settings option (S1) to enter UI settings page. Then, select Light theme (S4) to verify theme configuration reflects the choice.
+------------------------------
+Case 2/2
+Producer task:
+ From entry page (page 120), click 'General Settings' to navigate to General Settings page (page 9).
+Consumer task:
+ On General Settings page (page 9), click user interface settings option (S1) to enter UI settings page. Then, select Extra Large text font size (S6) to verify font size configuration reflects the choice.
+------------------------------
+
+==============================================
+[AppTest] Pair 99/123: 43 -> 29
+Producer: The General Settings page provides options to configure settings related to Server, User interface, Maps, Form management, and User and device identity for the data collection form management application.
+Consumer: The current page allows users to configure map settings, including selecting the Mapping SDK (e.g., Google Maps SDK) and the Basemap type (e.g., Streets).
+
+[Plan]
+Case 1/1
+Producer task:
+ From the entry page (page 120), click on the 'General Settings' option to navigate to the General Settings page (page 9).
+Consumer task:
+ On the General Settings page (page 9), click the 'Maps' option (the maps setting item produced by the Producer) to navigate to the Maps settings page and verify that the page allows configuring the Mapping SDK and Basemap type.
+------------------------------
+
+==============================================
+[AppTest] Pair 100/123: 43 -> 30
+Producer: The General Settings page provides options to configure settings related to Server, User interface, Maps, Form management, and User and device identity for the data collection form management application.
+Consumer: The current page, "Form management," allows users to configure various settings related to form updates (e.g., periodic checks, automatic download, hiding old versions), form submission (e.g., auto send, delete after send), and form filling (e.g., default to finalized, constraint processing) for data collection forms.
+
+[Plan]
+Case 1/1
+Producer task:
+ From entry page (page 120), click 'General Settings' to navigate to General Settings page (page 9) with configuration options.
+Consumer task:
+ Navigate to Form management settings (from General Settings page), configure auto send options (select a mode: Off, Wifi only, Cellular only, or Wifi or cellular), and set form to default to finalized, verifying these use the form management settings from the Producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 101/123: 43 -> 31
+Producer: The General Settings page provides options to configure settings related to Server, User interface, Maps, Form management, and User and device identity for the data collection form management application.
+Consumer: The page allows users to manage user and device identity settings, including configuring form metadata for identifying data submitters and toggling the collection of anonymous usage data to assist the ODK team in prioritizing fixes and features.
+
+[Plan]
+Case 1/1
+Producer task:
+ From the entry page (page 120), click on the 'General Settings' option to navigate to the General Settings page (page 9).
+Consumer task:
+ On the General Settings page, click the 'User and device identity' option to navigate to the User and device identity settings page. Verify that this page allows managing form metadata for data submitter identification and toggling anonymous usage data collection (using the settings accessed via the General Settings page).
+------------------------------
+
+==============================================
+[AppTest] Pair 102/123: 43 -> 32
+Producer: The General Settings page provides options to configure settings related to Server, User interface, Maps, Form management, and User and device identity for the data collection form management application.
+Consumer: The General Settings page provides access to configure various system - related settings including Server, User interface, Maps, Form management, and User and device identity for the application.
+
+[Plan]
+Case 1/1
+Producer task:
+ From the entry page (page 120), click on the 'General Settings' option to navigate to the General Settings page (page 9).
+Consumer task:
+ From the Admin Settings page, click on the 'General Settings' option (using the entry from the producer's action) to navigate to the General Settings page and verify that it provides access to configure Server, User interface, Maps, Form management, and User and device identity settings.
+------------------------------
+
+==============================================
+[AppTest] Pair 103/123: 43 -> 83
+Producer: The General Settings page provides options to configure settings related to Server, User interface, Maps, Form management, and User and device identity for the data collection form management application.
+Consumer: Toggle General Settings
+
+[Plan]
+Case 1/1
+Producer task:
+ From the entry page (page 120), click on the 'General Settings' option to navigate to the General Settings page (page 9).
+Consumer task:
+ On the Form Entry Settings page, click to toggle the General Settings option (using the state from the General Settings page accessed earlier) and verify its checked/unchecked state changes.
+------------------------------
+
+==============================================
+[AppTest] Pair 104/123: 44 -> 89
+Producer: The current page provides a "Change View" dialog with options to filter the display of forms as either "Show Unsent Forms" or "Show Sent and Unsent Forms" for the finalized forms management interface.
+Consumer: Show Unsent Forms option
+
+[Plan]
+Case 1/1
+Producer task:
+ On the finalized forms management page (page 120), click the 'Change View' option to open the dialog (page 122) with filtering options.
+Consumer task:
+ In the 'Change View' dialog (page 122), click the 'Show Unsent Forms' option, then verify the app transitions to page 123 and displays only unsent forms (using the updated form view setting from the producer).
+------------------------------
+
+==============================================
+[AppTest] Pair 105/123: 44 -> 90
+Producer: The current page provides a "Change View" dialog with options to filter the display of forms as either "Show Unsent Forms" or "Show Sent and Unsent Forms" for the finalized forms management interface.
+Consumer: Show Sent and Unsent Forms option
+
+[Plan]
+Case 1/1
+Producer task:
+ On the finalized forms management page (page 120), click the 'Change View' option to open the dialog (page 122) with filtering options.
+Consumer task:
+ On page 122 (the 'Change View' dialog), click the 'Show Sent and Unsent Forms' option to transition the app to page 124, verifying the form view setting is applied.
+------------------------------
+
+==============================================
+[AppTest] Pair 106/123: 45 -> 58
+Producer: The page allows users to configure server connection settings for an ODK Aggregate server, including viewing or editing the server URL, username, and password, and accessing ODK Aggregate specific settings.
+Consumer: Show password checkbox
+
+[Plan]
+Case 1/1
+Producer task:
+ On the Server Settings page (page 14), click the 'ODK Aggregate settings' link to open the ODK Aggregate - specific settings page.
+Consumer task:
+ On page 66 (after accessing the relevant settings page from the producer step), click the 'Show password checkbox' element and verify navigation to page 73, ensuring the checkbox interaction reflects the expected behavior related to the ODK Aggregate settings context.
+------------------------------
+
+==============================================
+[AppTest] Pair 107/123: 45 -> 69
+Producer: The page allows users to configure server connection settings for an ODK Aggregate server, including viewing or editing the server URL, username, and password, and accessing ODK Aggregate specific settings.
+Consumer: Server setting checkbox
+
+[Plan]
+Case 1/1
+Producer task:
+ On the Server Settings page (page 14), click the 'ODK Aggregate settings' link to open the ODK Aggregate - specific settings page.
+Consumer task:
+ Start on the User Settings page (page 70). Perform a click action on the 'Server' setting checkbox (which should reflect the server configuration from the ODK Aggregate settings page) to navigate to page 87.
+------------------------------
+
+==============================================
+[AppTest] Pair 108/123: 46 -> 71
+Producer: This page allows the user to select the app's language from a list of available languages, with an option to use the device's language.
+Consumer: Language setting checkbox
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 15, click 'Language' setting to go to page 27, then click a language option on page 27 to set the app's language (navigate to page 33).
+Consumer task:
+ Start on User Settings page (page 70), click the Language setting checkbox (which should reflect the language set by the Producer) and verify navigation to page 89.
+------------------------------
+
+==============================================
+[AppTest] Pair 109/123: 46 -> 84
+Producer: This page allows the user to select the app's language from a list of available languages, with an option to use the device's language.
+Consumer: Toggle Change Language
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 15, click 'Language' setting to go to page 27, then click a language option on page 27 to update language setting (navigate to page 33).
+Consumer task:
+ Start on Form Entry Settings page (page 71), click 'Change Language' toggle (should reflect the updated language setting from producer) and navigate to page 102.
+------------------------------
+
+==============================================
+[AppTest] Pair 110/123: 47 -> 50
+Producer: The page functions as a dialog for selecting the mapping SDK (Google Maps SDK, OpenStreetMap SDK, or Mapbox Maps SDK) to be used within the app's navigation or mapping-related features.
+Consumer: The current page allows the user to select a Mapping SDK (Google Maps SDK, OpenStreetMap SDK, or Mapbox Maps SDK) for the app's map functionality.
+
+[Plan]
+Case 1/1
+Producer task:
+ Click Navigation setting to open option selection dialog, then choose a navigation option (e.g., horizontal swipes) to update mapping SDK setting.
+Consumer task:
+ On page 16 (Maps settings), click 'Mapping SDK' setting to open dialog (dst page 29), then verify the selected mapping SDK reflects the one updated by the Producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 111/123: 48 -> 74
+Producer: Splash screen toggle
+Consumer: Splash screen checkbox
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to page 15 (User interface settings). Click on the 'Splash screen toggle' option to update the splash screen setting.
+Consumer task:
+ Navigate to the User Settings page (page 70). Click on the Splash screen checkbox (which should reflect the updated splash screen setting from the Producer) and verify the transition to page 92.
+------------------------------
+
+==============================================
+[AppTest] Pair 112/123: 50 -> 47
+Producer: The current page allows the user to select a Mapping SDK (Google Maps SDK, OpenStreetMap SDK, or Mapbox Maps SDK) for the app's map functionality.
+Consumer: The page functions as a dialog for selecting the mapping SDK (Google Maps SDK, OpenStreetMap SDK, or Mapbox Maps SDK) to be used within the app's navigation or mapping-related features.
+
+[Plan]
+Case 1/2
+Producer task:
+ On page 16 (Maps settings), click the 'Mapping SDK' setting to open dialog (page 29) and select Google Maps SDK.
+Consumer task:
+ Click Navigation setting to open option selection dialog, then verify that the mapping SDK setting (Google Maps SDK) is reflected in the app's navigation/mapping - related features setup (e.g., check if the mapping - related functionality uses Google Maps SDK as expected).
+------------------------------
+Case 2/2
+Producer task:
+ On page 16 (Maps settings), click the 'Mapping SDK' setting to open dialog (page 29) and select OpenStreetMap SDK.
+Consumer task:
+ Click Navigation setting to open option selection dialog, then verify that the mapping SDK setting (OpenStreetMap SDK) is reflected in the app's navigation/mapping - related features setup (e.g., check if the mapping - related functionality uses OpenStreetMap SDK as expected).
+------------------------------
+
+==============================================
+[AppTest] Pair 113/123: 52 -> 77
+Producer: This page allows the user to configure the frequency (e.g., Never, Every fifteen minutes, Every hour, etc.) at which the app checks for periodic form updates within the form management settings.
+Consumer: Periodic form updates check checkbox
+
+[Plan]
+Case 1/1
+Producer task:
+ On the form management page, open the periodic form updates check settings. Select 'Every fifteen minutes' from the frequency options to update the check setting.
+Consumer task:
+ On the User Settings page, click the 'Periodic form updates check' checkbox. Verify that the checkbox state reflects the 'Every fifteen minutes' setting configured by the Producer (e.g., if the setting enables the check, the checkbox is enabled; confirm the transition to page 95).
+------------------------------
+
+==============================================
+[AppTest] Pair 114/123: 53 -> 78
+Producer: Enable automatic form download
+Consumer: Automatic download checkbox
+
+[Plan]
+Case 1/1
+Producer task:
+ On the Form management page, click to enable the automatic form download feature (toggle the setting to enabled).
+Consumer task:
+ On the User Settings page, check the 'Automatic download' checkbox to verify it reflects the enabled automatic download setting produced earlier.
+------------------------------
+
+==============================================
+[AppTest] Pair 115/123: 54 -> 79
+Producer: Hide old form versions
+Consumer: Hide old form versions checkbox
+
+[Plan]
+Case 1/1
+Producer task:
+ On the Form management page, click the 'Hide old form versions' option to toggle its state (enable/disable hiding old form versions).
+Consumer task:
+ On User Settings page (page 70), click the 'Hide old form versions' checkbox (using the updated setting from the Producer) and verify the app transitions to page 97 with the checkbox state reflecting the Producer's update.
+------------------------------
+
+==============================================
+[AppTest] Pair 116/123: 55 -> 81
+Producer: Delete forms after sending
+Consumer: Delete after send checkbox
+
+[Plan]
+Case 1/1
+Producer task:
+ On the Form management page, click the 'Delete forms after sending' option (toggle/checkbox) to update the delete after send setting, then transition to page 51.
+Consumer task:
+ On page 70 (User Settings), click the 'Delete after send' checkbox. Verify the checkbox's state reflects the updated setting from the Producer, then (if applicable) navigate to page 99.
+------------------------------
+
+==============================================
+[AppTest] Pair 117/123: 59 -> 64
+Producer: Toggle all settings reset
+Consumer: Reset selected data
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 67, click to toggle the 'All settings (internal settings, saved settings)' option in the 'Select what to reset' dialog to update the all settings reset selection.
+Consumer task:
+ On page 67, click 'Reset selected data' (which leads to page 81) and verify that the 'All settings (internal settings, saved settings)' option (updated by the producer) is part of the selected data for reset.
+------------------------------
+
+==============================================
+[AppTest] Pair 118/123: 60 -> 64
+Producer: Toggle saved forms reset
+Consumer: Reset selected data
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 67, click the 'Toggle saved forms reset' element to navigate to page 76 and toggle the 'Saved forms' reset selection.
+Consumer task:
+ On page 67, click 'Reset selected data' to go to page 81 (Select what to reset dialog). Verify that the 'Saved forms' option (toggled by the producer) is reflected as a selected data category for reset.
+------------------------------
+
+==============================================
+[AppTest] Pair 119/123: 61 -> 64
+Producer: Toggle blank forms reset
+Consumer: Reset selected data
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 67, click to toggle the 'Blank forms reset' option (navigates to page 77).
+Consumer task:
+ On page 67, click 'Reset selected data' (opens page 81). Verify that the 'Blank forms reset' setting (updated via Producer) is available as a selectable option to reset.
+------------------------------
+
+==============================================
+[AppTest] Pair 120/123: 62 -> 64
+Producer: Toggle form load cache reset
+Consumer: Reset selected data
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 67, click 'Toggle form load cache reset' to navigate to page 78 and toggle the form load cache reset setting (e.g., open the confirmation/selection dialog for it).
+Consumer task:
+ On page 67, click 'Reset selected data' to go to page 81 ('Select what to reset' dialog). Verify that the 'form load cache' (from the producer's updated selection) is an option to reset here.
+------------------------------
+
+==============================================
+[AppTest] Pair 121/123: 63 -> 64
+Producer: Toggle OSM tile cache reset
+Consumer: Reset selected data
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 67, click 'Toggle OSM tile cache reset' to navigate to page 80 and toggle the OSM tile cache reset functionality.
+Consumer task:
+ On page 67, click 'Reset selected data' to go to page 81 (Select what to reset dialog). Verify that the OSM tile cache reset selection (from the producer step) is reflected as a selectable/selected option for resetting.
+------------------------------
+
+==============================================
+[AppTest] Pair 122/123: 75 -> 76
+Producer: Show Map SDK Options checkbox
+Consumer: Show Basemap Options checkbox
+
+[Plan]
+Case 1/1
+Producer task:
+ On the User Settings page (page 70), click the 'Show Map SDK Options' checkbox (this updates the show map SDK options setting and transitions to page 93).
+Consumer task:
+ Return to the User Settings page (page 70), then click the 'Show Basemap Options' checkbox (verify it reflects/uses the context set by the updated show map SDK options setting and transitions to page 94).
+------------------------------
+
+==============================================
+[AppTest] Pair 123/123: 76 -> 75
+Producer: Show Basemap Options checkbox
+Consumer: Show Map SDK Options checkbox
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 70 (User Settings), click the 'Show Basemap Options' checkbox (leading to page 94).
+Consumer task:
+ On page 70 (User Settings), click the 'Show Map SDK Options' checkbox (leading to page 93) and verify it reflects the updated show basemap options setting from the producer.
+------------------------------

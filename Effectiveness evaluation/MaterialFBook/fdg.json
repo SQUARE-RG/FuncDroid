@@ -1,0 +1,2277 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "Facebook login and account access page",
+            "action_refs": [
+                [
+                    0,
+                    2
+                ],
+                [
+                    0,
+                    3
+                ],
+                [
+                    0,
+                    4
+                ]
+            ],
+            "data_in": [
+                "login credentials (email/phone)",
+                "login credentials (password)"
+            ],
+            "data_out": [
+                "updated login credentials input (email/phone)",
+                "entered password (temporary input state)"
+            ],
+            "data_dependencies": [
+                3,
+                16
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on page 0. First, the user clicks the globe icon (no page change). Then, the user inputs an email/phone number into the corresponding field (navigating to page 3). Finally, the user inputs a password into the password field (navigating to page 4). There are no branches or loops, as it’s a linear sequence of actions for Facebook login setup.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the globe icon"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "input",
+                        "summary": "Input email/phone number"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 4,
+                        "action": "input",
+                        "summary": "Input password"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 1,
+            "function_description": "This page functions as a navigation sidebar for a Facebook - related app, offering options to access different sections like Top stories, Most Recent, Friend Requests, Search, Main menu, Groups, Events, Photos, and Settings, enabling users to navigate to various parts of the app.",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ]
+            ],
+            "data_in": [
+                "navigation menu state"
+            ],
+            "data_out": [
+                "expanded navigation menu"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on page 0. The user clicks the hamburger menu icon (on page 0), which opens the navigation sidebar (page 1) with various sections like Top stories, Most Recent, etc. This is a straight - line flow with no branches or loops as only one initial action is provided to open the sidebar.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the hamburger menu icon to open the navigation sidebar"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "The current page allows users to find their Facebook account by entering their email or mobile number, with additional options for language selection and links to other Meta services and policies.",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ]
+            ],
+            "data_in": [
+                "chat feature entry"
+            ],
+            "data_out": [
+                "chat feature page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The process starts on page 0. The user clicks the 'Chat icon' (action from [0,1]), which navigates to page 2. On page 2, the user can enter their email or mobile number to find their Facebook account, with language selection and links to Meta services/policies available.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click the Chat icon to navigate to the account-finding page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "The current page functions as a Facebook login interface where users can enter their email/phone number and password to log in, recover a forgotten password, or create a new account, with additional options for sharing, creating a page, and other actions via side buttons.",
+            "action_refs": [
+                [
+                    0,
+                    5
+                ],
+                [
+                    5,
+                    0
+                ],
+                [
+                    5,
+                    1
+                ]
+            ],
+            "data_in": [
+                "login credentials (email/phone, password)",
+                "login credential (email/phone)",
+                "login credentials (password)"
+            ],
+            "data_out": [
+                "login session",
+                "entered login credential (email/phone)",
+                "updated login form (password field)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts at the Facebook login page. First, the user clicks the 'Log In' button (or its equivalent action) to proceed to the input page. Then, the user can either click the email/phone input field to enter credentials or click the password input field, with these two input actions being mutually exclusive choices at the input step.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click Log In button to move to input page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            5,
+                            0
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click email/phone input field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            5,
+                            1
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click password input field"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "The page allows users to find their Facebook account by entering their email or mobile number, with additional options for language selection and links to other Meta services and policies.",
+            "action_refs": [
+                [
+                    0,
+                    6
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The process starts on the Facebook login page (page 0). The user clicks the 'Forgot account?' (or equivalent local text) link, which navigates to the 'Find your account' page (page 2) where they can enter an email or mobile number to locate their account. No branches or loops are present in this core flow as described by the provided action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            6
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click the 'Forgot account?' link to navigate to the account recovery page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "The current page allows users to create a new Facebook account by entering personal information such as name, birthday, gender, mobile number, and password, and includes options to learn more about Facebook's services and a sign - up button to complete the account creation process.",
+            "action_refs": [
+                [
+                    0,
+                    7
+                ],
+                [
+                    6,
+                    0
+                ],
+                [
+                    6,
+                    1
+                ],
+                [
+                    6,
+                    3
+                ],
+                [
+                    6,
+                    4
+                ]
+            ],
+            "data_in": [
+                "user profile",
+                "user profile (birthday month)",
+                "user registration form",
+                "new password input field"
+            ],
+            "data_out": [
+                "new Facebook account",
+                "updated user profile",
+                "updated user profile (birthday month)",
+                "user registration form (with mobile number input)",
+                "updated user registration form with new password input"
+            ],
+            "data_dependencies": [
+                18
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "To create a new Facebook account, start by clicking the 'Create new account' button (on page 0) to reach the account creation form (page 6). Then, interact with the form fields: first, click the 'First name' input field (to enter a first name), then optionally click the 'Birthday month' dropdown (to select a month), followed by clicking the 'Mobile number' input field (to enter a mobile number), and finally click the 'New password' input field (to set a password). The flow includes optional steps for dropdowns and mandatory steps for input fields.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            7
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click 'Create new account' button to open the account creation form"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            6,
+                            0
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 57,
+                        "action": "click",
+                        "summary": "Click 'First name' input field to enter a first name"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            6,
+                            1
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click 'Birthday month' dropdown to select a birthday month (optional)"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            6,
+                            3
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 59,
+                        "action": "click",
+                        "summary": "Click 'Mobile number' input field to enter a mobile number"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            6,
+                            4
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 60,
+                        "action": "click",
+                        "summary": "Click 'New password' input field to set a password"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S5"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "This page functions as a Facebook login interface, allowing users to enter their email/phone and password to log in, recover account information, or create a new account, with language options available at the bottom.",
+            "action_refs": [
+                [
+                    0,
+                    8
+                ]
+            ],
+            "data_in": [
+                "language setting"
+            ],
+            "data_out": [
+                "updated language setting (Français (France))"
+            ],
+            "data_dependencies": [
+                25
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The Facebook login interface is displayed. The user can click the 'Français (France)' language link (or other language options at the bottom) to change the interface language, with the page remaining the same after the click. This action is a language selection step on the login page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            8
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the 'Français (France)' language link (or other language option) to change the interface language."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "The current page functions as a Facebook login interface, prompting users to enter their email/phone number and password to log in, or to create a new account or recover forgotten account information.",
+            "action_refs": [
+                [
+                    1,
+                    0
+                ]
+            ],
+            "data_in": [
+                "top stories menu item"
+            ],
+            "data_out": [
+                "top stories content (navigation result)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts on page 1 (a menu page). The user clicks the 'Top stories' menu item, which navigates to page 0 (the Facebook login interface). On page 0, the user can choose to log in (by entering email/phone and password), recover forgotten account info, or create a new account, but the provided action only covers the navigation to the login page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            0
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click 'Top stories' menu item to navigate to Facebook login page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "The current page functions as a Facebook login interface, prompting users to enter their email/phone number and password to access their account, or to create a new account or recover forgotten account information.",
+            "action_refs": [
+                [
+                    1,
+                    1
+                ]
+            ],
+            "data_in": [
+                "Most Recent feature entry"
+            ],
+            "data_out": [
+                "Most Recent page content"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts on page 1 (a menu page) and proceeds by clicking the 'Most Recent' menu item, which navigates to page 0 (the Facebook login interface). On page 0, users can enter credentials to log in, or choose to recover account info or create a new account, but the captured action only covers the navigation to the login page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            1
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click 'Most Recent' menu item to navigate to Facebook login page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "The current page, titled \"Most Recent,\" is loading the user's most recent friend requests on Facebook, displaying a loading indicator and a placeholder icon while fetching the relevant data.",
+            "action_refs": [
+                [
+                    1,
+                    2
+                ]
+            ],
+            "data_in": [
+                "friend requests menu item"
+            ],
+            "data_out": [
+                "friend requests feature page (loading)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts on page 1 (menu), where the 'Friend Requests' menu item is clicked. This action navigates to page 7 (Most Recent), which displays a loading indicator and placeholder icon while fetching the user’s most recent friend requests. There are no branches or loops as the logic is a straight-line flow to load the data.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            2
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click 'Friend Requests' menu item to navigate to 'Most Recent' page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "The current page is the Facebook login page, which allows users to enter their email/phone number and password to log in to their Facebook account, or to create a new account or recover forgotten account information.",
+            "action_refs": [
+                [
+                    1,
+                    3
+                ]
+            ],
+            "data_in": [
+                "search feature entry"
+            ],
+            "data_out": [
+                "search feature page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts on page 1 (a menu page) and involves clicking the 'Search' menu item. This action navigates to page 0, which appears to be the Facebook login interface where users can log in, recover account info, or create a new account.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            3
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the 'Search' menu item to navigate to the Facebook login page (page 0)."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "The current page is the Facebook login page, which allows users to enter their email/phone number and password to log in, recover forgotten account information, or create a new account, and also provides language options at the bottom.",
+            "action_refs": [
+                [
+                    1,
+                    4
+                ]
+            ],
+            "data_in": [
+                "main menu item (Most Recent)"
+            ],
+            "data_out": [
+                "Most Recent feature page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user starts on page 1 (a menu) and clicks the 'Main menu' item. This action navigates to page 0, which appears to be the Facebook login interface where users can log in, recover account info, or create a new account, with language options at the bottom.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            4
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the 'Main menu' item to navigate to the Facebook login page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "The current page functions as a Facebook login interface, prompting users to enter their email/phone number and password to log in, or to create a new account or recover forgotten account information.",
+            "action_refs": [
+                [
+                    1,
+                    5
+                ]
+            ],
+            "data_in": [
+                "Groups menu item"
+            ],
+            "data_out": [
+                "Groups feature page (navigation result)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts on page 1 (a menu page) and proceeds by clicking the 'Groups' menu item, which navigates to page 0 (the Facebook login interface). The login interface prompts for email/phone and password, with options to log in, recover account info, or create a new account.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            5
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click on the 'Groups' menu item to navigate to the Facebook login page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "This page (still loading) is intended to display the Events section of Facebook, where users can view, manage, or discover upcoming events after navigating from the side menu.",
+            "action_refs": [
+                [
+                    1,
+                    6
+                ]
+            ],
+            "data_in": [
+                "events menu item"
+            ],
+            "data_out": [
+                "events page content"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts on page 1 (side menu). The user clicks the 'Events' menu item (action_ref [1,6]). This action navigates to page 8, where the Events section begins loading. There are no branches or loops as it’s a single navigation step to reach the loading Events page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            6
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click the 'Events' menu item in the side menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "The page loads and displays the \"Most Recent\" section of Facebook's Friend Requests, showing a loading indicator and a placeholder icon, likely to present the most recent friend requests or related updates once fully loaded.",
+            "action_refs": [
+                [
+                    1,
+                    7
+                ]
+            ],
+            "data_in": [
+                "photos feature entry"
+            ],
+            "data_out": [
+                "photos page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts on page 1 (a menu page). The user clicks the 'Most Recent' menu item, navigating to page 7 (the 'Most Recent' loading page). The page then displays a loading indicator and a placeholder icon as it loads content.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            7
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click 'Most Recent' menu item to navigate to the 'Most Recent' page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "The current page is the Facebook app's Settings page, which allows users to configure various app preferences such as disabling crash reports, setting the start URL, changing the app language, adjusting text scale, managing location access, and toggling options to hide specific content (e.g., status editor, images, sponsored content, birthdays) from the feed and other sections.",
+            "action_refs": [
+                [
+                    1,
+                    8
+                ],
+                [
+                    9,
+                    2
+                ],
+                [
+                    11,
+                    0
+                ],
+                [
+                    11,
+                    1
+                ],
+                [
+                    11,
+                    2
+                ]
+            ],
+            "data_in": [
+                "settings menu item",
+                "text scale setting",
+                "text size setting"
+            ],
+            "data_out": [
+                "settings page (loaded)",
+                "text scale setting",
+                "updated text size setting"
+            ],
+            "data_dependencies": [
+                26
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts by clicking the Settings menu item (S1) to enter the Settings page. Then, click the Start URL option (S2) to access its configuration page. At this point, a branch point exists where the user can choose one of three radio options: MostRecent (S3), TopStories (S4), or Messages (S5) to set the start URL.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            8
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click Settings menu item"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            9,
+                            2
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click Start URL option"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            11,
+                            0
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 40,
+                        "action": "click",
+                        "summary": "Click MostRecent radio option"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            11,
+                            1
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 41,
+                        "action": "click",
+                        "summary": "Click TopStories radio option"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            11,
+                            2
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 42,
+                        "action": "click",
+                        "summary": "Click Messages radio option"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "The current page is a Facebook login interface that allows users to enter their email/phone number and password to log in, recover account information, or create a new account, with language options at the bottom.",
+            "action_refs": [
+                [
+                    5,
+                    2
+                ]
+            ],
+            "data_in": [
+                "login credentials (email/phone, password)"
+            ],
+            "data_out": [
+                "login session"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user starts on the Facebook login page (page 5). The core action is clicking the 'Log In' (Se connecter) button, which navigates to page 0. This step initiates the login process or related navigation from the login interface.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            2
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the 'Log In' (Se connecter) button to proceed from the login page (page 5) to page 0."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "The current page allows users to search for their Facebook account by entering their email or phone number as part of the password recovery process.",
+            "action_refs": [
+                [
+                    5,
+                    3
+                ],
+                [
+                    20,
+                    0
+                ]
+            ],
+            "data_in": [
+                "search input (email/number)"
+            ],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "To start the password recovery process, the user first clicks the 'Forgot password?' link (on page 5) to navigate to page 20. Then, the user clicks the email or phone number input field (on page 20) to proceed with entering their account identifier, moving to page 22.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            3
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 20,
+                        "action": "click",
+                        "summary": "Click 'Forgot password? link' to go to page 20"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            20,
+                            0
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 22,
+                        "action": "click",
+                        "summary": "Click 'E-mail or number input field' to go to page 22"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "The current page is a Facebook account creation interface where users can input personal details (first name, birth date, gender, mobile number, new password) to sign up for a new Facebook account, with additional options for sharing, uploading, and navigating.",
+            "action_refs": [
+                [
+                    5,
+                    4
+                ],
+                [
+                    21,
+                    0
+                ],
+                [
+                    21,
+                    1
+                ],
+                [
+                    21,
+                    2
+                ],
+                [
+                    21,
+                    3
+                ],
+                [
+                    21,
+                    4
+                ],
+                [
+                    24,
+                    0
+                ],
+                [
+                    24,
+                    1
+                ],
+                [
+                    24,
+                    2
+                ],
+                [
+                    24,
+                    3
+                ],
+                [
+                    24,
+                    4
+                ],
+                [
+                    24,
+                    5
+                ],
+                [
+                    24,
+                    6
+                ],
+                [
+                    24,
+                    7
+                ],
+                [
+                    24,
+                    8
+                ],
+                [
+                    24,
+                    9
+                ],
+                [
+                    24,
+                    10
+                ],
+                [
+                    24,
+                    11
+                ]
+            ],
+            "data_in": [
+                "user registration form",
+                "date of birth setting",
+                "genre setting (Femme option)",
+                "mobile number input field",
+                "Facebook registration form",
+                "user registration form data",
+                "date selection list",
+                "date option",
+                "date option '13'",
+                "date option '14'",
+                "date '16'",
+                "date option '18'",
+                "date option '19'",
+                "date option '21'",
+                "date option '22'"
+            ],
+            "data_out": [
+                "user account (new)",
+                "updated user registration form (prénom field)",
+                "updated user registration form (genre set to Femme)",
+                "updated mobile number input",
+                "updated user registration form data (new password)",
+                "selected date (11)",
+                "selected date option",
+                "updated selected date",
+                "updated date selection (to 14)",
+                "selected date (15)",
+                "updated selected date (to 16)",
+                "selected date (17)",
+                "updated date selection (to 18)",
+                "updated date selection (to '19')",
+                "selected date (20)",
+                "updated date selection (to '22')"
+            ],
+            "data_dependencies": [
+                20
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "To create a Facebook account, first click the 'Create new account' button (S1) to reach the signup form. On the form (S2), you can click the first name input (S3), open the birth date dropdown (S4) to select a date (e.g., 11–22, S5–S20), choose the 'Femme' gender (S21), enter a mobile number (S22), or enter a new password (S23). These input steps can be done in any order as needed.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            4
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 21,
+                        "action": "click",
+                        "summary": "Click 'Create new account' to open the signup form"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            21,
+                            0
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": 23,
+                        "action": "click",
+                        "summary": "Click first name (Prénom) input field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            21,
+                            1
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": 24,
+                        "action": "click",
+                        "summary": "Click birth date (Date de naissance) dropdown"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            24,
+                            0
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 28,
+                        "action": "click",
+                        "summary": "Select birth date option '11'"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            24,
+                            1
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 29,
+                        "action": "click",
+                        "summary": "Select birth date option '12'"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            24,
+                            2
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 30,
+                        "action": "click",
+                        "summary": "Select birth date option '13'"
+                    },
+                    {
+                        "id": "S7",
+                        "action_ref": [
+                            24,
+                            3
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 31,
+                        "action": "click",
+                        "summary": "Select birth date option '14'"
+                    },
+                    {
+                        "id": "S8",
+                        "action_ref": [
+                            24,
+                            4
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 32,
+                        "action": "click",
+                        "summary": "Select birth date option '15'"
+                    },
+                    {
+                        "id": "S9",
+                        "action_ref": [
+                            24,
+                            5
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 33,
+                        "action": "click",
+                        "summary": "Select birth date option '16'"
+                    },
+                    {
+                        "id": "S10",
+                        "action_ref": [
+                            24,
+                            6
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 34,
+                        "action": "click",
+                        "summary": "Select birth date option '17'"
+                    },
+                    {
+                        "id": "S11",
+                        "action_ref": [
+                            24,
+                            7
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 35,
+                        "action": "click",
+                        "summary": "Select birth date option '18'"
+                    },
+                    {
+                        "id": "S12",
+                        "action_ref": [
+                            24,
+                            8
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 36,
+                        "action": "click",
+                        "summary": "Select birth date option '19'"
+                    },
+                    {
+                        "id": "S13",
+                        "action_ref": [
+                            24,
+                            9
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 37,
+                        "action": "click",
+                        "summary": "Select birth date option '20'"
+                    },
+                    {
+                        "id": "S14",
+                        "action_ref": [
+                            24,
+                            10
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 38,
+                        "action": "click",
+                        "summary": "Select birth date option '21'"
+                    },
+                    {
+                        "id": "S15",
+                        "action_ref": [
+                            24,
+                            11
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 39,
+                        "action": "click",
+                        "summary": "Select birth date option '22'"
+                    },
+                    {
+                        "id": "S16",
+                        "action_ref": [
+                            21,
+                            2
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": 25,
+                        "action": "click",
+                        "summary": "Click 'Genre Femme' radio button to select female gender"
+                    },
+                    {
+                        "id": "S17",
+                        "action_ref": [
+                            21,
+                            3
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": 26,
+                        "action": "click",
+                        "summary": "Click mobile number (Numéro mobile) input field"
+                    },
+                    {
+                        "id": "S18",
+                        "action_ref": [
+                            21,
+                            4
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": 27,
+                        "action": "click",
+                        "summary": "Click new password (Nouveau mot de passe) input field"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S16"
+                            },
+                            {
+                                "next_step": "S17"
+                            },
+                            {
+                                "next_step": "S18"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S4",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S5"
+                            },
+                            {
+                                "next_step": "S6"
+                            },
+                            {
+                                "next_step": "S7"
+                            },
+                            {
+                                "next_step": "S8"
+                            },
+                            {
+                                "next_step": "S9"
+                            },
+                            {
+                                "next_step": "S10"
+                            },
+                            {
+                                "next_step": "S11"
+                            },
+                            {
+                                "next_step": "S12"
+                            },
+                            {
+                                "next_step": "S13"
+                            },
+                            {
+                                "next_step": "S14"
+                            },
+                            {
+                                "next_step": "S15"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "The current page allows users to log into their Facebook account by entering their email/phone number and password, recover a forgotten password, create a new account, or create a page for a celebrity, brand, or business.",
+            "action_refs": [
+                [
+                    5,
+                    5
+                ]
+            ],
+            "data_in": [],
+            "data_out": [
+                "page (for celebrity, brand, or business)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "On the Facebook login page (page 5), the user can take the action of clicking the 'Create a Page' link. This action is a leaf step, meaning it likely initiates the process to create a page for a celebrity, brand, or business, with no further sequential steps or branches defined here from the provided actions.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            5
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click the 'Create a Page' link"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "Gender toggle (Female)",
+            "action_refs": [
+                [
+                    6,
+                    2
+                ]
+            ],
+            "data_in": [
+                "gender setting"
+            ],
+            "data_out": [
+                "updated gender setting (Female)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The flow starts on page 6. The user performs a click action on the 'Gender toggle (Female)' element, which transitions the app to page 58. This is a single-step flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            2
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 58,
+                        "action": "click",
+                        "summary": "Click the Gender toggle (Female) element"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "The current page (Facebook side navigation menu) provides a list of navigation options (e.g., Top stories, Friend Requests, Search, etc.) to access different sections and features of the Facebook app.",
+            "action_refs": [
+                [
+                    7,
+                    0
+                ]
+            ],
+            "data_in": [
+                "navigation menu state"
+            ],
+            "data_out": [
+                "opened navigation menu"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The flow starts on the 'Most Recent' page (page 7). The user clicks the hamburger menu button, which opens the Facebook side navigation menu (page 1) containing various navigation options like Top stories, Friend Requests, etc. This is a single-step flow with no branches or loops, as the action directly reveals the navigation menu.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            0
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the hamburger menu button to open the Facebook side navigation menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "This page is a Facebook side navigation menu (accessed from the page top navigation's hamburger menu) that provides options to navigate to different sections like Top stories, Most Recent, Friend Requests, Search, Main menu, Groups, Events, Photos, and Settings, allowing users to access various Facebook features and content.",
+            "action_refs": [
+                [
+                    8,
+                    0
+                ]
+            ],
+            "data_in": [
+                "navigation menu trigger"
+            ],
+            "data_out": [
+                "navigation menu (expanded)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The flow starts on page 8 (Facebook main page). The user clicks the hamburger menu button (action S1), which navigates to page 1 (the side navigation menu) displaying options like Top stories, Most Recent, etc. This is a straight-line flow with no branches as only one action is provided here.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            0
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the hamburger menu button to open the side navigation menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "The current page functions as a Facebook login and account access interface, allowing users to enter their email/phone and password to log in, recover a forgotten password, create a new account, or create a page for a celebrity, brand, or business.",
+            "action_refs": [
+                [
+                    9,
+                    0
+                ]
+            ],
+            "data_in": [
+                "settings page state"
+            ],
+            "data_out": [
+                "navigation back to previous page (Most Recent)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The flow starts on a settings page (page 9). The user clicks the back arrow icon, which navigates to a Facebook login/account access page (page 5). On this page, the user can choose to log in, recover a password, create an account, or create a page, but the captured action only covers the back navigation to reach this page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            0
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click the back arrow icon on the settings page to navigate to the Facebook login/account access page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "Disable ACRA checkbox",
+            "action_refs": [
+                [
+                    9,
+                    1
+                ]
+            ],
+            "data_in": [
+                "Disable ACRA setting"
+            ],
+            "data_out": [
+                "updated Disable ACRA setting (disabled)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The process starts on the Settings page (page 9). The user clicks the 'Disable ACRA' checkbox, which likely toggles its state (e.g., from unchecked to checked) and may navigate to a new page (page 10) or update the current page. There are no branches as it's a single action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            1
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click the 'Disable ACRA' checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 25,
+            "function_description": "This page allows the user to select a different language for the Facebook app from a list of available language options.",
+            "action_refs": [
+                [
+                    9,
+                    3
+                ],
+                [
+                    12,
+                    0
+                ],
+                [
+                    12,
+                    2
+                ],
+                [
+                    12,
+                    3
+                ],
+                [
+                    12,
+                    9
+                ],
+                [
+                    12,
+                    11
+                ],
+                [
+                    12,
+                    12
+                ]
+            ],
+            "data_in": [
+                "app language setting",
+                "language setting"
+            ],
+            "data_out": [
+                "updated app language setting",
+                "updated language setting",
+                "updated language setting (French [fr])",
+                "updated language setting (German [de])",
+                "updated language setting (Italian [it])",
+                "updated language setting (Polish [pl])",
+                "updated language setting (Portuguese [pt])"
+            ],
+            "data_dependencies": [
+                6,
+                32,
+                33,
+                34,
+                35,
+                36,
+                37,
+                38,
+                39
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts on the Settings page (page 9) and clicks the 'Change app language' option to open the language selection menu (page 12). At the language selection menu, the user chooses one of the available language radio buttons (e.g., English, French, German, Italian, Polish, Portuguese), each leading to a confirmation or completion page (pages 43, 45, 46, 52, 54, 55 respectively).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            3
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click 'Change app language' to open language selection"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            12,
+                            0
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 43,
+                        "action": "click",
+                        "summary": "Select English [en] radio button"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            12,
+                            2
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 45,
+                        "action": "click",
+                        "summary": "Select French [fr] radio button"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            12,
+                            3
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 46,
+                        "action": "click",
+                        "summary": "Select German [de] radio button"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            12,
+                            9
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 52,
+                        "action": "click",
+                        "summary": "Select Italian [it] radio button"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            12,
+                            11
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 54,
+                        "action": "click",
+                        "summary": "Select Polish [pl] radio button"
+                    },
+                    {
+                        "id": "S7",
+                        "action_ref": [
+                            12,
+                            12
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 55,
+                        "action": "click",
+                        "summary": "Select Portuguese [pt] radio button"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S6"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S7"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            },
+                            {
+                                "next_step": "S6"
+                            },
+                            {
+                                "next_step": "S7"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 26,
+            "function_description": "The current page (within the app settings) allows the user to select a text size option (Default, Medium, Large, Extra large) for the app's interface, with the selected option determining the size of text displayed throughout the app.",
+            "action_refs": [
+                [
+                    9,
+                    4
+                ]
+            ],
+            "data_in": [
+                "text scale setting"
+            ],
+            "data_out": [
+                "updated text scale setting"
+            ],
+            "data_dependencies": [
+                15
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts on the app settings page. They click the 'Text scale' option, which opens a menu with text size choices (Default, Medium, Large, Extra large). The flow then allows selecting one of these options to set the app's text size, though the selection step is implied by the menu's purpose.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            4
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click on 'Text scale' option to open text size selection menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 27,
+            "function_description": "Location access toggle",
+            "action_refs": [
+                [
+                    9,
+                    5
+                ]
+            ],
+            "data_in": [
+                "location access setting"
+            ],
+            "data_out": [
+                "updated location access setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts on the Settings page (page 9). The core action is clicking the Location access toggle, which likely changes its state (e.g., from off to on or vice versa) and may navigate to a related page (page 13) or update the toggle's appearance. There are no branches or loops here as it's a single click action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            5
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click the Location access toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 28,
+            "function_description": "Hide Status editor toggle",
+            "action_refs": [
+                [
+                    9,
+                    6
+                ]
+            ],
+            "data_in": [
+                "Hide Status editor in News Feed setting"
+            ],
+            "data_out": [
+                "updated Hide Status editor in News Feed setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "On the Settings page (page 9), the user clicks the 'Hide Status editor toggle' (action at [9,6]). This action navigates to page 14, completing the functional point's execution.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            6
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click the Hide Status editor toggle on the Settings page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 29,
+            "function_description": "Don't load images toggle",
+            "action_refs": [
+                [
+                    9,
+                    7
+                ]
+            ],
+            "data_in": [
+                "don't load images setting"
+            ],
+            "data_out": [
+                "updated don't load images setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The flow starts on the Settings page (page 9). The user clicks the 'Don't load images' toggle, which transitions the app to a new page (page 15). This action enables or disables the setting to prevent image loading.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            7
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click the 'Don't load images' toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 30,
+            "function_description": "Hide 'Sponsored' Content toggle",
+            "action_refs": [
+                [
+                    9,
+                    8
+                ]
+            ],
+            "data_in": [
+                "hide sponsored content setting"
+            ],
+            "data_out": [
+                "updated hide sponsored content setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": null
+        },
+        {
+            "index": 31,
+            "function_description": "Hide Birthdays toggle",
+            "action_refs": [
+                [
+                    9,
+                    9
+                ]
+            ],
+            "data_in": [
+                "hide birthdays setting"
+            ],
+            "data_out": [
+                "updated hide birthdays setting (enabled)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts on page 9 (Settings). The core logic is to click the 'Hide Birthdays' toggle, which transitions to page 17. There are no branches or loops as it's a single action to interact with the toggle.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            9
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click the 'Hide Birthdays' toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 32,
+            "function_description": "Filipino [fil] radio button",
+            "action_refs": [
+                [
+                    12,
+                    1
+                ]
+            ],
+            "data_in": [
+                "language setting"
+            ],
+            "data_out": [
+                "updated language setting (Filipino [fil])"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The user starts on page 12 (a settings-related page with a language selection dialog). The core action is clicking the 'Filipino [fil]' radio button, which transitions the flow to page 44 (presumably reflecting the language change or confirmation). There are no branches or loops as it’s a single action to select the Filipino language option.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            1
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 44,
+                        "action": "click",
+                        "summary": "Click the 'Filipino [fil]' radio button to select it"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 33,
+            "function_description": "Greek [el] radio button",
+            "action_refs": [
+                [
+                    12,
+                    4
+                ]
+            ],
+            "data_in": [
+                "language setting",
+                "Greek [el] option"
+            ],
+            "data_out": [
+                "updated language setting (Greek [el])"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The flow starts on page 12. The user clicks the 'Greek [el]' radio button, which transitions to page 47. This is a straight-line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            4
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 47,
+                        "action": "click",
+                        "summary": "Click the Greek [el] radio button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 34,
+            "function_description": "Hebrew [iw] radio button",
+            "action_refs": [
+                [
+                    12,
+                    5
+                ]
+            ],
+            "data_in": [
+                "language setting",
+                "Hebrew [iw] option"
+            ],
+            "data_out": [
+                "updated language setting (Hebrew [iw])"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The user starts on page 12 (a settings-related page with a language selection dialog). The core action is clicking the 'Hebrew [iw]' radio button, which transitions to page 48 (likely confirming the language change or returning to a related settings page). There are no branches or loops here, as it’s a single click action to select the language.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            5
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 48,
+                        "action": "click",
+                        "summary": "Click the 'Hebrew [iw]' radio button to select Hebrew as the language"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 35,
+            "function_description": "Hungarian [hu] radio button",
+            "action_refs": [
+                [
+                    12,
+                    6
+                ]
+            ],
+            "data_in": [
+                "language setting"
+            ],
+            "data_out": [
+                "updated language setting (Hungarian [hu])"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The flow starts on page 12 (likely a settings or language selection page). The user clicks the 'Hungarian [hu]' radio button, which transitions the app to page 49 (presumably confirming the language change or updating the interface). There are no branches or loops as this is a single action to select the Hungarian language option.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            6
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 49,
+                        "action": "click",
+                        "summary": "Click the 'Hungarian [hu]' radio button to select it"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 36,
+            "function_description": "Indonesian [in] radio button",
+            "action_refs": [
+                [
+                    12,
+                    7
+                ]
+            ],
+            "data_in": [
+                "language setting",
+                "Indonesian [in] option"
+            ],
+            "data_out": [
+                "updated language setting (Indonesian [in])"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The flow starts on page 12 (a settings-related page with a language selection dialog). The user clicks the 'Indonesian [in]' radio button, which transitions the app to page 50. This is a single-step flow with no branches, as the action directly selects the Indonesian language option.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            7
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 50,
+                        "action": "click",
+                        "summary": "Click the 'Indonesian [in]' radio button to select it"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 37,
+            "function_description": "Italian (Italy) [it-rIT] radio button",
+            "action_refs": [
+                [
+                    12,
+                    8
+                ]
+            ],
+            "data_in": [
+                "language setting"
+            ],
+            "data_out": [
+                "updated language setting (Italian (Italy) [it-rIT])"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The flow starts on page 12. The user clicks the 'Italian (Italy) [it-rIT]' radio button, which transitions the app to page 51. This is a single-step action with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            8
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 51,
+                        "action": "click",
+                        "summary": "Click the 'Italian (Italy) [it-rIT]' radio button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 38,
+            "function_description": "Kurdish [ku] radio button",
+            "action_refs": [
+                [
+                    12,
+                    10
+                ]
+            ],
+            "data_in": [
+                "language setting",
+                "Kurdish [ku] language option"
+            ],
+            "data_out": [
+                "updated language setting (Kurdish [ku] selected)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The flow starts on page 12. The user clicks the Kurdish [ku] radio button, which likely navigates to page 53 (or updates the state) to select Kurdish as the language option. There are no branches or loops as it's a single action to select the radio button.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            10
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 53,
+                        "action": "click",
+                        "summary": "Click the Kurdish [ku] radio button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 39,
+            "function_description": "Romanian [ro] radio button",
+            "action_refs": [
+                [
+                    12,
+                    13
+                ]
+            ],
+            "data_in": [
+                "language setting"
+            ],
+            "data_out": [
+                "updated language setting (Romanian [ro])"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The flow starts on page 12. The user clicks the 'Romanian [ro]' radio button, which transitions to page 56. This is a single-step action with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            13
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 56,
+                        "action": "click",
+                        "summary": "Click Romanian [ro] radio button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        }
+    ]
+}

@@ -1,0 +1,1624 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "Manage and view notes in a notepad app",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ],
+                [
+                    0,
+                    2
+                ],
+                [
+                    0,
+                    3
+                ],
+                [
+                    2,
+                    0
+                ],
+                [
+                    2,
+                    1
+                ],
+                [
+                    2,
+                    2
+                ],
+                [
+                    2,
+                    3
+                ],
+                [
+                    2,
+                    4
+                ],
+                [
+                    2,
+                    5
+                ]
+            ],
+            "data_in": [
+                "note list"
+            ],
+            "data_out": [
+                "sorted note list",
+                "sorted notes"
+            ],
+            "data_dependencies": [
+                1,
+                2,
+                3,
+                10
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user can open the hamburger menu, view sorting options by clicking the SORT button, and select from various radio buttons to sort notes based on criteria like edit date, title, creation date, or color.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Opens the hamburger menu."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Opens the SORT menu."
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            2,
+                            0
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 57,
+                        "action": "click",
+                        "summary": "Selects 'edit date: from oldest' sort option."
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            2,
+                            1
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 58,
+                        "action": "click",
+                        "summary": "Selects 'title: A to Z' sort option."
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            2,
+                            2
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 59,
+                        "action": "click",
+                        "summary": "Selects 'title: Z to A' sort option."
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            2,
+                            3
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 60,
+                        "action": "click",
+                        "summary": "Selects 'creation date: from newest' sort option."
+                    },
+                    {
+                        "id": "S7",
+                        "action_ref": [
+                            2,
+                            4
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 61,
+                        "action": "click",
+                        "summary": "Selects 'creation date: from oldest' sort option."
+                    },
+                    {
+                        "id": "S8",
+                        "action_ref": [
+                            2,
+                            5
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 62,
+                        "action": "click",
+                        "summary": "Selects 'color: in order' sort option."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            },
+                            {
+                                "next_step": "S6"
+                            },
+                            {
+                                "next_step": "S7"
+                            },
+                            {
+                                "next_step": "S8"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 1,
+            "function_description": "Create and edit a note with options to save or undo changes.",
+            "action_refs": [
+                [
+                    0,
+                    4
+                ]
+            ],
+            "data_in": [
+                "note"
+            ],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts by clicking on an existing note labeled 'Untitled' to open it for editing. Once in the editing mode, the user can save changes or undo them through the available options.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click on the 'Untitled' note to open it for editing."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "The current page allows users to manage notes that have been moved to the trash folder in a notepad app.",
+            "action_refs": [
+                [
+                    1,
+                    1
+                ]
+            ],
+            "data_in": [
+                "category list"
+            ],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user accesses the trash folder to manage notes by clicking the 'Edit categories' option. This action navigates the user to a new page where further management of notes can be performed.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            1
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click 'Edit categories' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "The current page allows users to manage the backup and restoration of their notes using online and file-based options.",
+            "action_refs": [
+                [
+                    1,
+                    2
+                ]
+            ],
+            "data_in": [
+                "notes"
+            ],
+            "data_out": [],
+            "data_dependencies": [
+                9
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user selects the backup option from the main menu, which navigates to a page allowing the management of note backups. On this page, users can choose to backup or restore notes using online or file-based options.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            2
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "User clicks on the backup option in the menu."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "The current page provides options to customize settings for themes, password protection, note management, backup, and privacy within the notepad app.",
+            "action_refs": [
+                [
+                    1,
+                    4
+                ]
+            ],
+            "data_in": [],
+            "data_out": [
+                "settings"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user accesses the settings page by clicking on the settings option from the main menu. From there, various customization options are available for themes, password protection, note management, backup, and privacy.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            4
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click on the settings option."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "The current page allows users to rate the Notepad app.",
+            "action_refs": [
+                [
+                    1,
+                    5
+                ]
+            ],
+            "data_in": [
+                "app information"
+            ],
+            "data_out": [
+                "app rating"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user selects the 'Rate the app' option, which redirects them to a page where they can rate the Notepad app.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            5
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Select 'Rate the app' option."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "The current page provides frequently asked questions and answers related to using and troubleshooting the Notepad app.",
+            "action_refs": [
+                [
+                    1,
+                    7
+                ],
+                [
+                    9,
+                    1
+                ],
+                [
+                    9,
+                    2
+                ]
+            ],
+            "data_in": [
+                "help topics",
+                "FAQ list"
+            ],
+            "data_out": [
+                "expanded FAQ answers"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user starts by selecting the Help option, which opens the FAQ section. Here, the user can choose to either expand all answers or select a specific FAQ item to view detailed information.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            7
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Navigate to the Help section."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            9,
+                            1
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 55,
+                        "action": "click",
+                        "summary": "Expand all FAQ answers."
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            9,
+                            2
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 56,
+                        "action": "click",
+                        "summary": "Select a specific FAQ item."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "This page displays the privacy policy for the Notepad app, detailing how user data is collected, stored, and used.",
+            "action_refs": [
+                [
+                    1,
+                    8
+                ]
+            ],
+            "data_in": [
+                "privacy policy"
+            ],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user starts by clicking on the 'Privacy policy' option from the main menu. This action redirects them to a page that displays the privacy policy details for the Notepad app.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            8
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click on the 'Privacy policy' option."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "This page provides instructions on various methods to back up notes in the notepad app, including cloud services and device backups.",
+            "action_refs": [
+                [
+                    6,
+                    0
+                ],
+                [
+                    11,
+                    0
+                ],
+                [
+                    11,
+                    4
+                ],
+                [
+                    16,
+                    0
+                ],
+                [
+                    16,
+                    1
+                ],
+                [
+                    16,
+                    2
+                ],
+                [
+                    16,
+                    3
+                ],
+                [
+                    16,
+                    4
+                ],
+                [
+                    16,
+                    5
+                ],
+                [
+                    16,
+                    6
+                ],
+                [
+                    16,
+                    7
+                ],
+                [
+                    16,
+                    8
+                ],
+                [
+                    16,
+                    9
+                ]
+            ],
+            "data_in": [
+                "help article",
+                "help topic",
+                "help content",
+                "password removal guide"
+            ],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts by clicking the show backup instructions button, navigating to the help page. They can expand sections such as 'What is a backup copy file?' for details. The main decision point occurs when collapsing or expanding additional sections such as 'How can I back up notes?', allowing further instructions to appear.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            0
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Show backup instructions button"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            11,
+                            0
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Expand 'What is a backup copy file?'"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            11,
+                            4
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Collapse 'How can I back up notes?'"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "This page allows users to back up their notes online to Google Drive.",
+            "action_refs": [
+                [
+                    6,
+                    1
+                ]
+            ],
+            "data_in": [
+                "notes"
+            ],
+            "data_out": [
+                "backup of notes"
+            ],
+            "data_dependencies": [
+                3,
+                10
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user initiates a backup of their notes by clicking the 'Backup notes' button. This action navigates them to a page where they can choose a Google account for uploading their notes to Google Drive.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            1
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click the 'Backup notes' button to start online backup"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "Save note backups to a file.",
+            "action_refs": [
+                [
+                    6,
+                    3
+                ]
+            ],
+            "data_in": [
+                "backup notes"
+            ],
+            "data_out": [
+                "backup file"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user navigates to the backup page and initiates the process to save a backup of their notes to a file. They click the 'Save backup to a file' button, which begins the file saving operation.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            3
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click the 'Save backup to a file' button."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "This page allows users to change the color theme of visible elements within the notepad app.",
+            "action_refs": [
+                [
+                    7,
+                    0
+                ],
+                [
+                    27,
+                    0
+                ],
+                [
+                    27,
+                    1
+                ],
+                [
+                    27,
+                    2
+                ],
+                [
+                    27,
+                    3
+                ],
+                [
+                    27,
+                    4
+                ],
+                [
+                    27,
+                    5
+                ],
+                [
+                    27,
+                    6
+                ]
+            ],
+            "data_in": [
+                "theme setting",
+                "theme settings"
+            ],
+            "data_out": [
+                "selected theme",
+                "theme setting",
+                "updated theme setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The user first clicks on the theme settings option to open the theme selection dialog. From there, they choose one of the theme options to set the color theme of visible elements, or they may cancel the operation.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            0
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 27,
+                        "action": "click",
+                        "summary": "Open theme settings"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            27,
+                            0
+                        ],
+                        "src_page_idx": 27,
+                        "dst_page_idx": 34,
+                        "action": "click",
+                        "summary": "Select 'Light' theme"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            27,
+                            1
+                        ],
+                        "src_page_idx": 27,
+                        "dst_page_idx": 35,
+                        "action": "click",
+                        "summary": "Select 'Solarized' theme"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            27,
+                            2
+                        ],
+                        "src_page_idx": 27,
+                        "dst_page_idx": 36,
+                        "action": "click",
+                        "summary": "Select 'White' theme"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            27,
+                            3
+                        ],
+                        "src_page_idx": 27,
+                        "dst_page_idx": 37,
+                        "action": "click",
+                        "summary": "Select 'Solarized dark' theme"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            27,
+                            4
+                        ],
+                        "src_page_idx": 27,
+                        "dst_page_idx": 38,
+                        "action": "click",
+                        "summary": "Select 'Dark' theme"
+                    },
+                    {
+                        "id": "S7",
+                        "action_ref": [
+                            27,
+                            5
+                        ],
+                        "src_page_idx": 27,
+                        "dst_page_idx": 39,
+                        "action": "click",
+                        "summary": "Select 'System setting' theme"
+                    },
+                    {
+                        "id": "S8",
+                        "action_ref": [
+                            27,
+                            6
+                        ],
+                        "src_page_idx": 27,
+                        "dst_page_idx": 40,
+                        "action": "click",
+                        "summary": "Cancel theme selection"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S6"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S7"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S8"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            },
+                            {
+                                "next_step": "S6"
+                            },
+                            {
+                                "next_step": "S7"
+                            },
+                            {
+                                "next_step": "S8"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "The \"Password settings\" page allows users to configure security options, including setting or removing passwords, adjusting unlock time, enabling a lock app button, and using biometrics for unlocking the app.",
+            "action_refs": [
+                [
+                    7,
+                    1
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The user navigates to the 'Password settings' page by clicking the 'Password settings' option. On this page, users can configure security settings such as setting or removing passwords, adjusting unlock time, and enabling biometrics for unlocking the app.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            1
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 28,
+                        "action": "click",
+                        "summary": "Navigate to the Password settings page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "This page allows users to configure settings related to note list display options, such as opening the last chosen category, showing note categories, and displaying the checklist create button.",
+            "action_refs": [
+                [
+                    7,
+                    2
+                ]
+            ],
+            "data_in": [
+                "note list settings"
+            ],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The user taps on the 'Note list settings' option to configure the display settings. This leads to a page where they can modify settings related to note categories and visibility of the checklist create button.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            2
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 29,
+                        "action": "click",
+                        "summary": "Click on the 'Note list settings' option."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "The current page allows users to configure note editing settings such as keyboard display, cursor position, text formatting, and auto-saving features in a notepad app.",
+            "action_refs": [
+                [
+                    7,
+                    3
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The user navigates to the settings page and selects the note editing settings option to configure features like keyboard display, cursor positioning, text formatting, and auto-saving.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            3
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 30,
+                        "action": "click",
+                        "summary": "User clicks on the note editing settings option."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "Move deleted notes to Trash toggle",
+            "action_refs": [
+                [
+                    7,
+                    5
+                ]
+            ],
+            "data_in": [
+                "deleted notes"
+            ],
+            "data_out": [
+                "Trash settings"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The user navigates to the settings page and clicks the 'Move deleted notes to Trash' toggle. This action either enables or disables the feature, which determines if deleted notes will be stored in the 'Trash' folder.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            5
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 31,
+                        "action": "click",
+                        "summary": "Click the 'Move deleted notes to Trash' toggle."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "Attach diagnostic info toggle",
+            "action_refs": [
+                [
+                    7,
+                    6
+                ]
+            ],
+            "data_in": [],
+            "data_out": [
+                "diagnostic info setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The user navigates to the settings page where the 'Attach diagnostic info' toggle is visible. Clicking on this toggle will attach diagnostic information to email messages if enabled.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            6
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 32,
+                        "action": "click",
+                        "summary": "Click the 'Attach diagnostic info' toggle."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "Hide note titles in diagnostic log toggle",
+            "action_refs": [
+                [
+                    7,
+                    7
+                ]
+            ],
+            "data_in": [],
+            "data_out": [
+                "diagnostic log"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "To toggle the hiding of note titles in the diagnostic log, the user navigates to the settings page and clicks on the specific option to enable or disable it. This updates whether note titles appear in diagnostic information sent for support.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            7
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 33,
+                        "action": "click",
+                        "summary": "Toggle the 'Hide note titles in diagnostic log' option."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "This page allows users to contact technical support by describing their issue via email.",
+            "action_refs": [
+                [
+                    9,
+                    3
+                ]
+            ],
+            "data_in": [
+                "contact form"
+            ],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user navigates to the help page and clicks the 'Contact technical support' link. This action opens an email application, allowing the user to describe their issue and send it to the support team's email address.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            3
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click the 'Contact technical support' link to open an email application."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "The current page allows users to set or change the app's password and manage security settings.",
+            "action_refs": [
+                [
+                    28,
+                    0
+                ],
+                [
+                    41,
+                    3
+                ],
+                [
+                    41,
+                    4
+                ]
+            ],
+            "data_in": [
+                "user profile",
+                "current password",
+                "new password",
+                "password recovery email address"
+            ],
+            "data_out": [
+                "updated password"
+            ],
+            "data_dependencies": [
+                20,
+                29,
+                30
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 28,
+                "logic": "The user navigates to the password settings and selects the option to set a password. A popup appears where the user can either confirm or cancel the action. If 'OK' is clicked, the user proceeds with the changes; if 'CANCEL' is clicked, the action is discarded and the user is returned to the settings page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            28,
+                            0
+                        ],
+                        "src_page_idx": 28,
+                        "dst_page_idx": 41,
+                        "action": "click",
+                        "summary": "Select the 'Set password' option."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            41,
+                            3
+                        ],
+                        "src_page_idx": 41,
+                        "dst_page_idx": 44,
+                        "action": "click",
+                        "summary": "Click 'CANCEL' in the password popup."
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            41,
+                            4
+                        ],
+                        "src_page_idx": 41,
+                        "dst_page_idx": 45,
+                        "action": "click",
+                        "summary": "Click 'OK' in the password popup."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "Show lock app button toggle",
+            "action_refs": [
+                [
+                    28,
+                    3
+                ]
+            ],
+            "data_in": [
+                "password settings"
+            ],
+            "data_out": [
+                "lock app button setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 28,
+                "logic": "The user navigates to the password settings page and clicks the toggle to show the lock app button. This action allows the user to enable or disable the immediate app lock button.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            28,
+                            3
+                        ],
+                        "src_page_idx": 28,
+                        "dst_page_idx": 42,
+                        "action": "click",
+                        "summary": "User clicks to toggle the Show lock app button."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "Use biometrics to unlock toggle",
+            "action_refs": [
+                [
+                    28,
+                    4
+                ]
+            ],
+            "data_in": [
+                "biometric data"
+            ],
+            "data_out": [
+                "biometric unlock setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 28,
+                "logic": "The user navigates to the password settings page and clicks the toggle to enable biometric unlocking for the app.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            28,
+                            4
+                        ],
+                        "src_page_idx": 28,
+                        "dst_page_idx": 43,
+                        "action": "click",
+                        "summary": "Click the toggle to enable 'Use biometrics to unlock the app'."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "Toggle 'Open the last chosen category'",
+            "action_refs": [
+                [
+                    29,
+                    0
+                ]
+            ],
+            "data_in": [
+                "note list settings"
+            ],
+            "data_out": [
+                "last chosen category setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 29,
+                "logic": "The user navigates to the Note List page, where they can toggle the 'Open the last chosen category' option. This action changes the setting to either enable or disable the feature.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            29,
+                            0
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 48,
+                        "action": "click",
+                        "summary": "Toggle the 'Open the last chosen category' option."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "Toggle 'Show note categories'",
+            "action_refs": [
+                [
+                    29,
+                    1
+                ]
+            ],
+            "data_in": [
+                "note list settings"
+            ],
+            "data_out": [
+                "note list settings change"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 29,
+                "logic": "The user can toggle the 'Show note categories' option from the settings page. Tapping the toggle switch updates whether note categories are displayed for each note in the list.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            29,
+                            1
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 49,
+                        "action": "click",
+                        "summary": "Click to toggle 'Show note categories'."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "Toggle 'Show checklist create button'",
+            "action_refs": [
+                [
+                    29,
+                    2
+                ]
+            ],
+            "data_in": [],
+            "data_out": [
+                "checklist button setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 29,
+                "logic": "The user clicks on the toggle to show or hide the checklist create button. This action updates the setting and transitions the user to the updated settings page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            29,
+                            2
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 50,
+                        "action": "click",
+                        "summary": "Click to toggle 'Show checklist create button'."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 25,
+            "function_description": "Toggle 'Show text formatting toolbar'",
+            "action_refs": [
+                [
+                    30,
+                    0
+                ]
+            ],
+            "data_in": [],
+            "data_out": [
+                "text formatting toolbar setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 30,
+                "logic": "The user clicks on the toggle to show or hide the text formatting toolbar. This action modifies the display settings within the app.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            30,
+                            0
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 51,
+                        "action": "click",
+                        "summary": "Toggle 'Show text formatting toolbar'"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 26,
+            "function_description": "Toggle 'Switch Save and Undo buttons'",
+            "action_refs": [
+                [
+                    30,
+                    1
+                ]
+            ],
+            "data_in": [],
+            "data_out": [
+                "button placement setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 30,
+                "logic": "The user navigates to the settings page to toggle the 'Switch Save and Undo buttons' option. This action rearranges the placement of these buttons on the interface.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            30,
+                            1
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 52,
+                        "action": "click",
+                        "summary": "Toggle the 'Switch Save and Undo buttons' to change their placement."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 27,
+            "function_description": "Toggle 'Open notes in read mode'",
+            "action_refs": [
+                [
+                    30,
+                    2
+                ]
+            ],
+            "data_in": [
+                "settings item"
+            ],
+            "data_out": [
+                "saved setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 30,
+                "logic": "The user navigates to the settings page where the option to toggle 'Open notes in read mode' is available. By clicking the toggle, the setting is updated to either enable or disable opening notes in read mode by default.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            30,
+                            2
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 53,
+                        "action": "click",
+                        "summary": "Toggles 'Open notes in read mode' setting."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 28,
+            "function_description": "Toggle 'Keep screen on'",
+            "action_refs": [
+                [
+                    30,
+                    3
+                ]
+            ],
+            "data_in": [],
+            "data_out": [
+                "screen setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 30,
+                "logic": "The user navigates to the settings page and toggles the 'Keep screen on' option. This action enables or disables the feature that prevents the screen from turning off while using the app.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            30,
+                            3
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 54,
+                        "action": "click",
+                        "summary": "Toggle the 'Keep screen on' option."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 29,
+            "function_description": "Show lock app button toggle",
+            "action_refs": [
+                [
+                    45,
+                    0
+                ]
+            ],
+            "data_in": [
+                "password settings"
+            ],
+            "data_out": [
+                "lock app button setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 45,
+                "logic": "The flow begins with the user clicking on the 'Show lock app button toggle' in the password settings. This action enables or disables the button for immediate app lock.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            45,
+                            0
+                        ],
+                        "src_page_idx": 45,
+                        "dst_page_idx": 46,
+                        "action": "click",
+                        "summary": "Click on the 'Show lock app button toggle'."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 30,
+            "function_description": "Use biometrics to unlock toggle",
+            "action_refs": [
+                [
+                    45,
+                    1
+                ]
+            ],
+            "data_in": [
+                "biometric settings"
+            ],
+            "data_out": [
+                "biometric unlock configuration"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 45,
+                "logic": "The user accesses the password settings page and clicks to enable biometric unlocking. This action switches the toggle, indicating biometrics are now used for unlocking the app.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            45,
+                            1
+                        ],
+                        "src_page_idx": 45,
+                        "dst_page_idx": 47,
+                        "action": "click",
+                        "summary": "Click to enable biometric unlocking."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        }
+    ]
+}

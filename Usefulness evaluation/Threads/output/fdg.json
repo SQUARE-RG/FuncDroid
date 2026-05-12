@@ -1,0 +1,4448 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "Social media feed with post interactions/navigation",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ],
+                [
+                    0,
+                    7
+                ]
+            ],
+            "data_in": [
+                "post status input"
+            ],
+            "data_out": [
+                "updated post status input"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the home page (entry page 0). First, the user clicks the active Home tab icon (S1), which keeps them on the home page. Then, the user inputs a status update ('Going for a walk') in the post status input field (S2), which navigates to a new page (page 7).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click active Home tab icon"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            0,
+                            7
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 7,
+                        "action": "input",
+                        "summary": "Input 'Going for a walk' in post status input"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 1,
+            "function_description": "The Messages page allows users to view, search, and manage their direct message conversations (including Inbox and Requests tabs) and provides options to compose new messages or interact with existing chats.",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ]
+            ],
+            "data_in": [
+                "messages feature entry"
+            ],
+            "data_out": [
+                "messages page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the home page. The user clicks the Messages tab icon (in the bottom navigation bar) to navigate to the Messages page, where they can view, search, and manage direct message conversations (Inbox/Requests) or compose new messages.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click Messages tab icon to open Messages page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "This page allows the user to create a new thread (post) by entering text, adding media/GIFs, specifying a topic, and configuring reply options before posting.",
+            "action_refs": [
+                [
+                    0,
+                    2
+                ],
+                [
+                    2,
+                    0
+                ]
+            ],
+            "data_in": [
+                "post creation interface",
+                "user profile",
+                "new thread content"
+            ],
+            "data_out": [
+                "new thread draft",
+                "updated new thread content"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on page 0 and clicks the 'Add post tab icon' to navigate to page 2. Then, on page 2, the user inputs text into the 'New thread text input field' to compose the new thread content.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click the Add post tab icon to navigate to the new thread creation page."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            2,
+                            0
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 27,
+                        "action": "input",
+                        "summary": "Input text into the New thread text input field to compose the post content."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "The current page (Activity) displays a feed of suggested threads with user posts, interaction metrics (likes, comments, shares), and options to adjust notification frequency, allowing users to view and interact with social media activity related to likes and other engagements.",
+            "action_refs": [
+                [
+                    0,
+                    3
+                ]
+            ],
+            "data_in": [
+                "likes tab entry"
+            ],
+            "data_out": [
+                "likes feed loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the main feed page (page 0). They click the Likes tab icon (a heart icon in the bottom navigation), which navigates to the Activity page (page 3) displaying suggested threads with engagement metrics and notification adjustment options. This is a straight-line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click the Likes tab icon (heart icon in bottom nav) to navigate to the Activity page showing suggested threads and engagement metrics."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "The current page (profile page) allows users to view and edit their profile details, share their profile, navigate through different post categories (Threads, Replies, Media, Reposts), and complete profile - related tasks like creating threads and following other profiles.",
+            "action_refs": [
+                [
+                    0,
+                    4
+                ]
+            ],
+            "data_in": [
+                "user profile"
+            ],
+            "data_out": [
+                "user profile page (loaded)"
+            ],
+            "data_dependencies": [
+                16,
+                17,
+                20,
+                24,
+                25,
+                40,
+                42
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the home page (page 0). The user clicks the Profile tab icon (action_ref [0,4]) to navigate to the profile page (page 4). On the profile page, the user can then perform further actions like editing, sharing, or navigating post categories, but this initial step focuses on accessing the profile page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the Profile tab icon to navigate to the profile page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "The page allows users to select and manage different social media feed categories (e.g., \"For you\", \"Following\", \"Ghost posts\") to customize the content they view in their social media feed.",
+            "action_refs": [
+                [
+                    0,
+                    5
+                ]
+            ],
+            "data_in": [
+                "navigation menu"
+            ],
+            "data_out": [
+                "opened navigation menu"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the social media feed page (page 0). They click the hamburger menu icon (action [0,5]), which opens the feed categories sidebar (page 5). This sidebar allows managing or selecting feed categories like 'For you', 'Following', or 'Ghost posts'.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click hamburger menu icon to open feed categories sidebar"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "This page enables users to search for and view profiles of other users (along with their follower counts and a \"Follow\" button for each) to discover and potentially follow new accounts.",
+            "action_refs": [
+                [
+                    0,
+                    6
+                ],
+                [
+                    6,
+                    0
+                ],
+                [
+                    52,
+                    0
+                ]
+            ],
+            "data_in": [
+                "search feature entry",
+                "search query",
+                "user profiles",
+                "search results (profiles)"
+            ],
+            "data_out": [
+                "search interface loaded",
+                "filtered user profiles"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the home page, clicks the search icon to open the search interface, then inputs 'motorcycle enthusiasts' into the search field. After inputting, the app displays search results (user profiles related to the query), and the user can then view these profiles (with follower counts and follow buttons) to discover new accounts to follow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            6
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click the search icon to open the search interface"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            6,
+                            0
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 52,
+                        "action": "input",
+                        "summary": "Input 'motorcycle enthusiasts' into the search field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            52,
+                            0
+                        ],
+                        "src_page_idx": 52,
+                        "dst_page_idx": 52,
+                        "action": "input",
+                        "summary": "View the search results (user profiles) after input"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "Follow user button (post avatar +)",
+            "action_refs": [
+                [
+                    0,
+                    8
+                ]
+            ],
+            "data_in": [
+                "follow user setting",
+                "post author"
+            ],
+            "data_out": [
+                "follow user setting updated"
+            ],
+            "data_dependencies": [
+                66
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on page 0. The user clicks the 'Follow user button (post avatar +)' (action_ref [0,8]). This action likely triggers a follow action for the post's author, with the destination page being 8 (though the exact UI change isn't detailed here).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            8
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click the Follow user button (post avatar +)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "Like post button (heart icon)",
+            "action_refs": [
+                [
+                    0,
+                    9
+                ]
+            ],
+            "data_in": [
+                "post",
+                "like count (post)"
+            ],
+            "data_out": [
+                "like count (post) updated",
+                "post liked state updated"
+            ],
+            "data_dependencies": [
+                12,
+                63,
+                66,
+                68
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the main feed page (page 0). The user clicks the heart (like) icon associated with a post. This action likely toggles the like status of the post, and the flow ends after this click (as the action is marked as a leaf).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            9
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click the heart (like) icon for a post"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "The current page (Thread) displays a social media post with text, images, interaction buttons (like, comment, share, repost), a reply input field, and options to view post activity, enabling users to engage with the post by replying, reacting, or exploring its engagement details.",
+            "action_refs": [
+                [
+                    0,
+                    10
+                ],
+                [
+                    10,
+                    0
+                ],
+                [
+                    10,
+                    3
+                ],
+                [
+                    10,
+                    4
+                ],
+                [
+                    10,
+                    7
+                ]
+            ],
+            "data_in": [
+                "post (leajxstine3's post)",
+                "post thread view",
+                "thread post",
+                "user comment",
+                "comment sorting configuration",
+                "thread comments",
+                "reply text input",
+                "post thread"
+            ],
+            "data_out": [
+                "comment input interface (for replying to post)",
+                "feed view",
+                "sorted thread comments",
+                "reply text (entered)"
+            ],
+            "data_dependencies": [
+                10,
+                11,
+                25,
+                27,
+                28,
+                31,
+                32
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the Thread page (page 0). First, the user clicks the comment button to enter the comment interface (page 10). From there, the user can either navigate back to the Thread page, open the more options menu, interact with the comment sort dropdown, or input a reply. After replying, the user can return to the Thread page via the back arrow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            10
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click comment post button to open comment interface"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            10,
+                            0
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click back arrow to return to Thread page"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            10,
+                            3
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 63,
+                        "action": "click",
+                        "summary": "Click more options menu"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            10,
+                            4
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 64,
+                        "action": "click",
+                        "summary": "Click comment sort dropdown"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            10,
+                            7
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 63,
+                        "action": "input",
+                        "summary": "Input reply text in reply field"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "The current page provides a menu of options (Copy link, Save, Not interested, Mute, Restrict, Block, Report) for interacting with a social media post, likely accessed by tapping the repost or post options button, to manage or share the post.",
+            "action_refs": [
+                [
+                    0,
+                    11
+                ]
+            ],
+            "data_in": [
+                "post"
+            ],
+            "data_out": [
+                "reposted post"
+            ],
+            "data_dependencies": [
+                12,
+                32,
+                49,
+                63,
+                68
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts by clicking the repost (cycle icon) button on a social media post (page 0). This action opens a menu (page 11) with options like Copy link, Save, Not interested, Mute, Restrict, Block, or Report. From here, the user can choose one of these options to manage or share the post, with the choice determining the next step (though the specific follow - up for each option isn't detailed here).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            11
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click the repost (cycle icon) button on a post to open the action menu."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": null
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "This page provides a menu of options (Copy link, Save, Not interested, Mute, Restrict, Block, Report) for interacting with a social media post, likely accessed via a repost or interaction action from the main feed, to manage or share the post.",
+            "action_refs": [
+                [
+                    0,
+                    12
+                ]
+            ],
+            "data_in": [
+                "post (leajxstine3's post)"
+            ],
+            "data_out": [
+                "share options menu"
+            ],
+            "data_dependencies": [
+                10,
+                12,
+                32,
+                49,
+                63,
+                68
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the social media feed (page 0). The user clicks the 'Share post' button (paper plane icon) on a post, which opens a menu (page 11) with options like Copy link, Save, Not interested, Mute, Restrict, Block, or Report. This menu is the destination after the click action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            12
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click the 'Share post' button (paper plane icon) on a social media post to open the interaction menu."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "This page provides options to interact with a social media post, including copying its link, saving it, or managing content preferences (e.g., marking as not interested, muting, restricting, blocking, or reporting the post’s author).",
+            "action_refs": [
+                [
+                    0,
+                    13
+                ]
+            ],
+            "data_in": [
+                "post"
+            ],
+            "data_out": [
+                "post options menu"
+            ],
+            "data_dependencies": [
+                10,
+                32,
+                49,
+                63,
+                68
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the social media feed page (page 0). The user clicks the three-dot menu (more options) on a post, which opens a menu (page 11) with options to copy the link, save the post, or manage content preferences (e.g., mark as not interested, mute, restrict, block, or report the author).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            13
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click the three-dot 'more options' menu on a social media post"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "Message search input field",
+            "action_refs": [
+                [
+                    1,
+                    0
+                ]
+            ],
+            "data_in": [
+                "message thread",
+                "search query"
+            ],
+            "data_out": [
+                "filtered message threads"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user starts on the Messages page (page 1). They interact with the message search input field by entering the text 'john_doe' (action at S1), which leads to a new page (page 12). This is a straight-line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            0
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 12,
+                        "action": "input",
+                        "summary": "Input 'john_doe' into the message search input field"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "The page enables users to initiate a new direct message by selecting a contact from suggested users or creating a group chat.",
+            "action_refs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    13,
+                    0
+                ],
+                [
+                    13,
+                    2
+                ],
+                [
+                    15,
+                    0
+                ],
+                [
+                    15,
+                    1
+                ],
+                [
+                    20,
+                    0
+                ]
+            ],
+            "data_in": [
+                "message interface (messages page)",
+                "new message page state",
+                "suggested contact (dinesh_meena_0856)",
+                "new message composition context",
+                "message draft",
+                "chat session",
+                "message composition context",
+                "attachment options trigger",
+                "attachment menu"
+            ],
+            "data_out": [
+                "new direct message setup (new message page)",
+                "messages page state",
+                "selected recipient (dinesh_meena_0856) for new message",
+                "new message chat interface with selected recipient",
+                "edited message draft",
+                "attachment options menu displayed",
+                "closed attachment menu"
+            ],
+            "data_dependencies": [
+                57,
+                59
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "To start a new direct message, the user first clicks the message button to open the new message page. On this page, they can choose to either select a suggested contact (like dinesh_meena_0856) or create a group chat. After selecting a contact, the user can input a message or use the attachment feature, with an option to close the attachment menu if needed.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            1
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click the message button to open the new message page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            13,
+                            2
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click a suggested contact (dinesh_meena_0856) to proceed to chat"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            15,
+                            0
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 19,
+                        "action": "input",
+                        "summary": "Input a message (Hello there!) in the message field"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            15,
+                            1
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 20,
+                        "action": "click",
+                        "summary": "Click the attachment action button to open attachment menu"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            20,
+                            0
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 21,
+                        "action": "click",
+                        "summary": "Click the close attachment menu button"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S5"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": null
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "See more notifications button",
+            "action_refs": [
+                [
+                    3,
+                    0
+                ]
+            ],
+            "data_in": [
+                "notification preference setting"
+            ],
+            "data_out": [
+                "notification preference setting updated to see more"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The user starts on the Activity page (page 3). They perform a single action: clicking the 'See more notifications button', which navigates them to page 28. There are no branches or loops in this flow as it is a straightforward click-and-navigate sequence.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            0
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 28,
+                        "action": "click",
+                        "summary": "Click the 'See more notifications button' to navigate to the next page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "The \"Edit profile\" page allows users to modify their profile details (name, bio, interests, links, podcast), manage verification/badges, adjust profile privacy settings, and save changes.",
+            "action_refs": [
+                [
+                    4,
+                    0
+                ],
+                [
+                    29,
+                    0
+                ],
+                [
+                    29,
+                    1
+                ]
+            ],
+            "data_in": [
+                "user profile",
+                "bio setting"
+            ],
+            "data_out": [
+                "user profile (entered edit mode)",
+                "updated user profile",
+                "updated bio setting"
+            ],
+            "data_dependencies": [
+                4,
+                17,
+                20,
+                24,
+                25,
+                40,
+                42
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The flow starts by clicking the 'Edit profile' button to enter the edit page. On the edit page, users can either input text in the bio field or click the 'Done' button to save changes. If editing the bio, text is entered; if saving, the 'Done' button is clicked to finalize edits.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            0
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 29,
+                        "action": "click",
+                        "summary": "Click 'Edit profile' button to enter edit profile page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            29,
+                            1
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 33,
+                        "action": "input",
+                        "summary": "Input text into bio field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            29,
+                            0
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 29,
+                        "action": "click",
+                        "summary": "Click 'Done' button to save profile edits"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "The page provides options to share the user's profile (daxiami63) via a QR code, including downloading the QR code, scanning it, copying the profile link, or sharing it to other platforms.",
+            "action_refs": [
+                [
+                    4,
+                    1
+                ],
+                [
+                    30,
+                    3
+                ]
+            ],
+            "data_in": [
+                "user profile"
+            ],
+            "data_out": [
+                "profile sharing options",
+                "profile QR code",
+                "profile link (copied)"
+            ],
+            "data_dependencies": [
+                37,
+                38,
+                39
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The flow starts on page 4, where the 'Share profile' button is clicked (S1) to navigate to page 30. On page 30, the same 'Share profile' button is clicked (S2), which navigates back to page 4. This suggests a possible loop or repeated action for sharing profile functionality.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            1
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 30,
+                        "action": "click",
+                        "summary": "Click 'Share profile' button on page 4 to go to page 30"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            30,
+                            3
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click 'Share profile' button on page 30 to go back to page 4"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "loop",
+                        "branches": [
+                            {
+                                "next_step": "S1"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "The page enables the user to create a new thread by composing a post, adding a topic, attaching media/GIFs, and configuring reply options before posting.",
+            "action_refs": [
+                [
+                    4,
+                    2
+                ]
+            ],
+            "data_in": [],
+            "data_out": [
+                "new thread draft"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user starts on page 4 and clicks the 'Create thread' button to navigate to page 2 (the 'New thread' page) to begin composing a new thread. This initiates the process of creating a thread, where further actions like adding content, topics, or media would follow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            2
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click 'Create thread' button to open the new thread composition page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "This page enables users to search for and follow new profiles (through a search bar and \"Follow\" button) to curate their social media feed, with a \"Done\" button to exit the profile - following setup process.",
+            "action_refs": [
+                [
+                    4,
+                    3
+                ],
+                [
+                    31,
+                    1
+                ]
+            ],
+            "data_in": [
+                "profile suggestion list",
+                "profile search query",
+                "profile search results"
+            ],
+            "data_out": [
+                "profile search results"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user starts on page 4 and clicks the 'See profiles' button to enter the profile - following setup page (page 31). On page 31, the user inputs a profile name in the search field. After that, the user can choose to follow the found profile or click the 'Done' button to exit the setup process.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            3
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 31,
+                        "action": "click",
+                        "summary": "Click 'See profiles' button to enter profile - following setup page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            31,
+                            1
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": 31,
+                        "action": "input",
+                        "summary": "Input profile name in search field on profile - following setup page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "This page allows the user to search for and add new communities or topics to their interests (with a note that interests/communities are public) while in an edit mode, with options to exit edit mode or confirm changes.",
+            "action_refs": [
+                [
+                    4,
+                    4
+                ],
+                [
+                    32,
+                    0
+                ],
+                [
+                    32,
+                    1
+                ],
+                [
+                    32,
+                    2
+                ],
+                [
+                    32,
+                    3
+                ],
+                [
+                    42,
+                    0
+                ]
+            ],
+            "data_in": [
+                "user profile",
+                "interests setting",
+                "search query",
+                "communities or topics list",
+                "community search interface",
+                "search query (photography)",
+                "interests and communities (to add)",
+                "interests editing session",
+                "topic search results"
+            ],
+            "data_out": [
+                "interests editing page loaded",
+                "search results (communities or topics)",
+                "search results (photography - related communities)",
+                "updated user interests and communities",
+                "profile page (navigated back to)",
+                "user profile page (returned to)"
+            ],
+            "data_dependencies": [
+                4,
+                16,
+                24,
+                25,
+                40,
+                42
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user starts by clicking the 'Add interests' button to enter edit mode. In edit mode, they can search for communities/topics (e.g., input 'technology'), add a community, or search for topics (e.g., input 'photography'). After making changes, they can either confirm by clicking 'Done' or exit without saving by clicking 'Back'.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            4
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 32,
+                        "action": "click",
+                        "summary": "Click 'Add interests' to enter edit mode for adding interests/communities."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            32,
+                            0
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": 41,
+                        "action": "input",
+                        "summary": "Input a community/topic (e.g., 'technology') in the search field."
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            32,
+                            1
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": 42,
+                        "action": "click",
+                        "summary": "Click 'Add community' button to add a community."
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            42,
+                            0
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": 42,
+                        "action": "input",
+                        "summary": "Input a topic (e.g., 'photography') in the search topics field."
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            32,
+                            2
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click 'Done' to confirm changes and exit edit mode."
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            32,
+                            3
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click 'Back' to exit edit mode without saving changes."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S6"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S6"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S5"
+                            },
+                            {
+                                "next_step": "S6"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S3",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            },
+                            {
+                                "next_step": "S6"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S4",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S5"
+                            },
+                            {
+                                "next_step": "S6"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "The current page (For You feed) displays a personalized social media feed where users can view, interact with (like, comment, repost, share), and provide feedback on posts from other users, along with options to create new posts and navigate to other sections of the app.",
+            "action_refs": [
+                [
+                    5,
+                    0
+                ]
+            ],
+            "data_in": [
+                "For you feed option"
+            ],
+            "data_out": [
+                "For you feed content"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user starts on page 5 (Feeds menu) and clicks the 'For you' feed option. This action navigates to page 0, which displays the personalized 'For you' social media feed with posts, interaction options, and navigation elements.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            0
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click 'For you' feed option to navigate to the personalized feed page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "The \"Create feed\" page enables users to name a new feed, set its visibility (public/private), and add profiles or topics (with suggested profiles provided) to customize the content of the new social media feed.",
+            "action_refs": [
+                [
+                    5,
+                    1
+                ],
+                [
+                    44,
+                    0
+                ]
+            ],
+            "data_in": [
+                "feed management interface",
+                "feed (create)"
+            ],
+            "data_out": [
+                "new feed creation interface",
+                "feed name (updated)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "To create a new feed, first click the 'Add feed' icon from the Feeds page. Then, input a name (e.g., 'Tech News') into the feed name input field on the subsequent page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            1
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 44,
+                        "action": "click",
+                        "summary": "Click 'Add feed' icon to start creating a new feed"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            44,
+                            0
+                        ],
+                        "src_page_idx": 44,
+                        "dst_page_idx": 46,
+                        "action": "input",
+                        "summary": "Input feed name (e.g., 'Tech News') into the input field"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "The \"Edit feeds\" page enables users to create new social media feeds, reorder existing feeds (via a beta drag - and - drop feature), and manage feed categories like \"For you\" and \"Following\".",
+            "action_refs": [
+                [
+                    5,
+                    2
+                ],
+                [
+                    45,
+                    0
+                ],
+                [
+                    45,
+                    2
+                ]
+            ],
+            "data_in": [
+                "feed list",
+                "feed settings",
+                "feed edits",
+                "feed editing session"
+            ],
+            "data_out": [
+                "edit feeds page loaded",
+                "updated feed settings",
+                "return to social feed page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The flow starts by clicking the Edit feed icon to enter the Edit feeds page. On this page, users can perform actions like creating new feeds or reordering. After editing, they can either click the Done button to save changes and stay on the page, or click the Back arrow to navigate back to the previous page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            2
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 45,
+                        "action": "click",
+                        "summary": "Click Edit feed icon to enter Edit feeds page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            45,
+                            0
+                        ],
+                        "src_page_idx": 45,
+                        "dst_page_idx": 45,
+                        "action": "click",
+                        "summary": "Click Done button to save edits"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            45,
+                            2
+                        ],
+                        "src_page_idx": 45,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click Back arrow to navigate back"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "Follow button (representative)",
+            "action_refs": [
+                [
+                    6,
+                    1
+                ]
+            ],
+            "data_in": [
+                "user profile (jimbentz001)"
+            ],
+            "data_out": [
+                "follow relationship (jimbentz001)"
+            ],
+            "data_dependencies": [
+                41,
+                51,
+                71
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The flow starts on page 6 (a list of users with Follow buttons). The user clicks a Follow button (representative) on this page, which navigates to page 53. This is a straight-line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            1
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 53,
+                        "action": "click",
+                        "summary": "Click the Follow button (representative) on page 6"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 25,
+            "function_description": "Follow user button",
+            "action_refs": [
+                [
+                    10,
+                    1
+                ]
+            ],
+            "data_in": [
+                "follow setting",
+                "user profile (leajxstine3)"
+            ],
+            "data_out": [
+                "follow setting (enabled)",
+                "follow relationship (with leajxstine3)"
+            ],
+            "data_dependencies": [
+                66
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The flow starts on page 10 (a thread page with a user's post). The user clicks the 'Follow user button' (action_ref [10,1]), which navigates to page 62. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            1
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 62,
+                        "action": "click",
+                        "summary": "Click the Follow user button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 26,
+            "function_description": "The current page (a social post thread) allows users to view a post (with text, images, engagement metrics like likes), interact with it (like, comment, share, reply), follow the poster, access post activity, and manage notifications for the thread.",
+            "action_refs": [
+                [
+                    10,
+                    2
+                ]
+            ],
+            "data_in": [
+                "notification setting for thread"
+            ],
+            "data_out": [
+                "updated notification setting for thread"
+            ],
+            "data_dependencies": [
+                27,
+                28,
+                31,
+                69
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The user starts on the social post thread page (page 10). The core action is clicking the notification bell icon, which likely manages notifications for the thread. Since there's only one action here, the flow is a single step with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            2
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click the notification bell icon to manage thread notifications"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 27,
+            "function_description": "Displays the list of users who liked a specific social media post, along with their follower counts and an option to follow each user.",
+            "action_refs": [
+                [
+                    10,
+                    5
+                ],
+                [
+                    65,
+                    0
+                ],
+                [
+                    69,
+                    1
+                ]
+            ],
+            "data_in": [
+                "post activity link",
+                "post",
+                "thread page",
+                "likes list page",
+                "reply input field",
+                "post thread"
+            ],
+            "data_out": [
+                "post activity details",
+                "thread page (returned)",
+                "reply text (to be entered)"
+            ],
+            "data_dependencies": [
+                28,
+                31,
+                50,
+                67
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The flow starts on the Thread page (page 10) where the 'View activity' link is clicked (S1) to navigate to the post activity page (page 65). From there, the back arrow is clicked (S2) to return to the Thread page (page 69). Finally, text is input into the reply field (S3) to complete the interaction.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            5
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 65,
+                        "action": "click",
+                        "summary": "Click 'View activity' link to navigate to post activity page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            65,
+                            0
+                        ],
+                        "src_page_idx": 65,
+                        "dst_page_idx": 69,
+                        "action": "click",
+                        "summary": "Click back arrow to return to Thread page"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            69,
+                            1
+                        ],
+                        "src_page_idx": 69,
+                        "dst_page_idx": 73,
+                        "action": "input",
+                        "summary": "Input text into reply field"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 28,
+            "function_description": "Displays hidden social media post replies (flagged as potentially offensive, misleading, or spam) and provides interaction options (like, comment, share, forward) for the visible hidden reply.",
+            "action_refs": [
+                [
+                    10,
+                    6
+                ],
+                [
+                    66,
+                    0
+                ],
+                [
+                    66,
+                    2
+                ],
+                [
+                    66,
+                    3
+                ]
+            ],
+            "data_in": [
+                "post thread",
+                "hidden replies setting",
+                "hidden replies page",
+                "back navigation action",
+                "Telegram link",
+                "hidden reply",
+                "like state (of hidden reply)"
+            ],
+            "data_out": [
+                "hidden replies list",
+                "thread page (navigated back to)",
+                "updated like state (of hidden reply)"
+            ],
+            "data_dependencies": [
+                31
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "First, click the 'Show hidden replies button' to view hidden social media post replies. Then, from the hidden replies page, choose an interaction: either click the 'Back to thread page arrow' to return, click the 'Hidden reply Telegram link' to interact with the link, or click the 'Like hidden reply button' to like the reply. These are mutually exclusive options after accessing the hidden replies.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            6
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 66,
+                        "action": "click",
+                        "summary": "Click to show hidden replies"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            66,
+                            0
+                        ],
+                        "src_page_idx": 66,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click to go back to thread page"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            66,
+                            2
+                        ],
+                        "src_page_idx": 66,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click hidden reply Telegram link"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            66,
+                            3
+                        ],
+                        "src_page_idx": 66,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click to like hidden reply"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 29,
+            "function_description": "This page functions as a GIF selection interface (powered by Tenor) where users can browse, search for, and select GIFs to share or use in the context of the social post thread they came from (e.g., to reply to a post with a GIF).",
+            "action_refs": [
+                [
+                    10,
+                    8
+                ],
+                [
+                    23,
+                    0
+                ],
+                [
+                    25,
+                    0
+                ]
+            ],
+            "data_in": [
+                "reply input",
+                "GIF selection interface trigger",
+                "search query",
+                "Tenor GIFs",
+                "search input (text: funny cat)"
+            ],
+            "data_out": [
+                "GIF selection interface",
+                "GIF list (Tenor)",
+                "filtered Tenor GIFs",
+                "search input (cleared)"
+            ],
+            "data_dependencies": [
+                31,
+                34,
+                76
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The user starts on the thread page and clicks the GIF selection button to enter the Tenor GIF interface. Then, they input a search term (e.g., 'funny cat') into the Tenor search field. Finally, they can click the clear search input button to reset the search field.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            8
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 23,
+                        "action": "click",
+                        "summary": "Click GIF selection button to open Tenor GIF interface"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            23,
+                            0
+                        ],
+                        "src_page_idx": 23,
+                        "dst_page_idx": 25,
+                        "action": "input",
+                        "summary": "Input search term into Tenor search field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            25,
+                            0
+                        ],
+                        "src_page_idx": 25,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click clear search input button to reset search field"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 30,
+            "function_description": "This page (a permission dialog) requests the user to grant the Threads app access to photos and videos on the device, offering options for limited access, full access, or denying access.",
+            "action_refs": [
+                [
+                    10,
+                    9
+                ]
+            ],
+            "data_in": [
+                "reply input",
+                "gallery access permission request"
+            ],
+            "data_out": [
+                "gallery access permission prompt"
+            ],
+            "data_dependencies": [
+                31,
+                75,
+                80
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The flow starts when the user clicks the image attachment button (on page 10), which triggers a permission dialog to appear (transitioning to page 22). The dialog asks for Threads app access to photos/videos, with options for limited access, full access, or denial, but the provided action only captures the initial click to trigger the dialog.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            9
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 22,
+                        "action": "click",
+                        "summary": "Click the image attachment button to trigger the permission dialog for photo/video access."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 31,
+            "function_description": "This page enables users to compose and post a reply to a social media post, with options to add media (images/GIFs), format text, add a topic, add another reply, access reply options, and finalize the reply via the \"Post\" button.",
+            "action_refs": [
+                [
+                    10,
+                    10
+                ],
+                [
+                    67,
+                    0
+                ],
+                [
+                    67,
+                    2
+                ],
+                [
+                    67,
+                    4
+                ]
+            ],
+            "data_in": [
+                "reply input",
+                "post thread",
+                "reply input field",
+                "post reply context",
+                "reply content",
+                "post (by leajxstine3)",
+                "reply options menu trigger",
+                "reply context (post, user reply)"
+            ],
+            "data_out": [
+                "expanded reply interface",
+                "new reply draft",
+                "posted reply"
+            ],
+            "data_dependencies": [
+                34
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The flow starts by clicking the expand input button to open the reply composition page. Then, the user can input text for the reply. After that, the user can either post the reply, access more reply options, or add another reply (with its own text input). These actions (post, more options, add another reply) are mutually exclusive choices at the reply composition step.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            10
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 67,
+                        "action": "click",
+                        "summary": "Click expand input button to open reply composition page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            67,
+                            0
+                        ],
+                        "src_page_idx": 67,
+                        "dst_page_idx": 78,
+                        "action": "input",
+                        "summary": "Input text for the reply"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            67,
+                            2
+                        ],
+                        "src_page_idx": 67,
+                        "dst_page_idx": 67,
+                        "action": "click",
+                        "summary": "Click post reply button"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            67,
+                            4
+                        ],
+                        "src_page_idx": 67,
+                        "dst_page_idx": 67,
+                        "action": "click",
+                        "summary": "Click more reply options icon"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 32,
+            "function_description": "This page functions as a social media feed interface where users can view posts (with images, text, and engagement metrics like likes/comments), interact with posts (e.g., like, comment, repost, share), and navigate the app (via bottom navigation for home, messages, post creation, likes, profile).",
+            "action_refs": [
+                [
+                    11,
+                    0
+                ]
+            ],
+            "data_in": [
+                "post (wildvision482025's)"
+            ],
+            "data_out": [
+                "reposted post record"
+            ],
+            "data_dependencies": [
+                49,
+                63,
+                68
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The flow starts on page 11 (a social media post interface). The user clicks the 'Repost only button', which navigates to page 0. There are no branches or loops as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            0
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the Repost only button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 33,
+            "function_description": "This page enables users to create a new group chat by selecting participants from a suggested list, adding a group name, and finalizing the setup.",
+            "action_refs": [
+                [
+                    13,
+                    1
+                ],
+                [
+                    14,
+                    0
+                ],
+                [
+                    14,
+                    1
+                ],
+                [
+                    14,
+                    2
+                ],
+                [
+                    16,
+                    0
+                ]
+            ],
+            "data_in": [
+                "create group chat option",
+                "group name setting",
+                "group creation configuration",
+                "selected contact (dinesh_meena_0856)",
+                "contact",
+                "group member selection state"
+            ],
+            "data_out": [
+                "group chat creation setup",
+                "updated group name setting",
+                "group creation confirmation",
+                "updated group member selection state"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 13,
+                "logic": "To create a new group chat, start by clicking the 'Create group chat' option. Then, on the next page, either input a group name (which may lead to another input step) or click the 'Done' button to confirm, or select a contact from the suggested list to add as a participant. The flow includes choices for naming the group, confirming, or selecting participants.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            13,
+                            1
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click 'Create group chat' option"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            14,
+                            0
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 16,
+                        "action": "input",
+                        "summary": "Input group name in the field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            14,
+                            1
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click 'Done' confirmation button"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            14,
+                            2
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click contact selection checkbox"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            16,
+                            0
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 18,
+                        "action": "input",
+                        "summary": "Input group name in the field (second input)"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S5"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S5"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 34,
+            "function_description": "This page functions as a direct messaging interface with a user (dinesh_meena_0856), displaying their profile details, a shared GIF, and providing options to view their profile and send additional messages.",
+            "action_refs": [
+                [
+                    23,
+                    1
+                ],
+                [
+                    26,
+                    0
+                ],
+                [
+                    26,
+                    2
+                ]
+            ],
+            "data_in": [
+                "GIF thumbnail",
+                "user profile (dinesh_meena_0856)",
+                "message thread",
+                "message input field"
+            ],
+            "data_out": [
+                "GIF in message thread",
+                "message thread (with dinesh_meena_0856)",
+                "message draft"
+            ],
+            "data_dependencies": [
+                57,
+                59
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 23,
+                "logic": "The flow starts by clicking a representative GIF thumbnail (from page 23) to navigate to the direct messaging interface with dinesh_meena_0856 (page 26). From there, the user can either click the back arrow to return (though no next step here) or input a message in the text field. The main path includes selecting the GIF, then choosing to either navigate back or send a message via input.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            23,
+                            1
+                        ],
+                        "src_page_idx": 23,
+                        "dst_page_idx": 26,
+                        "action": "click",
+                        "summary": "Click GIF thumbnail to open messaging interface with dinesh_meena_0856"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            26,
+                            0
+                        ],
+                        "src_page_idx": 26,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click back arrow (navigation option)"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            26,
+                            2
+                        ],
+                        "src_page_idx": 26,
+                        "dst_page_idx": null,
+                        "action": "input",
+                        "summary": "Input message in the text field to send to dinesh_meena_0856"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 35,
+            "function_description": "Show Instagram badge toggle",
+            "action_refs": [
+                [
+                    29,
+                    2
+                ]
+            ],
+            "data_in": [
+                "show instagram badge setting"
+            ],
+            "data_out": [
+                "show instagram badge setting updated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 29,
+                "logic": "The flow starts on page 29 (Edit profile). The user performs a click action on the 'Show Instagram badge' toggle. This action leads to page 34, completing the task of interacting with the toggle to show (or manage) the Instagram badge display.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            29,
+                            2
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 34,
+                        "action": "click",
+                        "summary": "Click the 'Show Instagram badge' toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 36,
+            "function_description": "The page allows users to toggle the \"Private profile\" setting, which controls whether only followers can see and interact with the user's threads and replies.",
+            "action_refs": [
+                [
+                    29,
+                    3
+                ]
+            ],
+            "data_in": [
+                "profile privacy setting"
+            ],
+            "data_out": [
+                "profile privacy setting page loaded"
+            ],
+            "data_dependencies": [
+                60
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 29,
+                "logic": "The flow starts on the Edit profile page. The user clicks on the 'Profile privacy' option, navigating to the Profile privacy page where the 'Private profile' toggle can be managed.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            29,
+                            3
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 35,
+                        "action": "click",
+                        "summary": "Click on 'Profile privacy settings' to navigate to the Profile privacy page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 37,
+            "function_description": "Download QR code button",
+            "action_refs": [
+                [
+                    30,
+                    0
+                ]
+            ],
+            "data_in": [
+                "profile QR code"
+            ],
+            "data_out": [
+                "downloaded profile QR code file"
+            ],
+            "data_dependencies": [
+                38
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 30,
+                "logic": "The flow starts on page 30. The user clicks the 'Download QR code button' (action_ref [30,0]), which leads to page 37. This is a single-step flow with no branches or loops, as the action directly transitions to the destination page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            30,
+                            0
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 37,
+                        "action": "click",
+                        "summary": "Click the Download QR code button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 38,
+            "function_description": "This page functions as a QR code scanning interface, likely activated from a profile sharing popup, to scan QR codes (possibly for profile sharing or related actions) as indicated by the transition from the profile sharing flow.",
+            "action_refs": [
+                [
+                    30,
+                    1
+                ]
+            ],
+            "data_in": [
+                "QR code scanning feature",
+                "profile QR code"
+            ],
+            "data_out": [
+                "QR code scanning interface (camera view)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 30,
+                "logic": "The flow starts on page 30 (profile sharing popup). The user clicks the 'Scan QR code' button, which transitions the app to page 38 (QR code scanning interface). There are no branches or loops in this core logic as it is a single-step transition to the scanning view.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            30,
+                            1
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 38,
+                        "action": "click",
+                        "summary": "Click the 'Scan QR code' button to open the QR code scanning interface"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 39,
+            "function_description": "Copy profile link button",
+            "action_refs": [
+                [
+                    30,
+                    2
+                ]
+            ],
+            "data_in": [
+                "profile link"
+            ],
+            "data_out": [
+                "copied profile link"
+            ],
+            "data_dependencies": [
+                39
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 30,
+                "logic": "The process starts on page 30. The user clicks the 'Copy profile link' button (or the relevant element to copy the profile link), which leads to page 39. This action completes the task of copying the profile link, with no branching or looping in this simple flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            30,
+                            2
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 39,
+                        "action": "click",
+                        "summary": "Click the Copy profile link button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 40,
+            "function_description": "The page enables users to manage their profile (edit, share), create threads, and follow other profiles to customize their social media feed, with options to add interests and view different content tabs (Threads, Replies, Media, Reposts).",
+            "action_refs": [
+                [
+                    31,
+                    0
+                ]
+            ],
+            "data_in": [
+                "profile following page"
+            ],
+            "data_out": [
+                "user profile page"
+            ],
+            "data_dependencies": [
+                24,
+                41,
+                42,
+                51,
+                71
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 31,
+                "logic": "The flow starts on a page (page 31) with a 'Close page icon'. The user clicks this icon, which navigates to page 4 (the profile management page). On page 4, the user can manage their profile (edit, share), create threads, follow profiles, add interests, or switch between content tabs (Threads, Replies, Media, Reposts).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            31,
+                            0
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the close page icon to navigate to the profile management page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 41,
+            "function_description": "Follow profile button (representative)",
+            "action_refs": [
+                [
+                    31,
+                    2
+                ]
+            ],
+            "data_in": [
+                "jimbentz001 profile"
+            ],
+            "data_out": [
+                "follow relationship (established)"
+            ],
+            "data_dependencies": [
+                42,
+                51,
+                71
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 31,
+                "logic": "The user starts on page 31 (a profile-following interface). The core action is clicking the 'Follow' button for the profile 'jimbentz001', which transitions to page 40. There are no branches or loops as it’s a single click action to follow the profile.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            31,
+                            2
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": 40,
+                        "action": "click",
+                        "summary": "Click the 'Follow' button for the profile 'jimbentz001' to follow it, transitioning to page 40."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 42,
+            "function_description": "The page enables users to manage their profile (edit, share), create threads, follow other profiles, and view/navigate their content (threads, replies, media, reposts) within a social media application.",
+            "action_refs": [
+                [
+                    31,
+                    3
+                ]
+            ],
+            "data_in": [
+                "profile following session"
+            ],
+            "data_out": [
+                "profile following session completed"
+            ],
+            "data_dependencies": [
+                24,
+                40
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 31,
+                "logic": "The flow starts on a page with a 'Done' button. When the 'Done' button is clicked, the flow transitions to the profile page where users can manage their profile, create threads, follow others, or view content.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            31,
+                            3
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the Done button to proceed to the profile page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 43,
+            "function_description": "Public feed toggle switch",
+            "action_refs": [
+                [
+                    44,
+                    1
+                ]
+            ],
+            "data_in": [
+                "public feed setting"
+            ],
+            "data_out": [
+                "public feed setting (updated state)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 44,
+                "logic": "The user starts on page 44 (Create feed). They click the Public feed toggle switch, which transitions the app to page 47. This action toggles the public visibility setting of the feed.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            44,
+                            1
+                        ],
+                        "src_page_idx": 44,
+                        "dst_page_idx": 47,
+                        "action": "click",
+                        "summary": "Click the Public feed toggle switch"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 44,
+            "function_description": "This page allows users to search for and add profiles (or topics) to customize the content of a new social media feed during its creation process.",
+            "action_refs": [
+                [
+                    44,
+                    2
+                ],
+                [
+                    48,
+                    0
+                ],
+                [
+                    48,
+                    1
+                ]
+            ],
+            "data_in": [
+                "feed creation context",
+                "profiles and topics (to add)",
+                "search input",
+                "profiles",
+                "topics",
+                "new feed configuration",
+                "feed creation session"
+            ],
+            "data_out": [
+                "search interface for profiles/topics",
+                "updated feed creation state",
+                "search results (profiles/topics)",
+                "updated new feed configuration",
+                "updated feed creation session"
+            ],
+            "data_dependencies": [
+                45,
+                62
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 44,
+                "logic": "The process starts on the 'Create feed' page. First, the user clicks the 'Add profiles or topics' button to navigate to the search page. On the search page, the user inputs a search term (e.g., 'technology') to find profiles/topics. After searching, the user can either continue adding more profiles/topics (implicit loop) or click the 'Next' button to return to the 'Create feed' page and proceed with feed creation.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            44,
+                            2
+                        ],
+                        "src_page_idx": 44,
+                        "dst_page_idx": 48,
+                        "action": "click",
+                        "summary": "Click 'Add profiles or topics' button to open search page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            48,
+                            0
+                        ],
+                        "src_page_idx": 48,
+                        "dst_page_idx": 50,
+                        "action": "input",
+                        "summary": "Input search term (e.g., 'technology') to find profiles/topics"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            48,
+                            1
+                        ],
+                        "src_page_idx": 48,
+                        "dst_page_idx": 44,
+                        "action": "click",
+                        "summary": "Click 'Next' button to return to 'Create feed' page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "loop",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 45,
+            "function_description": "Add button for 'jimbentz001'",
+            "action_refs": [
+                [
+                    44,
+                    3
+                ]
+            ],
+            "data_in": [
+                "feed",
+                "profile (jimbentz001)"
+            ],
+            "data_out": [
+                "feed with added profile (jimbentz001)"
+            ],
+            "data_dependencies": [
+                62
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 44,
+                "logic": "The process starts on page 44 (Create feed). The user clicks the 'Add' button associated with 'jimbentz001' in the suggested profiles list, which navigates to page 49. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            44,
+                            3
+                        ],
+                        "src_page_idx": 44,
+                        "dst_page_idx": 49,
+                        "action": "click",
+                        "summary": "Click the 'Add' button for 'jimbentz001' in the suggested profiles list"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 46,
+            "function_description": "The \"Create feed\" page allows users to define a new social media feed by entering a feed name, toggling its public visibility, and adding profiles or topics (with suggested profiles provided) to customize the feed's content.",
+            "action_refs": [
+                [
+                    45,
+                    1
+                ]
+            ],
+            "data_in": [
+                "feed creation interface trigger"
+            ],
+            "data_out": [
+                "new feed creation page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 45,
+                "logic": "The process starts on the 'Edit feeds' page. The user clicks the 'Create new feed' button, which navigates to the 'Create feed' page to begin defining a new social media feed by entering a name, toggling visibility, and adding profiles/topics.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            45,
+                            1
+                        ],
+                        "src_page_idx": 45,
+                        "dst_page_idx": 44,
+                        "action": "click",
+                        "summary": "Click 'Create new feed' button to navigate to 'Create feed' page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 47,
+            "function_description": "The current page allows users to filter search results for \"motorcycle enthusiasts\" by date ranges (after date, before date) or by specific profiles, refining the list of user profiles and content related to motorcycle enthusiasts.",
+            "action_refs": [
+                [
+                    52,
+                    1
+                ]
+            ],
+            "data_in": [
+                "search query",
+                "search results"
+            ],
+            "data_out": [
+                "search filter options"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 52,
+                "logic": "The user starts on the search results page for 'motorcycle enthusiasts'. They click the search filter icon, which opens a menu with options to filter by date ranges (After date, Before date) or by specific profiles (From profile), enabling refinement of the search results.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            52,
+                            1
+                        ],
+                        "src_page_idx": 52,
+                        "dst_page_idx": 54,
+                        "action": "click",
+                        "summary": "Click the search filter icon to open filtering options"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 48,
+            "function_description": "Displays social media posts related to the search query \"motorcycle enthusiasts\", allowing users to view, interact with (like, comment, share) posts, explore related profiles, and create new posts.",
+            "action_refs": [
+                [
+                    52,
+                    2
+                ]
+            ],
+            "data_in": [
+                "search query",
+                "search suggestions"
+            ],
+            "data_out": [
+                "search results (posts)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 52,
+                "logic": "The flow starts on the search page (page 52) with the query 'motorcycle enthusiasts'. The user clicks on the search result suggestion (action from [52,2]), which navigates to the page (55) displaying top posts related to the query. From here, the user can interact with posts, explore related profiles, or create a new post, though the current captured step focuses on reaching the post-display page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            52,
+                            2
+                        ],
+                        "src_page_idx": 52,
+                        "dst_page_idx": 55,
+                        "action": "click",
+                        "summary": "Click on the 'motorcycle enthusiasts' search result suggestion to navigate to the post-display page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 49,
+            "function_description": "Copy link to post",
+            "action_refs": [
+                [
+                    63,
+                    0
+                ]
+            ],
+            "data_in": [
+                "post"
+            ],
+            "data_out": [
+                "copied post link"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 63,
+                "logic": "The user starts on page 63 (a post/thread view). They perform a click action labeled 'Copy link to post', which transitions the flow to page 68 (implying the link is copied or a confirmation state is reached). There are no branches or loops as it's a single action flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            63,
+                            0
+                        ],
+                        "src_page_idx": 63,
+                        "dst_page_idx": 68,
+                        "action": "click",
+                        "summary": "Click the 'Copy link to post' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 50,
+            "function_description": "This page allows users to sort the list of users who liked a social media post between the default order and the most recent order, while also providing options to follow each liker and view their follower counts.",
+            "action_refs": [
+                [
+                    65,
+                    1
+                ],
+                [
+                    70,
+                    0
+                ]
+            ],
+            "data_in": [
+                "likers list",
+                "sort setting (for likers list)",
+                "sort setting",
+                "likes list"
+            ],
+            "data_out": [
+                "sorted likers list",
+                "updated sort setting (for likers list)",
+                "sort setting (default)"
+            ],
+            "data_dependencies": [
+                50,
+                67,
+                70
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 65,
+                "logic": "The user starts on the likers list page. First, they click the 'Sort' button to open the sort options. Then, they select the 'Default' sort option (via its radio button) to sort the likers list by the default order. The flow is a straight line with no branches or loops shown in the provided actions.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            65,
+                            1
+                        ],
+                        "src_page_idx": 65,
+                        "dst_page_idx": 70,
+                        "action": "click",
+                        "summary": "Click the 'Sort' button to open sort options for the likers list"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            70,
+                            0
+                        ],
+                        "src_page_idx": 70,
+                        "dst_page_idx": 75,
+                        "action": "click",
+                        "summary": "Select the 'Default' sort option (radio button) to sort the likers list"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 51,
+            "function_description": "This page displays the list of users who liked a specific social media post, providing options to follow these users and sort the list of likers.",
+            "action_refs": [
+                [
+                    65,
+                    2
+                ]
+            ],
+            "data_in": [
+                "user profile (ayumu.046)"
+            ],
+            "data_out": [
+                "follow relationship (with ayumu.046)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 65,
+                "logic": "The user starts on the page showing the list of post likers. They can click a 'Follow' button for a specific user (e.g., betthea). After clicking, the button's state updates (e.g., to 'Following'), confirming the follow action. This process can repeat for other users in the list as needed.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            65,
+                            2
+                        ],
+                        "src_page_idx": 65,
+                        "dst_page_idx": 71,
+                        "action": "click",
+                        "summary": "Click a 'Follow' button for a user in the likers list"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "loop",
+                        "branches": [
+                            {
+                                "next_step": "S1"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 52,
+            "function_description": "Learn about hidden replies link",
+            "action_refs": [
+                [
+                    66,
+                    1
+                ]
+            ],
+            "data_in": [
+                "hidden replies information"
+            ],
+            "data_out": [
+                "learned information about hidden replies"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 66,
+                "logic": "The user starts on page 66 and clicks the 'Learn about hidden replies link' (labeled 'Learn more' in the UI) to access information about hidden replies. This is a single-step flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            66,
+                            1
+                        ],
+                        "src_page_idx": 66,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'Learn more' link to learn about hidden replies"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 53,
+            "function_description": "Reply options menu (ellipsis)",
+            "action_refs": [
+                [
+                    66,
+                    4
+                ]
+            ],
+            "data_in": [
+                "reply item",
+                "reply options menu"
+            ],
+            "data_out": [
+                "reply options menu (opened)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 66,
+                "logic": "The user initiates the process by clicking the reply options menu (ellipsis) on the 'Hidden replies' page. This action likely opens a menu with further options related to the reply, though the current flow ends here as the destination page is null.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            66,
+                            4
+                        ],
+                        "src_page_idx": 66,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the reply options menu (ellipsis) on the Hidden replies page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 54,
+            "function_description": "This page allows the user to configure reply and quote permissions for their comment on a social media post, including options for who can interact and a toggle for reviewing replies, with a \"Done\" button to confirm changes.",
+            "action_refs": [
+                [
+                    67,
+                    1
+                ],
+                [
+                    79,
+                    2
+                ]
+            ],
+            "data_in": [
+                "reply options setting",
+                "reply configuration",
+                "reply permission setting"
+            ],
+            "data_out": [
+                "updated reply options setting",
+                "updated reply permission setting"
+            ],
+            "data_dependencies": [
+                57,
+                59,
+                72,
+                73
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 67,
+                "logic": "The user starts on page 67 and clicks the 'Reply options' button to navigate to page 79 (where reply/quote permissions are configured). After configuring, the user clicks the 'Done' button to confirm changes and return to page 67. There are no branches as the flow is linear.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            67,
+                            1
+                        ],
+                        "src_page_idx": 67,
+                        "dst_page_idx": 79,
+                        "action": "click",
+                        "summary": "Click Reply options button to open permissions config page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            79,
+                            2
+                        ],
+                        "src_page_idx": 79,
+                        "dst_page_idx": 67,
+                        "action": "click",
+                        "summary": "Click Done button to confirm config and return to original page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 55,
+            "function_description": "Text formatting toggle icon",
+            "action_refs": [
+                [
+                    67,
+                    3
+                ]
+            ],
+            "data_in": [
+                "reply text input",
+                "text formatting setting"
+            ],
+            "data_out": [
+                "formatted reply text"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 67,
+                "logic": "The user starts on page 67 and clicks the text formatting toggle icon. This action leads to page 80, completing the interaction with the toggle icon.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            67,
+                            3
+                        ],
+                        "src_page_idx": 67,
+                        "dst_page_idx": 80,
+                        "action": "click",
+                        "summary": "Click the text formatting toggle icon"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 56,
+            "function_description": "Cat using laptop GIF thumbnail",
+            "action_refs": [
+                [
+                    25,
+                    1
+                ]
+            ],
+            "data_in": [
+                "cat using laptop GIF"
+            ],
+            "data_out": [
+                "selected cat using laptop GIF"
+            ],
+            "data_dependencies": [
+                57,
+                59
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 25,
+                "logic": "The user interacts with the app by clicking on the 'Cat using laptop GIF thumbnail' which is visible on the page. This action is the core step in engaging with this specific GIF thumbnail.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            25,
+                            1
+                        ],
+                        "src_page_idx": 25,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the Cat using laptop GIF thumbnail"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 57,
+            "function_description": "View Profile button",
+            "action_refs": [
+                [
+                    26,
+                    1
+                ]
+            ],
+            "data_in": [
+                "user profile (dinesh_meena_0856)"
+            ],
+            "data_out": [
+                "user profile details (viewed)"
+            ],
+            "data_dependencies": [
+                59
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 26,
+                "logic": "The user starts on page 26 and clicks the 'View Profile' button. This action is intended to navigate to the profile page, though the destination page index is not yet determined from the provided action (or it may load the profile content).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            26,
+                            1
+                        ],
+                        "src_page_idx": 26,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'View Profile' button on page 26"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 58,
+            "function_description": "Plus attachment button",
+            "action_refs": [
+                [
+                    26,
+                    3
+                ]
+            ],
+            "data_in": [
+                "message thread",
+                "attachment option"
+            ],
+            "data_out": [
+                "attachment selection interface"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 26,
+                "logic": "The core execution logic starts on page 26. The user performs a click action on the plus attachment button. Since there's only one action here, the flow is a single step with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            26,
+                            3
+                        ],
+                        "src_page_idx": 26,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the plus attachment button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 59,
+            "function_description": "Three-dot options menu",
+            "action_refs": [
+                [
+                    26,
+                    4
+                ]
+            ],
+            "data_in": [
+                "user profile (dinesh_meena_0856)"
+            ],
+            "data_out": [
+                "menu options (from three-dot menu)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 26,
+                "logic": "The flow starts on page 26. The user clicks the three - dot options menu (action at S1). Since there's only one action here, the flow is a single - step interaction with the three - dot menu.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            26,
+                            4
+                        ],
+                        "src_page_idx": 26,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the three - dot options menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 60,
+            "function_description": "Private profile toggle switch",
+            "action_refs": [
+                [
+                    35,
+                    0
+                ]
+            ],
+            "data_in": [
+                "private profile setting"
+            ],
+            "data_out": [
+                "private profile setting enabled"
+            ],
+            "data_dependencies": [
+                60
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 35,
+                "logic": "The flow starts on the 'Profile privacy' page (page 35). The user clicks the 'Private profile' toggle switch, which likely toggles the private profile setting and may navigate to a new page (page 36) or update the current page's state. There are no branches or loops as only one action is involved.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            35,
+                            0
+                        ],
+                        "src_page_idx": 35,
+                        "dst_page_idx": 36,
+                        "action": "click",
+                        "summary": "Click the Private profile toggle switch"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 61,
+            "function_description": "bookstagram topic item",
+            "action_refs": [
+                [
+                    42,
+                    1
+                ]
+            ],
+            "data_in": [
+                "search query",
+                "topic item list"
+            ],
+            "data_out": [
+                "selected topic item"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 42,
+                "logic": "The flow starts on page 42. A click action is performed on the 'bookstagram topic item' (though the screenshot shows a search for 'photography', the action's description indicates the target). This click navigates to page 43, completing the functional point's execution.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            42,
+                            1
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": 43,
+                        "action": "click",
+                        "summary": "Click on the bookstagram topic item"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 62,
+            "function_description": "Add profile button (agwhite034)",
+            "action_refs": [
+                [
+                    48,
+                    2
+                ]
+            ],
+            "data_in": [
+                "agwhite034 profile",
+                "feed creation context"
+            ],
+            "data_out": [
+                "updated feed (with agwhite034 added)",
+                "agwhite034 profile added to feed"
+            ],
+            "data_dependencies": [
+                45,
+                62
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 48,
+                "logic": "On the 'Create feed' page, the user clicks the 'Add' button next to the profile 'agwhite034' (Adam White). This action transitions to the next page (page 51), completing the step of adding this profile.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            48,
+                            2
+                        ],
+                        "src_page_idx": 48,
+                        "dst_page_idx": 51,
+                        "action": "click",
+                        "summary": "Click 'Add' button for profile agwhite034"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 63,
+            "function_description": "Like button (heart) on post",
+            "action_refs": [
+                [
+                    55,
+                    0
+                ]
+            ],
+            "data_in": [
+                "post",
+                "like count setting (of post)"
+            ],
+            "data_out": [
+                "post (with updated like count)",
+                "like count setting (updated)"
+            ],
+            "data_dependencies": [
+                63,
+                68
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 55,
+                "logic": "The user starts on page 55 (a post feed). The core logic is a single step: click the like button (heart) on a post, which navigates to page 56 (likely reflecting the like action's result, e.g., updated like count or visual state).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            55,
+                            0
+                        ],
+                        "src_page_idx": 55,
+                        "dst_page_idx": 56,
+                        "action": "click",
+                        "summary": "Click the like button (heart) on the post"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 64,
+            "function_description": "The page displays a list of motorcycle enthusiast - related profiles, each with a \"Follow\" button, allowing users to discover and follow profiles that share an interest in motorcycles.",
+            "action_refs": [
+                [
+                    55,
+                    1
+                ]
+            ],
+            "data_in": [
+                "motorcycle enthusiasts group context"
+            ],
+            "data_out": [
+                "related profiles list"
+            ],
+            "data_dependencies": [
+                65,
+                78
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 55,
+                "logic": "The user starts on a page with motorcycle - related posts. They click the 'Related profiles' link, which navigates them to a page displaying a list of motorcycle enthusiast - related profiles, each having a 'Follow' button for further interaction.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            55,
+                            1
+                        ],
+                        "src_page_idx": 55,
+                        "dst_page_idx": 57,
+                        "action": "click",
+                        "summary": "Click the 'Related profiles' link to navigate to the profiles list page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 65,
+            "function_description": "The page allows the user \"daxiami63\" to create and post a new thread in the \"motorcycle enthusiasts\" group, with options to add media, GIFs, text, or other content, and configure reply settings before posting.",
+            "action_refs": [
+                [
+                    55,
+                    2
+                ],
+                [
+                    58,
+                    0
+                ]
+            ],
+            "data_in": [
+                "post creation interface",
+                "motorcycle enthusiasts group context",
+                "post content",
+                "thread (motorcycle enthusiasts)"
+            ],
+            "data_out": [
+                "new thread draft",
+                "updated post content input"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 55,
+                "logic": "The user starts on the 'motorcycle enthusiasts' group page. First, they click the 'Create post' button to open the post creation interface. Then, they input the text 'My new motorcycle is awesome!' into the post content field to compose the thread.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            55,
+                            2
+                        ],
+                        "src_page_idx": 55,
+                        "dst_page_idx": 58,
+                        "action": "click",
+                        "summary": "Click 'Create post' button to open post creation page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            58,
+                            0
+                        ],
+                        "src_page_idx": 58,
+                        "dst_page_idx": 60,
+                        "action": "input",
+                        "summary": "Input post content 'My new motorcycle is awesome!'"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 66,
+            "function_description": "Follow button for post author",
+            "action_refs": [
+                [
+                    69,
+                    0
+                ]
+            ],
+            "data_in": [
+                "follow setting",
+                "post author"
+            ],
+            "data_out": [
+                "follow setting (enabled)"
+            ],
+            "data_dependencies": [
+                66
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 69,
+                "logic": "The flow starts on the post page (page 69). The user clicks the 'Follow' button for the post author. This action leads to the next page (page 72), completing the follow action for the post author.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            69,
+                            0
+                        ],
+                        "src_page_idx": 69,
+                        "dst_page_idx": 72,
+                        "action": "click",
+                        "summary": "Click the Follow button for the post author"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 67,
+            "function_description": "This page displays the list of users who liked a specific social media post, along with options to follow each user and sort the list of likers.",
+            "action_refs": [
+                [
+                    69,
+                    2
+                ]
+            ],
+            "data_in": [
+                "post activity data"
+            ],
+            "data_out": [
+                "displayed post activity list"
+            ],
+            "data_dependencies": [
+                67
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 69,
+                "logic": "The flow starts on the post page (page 69). The user clicks the 'View activity' link, which navigates to the page (page 65) displaying the list of users who liked the post, along with 'Follow' buttons for each user and a 'Sort' option. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            69,
+                            2
+                        ],
+                        "src_page_idx": 69,
+                        "dst_page_idx": 65,
+                        "action": "click",
+                        "summary": "Click 'View activity' link to navigate to the likers list page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 68,
+            "function_description": "Like button (heart icon)",
+            "action_refs": [
+                [
+                    69,
+                    3
+                ]
+            ],
+            "data_in": [
+                "post",
+                "like count setting"
+            ],
+            "data_out": [
+                "updated like count",
+                "liked post"
+            ],
+            "data_dependencies": [
+                68
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 69,
+                "logic": "The user starts on page 69 (a thread view). The core action is clicking the like button (heart icon) on this page, which leads to page 74. There are no branches or loops as it’s a single click action to like the post.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            69,
+                            3
+                        ],
+                        "src_page_idx": 69,
+                        "dst_page_idx": 74,
+                        "action": "click",
+                        "summary": "Click the like button (heart icon) on the thread page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 69,
+            "function_description": "The page enables users to interact with a social media post thread by viewing the post content, engaging with it via likes, comments, shares, or reposts, replying to the post, and accessing post activity or notification settings.",
+            "action_refs": [
+                [
+                    69,
+                    4
+                ]
+            ],
+            "data_in": [
+                "notification setting for thread"
+            ],
+            "data_out": [
+                "notification setting for thread updated"
+            ],
+            "data_dependencies": [
+                69
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 69,
+                "logic": "The user starts on the social media post thread page (page 69). They can interact with the post, and in this flow, they click the notification bell icon (at the top right) to access notification settings, navigating to page 10. There are no branches or loops here as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            69,
+                            4
+                        ],
+                        "src_page_idx": 69,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click the notification bell icon to access notification settings"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 70,
+            "function_description": "Sort option 'Most recent' (radio button)",
+            "action_refs": [
+                [
+                    70,
+                    1
+                ]
+            ],
+            "data_in": [
+                "sort setting",
+                "like list"
+            ],
+            "data_out": [
+                "sort setting (updated to Most recent)",
+                "like list (sorted by Most recent)"
+            ],
+            "data_dependencies": [
+                70
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 70,
+                "logic": "The user starts on page 70. They click the 'Most recent' radio button (action_ref [70,1]), which transitions the app to page 76 to apply the 'Most recent' sort order. There are no branches or loops as it’s a single action to select and apply the sort option.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            70,
+                            1
+                        ],
+                        "src_page_idx": 70,
+                        "dst_page_idx": 76,
+                        "action": "click",
+                        "summary": "Click the 'Most recent' radio button to apply the 'Most recent' sort option."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 71,
+            "function_description": "Following button (ayumu.046)",
+            "action_refs": [
+                [
+                    71,
+                    0
+                ]
+            ],
+            "data_in": [
+                "ayumu.046's follow status setting"
+            ],
+            "data_out": [
+                "ayumu.046's follow status setting (updated to Following)"
+            ],
+            "data_dependencies": [
+                71
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 71,
+                "logic": "On the page with the list of users (starting at page 71), the user clicks the 'Following' button for ayumu.046. This action transitions the app to page 77, completing the interaction with this button.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            71,
+                            0
+                        ],
+                        "src_page_idx": 71,
+                        "dst_page_idx": 77,
+                        "action": "click",
+                        "summary": "Click the 'Following' button for ayumu.046"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 72,
+            "function_description": "Your followers reply permission radio",
+            "action_refs": [
+                [
+                    79,
+                    0
+                ]
+            ],
+            "data_in": [
+                "reply permission setting"
+            ],
+            "data_out": [
+                "reply permission setting (your followers)"
+            ],
+            "data_dependencies": [
+                72
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 79,
+                "logic": "The flow starts on page 79. The user clicks the 'Your followers' reply permission radio button, which navigates to page 81. This is a single-step action with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            79,
+                            0
+                        ],
+                        "src_page_idx": 79,
+                        "dst_page_idx": 81,
+                        "action": "click",
+                        "summary": "Click 'Your followers' reply permission radio"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 73,
+            "function_description": "Review and approve replies toggle",
+            "action_refs": [
+                [
+                    79,
+                    1
+                ]
+            ],
+            "data_in": [
+                "review and approve replies setting"
+            ],
+            "data_out": [
+                "review and approve replies setting enabled"
+            ],
+            "data_dependencies": [
+                73
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 79,
+                "logic": "The process starts on page 79. The user clicks the 'Review and approve replies' toggle, which leads to page 82. This action enables or disables the review and approval requirement for replies.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            79,
+                            1
+                        ],
+                        "src_page_idx": 79,
+                        "dst_page_idx": 82,
+                        "action": "click",
+                        "summary": "Click the 'Review and approve replies' toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 74,
+            "function_description": "This page allows users to add a name to a new group chat and select contacts (from suggestions) to include in the group, with options to go back or finalize the setup.",
+            "action_refs": [
+                [
+                    16,
+                    1
+                ]
+            ],
+            "data_in": [
+                "group name edit session"
+            ],
+            "data_out": [
+                "exited group name edit page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 16,
+                "logic": "The user starts on the 'Edit name' page (page 16). They click the 'Close (X) button' (action_ref [16,1]), which navigates them back to the 'Add group name' page (page 14) where contact selection and group name setup continue.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            16,
+                            1
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click the Close (X) button to return to the Add group name page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 75,
+            "function_description": "This page (a permission dialog) requests the user to grant the Threads app access to photos and videos on the device, with options for limited access, full access, or denial.",
+            "action_refs": [
+                [
+                    20,
+                    1
+                ]
+            ],
+            "data_in": [
+                "media attachment option",
+                "message thread"
+            ],
+            "data_out": [
+                "gallery access permission request"
+            ],
+            "data_dependencies": [
+                75,
+                77
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The flow starts on the 'New message' page. The user clicks the 'Media' option, which triggers a permission dialog asking for Threads to access photos and videos. At this dialog, the user can choose among 'Allow limited access', 'Allow all', or 'Don’t allow' to proceed (though the provided action only initiates the dialog, the core logic involves this choice point after the click).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            1
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 22,
+                        "action": "click",
+                        "summary": "Click the 'Media' option in the 'New message' page's attachment menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": null,
+                                "condition": "User selects 'Allow limited access'"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "User selects 'Allow all'"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "User selects 'Don’t allow'"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 76,
+            "function_description": "This page allows users to browse, search (via \"Search Tenor\"), and select GIFs (and potentially stickers) to attach to a message when composing a direct message to a contact, with a grid of GIF thumbnails for selection.",
+            "action_refs": [
+                [
+                    20,
+                    2
+                ]
+            ],
+            "data_in": [
+                "message composition context",
+                "GIFs and stickers feature entry"
+            ],
+            "data_out": [
+                "GIFs and stickers selection interface loaded"
+            ],
+            "data_dependencies": [
+                76
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The user starts on the 'New message' page. They click the 'GIFs and stickers' option, which navigates to the GIF/sticker browsing page with a search bar and grid of thumbnails. From there, the user can browse, search, or select a GIF/sticker to attach (though the provided actions only include the initial navigation step here).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            2
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 23,
+                        "action": "click",
+                        "summary": "Click 'GIFs and stickers' option to navigate to GIF/sticker browsing page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 77,
+            "function_description": "This page functions as a camera interface within the direct messaging attachment workflow, allowing the user to capture a photo to attach to a message being composed for the selected contact.",
+            "action_refs": [
+                [
+                    20,
+                    3
+                ]
+            ],
+            "data_in": [
+                "message composition context",
+                "camera attachment option"
+            ],
+            "data_out": [
+                "camera interface opened"
+            ],
+            "data_dependencies": [
+                77
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The user starts on the 'New message' page (page 20) and clicks the 'Camera' attachment option. This action navigates to the camera interface (page 24), where the user can capture a photo to attach to the message for the selected contact.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            3
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 24,
+                        "action": "click",
+                        "summary": "Click the 'Camera' attachment option to open the camera interface."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 78,
+            "function_description": "Follow button for 'kwbikemeets' profile",
+            "action_refs": [
+                [
+                    57,
+                    0
+                ]
+            ],
+            "data_in": [
+                "kwbikemeets profile",
+                "follow setting (kwbikemeets)"
+            ],
+            "data_out": [
+                "follow setting (kwbikemeets) updated to followed"
+            ],
+            "data_dependencies": [
+                78
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 57,
+                "logic": "On the profiles page, the user clicks the 'Follow' button associated with the 'kwbikemeets' profile. This action likely navigates to or updates the state related to following this profile.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            57,
+                            0
+                        ],
+                        "src_page_idx": 57,
+                        "dst_page_idx": 59,
+                        "action": "click",
+                        "summary": "Click the Follow button for 'kwbikemeets' profile"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 79,
+            "function_description": "Anonymous post toggle switch",
+            "action_refs": [
+                [
+                    58,
+                    1
+                ]
+            ],
+            "data_in": [
+                "anonymous post setting"
+            ],
+            "data_out": [
+                "anonymous post setting updated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 58,
+                "logic": "The user starts on page 58 (New thread). They click the anonymous post toggle switch, which transitions the app to page 61. This action toggles the anonymous post setting for the thread being created.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            58,
+                            1
+                        ],
+                        "src_page_idx": 58,
+                        "dst_page_idx": 61,
+                        "action": "click",
+                        "summary": "Click the anonymous post toggle switch"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 80,
+            "function_description": "This page requests the user to grant the Threads app permission to access photos and videos on the device, offering options for limited access, full access, or denying access.",
+            "action_refs": [
+                [
+                    58,
+                    2
+                ]
+            ],
+            "data_in": [
+                "thread post",
+                "device photos and videos access permission"
+            ],
+            "data_out": [
+                "gallery access request (for thread post)"
+            ],
+            "data_dependencies": [
+                80
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 58,
+                "logic": "The flow starts on the 'New thread' page. The user clicks the image attachment button, which triggers a permission dialog asking for Threads to access photos and videos. At this point, the user can choose between 'Allow limited access', 'Allow all', or 'Don't allow' to proceed with different access levels or deny access.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            58,
+                            2
+                        ],
+                        "src_page_idx": 58,
+                        "dst_page_idx": 22,
+                        "action": "click",
+                        "summary": "Click the image attachment button to trigger the photo/video access permission dialog."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": null,
+                                "condition": "User selects 'Allow limited access'"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "User selects 'Allow all'"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "User selects 'Don't allow'"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}

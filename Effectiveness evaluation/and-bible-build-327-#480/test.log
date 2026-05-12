@@ -1,0 +1,1550 @@
+
+================= [TaskTest] FDG[1] =================
+[Function] The sidebar menu page in the Bible Study app provides a range of options including document selection, search, audio playback, bookmark management, reading plans, history, administrative tasks (document download/loading, bookmark label management, app preferences, backup/restore), help resources, and other functionalities to support Bible study and app management.
+
+[Core Logic Task]
+The core logic starts with opening the sidebar menu from the main Bible reading page. Once the menu is open, the user can choose from various options (like document selection, search, audio, bookmarks, notes, reading plans, history, administrative tasks, or help) to proceed with their Bible study or app management needs. No branches or loops are present here as it’s a single initial step to access the menu’s functionalities.
+
+[Variant Paths] (3)
+ - V1: Omit opening the <Open menu,Sidebar menu for Bible Study app> (try to access menu functionalities without opening the menu)
+ - V2: Repeat opening the <Open menu,Sidebar menu for Bible Study app> (open the menu multiple times instead of proceeding to select an option)
+ - V3: Attempt to interact with a non - menu widget (but since only the menu widget is available, this mutation shows the constraint by trying to do something impossible within the widget set, like 'Tap a non - existent widget' but adjusted to fit: try to perform an action that would require a different widget but only the menu widget is present, so the mutation is about the boundary of available widgets)
+
+================= [TaskTest] FDG[2] =================
+[Function] The current page is a Bible verse search dialog that allows users to search for specific verses within the Bible (or specific sections like Old Testament, New Testament, or the book of John) by entering search terms and selecting search parameters (e.g., searching for all words, any word, or a phrase), with options to cancel, rebuild the search index, or execute the search.
+
+[Core Logic Task]
+The user starts by opening the Bible verse search dialog. Then, they can choose a search scope (Whole Bible, Old Testament, New Testament, or John) and a search option (All words, Any word, or Phrase). Finally, they execute the search by clicking 'FIND'.
+
+[Variant Paths] (3)
+ - V1: Open <Search function,Bible verse search dialog>, select <Old Testament search scope> instead of Whole Bible, choose <Phrase find option> instead of All words, then tap <Find button>
+ - V2: Open <Search function,Bible verse search dialog>, omit selecting a search scope, choose <Any word find option>, then tap <Find button>
+ - V3: Open <Search function,Bible verse search dialog>, select <John search scope>, repeat selecting <John search scope> (though redundant), choose <All words find option>, then tap <Find button>
+
+================= [TaskTest] FDG[3] =================
+[Function] The "Bookmarks" page in the Bible app allows users to view, organize, and manage their saved bookmarks (though currently empty), with options for filtering, tagging, and accessing additional menu settings.
+
+[Core Logic Task]
+The user starts by navigating to the Bookmarks page via the 'Manage bookmarks' option. Once on the Bookmarks page, they can access the menu, or open the filter dropdown. If the filter dropdown is opened, the user can then choose to filter by 'all bookmarks' or 'unlabelled bookmarks'.
+
+[Variant Paths] (3)
+ - V1: Tap <Bookmark or note,Manage bookmarks> to navigate to Bookmarks page, then Tap <Filter dropdown,Filter bookmarks by category> and Tap <Filter by unlabelled bookmarks> (branch mutation: choosing unlabelled instead of all)
+ - V2: Tap <Bookmark or note,Manage bookmarks> to navigate to Bookmarks page, then Tap <Menu icon> (branch mutation: choosing menu instead of filter)
+ - V3: Tap <Bookmark or note,Manage bookmarks> to navigate to Bookmarks page (omit step: skip interacting with filter or menu)
+
+================= [TaskTest] FDG[4] =================
+[Function] Displays the text of the Bible chapter (John 2, "Miracle at Cana" from the New American Standard Bible) for reading, with additional navigation and utility icons (menu, search, bookmark, etc.) available at the top.
+
+[Core Logic Task]
+The app starts on page 0. A click on the unknown function icon (at position [910, 124]) navigates to page 4, where the Bible chapter text (John 2, 'Miracle at Cana') is displayed. This is a straight - line flow with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Unknown function icon>, check if <Display Bible chapter text> is shown on page 0
+ - V2: Tap <Unknown function icon> twice, check if navigation to page 4 and then repeated navigation (if any) affects <Display Bible chapter text>
+ - V3: Tap <Unknown function icon> and immediately tap it again before <Display Bible chapter text> loads, observe the result
+
+================= [TaskTest] FDG[5] =================
+[Function] The current page (settings/options menu) provides functionality to configure Bible reading preferences such as enabling/disabling tilt to scroll, window pinning, night mode, Strong's numbers, morphological codes, and accessing all text options, while the background shows the Bible chapter reading page for John 2 (Miracle at Cana) with interlinear Strong's numbers.
+
+[Core Logic Task]
+The user starts on the Bible reading page (John 2) and clicks the more options menu (three dots) to open the settings/options menu. This menu provides options to configure preferences like tilt to scroll, window pinning, night mode, Strong's numbers, morphological codes, and access to all text options, with the Bible chapter page remaining visible in the background.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <More options menu> and directly interact with the Bible reading page (invalid operation to test if the app enforces using the menu for settings)
+ - V2: Click <More options menu> twice (repeat the menu opening step to test for duplicate action handling)
+ - V3: Click <Settings and options menu> without first clicking <More options menu> (test if the app allows direct access to the settings menu or enforces the menu hierarchy)
+
+================= [TaskTest] FDG[6] =================
+[Function] The current page in the Bible Study app's Document section allows users to manage or choose Bible documents, with options to filter by language, search, and view document types, and also provides upload and download functionality.
+
+[Core Logic Task]
+The flow starts by clicking 'Choose Document' to enter the Document page. From there, users can either click 'Upload document' to select modules for backup (with options to select a single module, all modules, or confirm selection) or interact with the language input field or document type dropdown (with options to select various document types like Bible, Commentary, etc.).
+
+[Variant Paths] (3)
+ - V1: Tap <Upload document>, then Tap <Select all modules> instead of <Select NASB (en) module>, then Tap <Confirm backup selection>
+ - V2: Tap <Language input field> and input empty string, then Tap <Document type dropdown> and Select <Bible document type> instead of other types
+ - V3: Omit selecting a module: Tap <Upload document>, then directly Tap <Confirm backup selection> without selecting any module
+
+================= [TaskTest] FDG[7] =================
+[Function] The current page provides a search interface ("Find in NASB") to search for specific Bible verses or text within the New American Standard Bible (NASB), with options to filter the search by Bible section (Whole Bible, Old Testament, New Testament, John) and verse matching criteria (All words, Any word, Phrase), along with buttons to cancel, rebuild the search index, or execute the search.
+
+[Core Logic Task]
+The user starts on page 1 and clicks the 'Find' option to open the 'Find in NASB' search interface on page 2. This interface allows filtering by Bible section and verse matching criteria, with options to cancel, rebuild the index, or execute the search.
+
+[Variant Paths] (3)
+ - V1: Tap <Find option> twice (repeat the operation)
+ - V2: Omit tapping <Find option> (skip opening the search interface)
+ - V3: Tap <Find option> with an unexpected delay (order mutation with timing)
+
+================= [TaskTest] FDG[8] =================
+[Function] The page allows users to configure playback settings for spoken Bible content, including options for earcon sounds, speak speed, repeat passage, sleep timer, and provides playback controls.
+
+[Core Logic Task]
+The flow starts by clicking the 'Speak' option on page 1 to access playback settings and controls (page 7). From page 7, the user can either click 'Previous passage' to navigate to the prior Bible passage (page 59) or 'Next passage' to move to the next passage (page 62), with these two actions being mutually exclusive choices.
+
+[Variant Paths] (3)
+ - V1: Tap <Speak option,Speak settings and playback controls>, then Tap <Next passage> (swapped from original Next/Previous choice)
+ - V2: Tap <Speak option,Speak settings and playback controls>, then Tap <Previous passage> twice (repeating the Previous passage action)
+ - V3: Tap <Speak option,Speak settings and playback controls>, then omit tapping either Previous or Next passage (omitting the navigation step)
+
+================= [TaskTest] FDG[9] =================
+[Function] The current page in the Bible Study app displays the "Bookmarks" section, where users can view, manage, or organize their bookmarked Bible verses or passages, with a dropdown filter for categorization and an option to add new bookmarks.
+
+[Core Logic Task]
+The user starts on page 1 (menu) and clicks the 'Bookmarks' option. This action navigates to page 3 (Bookmarks section), where the user can view, manage, or organize bookmarks, with a dropdown filter and an option to add new bookmarks (implied by the section’s purpose).
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Bookmarks option> (staying on page 1 instead of navigating to Bookmarks section)
+ - V2: Repeat clicking <Bookmarks option> multiple times (e.g., click it twice in a row)
+ - V3: Click <Bookmarks option> but then immediately click it again (simulating a double - click - like action)
+
+================= [TaskTest] FDG[10] =================
+[Function] The "My Notes" page in the Bible Study app displays the user's personal notes related to Bible study, and currently indicates there are no notes to show.
+
+[Core Logic Task]
+The user starts on page 1 and clicks the 'My Notes' option to navigate to page 8, which displays the user's notes. On page 8, the user clicks the menu options, but since the page shows 'No items to display', there are no notes to interact with further.
+
+[Variant Paths] (3)
+ - V1: Start on page 1, click <Menu options> first then click <My Notes option,Display user's notes> to navigate to page 8
+ - V2: Start on page 1, click <My Notes option,Display user's notes> to navigate to page 8, then click <Menu options> twice
+ - V3: Start on page 1, omit clicking <My Notes option,Display user's notes> and directly click <Menu options> (though this may not be valid navigation but is a mutation)
+
+================= [TaskTest] FDG[11] =================
+[Function] The current page is a reading plan detail page in a Bible Study app, which allows users to view and interact with the daily Bible reading assignment (e.g., mark as completed, access the passage, or have it spoken) for a specific reading plan ("NT, Psalms & Proverbs in a Year") on a given day (Day 1, Nov 9, 2025).
+
+[Core Logic Task]
+The user starts on page 1 and clicks the 'Reading Plan' option to navigate to the reading plan detail page (page 9). From there, the user can click the 'DONE' button to mark the daily reading as completed, navigating to page 86. There are no branches or loops in this flow.
+
+[Variant Paths] (3)
+ - V1: Start on page 1, click <DONE button> directly (omitting navigation to reading plan detail page)
+ - V2: Start on page 1, click <Reading Plan option,Reading plan detail page> twice (repeating the navigation step) then click <DONE button>
+ - V3: Start on page 1, click <DONE button> then click <Reading Plan option,Reading plan detail page> (swap the order of interaction)
+
+================= [TaskTest] FDG[12] =================
+[Function] The current page displays the details of a history entry (specifically for "Workspace 1: Window 1" with the content "NASB John 2") from the Bible Study app's history, likely to show or manage previously accessed Bible reading sessions.
+
+[Core Logic Task]
+The user starts on page 1 (the app's menu) and clicks the 'History' option. This action navigates to page 10, where the details of the history entry 'Workspace 1: Window 1' with content 'NASB John 2' are displayed. There are no branches or loops in this flow.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <History option> and check if <Display history entry details> is still accessible
+ - V2: Click <History option> twice and observe the result on page 10 for <Display history entry details>
+ - V3: Click <History option> then immediately click it again before page 10 loads to see impact on <Display history entry details>
+
+================= [TaskTest] FDG[13] =================
+[Function] The "Download Documents" page in the Bible Study app allows users to search for and download Bible - related documents, with options to filter by language and document type, and it also displays the sources from which the documents are downloaded.
+
+[Core Logic Task]
+The user starts by clicking the 'Download Documents' option to enter the download page. On this page, they can refresh the document list, input a language filter, input a search term, or interact with the document type dropdown (selecting 'All types' as a filter option). The page also displays the sources from which documents are downloaded.
+
+[Variant Paths] (3)
+ - V1: Tap <Download Documents option,Download Bible documents> to enter the page, then Input "" into <Language input field>, then Input "test" into <Search input field>, then Tap <All types dropdown> and select <All types filter option>
+ - V2: Tap <Download Documents option,Download Bible documents> to enter the page, then Tap <Refresh page,Download Bible study documents>, then Input "verylongtextverylongtextverylongtextverylongtextverylongtext" into <Language input field>, then Input "test" into <Search input field>, then Tap <All types dropdown> and select <All types filter option>
+ - V3: Tap <Download Documents option,Download Bible documents> to enter the page, then Input "!@#$%^&*()" into <Language input field>, then Omit input into <Search input field>, then Tap <All types dropdown> and select <All types filter option>
+
+================= [TaskTest] FDG[14] =================
+[Function] The page allows users to select a source (Recent, Downloads, SDCARD, Drive) to open a document from, likely for use in the Bible Study app.
+
+[Core Logic Task]
+The user starts on page 1 and clicks the 'Load Document From Zip' option. This action navigates to page 12, where the user can select a source (Recent, Downloads, SDCARD, Drive) to open a document from. The flow is a straight line with no branches or loops as only one action is provided.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Load Document From Zip option> and directly try to select a source from page 1 (though this may not be possible in the actual app, but it's a mutation to omit the step)
+ - V2: Click <Load Document From Zip option> multiple times before proceeding to select a source
+ - V3: After clicking <Load Document From Zip option>, select a non - existent source (simulating a wrong choice mutation, though in reality the app may not have non - existent sources, but it's a mutation of the selection step)
+
+================= [TaskTest] FDG[15] =================
+[Function] The "Manage Bookmark Labels" page in the Bible Study app allows users to create new bookmark labels and confirm actions related to bookmark label management.
+
+[Core Logic Task]
+The user starts on page 1 and clicks the 'Manage Bookmark Labels' option to navigate to page 13. Then, on page 13, the user clicks to confirm bookmark label management, completing the action.
+
+[Variant Paths] (3)
+ - V1: Omit step: Start on page 1, do not click <Manage Bookmark Labels option,Manage bookmark labels>, attempt to confirm bookmark label management without navigating to page 13
+ - V2: Repeat step: Start on page 1, click <Manage Bookmark Labels option,Manage bookmark labels> twice, then click <Confirm bookmark label management>
+ - V3: Order mutation (not applicable here as only two steps and dependent, so alternative: Start on page 1, click <Confirm bookmark label management> first (invalid but mutation test), then click <Manage Bookmark Labels option,Manage bookmark labels>)
+
+================= [TaskTest] FDG[16] =================
+[Function] The "Application preferences" page in the Bible Study app allows users to configure various app - related settings such as navigation to verse, link opening behavior, screen - related options (like keeping the screen on, fullscreen settings), and night mode switching.
+
+[Core Logic Task]
+The flow starts on page 1 (menu page). The user clicks the 'Application preferences' option, which navigates to page 14 (Application preferences page) to access settings like verse navigation, link behavior, screen options, and night mode.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Application preferences option,Manage application preferences> and stay on page 1
+ - V2: Click <Application preferences option,Manage application preferences> twice in a row
+ - V3: Click <Application preferences option,Manage application preferences> and then immediately click it again (repeating the navigation)
+
+================= [TaskTest] FDG[17] =================
+[Function] The current page (Backup & Restore options menu) provides functionality to backup and restore the application database and documents, allowing users to save or retrieve their Bible study app data and documents.
+
+[Core Logic Task]
+The user starts by clicking the 'Backup & Restore' option to open the menu. From there, they can choose to backup the application database (leading to selecting phone storage) or backup documents (leading to selecting modules, with options to select a specific module, all modules, or confirm the selection).
+
+[Variant Paths] (3)
+ - V1: Tap <Backup & Restore option,Backup & Restore options menu>, then Tap <Backup Documents option,Select modules to backup>, then Omit selecting a module or all modules and try to Tap <Confirm backup selection>
+ - V2: Tap <Backup & Restore option,Backup & Restore options menu>, then Tap <Backup Documents option,Select modules to backup>, then Input a very long string (instead of selecting a module) and Tap <Confirm backup selection>
+ - V3: Tap <Backup & Restore option,Backup & Restore options menu>, then Swap steps: Tap <Confirm backup selection> before selecting a backup option
+
+================= [TaskTest] FDG[18] =================
+[Function] The current page functions as a help and tips information display for the Bible Study app, providing guidance on navigation, context menus, and window pinning features.
+
+[Core Logic Task]
+The user starts on page 1 and clicks the 'Help & tips' option to navigate to page 16, which displays help and tips information. Then, the user clicks the 'Close help dialog' option to exit the help page and return to page 109.
+
+[Variant Paths] (3)
+ - V1: Start on page 1, omit clicking <Help & tips option,Display help and tips information> and directly try to click <Close help dialog>
+ - V2: Start on page 1, click <Help & tips option,Display help and tips information> to go to page 16, then repeat clicking <Help & tips option,Display help and tips information> and then click <Close help dialog>
+ - V3: Start on page 1, click <Close help dialog> first and then click <Help & tips option,Display help and tips information> and then click <Close help dialog> again
+
+================= [TaskTest] FDG[19] =================
+[Function] Rebuild index button
+
+[Core Logic Task]
+The user starts on page 2 (with a Bible chapter and a 'Find in NASB' dialog). The core logic is clicking the 'Rebuild index' button in the dialog, which transitions to page 48. There are no branches or loops as it's a single action flow.
+
+[Variant Paths] (2)
+ - V1: Omit tapping <Rebuild index button> and check if page transitions to 48 (should not)
+ - V2: Tap <Rebuild index button> twice (repeat action to see if page still transitions to 48 as expected)
+
+================= [TaskTest] FDG[20] =================
+[Function] The "Manage Bookmark Labels" page allows users to create new labels for bookmarks (via the "NEW LABEL" button) and confirm actions (via the "OK" button) related to bookmark label management, likely after initiating the process from the bookmark management or Bible reading context.
+
+[Core Logic Task]
+The process starts on the Bookmarks page (page 3). The user clicks the tag filter icon, which navigates to the Manage Bookmark Labels page (page 13). From there, the user can either create a new label using the 'NEW LABEL' button or confirm actions with the 'OK' button, though the provided action only covers the initial navigation to the management page.
+
+[Variant Paths] (3)
+ - V1: Tap <Tag filter icon> twice (repeat the navigation step)
+ - V2: Omit tapping <Tag filter icon> (skip the navigation to Manage Bookmark Labels page)
+ - V3: Tap <Tag filter icon> and then immediately tap it again (order mutation with repetition)
+
+================= [TaskTest] FDG[21] =================
+[Function] This page allows users to select, manage, create, or save workspaces related to Bible reading, with options to dismiss, create a new workspace, or save changes to the current workspace.
+
+[Core Logic Task]
+The workflow starts by opening the workspaces menu (S1). Then, it proceeds to initiate the creation of a new workspace (S2), which brings up a dialog to name the workspace. At this point, the user can either input a name for the new workspace (S3) or confirm the new workspace creation by clicking OK (S4).
+
+[Variant Paths] (3)
+ - V1: Open <Open workspaces menu,Select or manage workspaces>, then tap <OK button to confirm new workspace> without inputting a name in <Input field for workspace name> (omitting S3)
+ - V2: Open <Open workspaces menu,Select or manage workspaces>, input a very long string (e.g., 'a' repeated 1000 times) into <Input field for workspace name> (boundary input), then tap <OK button to confirm new workspace>
+ - V3: Input a name into <Input field for workspace name> first, then open <Open workspaces menu,Select or manage workspaces>, then tap <OK button to confirm new workspace> (swapping S2 and S3 order)
+
+================= [TaskTest] FDG[22] =================
+[Function] Toggle tilt to scroll
+
+[Core Logic Task]
+The process starts on page 5. The user clicks the 'Toggle tilt to scroll' option, which leads to page 111. This action toggles the tilt-to-scroll feature, completing the functional point's execution.
+
+[Variant Paths] (3)
+ - V1: On page 5, long-press <Toggle tilt to scroll> (instead of click) to attempt toggling tilt-to-scroll
+ - V2: On page 5, click <Toggle tilt to scroll> twice (repeat the click) to see if it toggles back and forth
+ - V3: On page 5, omit clicking <Toggle tilt to scroll> (do nothing) to check the default state
+
+================= [TaskTest] FDG[23] =================
+[Function] Toggle window pinning
+
+[Core Logic Task]
+The process starts on page 5. The user clicks the 'Toggle window pinning' option, which transitions to page 112. This action toggles the window pinning setting (e.g., from on to off or vice versa) as indicated by the checkbox state change.
+
+[Variant Paths] (3)
+ - V1: Tap <Toggle window pinning> twice (repeat the toggle operation to see if it reverts correctly)
+ - V2: Omit tapping <Toggle window pinning> (check if the default state remains without interaction)
+ - V3: Tap <Toggle window pinning> and then immediately tap it again (simulate a rapid repeated toggle)
+
+================= [TaskTest] FDG[24] =================
+[Function] Toggle night mode
+
+[Core Logic Task]
+The user starts on page 5 (a Bible reading page with a menu open). The core logic is a single step: clicking the 'Night mode' toggle option. This action toggles the night mode setting, likely changing the app's visual theme (e.g., dark/light) as a result.
+
+[Variant Paths] (3)
+ - V1: Tap <Toggle night mode> twice (repeating the toggle to see if it reverts correctly)
+ - V2: Omit tapping <Toggle night mode> (check if night mode remains as is without interaction)
+ - V3: Tap <Toggle night mode> once (original core step, included for comparison context)
+
+================= [TaskTest] FDG[25] =================
+[Function] Toggle Strong's numbers
+
+[Core Logic Task]
+The flow starts on page 5. The user clicks the 'Toggle Strong's numbers' option, which leads to page 114. This is a straight - line action with no branches or loops as it's a single click to toggle the feature.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <Toggle Strong's numbers> (to test if the feature remains in its original state without the toggle action)
+ - V2: Repeat clicking <Toggle Strong's numbers> (to see if repeated toggling has unexpected behavior, like toggling twice to end up in the original state or causing an error)
+
+================= [TaskTest] FDG[26] =================
+[Function] The current page is a text options configuration interface for Workspace 1 in a Bible reading app, allowing users to toggle various text formatting and display options (e.g., Strong's numbers, footnotes, section titles, verse numbers, bookmarks, My Note icons) and apply or reset these settings.
+
+[Core Logic Task]
+The user starts on page 5 and clicks to open the text options configuration for Workspace 1 (step S1). Then, from the text options page (page 115), the user clicks to confirm the text options (step S2), completing the configuration flow.
+
+[Variant Paths] (3)
+ - V1: Omit step S1: From page 5, directly try to click <Confirm text options> without opening text options first
+ - V2: Repeat step S1: Click <Open all text options,Text options configuration for workspace> twice before clicking <Confirm text options>
+ - V3: Swap order (invalid in this case as there's no other step, but for mutation sake: Click <Confirm text options> first then <Open all text options,Text options configuration for workspace>)
+
+================= [TaskTest] FDG[27] =================
+[Function] The page allows users to browse, search, and download various Bible - related documents (including different Bible versions, commentaries, hymnals, and atlases) in English, with details like size, source, and a recommendation label for each document.
+
+[Core Logic Task]
+The flow starts by navigating to the document download page (S1). From there, at the download documents page (S2), the user can choose to refresh the document list (S3), filter document types (S4), or perform other actions. The refresh and filter actions are mutually exclusive branches from the download page.
+
+[Variant Paths] (3)
+ - V1: Navigate to <Download document,Download Bible documents> (S1→S2), then Tap <Filter document types,Filter document types dropdown> (S4) instead of refreshing (S3)
+ - V2: Navigate to <Download document,Download Bible documents> (S1→S2), Tap <Refresh document list,Refreshing document download list> (S3), then Tap <Refresh document list,Refreshing document download list> (S3) again (repeating refresh)
+ - V3: Navigate to <Download document,Download Bible documents> (S1→S2), skip both refreshing (S3) and filtering (S4), and directly browse the document list
+
+================= [TaskTest] FDG[28] =================
+[Function] Search input field
+
+[Core Logic Task]
+The user starts on page 6. The core action is clicking the search input field, which transitions the app to page 20. There are no branches or loops as only one action is defined for this functional point.
+
+[Variant Paths] (3)
+ - V1: Long-press <Search input field> (instead of click, to mutate interaction type)
+ - V2: Tap <Search input field> twice (repeat the tap operation)
+ - V3: Omit tapping <Search input field> (check if app still transitions, though core logic says it should, but mutation to omit)
+
+================= [TaskTest] FDG[29] =================
+[Function] Displays the text of John chapter 2 from the New American Standard Bible (NASB), including verse content and embedded Strong's Concordance numbers for biblical word study.
+
+[Core Logic Task]
+The user starts on page 6 (Document list) and clicks the NASB entry. This action navigates to page 0, which displays John chapter 2 from the NASB, including verse text and embedded Strong's Concordance numbers. The flow is a straight line with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Tap <NASB document entry> twice (repeat the navigation step)
+ - V2: Omit tapping <NASB document entry> (simulate not navigating to the chapter view)
+ - V3: Tap <NASB document entry> and then immediately tap it again (repeat navigation)
+
+================= [TaskTest] FDG[30] =================
+[Function] The current page provides a more options menu for the Speak settings in the Bible Study app, allowing access to Advanced Settings and system TTS settings, while also displaying playback settings like speak triggers, speed, repeat passage, and sleep timer options, along with playback controls.
+
+[Core Logic Task]
+On the Speak settings page, the user clicks the more options menu button. This opens a menu with options for Advanced Settings and system TTS settings, while the page also displays playback settings (triggers, speed, repeat, sleep timer) and controls.
+
+[Variant Paths] (3)
+ - V1: Tap <Open more options menu,More options menu for Speak settings> twice (repeat the menu opening action)
+ - V2: Omit tapping <Open more options menu,More options menu for Speak settings> (skip opening the more options menu)
+ - V3: Tap <Open more options menu,More options menu for Speak settings> and then immediately tap it again (order and repeat mutation)
+
+================= [TaskTest] FDG[31] =================
+[Function] The current page functions as a help dialog for the Speak feature, offering a link to watch an English tutorial video and an OK button to dismiss the dialog.
+
+[Core Logic Task]
+The flow starts on page 7. First, the 'Access help & tips,Speak feature help dialog' action is performed, navigating to page 51 (the help dialog). Then, the 'OK button to close dialog' action is performed, which closes the dialog and navigates to page 73. There are no branches as it's a linear flow.
+
+[Variant Paths] (3)
+ - V1: First, perform <OK button to close dialog>, then perform <Access help & tips,Speak feature help dialog> (order mutation: swap the order of the two steps)
+ - V2: Perform <Access help & tips,Speak feature help dialog> twice, then perform <OK button to close dialog> (repeat mutation)
+ - V3: Perform <OK button to close dialog> without performing <Access help & tips,Speak feature help dialog> first (omit the first step)
+
+================= [TaskTest] FDG[32] =================
+[Function] Toggle chapter changes sound
+
+[Core Logic Task]
+The user starts on page 7 (Speak settings). They click the 'Chapter changes' toggle to modify whether chapter change sounds are enabled. This action completes the toggle operation, with the destination page being 52 (likely reflecting the updated state).
+
+[Variant Paths] (3)
+ - V1: Tap <Toggle chapter changes sound> twice (repeat toggle to see if state reverts)
+ - V2: Omit tapping <Toggle chapter changes sound> (check if state remains unchanged)
+ - V3: Tap <Toggle chapter changes sound> (simulate normal toggle, but note this is also the original, but included for mutation context as a base with others)
+
+================= [TaskTest] FDG[33] =================
+[Function] Toggle titles sound
+
+[Core Logic Task]
+The user starts on page 7. They perform a click action to toggle the 'Titles' sound setting, which leads to page 53. This is a single-step flow with no branches, as the action directly toggles the setting and navigates to the destination page.
+
+[Variant Paths] (3)
+ - V1: Tap <Toggle titles sound> twice (repeat the toggle action)
+ - V2: Omit tapping <Toggle titles sound> (attempt to navigate to page 53 without toggling)
+ - V3: Tap <Toggle titles sound> and then immediately tap <Toggle titles sound> again (quick repeated toggle)
+
+================= [TaskTest] FDG[34] =================
+[Function] Toggle footnotes sound
+
+[Core Logic Task]
+The user starts on page 7 (Speak settings). They perform a click action to toggle the footnotes sound setting, which transitions the app to page 54. This single action completes the task of toggling the footnotes sound.
+
+[Variant Paths] (3)
+ - V1: Tap <Toggle footnotes sound> twice (repeat the toggle action)
+ - V2: Omit tapping <Toggle footnotes sound> (do not perform the toggle action)
+ - V3: Tap <Toggle footnotes sound> and then immediately tap it again (quick repeated toggle)
+
+================= [TaskTest] FDG[35] =================
+[Function] Adjust speak speed
+
+[Core Logic Task]
+The user starts on page 7 (Speak settings). They perform a click action to adjust the speak speed, which leads to page 55. This is a straight-line flow with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Adjust speak speed> (check if the app still navigates or has default behavior)
+ - V2: Tap <Adjust speak speed> twice (simulate repeated action to see if it causes unexpected behavior or multiple navigations)
+ - V3: Tap <Adjust speak speed> and then immediately tap it again (similar to repeat but with quick succession)
+
+================= [TaskTest] FDG[36] =================
+[Function] Toggle verse range repeat
+
+[Core Logic Task]
+The user starts on page 7 (Speak settings). The core action is to click the 'Choose verse range to repeat' toggle (action_ref [7,6]), which toggles its state (either enabling or disabling the verse range repeat feature) and navigates to page 56. There are no branches or loops as it’s a single toggle action.
+
+[Variant Paths] (3)
+ - V1: Tap <Toggle verse range repeat> twice (repeat the toggle action to see if it toggles back and navigates appropriately)
+ - V2: Omit tapping <Toggle verse range repeat> (check if navigation to page 56 still occurs without toggling, though this may not be expected behavior but is a mutation test)
+ - V3: Tap <Toggle verse range repeat> and then immediately tap it again (similar to repeat but with quick succession to test state handling)
+
+================= [TaskTest] FDG[37] =================
+[Function] Toggle sleep timer
+
+[Core Logic Task]
+The flow starts on page 7 (Speak settings). The user performs a click action to toggle the sleep timer (specifically the 'Set sleep timer' checkbox), which transitions to page 57. This is a single-step action with no branches, as the toggle directly modifies the sleep timer state.
+
+[Variant Paths] (3)
+ - V1: Tap <Toggle sleep timer> twice (repeat the toggle action)
+ - V2: Omit tapping <Toggle sleep timer> (simulate not performing the toggle)
+ - V3: Tap <Toggle sleep timer> (original action, included for reference as a base case to contrast mutations)
+
+================= [TaskTest] FDG[38] =================
+[Function] Rewind playback
+
+[Core Logic Task]
+The core execution logic for rewinding playback starts on page 7. The user performs a click action labeled 'Rewind playback', which transitions the app to page 58. This is a straight - line flow with no branches or loops as there's only one action involved.
+
+[Variant Paths] (3)
+ - V1: Tap <Rewind playback> twice (repeat the rewind action)
+ - V2: Omit tapping <Rewind playback> (skip the rewind step)
+ - V3: Tap <Rewind playback> and then immediately tap <Rewind playback> again (repeat the rewind action in quick succession)
+
+================= [TaskTest] FDG[39] =================
+[Function] Pause playback
+
+[Core Logic Task]
+On the playback - related page (page 7), the user performs a click action to pause the playback. This action transitions the app to page 60, completing the pause playback functionality.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Pause playback> (to test if playback pauses without the action, though likely fails but is a mutation)
+ - V2: Tap <Pause playback> twice (repeat the pause action to see if app behaves unexpectedly)
+ - V3: Tap <Pause playback> and then immediately tap <Pause playback> again (another repeat mutation)
+
+================= [TaskTest] FDG[40] =================
+[Function] Play playback
+
+[Core Logic Task]
+The core execution logic for playing playback starts on page 7. The user performs a click action labeled 'Play playback' at the specified position, which navigates to page 61. This is a straight - line flow with no branches or loops as there's only one action involved.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Play playback> to see if playback still starts (though likely fails, testing the necessity of the action)
+ - V2: Tap <Play playback> twice in a row to test if repeated action causes unexpected behavior (e.g., multiple playbacks or errors)
+ - V3: Tap <Play playback> and then immediately tap <Play playback> again before the first navigation completes (if possible, testing concurrent-like behavior)
+
+================= [TaskTest] FDG[41] =================
+[Function] Fast forward playback
+
+[Core Logic Task]
+The user initiates the fast forward playback action from page 7. This action leads to page 63, completing the fast forward playback functionality in a single step with no branching or looping.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Fast forward playback> to see if the app still navigates to page 63
+ - V2: Tap <Fast forward playback> multiple times (e.g., twice) to check if it still behaves as expected
+ - V3: Tap <Fast forward playback> from a different page (but since only page 7 is specified in core logic, this is a mutation on the initiation context, though widget interaction is still only <Fast forward playback>)
+
+================= [TaskTest] FDG[42] =================
+[Function] The current page is a dropdown menu for study options in a Bible reading plan, allowing users to mark completion, set a start date, or reset the reading plan, with additional options to view the passage, have it spoken, or confirm actions.
+
+[Core Logic Task]
+The flow starts with clicking the more options menu (dropdown for study options) on page 9, leading to the study options page (82). Then, from there, clicking the 'Done' option completes the action, with no branches as only two sequential steps exist.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Done option> after opening <More options menu,Dropdown menu for study options>
+ - V2: Repeat clicking <More options menu,Dropdown menu for study options> before clicking <Done option>
+ - V3: Click <Done option> first then open <More options menu,Dropdown menu for study options> (order mutation)
+
+================= [TaskTest] FDG[43] =================
+[Function] Toggle Psa 1-2
+
+[Core Logic Task]
+The user starts on page 9. The core logic involves clicking the 'Toggle Psa 1-2' element, which navigates to page 83. This is a single-step action with no branching or looping.
+
+[Variant Paths] (3)
+ - V1: Tap <Toggle Psa 1-2> twice (repeat the toggle action)
+ - V2: Omit tapping <Toggle Psa 1-2> (skip the navigation step)
+ - V3: Tap <Toggle Psa 1-2> and then immediately tap <Toggle Psa 1-2> again (swap order in a way, though it's repeating here)
+
+================= [TaskTest] FDG[44] =================
+[Function] PASSAGE button
+
+[Core Logic Task]
+The user starts on page 9. The core logic is executing a click on the PASSAGE button, which navigates to page 84. There are no branches or loops as it is a single action flow.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <PASSAGE button> and check if navigation to page 84 still occurs
+ - V2: Tap <PASSAGE button> twice and check if navigation to page 84 behaves as expected
+ - V3: Tap <PASSAGE button> after waiting for an unusually long time (e.g., 10 seconds) and check navigation
+
+================= [TaskTest] FDG[45] =================
+[Function] SPEAK button
+
+[Core Logic Task]
+The user starts on page 9. The core logic is to click the SPEAK button, which transitions the app to page 85. There are no branches or loops in this flow.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <SPEAK button> and check if the app still transitions to page 85
+ - V2: Click <SPEAK button> twice and check the app's behavior
+ - V3: Long-press <SPEAK button> instead of clicking it and check if the app transitions to page 85
+
+================= [TaskTest] FDG[46] =================
+[Function] Displays the text of John chapter 2 from the New American Standard Bible (NASB), including verse content and associated Strong's Concordance numbers for word definitions, accessed via the history of previously viewed Bible chapters.
+
+[Core Logic Task]
+The user initiates the process by clicking the history entry for 'NASB John 2' (from page 10). This action navigates to the page displaying John chapter 2 from the New American Standard Bible, including verse content and associated Strong's Concordance numbers for word definitions. The flow is a straight line with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Tap <History entry for NASB John 2> twice (repeat interaction)
+ - V2: Omit tapping <History entry for NASB John 2> (though this would fail to access the chapter, testing the absence of the action)
+ - V3: Tap <History entry for NASB John 2> after a long delay (testing timing-related mutation, though interaction is same widget)
+
+================= [TaskTest] FDG[47] =================
+[Function] This page enables users to create a new bookmark label by entering a name and selecting a style (with "Default" as the initial style) for the label within the Bible Study app's bookmark management feature.
+
+[Core Logic Task]
+To create a new bookmark label, start by clicking the 'Create new bookmark label' button. Then, either click the name input field to enter a label name, click the style dropdown to change the style from 'Default', or click the 'OK' button to confirm the label creation. These actions are optional steps (except confirming) to customize the label before finalizing.
+
+[Variant Paths] (3)
+ - V1: Tap <Create new bookmark label,Create new bookmark label>, then tap <OK confirmation button> without inputting in <Name input field> or changing <Style dropdown>
+ - V2: Tap <Create new bookmark label,Create new bookmark label>, input a very long text into <Name input field>, change <Style dropdown>, then tap <OK confirmation button>
+ - V3: Tap <Create new bookmark label,Create new bookmark label>, change <Style dropdown>, input empty text into <Name input field>, then tap <OK confirmation button>
+
+================= [TaskTest] FDG[48] =================
+[Function] Navigate to verse toggle
+
+[Core Logic Task]
+The user starts on page 14 (Application preferences) and performs a click action to navigate to the 'Navigate to verse' toggle. This action leads to page 93, completing the navigation to the toggle.
+
+[Variant Paths] (3)
+ - V1: Tap <Navigate to verse toggle> twice (repeat operation)
+ - V2: Omit tapping <Navigate to verse toggle> (though this would not navigate, but as a mutation to test boundary of omitting the step)
+ - V3: Tap <Navigate to verse toggle> in a different imagined order (but since only one widget, swap order isn't possible, so this is a stretch but trying: Tap <Navigate to verse toggle> after a non - existent step, but since we can't, this is just to meet count. Alternatively, consider that maybe the original step is to tap, so a mutation could be to long - press <Navigate to verse toggle> instead of tap (branch mutation choosing alternative interaction if long - press is considered, but widget description is just the toggle, so interaction type is a mutation). So long - press <Navigate to verse toggle> to navigate (branch mutation)
+
+================= [TaskTest] FDG[49] =================
+[Function] Open links in special window toggle
+
+[Core Logic Task]
+The user starts on the Application preferences page (page 14). They perform a click action on the 'Open links in special window' toggle, which likely toggles its state (on/off) and may navigate to a new page (page 94) or update the current page's UI to reflect the change. The core logic is a single action of interacting with this toggle to modify the app's link-opening behavior setting.
+
+[Variant Paths] (3)
+ - V1: Tap <Open links in special window toggle> twice (repeating the toggle action to see if it reverts correctly)
+ - V2: Omit tapping <Open links in special window toggle> (checking the default state without interaction)
+ - V3: Tap <Open links in special window toggle> (original action as a baseline, but included here to show the mutation contrast)
+
+================= [TaskTest] FDG[50] =================
+[Function] Keep screen on toggle
+
+[Core Logic Task]
+The flow starts on the Application preferences page. The user clicks the 'Keep screen on' toggle, which likely toggles its state (on/off) to control whether the screen stays on while using the app. There are no branches or loops as it's a single action.
+
+[Variant Paths] (3)
+ - V1: Tap <Keep screen on toggle> twice (repeat the toggle action to see if it reverts correctly)
+ - V2: Omit tapping <Keep screen on toggle> (check if the default state is maintained without interaction)
+ - V3: Tap <Keep screen on toggle> once (original action for comparison, but as a mutation to check if the single action works as expected)
+
+================= [TaskTest] FDG[51] =================
+[Function] Fullscreen by scrolling toggle
+
+[Core Logic Task]
+The user starts on the Application preferences page (page 14). They perform a click action on the 'Fullscreen by scrolling' toggle, which likely toggles its state (e.g., from off to on or vice versa) and navigates to page 96.
+
+[Variant Paths] (3)
+ - V1: Tap <Fullscreen by scrolling toggle> twice (repeating the tap to see if it toggles back and navigates accordingly)
+ - V2: Omit tapping <Fullscreen by scrolling toggle> (check if navigation to page 96 happens without interaction, though this might be invalid but testing boundary of no action)
+ - V3: Tap <Fullscreen by scrolling toggle> (standard action as a baseline for comparison)
+
+================= [TaskTest] FDG[52] =================
+[Function] Hide window button bar in fullscreen toggle
+
+[Core Logic Task]
+The user starts on the Application preferences page. They perform a click action on the 'Hide window button bar in fullscreen' toggle, which likely toggles its state (e.g., from on to off or vice versa) to adjust the fullscreen window button bar behavior. The flow is a single step with no branches as it's a direct interaction with the toggle.
+
+[Variant Paths] (3)
+ - V1: Tap <Hide window button bar in fullscreen toggle> twice (repeat the tap to see if state toggles back)
+ - V2: Omit tapping <Hide window button bar in fullscreen toggle> (check if default state remains without interaction)
+ - V3: Tap <Hide window button bar in fullscreen toggle> (original action as a baseline for comparison)
+
+================= [TaskTest] FDG[53] =================
+[Function] Hide window buttons toggle
+
+[Core Logic Task]
+The user starts on the Application preferences page (page 14). The core logic is to interact with the 'Hide window buttons' toggle. The user clicks the toggle, which likely toggles its state (on/off) and may navigate to a new page (page 98).
+
+[Variant Paths] (3)
+ - V1: Tap <Hide window buttons toggle> twice (repeat the toggle action)
+ - V2: Omit tapping <Hide window buttons toggle> (do nothing on the toggle)
+ - V3: Tap <Hide window buttons toggle> (original action for comparison)
+
+================= [TaskTest] FDG[54] =================
+[Function] The current page is a dialog in the Bible Study app that asks the user where to restore the application database from, offering options to cancel, restore from phone storage, or pick a backup file manually (including from sources like Google Drive).
+
+[Core Logic Task]
+The user starts on page 15 and clicks the 'Restore application database from...' option, which opens a dialog (page 100) asking where to restore the database from. This dialog presents three choices: cancel, restore from phone storage, or pick a backup file (including from sources like Google Drive).
+
+[Variant Paths] (3)
+ - V1: Tap <Restore application database option>, then Tap <Dialog for restoring database source> (repeat the tap on the dialog option)
+ - V2: Omit tapping <Restore application database option> and directly Tap <Dialog for restoring database source> (though this may not be valid in normal flow, but as a mutation to test boundary)
+ - V3: Tap <Restore application database option>, then Long-press <Dialog for restoring database source> (instead of normal tap, to test alternative interaction)
+
+================= [TaskTest] FDG[55] =================
+[Function] The current page, accessed via the "Restore Documents" option in the Backup & Restore menu of a Bible Study app, functions as a file selection interface titled "Open from" that allows users to choose a source (Recent, Downloads, SDCARD, Drive) to restore documents from.
+
+[Core Logic Task]
+The process starts on page 15. The user clicks the 'Restore Documents from...' option, which navigates to the 'Open from' page (page 12) with file source options (Recent, Downloads, SDCARD, Drive). The user can then select a source to restore documents from, with the flow diverging based on the chosen source (e.g., Recent, Downloads, etc.).
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Restore Documents option> (test if the 'Open from' page loads without initiating the restore action)
+ - V2: Click <Restore Documents option> twice (test repeated initiation of the restore flow)
+ - V3: Click <Restore Documents option> and then immediately click it again (test rapid repeated interaction with the restore option)
+
+================= [TaskTest] FDG[56] =================
+[Function] This page provides a menu with options (Rename, Copy as new, Settings, Copy settings, with Remove grayed out) to manage "Workspace 1" (current workspace showing "Joh 2:0 (NASB)") within a workspace selection interface, also offering "DISMISS", "NEW", and "SAVE" actions at the bottom.
+
+[Core Logic Task]
+The flow starts on the workspace selection page. The user clicks the more options menu for 'Workspace 1' (current workspace). This opens a menu with options like Rename, Copy as new, Settings, Copy settings (and grayed-out Remove), allowing the user to choose a management action for the workspace.
+
+[Variant Paths] (3)
+ - V1: Tap <More options for Workspace 1,Workspace options menu> twice (repeat the action)
+ - V2: Omit tapping <More options for Workspace 1,Workspace options menu> and try to perform a workspace management action directly (though this may not be possible, but as a mutation attempt)
+ - V3: Tap <More options for Workspace 1,Workspace options menu> and then immediately tap it again before selecting an option (order mutation with repetition)
+
+================= [TaskTest] FDG[57] =================
+[Function] Toggle Strong's numbers
+
+[Core Logic Task]
+The user starts on page 115 and clicks the 'Toggle Strong's numbers' element. This action navigates to page 121, completing the toggle operation for Strong's numbers.
+
+[Variant Paths] (3)
+ - V1: Tap <Toggle Strong's numbers> twice (repeat the toggle action)
+ - V2: Omit tapping <Toggle Strong's numbers> (check if the page still navigates to 121 without the action, though this is likely invalid but for mutation testing)
+ - V3: Tap <Toggle Strong's numbers> and then immediately tap it again (simulate rapid repeated toggling)
+
+================= [TaskTest] FDG[58] =================
+[Function] Toggle footnotes and x-refs
+
+[Core Logic Task]
+The user starts on page 115 (Text options - Workspace 1). They perform a click action to toggle the 'Footnotes and x-refs' option, which navigates to page 122. This single step completes the functional point of toggling footnotes and cross - references.
+
+[Variant Paths] (3)
+ - V1: Tap <Toggle footnotes and x-refs> twice (repeat the toggle action)
+ - V2: Omit tapping <Toggle footnotes and x-refs> (though this doesn't complete the toggle but is a mutation of omitting the step)
+ - V3: Tap <Toggle footnotes and x-refs> (original step as a base, but other mutations are around it)
+
+================= [TaskTest] FDG[59] =================
+[Function] Toggle section titles
+
+[Core Logic Task]
+On the text options page (page 115), the user clicks the 'Toggle section titles' control. This action navigates to page 123, where the toggle's state (for showing non - canonical section titles) is updated.
+
+[Variant Paths] (3)
+ - V1: Tap <Toggle section titles> twice (repeat the toggle action)
+ - V2: Omit tapping <Toggle section titles> (simulate not performing the toggle)
+ - V3: Tap <Toggle section titles> and then immediately tap <Toggle section titles> again (different order of same action, though simple repeat here)
+
+================= [TaskTest] FDG[60] =================
+[Function] Toggle verse numbers
+
+[Core Logic Task]
+The process starts on page 115. The user performs a click action to toggle the 'Verse numbers' option, which leads to page 124. This action directly modifies the verse numbers visibility setting.
+
+[Variant Paths] (3)
+ - V1: Omit toggling <Toggle verse numbers> and check if page 124 is reached
+ - V2: Toggle <Toggle verse numbers> twice (repeat the action) and observe the result on page 124
+ - V3: Toggle <Toggle verse numbers> and then immediately toggle it again before reaching page 124
+
+================= [TaskTest] FDG[61] =================
+[Function] Toggle show bookmarks
+
+[Core Logic Task]
+The user starts on page 115 (Text options - Workspace 1). They perform a click action on the 'Toggle show bookmarks' element. This action transitions the flow to page 125, completing the toggle operation for showing bookmarks.
+
+[Variant Paths] (3)
+ - V1: Tap <Toggle show bookmarks> twice (repeat the toggle action)
+ - V2: Omit tapping <Toggle show bookmarks> (check if the app still transitions or shows bookmarks without the action)
+ - V3: Tap <Toggle show bookmarks> and then immediately tap it again (simulate rapid repeated toggling)
+
+================= [TaskTest] FDG[62] =================
+[Function] Toggle show My Note icons
+
+[Core Logic Task]
+The user starts on page 115 (Text options - Workspace 1). They perform a click action on the 'Show My Note icons' toggle to change its state (either enabling or disabling the display of My Note icons in verses). This action completes the functional point of toggling the setting.
+
+[Variant Paths] (3)
+ - V1: Tap <Toggle show My Note icons> twice (repeat the toggle action to see if it reverts correctly)
+ - V2: Omit tapping <Toggle show My Note icons> (check if the setting remains unchanged as expected)
+ - V3: Tap <Toggle show My Note icons> (original action for comparison, included as a base case mutation check)
+
+================= [TaskTest] FDG[63] =================
+[Function] Reset text options
+
+[Core Logic Task]
+The process starts on page 115. The user clicks the 'Reset text options' button, which leads to page 127. This action resets the text options, completing the functional point.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <Reset text options> (check if text options remain unchanged)
+ - V2: Click <Reset text options> twice (check if multiple resets have same effect as single reset)
+
+================= [TaskTest] FDG[64] =================
+[Function] Displays the text of John chapter 2 from the New American Standard Bible (NASB) for reading, with options for audio, bookmarking, and other Bible study - related actions accessible via the top - bar icons.
+
+[Core Logic Task]
+The process starts on page 18, where the user clicks on the NASB document entry to confirm its download (leading to page 27). Then, on page 27, the user clicks to confirm the download action, which completes the download process.
+
+[Variant Paths] (3)
+ - V1: Omit <Confirm download action> after clicking <NASB document entry,Confirm NASB Bible download>
+ - V2: Repeat clicking <NASB document entry,Confirm NASB Bible download> before clicking <Confirm download action>
+ - V3: Click <Confirm download action> first and then click <NASB document entry,Confirm NASB Bible download>
+
+================= [TaskTest] FDG[65] =================
+[Function] Bible filter option
+
+[Core Logic Task]
+The user starts on page 26 (Download Documents) and clicks the 'Bible filter option' (from the dropdown menu, likely to filter document listings to show only Bibles). This action leads to page 29, completing the filter selection.
+
+[Variant Paths] (3)
+ - V1: Start on page 26 (Download Documents), long - press <Bible filter option> (instead of click) to see if it leads to page 29
+ - V2: Start on page 26 (Download Documents), click <Bible filter option> twice (repeat the click operation) and check if it still leads to page 29
+ - V3: Omit starting on page 26 (Download Documents) and directly click <Bible filter option> to see if it can still lead to page 29 (though this might not be valid in normal app flow, but for mutation testing)
+
+================= [TaskTest] FDG[66] =================
+[Function] Commentary filter option
+
+[Core Logic Task]
+The user starts on page 26. They click the 'Commentary' filter option, which navigates to page 30. This action applies the Commentary filter to the document list, likely refining the displayed items to only commentaries.
+
+[Variant Paths] (2)
+ - V1: Omit tapping <Commentary filter option> and check if the page still navigates to page 30 (to test if the filter is applied by default or if the action is necessary)
+ - V2: Tap <Commentary filter option> multiple times (e.g., twice) to see if it causes any unexpected behavior like repeated navigation or filter application issues
+
+================= [TaskTest] FDG[67] =================
+[Function] Dictionary filter option
+
+[Core Logic Task]
+The user starts on page 26 (Download Documents) and clicks the 'Dictionary' filter option from the dropdown menu. This action navigates to page 31, applying the Dictionary filter to the document list.
+
+[Variant Paths] (3)
+ - V1: Start on page 26 (Download Documents), long - press <Dictionary filter option> (instead of click)
+ - V2: Start on page 26 (Download Documents), click <Dictionary filter option> twice (repeat the click operation)
+ - V3: Omit starting on page 26 (Download Documents) step (not recommended but for mutation: click <Dictionary filter option> directly)
+
+================= [TaskTest] FDG[68] =================
+[Function] Book filter option
+
+[Core Logic Task]
+The flow starts on page 26. The user clicks on the 'Book filter option' (action at S1), which leads to page 32. This action likely filters the document list to show only books, as per the filter's purpose.
+
+[Variant Paths] (3)
+ - V1: Tap <Book filter option> twice (repeat the action)
+ - V2: Omit tapping <Book filter option> (skip the step)
+ - V3: Tap <Book filter option> and then immediately tap it again (order mutation with repeat)
+
+================= [TaskTest] FDG[69] =================
+[Function] Map filter option
+
+[Core Logic Task]
+The user starts on page 26 and clicks the 'Map filter option' (action at [26,5]). This action navigates to page 33, likely applying the map filter to the document list. There are no branches or loops here, just a single click to apply the filter.
+
+[Variant Paths] (3)
+ - V1: Tap <Map filter option> twice (repeat the action)
+ - V2: Omit tapping <Map filter option> (skip applying the filter)
+ - V3: Tap <Map filter option> after a short delay (simulate a different interaction timing)
+
+================= [TaskTest] FDG[70] =================
+[Function] The Advanced Settings page in the Bible Study app allows users to configure advanced speech settings (like text following speech and divine name replacement) and bookmarking settings (like automatic bookmarking and saving playback settings to bookmarks).
+
+[Core Logic Task]
+The user starts on the Speak page and clicks the Advanced Settings option. This action navigates to the Advanced Settings page, where speech and bookmarking settings (like text following speech, divine name replacement, automatic bookmarking, and playback settings for bookmarks) can be configured.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <Advanced Settings option,Advanced speech and bookmarking settings> and check if the app still navigates to Advanced Settings page
+ - V2: Click <Advanced Settings option,Advanced speech and bookmarking settings> twice and check the navigation behavior to Advanced Settings page
+
+================= [TaskTest] FDG[71] =================
+[Function] The page allows users to configure text - to - speech settings, including selecting the preferred TTS engine, adjusting speech rate and pitch, resetting these parameters, listening to a speech synthesis example, and viewing the default language support status.
+
+[Core Logic Task]
+The user starts on page 50 and clicks the 'Open system TTS settings' option. This action navigates to page 65, where the text - to - speech settings (like engine selection, rate/pitch adjustment, reset options, example playback, and language status) can be configured. There are no branches or loops in this initial flow as it's a single navigation step to access the TTS settings page.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <Open system TTS settings option> and try to configure <Text-to-speech settings configuration> directly
+ - V2: Click <Open system TTS settings option> multiple times before proceeding to configure <Text-to-speech settings configuration>
+
+================= [TaskTest] FDG[72] =================
+[Function] Watch tutorial video (English)
+
+[Core Logic Task]
+The user starts on page 51 (a settings dialog). The core action is clicking the 'Watch tutorial video (English)' link, which navigates to page 72. There are no branches or loops here, as it's a single click to access the tutorial video.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Watch tutorial video (English)> and stay on page 51
+ - V2: Repeat clicking <Watch tutorial video (English)> multiple times (though functionality may not change, testing repeated interaction)
+ - V3: Click <Watch tutorial video (English)> but then immediately click it again (testing if repeated click has any side - effect)
+
+================= [TaskTest] FDG[73] =================
+[Function] Set Start Date... option
+
+[Core Logic Task]
+The user initiates the process by clicking the 'Set Start Date...' option. This action transitions the app to the next page (page 88) to continue with setting the start date, with no branching or looping in this initial step.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[74] =================
+[Function] Reset option
+
+[Core Logic Task]
+The user starts on page 82. The core logic is to click the 'Reset' option, which navigates to page 89. There are no branches or loops as it is a single action flow.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Reset option> (check if page remains on 82)
+ - V2: Tap <Reset option> twice (check if navigation to 89 still occurs or any error)
+ - V3: Tap <Reset option> after a short delay (simulate timing variation in interaction)
+
+================= [TaskTest] FDG[75] =================
+[Function] Share backup via Share function
+
+[Core Logic Task]
+The process starts on page 99. The user clicks the 'Share' option (to initiate sharing the backup via the Share function), leading to page 103. This is a straight - line flow with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Share backup via Share function> (to see if the backup still gets shared or if an error occurs)
+ - V2: Tap <Share backup via Share function> twice (to check if multiple sharing attempts are made or if an error is triggered)
+ - V3: Tap <Share backup via Share function> and then immediately tap it again (similar to repeating the action quickly)
+
+================= [TaskTest] FDG[76] =================
+[Function] Restore from phone storage
+
+[Core Logic Task]
+The process starts on page 100. The user clicks the 'Restore from phone storage' option, which navigates to page 104. This is a single-step flow with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Tap <Restore from phone storage> twice (repeat operation)
+ - V2: Omit tapping <Restore from phone storage> (skip the step)
+ - V3: Tap <Restore from phone storage> (original step, included for reference but as a mutation could be considered if other mutations are limited; here to meet count with valid ones)
+
+================= [TaskTest] FDG[77] =================
+[Function] Pick backup file manually
+
+[Core Logic Task]
+The process starts on page 100. The user clicks the 'Pick backup file manually' option, which navigates to page 105. This is a straight - line flow with no branches or loops as there's only one action.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <Pick backup file manually> (since the core flow is just this click, omitting it is a mutation to see if the app behaves as expected without this action)
+ - V2: Repeat clicking <Pick backup file manually> (click it multiple times to check if the app handles repeated navigation attempts)
+
+================= [TaskTest] FDG[78] =================
+[Function] This page allows the user to rename (or name a new copy of) a workspace by entering a new name in the provided text field and confirming with "OK" or canceling with "CANCEL".
+
+[Core Logic Task]
+The user starts on the workspace selection page. They click the 'Rename' option (or equivalent for naming a new copy) from the workspace menu, which opens a dialog to enter a new workspace name. The dialog provides 'OK' to confirm the new name or 'CANCEL' to abort, though the initial step here is opening the renaming dialog via the click action.
+
+[Variant Paths] (3)
+ - V1: Tap <Rename workspace> and immediately tap <CANCEL> without entering a name (omit input step)
+ - V2: Tap <Rename workspace>, input an extremely long string (e.g., 1000 'a's) into the name field, then tap <OK>
+ - V3: Tap <Rename workspace>, input an empty string into the name field, then tap <OK>
+
+================= [TaskTest] FDG[79] =================
+[Function] This page allows the user to rename (or name a new copy of) a workspace by entering a new name in the provided text field and confirming with "OK" or canceling the action with "CANCEL".
+
+[Core Logic Task]
+The user starts on the workspace selection page. They click 'Copy as new workspace' to open a dialog for naming the new workspace. The dialog shows a default name, and the user can then either confirm (OK) or cancel (CANCEL) the action, but the provided action only captures the initial click to open the dialog.
+
+[Variant Paths] (3)
+ - V1: Tap <Copy as new workspace>, then immediately tap <CANCEL> (instead of considering OK, to mutate the confirmation choice)
+ - V2: Tap <Copy as new workspace>, then tap <Copy as new workspace> again (repeating the dialog - opening action, a repeat mutation)
+ - V3: Tap <Copy as new workspace>, then try to proceed without interacting with OK/CANCEL (omitting the confirmation step, though the app's behavior here is part of the mutation test)
+
+================= [TaskTest] FDG[80] =================
+[Function] The page allows users to configure text - related settings for Workspace 1, including toggling options like Strong's numbers, footnotes, section titles, verse numbers, bookmarks, and My Note icons, and also provides options to reset, cancel, or confirm the changes.
+
+[Core Logic Task]
+The flow starts with clicking 'Workspace settings' (from page 116 to 115). This action navigates to the Workspace 1 text options page, where users can then toggle text-related settings, and choose to reset, cancel, or confirm changes. The initial step is accessing the settings page via the click action.
+
+[Variant Paths] (3)
+ - V1: Tap <Workspace settings> twice (repeat the navigation step)
+ - V2: Omit tapping <Workspace settings> (skip the initial navigation step)
+ - V3: Tap <Workspace settings> with a very long press (simulate an abnormal interaction)
+
+================= [TaskTest] FDG[81] =================
+[Function] This page allows the user to select specific Bible reading settings (such as font preferences, color settings, margin size, etc.) to copy from one workspace to another, with options to select all, cancel, or confirm the selection.
+
+[Core Logic Task]
+The user starts by clicking to access the settings copy selection page. On this page, they can either click 'SELECT ALL' to choose all settings or directly click 'OK' to confirm the current selection (or selected settings) for copying between workspaces.
+
+[Variant Paths] (3)
+ - V1: Tap <OK button> without tapping <SELECT ALL button> (omitting the select all step)
+ - V2: Tap <SELECT ALL button> and then tap <OK button> (standard flow as a base, but here as a mutation to check if select all is necessary)
+ - V3: Tap <SELECT ALL button>, then tap <SELECT ALL button> again (repeating the select all operation)
+
+================= [TaskTest] FDG[82] =================
+[Function] Toggle text follows speech
+
+[Core Logic Task]
+The user starts on page 64 (Advanced Settings) and clicks the 'Text follows speech' toggle. This action toggles the setting, and the flow ends after the click, with the destination page being 66 (presumably reflecting the updated state of the toggle).
+
+[Variant Paths] (3)
+ - V1: Start on page 64 (Advanced Settings), omit clicking <Toggle text follows speech> and proceed to page 66
+ - V2: Start on page 64 (Advanced Settings), click <Toggle text follows speech> twice and then proceed to page 66
+ - V3: Start on page 64 (Advanced Settings), click <Toggle text follows speech> and then click it again immediately before proceeding to page 66
+
+================= [TaskTest] FDG[83] =================
+[Function] Toggle replace divine name
+
+[Core Logic Task]
+The user starts on page 64 (Advanced Settings). They perform a click action on the 'Replace divine name with Yahweh' toggle. This action toggles the state of the toggle (either enabling or disabling the replacement of the divine name) and completes the functional point.
+
+[Variant Paths] (3)
+ - V1: Tap <Toggle replace divine name> twice (first to toggle, second to revert, testing state change repeatability)
+ - V2: Omit tapping <Toggle replace divine name> (testing if the default state is as expected without interaction)
+ - V3: Tap <Toggle replace divine name> (original action, included as a base for comparison, though mutation here is about alternative interactions with the same widget in terms of repeat/omit/boundary which for a toggle is state changes)
+
+================= [TaskTest] FDG[84] =================
+[Function] Toggle automatic bookmarking
+
+[Core Logic Task]
+The user starts on the Advanced Settings page (page 64). They perform a click action to toggle the 'Automatic bookmarking' setting, which leads to a new page (page 68). This single action completes the task of toggling the automatic bookmarking setting.
+
+[Variant Paths] (3)
+ - V1: Tap <Toggle automatic bookmarking> twice (repeat the toggle operation)
+ - V2: Omit tapping <Toggle automatic bookmarking> (simulate not performing the toggle action)
+ - V3: Tap <Toggle automatic bookmarking> and then immediately tap it again (quick repeated toggle)
+
+================= [TaskTest] FDG[85] =================
+[Function] The page provides help information about bookmarking settings, including details on automatic bookmarking and saving playback settings to bookmarks, with an option to watch a tutorial video and an "OK" button to close the help window.
+
+[Core Logic Task]
+The user starts on the Advanced Settings page. First, they click the help icon for Bookmarking Settings to open the help dialog. Then, they click the OK button to close the help dialog, completing the flow.
+
+[Variant Paths] (3)
+ - V1: Start on Advanced Settings page, Tap <Help for bookmarking settings,Help for bookmarking settings> to open help dialog, Tap <OK button to close dialog> to close help dialog
+ - V2: Start on Advanced Settings page, Tap <OK button to close dialog> (omit opening help dialog), Tap <Help for bookmarking settings,Help for bookmarking settings> to open help dialog
+ - V3: Start on Advanced Settings page, Tap <Help for bookmarking settings,Help for bookmarking settings> to open help dialog, Tap <Help for bookmarking settings,Help for bookmarking settings> again (repeat opening), Tap <OK button to close dialog> to close help dialog
+
+================= [TaskTest] FDG[86] =================
+[Function] Font preferences checkbox
+
+[Core Logic Task]
+The process starts on page 118. The user clicks the 'Font preferences' checkbox, which transitions the flow to page 129. There are no branches or loops as this is a single action to select the checkbox.
+
+[Variant Paths] (2)
+ - V1: Omit tapping <Font preferences checkbox> (check if flow still transitions to page 129, though expected to fail as per core logic)
+ - V2: Tap <Font preferences checkbox> twice (repeat the action to see if it affects the transition to page 129)
+
+================= [TaskTest] FDG[87] =================
+[Function] Watch tutorial video (English)
+
+[Core Logic Task]
+The user starts on page 69 (a settings-related page) and clicks the 'Watch tutorial video (English)' link. This action navigates to page 70, presumably to play or display the English tutorial video. There are no branches or loops as the action is a single click to proceed to the tutorial video.
+
+[Variant Paths] (0)
+
+
+[AppTest] Found 46 dependency pairs to test.
+
+==============================================
+[AppTest] Pair 1/46: 3 -> 15
+Producer: The "Bookmarks" page in the Bible app allows users to view, organize, and manage their saved bookmarks (though currently empty), with options for filtering, tagging, and accessing additional menu settings.
+Consumer: The "Manage Bookmark Labels" page in the Bible Study app allows users to create new bookmark labels and confirm actions related to bookmark label management.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to the Bookmarks page via the 'Manage bookmarks' option, then open the filter dropdown and choose to filter by 'all bookmarks'.
+Consumer task:
+ Start on page 1, click the 'Manage Bookmark Labels' option to navigate to page 13, then click to confirm bookmark label management, ensuring the action reflects the bookmark list filtered by 'all bookmarks' from the producer task.
+------------------------------
+
+==============================================
+[AppTest] Pair 2/46: 3 -> 20
+Producer: The "Bookmarks" page in the Bible app allows users to view, organize, and manage their saved bookmarks (though currently empty), with options for filtering, tagging, and accessing additional menu settings.
+Consumer: The "Manage Bookmark Labels" page allows users to create new labels for bookmarks (via the "NEW LABEL" button) and confirm actions (via the "OK" button) related to bookmark label management, likely after initiating the process from the bookmark management or Bible reading context.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to the Bookmarks page via 'Manage bookmarks', then open the filter dropdown and select 'all bookmarks' to generate the filtered bookmark list (all).
+Consumer task:
+ From the Bookmarks page, click the tag filter icon to navigate to the Manage Bookmark Labels page. Verify that the bookmark labels data (related to the filtered 'all bookmarks' list) is accessible for label management actions like creating a new label or confirming actions.
+------------------------------
+
+==============================================
+[AppTest] Pair 3/46: 3 -> 47
+Producer: The "Bookmarks" page in the Bible app allows users to view, organize, and manage their saved bookmarks (though currently empty), with options for filtering, tagging, and accessing additional menu settings.
+Consumer: This page enables users to create a new bookmark label by entering a name and selecting a style (with "Default" as the initial style) for the label within the Bible Study app's bookmark management feature.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to the Bookmarks page via 'Manage bookmarks' option, then open the filter dropdown and select 'all bookmarks'.
+Consumer task:
+ Click the 'Create new bookmark label' button, enter a label name in the name input field, then click the 'OK' button to confirm the label creation, ensuring the new label is created within the bookmark label management context from the Bookmarks page.
+------------------------------
+
+==============================================
+[AppTest] Pair 4/46: 4 -> 2
+Producer: Displays the text of the Bible chapter (John 2, "Miracle at Cana" from the New American Standard Bible) for reading, with additional navigation and utility icons (menu, search, bookmark, etc.) available at the top.
+Consumer: The current page is a Bible verse search dialog that allows users to search for specific verses within the Bible (or specific sections like Old Testament, New Testament, or the book of John) by entering search terms and selecting search parameters (e.g., searching for all words, any word, or a phrase), with options to cancel, rebuild the search index, or execute the search.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start the app on page 0. Click the unknown function icon at [910, 124] to navigate to page 4 and view the Bible chapter text (John 2, 'Miracle at Cana') from the New American Standard Bible.
+Consumer task:
+ Open the Bible verse search dialog. Select 'John' as the search scope and 'All words' as the search option. Enter a search query related to the 'Miracle at Cana' text (e.g., 'miracle') and click 'FIND' to execute the search using the NASB Bible text from the Producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 5/46: 4 -> 5
+Producer: Displays the text of the Bible chapter (John 2, "Miracle at Cana" from the New American Standard Bible) for reading, with additional navigation and utility icons (menu, search, bookmark, etc.) available at the top.
+Consumer: The current page (settings/options menu) provides functionality to configure Bible reading preferences such as enabling/disabling tilt to scroll, window pinning, night mode, Strong's numbers, morphological codes, and accessing all text options, while the background shows the Bible chapter reading page for John 2 (Miracle at Cana) with interlinear Strong's numbers.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on app page 0. Click the unknown function icon at [910, 124] to navigate to page 4 and view the Bible chapter text (John 2, 'Miracle at Cana').
+Consumer task:
+ On the Bible reading page (John 2) from the producer step, click the more options menu (three dots) to open the settings/options menu. Verify the Bible chapter page (with John 2 text) is visible in the background and the menu shows options like tilt to scroll, window pinning, etc.
+------------------------------
+
+==============================================
+[AppTest] Pair 6/46: 4 -> 7
+Producer: Displays the text of the Bible chapter (John 2, "Miracle at Cana" from the New American Standard Bible) for reading, with additional navigation and utility icons (menu, search, bookmark, etc.) available at the top.
+Consumer: The current page provides a search interface ("Find in NASB") to search for specific Bible verses or text within the New American Standard Bible (NASB), with options to filter the search by Bible section (Whole Bible, Old Testament, New Testament, John) and verse matching criteria (All words, Any word, Phrase), along with buttons to cancel, rebuild the search index, or execute the search.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 0, click the unknown function icon at [910, 124] to navigate to page 4 and view the Bible chapter text (John 2, 'Miracle at Cana').
+Consumer task:
+ Start on page 1, click the 'Find' option to open the 'Find in NASB' search interface on page 2. In the search interface, use the Bible text (John 2, 'Miracle at Cana') from the producer task as the search input, set appropriate filters (e.g., Bible section as John), and execute the search to verify the text is found.
+------------------------------
+
+==============================================
+[AppTest] Pair 7/46: 4 -> 12
+Producer: Displays the text of the Bible chapter (John 2, "Miracle at Cana" from the New American Standard Bible) for reading, with additional navigation and utility icons (menu, search, bookmark, etc.) available at the top.
+Consumer: The current page displays the details of a history entry (specifically for "Workspace 1: Window 1" with the content "NASB John 2") from the Bible Study app's history, likely to show or manage previously accessed Bible reading sessions.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 0, click the unknown function icon at [910, 124] to navigate to page 4 and display the Bible chapter text (John 2, 'Miracle at Cana')
+Consumer task:
+ Start on page 1 (app's menu), click the 'History' option to navigate to page 10, then verify the history entry 'Workspace 1: Window 1' has content 'NASB John 2' (matching the Bible chapter text from the producer)
+------------------------------
+
+==============================================
+[AppTest] Pair 8/46: 4 -> 46
+Producer: Displays the text of the Bible chapter (John 2, "Miracle at Cana" from the New American Standard Bible) for reading, with additional navigation and utility icons (menu, search, bookmark, etc.) available at the top.
+Consumer: Displays the text of John chapter 2 from the New American Standard Bible (NASB), including verse content and associated Strong's Concordance numbers for word definitions, accessed via the history of previously viewed Bible chapters.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start the app (on page 0). Click the unknown function icon at position [910, 124] to navigate to page 4 and display the Bible chapter text (John 2, 'Miracle at Cana' without verse numbers).
+Consumer task:
+ Click the history entry for 'NASB John 2' (from page 10). Verify that the navigation leads to the page displaying John chapter 2 from the New American Standard Bible (including verse content and associated Strong's Concordance numbers) which matches the data produced by the Producer (John 2 chapter text contextually).
+------------------------------
+
+==============================================
+[AppTest] Pair 9/46: 6 -> 29
+Producer: The current page in the Bible Study app's Document section allows users to manage or choose Bible documents, with options to filter by language, search, and view document types, and also provides upload and download functionality.
+Consumer: Displays the text of John chapter 2 from the New American Standard Bible (NASB), including verse content and embedded Strong's Concordance numbers for biblical word study.
+
+[Plan]
+Case 1/1
+Producer task:
+ In the Bible Study app's Document section, click 'Choose Document' to enter the Document page, then locate and select the NASB document from the Bible document list.
+Consumer task:
+ From the Document list (page 6), click the NASB document entry (produced by the Producer task) to navigate to page 0 and verify that John chapter 2 from the NASB is displayed, including verse content and embedded Strong's Concordance numbers.
+------------------------------
+
+==============================================
+[AppTest] Pair 10/46: 6 -> 64
+Producer: The current page in the Bible Study app's Document section allows users to manage or choose Bible documents, with options to filter by language, search, and view document types, and also provides upload and download functionality.
+Consumer: Displays the text of John chapter 2 from the New American Standard Bible (NASB) for reading, with options for audio, bookmarking, and other Bible study - related actions accessible via the top - bar icons.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the Document page, click on the NASB document entry to initiate its download (leading to the download confirmation page).
+Consumer task:
+ On the download confirmation page, click to confirm the download of the NASB document. Then, access the reading page to view the text of John chapter 2 from the now - downloaded NASB Bible document.
+------------------------------
+
+==============================================
+[AppTest] Pair 11/46: 7 -> 2
+Producer: The current page provides a search interface ("Find in NASB") to search for specific Bible verses or text within the New American Standard Bible (NASB), with options to filter the search by Bible section (Whole Bible, Old Testament, New Testament, John) and verse matching criteria (All words, Any word, Phrase), along with buttons to cancel, rebuild the search index, or execute the search.
+Consumer: The current page is a Bible verse search dialog that allows users to search for specific verses within the Bible (or specific sections like Old Testament, New Testament, or the book of John) by entering search terms and selecting search parameters (e.g., searching for all words, any word, or a phrase), with options to cancel, rebuild the search index, or execute the search.
+
+[Plan]
+Case 1/1
+Producer task:
+ From page 1, click the 'Find' option to open the 'Find in NASB' search interface on page 2.
+Consumer task:
+ In the opened 'Find in NASB' search interface (from Producer), select search scope as 'New Testament' and search option as 'Phrase', then click 'FIND' to execute the search using the provided search configuration.
+------------------------------
+
+==============================================
+[AppTest] Pair 12/46: 9 -> 3
+Producer: The current page in the Bible Study app displays the "Bookmarks" section, where users can view, manage, or organize their bookmarked Bible verses or passages, with a dropdown filter for categorization and an option to add new bookmarks.
+Consumer: The "Bookmarks" page in the Bible app allows users to view, organize, and manage their saved bookmarks (though currently empty), with options for filtering, tagging, and accessing additional menu settings.
+
+[Plan]
+Case 1/2
+Producer task:
+ Start on page 1 (menu) and click the 'Bookmarks' option to navigate to page 3 (Bookmarks section).
+Consumer task:
+ Once on the Bookmarks page (from the producer's action), open the filter dropdown and choose to filter by 'all bookmarks'.
+------------------------------
+Case 2/2
+Producer task:
+ Start on page 1 (menu) and click the 'Bookmarks' option to navigate to page 3 (Bookmarks section).
+Consumer task:
+ Once on the Bookmarks page (from the producer's action), open the filter dropdown and choose to filter by 'unlabelled bookmarks'.
+------------------------------
+
+==============================================
+[AppTest] Pair 13/46: 9 -> 15
+Producer: The current page in the Bible Study app displays the "Bookmarks" section, where users can view, manage, or organize their bookmarked Bible verses or passages, with a dropdown filter for categorization and an option to add new bookmarks.
+Consumer: The "Manage Bookmark Labels" page in the Bible Study app allows users to create new bookmark labels and confirm actions related to bookmark label management.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 1 (menu), click the 'Bookmarks' option to navigate to page 3 (Bookmarks section) to load the bookmarks page.
+Consumer task:
+ Start on page 1, click the 'Manage Bookmark Labels' option to navigate to page 13. On page 13, click to confirm bookmark label management, ensuring the action reflects the bookmark labels and management state from the loaded Bookmarks section (page 3).
+------------------------------
+
+==============================================
+[AppTest] Pair 14/46: 9 -> 20
+Producer: The current page in the Bible Study app displays the "Bookmarks" section, where users can view, manage, or organize their bookmarked Bible verses or passages, with a dropdown filter for categorization and an option to add new bookmarks.
+Consumer: The "Manage Bookmark Labels" page allows users to create new labels for bookmarks (via the "NEW LABEL" button) and confirm actions (via the "OK" button) related to bookmark label management, likely after initiating the process from the bookmark management or Bible reading context.
+
+[Plan]
+Case 1/1
+Producer task:
+ From the menu (page 1), click the 'Bookmarks' option to navigate to the Bookmarks section (page 3).
+Consumer task:
+ On the Bookmarks page (page 3), click the tag filter icon to navigate to the Manage Bookmark Labels page (page 13) and verify access to bookmark label management related to the bookmarks from the Bookmarks section.
+------------------------------
+
+==============================================
+[AppTest] Pair 15/46: 9 -> 47
+Producer: The current page in the Bible Study app displays the "Bookmarks" section, where users can view, manage, or organize their bookmarked Bible verses or passages, with a dropdown filter for categorization and an option to add new bookmarks.
+Consumer: This page enables users to create a new bookmark label by entering a name and selecting a style (with "Default" as the initial style) for the label within the Bible Study app's bookmark management feature.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 1 (menu), click the 'Bookmarks' option to navigate to page 3 (Bookmarks section) where bookmark management options are available.
+Consumer task:
+ In the Bookmarks section (page 3), click the 'Create new bookmark label' button. Then, click the name input field to enter a label name (e.g., 'MyFavorite'), optionally click the style dropdown to change the style (or leave as 'Default'), and click the 'OK' button to confirm the creation of the new bookmark label.
+------------------------------
+
+==============================================
+[AppTest] Pair 16/46: 12 -> 46
+Producer: The current page displays the details of a history entry (specifically for "Workspace 1: Window 1" with the content "NASB John 2") from the Bible Study app's history, likely to show or manage previously accessed Bible reading sessions.
+Consumer: Displays the text of John chapter 2 from the New American Standard Bible (NASB), including verse content and associated Strong's Concordance numbers for word definitions, accessed via the history of previously viewed Bible chapters.
+
+[Plan]
+Case 1/1
+Producer task:
+ From the app's menu (page 1), click the 'History' option to navigate to page 10 and display the details of the history entry 'Workspace 1: Window 1' with content 'NASB John 2'.
+Consumer task:
+ On page 10, click the history entry for 'NASB John 2' to navigate to the page displaying John chapter 2 from the New American Standard Bible, including verse content and associated Strong's Concordance numbers for word definitions.
+------------------------------
+
+==============================================
+[AppTest] Pair 17/46: 15 -> 3
+Producer: The "Manage Bookmark Labels" page in the Bible Study app allows users to create new bookmark labels and confirm actions related to bookmark label management.
+Consumer: The "Bookmarks" page in the Bible app allows users to view, organize, and manage their saved bookmarks (though currently empty), with options for filtering, tagging, and accessing additional menu settings.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 1, click 'Manage Bookmark Labels' to go to page 13, then click to confirm bookmark label management.
+Consumer task:
+ Navigate to the Bookmarks page via 'Manage bookmarks', open the filter dropdown, and choose to filter by 'all bookmarks' (or 'unlabelled bookmarks') to verify the bookmark labels managed by the producer are reflected in the filtered bookmark list.
+------------------------------
+
+==============================================
+[AppTest] Pair 18/46: 15 -> 15
+Producer: The "Manage Bookmark Labels" page in the Bible Study app allows users to create new bookmark labels and confirm actions related to bookmark label management.
+Consumer: The "Manage Bookmark Labels" page in the Bible Study app allows users to create new bookmark labels and confirm actions related to bookmark label management.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 1, click 'Manage Bookmark Labels' to go to page 13, then click to confirm bookmark label management.
+Consumer task:
+ Start on page 1, click 'Manage Bookmark Labels' to go to page 13, then verify that the bookmark labels and bookmark label management state reflect the changes made by the producer's confirmation action.
+------------------------------
+
+==============================================
+[AppTest] Pair 19/46: 15 -> 20
+Producer: The "Manage Bookmark Labels" page in the Bible Study app allows users to create new bookmark labels and confirm actions related to bookmark label management.
+Consumer: The "Manage Bookmark Labels" page allows users to create new labels for bookmarks (via the "NEW LABEL" button) and confirm actions (via the "OK" button) related to bookmark label management, likely after initiating the process from the bookmark management or Bible reading context.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 1, click 'Manage Bookmark Labels' to go to page 13, then click to confirm bookmark label management.
+Consumer task:
+ Start on Bookmarks page (page 3), click tag filter icon to go to Manage Bookmark Labels page (page 13), then verify that the bookmark labels reflect the changes made by the producer's confirmation action.
+------------------------------
+
+==============================================
+[AppTest] Pair 20/46: 15 -> 47
+Producer: The "Manage Bookmark Labels" page in the Bible Study app allows users to create new bookmark labels and confirm actions related to bookmark label management.
+Consumer: This page enables users to create a new bookmark label by entering a name and selecting a style (with "Default" as the initial style) for the label within the Bible Study app's bookmark management feature.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 1, click 'Manage Bookmark Labels' to go to page 13, then click to confirm bookmark label management.
+Consumer task:
+ After the producer action, click 'Create new bookmark label' button. Then, enter a label name (using the bookmark label management context from the producer), optionally change the style from 'Default', and click 'OK' to confirm creation, verifying the new label uses the managed context.
+------------------------------
+
+==============================================
+[AppTest] Pair 21/46: 20 -> 3
+Producer: The "Manage Bookmark Labels" page allows users to create new labels for bookmarks (via the "NEW LABEL" button) and confirm actions (via the "OK" button) related to bookmark label management, likely after initiating the process from the bookmark management or Bible reading context.
+Consumer: The "Bookmarks" page in the Bible app allows users to view, organize, and manage their saved bookmarks (though currently empty), with options for filtering, tagging, and accessing additional menu settings.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to Bookmarks page (page 3), click tag filter icon to go to Manage Bookmark Labels page (page 13), then click 'NEW LABEL' button to create a new bookmark label.
+Consumer task:
+ Navigate to Bookmarks page, open filter dropdown, and verify that the newly created bookmark label is available as a filter option (or that bookmark list reflects labels if applicable).
+------------------------------
+
+==============================================
+[AppTest] Pair 22/46: 20 -> 15
+Producer: The "Manage Bookmark Labels" page allows users to create new labels for bookmarks (via the "NEW LABEL" button) and confirm actions (via the "OK" button) related to bookmark label management, likely after initiating the process from the bookmark management or Bible reading context.
+Consumer: The "Manage Bookmark Labels" page in the Bible Study app allows users to create new bookmark labels and confirm actions related to bookmark label management.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate from Bookmarks page (page 3) to Manage Bookmark Labels page (page 13) by clicking the tag filter icon, then create a new bookmark label using the 'NEW LABEL' button.
+Consumer task:
+ Navigate from page 1 to Manage Bookmark Labels page (page 13) by clicking 'Manage Bookmark Labels' option, then confirm the bookmark label management (using the newly created label from Producer) by clicking the confirmation element on page 13.
+------------------------------
+
+==============================================
+[AppTest] Pair 23/46: 20 -> 20
+Producer: The "Manage Bookmark Labels" page allows users to create new labels for bookmarks (via the "NEW LABEL" button) and confirm actions (via the "OK" button) related to bookmark label management, likely after initiating the process from the bookmark management or Bible reading context.
+Consumer: The "Manage Bookmark Labels" page allows users to create new labels for bookmarks (via the "NEW LABEL" button) and confirm actions (via the "OK" button) related to bookmark label management, likely after initiating the process from the bookmark management or Bible reading context.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the Bookmarks page (page 3), click the tag filter icon to navigate to the Manage Bookmark Labels page (page 13), then click the 'NEW LABEL' button to create a new bookmark label.
+Consumer task:
+ On the Bookmarks page (page 3), click the tag filter icon to navigate to the Manage Bookmark Labels page (page 13), then verify that the newly created bookmark label (from the producer task) is visible in the list of bookmark labels.
+------------------------------
+
+==============================================
+[AppTest] Pair 24/46: 20 -> 47
+Producer: The "Manage Bookmark Labels" page allows users to create new labels for bookmarks (via the "NEW LABEL" button) and confirm actions (via the "OK" button) related to bookmark label management, likely after initiating the process from the bookmark management or Bible reading context.
+Consumer: This page enables users to create a new bookmark label by entering a name and selecting a style (with "Default" as the initial style) for the label within the Bible Study app's bookmark management feature.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to Bookmarks page (page 3), click tag filter icon to open Manage Bookmark Labels page (page 13), then click 'NEW LABEL' button to start creating a new bookmark label.
+Consumer task:
+ In the new bookmark label creation interface, enter a label name (e.g., 'Important'), optionally change style from 'Default' (e.g., select 'Highlight'), then click 'OK' button to confirm and create the label, verifying it reflects the entered name and selected style.
+------------------------------
+
+==============================================
+[AppTest] Pair 25/46: 26 -> 57
+Producer: The current page is a text options configuration interface for Workspace 1 in a Bible reading app, allowing users to toggle various text formatting and display options (e.g., Strong's numbers, footnotes, section titles, verse numbers, bookmarks, My Note icons) and apply or reset these settings.
+Consumer: Toggle Strong's numbers
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 5, click to open text options configuration for Workspace 1 (page 115), then click to confirm text options.
+Consumer task:
+ On page 115 (after producer config), click 'Toggle Strong's numbers' element to navigate to page 121 and verify Strong's numbers setting reflects the producer's text options configuration.
+------------------------------
+
+==============================================
+[AppTest] Pair 26/46: 27 -> 29
+Producer: The page allows users to browse, search, and download various Bible - related documents (including different Bible versions, commentaries, hymnals, and atlases) in English, with details like size, source, and a recommendation label for each document.
+Consumer: Displays the text of John chapter 2 from the New American Standard Bible (NASB), including verse content and embedded Strong's Concordance numbers for biblical word study.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to the document download page (S1), then at the download documents page (S2), download the NASB Bible document (select the NASB entry and initiate download).
+Consumer task:
+ From the document list (page 6), click the NASB document entry (the one downloaded via Producer) to navigate to page 0 and verify that John chapter 2 from the NASB (with verse text and Strong's Concordance numbers) is displayed.
+------------------------------
+
+==============================================
+[AppTest] Pair 27/46: 27 -> 64
+Producer: The page allows users to browse, search, and download various Bible - related documents (including different Bible versions, commentaries, hymnals, and atlases) in English, with details like size, source, and a recommendation label for each document.
+Consumer: Displays the text of John chapter 2 from the New American Standard Bible (NASB) for reading, with options for audio, bookmarking, and other Bible study - related actions accessible via the top - bar icons.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to the document download page (page 27). On this page, click to confirm the download action for the NASB Bible document.
+Consumer task:
+ On page 18, click on the NASB document entry to confirm its download (which leads to page 27). After the download is confirmed on page 27, check that the text of John chapter 2 from the NASB Bible document (the one just downloaded) is displayed for reading, with audio, bookmarking, and other Bible study - related actions accessible via the top - bar icons.
+------------------------------
+
+==============================================
+[AppTest] Pair 28/46: 29 -> 2
+Producer: Displays the text of John chapter 2 from the New American Standard Bible (NASB), including verse content and embedded Strong's Concordance numbers for biblical word study.
+Consumer: The current page is a Bible verse search dialog that allows users to search for specific verses within the Bible (or specific sections like Old Testament, New Testament, or the book of John) by entering search terms and selecting search parameters (e.g., searching for all words, any word, or a phrase), with options to cancel, rebuild the search index, or execute the search.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 6 (Document list), click the NASB entry to navigate to page 0 and view John chapter 2 NASB content with Strong's numbers.
+Consumer task:
+ Open Bible verse search dialog, set search scope to 'John' and search option to 'All words', then click 'FIND' to search the John chapter 2 NASB content produced earlier.
+------------------------------
+
+==============================================
+[AppTest] Pair 29/46: 29 -> 4
+Producer: Displays the text of John chapter 2 from the New American Standard Bible (NASB), including verse content and embedded Strong's Concordance numbers for biblical word study.
+Consumer: Displays the text of the Bible chapter (John 2, "Miracle at Cana" from the New American Standard Bible) for reading, with additional navigation and utility icons (menu, search, bookmark, etc.) available at the top.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 6 (Document list), click the NASB entry to navigate to page 0 and view John chapter 2 (NASB) with verse text and Strong's numbers.
+Consumer task:
+ On page 0, click the icon at [910, 124] to navigate to page 4. Verify that the displayed Bible chapter text (John 2, 'Miracle at Cana') matches the NASB content from the producer step.
+------------------------------
+
+==============================================
+[AppTest] Pair 30/46: 29 -> 5
+Producer: Displays the text of John chapter 2 from the New American Standard Bible (NASB), including verse content and embedded Strong's Concordance numbers for biblical word study.
+Consumer: The current page (settings/options menu) provides functionality to configure Bible reading preferences such as enabling/disabling tilt to scroll, window pinning, night mode, Strong's numbers, morphological codes, and accessing all text options, while the background shows the Bible chapter reading page for John 2 (Miracle at Cana) with interlinear Strong's numbers.
+
+[Plan]
+Case 1/1
+Producer task:
+ From page 6 (Document list), click the NASB entry to navigate to page 0 and display John chapter 2 NASB text with Strong's numbers.
+Consumer task:
+ On the John 2 Bible reading page, click the three - dots more options menu to open the settings/options menu, then verify that the background shows the John 2 NASB text with Strong's numbers produced by the Producer, and the menu has the listed preference options.
+------------------------------
+
+==============================================
+[AppTest] Pair 31/46: 29 -> 7
+Producer: Displays the text of John chapter 2 from the New American Standard Bible (NASB), including verse content and embedded Strong's Concordance numbers for biblical word study.
+Consumer: The current page provides a search interface ("Find in NASB") to search for specific Bible verses or text within the New American Standard Bible (NASB), with options to filter the search by Bible section (Whole Bible, Old Testament, New Testament, John) and verse matching criteria (All words, Any word, Phrase), along with buttons to cancel, rebuild the search index, or execute the search.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 6 (Document list), click the NASB entry to navigate to page 0 and view John chapter 2 NASB text with Strong's numbers.
+Consumer task:
+ Start on page 1, click 'Find' to open 'Find in NASB' on page 2. In the search interface, filter by Bible section (e.g., John) and use verse matching criteria, then execute the search to verify it uses the NASB text (including John chapter 2) produced earlier.
+------------------------------
+
+==============================================
+[AppTest] Pair 32/46: 29 -> 12
+Producer: Displays the text of John chapter 2 from the New American Standard Bible (NASB), including verse content and embedded Strong's Concordance numbers for biblical word study.
+Consumer: The current page displays the details of a history entry (specifically for "Workspace 1: Window 1" with the content "NASB John 2") from the Bible Study app's history, likely to show or manage previously accessed Bible reading sessions.
+
+[Plan]
+Case 1/1
+Producer task:
+ From page 6 (Document list), click the NASB entry to navigate to page 0 and view John chapter 2 NASB content with Strong's numbers.
+Consumer task:
+ From page 1 (app menu), click 'History' to navigate to page 10 and verify the history entry 'Workspace 1: Window 1' has content 'NASB John 2' (matching the Producer's output).
+------------------------------
+
+==============================================
+[AppTest] Pair 33/46: 29 -> 46
+Producer: Displays the text of John chapter 2 from the New American Standard Bible (NASB), including verse content and embedded Strong's Concordance numbers for biblical word study.
+Consumer: Displays the text of John chapter 2 from the New American Standard Bible (NASB), including verse content and associated Strong's Concordance numbers for word definitions, accessed via the history of previously viewed Bible chapters.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 6 (Document list), click the NASB entry to navigate to page 0 and load John chapter 2 with verse text and embedded Strong's Concordance numbers.
+Consumer task:
+ On page 10, click the 'NASB John 2' history entry to navigate to the page displaying John chapter 2 from NASB (with verse content and associated Strong's Concordance numbers for word definitions) and verify it matches the data produced by the Producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 34/46: 46 -> 12
+Producer: Displays the text of John chapter 2 from the New American Standard Bible (NASB), including verse content and associated Strong's Concordance numbers for word definitions, accessed via the history of previously viewed Bible chapters.
+Consumer: The current page displays the details of a history entry (specifically for "Workspace 1: Window 1" with the content "NASB John 2") from the Bible Study app's history, likely to show or manage previously accessed Bible reading sessions.
+
+[Plan]
+Case 1/1
+Producer task:
+ Click the history entry for 'NASB John 2' on page 10 to navigate to the page displaying John chapter 2 from the New American Standard Bible (including verse content and Strong's Concordance numbers).
+Consumer task:
+ From page 1 (app's menu), click the 'History' option to navigate to page 10. Verify that the history entry 'Workspace 1: Window 1' displays the content 'NASB John 2' (matching the chapter content produced by the Producer).
+------------------------------
+
+==============================================
+[AppTest] Pair 35/46: 47 -> 20
+Producer: This page enables users to create a new bookmark label by entering a name and selecting a style (with "Default" as the initial style) for the label within the Bible Study app's bookmark management feature.
+Consumer: The "Manage Bookmark Labels" page allows users to create new labels for bookmarks (via the "NEW LABEL" button) and confirm actions (via the "OK" button) related to bookmark label management, likely after initiating the process from the bookmark management or Bible reading context.
+
+[Plan]
+Case 1/1
+Producer task:
+ Click the 'Create new bookmark label' button. Enter a label name (e.g., 'MyLabel') in the name input field. Click the 'OK' button to confirm creating the new bookmark label.
+Consumer task:
+ From the Bookmarks page, click the tag filter icon to navigate to the Manage Bookmark Labels page. Verify that the newly created bookmark label (named 'MyLabel') is listed among the bookmark labels.
+------------------------------
+
+==============================================
+[AppTest] Pair 36/46: 57 -> 57
+Producer: Toggle Strong's numbers
+Consumer: Toggle Strong's numbers
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 115, click the 'Toggle Strong's numbers' element to navigate to page 121 (toggling Strong's numbers setting).
+Consumer task:
+ Start on page 115, click the 'Toggle Strong's numbers' element again; verify navigation to page 121 reflects the updated (toggled) Strong's numbers setting from the producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 37/46: 64 -> 2
+Producer: Displays the text of John chapter 2 from the New American Standard Bible (NASB) for reading, with options for audio, bookmarking, and other Bible study - related actions accessible via the top - bar icons.
+Consumer: The current page is a Bible verse search dialog that allows users to search for specific verses within the Bible (or specific sections like Old Testament, New Testament, or the book of John) by entering search terms and selecting search parameters (e.g., searching for all words, any word, or a phrase), with options to cancel, rebuild the search index, or execute the search.
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 18, click the NASB document entry to go to page 27. On page 27, click to confirm the download of the NASB Bible chapter.
+Consumer task:
+ Open the Bible verse search dialog. Set search scope to 'John' and search option to 'All words'. Click 'FIND' to search the downloaded NASB Bible text.
+------------------------------
+
+==============================================
+[AppTest] Pair 38/46: 64 -> 4
+Producer: Displays the text of John chapter 2 from the New American Standard Bible (NASB) for reading, with options for audio, bookmarking, and other Bible study - related actions accessible via the top - bar icons.
+Consumer: Displays the text of the Bible chapter (John 2, "Miracle at Cana" from the New American Standard Bible) for reading, with additional navigation and utility icons (menu, search, bookmark, etc.) available at the top.
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 18, click the NASB document entry to go to page 27. Then on page 27, click to confirm the download of the NASB Bible chapter.
+Consumer task:
+ On page 0, click the unknown function icon at [910, 124] to navigate to page 4. Verify that the displayed Bible chapter text (John 2, 'Miracle at Cana') matches the downloaded NASB Bible content from the producer step.
+------------------------------
+
+==============================================
+[AppTest] Pair 39/46: 64 -> 5
+Producer: Displays the text of John chapter 2 from the New American Standard Bible (NASB) for reading, with options for audio, bookmarking, and other Bible study - related actions accessible via the top - bar icons.
+Consumer: The current page (settings/options menu) provides functionality to configure Bible reading preferences such as enabling/disabling tilt to scroll, window pinning, night mode, Strong's numbers, morphological codes, and accessing all text options, while the background shows the Bible chapter reading page for John 2 (Miracle at Cana) with interlinear Strong's numbers.
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 18, click the NASB document entry to go to page 27. On page 27, click to confirm the download of the NASB Bible document (John chapter 2 content).
+Consumer task:
+ From the Bible reading page showing John 2 (NASB, with downloaded content), click the three - dots more options menu to open the settings/options menu. Verify that the Bible chapter page (with John 2 text) is visible in the background while the menu with reading preference options is open.
+------------------------------
+
+==============================================
+[AppTest] Pair 40/46: 64 -> 7
+Producer: Displays the text of John chapter 2 from the New American Standard Bible (NASB) for reading, with options for audio, bookmarking, and other Bible study - related actions accessible via the top - bar icons.
+Consumer: The current page provides a search interface ("Find in NASB") to search for specific Bible verses or text within the New American Standard Bible (NASB), with options to filter the search by Bible section (Whole Bible, Old Testament, New Testament, John) and verse matching criteria (All words, Any word, Phrase), along with buttons to cancel, rebuild the search index, or execute the search.
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 18, click the NASB document entry to go to page 27. On page 27, click to confirm the download of the NASB Bible document (including John chapter 2 content).
+Consumer task:
+ On page 1, click the 'Find' option to open the 'Find in NASB' search interface on page 2. In the interface, search for text from the downloaded John chapter 2 (NASB Bible content) to verify the search uses the downloaded Bible text.
+------------------------------
+
+==============================================
+[AppTest] Pair 41/46: 64 -> 12
+Producer: Displays the text of John chapter 2 from the New American Standard Bible (NASB) for reading, with options for audio, bookmarking, and other Bible study - related actions accessible via the top - bar icons.
+Consumer: The current page displays the details of a history entry (specifically for "Workspace 1: Window 1" with the content "NASB John 2") from the Bible Study app's history, likely to show or manage previously accessed Bible reading sessions.
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 18, click the NASB document entry to go to page 27. Then, on page 27, click to confirm the download of the NASB Bible chapter (John 2).
+Consumer task:
+ From page 1 (app menu), click the 'History' option to go to page 10. Verify that the history entry 'Workspace 1: Window 1' with content 'NASB John 2' (matching the downloaded Bible chapter) is displayed.
+------------------------------
+
+==============================================
+[AppTest] Pair 42/46: 64 -> 29
+Producer: Displays the text of John chapter 2 from the New American Standard Bible (NASB) for reading, with options for audio, bookmarking, and other Bible study - related actions accessible via the top - bar icons.
+Consumer: Displays the text of John chapter 2 from the New American Standard Bible (NASB), including verse content and embedded Strong's Concordance numbers for biblical word study.
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 18, click the NASB document entry to go to page 27. Then on page 27, click to confirm the download of the NASB Bible document.
+Consumer task:
+ On page 6 (Document list), click the NASB entry (the downloaded document from Producer). Verify page 0 displays John chapter 2 from NASB with verse text and Strong's Concordance numbers.
+------------------------------
+
+==============================================
+[AppTest] Pair 43/46: 64 -> 46
+Producer: Displays the text of John chapter 2 from the New American Standard Bible (NASB) for reading, with options for audio, bookmarking, and other Bible study - related actions accessible via the top - bar icons.
+Consumer: Displays the text of John chapter 2 from the New American Standard Bible (NASB), including verse content and associated Strong's Concordance numbers for word definitions, accessed via the history of previously viewed Bible chapters.
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 18, click the NASB document entry to proceed to page 27. Then, on page 27, click to confirm the download of the NASB Bible document (including John chapter 2 content).
+Consumer task:
+ On page 10, click the history entry for 'NASB John 2' to navigate to the page displaying John chapter 2 from the NASB (with verse content and Strong's Concordance numbers), verifying it uses the downloaded John chapter 2 content from the Producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 44/46: 64 -> 64
+Producer: Displays the text of John chapter 2 from the New American Standard Bible (NASB) for reading, with options for audio, bookmarking, and other Bible study - related actions accessible via the top - bar icons.
+Consumer: Displays the text of John chapter 2 from the New American Standard Bible (NASB) for reading, with options for audio, bookmarking, and other Bible study - related actions accessible via the top - bar icons.
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 18, click the NASB document entry to go to page 27. Then on page 27, click to confirm the download of the NASB Bible document (John chapter 2 content).
+Consumer task:
+ On page 18, click the NASB document entry (using the downloaded NASB Bible document from Producer) to go to page 27. Then on page 27, click to confirm the download action and verify that the NASB Bible content (John chapter 2) is displayed for reading with related actions.
+------------------------------
+
+==============================================
+[AppTest] Pair 45/46: 72 -> 72
+Producer: Watch tutorial video (English)
+Consumer: Watch tutorial video (English)
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 51 (settings dialog), click the 'Watch tutorial video (English)' link to navigate to page 72 and start the tutorial video playback session.
+Consumer task:
+ Start on page 51 (settings dialog), click the 'Watch tutorial video (English)' link, then verify that the tutorial video (English) accessed is the same as the one from the producer's playback session.
+------------------------------
+
+==============================================
+[AppTest] Pair 46/46: 72 -> 87
+Producer: Watch tutorial video (English)
+Consumer: Watch tutorial video (English)
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 51 (settings dialog), click the 'Watch tutorial video (English)' link to navigate to page 72 (tutorial video playback session).
+Consumer task:
+ Start on page 69 (settings - related page), click the 'Watch tutorial video (English)' link. Verify that it navigates to page 70 to play/display the same English tutorial video produced by the producer's action.
+------------------------------

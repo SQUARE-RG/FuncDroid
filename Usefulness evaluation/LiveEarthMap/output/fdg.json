@@ -1,0 +1,2352 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "Earth Map app: location/tracking feature hub",
+            "action_refs": [],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": false,
+            "core_logic": null
+        },
+        {
+            "index": 1,
+            "function_description": "This page functions as a subscription offer screen for the GPS Camera Pro upgrade, showcasing the features available in the Pro version, presenting weekly and lifetime subscription plans with pricing, and providing a button to start the subscription, along with links to terms and conditions and privacy policy.",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    2
+                ],
+                [
+                    1,
+                    3
+                ]
+            ],
+            "data_in": [
+                "subscription offer page",
+                "weekly subscription plan option",
+                "subscription plan selection interface",
+                "lifetime subscription plan option",
+                "subscription plan",
+                "payment method"
+            ],
+            "data_out": [
+                "subscription plan selection interface",
+                "selected weekly subscription plan",
+                "subscription initiation request"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts by clicking the offer button to enter the subscription screen. On the subscription screen, the user can choose between a weekly or lifetime plan (via their respective buttons) or directly click the start subscription button. After selecting a plan (or not, if default is used) and clicking 'Start subscription', the flow proceeds to the payment page (or relevant destination).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the offer button to navigate to the subscription screen"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            1,
+                            1
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Select the weekly subscription plan"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            1,
+                            2
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Select the lifetime subscription plan"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            1,
+                            3
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click the start subscription button to proceed to payment"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2",
+                                "condition": "User selects weekly plan"
+                            },
+                            {
+                                "next_step": "S3",
+                                "condition": "User selects lifetime plan"
+                            },
+                            {
+                                "next_step": "S4",
+                                "condition": "User clicks start subscription without changing plan"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "The Settings page of the Earth Map app allows users to configure various app preferences (map type, date/time/date format/time format/temperature format) and access options to rate the app or view the privacy policy.",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ]
+            ],
+            "data_in": [
+                "settings entry"
+            ],
+            "data_out": [
+                "settings page loaded"
+            ],
+            "data_dependencies": [
+                12,
+                13
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the initial page and clicks the Settings gear icon to navigate to the Settings page, where various app preferences (map type, date/time/date format/time format/temperature format) and options to rate the app or view the privacy policy are accessible.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click the Settings gear icon to open the Settings page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "The page functions as a subscription offer screen for the GPS Camera Pro upgrade in the Earth Map app, allowing users to view Pro vs. Free feature differences, select a weekly or lifetime payment plan, and start a subscription to unlock all premium features.",
+            "action_refs": [
+                [
+                    0,
+                    2
+                ]
+            ],
+            "data_in": [
+                "Earth 3D feature card"
+            ],
+            "data_out": [
+                "subscription feature details page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the welcome page (page 0). The user clicks the 'Earth 3D feature card' (or related element) to navigate to the subscription offer page (page 1), where they can view Pro vs. Free features, select a plan, and start a subscription. This is a straight-line flow with no branches yet, as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the Earth 3D feature card (or related element) to navigate to the subscription offer page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "This page functions as a subscription offer screen for the GPS Camera Pro upgrade, comparing free vs. pro features (e.g., unlimited tracking, 3D Earth, ad removal) and presenting weekly/lifetime payment plans to unlock premium capabilities.",
+            "action_refs": [
+                [
+                    0,
+                    3
+                ]
+            ],
+            "data_in": [
+                "Video Live feature card"
+            ],
+            "data_out": [
+                "subscription plan selection interface"
+            ],
+            "data_dependencies": [
+                1
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on page 0. The user clicks the 'Video Live feature card' (or equivalent interactive element) to navigate to page 1, which displays the GPS Camera Pro subscription offer, comparing free and pro features and presenting payment plans. This is a straight-line flow with no branches yet.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the interactive element (e.g., Video Live feature card) to navigate to the subscription offer page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "The \"Select Template\" page in the Earth Map app allows users to choose from various location - themed templates, each of which displays details like the location name, time, date, weather, temperature, and sometimes a map or landscape image, likely for use in location - related tracking or display features.",
+            "action_refs": [
+                [
+                    0,
+                    4
+                ],
+                [
+                    3,
+                    0
+                ],
+                [
+                    3,
+                    1
+                ],
+                [
+                    3,
+                    2
+                ],
+                [
+                    3,
+                    3
+                ],
+                [
+                    3,
+                    4
+                ],
+                [
+                    3,
+                    5
+                ],
+                [
+                    3,
+                    6
+                ],
+                [
+                    3,
+                    7
+                ],
+                [
+                    3,
+                    8
+                ]
+            ],
+            "data_in": [
+                "template selection entry",
+                "template selection session",
+                "Meghalaya, India template card",
+                "Moscow, Russia template card",
+                "VIC, Australia template card",
+                "Oberosterreich, Austria template card",
+                "Wales, UK template card",
+                "template card (Marble Street, Turkey)",
+                "template card",
+                "Athens, Greece template card"
+            ],
+            "data_out": [
+                "selected template",
+                "navigation back to welcome page",
+                "selected Meghalaya, India template card"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts by clicking the 'Select Template' feature card to enter the template selection page. Once there, the user can choose from multiple location - themed templates (like Meghalaya, Moscow, etc.) by clicking on them. There's also an option to go back to the previous page using the back navigation arrow. The main flow is selecting a template, with the back action as an alternative.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click on the 'Select Template' feature card to navigate to the template selection page."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            3,
+                            0
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the back navigation arrow button to return to the previous page."
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            3,
+                            1
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click on the 'Meghalaya, India' template card to select this location - themed template."
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            3,
+                            2
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click on the 'Moscow, Russia' template card to select this location - themed template."
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            3,
+                            3
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click on the 'VIC, Australia' template card to select this location - themed template."
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            3,
+                            4
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click on the 'Oberosterreich, Austria' template card to select this location - themed template."
+                    },
+                    {
+                        "id": "S7",
+                        "action_ref": [
+                            3,
+                            5
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click on the 'Wales, UK' template card to select this location - themed template."
+                    },
+                    {
+                        "id": "S8",
+                        "action_ref": [
+                            3,
+                            6
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click on the 'Marble Street, Turkey' template card to select this location - themed template."
+                    },
+                    {
+                        "id": "S9",
+                        "action_ref": [
+                            3,
+                            7
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click on the 'Unnamed (building)' template card to select this location - themed template."
+                    },
+                    {
+                        "id": "S10",
+                        "action_ref": [
+                            3,
+                            8
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click on the 'Athens, Greece' template card to select this location - themed template."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S6"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S7"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S8"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S9"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S10"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            },
+                            {
+                                "next_step": "S6"
+                            },
+                            {
+                                "next_step": "S7"
+                            },
+                            {
+                                "next_step": "S8"
+                            },
+                            {
+                                "next_step": "S9"
+                            },
+                            {
+                                "next_step": "S10"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "The current page functions as a camera interface within the Earth Map app’s Capture Image feature, allowing users to take photos or record videos while displaying location, time, weather, and temperature information, and providing options to set location, switch between photo/video modes, and access camera settings like flash, grid, timer, and rotation.",
+            "action_refs": [
+                [
+                    0,
+                    5
+                ],
+                [
+                    4,
+                    2
+                ],
+                [
+                    4,
+                    7
+                ]
+            ],
+            "data_in": [
+                "photo capture mode setting",
+                "camera view (current)"
+            ],
+            "data_out": [
+                "photo capture mode setting (confirmed)",
+                "camera view (rotated)"
+            ],
+            "data_dependencies": [
+                22,
+                23,
+                24,
+                25,
+                27
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts with clicking the Capture Image feature card (S1) to enter the camera interface. Then, from the camera interface (S2), users can choose to click the PHOTO tab (S3) to switch to photo mode or click the Rotate camera button (S4) to rotate the camera view, with these two actions being mutually exclusive options at the camera interface step.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click Capture Image feature card to enter camera interface"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": null,
+                        "src_page_idx": 4,
+                        "dst_page_idx": null,
+                        "action": "none",
+                        "summary": "Reach camera interface with location/time/weather and mode/settings options"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            4,
+                            2
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 32,
+                        "action": "click",
+                        "summary": "Click PHOTO tab button to switch to photo mode"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            4,
+                            7
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 37,
+                        "action": "click",
+                        "summary": "Click Rotate camera button to rotate camera view"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "The current page of the Earth Map app serves as a feature hub for location/tracking - related functionalities, and the \"Edit Existing Images\" feature card (when accessed) likely allows users to modify or enhance previously captured or selected images, likely with location - related or template - based customizations, as part of the app's suite of location - centric and image - related tools.",
+            "action_refs": [
+                [
+                    0,
+                    6
+                ],
+                [
+                    5,
+                    0
+                ],
+                [
+                    5,
+                    1
+                ],
+                [
+                    5,
+                    2
+                ],
+                [
+                    5,
+                    3
+                ],
+                [
+                    5,
+                    4
+                ],
+                [
+                    39,
+                    3
+                ]
+            ],
+            "data_in": [
+                "edit existing images feature card",
+                "photo",
+                "photo selection checkbox",
+                "video content"
+            ],
+            "data_out": [
+                "entered edit existing images feature",
+                "selected photo",
+                "updated photo selection state",
+                "video playback started"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts by clicking the 'Edit Existing Images' feature card on the main hub page (page 0) to navigate to the image editing page (page 5). On page 5, the user can either select images (via checkboxes) to edit or use the back arrow to return to the main hub. If returning, clicking the back arrow takes them to page 39, and optionally, a 'Play video' button on page 39 can loop back to page 5 to resume image selection/editing.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            6
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click 'Edit Existing Images' card to go to image editing page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            5,
+                            0
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 39,
+                        "action": "click",
+                        "summary": "Click back arrow to go to page 39"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            39,
+                            3
+                        ],
+                        "src_page_idx": 39,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click 'Play video' button to return to image editing page"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            5,
+                            1
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 40,
+                        "action": "click",
+                        "summary": "Click first photo checkbox to select image"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            5,
+                            2
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 41,
+                        "action": "click",
+                        "summary": "Click second photo checkbox to select image"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            5,
+                            3
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 42,
+                        "action": "click",
+                        "summary": "Click third photo checkbox to select image"
+                    },
+                    {
+                        "id": "S7",
+                        "action_ref": [
+                            5,
+                            4
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 43,
+                        "action": "click",
+                        "summary": "Click fourth photo checkbox to select image"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S1"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S6"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S7"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S3",
+                        "type": "loop",
+                        "branches": [
+                            {
+                                "next_step": "S1"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "This page serves as a welcome screen for the Earth Map app, prompting users to continue to access features for exploring the world, connecting with friends, and tracking moments, with a visual of a 3D map and friend avatars.",
+            "action_refs": [
+                [
+                    0,
+                    7
+                ]
+            ],
+            "data_in": [
+                "location wise images feature card"
+            ],
+            "data_out": [
+                "viewed location wise images feature card"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the Earth Map welcome page. They click on the 'View Location Wise Images' feature card, which keeps them on the same page (possibly to explore or confirm the feature).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            7
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click on the 'View Location Wise Images' feature card"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "The current page serves as a welcome screen for the Earth Map app, prompting users to continue to access features for exploring the world, connecting with friends, and tracking moments, after closing the subscription popup.",
+            "action_refs": [
+                [
+                    1,
+                    0
+                ]
+            ],
+            "data_in": [
+                "subscription popup"
+            ],
+            "data_out": [
+                "closed subscription popup",
+                "main app interface (Earth Map) loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user starts on the subscription popup page (page 1). They click the close button to dismiss the popup, transitioning to the welcome screen (page 0). From there, the flow ends as the welcome screen is reached, allowing access to app features.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            0
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the close button on the subscription popup to dismiss it and go to the welcome screen."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "This page allows users to review the features of the GPS Camera Pro subscription (including unlimited friend tracking, GPS photo data, 3D/Live Earth, and ad removal) and select a weekly ($1.99) or lifetime ($19.99) subscription plan to unlock all Pro features, with an option to start the subscription.",
+            "action_refs": [
+                [
+                    1,
+                    4
+                ]
+            ],
+            "data_in": [
+                "terms and conditions document"
+            ],
+            "data_out": [
+                "loaded terms and conditions document"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user starts on the subscription review page, where they can view Pro features. They may click the Terms & Conditions link (at the bottom) to view its content, with the page remaining the same after the click.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            4
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the Terms & Conditions link (at the bottom of the subscription page)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "The current page (opened via the Privacy Policy link from the subscription plan selection page) is a Chrome browser window likely intended to display the privacy policy details for the GPS Camera Pro subscription associated with the Live Earth 3D & Satellite Map app.",
+            "action_refs": [
+                [
+                    1,
+                    5
+                ]
+            ],
+            "data_in": [
+                "privacy policy document"
+            ],
+            "data_out": [
+                "opened privacy policy document"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "From the subscription plan selection page (page 1), the user clicks the 'Privacy Policy' link. This action opens a Chrome browser window (page 7) to display the privacy policy details for the GPS Camera Pro subscription associated with the app. The flow is a straight line with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            5
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click the Privacy Policy link on the subscription plan selection page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "The current page displays an advertisement for the Lemon8 app, featuring an option to install the app from the Google Play Store and a video promoting the app.",
+            "action_refs": [
+                [
+                    2,
+                    0
+                ]
+            ],
+            "data_in": [
+                "settings page state"
+            ],
+            "data_out": [
+                "previous page navigation result"
+            ],
+            "data_dependencies": [
+                28
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The flow starts on the settings page (page 2). The user clicks the back arrow button, which navigates to the page displaying the Lemon8 app advertisement (page 8). There are no branches or loops in this straight - line flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            0
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click the back arrow button on the settings page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "This page (within the app's settings) displays a calendar interface for selecting a date, likely to set or modify a date - related parameter for the app (such as a date - based filter or schedule related to the map or location - tracking features), with options to cancel or confirm the selected date.",
+            "action_refs": [
+                [
+                    2,
+                    1
+                ],
+                [
+                    9,
+                    0
+                ],
+                [
+                    9,
+                    1
+                ],
+                [
+                    9,
+                    2
+                ],
+                [
+                    9,
+                    3
+                ],
+                [
+                    9,
+                    4
+                ]
+            ],
+            "data_in": [
+                "map type setting",
+                "date selection popup",
+                "calendar date selection",
+                "calendar date"
+            ],
+            "data_out": [
+                "updated map type setting",
+                "popup closed",
+                "selected calendar date",
+                "satellite map type setting",
+                "selected date",
+                "terrain map type setting updated",
+                "hybrid map type setting"
+            ],
+            "data_dependencies": [
+                14
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The user starts on the settings page and clicks the 'Change Date' button (not in the provided actions, but assuming the calendar popup is opened). Then, on the calendar popup, the user can either click 'CANCEL' to close the popup without changing the date or click 'OK' to confirm the selected date. However, since the provided actions are about map type, there's a mismatch. Wait, the functional point is about date selection, but the actions given are for map type. Oh, maybe a mistake. But following the instructions, perhaps the user intended. Wait, the actions list has actions for map type, but the functional point is date. Maybe the actions are wrong, but the task is to process. Wait, the user's functional point is about date selection, but the actions provided are for map type. This is a problem. But according to the task, we have to use the given actions. Wait, maybe the user made a mistake. But proceeding, perhaps the functional point is map type. Let's re-express. The user is on page 2 (settings), clicks 'Change Map Type' (action [2,1]) to open page 9 (map type popup). Then, on page 9, the user can choose to close the popup (action [9,0]), or select Normal (9,1), Satellite (9,2), Terrain (9,3), or Hybrid (9,4). So the logic: Start on settings page (page 2), click 'Change Map Type' to open the map type popup (page 9). At the popup, the user can either close it (click 'Close' button) or select one of the four map types (Normal, Satellite, Terrain, Hybrid).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            1
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click 'Change Map Type' button on settings page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            9,
+                            0
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click 'Close' button on map type popup"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            9,
+                            1
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click 'Normal' map type button"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            9,
+                            2
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click 'Satellite' map type button"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            9,
+                            3
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click 'Terrain' map type button"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            9,
+                            4
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click 'Hybrid' map type button"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S6"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            },
+                            {
+                                "next_step": "S6"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "This page (or pop - up) enables users to select a specific date from the December 2025 calendar, with options to cancel or confirm the selection, likely for a feature related to date - based configuration or scheduling within the Earth Map app's settings context.",
+            "action_refs": [
+                [
+                    2,
+                    2
+                ]
+            ],
+            "data_in": [
+                "date setting"
+            ],
+            "data_out": [
+                "date setting (to be changed)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The flow starts on the settings page. The user clicks the 'Change Date' button, which opens a calendar popup for December 2025. From here, the user can select a date, then choose to cancel or confirm the selection (though the provided action only covers opening the calendar).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            2
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click 'Change Date' button to open December 2025 calendar popup"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "This page (a time - setting modal) enables users to set or adjust the time (including choosing between AM and PM) for the Earth Map app, with options to confirm the change via “OK” or cancel it via “CANCEL”.",
+            "action_refs": [
+                [
+                    2,
+                    3
+                ],
+                [
+                    10,
+                    0
+                ],
+                [
+                    10,
+                    1
+                ],
+                [
+                    10,
+                    2
+                ],
+                [
+                    10,
+                    3
+                ],
+                [
+                    10,
+                    4
+                ]
+            ],
+            "data_in": [
+                "time setting",
+                "time setting (AM/PM)",
+                "time setting (hour)",
+                "time setting dialog",
+                "selected time"
+            ],
+            "data_out": [
+                "updated time setting",
+                "time setting (AM) updated",
+                "updated time setting (PM)",
+                "updated time setting (hour)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The flow starts by clicking the 'Change Time' button to open the time - setting modal. In the modal, users can choose to set the time period to AM or PM, select the hour, and then either cancel the change (returning to the previous page) or confirm the change (also returning to the previous page) by clicking the respective buttons.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            3
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click 'Change Time' button to open time - setting modal"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            10,
+                            0
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click 'AM/PM toggle button (AM)' to set time to AM"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            10,
+                            1
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 20,
+                        "action": "click",
+                        "summary": "Click 'AM/PM toggle button (PM)' to set time to PM"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            10,
+                            2
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 21,
+                        "action": "click",
+                        "summary": "Click 'Clock hour selection (7)' to set hour to 7"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            10,
+                            3
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click 'Cancel button' to cancel time change and return"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            10,
+                            4
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click 'OK button' to confirm time change and return"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S6"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            },
+                            {
+                                "next_step": "S6"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "This page (a modal within the app's settings) allows the user to select the temperature format (°C, °F, or K) for the Earth Map app.",
+            "action_refs": [
+                [
+                    2,
+                    4
+                ],
+                [
+                    11,
+                    0
+                ]
+            ],
+            "data_in": [
+                "date format setting",
+                "temperature format setting"
+            ],
+            "data_out": [
+                "updated date format setting"
+            ],
+            "data_dependencies": [
+                29,
+                30,
+                31
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The user starts on the settings page (page 2). First, they click the 'Change Date Format' button (action_ref [2,4]) to open the date format selection popup (navigating to page 11). Then, they click to close the date format popup (action_ref [11,0]), returning to the previous page (page 22, though likely back to the settings context).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            4
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click 'Change Date Format' button to open date format popup"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            11,
+                            0
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 22,
+                        "action": "click",
+                        "summary": "Click to close date format selection popup"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "The current page (a modal within the app's settings) allows the user to select a temperature format (°C, °F, or K) for the Earth Map app.",
+            "action_refs": [
+                [
+                    2,
+                    5
+                ]
+            ],
+            "data_in": [
+                "time format setting"
+            ],
+            "data_out": [
+                "updated time format setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The user starts on the settings page (page 2). They click the 'Change Temperature Format' button, which opens a modal (page 11) displaying temperature format options (°C, °F, K). The flow then allows selecting one of these options (though the provided action only covers opening the modal; additional steps for selection would follow if included).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            5
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click 'Change Temperature Format' button to open temp format selection modal"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "The current page (a modal within the app's settings) allows the user to select a temperature format (°C, °F, or K) for the Earth Map app.",
+            "action_refs": [
+                [
+                    2,
+                    6
+                ]
+            ],
+            "data_in": [
+                "temperature format setting"
+            ],
+            "data_out": [
+                "updated temperature format setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The user starts on the settings page. They click the 'Change Temperature Format' button, which opens a modal to select a temperature format (°C, °F, or K).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            6
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click 'Change Temperature Format' button to open temp format selection modal"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "This page (triggered by the \"Rate App\" action in the settings of the Earth Map app) allows users to rate the app by selecting a star rating (from 1 to 5 stars) and then proceeding to submit their rating via the \"Rate\" button, with a message thanking users for their support and requesting a rating.",
+            "action_refs": [
+                [
+                    2,
+                    7
+                ]
+            ],
+            "data_in": [
+                "rate app setting"
+            ],
+            "data_out": [
+                "rate app request initiated"
+            ],
+            "data_dependencies": [
+                32,
+                33,
+                34,
+                35,
+                37
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The user starts on the settings page (page 2). They click the 'Rate App' button, which triggers a dialog to appear with a thank-you message and a star rating interface, moving to page 12. This is the core flow to access the app rating interface.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            7
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click the 'Rate App' button on the settings page to open the rating dialog."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "The current page displays the Privacy Policy for the Earth Map app, detailing the app's policies and procedures regarding the collection, use, and disclosure of user information, along with user privacy rights and legal protections.",
+            "action_refs": [
+                [
+                    2,
+                    8
+                ]
+            ],
+            "data_in": [
+                "privacy policy item"
+            ],
+            "data_out": [
+                "privacy policy document (loaded)"
+            ],
+            "data_dependencies": [
+                18
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The user starts on the Settings page (page 2). The core logic is a single step: clicking the 'Privacy Policy' button, which navigates to the Privacy Policy page (page 13) displaying the app’s privacy-related details. There are no branches or loops as it’s a direct navigation to view the policy.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            8
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click the 'Privacy Policy' button on the Settings page to navigate to the Privacy Policy page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "This page serves as a welcome screen for the Earth Map app, inviting users to continue to access features for exploring the world, connecting with friends, and tracking moments, with a visual of a map and friend avatars.",
+            "action_refs": [
+                [
+                    4,
+                    0
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user starts on page 4 (a non - welcome page) and clicks the back arrow button. This action navigates them to page 0, which is the welcome screen of the Earth Map app, where they can then proceed to access the app's features.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            0
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the back arrow button on page 4 to navigate to page 0 (welcome screen)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "The current page (after clicking \"SET LOCATION\" on the camera interface) likely allows the user to set or assign a location to the captured image or video within the Earth Map app's capture workflow.",
+            "action_refs": [
+                [
+                    4,
+                    1
+                ]
+            ],
+            "data_in": [
+                "location setting"
+            ],
+            "data_out": [
+                "location setting updated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user starts on page 4 (camera interface) and clicks the 'SET LOCATION' button. This action navigates to page 31, likely to set or assign a location to the captured media.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            1
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 31,
+                        "action": "click",
+                        "summary": "Click 'SET LOCATION' button on camera page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "VIDEO tab button",
+            "action_refs": [
+                [
+                    4,
+                    3
+                ]
+            ],
+            "data_in": [
+                "video mode setting"
+            ],
+            "data_out": [
+                "video mode setting activated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The core execution logic starts on page 4. The user clicks the VIDEO tab button, which navigates to page 33. There are no branches or loops as this is a single action flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            3
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 33,
+                        "action": "click",
+                        "summary": "Click the VIDEO tab button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "Flash toggle button",
+            "action_refs": [
+                [
+                    4,
+                    4
+                ]
+            ],
+            "data_in": [
+                "flash setting"
+            ],
+            "data_out": [
+                "flash setting updated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The core execution logic for the flash toggle button involves a single step: clicking the flash toggle button. This action is performed on page 4, and upon clicking, the app navigates to page 34. There are no branches or loops in this flow as it is a straightforward click action to toggle the flash.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            4
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 34,
+                        "action": "click",
+                        "summary": "Click the flash toggle button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 25,
+            "function_description": "Grid view toggle button",
+            "action_refs": [
+                [
+                    4,
+                    5
+                ]
+            ],
+            "data_in": [
+                "grid view setting"
+            ],
+            "data_out": [
+                "grid view setting updated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The flow starts on page 4. The user clicks the grid view toggle button, which leads to page 35. There are no branches or loops as it is a single action to toggle the grid view.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            5
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 35,
+                        "action": "click",
+                        "summary": "Click the grid view toggle button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 26,
+            "function_description": "Capture button",
+            "action_refs": [
+                [
+                    4,
+                    6
+                ]
+            ],
+            "data_in": [
+                "current screen content"
+            ],
+            "data_out": [
+                "captured screenshot"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The core execution logic for the Capture button functional point involves a single step: clicking the Capture button (likely the central circular button in the camera interface) on page 4, which navigates to page 36. There are no branches or loops as it is a straightforward action to initiate capturing (e.g., taking a photo or starting a video recording).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            6
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 36,
+                        "action": "click",
+                        "summary": "Click the Capture button (central circular button in camera interface) to initiate capturing and navigate to page 36."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 27,
+            "function_description": "Timer button",
+            "action_refs": [
+                [
+                    4,
+                    8
+                ]
+            ],
+            "data_in": [
+                "timer setting"
+            ],
+            "data_out": [
+                "timer setting updated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The core execution logic for the Timer button functional point involves a single step: clicking the Timer button located at a specific position on the screen. This action transitions the app from the source page (page 4) to the destination page (page 38). There are no branches or loops as it is a straightforward click action to navigate to the timer-related page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            8
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 38,
+                        "action": "click",
+                        "summary": "Click the Timer button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 28,
+            "function_description": "The current page welcomes users back to the Earth Map app, prompting them to continue to access features for exploring the world, connecting with friends, and tracking moments, while also displaying an advertisement area.",
+            "action_refs": [
+                [
+                    8,
+                    0
+                ]
+            ],
+            "data_in": [
+                "Lemon8 app installation request"
+            ],
+            "data_out": [
+                "Lemon8 app installed",
+                "Earth Map app welcome page (post - installation)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The flow starts on the advertisement page (page 8). The user clicks the 'Install' button for the Lemon8 app, which navigates to the 'Welcome back to Earth Map' page (page 0) that prompts continuing to access app features and displays an ad area.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            0
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the Install button for Lemon8 app to navigate to the Earth Map welcome page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 29,
+            "function_description": "Select DD/MM/YYYY date format",
+            "action_refs": [
+                [
+                    11,
+                    1
+                ]
+            ],
+            "data_in": [
+                "date format setting"
+            ],
+            "data_out": [
+                "date format setting (DD/MM/YYYY)"
+            ],
+            "data_dependencies": [
+                16
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The process starts on page 11. The user performs a click action to select the DD/MM/YYYY date format, which transitions the app to page 23. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            1
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 23,
+                        "action": "click",
+                        "summary": "Click to select DD/MM/YYYY date format"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 30,
+            "function_description": "Select MM/DD/YYYY date format",
+            "action_refs": [
+                [
+                    11,
+                    2
+                ]
+            ],
+            "data_in": [
+                "date format setting"
+            ],
+            "data_out": [
+                "date format setting (MM/DD/YYYY)"
+            ],
+            "data_dependencies": [
+                16
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The process starts on page 11. The user performs a click action to select the MM/DD/YYYY date format, which navigates to page 24. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            2
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 24,
+                        "action": "click",
+                        "summary": "Click to select MM/DD/YYYY date format"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 31,
+            "function_description": "Select YYYY/MM/DD date format",
+            "action_refs": [
+                [
+                    11,
+                    3
+                ]
+            ],
+            "data_in": [
+                "date format setting"
+            ],
+            "data_out": [
+                "date format setting (YYYY/MM/DD)"
+            ],
+            "data_dependencies": [
+                16
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The process starts on page 11. The user clicks to select the YYYY/MM/DD date format, which transitions to page 25. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            3
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 25,
+                        "action": "click",
+                        "summary": "Click to select YYYY/MM/DD date format"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 32,
+            "function_description": "1-star rating button",
+            "action_refs": [
+                [
+                    12,
+                    0
+                ]
+            ],
+            "data_in": [
+                "app rating"
+            ],
+            "data_out": [
+                "1 - star app rating"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The flow starts on page 12. The user clicks the 1 - star rating button, and this action leads to page 26. There are no branches or loops in this simple flow as it is a single click action to select the 1 - star rating.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            0
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 26,
+                        "action": "click",
+                        "summary": "Click the 1 - star rating button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 33,
+            "function_description": "2-star rating button",
+            "action_refs": [
+                [
+                    12,
+                    1
+                ]
+            ],
+            "data_in": [
+                "app rating"
+            ],
+            "data_out": [
+                "2 - star app rating"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The flow begins on page 12. The user clicks the 2 - star rating button, and this action leads to page 27. There are no branches or loops in this simple flow as it's a single click action to rate with 2 stars.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            1
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 27,
+                        "action": "click",
+                        "summary": "Click the 2 - star rating button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 34,
+            "function_description": "3-star rating button",
+            "action_refs": [
+                [
+                    12,
+                    2
+                ]
+            ],
+            "data_in": [
+                "app rating"
+            ],
+            "data_out": [
+                "3 - star app rating"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The flow starts on page 12. The user clicks the 3 - star rating button, and this action leads to page 28. There are no branch points or loops in this simple flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            2
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 28,
+                        "action": "click",
+                        "summary": "Click the 3 - star rating button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 35,
+            "function_description": "4-star rating button",
+            "action_refs": [
+                [
+                    12,
+                    3
+                ]
+            ],
+            "data_in": [
+                "app rating (4-star)"
+            ],
+            "data_out": [
+                "app rating (4-star) recorded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The flow starts on page 12. The user clicks the 4 - star rating button, and this action leads to page 29. There are no branches or loops in this simple flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            3
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 29,
+                        "action": "click",
+                        "summary": "Click the 4 - star rating button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 36,
+            "function_description": "5-star rating button",
+            "action_refs": [
+                [
+                    12,
+                    4
+                ]
+            ],
+            "data_in": [
+                "app rating request"
+            ],
+            "data_out": [
+                "5 - star app rating"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The flow starts on page 12. The user clicks the 5 - star rating button, and this action leads to page 30. There are no branches or loops in this simple execution logic for the 5 - star rating button click.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            4
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 30,
+                        "action": "click",
+                        "summary": "Click the 5 - star rating button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 37,
+            "function_description": "This page prompts users to rate the Earth Map app, providing a star rating system and a \"Rate\" button to submit feedback, after navigating from the app's settings page.",
+            "action_refs": [
+                [
+                    12,
+                    5
+                ]
+            ],
+            "data_in": [
+                "app rating request"
+            ],
+            "data_out": [
+                "app rating submission"
+            ],
+            "data_dependencies": [
+                36
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The user navigates to the rating prompt page (from the settings page). The core action is clicking the 'Rate' button to submit feedback. There are no branches or loops here as it's a single action to complete the rating submission.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            5
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click the 'Rate' button to submit the app rating"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 38,
+            "function_description": "The current page of the Earth Map app serves as a welcome screen, inviting users to continue using the app to explore the world, connect with friends, and track moments, with a \"Continue\" button to proceed and an advertisement section below.",
+            "action_refs": [
+                [
+                    39,
+                    0
+                ]
+            ],
+            "data_in": [
+                "advertisement"
+            ],
+            "data_out": [
+                "ad closed state",
+                "app main interface (Earth Map)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 39,
+                "logic": "The user starts on the advertisement page (page 39). They click the 'Close' button to dismiss the advertisement, which navigates them to the welcome screen (page 44) of the Earth Map app, where they can proceed with the app's main functionality.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            39,
+                            0
+                        ],
+                        "src_page_idx": 39,
+                        "dst_page_idx": 44,
+                        "action": "click",
+                        "summary": "Click the Close button to dismiss the advertisement and navigate to the welcome screen."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 39,
+            "function_description": "The page serves as a feature hub for the Earth Map app, providing access to location/tracking - related features (like friend location tracking, Earth 3D, video live) and image - related features (select template, capture image, edit existing images, view location - wise images), along with an offer button and a settings icon.",
+            "action_refs": [
+                [
+                    39,
+                    1
+                ]
+            ],
+            "data_in": [
+                "advertisement"
+            ],
+            "data_out": [
+                "app main page access"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 39,
+                "logic": "The flow starts on page 39 (the feature hub). The user can click the 'Shop Now' button at the bottom, which navigates to page 5. There are no branches or loops here as only one action is defined.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            39,
+                            1
+                        ],
+                        "src_page_idx": 39,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click the Shop Now button at the bottom of the feature hub page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 40,
+            "function_description": "The current page of the Earth Map app serves as a feature hub for location/tracking - related functionalities, offering options like friend location tracking, Earth 3D, video live, template selection, image capture, editing existing images, and viewing location - wise images, along with an offer button and a settings icon.",
+            "action_refs": [
+                [
+                    39,
+                    2
+                ]
+            ],
+            "data_in": [
+                "ad"
+            ],
+            "data_out": [
+                "app home page access"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 39,
+                "logic": "The flow starts on page 39 (the feature hub). The user clicks the 'Shop Now' button (middle), which navigates to page 5. There are no branches or loops as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            39,
+                            2
+                        ],
+                        "src_page_idx": 39,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click the middle 'Shop Now' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 41,
+            "function_description": "This page promotes the GPS Camera Pro subscription for the Earth Map app, comparing PRO and FREE features, offering weekly and lifetime subscription plans, and providing a button to start the subscription.",
+            "action_refs": [
+                [
+                    44,
+                    0
+                ]
+            ],
+            "data_in": [
+                "app onboarding state"
+            ],
+            "data_out": [
+                "navigation to subscription page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 44,
+                "logic": "The flow starts on the welcome page (page 44). The user clicks the 'Continue' button, which navigates to the GPS Camera Pro subscription promotion page (page 1). On this page, the user can view feature comparisons, select a subscription plan (Weekly or Lifetime), and proceed to start the subscription.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            44,
+                            0
+                        ],
+                        "src_page_idx": 44,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the 'Continue' button to navigate to the subscription promotion page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        }
+    ]
+}

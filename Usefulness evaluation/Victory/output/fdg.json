@@ -1,0 +1,1278 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "Sports content, live streams, video navigation",
+            "action_refs": [
+                [
+                    0,
+                    4
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the home page (page 0). The user clicks the Home tab button, which keeps the app on the home page (page 0) to access sports content, live streams, or video navigation options. There are no branches or loops as only one action is defined.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the Home tab button to stay on the home page for sports content access"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 1,
+            "function_description": "The current page (hamburger menu) provides a navigation interface to access different sports categories, teams, media content (like films, shorts), and other specialized sections (e.g., hunting & fishing) within the sports app.",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ],
+                [
+                    1,
+                    0
+                ]
+            ],
+            "data_in": [
+                "hamburger menu (navigation drawer)",
+                "search query",
+                "search interface"
+            ],
+            "data_out": [
+                "navigation drawer (menu) opened",
+                "entered search query"
+            ],
+            "data_dependencies": [
+                2
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts by clicking the hamburger menu button on the entry page. Then, it proceeds to input 'hockey news' into the search field. There are no branches or loops in this simple sequential flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the hamburger menu button"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            1,
+                            0
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 2,
+                        "action": "input",
+                        "summary": "Input 'hockey news' into the search field"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "The current page functions as a search interface where users can input and search for \"hockey news\" (or other sports - related queries) to find relevant sports - related content, with options to clear the search input or go back to the previous sports - content - focused page.",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    2,
+                    0
+                ],
+                [
+                    2,
+                    1
+                ]
+            ],
+            "data_in": [
+                "search query input",
+                "search query (hockey news)",
+                "search query",
+                "search input field"
+            ],
+            "data_out": [
+                "search interface loaded",
+                "updated search query"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the sports content page (page 0). First, the user clicks the search icon to enter the search interface (page 2). In the search interface, the user can either input a sports - related query (like 'hockey games') or click the back button to return to the previous sports - content - focused page (page 0).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click search icon to enter search page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            2,
+                            0
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click back button to return to previous page"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            2,
+                            1
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 2,
+                        "action": "input",
+                        "summary": "Input sports - related query in search field"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if - else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "The page provides live audio streaming for \"The Ticket Sportsradio 96.7 FM & 1310 AM\" and displays a list of related sports videos with timestamps and event details.",
+            "action_refs": [
+                [
+                    0,
+                    2
+                ],
+                [
+                    3,
+                    0
+                ],
+                [
+                    3,
+                    1
+                ]
+            ],
+            "data_in": [
+                "volleyball match video entry",
+                "main video dropdown toggle",
+                "related videos list"
+            ],
+            "data_out": [
+                "video playback session",
+                "related videos list"
+            ],
+            "data_dependencies": [
+                4
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts by clicking the 'Watch Now' video button to access the live audio streaming and related videos page. From there, the user can either click a related video thumbnail (like 'Robo’s Toy Drive') to view that video or click the dropdown toggle for the main video, with these actions occurring on the same page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click 'Watch Now' video button to navigate to the live audio and related videos page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            3,
+                            0
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click a related video thumbnail (e.g., 'Robo’s Toy Drive') to view that video"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            3,
+                            1
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click the dropdown toggle for the main video"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "The page provides live audio streaming for \"The Ticket Sportsradio 96.7 FM & 1310 AM\" and displays related sports event videos with timestamps for user access.",
+            "action_refs": [
+                [
+                    0,
+                    3
+                ]
+            ],
+            "data_in": [
+                "live stream (The Ticket) card"
+            ],
+            "data_out": [
+                "live stream details page",
+                "related videos list"
+            ],
+            "data_dependencies": [
+                3
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the home page (page 0) and clicks the 'Live stream (The Ticket) card' to navigate to page 3. On page 3, the live audio streaming for 'The Ticket Sportsradio 96.7 FM & 1310 AM' is active, and related sports event videos with timestamps are displayed for access.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click the 'Live stream (The Ticket) card' on the home page to navigate to the live stream and related videos page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "The current page (Shorts tab) functions as a platform to view short - form video content, with features like a search option, a comment button, a share button, and navigation options to the Home and Profile sections.",
+            "action_refs": [
+                [
+                    0,
+                    5
+                ]
+            ],
+            "data_in": [
+                "shorts feature entry"
+            ],
+            "data_out": [
+                "shorts content loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the initial page (page 0) and clicks the Shorts tab button (at the bottom navigation bar). This action navigates to the Shorts tab page (page 4), where short - form video content along with features like search, comment, and share buttons, and navigation to Home and Profile are available. There are no branching or looping actions in this core flow as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the Shorts tab button in the bottom navigation bar to navigate to the Shorts tab page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "The Profile page displays user account information (name, email) and provides access to contests/sweepstakes, settings (consent preferences, content controls, terms, privacy), and account management options (sign out, delete account).",
+            "action_refs": [
+                [
+                    0,
+                    6
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the Home page (page 0). The user clicks the Profile tab button (action_ref [0,6]) to navigate to the Profile page (page 5), where user account info and options for contests, settings, and account management are displayed. This is a straight - line flow with no branches or loops as only this single navigation action is provided for this functional point's core logic.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            6
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click the Profile tab button to navigate to the Profile page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "The page provides Dallas Stars - related video content, organizing it into sections like \"BRAND NEW STARS CONTENT\", \"FROM THE EDIT BAY\", and \"STARGAZING\", allowing users to browse and access various video materials (including live streams - related or team - specific videos) related to the Dallas Stars.",
+            "action_refs": [
+                [
+                    1,
+                    1
+                ]
+            ],
+            "data_in": [
+                "Dallas Stars category"
+            ],
+            "data_out": [
+                "Dallas Stars content page"
+            ],
+            "data_dependencies": [
+                15
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user starts on page 1 and clicks the 'Dallas Stars' category button (action_ref [1,1]). This action navigates to page 6, which displays Dallas Stars - related video content organized into sections like 'BRAND NEW STARS CONTENT', 'FROM THE EDIT BAY', and 'STARGAZING', allowing access to various team - specific videos.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            1
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click the Dallas Stars category button to navigate to the Dallas Stars video content page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "This page functions as a comments section for a short sports - related video, enabling users to view existing comments (while they are loading) and post new comments through the provided text input field and “Post” button.",
+            "action_refs": [
+                [
+                    4,
+                    0
+                ],
+                [
+                    9,
+                    0
+                ],
+                [
+                    9,
+                    1
+                ]
+            ],
+            "data_in": [
+                "video",
+                "comments section",
+                "comment input field",
+                "video post (implicit context)",
+                "comment text",
+                "video post"
+            ],
+            "data_out": [
+                "loaded comments section",
+                "comment text (entered)",
+                "new comment on video post"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user starts on page 4 and clicks the chat icon to open the comments section (page 9, where comments load). Then, the user can either input text in the comment field (to prepare a new comment) or click the 'Post' button (to submit a comment, which may refresh the comments view back to page 9).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            0
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click chat icon to open comments section (comments start loading)"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            9,
+                            0
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 10,
+                        "action": "input",
+                        "summary": "Input comment text in the input field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            9,
+                            1
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click 'Post' button to submit comment (comments view refreshes)"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "The page displays the terms and conditions for the \"$10 Million Streaks Dallas Stars Edition\" giveaway, including eligibility, official rules, and legal disclaimers for participants.",
+            "action_refs": [
+                [
+                    5,
+                    0
+                ],
+                [
+                    11,
+                    0
+                ]
+            ],
+            "data_in": [
+                "$10M Streaks (Dallas Stars) contest item",
+                "$10 Million Streaks Dallas Stars Edition promotion details"
+            ],
+            "data_out": [
+                "$10M Streaks (Dallas Stars) contest details",
+                "navigation back to profile page"
+            ],
+            "data_dependencies": [
+                16
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The flow starts on page 5. First, the user clicks the '$10M Streaks (Dallas Stars) contest card' to navigate to page 11. Then, the user clicks the 'Back navigation arrow' to return to page 15. There are no branches or loops in this flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            0
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click the $10M Streaks (Dallas Stars) contest card to go to page 11"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            11,
+                            0
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click the back navigation arrow to go to page 15"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "The Content Controls page allows users to toggle the Content Visibility setting to tailor their viewing experience by controlling which content is shown, with a description of how the setting affects content availability based on regional restrictions.",
+            "action_refs": [
+                [
+                    5,
+                    1
+                ],
+                [
+                    12,
+                    0
+                ]
+            ],
+            "data_in": [
+                "content controls setting",
+                "content controls page state"
+            ],
+            "data_out": [
+                "content controls page loaded",
+                "profile page state (navigation result)"
+            ],
+            "data_dependencies": [
+                14,
+                17
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user starts on page 5 and clicks the Content Controls option to navigate to page 12. From page 12, the user can click the back navigation button to return to page 5. There are no branches or loops in this flow as it is a simple navigation between two pages.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            1
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click Content Controls option to navigate to page 12"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            12,
+                            0
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click back navigation button to return to page 5"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "Sign Out button",
+            "action_refs": [
+                [
+                    5,
+                    2
+                ]
+            ],
+            "data_in": [
+                "login session",
+                "user profile"
+            ],
+            "data_out": [
+                "login session terminated",
+                "user profile session updated"
+            ],
+            "data_dependencies": [
+                20
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user starts on page 5 (profile page). The core logic is to click the 'Sign Out' button, which navigates to page 13. There are no branches or loops as it's a single action flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            2
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click the Sign Out button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "The page functions to confirm the deletion of the user's account, explaining the consequences (canceling subscriptions, no refunds, erasing details) and providing \"Delete account\" and \"Cancel\" action buttons.",
+            "action_refs": [
+                [
+                    5,
+                    3
+                ],
+                [
+                    14,
+                    0
+                ],
+                [
+                    14,
+                    1
+                ]
+            ],
+            "data_in": [
+                "account",
+                "user account",
+                "account deletion confirmation",
+                "account deletion process"
+            ],
+            "data_out": [
+                "account deletion confirmation page",
+                "deleted user account",
+                "erased account details",
+                "cancelled account deletion process"
+            ],
+            "data_dependencies": [
+                19
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The flow starts by clicking the 'Delete account' button (on page 5) to reach the confirmation page. On the confirmation page, the user can either click 'Delete account confirmation' to proceed with deletion (final step) or click 'Cancel account deletion' to stop the process (final step).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            3
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click 'Delete account' button to open confirmation page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            14,
+                            0
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click 'Delete account confirmation' button to delete account"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            14,
+                            1
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click 'Cancel account deletion' button to cancel deletion"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "The page functions to play the video \"Robo’s 4th Annual Holiday Toy Drive\" and display related videos for further viewing.",
+            "action_refs": [
+                [
+                    6,
+                    0
+                ],
+                [
+                    7,
+                    0
+                ]
+            ],
+            "data_in": [
+                "video (Robo’s 4th Annual Holiday Toy Drive)",
+                "video details section",
+                "video metadata"
+            ],
+            "data_out": [
+                "video playback (Robo’s 4th Annual Holiday Toy Drive)",
+                "collapsed video details section"
+            ],
+            "data_dependencies": [
+                8,
+                15
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The flow starts on page 6. First, the user clicks the thumbnail for 'Robo’s 4th Annual Holiday Toy Drive' (action_ref [6,0]) to navigate to page 7. Then, the user clicks the 'Collapse video details icon' (action_ref [7,0]) to complete the interaction on page 8. There are no branches or loops as the actions form a linear sequence.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            0
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click the video thumbnail for 'Robo’s 4th Annual Holiday Toy Drive' to open its playback page."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            7,
+                            0
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click the 'Collapse video details icon' to collapse video details."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "Content Visibility toggle switch",
+            "action_refs": [
+                [
+                    12,
+                    1
+                ]
+            ],
+            "data_in": [
+                "content visibility setting"
+            ],
+            "data_out": [
+                "content visibility setting (updated state)"
+            ],
+            "data_dependencies": [
+                10,
+                17
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The flow starts on page 12 (Content Controls). The user clicks the Content Visibility toggle switch, which transitions the app to page 21. This action toggles the visibility setting to tailor the viewing experience.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            1
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 21,
+                        "action": "click",
+                        "summary": "Click the Content Visibility toggle switch"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "Plays the \"Robo’s 4th Annual Holiday Toy Drive\" video and provides a list of related videos (e.g., \"DSIG Unscripted: The Final Cut\") for users to select and watch additional Dallas Stars - related video content.",
+            "action_refs": [
+                [
+                    7,
+                    1
+                ]
+            ],
+            "data_in": [
+                "DSIG Unscripted: The Final Cut video"
+            ],
+            "data_out": [
+                "DSIG Unscripted: The Final Cut video (initiated playback or selection)"
+            ],
+            "data_dependencies": [
+                8,
+                13
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The app starts on a page where the 'Robo’s 4th Annual Holiday Toy Drive' video is playing, with a 'RELATED VIDEOS' section below. The user can click on a related video (e.g., 'DSIG Unscripted: The Final Cut') to watch additional Dallas Stars - related content. This is a single action step with no branching or looping as described by the provided action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            1
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click on the 'DSIG Unscripted: The Final Cut' video thumbnail in the related videos section"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "The page displays the terms and conditions for the \"$10 Million Streaks Dallas Stars Edition\" contest, including official rules, eligibility, and other legal details for participants.",
+            "action_refs": [
+                [
+                    15,
+                    0
+                ]
+            ],
+            "data_in": [
+                "$10M Streaks (Dallas Stars) contest entry"
+            ],
+            "data_out": [
+                "$10M Streaks (Dallas Stars) contest details"
+            ],
+            "data_dependencies": [
+                9
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user starts on page 15 and clicks the 'Contest: $10M Streaks (Dallas Stars)' option. This action navigates to page 11, where the terms and conditions for the $10 Million Streaks Dallas Stars Edition contest are displayed, including official rules and eligibility details.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            0
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click the 'Contest: $10M Streaks (Dallas Stars)' option to navigate to the contest's terms and conditions page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "The page allows the user to manage consent preferences for personalized ads (Victory+ Personalized Experience) by enabling or disabling the \"Allow Personalized Ads\" option, with additional options to view the Privacy Policy, save preferences and exit, or delete the account.",
+            "action_refs": [
+                [
+                    15,
+                    1
+                ],
+                [
+                    16,
+                    3
+                ]
+            ],
+            "data_in": [
+                "consent preferences setting",
+                "personalized ads setting"
+            ],
+            "data_out": [
+                "consent preferences setting (opened)",
+                "updated personalized ads setting",
+                "saved setting"
+            ],
+            "data_dependencies": [
+                21,
+                22,
+                23
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user starts on page 15 and clicks 'Consent Preferences' to navigate to page 16. On page 16, the user can manage ad consent settings (implied by the functional point) and then clicks 'Save and Exit' to return to page 5. The flow is a straight sequence with no branches shown in the provided actions.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            1
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Navigate to Consent Preferences page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            16,
+                            3
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Save preferences and exit to page 5"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "Sign Out button",
+            "action_refs": [
+                [
+                    15,
+                    2
+                ]
+            ],
+            "data_in": [
+                "login session",
+                "user profile"
+            ],
+            "data_out": [
+                "login session terminated",
+                "user profile session updated"
+            ],
+            "data_dependencies": [
+                20
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user starts on page 15 (Profile page). The core logic is to click the 'Sign Out' button, which navigates to page 17. There are no branches or loops as it's a single-step action to sign out.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            2
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click the Sign Out button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "The page functions as a confirmation interface for users to either permanently delete their account (with details on subscription cancellation and data erasure) or cancel the deletion process.",
+            "action_refs": [
+                [
+                    15,
+                    3
+                ]
+            ],
+            "data_in": [
+                "account (to delete)"
+            ],
+            "data_out": [
+                "account deletion confirmation page"
+            ],
+            "data_dependencies": [
+                12
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The flow starts on the profile page (page 15). The user clicks the 'Delete account' button, navigating to the account deletion confirmation page (page 14). On this confirmation page, the user can choose to either permanently delete the account (by clicking 'Delete account') or cancel the deletion process (by clicking 'Cancel').",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            3
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click 'Delete account' button on profile page to navigate to deletion confirmation page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "The current page (Profile page) enables users to manage their account (view profile info, sign out, delete account), access contests/sweepstakes, and adjust settings (consent, content, terms, privacy).",
+            "action_refs": [
+                [
+                    15,
+                    4
+                ]
+            ],
+            "data_in": [
+                "user profile"
+            ],
+            "data_out": [
+                "updated user profile"
+            ],
+            "data_dependencies": [
+                11,
+                18
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The flow starts on the Profile page (page 15). The user can click on the 'Profile information (avatar/name/email)' element, which navigates to page 5. This action allows accessing profile - related details from the main Profile page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            4
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click on Profile information (avatar/name/email) to navigate to page 5"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "NO button for personalized ads",
+            "action_refs": [
+                [
+                    16,
+                    0
+                ]
+            ],
+            "data_in": [
+                "allow personalized ads setting"
+            ],
+            "data_out": [
+                "allow personalized ads setting (disabled)"
+            ],
+            "data_dependencies": [
+                22
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 16,
+                "logic": "On the page with the 'Victory+ Personalized Experience' prompt, the user clicks the 'NO' button to decline personalized ads. This action leads to the next page (page 18), completing the choice for ad personalization.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            16,
+                            0
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click the 'NO' button to decline personalized ads"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "YES button for personalized ads",
+            "action_refs": [
+                [
+                    16,
+                    1
+                ]
+            ],
+            "data_in": [
+                "personalized ads setting"
+            ],
+            "data_out": [
+                "personalized ads setting (enabled)"
+            ],
+            "data_dependencies": [
+                21
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 16,
+                "logic": "The flow starts on page 16. The user clicks the 'YES' button for personalized ads, which navigates to page 19. This is a single-step flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            16,
+                            1
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click the YES button for personalized ads"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "The current page allows the user to select an application (e.g., Chrome, WebView Browser Tester) to open the Privacy Policy document, with options to set the app preference as \"JUST ONCE\" or \"ALWAYS\".",
+            "action_refs": [
+                [
+                    16,
+                    2
+                ]
+            ],
+            "data_in": [
+                "privacy policy document"
+            ],
+            "data_out": [
+                "opened privacy policy document"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 16,
+                "logic": "The user starts on page 16 and clicks the Privacy Policy button. This action triggers a dialog to appear, allowing the user to choose an app (e.g., Chrome, WebView Browser Tester) to open the document, with options to set the preference as 'JUST ONCE' or 'ALWAYS'.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            16,
+                            2
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 20,
+                        "action": "click",
+                        "summary": "Click the Privacy Policy button to initiate opening the document with an app selection dialog."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        }
+    ]
+}

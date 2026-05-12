@@ -1,0 +1,4200 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "Walmart shopping: browse, search, shop clearance",
+            "action_refs": [
+                [
+                    0,
+                    10
+                ]
+            ],
+            "data_in": [
+                "shopping page content"
+            ],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the Walmart app's main page (page 0). The user clicks the 'Shop' bottom tab (action at [0,10]), which keeps the app on the same page (page 0) to browse, search, or shop clearance items. There are no branches or loops here as it's a single action to access the shopping interface.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            10
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click 'Shop' bottom tab to access shopping interface"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 1,
+            "function_description": "The page allows users to sign in to their existing Walmart account or initiate the creation of a new account by entering a phone number or email address and proceeding with the \"Continue\" button.",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ],
+                [
+                    1,
+                    0
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    2
+                ]
+            ],
+            "data_in": [
+                "user account (sign in context)",
+                "sign in modal",
+                "phone number or email input",
+                "user account credential (phone/email)"
+            ],
+            "data_out": [
+                "sign in page (navigation result)",
+                "sign in modal closed",
+                "entered phone number or email"
+            ],
+            "data_dependencies": [
+                65,
+                72
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts with clicking the 'Sign In' button (S1) to open the sign-in/account creation modal. In the modal (S2), the user can either close the modal (S3) or input a phone number/email (S4) and then click 'Continue' (S5) to proceed with account verification or creation. The 'Continue' action loops back to the same modal page (S2) to allow re-entry if needed, while closing the modal exits the flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click 'Sign In' button to open the sign-in modal"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            1,
+                            0
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click 'Close modal' button to exit the sign-in flow"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            1,
+                            1
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 16,
+                        "action": "input",
+                        "summary": "Input phone number or email in the input field"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            1,
+                            2
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click 'Continue' button to proceed with account verification/creation (loops back to S2)"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S4",
+                        "type": "loop",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "The current page in the Walmart app provides search suggestions related to \"wireless earbuds\" to help the user refine their search and quickly navigate to relevant product listings.",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    2,
+                    0
+                ],
+                [
+                    2,
+                    1
+                ]
+            ],
+            "data_in": [
+                "search input field",
+                "search query (wireless earbuds)",
+                "search query",
+                "search suggestions",
+                "search input text"
+            ],
+            "data_out": [
+                "search suggestions list",
+                "updated search query",
+                "updated search suggestions",
+                "cleared search input text"
+            ],
+            "data_dependencies": [
+                54
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the Walmart app's main page (page 0) and inputs 'wireless headphones' into the search field (step S1), navigating to page 2. On page 2, the user can either continue with the input (step S2) or clear the search input (step S3), with these two options forming an if-else branch at step S1.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "input",
+                        "summary": "Input 'wireless headphones' into Walmart search field"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            2,
+                            0
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 18,
+                        "action": "input",
+                        "summary": "Input 'wireless headphones' into search input field on page 2"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            2,
+                            1
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click clear search input button on page 2"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "The current page (Walmart Scanner) enables users to scan barcodes or QR codes to check item prices/availability, add items to cart, checkout with Walmart Pay, add receipts to purchase history, and perform other shopping - related actions, with an introductory prompt to guide users through its functionality.",
+            "action_refs": [
+                [
+                    0,
+                    2
+                ],
+                [
+                    3,
+                    0
+                ],
+                [
+                    3,
+                    2
+                ]
+            ],
+            "data_in": [
+                "scanner feature page state"
+            ],
+            "data_out": [
+                "return to main shop page state"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on page 0 and clicks the barcode scan icon to enter the scanner page (page 3). On page 3, the user can either click 'Got it' to confirm the introductory prompt (ending the flow) or click the back arrow to return to page 0 (restarting the flow).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click barcode scan icon to open scanner page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            3,
+                            0
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click 'Got it' to confirm scanner prompt"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            3,
+                            2
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click back arrow to return to page 0"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "The page displays an empty shopping cart in the Walmart app, notifying the user that their cart has no items and providing a \"Start shopping\" button to begin adding products, along with a search bar for finding Walmart items.",
+            "action_refs": [
+                [
+                    0,
+                    3
+                ],
+                [
+                    4,
+                    0
+                ]
+            ],
+            "data_in": [
+                "shopping cart",
+                "shopping cart page state",
+                "search results page state"
+            ],
+            "data_out": [
+                "shopping cart page (empty state)",
+                "navigation back to search results page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the Walmart app's main page (page 0). First, they click the shopping cart icon (action [0,3]) to navigate to the shopping cart page (page 4). Then, if they want to return to the previous page, they can click the back navigation arrow (action [4,0]) to go back to page 20 (or the prior page context).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click shopping cart icon to go to cart page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            4,
+                            0
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 20,
+                        "action": "click",
+                        "summary": "Click back arrow to return to prior page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "The page allows users to select or add a pickup or delivery location (either a shipping address or a Walmart store) to proceed with shopping, browsing, or purchasing clearance items on Walmart.",
+            "action_refs": [
+                [
+                    0,
+                    4
+                ]
+            ],
+            "data_in": [
+                "pickup or delivery location setting"
+            ],
+            "data_out": [
+                "updated pickup or delivery location options"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the main Walmart page. The user clicks the pickup/delivery location selector (at the top right, showing the current location). This opens a menu where the user can then choose to add a shipping address or select a Walmart store for pickup/delivery, enabling them to proceed with shopping, browsing, or purchasing clearance items.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click the pickup/delivery location selector (showing current location) to open the location selection menu."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "The current page in the Walmart app enables users to search for products, choose pickup or delivery options, explore meal - related categories (such as budget - friendly dinners and quick - delivery dinner slots), and access different shopping - related features via the bottom navigation bar.",
+            "action_refs": [
+                [
+                    0,
+                    5
+                ]
+            ],
+            "data_in": [
+                "promotional banner"
+            ],
+            "data_out": [
+                "navigation to food shopping section"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the Walmart app's main page (page 0). The user clicks the 'Shop now' banner button, which navigates to a new page (page 6) focused on meal - related shopping options like dinner delivery slots and budget - friendly dinner categories.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click the 'Shop now' banner button to navigate to the meal - related shopping page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "Pause banner carousel button",
+            "action_refs": [
+                [
+                    0,
+                    6
+                ]
+            ],
+            "data_in": [
+                "banner carousel"
+            ],
+            "data_out": [
+                "banner carousel paused"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on page 0. The user clicks the pause banner carousel button, which transitions the app to page 7. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            6
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click the pause banner carousel button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "The page enables users to browse, search, and shop for discounted items in Walmart's end - of - year clearance sale, with options to filter by categories like price ranges and seasonal, and view product details and pricing for purchase.",
+            "action_refs": [
+                [
+                    0,
+                    7
+                ],
+                [
+                    8,
+                    0
+                ],
+                [
+                    39,
+                    0
+                ],
+                [
+                    39,
+                    1
+                ],
+                [
+                    39,
+                    2
+                ]
+            ],
+            "data_in": [
+                "end-of-year clearance item list",
+                "clearance search input field",
+                "search query (vacuum cleaner)",
+                "search query",
+                "clearance items",
+                "search text",
+                "search interface state",
+                "search results"
+            ],
+            "data_out": [
+                "end-of-year clearance item list (expanded)",
+                "updated search input",
+                "filtered clearance items",
+                "cleared search text",
+                "reset search interface state",
+                "search interface reset (no search query, no filtered results)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the main page and clicks 'View all clearance' to access the clearance section. Once there, they can search for items (e.g., 'vacuum cleaner') in the input field. Alternatively, they can clear the search text or cancel the search, leading to different branches of the flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            7
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click 'View all clearance' link to enter clearance section"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            8,
+                            0
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 39,
+                        "action": "input",
+                        "summary": "Input search term (e.g., 'vacuum cleaner') in clearance search field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            39,
+                            1
+                        ],
+                        "src_page_idx": 39,
+                        "dst_page_idx": 42,
+                        "action": "click",
+                        "summary": "Click 'Clear search text' button"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            39,
+                            2
+                        ],
+                        "src_page_idx": 39,
+                        "dst_page_idx": 43,
+                        "action": "click",
+                        "summary": "Click 'Cancel search' button"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            39,
+                            0
+                        ],
+                        "src_page_idx": 39,
+                        "dst_page_idx": 41,
+                        "action": "input",
+                        "summary": "Confirm search input (e.g., 'vacuum cleaner') to proceed"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S5"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "Displays details of the \"Best Choice Products Kids 24V Ride On Truck\" (including price, shipping, returns, images) and provides options to buy now or add to cart, along with sharing, favoriting, and zooming features for the product.",
+            "action_refs": [
+                [
+                    0,
+                    8
+                ],
+                [
+                    9,
+                    6
+                ],
+                [
+                    51,
+                    0
+                ],
+                [
+                    51,
+                    1
+                ]
+            ],
+            "data_in": [
+                "product card (UBesGoo 12V toy)",
+                "product (ride on truck)",
+                "cart",
+                "cart item quantity"
+            ],
+            "data_out": [
+                "product details page (ride-on truck)",
+                "cart (updated with product quantity)",
+                "updated cart item quantity",
+                "updated cart"
+            ],
+            "data_dependencies": [
+                10,
+                25,
+                26,
+                27,
+                28,
+                29,
+                52,
+                53,
+                61,
+                62,
+                63
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts by clicking the product card to view its details. Then, a second thumbnail image is clicked to explore more visuals. After that, the flow branches: either the cart quantity is decreased or increased, depending on the user's choice.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            8
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click the product card to view its details page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            9,
+                            6
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 51,
+                        "action": "click",
+                        "summary": "Click the second product thumbnail image"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            51,
+                            0
+                        ],
+                        "src_page_idx": 51,
+                        "dst_page_idx": 55,
+                        "action": "click",
+                        "summary": "Click the decrease cart quantity button"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            51,
+                            1
+                        ],
+                        "src_page_idx": 51,
+                        "dst_page_idx": 56,
+                        "action": "click",
+                        "summary": "Click the increase cart quantity button"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "Favorite heart icon (product)",
+            "action_refs": [
+                [
+                    0,
+                    9
+                ]
+            ],
+            "data_in": [
+                "product",
+                "favorite setting"
+            ],
+            "data_out": [
+                "product favorite state updated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on page 0. The user clicks the favorite heart icon (product) at the specified position. This action leads to page 10, completing the interaction with the favorite heart icon for the product.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            9
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click the favorite heart icon (product) on page 0"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "The current page (under \"My Items\" tab) in the Walmart app allows users to access, manage, or view their saved lists (after signing in) and also provides options for reordering items and managing registries.",
+            "action_refs": [
+                [
+                    0,
+                    11
+                ],
+                [
+                    11,
+                    0
+                ],
+                [
+                    11,
+                    2
+                ]
+            ],
+            "data_in": [
+                "my items feature entry"
+            ],
+            "data_out": [
+                "my items page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts by clicking the 'My Items' bottom tab (from page 0 to 11). Then, on page 11, the user can either click the 'Lists' navigation tab (to view saved lists) or click the 'Add' button for Bounty paper towels (to manage items). These are two distinct branches from the 'My Items' page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            11
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click 'My Items' bottom tab to navigate to My Items page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            11,
+                            0
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click 'Lists' tab to access saved lists"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            11,
+                            2
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click 'Add' button for Bounty paper towels to manage items"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "The \"Ask Sparky\" page functions as an interface to interact with Walmart’s AI shopping assistant, Sparky, which offers help with shopping needs after signing into a Walmart account, and includes a chat input area and cart summary.",
+            "action_refs": [
+                [
+                    0,
+                    12
+                ],
+                [
+                    12,
+                    0
+                ],
+                [
+                    12,
+                    4
+                ]
+            ],
+            "data_in": [
+                "Ask Sparky feature entry",
+                "Ask Sparky page content",
+                "chat input field",
+                "chat session (signed out state)"
+            ],
+            "data_out": [
+                "Ask Sparky page loaded",
+                "navigation back to Walmart home page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the main Walmart page. First, the user clicks the 'Ask Sparky' bottom tab to navigate to the Ask Sparky page. Then, on the Ask Sparky page, the user can input a query into the chat field. There is also an option to navigate back to the main page using the back arrow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            12
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click 'Ask Sparky' bottom tab to navigate to Ask Sparky page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            12,
+                            4
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 12,
+                        "action": "input",
+                        "summary": "Input query into chat input field on Ask Sparky page"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            12,
+                            0
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click back navigation arrow to return to main page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "The current page in the Walmart app (Services tab) provides access to various Walmart services (e.g., Pharmacy, Auto Services, Custom Cakes), store tools (e.g., Walmart Pay, price checking, store maps), and additional services, enabling users to explore and utilize Walmart's non - shopping service offerings and store - related tools.",
+            "action_refs": [
+                [
+                    0,
+                    13
+                ]
+            ],
+            "data_in": [
+                "services feature entry"
+            ],
+            "data_out": [
+                "services page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the Shop page (page 0) and clicks the Services bottom tab. This action navigates to the Services page (page 13), where various Walmart services (e.g., Pharmacy, Auto Services) and store tools (e.g., Walmart Pay, price checking) are displayed for exploration. There are no decision or loop points in this flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            13
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click the Services bottom tab to navigate to the Services page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "The Account page in the Walmart app enables users to sign in or create an account to manage orders, customize profiles, track savings/rewards, access purchase history to track orders, view subscription plans (like Walmart+), and explore privacy - related options.",
+            "action_refs": [
+                [
+                    0,
+                    14
+                ]
+            ],
+            "data_in": [
+                "account feature entry"
+            ],
+            "data_out": [
+                "account page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the main Walmart app page. The user clicks the 'Account' bottom tab, which navigates to the Account page. From the Account page, users can then choose to sign in/create an account (to manage orders, customize profiles, track savings/rewards) or interact with other options like purchase history, subscriptions, or privacy settings.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            14
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click the Account bottom tab to navigate to the Account page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "The current page, Walmart's Privacy & Security page, provides information about Walmart's privacy notices and practices, outlining how the company handles personal information to maintain the trust of customers, associates, representatives, and service providers.",
+            "action_refs": [
+                [
+                    1,
+                    3
+                ]
+            ],
+            "data_in": [
+                "privacy measures link"
+            ],
+            "data_out": [
+                "privacy & security page content"
+            ],
+            "data_dependencies": [
+                66,
+                73,
+                75
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user starts on page 1 (Sign in/account creation). They click the 'Privacy measures' link, which navigates to page 17 (Walmart's Privacy & Security page) to view privacy-related information.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            3
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click the 'Privacy measures' link to navigate to the Privacy & Security page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "Displays search results for \"wireless headphones\" on Walmart, allowing users to browse, view details, and take actions (like selecting options) for various wireless headphone products, with filtering and sorting options available.",
+            "action_refs": [
+                [
+                    2,
+                    2
+                ]
+            ],
+            "data_in": [
+                "search query (wireless headphones)"
+            ],
+            "data_out": [
+                "search results (wireless headphones)"
+            ],
+            "data_dependencies": [
+                45,
+                49
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The process starts on page 2. The user clicks the 'wireless headphones' search suggestion (action_ref [2,2]), which navigates to page 20 displaying search results for wireless headphones. On page 20, users can browse products, view details, and take actions like selecting options, with filtering/sorting available (though no further actions are specified here).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            2
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 20,
+                        "action": "click",
+                        "summary": "Click search suggestion 'wireless headphones' to view results"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "The page allows users to manually enter a 12 - 14 digit item barcode number (with an option to switch to entering receipt codes) and then search for the corresponding item in the Walmart system.",
+            "action_refs": [
+                [
+                    3,
+                    1
+                ],
+                [
+                    37,
+                    0
+                ],
+                [
+                    37,
+                    1
+                ]
+            ],
+            "data_in": [
+                "barcode input interface",
+                "barcode number requirement",
+                "item barcode number"
+            ],
+            "data_out": [
+                "entered barcode number",
+                "barcode input validation state",
+                "item barcode number (updated)",
+                "search result (barcode-related)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The user starts on page 3 and clicks the 'Type your barcode' button to navigate to the manual entry page (page 37). On page 37, the user inputs a 12 - 14 digit item barcode number into the input field. Then, the user clicks the 'Search' button to initiate the search for the corresponding item in the Walmart system.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            1
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 37,
+                        "action": "click",
+                        "summary": "Click 'Type your barcode' button to go to manual entry page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            37,
+                            0
+                        ],
+                        "src_page_idx": 37,
+                        "dst_page_idx": 38,
+                        "action": "input",
+                        "summary": "Input 12 - 14 digit item barcode number"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            37,
+                            1
+                        ],
+                        "src_page_idx": 37,
+                        "dst_page_idx": 37,
+                        "action": "click",
+                        "summary": "Click 'Search' button to search for the item"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "The page displays an empty shopping cart and provides a \"Start shopping\" button to navigate back to the main shopping interface to browse and add items to the cart.",
+            "action_refs": [
+                [
+                    4,
+                    1
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user starts on the empty shopping cart page (page 4). The core action is clicking the 'Start shopping' button, which navigates back to the main shopping interface to browse and add items to the cart. There are no branches or loops here, just a single action to transition from the empty cart page to the shopping interface.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            1
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the 'Start shopping' button to navigate to the main shopping interface"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "This page allows users to sign in to their existing Walmart account or create a new one by entering their phone number or email address to proceed with account - related actions (such as managing pickup/delivery addresses after initiating the address - adding process).",
+            "action_refs": [
+                [
+                    5,
+                    0
+                ]
+            ],
+            "data_in": [
+                "shipping/delivery address setting"
+            ],
+            "data_out": [
+                "account sign-in/create prompt (triggered)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The flow starts on page 5 (the main shop page). The user clicks the 'Add Address' button, which navigates to page 1 (the sign - in or account - creation page) to proceed with account - related actions for address management.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            0
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the 'Add Address' button to navigate to the account - related page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "The page allows users to browse dinner delivery options (with a timeslot booking feature) and explore budget - friendly meal categories like easy meals, family meals under $10, etc., on the Walmart app.",
+            "action_refs": [
+                [
+                    6,
+                    0
+                ]
+            ],
+            "data_in": [
+                "delivery timeslot booking option"
+            ],
+            "data_out": [
+                "timeslot booking request"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on page 6 (the dinner delivery/budget meals page). They click the 'Book timeslot' button, which remains on the same page (page 6) to complete the timeslot booking for dinner delivery, while also having the option to explore budget - friendly meal categories on this page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            0
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click the 'Book timeslot' button to start the timeslot booking process (staying on the same page)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "The current page on the Walmart app allows users to browse dinner delivery options (with a timeslot booking feature) and explore budget - friendly meal categories like easy meals, family meals under $10, etc., to facilitate meal planning and shopping.",
+            "action_refs": [
+                [
+                    6,
+                    1
+                ]
+            ],
+            "data_in": [
+                "Easy Meals for less card"
+            ],
+            "data_out": [
+                "Easy Meals for less card interaction result"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on page 6 (the dinner - related page). They click on the 'Easy Meals for less' card. Since there are no further actions or branches provided, the flow ends after this click action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            1
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click on the 'Easy Meals for less' card"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "The page allows users to browse and shop seasonal clearance items as part of Walmart's end - of - year clearance, with options to filter by various criteria like price, brand, and in - store availability, and also to search within the clearance items.",
+            "action_refs": [
+                [
+                    8,
+                    1
+                ]
+            ],
+            "data_in": [
+                "seasonal clearance category"
+            ],
+            "data_out": [
+                "filtered clearance items (seasonal)"
+            ],
+            "data_dependencies": [
+                23
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The user starts on the end - of - year clearance page. They click the 'Seasonal clearance category button' to browse seasonal clearance items. This action keeps them on the same page, likely updating the displayed items to show only seasonal clearance products.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            1
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click the seasonal clearance category button to view seasonal clearance items"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "The page functions to display and allow browsing of seasonal clearance items as part of Walmart's end - of - year clearance, with options for filtering and searching within this clearance category.",
+            "action_refs": [
+                [
+                    8,
+                    2
+                ]
+            ],
+            "data_in": [
+                "clearance item",
+                "shopping cart"
+            ],
+            "data_out": [
+                "updated shopping cart"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The flow starts on the end - of - year clearance page. The user can perform the action of clicking the 'Add to cart' button for a clearance item. There are no branches or loops as it's a single action step for adding a clearance item to the cart.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            2
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click the 'Add to cart' button for a clearance item"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "The current page is a \"Sort & Filter\" interface for end - of - year clearance items on Walmart, enabling users to sort and filter the items using various criteria like sort order, cash offers, customer rating, color, deals, availability, departments, retailer, and gifting options, and then view the filtered results.",
+            "action_refs": [
+                [
+                    8,
+                    3
+                ],
+                [
+                    40,
+                    0
+                ],
+                [
+                    40,
+                    1
+                ],
+                [
+                    40,
+                    2
+                ]
+            ],
+            "data_in": [
+                "filter options toggle setting",
+                "sort & filter modal",
+                "search results configuration",
+                "sort by setting",
+                "sort options",
+                "sort and filter settings",
+                "search query"
+            ],
+            "data_out": [
+                "sort & filter page opened",
+                "search results page (updated view)",
+                "expanded sort by dropdown",
+                "filtered search results"
+            ],
+            "data_dependencies": [
+                67,
+                68
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The flow starts on the end - of - year clearance results page (page 8). First, the user clicks the filter options toggle button to open the 'Sort & Filter' modal (page 40). In the modal, the user can either click the 'Sort by' dropdown to adjust sorting criteria, close the modal, or click the 'View results' button to see the filtered items. After taking an action in the modal, the flow may return to the results page or move to other relevant pages based on the action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            3
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 40,
+                        "action": "click",
+                        "summary": "Click filter options toggle button to open Sort & Filter modal"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            40,
+                            0
+                        ],
+                        "src_page_idx": 40,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click to close Sort & Filter modal and return to results page"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            40,
+                            1
+                        ],
+                        "src_page_idx": 40,
+                        "dst_page_idx": 44,
+                        "action": "click",
+                        "summary": "Click Sort by dropdown to adjust sorting criteria"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            40,
+                            2
+                        ],
+                        "src_page_idx": 40,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click View results button to see filtered clearance items"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 25,
+            "function_description": "This page enables users to sign in to their existing Walmart account or initiate the creation of a new account by entering a phone number or email address and proceeding, as part of the checkout process after attempting to buy the UBesGoo toy car.",
+            "action_refs": [
+                [
+                    9,
+                    0
+                ]
+            ],
+            "data_in": [
+                "ride on truck product",
+                "purchase session"
+            ],
+            "data_out": [
+                "initiated sign in flow",
+                "purchase process state"
+            ],
+            "data_dependencies": [
+                26,
+                65,
+                70,
+                72
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The process starts on the product page (page 9). The user clicks the 'Buy now' button, which navigates to the 'Sign in or create your account' page (page 1) to begin the account sign-in or creation process for checkout.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            0
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click 'Buy now' button to proceed to account sign-in/creation page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 26,
+            "function_description": "After adding a product to the cart, this page offers a Walmart Protection Plan by Allstate, presenting plan details and options to purchase the 3 - year plan for $29.00 or decline the plan with \"No Thanks\".",
+            "action_refs": [
+                [
+                    9,
+                    1
+                ],
+                [
+                    24,
+                    0
+                ],
+                [
+                    24,
+                    1
+                ]
+            ],
+            "data_in": [
+                "ride on truck product",
+                "shopping cart",
+                "cart confirmation popup",
+                "protection plan option (2-Year)"
+            ],
+            "data_out": [
+                "updated shopping cart",
+                "added to cart confirmation",
+                "cart confirmation popup closed"
+            ],
+            "data_dependencies": [
+                50,
+                55,
+                56
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "After adding a product to the cart (via the 'Add to cart' button), the app presents a Walmart Protection Plan popup. At this point, the user can either purchase the 3 - year plan (by clicking the relevant button) or decline the plan (by clicking 'No Thanks' or closing the popup).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            1
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 24,
+                        "action": "click",
+                        "summary": "Click 'Add to cart' button to add product to cart and open protection plan popup"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            24,
+                            0
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 26,
+                        "action": "click",
+                        "summary": "Click 'Close popup button (X)' to decline protection plan and close popup"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            24,
+                            1
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 24,
+                        "action": "click",
+                        "summary": "Click '2 - Year Protection Plan button' (or relevant plan purchase button) to purchase the protection plan"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if - else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 27,
+            "function_description": "Favorite (heart) icon",
+            "action_refs": [
+                [
+                    9,
+                    2
+                ]
+            ],
+            "data_in": [
+                "product (ride on truck)"
+            ],
+            "data_out": [
+                "favorite product setting (updated)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The flow starts on page 9 (a product details page). The user clicks the Favorite (heart) icon, which leads to page 48. This is a single-step action with no branches, as the click directly navigates to the next page (or toggles the favorite state, with the UI update reflected in the navigation to page 48).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            2
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 48,
+                        "action": "click",
+                        "summary": "Click the Favorite (heart) icon on the product details page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 28,
+            "function_description": "The page provides options to share the product (Best Choice Products kids ride - on truck) via methods like Message, Email, Copy, or More, and also has a \"Shop With Friends\" toggle to let friends rate the item.",
+            "action_refs": [
+                [
+                    9,
+                    3
+                ],
+                [
+                    49,
+                    2
+                ]
+            ],
+            "data_in": [
+                "product (ride on truck)",
+                "share modal",
+                "product item"
+            ],
+            "data_out": [
+                "share interface (for product)",
+                "share modal closed",
+                "product page (restored)"
+            ],
+            "data_dependencies": [
+                53
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The flow starts on the product page (page 9). First, the user clicks the Share icon (action [9,3]) to open the share modal (page 49). Then, the user can choose to close the share modal by clicking the Close button (action [49,2]), which returns to the product page (page 9).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            3
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 49,
+                        "action": "click",
+                        "summary": "Click Share icon to open share modal"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            49,
+                            2
+                        ],
+                        "src_page_idx": 49,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click Close share modal button to return to product page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 29,
+            "function_description": "Displays a zoomable, detailed image of the UBesGoo 12V Ford - licensed toy car, along with thumbnails of other product images and purchase options (Buy now, Add to cart).",
+            "action_refs": [
+                [
+                    9,
+                    4
+                ],
+                [
+                    50,
+                    0
+                ],
+                [
+                    50,
+                    1
+                ],
+                [
+                    50,
+                    2
+                ],
+                [
+                    50,
+                    3
+                ],
+                [
+                    50,
+                    4
+                ],
+                [
+                    50,
+                    5
+                ]
+            ],
+            "data_in": [
+                "product image",
+                "gallery view",
+                "product page context",
+                "product quantity setting"
+            ],
+            "data_out": [
+                "magnified product image",
+                "product page restored",
+                "zoomed product image",
+                "zoomed out product image",
+                "updated product quantity setting"
+            ],
+            "data_dependencies": [
+                30
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The flow starts by clicking the zoom icon on the product page (page 9) to open the gallery (page 50). In the gallery, users can perform optional actions: zoom in/out the image, switch to a different product image thumbnail, or adjust quantity. To exit the gallery, click the close button (leading to page 51).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            4
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 50,
+                        "action": "click",
+                        "summary": "Click zoom icon to open product image gallery"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            50,
+                            0
+                        ],
+                        "src_page_idx": 50,
+                        "dst_page_idx": 51,
+                        "action": "click",
+                        "summary": "Click close gallery button to exit gallery"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            50,
+                            1
+                        ],
+                        "src_page_idx": 50,
+                        "dst_page_idx": 50,
+                        "action": "click",
+                        "summary": "Click zoom in image button"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            50,
+                            2
+                        ],
+                        "src_page_idx": 50,
+                        "dst_page_idx": 50,
+                        "action": "click",
+                        "summary": "Click zoom out image button"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            50,
+                            3
+                        ],
+                        "src_page_idx": 50,
+                        "dst_page_idx": 50,
+                        "action": "click",
+                        "summary": "Click product image thumbnail to switch image"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            50,
+                            4
+                        ],
+                        "src_page_idx": 50,
+                        "dst_page_idx": 50,
+                        "action": "click",
+                        "summary": "Click decrease quantity button"
+                    },
+                    {
+                        "id": "S7",
+                        "action_ref": [
+                            50,
+                            5
+                        ],
+                        "src_page_idx": 50,
+                        "dst_page_idx": 50,
+                        "action": "click",
+                        "summary": "Click increase quantity button"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S6"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S7"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S1"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S1"
+                    },
+                    {
+                        "from": "S5",
+                        "to": "S1"
+                    },
+                    {
+                        "from": "S6",
+                        "to": "S1"
+                    },
+                    {
+                        "from": "S7",
+                        "to": "S1"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            },
+                            {
+                                "next_step": "S6"
+                            },
+                            {
+                                "next_step": "S7"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 30,
+            "function_description": "Displays a gallery of images for the UBesGoo toy car, with options to zoom in on the main image and purchase the product via \"Buy now\" or \"Add to cart\" buttons.",
+            "action_refs": [
+                [
+                    9,
+                    5
+                ]
+            ],
+            "data_in": [
+                "product image"
+            ],
+            "data_out": [
+                "enlarged product image"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The flow starts on the product page (page 9) for the toy car. The user clicks the play video icon (or an image-related action to open the gallery). This action leads to the gallery page (page 50) where the image gallery for the toy car is displayed, allowing further interactions like zooming or purchasing.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            5
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 50,
+                        "action": "click",
+                        "summary": "Click the play video icon (or image interaction) to open the image gallery for the toy car."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 31,
+            "function_description": "This page enables users to sign in to their existing Walmart account or create a new one by entering their phone number or email address and proceeding, with a focus on personal information security.",
+            "action_refs": [
+                [
+                    11,
+                    1
+                ]
+            ],
+            "data_in": [
+                "account sign-in state"
+            ],
+            "data_out": [
+                "account sign-in interface loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The process starts on page 11, where the user clicks the 'Sign in or create account' button. This action navigates to page 1, which is the account sign-in/creation interface. Here, the user can enter their phone number or email to proceed with signing in or creating a new account, with a focus on personal information security.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            1
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click 'Sign in or create account' button to navigate to account interface"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 32,
+            "function_description": "The current page (Walmart's Privacy & Security page) provides information about Walmart's privacy notices, outlining how the company values and handles personal information from customers, associates, representatives, and service providers.",
+            "action_refs": [
+                [
+                    12,
+                    1
+                ]
+            ],
+            "data_in": [
+                "privacy notice link"
+            ],
+            "data_out": [
+                "privacy notice page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The flow starts on the Ask Sparky page (page 12). The user clicks the 'Privacy Notice' link, which navigates to the Privacy & Security page (page 17) containing Walmart’s privacy notices about handling personal information. There are no branches or loops as it is a single navigation step.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            1
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click the 'Privacy Notice' link to navigate to the Privacy & Security page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 33,
+            "function_description": "The current page displays Walmart.com's Terms of Use, providing legal information about the usage of Walmart's websites and applications, including an introduction, arbitration provisions, and other terms governing user access and interaction.",
+            "action_refs": [
+                [
+                    12,
+                    2
+                ]
+            ],
+            "data_in": [
+                "terms of use link"
+            ],
+            "data_out": [
+                "terms of use document"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The user starts on page 12 (Ask Sparky) and clicks the 'Terms of Use' link. This action navigates to page 57, which displays Walmart.com's Terms of Use, including legal information like an introduction and arbitration provisions.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            2
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 57,
+                        "action": "click",
+                        "summary": "Click the 'Terms of Use' link to navigate to the Terms of Use page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 34,
+            "function_description": "This page enables users to sign in to their existing Walmart account or initiate the process to create a new account by entering their phone number or email address and proceeding.",
+            "action_refs": [
+                [
+                    12,
+                    3
+                ]
+            ],
+            "data_in": [
+                "login session"
+            ],
+            "data_out": [
+                "login session (initiated)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The process starts on the Ask Sparky page. The user clicks the 'Sign in' link, which navigates to the 'Sign in or create your account' page where they can enter their phone number or email to proceed with signing in or creating an account.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            3
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the 'Sign in' link to navigate to the account sign-in/create page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 35,
+            "function_description": "The page functions as a Walmart shopping cart interface, allowing users to view the item(s) in their cart, check pickup and delivery options, review shipping details and costs, and proceed to checkout to complete their purchase.",
+            "action_refs": [
+                [
+                    12,
+                    5
+                ],
+                [
+                    58,
+                    1
+                ],
+                [
+                    58,
+                    5
+                ]
+            ],
+            "data_in": [
+                "shopping cart",
+                "cart item",
+                "shipping address",
+                "pickup and delivery options"
+            ],
+            "data_out": [
+                "shopping cart details",
+                "checkout process initiation"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The flow starts by clicking the cart icon to open the cart page. On the cart page, users can either click the pickup/delivery options dropdown to review or adjust those options (and stay on the cart page) or click the 'Continue to checkout' button to proceed to checkout. The dropdown action is a leaf (no navigation), while 'Continue to checkout' navigates to the next page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            5
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 58,
+                        "action": "click",
+                        "summary": "Click cart icon to open cart page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            58,
+                            5
+                        ],
+                        "src_page_idx": 58,
+                        "dst_page_idx": 58,
+                        "action": "click",
+                        "summary": "Click pickup/delivery dropdown to review options (stays on cart)"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            58,
+                            1
+                        ],
+                        "src_page_idx": 58,
+                        "dst_page_idx": 59,
+                        "action": "click",
+                        "summary": "Click 'Continue to checkout' to proceed to checkout"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 36,
+            "function_description": "The Walmart Pharmacy page enables users to refill, track, and manage prescriptions (after signing in), learn about and schedule updated vaccines, and access other pharmacy - related services like My Health, Vision Center, and Insurance Services, while also promoting pharmacy delivery.",
+            "action_refs": [
+                [
+                    13,
+                    0
+                ]
+            ],
+            "data_in": [
+                "pharmacy service tile"
+            ],
+            "data_out": [
+                "pharmacy service page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 13,
+                "logic": "The flow starts on the Services page (page 13). The user clicks the Pharmacy service tile, which navigates to the Pharmacy page (page 66). On the Pharmacy page, users can then access services like prescription management (after signing in), vaccine scheduling, or other pharmacy - related options like My Health, Vision Center, etc.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            13,
+                            0
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 66,
+                        "action": "click",
+                        "summary": "Click on the Pharmacy service tile on the Services page to navigate to the Pharmacy page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 37,
+            "function_description": "This page allows users to sign in to their existing Walmart account or initiate the process to create a new account by entering their phone number or email address and proceeding with the \"Continue\" button.",
+            "action_refs": [
+                [
+                    13,
+                    1
+                ]
+            ],
+            "data_in": [
+                "Walmart Pay service tile"
+            ],
+            "data_out": [
+                "account sign-in prompt"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 13,
+                "logic": "The flow starts on page 13 (Services page). The user clicks the Walmart Pay service tile (action_ref [13,1]), which navigates to page 1 (the 'Sign in or create your account' page). On this page, the user can enter their phone number or email and click 'Continue' to proceed with signing in or creating an account, though the provided actions only include the initial click to reach this page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            13,
+                            1
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click Walmart Pay service tile to navigate to sign-in/create account page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 38,
+            "function_description": "The page allows users to search for and select a nearby Walmart store by entering a zip code/city - state, using their current location, or choosing from a list of stores with details like address, opening time, distance, and an option to view store details.",
+            "action_refs": [
+                [
+                    13,
+                    2
+                ],
+                [
+                    67,
+                    0
+                ],
+                [
+                    67,
+                    1
+                ]
+            ],
+            "data_in": [
+                "store search input",
+                "store list",
+                "store selection list",
+                "South Gate Supercenter store option"
+            ],
+            "data_out": [
+                "store search results",
+                "selected store (South Gate Supercenter)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 13,
+                "logic": "The process starts by clicking the 'Find a store nearby' link. Then, a zip code (e.g., 90061) is entered into the store search input field. Finally, a specific store (e.g., South Gate Supercenter) is selected via its radio button to proceed with viewing or using that store’s details.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            13,
+                            2
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 67,
+                        "action": "click",
+                        "summary": "Click 'Find a store nearby' link to navigate to store selection page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            67,
+                            0
+                        ],
+                        "src_page_idx": 67,
+                        "dst_page_idx": 67,
+                        "action": "input",
+                        "summary": "Input zip code (e.g., 90061) into store search field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            67,
+                            1
+                        ],
+                        "src_page_idx": 67,
+                        "dst_page_idx": 73,
+                        "action": "click",
+                        "summary": "Click radio button for a specific store (e.g., South Gate Supercenter) to select it"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 39,
+            "function_description": "The Walmart Financial Services page provides access to various payment - related services, including OnePay Credit Card, OnePay Cash, OnePay Later, gift cards, Green Dot, and Walmart MoneyCard, enabling users to explore and manage different financial options offered by Walmart.",
+            "action_refs": [
+                [
+                    13,
+                    3
+                ]
+            ],
+            "data_in": [
+                "financial services entry"
+            ],
+            "data_out": [
+                "financial services page content"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 13,
+                "logic": "The user starts on page 13 and clicks the 'Financial Services' tile. This action navigates to page 68, where various Walmart financial services (like OnePay Credit Card, OnePay Cash, etc.) are displayed for exploration and management.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            13,
+                            3
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 68,
+                        "action": "click",
+                        "summary": "Click on the Financial Services tile to navigate to the Walmart Financial Services page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 40,
+            "function_description": "This page enables users to sign in to their existing Walmart account or create a new one by entering their phone number or email address and proceeding, with a focus on securing personal information.",
+            "action_refs": [
+                [
+                    14,
+                    0
+                ]
+            ],
+            "data_in": [
+                "user account (sign in/create context)"
+            ],
+            "data_out": [
+                "sign in or create account session (initiated)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The flow starts on the Account page. The user clicks the 'Sign in or create account' button, which navigates to the sign-in/create account page where they can enter their phone number or email to proceed with signing in or creating an account, with a focus on privacy and security.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            0
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click 'Sign in or create account' button on Account page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 41,
+            "function_description": "This page enables users to sign in to their existing Walmart account or initiate the creation of a new account by entering a phone number or email address and proceeding.",
+            "action_refs": [
+                [
+                    14,
+                    1
+                ]
+            ],
+            "data_in": [
+                "order tracking feature entry",
+                "account page context"
+            ],
+            "data_out": [
+                "sign in or create account page navigation"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The flow starts on the Account page. The user clicks the 'Sign in or create account' button (action from [14,1]), which navigates to the 'Sign in or create your account' page where they can enter a phone number or email to proceed with signing in or creating an account. There are no branches or loops in this initial step of the flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            1
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click 'Sign in or create account' button to navigate to the account sign-in/create page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 42,
+            "function_description": "This page promotes Walmart+ membership, offering a 30 - day free trial and highlighting benefits like free delivery, gas savings, along with membership pricing and a 50% - off offer for signing up.",
+            "action_refs": [
+                [
+                    14,
+                    2
+                ]
+            ],
+            "data_in": [
+                "Walmart+ subscription entry"
+            ],
+            "data_out": [
+                "Walmart+ subscription page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The flow starts on the Account page. The user clicks the Walmart+ option under Subscriptions & plans, which navigates to the Walmart+ promotion page, where benefits like free delivery, gas savings, and a 30 - day free trial are highlighted.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            2
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 28,
+                        "action": "click",
+                        "summary": "Click on the Walmart+ option in the Subscriptions & plans section on the Account page to navigate to the Walmart+ promotion page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 43,
+            "function_description": "Your Privacy Choices toggle",
+            "action_refs": [
+                [
+                    14,
+                    3
+                ]
+            ],
+            "data_in": [
+                "your privacy choices setting"
+            ],
+            "data_out": [
+                "your privacy choices setting (updated state)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The flow starts on page 14 (Account page). The user clicks the 'Your Privacy Choices' toggle, which leads to page 29. There are no branches or loops as this is a single action with a direct destination.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            3
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 29,
+                        "action": "click",
+                        "summary": "Click the 'Your Privacy Choices' toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 44,
+            "function_description": "The current page (Walmart Account management & settings) provides options to sign in/create an account, access purchase history to track orders, manage subscriptions/plans (like Walmart+), and view privacy-related documents (e.g., Privacy Policy) for account - related and privacy - focused actions.",
+            "action_refs": [
+                [
+                    14,
+                    4
+                ]
+            ],
+            "data_in": [
+                "privacy policy document"
+            ],
+            "data_out": [
+                "opened privacy policy document"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The flow starts on the Walmart Account page. The user clicks the 'Privacy Policy' link, which navigates to the Privacy Policy page (dst_page_idx 30). This is a straight - line flow with no branches or loops as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            4
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 30,
+                        "action": "click",
+                        "summary": "Click the Privacy Policy link on the Account page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 45,
+            "function_description": "Displays detailed product information for a specific model of wireless earbuds (including description, ratings, images, and purchase options like \"Buy now\" and \"Add to cart\") after navigating from a search for wireless headphones and selecting the options for this product.",
+            "action_refs": [
+                [
+                    20,
+                    0
+                ]
+            ],
+            "data_in": [
+                "Mahipey Y01 Wireless Over - Ear Headphones product"
+            ],
+            "data_out": [
+                "Mahipey Y01 Wireless Over - Ear Headphones product details page"
+            ],
+            "data_dependencies": [
+                46,
+                52,
+                61,
+                63
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The flow starts on the search results page for wireless headphones. The user clicks the 'Options' button for the Mahipey headphones, which navigates to the product details page. On this page, detailed product information (description, ratings, images) and purchase options ('Buy now', 'Add to cart') are displayed. There are no branches or loops in this core logic as it is a straight-line navigation to view product details.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            0
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 21,
+                        "action": "click",
+                        "summary": "Click the 'Options' button for Mahipey headphones to navigate to its product details page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 46,
+            "function_description": "Wishlist toggle for Mahipey headphones",
+            "action_refs": [
+                [
+                    20,
+                    1
+                ]
+            ],
+            "data_in": [
+                "Mahipey Y01 Wireless Over - Ear Headphones wishlist setting"
+            ],
+            "data_out": [
+                "Mahipey Y01 Wireless Over - Ear Headphones wishlist setting (updated)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The flow starts on page 20 (a product listing page). The user performs a click action on the wishlist toggle (heart icon) for the Mahipey headphones. This action leads to page 22, completing the wishlist toggle interaction.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            1
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 22,
+                        "action": "click",
+                        "summary": "Click the wishlist toggle (heart icon) for Mahipey headphones"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 47,
+            "function_description": "Displays the empty shopping cart page of the Walmart app, indicating no items are present and providing a \"Start shopping\" button to begin adding items.",
+            "action_refs": [
+                [
+                    20,
+                    2
+                ]
+            ],
+            "data_in": [
+                "shopping cart"
+            ],
+            "data_out": [
+                "shopping cart (viewed, empty state)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The flow starts on a page with a shopping cart icon (showing 0 items). The user clicks this shopping cart icon, which navigates to the empty shopping cart page. This page displays a message that the cart is empty and provides a 'Start shopping' button to begin adding items. There are no branches or loops in this core logic as it is a straight-line flow to display the empty cart state.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            2
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the shopping cart icon (showing 0 items) to navigate to the empty cart page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 48,
+            "function_description": "The Account page in the Walmart app enables users to sign in or create an account, access purchase history to track orders, manage subscriptions like Walmart+, and view privacy - related options.",
+            "action_refs": [
+                [
+                    20,
+                    3
+                ]
+            ],
+            "data_in": [
+                "account feature entry"
+            ],
+            "data_out": [
+                "account page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The flow starts by clicking the Account bottom navigation tab (from page 20) to navigate to the Account page (page 14). On the Account page, users can then choose to sign in/create an account, access purchase history, manage subscriptions, or view privacy options, with the initial step being the navigation to the Account page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            3
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click Account bottom navigation tab to go to Account page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 49,
+            "function_description": "The current page allows users to set a price range (via a slider) for filtering the search results of wireless headphones and then view the filtered results.",
+            "action_refs": [
+                [
+                    20,
+                    4
+                ],
+                [
+                    23,
+                    0
+                ],
+                [
+                    23,
+                    2
+                ],
+                [
+                    23,
+                    3
+                ]
+            ],
+            "data_in": [
+                "price filter setting",
+                "product search results (wireless headphones)",
+                "price filter popup",
+                "price range setting",
+                "search query (wireless headphones)",
+                "product search results"
+            ],
+            "data_out": [
+                "price range configuration",
+                "filtered product search results",
+                "closed price filter popup",
+                "updated price range setting"
+            ],
+            "data_dependencies": [
+                64
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The user starts on the search results page for wireless headphones. First, they click the price filter dropdown to open the price range popup. Then, they can adjust the price range using the slider's right handle. After setting the desired range, they click the 'View results' button to apply the filter and see the updated search results. Alternatively, they can close the popup without applying changes.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            4
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 23,
+                        "action": "click",
+                        "summary": "Open price filter dropdown"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            23,
+                            3
+                        ],
+                        "src_page_idx": 23,
+                        "dst_page_idx": 36,
+                        "action": "click",
+                        "summary": "Adjust price range slider (right handle)"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            23,
+                            2
+                        ],
+                        "src_page_idx": 23,
+                        "dst_page_idx": 20,
+                        "action": "click",
+                        "summary": "Click 'View results' to apply filter"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            23,
+                            0
+                        ],
+                        "src_page_idx": 23,
+                        "dst_page_idx": 34,
+                        "action": "click",
+                        "summary": "Close price filter popup"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 50,
+            "function_description": "No Thanks (decline plan) link",
+            "action_refs": [
+                [
+                    24,
+                    2
+                ]
+            ],
+            "data_in": [
+                "protection plan offer"
+            ],
+            "data_out": [
+                "declined protection plan state"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 24,
+                "logic": "On the page displaying the Walmart Protection Plan offer (after adding an item to the cart), the user clicks the 'No Thanks' link to decline the protection plan. This action navigates to the next relevant page (dst_page_idx 27).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            24,
+                            2
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 27,
+                        "action": "click",
+                        "summary": "Click the 'No Thanks (decline plan)' link to decline the protection plan and proceed."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 51,
+            "function_description": "This page functions as an account authentication interface where users can sign in or create a new account by entering a valid phone number or email address and proceeding with the 'Continue' button, with a focus on securing personal information.",
+            "action_refs": [
+                [
+                    28,
+                    0
+                ],
+                [
+                    31,
+                    1
+                ],
+                [
+                    31,
+                    2
+                ]
+            ],
+            "data_in": [
+                "Walmart+ trial offer",
+                "user account credential (phone/email)"
+            ],
+            "data_out": [
+                "initiated trial claim process",
+                "account sign-in prompt",
+                "entered user account credential (phone/email)"
+            ],
+            "data_dependencies": [
+                65,
+                72
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 28,
+                "logic": "The flow starts with clicking the 'Claim free 30-day trial' button to reach the account authentication page. Then, a phone number or email is entered into the input field. Finally, the 'Continue' button is clicked to proceed with account sign-in or creation, with the system checking the input validity.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            28,
+                            0
+                        ],
+                        "src_page_idx": 28,
+                        "dst_page_idx": 31,
+                        "action": "click",
+                        "summary": "Click 'Claim free 30-day trial' button to navigate to authentication page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            31,
+                            1
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": 33,
+                        "action": "input",
+                        "summary": "Input phone number or email into the input field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            31,
+                            2
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": 31,
+                        "action": "click",
+                        "summary": "Click 'Continue' button to proceed with account authentication"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 52,
+            "function_description": "Copy link button",
+            "action_refs": [
+                [
+                    49,
+                    0
+                ]
+            ],
+            "data_in": [
+                "product link",
+                "product details"
+            ],
+            "data_out": [
+                "copied product link"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 49,
+                "logic": "The user starts on page 49 (the share dialog for a product). They click the 'Copy link' button (action at S1), which likely copies the product link to the clipboard, and the flow ends as this is a leaf action with no further steps shown.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            49,
+                            0
+                        ],
+                        "src_page_idx": 49,
+                        "dst_page_idx": 52,
+                        "action": "click",
+                        "summary": "Click the 'Copy link' button to copy the product link"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 53,
+            "function_description": "Shop With Friends toggle",
+            "action_refs": [
+                [
+                    49,
+                    1
+                ]
+            ],
+            "data_in": [
+                "Shop With Friends setting",
+                "product item"
+            ],
+            "data_out": [
+                "Shop With Friends setting enabled",
+                "updated product sharing state"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 49,
+                "logic": "The flow starts on page 49. The user clicks the 'Shop With Friends' toggle, which leads to page 53. There are no branches or loops as this is a single action to interact with the toggle.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            49,
+                            1
+                        ],
+                        "src_page_idx": 49,
+                        "dst_page_idx": 53,
+                        "action": "click",
+                        "summary": "Click the Shop With Friends toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 54,
+            "function_description": "The page provides search suggestions related to \"wireless earbuds\" to help users refine their search and find relevant products on the Walmart platform.",
+            "action_refs": [
+                [
+                    58,
+                    0
+                ]
+            ],
+            "data_in": [
+                "search bar",
+                "search query (wireless earbuds)"
+            ],
+            "data_out": [
+                "search suggestions list"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 58,
+                "logic": "The user starts on page 58 and inputs 'wireless earbuds' into the Walmart search bar. After inputting, the app navigates to page 2, where search suggestions related to 'wireless earbuds' are displayed to help refine the search.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            58,
+                            0
+                        ],
+                        "src_page_idx": 58,
+                        "dst_page_idx": 2,
+                        "action": "input",
+                        "summary": "Input 'wireless earbuds' into Walmart search bar"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 55,
+            "function_description": "2-Year Walmart Accident Plan checkbox",
+            "action_refs": [
+                [
+                    58,
+                    2
+                ]
+            ],
+            "data_in": [
+                "2-Year Walmart Accident Plan setting"
+            ],
+            "data_out": [
+                "2-Year Walmart Accident Plan setting updated (checked/unchecked)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 58,
+                "logic": "The user interacts with the 2-Year Walmart Accident Plan checkbox by clicking it. This action likely toggles the selection state of the accident plan, and the flow proceeds to the next page (60) after the click.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            58,
+                            2
+                        ],
+                        "src_page_idx": 58,
+                        "dst_page_idx": 60,
+                        "action": "click",
+                        "summary": "Click the 2-Year Walmart Accident Plan checkbox"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": null
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 56,
+            "function_description": "3-Year Walmart Accident Plan checkbox",
+            "action_refs": [
+                [
+                    58,
+                    3
+                ]
+            ],
+            "data_in": [
+                "3-Year Walmart Accident Plan setting"
+            ],
+            "data_out": [
+                "3-Year Walmart Accident Plan setting updated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 58,
+                "logic": "The user starts on page 58 (Cart page). The core action is clicking the '3-Year Walmart Accident Plan checkbox' (action_ref [58,3]), which transitions to page 61. There are no branches or loops as it's a single click action to interact with the checkbox.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            58,
+                            3
+                        ],
+                        "src_page_idx": 58,
+                        "dst_page_idx": 61,
+                        "action": "click",
+                        "summary": "Click the 3-Year Walmart Accident Plan checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 57,
+            "function_description": "This page allows users to sign in to their existing Walmart account or create a new one by entering a valid phone number or email address and proceeding with the \"Continue\" button.",
+            "action_refs": [
+                [
+                    58,
+                    4
+                ],
+                [
+                    62,
+                    1
+                ],
+                [
+                    62,
+                    2
+                ]
+            ],
+            "data_in": [
+                "delivery address addition trigger (cart page prompt)",
+                "phone number or email input",
+                "login session",
+                "user account credentials"
+            ],
+            "data_out": [
+                "account sign-in/create prompt (for address addition)",
+                "validated phone number or email input",
+                "login session (updated)"
+            ],
+            "data_dependencies": [
+                65,
+                70,
+                72
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 58,
+                "logic": "The flow starts with clicking the 'Add delivery address link' (or related action leading to the sign-in page). Then, on the sign-in page, the user inputs a phone number or email into the input field. After input, the user clicks 'Continue' to proceed with sign-in or account creation. If the input is invalid, the flow may loop back to re-enter, but here the input is valid.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            58,
+                            4
+                        ],
+                        "src_page_idx": 58,
+                        "dst_page_idx": 62,
+                        "action": "click",
+                        "summary": "Click to navigate to sign-in/account creation page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            62,
+                            1
+                        ],
+                        "src_page_idx": 62,
+                        "dst_page_idx": 65,
+                        "action": "input",
+                        "summary": "Input phone number or email into the field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            62,
+                            2
+                        ],
+                        "src_page_idx": 62,
+                        "dst_page_idx": 62,
+                        "action": "click",
+                        "summary": "Click 'Continue' to proceed"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 58,
+            "function_description": "This page functions as an account sign - in or creation interface, where users are prompted to enter a valid phone number or email address and then click \"Continue\" to either sign in to an existing account or start the process of creating a new one.",
+            "action_refs": [
+                [
+                    66,
+                    0
+                ],
+                [
+                    69,
+                    0
+                ],
+                [
+                    69,
+                    1
+                ]
+            ],
+            "data_in": [
+                "vaccine appointment scheduling request",
+                "phone number or email input",
+                "user account credential (phone/email)"
+            ],
+            "data_out": [
+                "account sign-in/creation prompt (for vaccine appointment)",
+                "validated phone number or email input"
+            ],
+            "data_dependencies": [
+                65,
+                70,
+                72
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 66,
+                "logic": "The process starts on the Pharmacy page (page 66). First, the user clicks the 'Sign in or create account' button (action [66,0]) to navigate to the account sign - in/creation page (page 69). Then, the user inputs a phone number or email (action [69,0]) into the input field. Finally, the user clicks the 'Continue' button (action [69,1]) to proceed with either signing in to an existing account or starting the account creation process.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            66,
+                            0
+                        ],
+                        "src_page_idx": 66,
+                        "dst_page_idx": 69,
+                        "action": "click",
+                        "summary": "Click 'Sign in or create account' button to navigate to the account sign - in/creation page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            69,
+                            0
+                        ],
+                        "src_page_idx": 69,
+                        "dst_page_idx": 70,
+                        "action": "input",
+                        "summary": "Input phone number or email into the input field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            69,
+                            1
+                        ],
+                        "src_page_idx": 69,
+                        "dst_page_idx": 69,
+                        "action": "click",
+                        "summary": "Click 'Continue' button to proceed with account sign - in or creation"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 59,
+            "function_description": "This page enables users to search for and select a Walmart store by entering a zip code, city/state, or using their current location, and displays a list of nearby Walmart stores with details like address, opening time, distance, and an option to view store details.",
+            "action_refs": [
+                [
+                    67,
+                    2
+                ]
+            ],
+            "data_in": [
+                "current location",
+                "store selection context"
+            ],
+            "data_out": [
+                "updated store list (based on current location)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 67,
+                "logic": "The user starts on the 'Select a store' page. They can click the 'Use my current location' link, which likely triggers the app to fetch and display nearby Walmart stores based on the device's location. This action keeps the user on the same page (or refreshes it) to show the updated list of stores with details like address, opening time, and distance.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            67,
+                            2
+                        ],
+                        "src_page_idx": 67,
+                        "dst_page_idx": 67,
+                        "action": "click",
+                        "summary": "Click 'Use my current location' link to fetch nearby Walmart stores based on device location"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 60,
+            "function_description": "The page provides information and a sign - up prompt for the Walmart OnePay CashRewards Credit Card, including details about cash - back rewards, a welcome bonus, and the absence of an annual fee.",
+            "action_refs": [
+                [
+                    68,
+                    0
+                ]
+            ],
+            "data_in": [
+                "OnePay Credit Card option"
+            ],
+            "data_out": [
+                "OnePay Credit Card details page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 68,
+                "logic": "The flow starts on the Walmart Financial Services page. The user clicks on the 'OnePay Credit Card' option, which navigates to the page displaying details about the Walmart OnePay CashRewards Credit Card, including cash-back rewards, a welcome bonus, and the absence of an annual fee.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            68,
+                            0
+                        ],
+                        "src_page_idx": 68,
+                        "dst_page_idx": 74,
+                        "action": "click",
+                        "summary": "Click on the OnePay Credit Card option to view its details"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 61,
+            "function_description": "This page allows users to sign in to their existing Walmart account or initiate the process to create a new account by entering their phone number or email address and proceeding with the \"Continue\" button.",
+            "action_refs": [
+                [
+                    21,
+                    0
+                ]
+            ],
+            "data_in": [
+                "earbuds product",
+                "purchase session"
+            ],
+            "data_out": [
+                "sign in prompt",
+                "purchase initiation"
+            ],
+            "data_dependencies": [
+                62,
+                65,
+                70,
+                72
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 21,
+                "logic": "The process starts on page 21. The user clicks the 'Buy now' button, which navigates to the 'Sign in or create your account' page (page 1). On this new page, the user can enter their phone number or email and then click 'Continue' to proceed with signing in or creating an account, though the 'Continue' action is not included in the provided actions list here.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            21,
+                            0
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the 'Buy now' button to navigate to the sign in/create account page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 62,
+            "function_description": "After adding an item to the cart, this page offers a Walmart Protection Plan by Allstate, presenting plan details and options to purchase the 3 - year plan for $29.00 or decline the protection plan.",
+            "action_refs": [
+                [
+                    21,
+                    1
+                ]
+            ],
+            "data_in": [
+                "earbuds product",
+                "cart"
+            ],
+            "data_out": [
+                "cart with added earbuds",
+                "added to cart confirmation"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 21,
+                "logic": "After adding an item to the cart (by clicking the 'Add to cart' button), the app presents a Walmart Protection Plan by Allstate. At this point, the user can choose to purchase the 3 - year plan for $29.00 or decline the protection plan by selecting 'No Thanks'.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            21,
+                            1
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": 24,
+                        "action": "click",
+                        "summary": "Click the 'Add to cart' button to add the item to the cart and proceed to the protection plan page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": null,
+                                "condition": "User clicks '3-Year Plan - $29.00' to purchase the protection plan"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "User clicks 'No Thanks' to decline the protection plan"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 63,
+            "function_description": "Favorite (heart) icon",
+            "action_refs": [
+                [
+                    21,
+                    2
+                ]
+            ],
+            "data_in": [
+                "earbuds product",
+                "favorite setting (earbuds)"
+            ],
+            "data_out": [
+                "favorite setting (earbuds) updated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 21,
+                "logic": "The user starts on page 21 (a product detail page) and clicks the favorite (heart) icon. This action leads to page 25, completing the process of favoriting the item.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            21,
+                            2
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": 25,
+                        "action": "click",
+                        "summary": "Click the favorite (heart) icon on the product detail page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 64,
+            "function_description": "Clear price range link",
+            "action_refs": [
+                [
+                    23,
+                    1
+                ]
+            ],
+            "data_in": [
+                "price range setting"
+            ],
+            "data_out": [
+                "price range setting cleared"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 23,
+                "logic": "The user starts on page 23 (with a price range modal open). The core action is clicking the 'Clear price range link' (action_ref [23,1]), which navigates to page 35. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            23,
+                            1
+                        ],
+                        "src_page_idx": 23,
+                        "dst_page_idx": 35,
+                        "action": "click",
+                        "summary": "Click the Clear price range link"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 65,
+            "function_description": "Close sign-in modal button",
+            "action_refs": [
+                [
+                    31,
+                    0
+                ]
+            ],
+            "data_in": [
+                "sign-in modal"
+            ],
+            "data_out": [
+                "sign-in modal closed"
+            ],
+            "data_dependencies": [
+                74
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 31,
+                "logic": "The user starts on the sign - in modal page (page 31). Then, the user clicks the close sign - in modal button. After this click, the app navigates to page 32, and the sign - in modal is closed.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            31,
+                            0
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": 32,
+                        "action": "click",
+                        "summary": "Click the close sign - in modal button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 66,
+            "function_description": "The page provides information about Walmart's privacy and security policies, including privacy notices, to inform users about how their personal information is handled.",
+            "action_refs": [
+                [
+                    31,
+                    3
+                ]
+            ],
+            "data_in": [
+                "privacy measures link"
+            ],
+            "data_out": [
+                "privacy & security page content"
+            ],
+            "data_dependencies": [
+                73,
+                75
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 31,
+                "logic": "The user starts on page 31 (account sign-in/create). To access Walmart’s privacy and security policy information, the user clicks the 'Privacy measures' link. This action navigates to page 17, which displays the Privacy & Security page with privacy notices and related content.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            31,
+                            3
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click the 'Privacy measures' link to navigate to the Privacy & Security page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 67,
+            "function_description": "Price: Low to High sort option (radio)",
+            "action_refs": [
+                [
+                    44,
+                    0
+                ]
+            ],
+            "data_in": [
+                "sort setting"
+            ],
+            "data_out": [
+                "sort setting (Price: Low to High)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 44,
+                "logic": "The user starts on the Sort & Filter page (page 44). They click the 'Price: Low to High' radio button, which transitions the app to page 45 (likely applying the sort).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            44,
+                            0
+                        ],
+                        "src_page_idx": 44,
+                        "dst_page_idx": 45,
+                        "action": "click",
+                        "summary": "Click 'Price: Low to High' radio button to select this sort option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 68,
+            "function_description": "The page enables users to sort and filter Walmart clearance products by various criteria (sort order, Walmart Cash eligibility, customer rating, color, deals, availability, department, retailer, gifting) and then view the filtered results.",
+            "action_refs": [
+                [
+                    44,
+                    1
+                ]
+            ],
+            "data_in": [
+                "Walmart Cash Offers filter setting"
+            ],
+            "data_out": [
+                "Walmart Cash Offers filter setting expanded"
+            ],
+            "data_dependencies": [
+                67,
+                77
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 44,
+                "logic": "The user starts on the Sort & Filter page (page 44). They click the 'Walmart Cash Offers' dropdown (action S1) to expand it (navigating to page 46), revealing the 'Walmart Cash eligible' filter option. This step initiates filtering by Walmart Cash eligibility, with further steps (not shown here) likely involving selecting filters and viewing results.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            44,
+                            1
+                        ],
+                        "src_page_idx": 44,
+                        "dst_page_idx": 46,
+                        "action": "click",
+                        "summary": "Click Walmart Cash Offers dropdown to expand filter options"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 69,
+            "function_description": "Close address popup (X icon)",
+            "action_refs": [
+                [
+                    59,
+                    0
+                ]
+            ],
+            "data_in": [
+                "address popup"
+            ],
+            "data_out": [
+                "address popup closed"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 59,
+                "logic": "The process starts on page 59 where an address popup is visible. The user clicks the X icon (close button) on the address popup, which transitions the flow to page 63, completing the action of closing the popup.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            59,
+                            0
+                        ],
+                        "src_page_idx": 59,
+                        "dst_page_idx": 63,
+                        "action": "click",
+                        "summary": "Click the X icon to close the address popup"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 70,
+            "function_description": "This page functions as a sign - in or account creation interface for Walmart, where users are prompted to enter a valid phone number or email address and then click the “Continue” button to either sign in to their existing account or start the process of creating a new one.",
+            "action_refs": [
+                [
+                    59,
+                    1
+                ]
+            ],
+            "data_in": [
+                "delivery address",
+                "order"
+            ],
+            "data_out": [
+                "confirmed delivery address",
+                "order with confirmed address"
+            ],
+            "data_dependencies": [
+                65,
+                72
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 59,
+                "logic": "The user starts on page 59 and clicks the 'Confirm address button' (action_ref [59,1]). This action leads to page 62, likely advancing the process related to address confirmation or account sign - in/creation setup.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            59,
+                            1
+                        ],
+                        "src_page_idx": 59,
+                        "dst_page_idx": 62,
+                        "action": "click",
+                        "summary": "Click the 'Confirm address button' to proceed from page 59 to page 62."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 71,
+            "function_description": "This page functions as an address confirmation popup during checkout, allowing the user to either confirm the current shipping address (Los Angeles, CA 90060) or select a different address to proceed with the order delivery setup.",
+            "action_refs": [
+                [
+                    59,
+                    2
+                ]
+            ],
+            "data_in": [
+                "delivery address setting"
+            ],
+            "data_out": [
+                "delivery address change initiation"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 59,
+                "logic": "The flow starts on the address confirmation popup page. The user can choose to either confirm the current address (implied by the 'Yes' button, though not in the provided actions) or select a different address. The provided action is clicking the 'Select a different address' button, which likely leads to a page for choosing another address.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            59,
+                            2
+                        ],
+                        "src_page_idx": 59,
+                        "dst_page_idx": 59,
+                        "action": "click",
+                        "summary": "Click the 'Select a different address' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 72,
+            "function_description": "Close sign-in modal",
+            "action_refs": [
+                [
+                    62,
+                    0
+                ]
+            ],
+            "data_in": [
+                "sign-in modal"
+            ],
+            "data_out": [
+                "sign-in modal closed"
+            ],
+            "data_dependencies": [
+                74
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 62,
+                "logic": "The flow starts on the sign-in modal page (page 62). The user performs a click action to close the sign-in modal, which transitions to the destination page (page 64). There are no branches or loops as it is a single-step flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            62,
+                            0
+                        ],
+                        "src_page_idx": 62,
+                        "dst_page_idx": 64,
+                        "action": "click",
+                        "summary": "Click to close the sign-in modal"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 73,
+            "function_description": "The current page, Walmart's Privacy & Security page, provides information about Walmart's privacy notices and security measures to inform users about how their personal information is handled.",
+            "action_refs": [
+                [
+                    62,
+                    3
+                ]
+            ],
+            "data_in": [
+                "privacy measures link"
+            ],
+            "data_out": [
+                "privacy & security page content"
+            ],
+            "data_dependencies": [
+                66,
+                75
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 62,
+                "logic": "The user starts on the sign-in page (page 62). They click the 'privacy measures' link, which navigates to the Walmart Privacy & Security page (page 17) to view information about privacy notices and security measures. This is a straight-line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            62,
+                            3
+                        ],
+                        "src_page_idx": 62,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click 'privacy measures' link to navigate to Privacy & Security page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 74,
+            "function_description": "This page (after closing the sign - in modal) likely allows users to continue exploring the pharmacy service page for vaccine appointments without signing in immediately, or return to the previous pharmacy service page to review prescription and vaccine - related information.",
+            "action_refs": [
+                [
+                    69,
+                    2
+                ],
+                [
+                    71,
+                    0
+                ]
+            ],
+            "data_in": [
+                "sign in modal",
+                "modal window"
+            ],
+            "data_out": [
+                "sign in modal closed",
+                "modal window closed"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 69,
+                "logic": "The flow starts on the sign - in modal page (page 69). First, the user clicks the close modal (X) button (action from [69, 2]), which leads to page 71. Then, on page 71, the user again clicks the close modal (X) button (action from [71, 0]), and this action is a leaf action, likely finalizing the modal closure to allow exploration of the pharmacy service page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            69,
+                            2
+                        ],
+                        "src_page_idx": 69,
+                        "dst_page_idx": 71,
+                        "action": "click",
+                        "summary": "Click the close modal (X) button on the sign - in modal page (page 69) to navigate to page 71."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            71,
+                            0
+                        ],
+                        "src_page_idx": 71,
+                        "dst_page_idx": 72,
+                        "action": "click",
+                        "summary": "Click the close modal (X) button on page 71 (this is a leaf action)."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 75,
+            "function_description": "The page provides information about Walmart's privacy and security measures, including privacy notices, to inform users about how personal information is handled.",
+            "action_refs": [
+                [
+                    69,
+                    3
+                ]
+            ],
+            "data_in": [
+                "privacy measures link"
+            ],
+            "data_out": [
+                "privacy & security page content"
+            ],
+            "data_dependencies": [
+                66,
+                73
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 69,
+                "logic": "The flow starts on page 69 (account sign-in/create). The user clicks the 'Privacy measures' link, which navigates to page 17 (Walmart’s Privacy & Security page) to view information about privacy notices and data handling measures. There are no branches or loops as it is a straight-line navigation to access the privacy information.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            69,
+                            3
+                        ],
+                        "src_page_idx": 69,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click the 'Privacy measures' link to navigate to the Privacy & Security page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 76,
+            "function_description": "This page allows users to sign in to their existing Walmart account or initiate the process to create a new account by entering their phone number or email address and proceeding with the \"Continue\" button.",
+            "action_refs": [
+                [
+                    74,
+                    0
+                ]
+            ],
+            "data_in": [
+                "welcome bonus promotion"
+            ],
+            "data_out": [
+                "account sign-in/create session initiation"
+            ],
+            "data_dependencies": [
+                65,
+                70,
+                72
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 74,
+                "logic": "The process starts on page 74, where the user clicks the 'Get started today' link. This action navigates to the 'Sign in or create your account' page (page 1), where the user can then enter their phone number or email and proceed with 'Continue' to either sign in or start account creation.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            74,
+                            0
+                        ],
+                        "src_page_idx": 74,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click 'Get started today' link to navigate to account sign-in/create page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 77,
+            "function_description": "Walmart Cash eligible checkbox",
+            "action_refs": [
+                [
+                    46,
+                    0
+                ]
+            ],
+            "data_in": [
+                "Walmart Cash eligible filter setting"
+            ],
+            "data_out": [
+                "Walmart Cash eligible filter setting (updated)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 46,
+                "logic": "The flow starts on page 46 (Sort & Filter). The user clicks the 'Walmart Cash eligible' checkbox, which transitions the app to page 47. This action enables filtering results to show only items eligible for Walmart Cash offers.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            46,
+                            0
+                        ],
+                        "src_page_idx": 46,
+                        "dst_page_idx": 47,
+                        "action": "click",
+                        "summary": "Click the 'Walmart Cash eligible' checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        }
+    ]
+}

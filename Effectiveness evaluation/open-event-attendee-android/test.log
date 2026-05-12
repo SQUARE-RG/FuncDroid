@@ -1,0 +1,507 @@
+
+================= [TaskTest] FDG[0] =================
+[Function] Location-based discovery and navigation page
+
+[Core Logic Task]
+The flow starts on the location entry page. First, a location (e.g., New York) is input into the location field, leading to a new page. Alternatively, the Events tab icon can be clicked, which keeps the user on the same page (likely to refresh or re-enter event-related location discovery).
+
+[Variant Paths] (3)
+ - V1: Input empty string into <Location input field>
+ - V2: Tap <Events tab icon> first, then input "New York" into <Location input field>
+ - V3: Input a very long string (e.g., "New YorkNew YorkNew York..." repeated 100 times) into <Location input field>
+
+================= [TaskTest] FDG[1] =================
+[Function] This page functions as a login or sign - up interface where users can enter their email address and then proceed by clicking the "Get Started" button to either sign up for a new account or log in to an existing one, with the goal of accessing location - based content to see what's happening nearby.
+
+[Core Logic Task]
+The user starts on page 0 and clicks the notification bell icon (action_ref [0,1]) to navigate to page 2. On page 2, the user can either click the back arrow (action_ref [2,0]) to return to page 0 or click the email input field (action_ref [2,1]) to proceed to page 5 for entering email details to continue with login/signup.
+
+[Variant Paths] (3)
+ - V1: Start on page 0, tap <Email input field> (skipping notification bell interaction)
+ - V2: Start on page 0, tap <Notification bell icon>, then tap <Notification bell icon> again (repeating the bell tap)
+ - V3: Start on page 0, tap <Back arrow icon> (unexpectedly using back arrow first instead of bell or email field)
+
+================= [TaskTest] FDG[2] =================
+[Function] The page allows users to search for outings by specifying a date (e.g., Friday, Dec 12), a location, and an activity type (e.g., Anything), and then proceed with the search using the provided details.
+
+[Core Logic Task]
+The user starts by clicking the Search tab icon (page 0 → 3). Then, they can interact with the location input, activity filter, or submit button. If they click the submit arrow (page 3 → 11), they proceed to results. Alternatively, they can adjust the date (e.g., via 'Today' or date tag) to loop back and refine the search.
+
+[Variant Paths] (3)
+ - V1: Tap <Search tab icon>, Tap <Today filter button>, Tap <Blue submit arrow button>
+ - V2: Tap <Search tab icon>, Input "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" into <Enter location input field>, Tap <Blue submit arrow button>
+ - V3: Tap <Search tab icon>, Tap <2025-12-13 date tag>, Tap <Blue submit arrow button>, Tap <Back arrow icon>, Tap <Today filter button>, Tap <Blue submit arrow button>
+
+================= [TaskTest] FDG[3] =================
+[Function] This page functions as a login or sign - up entry point, where users can enter their email address and then tap the "Get Started" button to either create a new account or log into an existing one to access location - based content and features.
+
+[Core Logic Task]
+The user starts on the location - entry page (page 0). They click the profile icon (at page 0, action_ref [0,4]) to navigate to the 'Let's get started' page (page 2). On this page, the user will enter their email address and then tap the 'Get Started' button to either sign up or log in to access location - based content.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[4] =================
+[Function] This page functions as a login or sign - up interface, prompting users to enter their email address and then click the “Get Started” button to either create a new account or log into an existing one, with the goal of enabling them to view location - based activities or updates.
+
+[Core Logic Task]
+The user starts on page 0 and clicks the Tickets tab icon (action at [0,5]). This action navigates to page 2, which is the 'Let's get started' login/sign - up interface. The flow is a straight - line navigation from the initial page to the login/sign - up page via the click action.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Tickets tab icon> (test if the login/sign-up page is accessible without this action, though likely not, but it's a mutation of omitting the step)
+ - V2: Repeat clicking <Tickets tab icon> multiple times (test if repeated navigation affects the result)
+ - V3: Click <Tickets tab icon> in a different order (if there were other steps, but here it's a single step, so simulate a different 'order' context, like clicking after a non-existent step, but since only this widget, it's a stretch but valid as a mutation attempt)
+
+================= [TaskTest] FDG[5] =================
+[Function] The Profile page provides access to general settings and support options (Settings, Manage Events, Ticket Issues) and a login option, allowing users to manage account-related preferences, event management, ticket support, and authenticate into their account.
+
+[Core Logic Task]
+The flow starts on the initial page (page 0). The user clicks the Profile tab icon (action_ref [0,6]), which navigates to the Profile page (page 4). This is a straight - line flow with no branches or loops as only one action is provided.
+
+[Variant Paths] (3)
+ - V1: Tap <Profile tab icon> twice (repeat the action)
+ - V2: Omit tapping <Profile tab icon> (simulate not navigating to Profile page)
+ - V3: Tap <Profile tab icon> after a very long delay (simulate abnormal timing, though action is same but contextually a mutation in timing/execution)
+
+================= [TaskTest] FDG[6] =================
+[Function] This page facilitates user sign - up or login by prompting for an email address and providing a “Get Started” button to proceed with accessing location - based activity information.
+
+[Core Logic Task]
+The user starts on the 'Let’s get started' page. They click the 'Get Started' button to proceed with accessing location - based activity information. There are no branches or loops in this flow as it is a single action to move forward.
+
+[Variant Paths] (3)
+ - V1: Tap <Get Started button> twice (repeat operation)
+ - V2: Omit tapping <Get Started button> (omit step)
+ - V3: Tap <Get Started button> after waiting for an unusually long time before tapping (simulate timing - related boundary condition, though not strictly input - based but a mutation of the action timing)
+
+================= [TaskTest] FDG[7] =================
+[Function] The Settings page allows users to configure server settings, manage account-related actions (when logged in), access about, legal, and app version information, and interact with options like visiting the website, rating the app, suggesting improvements, and reviewing legal policies.
+
+[Core Logic Task]
+The flow starts on page 2. First, the user clicks the settings gear icon (action from page 2 to 6). Then, the user can click the back arrow icon (action from page 6 back to 2), creating a navigational loop between the settings page (6) and the starting page (2).
+
+[Variant Paths] (3)
+ - V1: Tap <Settings gear icon>, then tap <Back arrow icon>, then tap <Settings gear icon> (repeat the navigation loop)
+ - V2: Tap <Back arrow icon> first (omit the initial settings gear tap, though this might not be a valid flow as per the core logic, but it's a mutation attempt), then tap <Settings gear icon>
+ - V3: Tap <Settings gear icon>, then tap <Settings gear icon> again (repeating the settings entry), then tap <Back arrow icon>
+
+================= [TaskTest] FDG[8] =================
+[Function] This page allows the user to select a time frame (e.g., Anytime, Today, Tomorrow, etc.) to filter search results or events based on the desired date or period.
+
+[Core Logic Task]
+The user starts on page 3 and clicks the Anytime filter text to open the time selection page (page 8). On page 8, the user can choose a preset time option (Anytime, Today, Tomorrow, etc.) to return to page 3, or select 'Pick a date...' to open the calendar (page 12). On the calendar, the user can navigate months or select a date, then either cancel (return to page 8) or confirm (return to page 3) the date selection.
+
+[Variant Paths] (3)
+ - V1: Start on page 3, tap <Anytime filter text> to open page 8. On page 8, tap <Today option> instead of Anytime to return to page 3.
+ - V2: Start on page 3, tap <Anytime filter text> to open page 8. On page 8, tap <Pick a date... option> to open page 12. On page 12, tap <Previous month arrow> (even if not needed) then tap <Calendar date (1-31 Dec 2025)> (e.g., 15 Dec), then tap <OK button> to return to page 3.
+ - V3: Start on page 3, tap <Anytime filter text> to open page 8. On page 8, tap <Pick a date... option> to open page 12. On page 12, tap <CANCEL button> to return to page 8, then tap <Anytime option> to return to page 3 (omitting date selection).
+
+================= [TaskTest] FDG[9] =================
+[Function] The Settings page allows users to configure server settings, manage account status, access about, legal, and app - specific options (like version info), and perform actions such as visiting the website, rating the app, and suggesting improvements.
+
+[Core Logic Task]
+The user starts on the Profile page (page 4) and clicks the 'Settings' option. This action navigates to the Settings page (page 6), where server configuration, account management, and other app - related options (like visiting the website, rating, suggesting improvements) are accessible.
+
+[Variant Paths] (3)
+ - V1: Start on the Profile page (page 4), long - press <Settings option> instead of clicking it, then check if navigation to the Settings page (page 6) occurs
+ - V2: Start on the Profile page (page 4), click <Settings option> twice in a row, then check the navigation to the Settings page (page 6)
+ - V3: Start on the Profile page (page 4), omit clicking <Settings option> and check if the Settings page (page 6) is accessible through other means
+
+================= [TaskTest] FDG[10] =================
+[Function] The current page (triggered by selecting "Manage Events" from the Profile page) is a browser selection interface that allows the user to choose an application (e.g., Chrome, WebView Browser Tester) to open the event management functionality, with options to set a default browser for future actions.
+
+[Core Logic Task]
+From the Profile page (page 4), the user clicks the 'Manage Events' option. This triggers a browser selection interface (page 7) where the user can choose an app (e.g., Chrome, WebView Browser Tester) to open event management, with options to set a default browser for future actions.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Manage Events option> (test if the browser selection interface still appears without triggering it)
+ - V2: Repeat clicking <Manage Events option> multiple times (test if multiple browser selection interfaces open or if there's an error)
+ - V3: Click <Manage Events option> and then immediately click it again (test for unexpected behavior like duplicate interfaces or errors)
+
+================= [TaskTest] FDG[11] =================
+[Function] The current page (initiated by selecting "Manage Events" from the Profile page) is prompting the user to choose a browser (Chrome or WebView Browser Tester) to open the event management functionality, likely for tasks like viewing, editing, or organizing events associated with the user's profile.
+
+[Core Logic Task]
+The flow starts on the Profile page. The user clicks the 'Manage Events' option (though the provided action is 'Ticket Issues', likely a typo or mislabel; assuming it's the trigger for the browser choice). This action opens a browser selection dialog, presenting two options: Chrome or WebView Browser Tester. The flow then branches based on which browser the user selects to proceed with event management.
+
+[Variant Paths] (3)
+ - V1: Tap <Ticket Issues option> and select Chrome (branch mutation: alternative browser choice)
+ - V2: Tap <Ticket Issues option> and select WebView Browser Tester (branch mutation: alternative browser choice)
+ - V3: Tap <Ticket Issues option> twice (repeat mutation: repeat the trigger action)
+
+================= [TaskTest] FDG[12] =================
+[Function] This page allows users to sign up or log in by entering their email address and proceeding with the "Get Started" button to access location - based activity information.
+
+[Core Logic Task]
+The user starts on page 4 (Profile page) and clicks the 'Log In' option. This action navigates to page 2 (the 'Let's get started' page) where they can enter an email and proceed with 'Get Started' to access location-based activity info. The flow is a straight line from clicking 'Log In' to reaching the login/signup input page.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Log In option> (try to access the login/signup page without initiating the flow)
+ - V2: Repeat clicking <Log In option> multiple times (unintended repeated action to see if it causes issues)
+ - V3: Click <Log In option> but then immediately click it again (order mutation with repeated action)
+
+================= [TaskTest] FDG[13] =================
+[Function] The current page is a settings page that allows users to configure the server URL, manage account settings, access information about the app, view legal documents, and check the app version.
+
+[Core Logic Task]
+The user starts on the settings page (page 6). The core action is clicking the 'Server configuration' link, which likely leads to a subpage for server URL configuration (though the destination page remains 6 in the action data, suggesting it might refresh or stay on the same page contextually). There are no branches or loops here as only one action is provided.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Server configuration link> and instead try to interact with non - existent widgets (but since only <Server configuration link> is available, this is a mutation of omitting the core action)
+ - V2: Repeat clicking <Server configuration link> multiple times (e.g., click <Server configuration link> twice in a row)
+ - V3: Click <Server configuration link> but then immediately try to click it again (simulating a rapid, repeated interaction)
+
+================= [TaskTest] FDG[14] =================
+[Function] The current page (a browser selection dialog) allows the user to choose a browser (Chrome or WebView Browser Tester) to open a website, likely related to the app's "Visit Website" functionality from the settings page.
+
+[Core Logic Task]
+The user starts on the Settings page. They click the 'Visit Website' option, which triggers a browser selection dialog (Open with) to appear, offering Chrome and WebView Browser Tester as options to open the website.
+
+[Variant Paths] (3)
+ - V1: Tap <Visit Website option> and then select an alternative browser (if available in the dialog, but since only Chrome and WebView Browser Tester are mentioned, maybe select the non-default one, e.g., if default is Chrome, select WebView Browser Tester)
+ - V2: Tap <Visit Website option> twice (repeat the action to see if the dialog behaves differently)
+ - V3: Omit selecting a browser after tapping <Visit Website option> to see the app's behavior
+
+================= [TaskTest] FDG[16] =================
+[Function] The current page is a browser selection interface (triggered by the "Visit Website" action from the settings page) that allows the user to choose an application (either Chrome or WebView Browser Tester) to open a website, with options to set the choice as temporary ("JUST ONCE") or permanent ("ALWAYS").
+
+[Core Logic Task]
+The flow starts on the Settings page (page 6). The user clicks the 'Suggest Improvement' option, which leads to a new page (page 7). This action initiates the process of providing feedback or suggestions for app improvements.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Suggest Improvement option> (skip the feedback initiation step)
+ - V2: Tap <Suggest Improvement option> twice (repeat the feedback initiation action)
+ - V3: Tap <Suggest Improvement option> then immediately tap it again (order mutation with repeated action)
+
+================= [TaskTest] FDG[18] =================
+[Function] The current page is a browser selection interface that appears after selecting the "Visit Website" option from the settings page, allowing the user to choose between Chrome and WebView Browser Tester to open the website.
+
+[Core Logic Task]
+The user starts on the Settings page. They click the 'Visit Website' option, which triggers a browser selection dialog. At this point, the user can choose between Chrome or WebView Browser Tester to open the website, with the flow branching based on this choice.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[19] =================
+[Function] The current page is a browser selection interface (triggered by the "Visit Website" action from the settings page) that allows the user to choose a browser (Chrome or WebView Browser Tester) to open an external website, with options to set a default browser preference.
+
+[Core Logic Task]
+The flow starts with clicking the 'Visit Website' option on the settings page, which triggers a browser selection dialog. The user can then choose between Chrome or WebView Browser Tester to open the external website, with options to set a default preference.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[20] =================
+[Function] The page enables users to enter a location to discover location - based content (such as events, places, etc.) and has a bottom navigation bar with options like Events, Search, Favorites, Tickets, and Profile.
+
+[Core Logic Task]
+The flow starts with a page where the app has stopped. The user clicks the 'Open app again' button, which navigates to the app's main page (with location entry and bottom navigation). This is a straight-line flow with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Open app again button> (simulate app not reopened)
+ - V2: Tap <Open app again button> twice (repeat the app reopening action)
+ - V3: Tap <Open app again button> then immediately tap it again (order mutation with repeated tap)
+
+================= [TaskTest] FDG[21] =================
+[Function] The current page allows users to refine search results by adjusting filters for date, location, category, specific search criteria (e.g., free stuff only), and sorting preferences (e.g., by name or date) before applying these filters to update the search results.
+
+[Core Logic Task]
+The user starts on page 11 and clicks the filter icon to open the filter page (14). On page 14, the user can choose to adjust date, location, category, search filters, or sorting preferences (each adjustment is a branch). After setting desired filters/sorts, the user clicks the apply filter checkmark to update search results.
+
+[Variant Paths] (3)
+ - V1: Tap <Filter icon>, then tap <Date selection (2025-12-13)> and immediately tap <Apply filter checkmark icon> (skipping other filter adjustments)
+ - V2: Tap <Filter icon>, tap <Name sort radio button> instead of <Date sort radio button>, then tap <Apply filter checkmark icon>
+ - V3: Tap <Filter icon>, tap <Apply filter checkmark icon> without adjusting any filters (omitting filter adjustment steps)
+
+================= [TaskTest] FDG[22] =================
+[Function] Displays search results filtered to show items or events occurring on today's date (2025-12-13), with a search bar at the top and a list of result entries below.
+
+[Core Logic Task]
+The flow starts on page 11. The user clicks the 'Tomorrow filter button' (action_ref [11,3]), which transitions the app to page 15. This action likely adjusts the search results to show items or events for the next day, completing the filtering logic for date-based search results.
+
+[Variant Paths] (2)
+ - V1: Omit tapping <Tomorrow filter button> to see if results remain unfiltered (repeat/omit mutation)
+ - V2: Tap <Tomorrow filter button> twice to check if filtering behaves unexpectedly (repeat/omit mutation)
+
+================= [TaskTest] FDG[23] =================
+[Function] Displays search results filtered to show items or events occurring on the current date (2025-12-13), with a search bar for further refinement and a list of result placeholders.
+
+[Core Logic Task]
+The app starts on page 11, where a click action is performed on the 'This weekend filter button'. This action navigates to page 15, likely to display or refine search results filtered for the current date (2025-12-13), with a search bar and result placeholders.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <This weekend filter button> and check if the app still navigates to page 15 with current date results
+ - V2: Click <This weekend filter button> twice and observe if the app navigates to page 15 both times or behaves differently
+ - V3: Click <This weekend filter button> and then immediately click it again to see if the results change or the app reacts unexpectedly
+
+================= [TaskTest] FDG[24] =================
+[Function] Free stuff only checkbox
+
+[Core Logic Task]
+The user starts on page 14. They perform a click action on the 'Free stuff only' checkbox, which transitions the app to page 19. This action enables the filter to show only free stuff.
+
+[Variant Paths] (3)
+ - V1: Tap <Free stuff only checkbox> twice (repeat the click operation)
+ - V2: Omit tapping <Free stuff only checkbox> (simulate not enabling the filter)
+ - V3: Tap <Free stuff only checkbox> and then immediately tap it again (order mutation with repeated action)
+
+================= [TaskTest] FDG[25] =================
+[Function] Sessions and speakers checkbox
+
+[Core Logic Task]
+The user starts on page 14. They perform a click action on the 'Sessions and speakers' checkbox, which leads to page 20. This is a single-step flow with no branches or loops, focusing on interacting with the specified checkbox.
+
+[Variant Paths] (3)
+ - V1: Tap <Sessions and speakers checkbox> twice (repeat operation)
+ - V2: Omit tapping <Sessions and speakers checkbox> (skip the step)
+ - V3: Tap <Sessions and speakers checkbox> (original step, included for reference as a base)
+
+================= [TaskTest] FDG[26] =================
+[Function] Call For Speakers checkbox
+
+[Core Logic Task]
+The user starts on page 14. They click the 'Call For Speakers' checkbox, which leads to page 21. This is a single-step action with no branching or looping.
+
+[Variant Paths] (2)
+ - V1: Omit tapping <Call For Speakers checkbox> and check if the app still navigates to page 21 (though expected to stay on page 14)
+ - V2: Tap <Call For Speakers checkbox> twice (repeat the action) and observe if it still navigates to page 21 or has unexpected behavior
+
+
+[AppTest] Found 18 dependency pairs to test.
+
+==============================================
+[AppTest] Pair 1/18: 1 -> 6
+Producer: This page functions as a login or sign - up interface where users can enter their email address and then proceed by clicking the "Get Started" button to either sign up for a new account or log in to an existing one, with the goal of accessing location - based content to see what's happening nearby.
+Consumer: This page facilitates user sign - up or login by prompting for an email address and providing a “Get Started” button to proceed with accessing location - based activity information.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 0, click the notification bell icon (action_ref [0,1]) to go to page 2, then click the email input field (action_ref [2,1]) to navigate to page 5 and enter an email address.
+Consumer task:
+ On the 'Let’s get started' page, click the 'Get Started' button and verify that the email entered in the Producer's step is used/prompted for in the sign - up/login process to access location - based activity information.
+------------------------------
+
+==============================================
+[AppTest] Pair 2/18: 2 -> 21
+Producer: The page allows users to search for outings by specifying a date (e.g., Friday, Dec 12), a location, and an activity type (e.g., Anything), and then proceed with the search using the provided details.
+Consumer: The current page allows users to refine search results by adjusting filters for date, location, category, specific search criteria (e.g., free stuff only), and sorting preferences (e.g., by name or date) before applying these filters to update the search results.
+
+[Plan]
+Case 1/1
+Producer task:
+ Click Search tab icon (page 0→3), enter 'New York' in location input, select 'Hiking' as activity type, click submit arrow (page 3→11) to get search results.
+Consumer task:
+ On page 11, click filter icon to open page 14. Adjust date to 'Tomorrow', set category to 'Outdoor', apply filters (click checkmark) and verify search results reflect Producer's location (New York), activity (Hiking), and new date/category filters.
+------------------------------
+
+==============================================
+[AppTest] Pair 3/18: 2 -> 22
+Producer: The page allows users to search for outings by specifying a date (e.g., Friday, Dec 12), a location, and an activity type (e.g., Anything), and then proceed with the search using the provided details.
+Consumer: Displays search results filtered to show items or events occurring on today's date (2025-12-13), with a search bar at the top and a list of result entries below.
+
+[Plan]
+Case 1/1
+Producer task:
+ Click the Search tab icon (page 0 → 3), then click the submit arrow (page 3 → 11) to generate search results.
+Consumer task:
+ On page 11, click the 'Tomorrow filter button' (action_ref [11,3]) to transition to page 15 and verify that the search results now reflect items or events for the next day (2025-12-14) based on the producer's search results.
+------------------------------
+
+==============================================
+[AppTest] Pair 4/18: 2 -> 23
+Producer: The page allows users to search for outings by specifying a date (e.g., Friday, Dec 12), a location, and an activity type (e.g., Anything), and then proceed with the search using the provided details.
+Consumer: Displays search results filtered to show items or events occurring on the current date (2025-12-13), with a search bar for further refinement and a list of result placeholders.
+
+[Plan]
+Case 1/1
+Producer task:
+ Click the Search tab icon (navigate from page 0 to 3), then click the submit arrow (navigate from page 3 to 11) to generate search results.
+Consumer task:
+ On page 11, click the 'This weekend filter button' to navigate to page 15 and verify that the displayed search results are filtered for the current date (2025-12-13) and match the results produced by the Producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 5/18: 5 -> 10
+Producer: The Profile page provides access to general settings and support options (Settings, Manage Events, Ticket Issues) and a login option, allowing users to manage account-related preferences, event management, ticket support, and authenticate into their account.
+Consumer: The current page (triggered by selecting "Manage Events" from the Profile page) is a browser selection interface that allows the user to choose an application (e.g., Chrome, WebView Browser Tester) to open the event management functionality, with options to set a default browser for future actions.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the initial page (page 0), click the Profile tab icon (action_ref [0,6]) to navigate to the Profile page (page 4).
+Consumer task:
+ On the Profile page (page 4), click the 'Manage Events' option. Verify that the browser selection interface (page 7) appears, showing options to choose an app (e.g., Chrome, WebView Browser Tester) to open event management, using the 'Manage Events' option produced by the Profile page navigation.
+------------------------------
+
+==============================================
+[AppTest] Pair 6/18: 5 -> 11
+Producer: The Profile page provides access to general settings and support options (Settings, Manage Events, Ticket Issues) and a login option, allowing users to manage account-related preferences, event management, ticket support, and authenticate into their account.
+Consumer: The current page (initiated by selecting "Manage Events" from the Profile page) is prompting the user to choose a browser (Chrome or WebView Browser Tester) to open the event management functionality, likely for tasks like viewing, editing, or organizing events associated with the user's profile.
+
+[Plan]
+Case 1/1
+Producer task:
+ From the initial page (page 0), click the Profile tab icon (action_ref [0,6]) to navigate to the Profile page (page 4).
+Consumer task:
+ On the Profile page, click the 'Ticket Issues' (or intended 'Manage Events') option to trigger the browser selection dialog, then verify that the dialog appears with Chrome and WebView Browser Tester options (using the profile page content as context for the event management trigger).
+------------------------------
+
+==============================================
+[AppTest] Pair 7/18: 5 -> 12
+Producer: The Profile page provides access to general settings and support options (Settings, Manage Events, Ticket Issues) and a login option, allowing users to manage account-related preferences, event management, ticket support, and authenticate into their account.
+Consumer: This page allows users to sign up or log in by entering their email address and proceeding with the "Get Started" button to access location - based activity information.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on the initial page (page 0). Click the Profile tab icon (action_ref [0,6]) to navigate to the Profile page (page 4).
+Consumer task:
+ On the Profile page (page 4), click the 'Log In' option. Verify that this navigates to the 'Let's get started' page (page 2) where you can enter an email and proceed with 'Get Started' to access location - based activity information, using the login option from the Profile page.
+------------------------------
+
+==============================================
+[AppTest] Pair 8/18: 6 -> 1
+Producer: This page facilitates user sign - up or login by prompting for an email address and providing a “Get Started” button to proceed with accessing location - based activity information.
+Consumer: This page functions as a login or sign - up interface where users can enter their email address and then proceed by clicking the "Get Started" button to either sign up for a new account or log in to an existing one, with the goal of accessing location - based content to see what's happening nearby.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the 'Let’s get started' page, click the 'Get Started' button to initiate the login session and proceed to access location - based activity information.
+Consumer task:
+ After the producer task, on the relevant page (page 2 as per core_logic), click the email input field (action_ref [2,1]) to proceed to page 5 for entering email details. Verify that this action is possible and is related to the login session initiated by the producer task.
+------------------------------
+
+==============================================
+[AppTest] Pair 9/18: 8 -> 2
+Producer: This page allows the user to select a time frame (e.g., Anytime, Today, Tomorrow, etc.) to filter search results or events based on the desired date or period.
+Consumer: The page allows users to search for outings by specifying a date (e.g., Friday, Dec 12), a location, and an activity type (e.g., Anything), and then proceed with the search using the provided details.
+
+[Plan]
+Case 1/2
+Producer task:
+ On page 3, click 'Anytime' filter text to open page 8. Select 'Today' preset option, return to page 3.
+Consumer task:
+ On page 3 (after Producer task), click the submit arrow. Verify search results reflect the 'Today' date filter set by Producer.
+------------------------------
+Case 2/2
+Producer task:
+ On page 3, click 'Anytime' to open page 8. Select 'Pick a date...' to open calendar (page 12). Navigate to December 2025, select Dec 15, confirm to return to page 3.
+Consumer task:
+ On page 3 (after Producer task), click the submit arrow. Verify search results use the selected date (Dec 15) from Producer's calendar selection.
+------------------------------
+
+==============================================
+[AppTest] Pair 10/18: 8 -> 21
+Producer: This page allows the user to select a time frame (e.g., Anytime, Today, Tomorrow, etc.) to filter search results or events based on the desired date or period.
+Consumer: The current page allows users to refine search results by adjusting filters for date, location, category, specific search criteria (e.g., free stuff only), and sorting preferences (e.g., by name or date) before applying these filters to update the search results.
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 3, click the Anytime filter text to open page 8. Select 'Today' as the preset time option, then return to page 3.
+Consumer task:
+ On page 11, click the filter icon to open page 14. Verify that the date setting (from the producer's 'Today' selection) is reflected in the date filter options, then click the apply filter checkmark to update search results.
+------------------------------
+
+==============================================
+[AppTest] Pair 11/18: 8 -> 22
+Producer: This page allows the user to select a time frame (e.g., Anytime, Today, Tomorrow, etc.) to filter search results or events based on the desired date or period.
+Consumer: Displays search results filtered to show items or events occurring on today's date (2025-12-13), with a search bar at the top and a list of result entries below.
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 3, click 'Anytime' filter text to open page 8. On page 8, select 'Today' as the time option, then return to page 3 to apply the 'Today' time filter setting.
+Consumer task:
+ On page 11, click 'Tomorrow filter button' (action_ref [11,3]) to transition to page 15 and verify search results are filtered to show items/events for the date set by the producer (today's date, 2025-12-13).
+------------------------------
+
+==============================================
+[AppTest] Pair 12/18: 9 -> 7
+Producer: The Settings page allows users to configure server settings, manage account status, access about, legal, and app - specific options (like version info), and perform actions such as visiting the website, rating the app, and suggesting improvements.
+Consumer: The Settings page allows users to configure server settings, manage account-related actions (when logged in), access about, legal, and app version information, and interact with options like visiting the website, rating the app, suggesting improvements, and reviewing legal policies.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on Profile page (page 4), click 'Settings' option to navigate to Settings page (page 6).
+Consumer task:
+ Start on page 2, click settings gear icon to go to Settings page (page 6) (verify it's the same Settings page as produced), then click back arrow icon to return to page 2.
+------------------------------
+
+==============================================
+[AppTest] Pair 13/18: 12 -> 1
+Producer: This page allows users to sign up or log in by entering their email address and proceeding with the "Get Started" button to access location - based activity information.
+Consumer: This page functions as a login or sign - up interface where users can enter their email address and then proceed by clicking the "Get Started" button to either sign up for a new account or log in to an existing one, with the goal of accessing location - based content to see what's happening nearby.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on Profile page (page 4), click 'Log In' option to navigate to 'Let's get started' page (page 2).
+Consumer task:
+ Start on page 0, click notification bell icon (action_ref [0,1]) to navigate to page 2 (the page reached by Producer). Then click email input field (action_ref [2,1]) to proceed to page 5, verifying the login session initiated by Producer is reflected in the email input workflow.
+------------------------------
+
+==============================================
+[AppTest] Pair 14/18: 20 -> 2
+Producer: The page enables users to enter a location to discover location - based content (such as events, places, etc.) and has a bottom navigation bar with options like Events, Search, Favorites, Tickets, and Profile.
+Consumer: The page allows users to search for outings by specifying a date (e.g., Friday, Dec 12), a location, and an activity type (e.g., Anything), and then proceed with the search using the provided details.
+
+[Plan]
+Case 1/1
+Producer task:
+ Click the 'Open app again' button to navigate to the app's main page with location entry and bottom navigation.
+Consumer task:
+ First, click the Search tab icon. Then, interact with the location input field (using the location context from the Producer's app state) and, if desired, adjust the activity filter or date (e.g., use the date tag). Finally, click the submit arrow to proceed to the search results and verify the results reflect the input location and other criteria.
+------------------------------
+
+==============================================
+[AppTest] Pair 15/18: 21 -> 23
+Producer: The current page allows users to refine search results by adjusting filters for date, location, category, specific search criteria (e.g., free stuff only), and sorting preferences (e.g., by name or date) before applying these filters to update the search results.
+Consumer: Displays search results filtered to show items or events occurring on the current date (2025-12-13), with a search bar for further refinement and a list of result placeholders.
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 11, click the filter icon to open page 14. On page 14, set the date filter to '2025-12-13', then click the apply filter checkmark to update search results.
+Consumer task:
+ On page 11, click the 'This weekend filter button' to navigate to page 15. Verify that the search results on page 15 reflect the items/events filtered for 2025-12-13 (matching the date filter set by the Producer).
+------------------------------
+
+==============================================
+[AppTest] Pair 16/18: 21 -> 24
+Producer: The current page allows users to refine search results by adjusting filters for date, location, category, specific search criteria (e.g., free stuff only), and sorting preferences (e.g., by name or date) before applying these filters to update the search results.
+Consumer: Free stuff only checkbox
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 11, click filter icon to open page 14. On page 14, adjust 'Free stuff only' filter (check the checkbox), then click apply filter checkmark to update search results.
+Consumer task:
+ Start on page 14, click 'Free stuff only' checkbox (should be in the state set by producer), transition to page 19. Verify that the filter shows only free stuff (matches the producer's updated 'Free stuff only' filter setting).
+------------------------------
+
+==============================================
+[AppTest] Pair 17/18: 21 -> 25
+Producer: The current page allows users to refine search results by adjusting filters for date, location, category, specific search criteria (e.g., free stuff only), and sorting preferences (e.g., by name or date) before applying these filters to update the search results.
+Consumer: Sessions and speakers checkbox
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 11, click filter icon to open page 14. On page 14, adjust at least one filter (e.g., date, location, category) or sort preference, then click apply filter checkmark to update search results.
+Consumer task:
+ Start on page 14 (after producer's filter application), click 'Sessions and speakers' checkbox, then verify on page 20 that the 'Sessions and speakers' filter setting reflects the context of the previously applied producer filters (e.g., if producer filtered by date, check that session/speaker data aligns with that date filter).
+------------------------------
+
+==============================================
+[AppTest] Pair 18/18: 21 -> 26
+Producer: The current page allows users to refine search results by adjusting filters for date, location, category, specific search criteria (e.g., free stuff only), and sorting preferences (e.g., by name or date) before applying these filters to update the search results.
+Consumer: Call For Speakers checkbox
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 11, click the filter icon to open page 14. On page 14, adjust at least one filter (e.g., date, location, category) or sorting preference, then click the apply filter checkmark to update search results.
+Consumer task:
+ On page 14, click the 'Call For Speakers' checkbox, which should lead to page 21 where the previously updated search results (from the producer task) are reflected with the 'Call For Speakers' filter applied.
+------------------------------

@@ -1,0 +1,2236 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "Social media content browsing (推荐 tab), posts & interactions",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    10
+                ]
+            ],
+            "data_in": [
+                "推荐内容列表",
+                "推荐页面内容"
+            ],
+            "data_out": [],
+            "data_dependencies": [
+                1,
+                8,
+                9,
+                21
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The app starts on page 0. First, the user clicks the '推荐' (Recommend) tab in the top navigation (which is already the current tab, so the page remains 0). Then, the user clicks the '最右' (Zuiyou) bottom tab, which also keeps the page as 0. These actions are part of navigating or confirming the social media content browsing in the '推荐' tab.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click '推荐' tab in top navigation (current tab, page remains 0)"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            0,
+                            10
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click '最右' bottom tab (page remains 0)"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 1,
+            "function_description": "The \"话题广场\" (Topic Plaza) page in the app's \"话题\" (Topic) section allows users to browse, search for, and join various topic groups (with options to create topics), organized by categories like 推荐 (Recommended), 小编精选 (Editor's Picks), 搞笑 (Humor), etc., and view topic - related posts and interaction counts.",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ],
+                [
+                    1,
+                    0
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    18,
+                    0
+                ],
+                [
+                    18,
+                    2
+                ]
+            ],
+            "data_in": [
+                "topic feature entry",
+                "topic广场页面内容",
+                "topic list",
+                "topic search input"
+            ],
+            "data_out": [
+                "topic page content",
+                "返回后的推荐页面内容",
+                "updated topic list"
+            ],
+            "data_dependencies": [
+                33
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the main page and clicks the '话题' tab to navigate to the topic section. From there, they click the '话题广场' tab to enter the Topic Plaza. In the plaza, the user can either input a topic in the search field (e.g., '搞笑话题') or click a category tab (e.g., '推荐') to browse topics, with the flow allowing for repeated interaction with search/navigation.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click '话题' tab to enter topic section"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            1,
+                            1
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click '话题广场' tab to enter Topic Plaza"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            18,
+                            0
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 18,
+                        "action": "input",
+                        "summary": "Input topic (e.g., '搞笑话题') in search field"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            18,
+                            2
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click category tab (e.g., '推荐') to browse topics"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3",
+                                "condition": "User wants to search a topic"
+                            },
+                            {
+                                "next_step": "S4",
+                                "condition": "User wants to browse by category"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "This page enables users to search for content, view historical searches, explore featured sections (like 章鱼周刊, 发现话题), and browse trending topics (最右热榜) with options to engage with popular posts or subscribe to the hotlist.",
+            "action_refs": [
+                [
+                    0,
+                    2
+                ],
+                [
+                    6,
+                    0
+                ],
+                [
+                    6,
+                    1
+                ],
+                [
+                    6,
+                    2
+                ],
+                [
+                    29,
+                    2
+                ]
+            ],
+            "data_in": [
+                "search page state",
+                "hot content list",
+                "search input field",
+                "search query (existing text)",
+                "search query",
+                "search interface"
+            ],
+            "data_out": [
+                "home page state",
+                "search results (post)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts by clicking the search icon to enter the search page. On the search page, users can input a query (e.g., '悬疑电影') and execute the search. After searching, users can also interact with the '话题' tab. Navigation back to the previous page is possible via the back button.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click search icon to enter search page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            6,
+                            0
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click back button to return to previous page"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            6,
+                            1
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 6,
+                        "action": "input",
+                        "summary": "Input search query in search field"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            6,
+                            2
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 29,
+                        "action": "click",
+                        "summary": "Click search execution button to perform search"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            29,
+                            2
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 29,
+                        "action": "click",
+                        "summary": "Click '话题' tab button"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S5"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "This page functions as a video playback interface for a social media video post, allowing users to play/pause the video, send bullet comments, view and interact with the video (like, comment, share, save), and see the video's title and interaction metrics.",
+            "action_refs": [
+                [
+                    0,
+                    3
+                ],
+                [
+                    7,
+                    0
+                ]
+            ],
+            "data_in": [
+                "video post",
+                "video content",
+                "video playback state"
+            ],
+            "data_out": [
+                "video playback started",
+                "navigation back to feed page"
+            ],
+            "data_dependencies": [
+                4,
+                5,
+                6,
+                7,
+                9,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                21,
+                34,
+                36,
+                37
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on page 0. First, the user clicks the video play button of the first post (navigating to page 7). Then, the user can click the back arrow to return to page 0, completing the navigation cycle for video playback and return.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click video play button of first post to enter video playback page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            7,
+                            0
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click back navigation arrow to return to the original page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "This page provides a sharing interface for a social media post (video), allowing users to share the post to various platforms (e.g., WeChat, QQ, QQ Space) or perform actions like saving, bookmarking, or blocking related content.",
+            "action_refs": [
+                [
+                    0,
+                    4
+                ],
+                [
+                    8,
+                    0
+                ]
+            ],
+            "data_in": [
+                "post (content: 谁说国产没有好剧情, video)",
+                "share popup"
+            ],
+            "data_out": [
+                "share options (for post)",
+                "share popup closed"
+            ],
+            "data_dependencies": [
+                5,
+                6,
+                7,
+                16,
+                17,
+                18,
+                19,
+                36,
+                37
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the social media post page (page 0). First, the user clicks the share icon (with a count of 256) to open the share popup (navigating to page 8). Then, the user can click the close button to dismiss the share popup, ending the flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click share icon to open share popup"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            8,
+                            0
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click close button to dismiss share popup"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "This page displays a social media post (including a chat screenshot, author info, and interaction buttons) and allows users to view, comment on, share, like, or save the post, as well as browse the hottest comments related to it.",
+            "action_refs": [
+                [
+                    0,
+                    5
+                ],
+                [
+                    9,
+                    0
+                ],
+                [
+                    9,
+                    1
+                ]
+            ],
+            "data_in": [
+                "post comment section entry",
+                "post",
+                "comment text input field",
+                "post (最右)",
+                "comment section context",
+                "post content"
+            ],
+            "data_out": [
+                "comment section view",
+                "comment text (to be submitted)"
+            ],
+            "data_dependencies": [
+                4,
+                6,
+                7,
+                16,
+                17,
+                18,
+                19,
+                34,
+                35,
+                36,
+                37
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the post page (page 0). First, the user clicks the comment icon (S1) to enter the comment page (page 9). On the comment page, there are two options: either input a comment (S2) to proceed to the comment submission (page 31) or click the back arrow (S3) to return to the original post page (page 0).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click the comment icon to open the comment page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            9,
+                            0
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 31,
+                        "action": "input",
+                        "summary": "Input a comment in the text field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            9,
+                            1
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the back arrow to return to the post page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "Like icon (count 1362)",
+            "action_refs": [
+                [
+                    0,
+                    6
+                ]
+            ],
+            "data_in": [
+                "post",
+                "like count setting"
+            ],
+            "data_out": [
+                "post like count updated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on page 0 and clicks the like icon (with a count of 1362). This action transitions the app to page 10, completing the like interaction for the content.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            6
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click the like icon (count 1362)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "Dislike icon",
+            "action_refs": [
+                [
+                    0,
+                    7
+                ]
+            ],
+            "data_in": [
+                "post (谁说国产没有好剧情)"
+            ],
+            "data_out": [
+                "dislike count update for post (谁说国产没有好剧情)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on page 0. They perform a click action on the dislike icon, which transitions the app to page 11. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            7
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click the dislike icon"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "This page is in the process of loading content related to \"high - score movies\" after the user selected the \"高分电影\" tag from the social media content browsing (recommendation tab) page, with a loading indicator and a refresh button available.",
+            "action_refs": [
+                [
+                    0,
+                    8
+                ]
+            ],
+            "data_in": [
+                "高分电影话题"
+            ],
+            "data_out": [
+                "高分电影话题相关内容"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the social media recommendation page (page 0). They click the '高分电影' tag (with dropdown), which triggers a transition to a new page (page 12) where content related to high - score movies is being loaded, with a loading indicator and a refresh button visible.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            8
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click the '高分电影' tag (with dropdown) to initiate loading of high - score movie related content."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "This page allows users to select a reason for disliking a post (from the \"推荐\" tab) and provide feedback, with options for disliking the user, lack of interest, repeated recommendations, and various content - related issues like offensive, inappropriate, or AI - generated content, to improve the recommendation experience.",
+            "action_refs": [
+                [
+                    0,
+                    9
+                ],
+                [
+                    13,
+                    1
+                ]
+            ],
+            "data_in": [
+                "post (first post)",
+                "feedback reason input field",
+                "feedback reason text"
+            ],
+            "data_out": [
+                "feedback options (for post)",
+                "feedback reason text (updated)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The process starts on the '推荐' page. First, the user clicks the dropdown arrow for the first post's user (on page 0) to navigate to page 13. Then, on page 13, the user inputs feedback (e.g., '内容缺乏新意') into the feedback reason input box. This is a linear flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            9
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click the dropdown arrow for the first post's user to navigate to the feedback page (page 13)."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            13,
+                            1
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 38,
+                        "action": "input",
+                        "summary": "Input feedback (e.g., '内容缺乏新意') into the feedback reason input box on page 13."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "This page enables users to complete real - name authentication by binding a mobile phone number. It requires users to input a phone number, obtain and enter a verification code, and agree to the privacy statement before finishing the authentication process.",
+            "action_refs": [
+                [
+                    0,
+                    11
+                ],
+                [
+                    15,
+                    1
+                ],
+                [
+                    15,
+                    2
+                ],
+                [
+                    15,
+                    4
+                ]
+            ],
+            "data_in": [
+                "post creation trigger (add post button)",
+                "phone number input field",
+                "real - name authentication process context",
+                "verification code",
+                "phone number (for real - name authentication)",
+                "authentication form data",
+                "privacy policy agreement state"
+            ],
+            "data_out": [
+                "real - name authentication page entry",
+                "entered phone number content in the input field",
+                "filled verification code input field (for real - name authentication)"
+            ],
+            "data_dependencies": [
+                22,
+                23,
+                24,
+                39
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on page 0 and clicks to enter the real - name authentication page (page 15). On page 15, the user first inputs a phone number. Then, the user inputs a verification code. Finally, the user clicks the 'Complete authentication' button to finish the real - name authentication process. There are no branches or loops in this core flow as the actions are sequential and required for the authentication.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            11
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click to enter the real - name authentication page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            15,
+                            1
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 20,
+                        "action": "input",
+                        "summary": "Input the phone number"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            15,
+                            2
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 21,
+                        "action": "input",
+                        "summary": "Input the verification code"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            15,
+                            4
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click the complete authentication button"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "The current page (under the \"消息\" (Messages) bottom tab, \"提醒\" (Reminders) sub - tab) functions to display various types of message reminders (such as \"小右通知\", \"@ mentions\", \"插眼\" notifications, \"fans/friends\" related notifications) and shows the current status of these reminders (in this case, indicating no message reminders are available).",
+            "action_refs": [
+                [
+                    0,
+                    12
+                ]
+            ],
+            "data_in": [
+                "消息功能入口"
+            ],
+            "data_out": [
+                "消息页面加载完成"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the main page and clicks the '消息' (Messages) bottom tab. This navigates to the '提醒' (Reminders) sub - tab page, where various types of message reminders are displayed, and in this case, it shows that there are no message reminders available.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            12
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click the '消息' bottom tab to navigate to the '提醒' sub - tab page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "The current page (我的) serves as the user's personal center, displaying profile information (获赞, 关注, 粉丝), providing access to personal content (帖子, 评论, 收藏, 插眼, 赞过), featuring a newbie task, and offering various functional entries (共建最右, 小说中心, 小游戏, 更多服务) for account management, content interaction, and platform - related services.",
+            "action_refs": [
+                [
+                    0,
+                    13
+                ]
+            ],
+            "data_in": [
+                "user profile"
+            ],
+            "data_out": [
+                "user profile page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the main feed page (page 0) and clicks the '我的' (My) bottom tab. This action navigates to the personal center page (page 17), where profile info, personal content access, a newbie task, and various functional entries are displayed. There are no branches or loops as this is a single navigation step to the personal center.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            13
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click '我的' bottom tab to navigate to personal center page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "This page is for real - name authentication, which requires users to bind their mobile phone numbers. Users need to enter their mobile phone number, obtain and input a verification code, and agree to the \"Privacy Statement\" to complete the authentication process, so as to ensure normal use of the related Internet account (on the \"最右\" platform).",
+            "action_refs": [
+                [
+                    1,
+                    2
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user starts on page 1 and clicks the 'Create' button (action_ref [1,2]) to navigate to page 15, likely initiating the real - name authentication or related process. There are no branches or loops in this initial flow as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            2
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click the 'Create' button at position [951, 120] to navigate from page 1 to page 15."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "This page facilitates the real - name authentication process for the account by enabling users to bind their mobile phone numbers. It requires users to input their phone number, obtain and enter a verification code, and agree to the privacy statement to complete the binding and authentication.",
+            "action_refs": [
+                [
+                    7,
+                    1
+                ]
+            ],
+            "data_in": [
+                "video playback session",
+                "bullet comment input field"
+            ],
+            "data_out": [
+                "bullet comment (to be sent)",
+                "real - name authentication page (navigated to)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The process starts on page 7. The user inputs content into the bullet comment input field, and this action leads to page 15. There are no branches or loops in this flow as it is a single input action transitioning to another page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            1
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 15,
+                        "action": "input",
+                        "summary": "Input content into the bullet comment input field"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": null
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "This page enables users to play, pause, interact with (via comments, likes, reposts), and share a video (specifically to WeChat), along with viewing and sending bullet comments, within a social media video - playback context.",
+            "action_refs": [
+                [
+                    7,
+                    2
+                ]
+            ],
+            "data_in": [
+                "video"
+            ],
+            "data_out": [
+                "shared video"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "On the video playback page (page 7), the user can perform a share action. The core flow involves clicking the 'Share to WeChat' button, which triggers the sharing functionality while remaining on the same page (page 7). There are no branches or loops in this single-step flow for the share action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            2
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click the 'Share to WeChat' button to initiate sharing the video to WeChat"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "Share to WeChat Friends",
+            "action_refs": [
+                [
+                    8,
+                    1
+                ]
+            ],
+            "data_in": [
+                "post",
+                "WeChat friend"
+            ],
+            "data_out": [
+                "shared post"
+            ],
+            "data_dependencies": [
+                36
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The process starts on page 8. The user clicks the 'Share to WeChat Friends' option, which initiates the sharing flow to WeChat Friends. Since there's only one action here, the flow is a single step with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            1
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click 'Share to WeChat Friends' to start sharing to WeChat Friends"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "Favorite content",
+            "action_refs": [
+                [
+                    8,
+                    2
+                ]
+            ],
+            "data_in": [
+                "content",
+                "favorite setting"
+            ],
+            "data_out": [
+                "content marked as favorite"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The process starts on page 8. The user performs a click action to favorite the content. Since there are no further steps or branches, the flow ends after this single action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            2
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click to favorite the content"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "This page provides sharing options (e.g., social platforms, copying links) and additional actions (e.g., sharing to internal friends, generating long images, adjusting reading settings, copying text, saving) for the current social media post.",
+            "action_refs": [
+                [
+                    9,
+                    2
+                ],
+                [
+                    32,
+                    0
+                ]
+            ],
+            "data_in": [
+                "post (最右)",
+                "share popup"
+            ],
+            "data_out": [
+                "share options (for post)",
+                "share popup closed"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The flow starts by clicking the three - dot menu button on the post page (page 9) to open the share popup (page 32). Then, one can click the close share popup button on the share popup page (page 32) to close the popup and return to the post page (page 34).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            2
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 32,
+                        "action": "click",
+                        "summary": "Click the three - dot menu button to open the share popup"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            32,
+                            0
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": 34,
+                        "action": "click",
+                        "summary": "Click the close share popup button to close the popup"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "This page enables users to record voice comments (via click/long - press on the microphone button) and also provides a text input area for typing comments, along with additional interaction options like @mentioning, adding emojis, etc., to interact with the post's comment section.",
+            "action_refs": [
+                [
+                    9,
+                    3
+                ],
+                [
+                    33,
+                    1
+                ]
+            ],
+            "data_in": [
+                "comment input",
+                "post content",
+                "comment text input"
+            ],
+            "data_out": [
+                "voice recording (for comment)",
+                "comment text (entered)"
+            ],
+            "data_dependencies": [
+                38
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts on page 9. First, they click the microphone icon button (action from page 9 to 33). Then, they input text into the comment field (action from page 33 back to 9). The flow is a straight line with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            3
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 33,
+                        "action": "click",
+                        "summary": "Click microphone icon button"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            33,
+                            1
+                        ],
+                        "src_page_idx": 33,
+                        "dst_page_idx": 9,
+                        "action": "input",
+                        "summary": "Input text into comment field"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "This page functions as a loading interface with a refresh button, likely for fetching and displaying content related to \"high - score movies\" after being triggered from a social media content browsing page with a \"high - score movies\" tag selection.",
+            "action_refs": [
+                [
+                    12,
+                    0
+                ]
+            ],
+            "data_in": [
+                "app data (to be refreshed)"
+            ],
+            "data_out": [
+                "refreshed app data"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The flow starts on page 12 (the loading interface). The user clicks the refresh button (action_ref [12,0]) to trigger fetching and displaying high - score movies - related content. Since there's only one action here, the flow is a single - step process with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            0
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click the refresh button to initiate fetching high - score movies - related content"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "The page functions as a social media content browsing interface (under the \"推荐\" tab) where users can view posts (including videos), interact with them (like, comment, share, etc.), and access options to provide feedback (e.g., mark content as uninteresting) for content personalization.",
+            "action_refs": [
+                [
+                    13,
+                    0
+                ]
+            ],
+            "data_in": [
+                "content feedback form",
+                "content item (post/video)"
+            ],
+            "data_out": [
+                "feedback record (not interested)",
+                "updated content recommendation state"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 13,
+                "logic": "The user starts on the '推荐' (recommendation) page. They click the '不感兴趣反馈按钮' (not interested feedback button) to provide feedback about the content, which likely leads to a feedback selection or confirmation step. This action is part of the content personalization process for the social media browsing experience.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            13,
+                            0
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the '不感兴趣反馈按钮' to initiate content feedback for personalization."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "The page functions as a \"Topic Plaza\" where users can browse various interest - based topics (such as hand - made, movie - related, cute pet - related topics), search for topics, create new topics, and join existing topics to participate in related discussions and communities.",
+            "action_refs": [
+                [
+                    15,
+                    0
+                ]
+            ],
+            "data_in": [
+                "authentication page"
+            ],
+            "data_out": [
+                "navigation to topic page"
+            ],
+            "data_dependencies": [
+                33
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user starts on the authentication page (page 15). They click the close button (action_ref [15,0]) to exit the authentication page, which navigates them to the Topic Plaza page (page 18) where they can browse, search, create, or join topics.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            0
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click the close button on the authentication page to navigate to the Topic Plaza page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "This page enables users to complete real - name authentication by binding a mobile phone number, including entering the phone number, obtaining a verification code, and submitting the information after agreeing to the privacy statement.",
+            "action_refs": [
+                [
+                    15,
+                    3
+                ]
+            ],
+            "data_in": [
+                "phone number",
+                "verification code request"
+            ],
+            "data_out": [
+                "verification code request initiated"
+            ],
+            "data_dependencies": [
+                22,
+                24,
+                39
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The core execution logic starts on the real - name authentication page. The user clicks the 'Get verification code' button. Since there's only one action provided, the flow is currently a single - step process, but in a complete scenario, after getting the code, the user would enter it, agree to the privacy statement, and submit to complete authentication.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            3
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click the 'Get verification code' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "Privacy policy agreement checkbox",
+            "action_refs": [
+                [
+                    15,
+                    5
+                ]
+            ],
+            "data_in": [
+                "privacy policy agreement setting"
+            ],
+            "data_out": [
+                "privacy policy agreement setting enabled"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user starts on page 15 (real - name authentication page). Then, the user clicks the privacy policy agreement checkbox. After this click, the user is navigated to page 22. There are no branch points as this is a single - step action with a direct navigation.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            5
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 22,
+                        "action": "click",
+                        "summary": "Click the privacy policy agreement checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 25,
+            "function_description": "This page functions as a private message management interface within a social media application, allowing users to view, potentially compose (implied by the \"主动才会有故事~\" prompt), and manage (via delete/select options) their private messages.",
+            "action_refs": [
+                [
+                    16,
+                    0
+                ]
+            ],
+            "data_in": [
+                "私信功能入口"
+            ],
+            "data_out": [
+                "私信页面加载完成"
+            ],
+            "data_dependencies": [
+                40,
+                41,
+                42
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 16,
+                "logic": "The user starts on page 16 (message/notification interface) and clicks the '私信' (Private Messages) tab. This action navigates to page 46, the private message management interface, where users can view, compose, or manage private messages (e.g., delete/select) as implied by the UI elements and prompt.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            16,
+                            0
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 46,
+                        "action": "click",
+                        "summary": "Click the '私信' tab to navigate to the private message management page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 26,
+            "function_description": "This page functions as the user's personal post management and profile overview page, allowing the user to view and manage their own posts (via the \"帖子\" button), along with accessing other personal-related features like comments, collections, and account settings.",
+            "action_refs": [
+                [
+                    17,
+                    0
+                ]
+            ],
+            "data_in": [
+                "帖子功能入口"
+            ],
+            "data_out": [
+                "进入帖子功能页面"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 17,
+                "logic": "The user starts on the personal profile page (page 17). The core action is clicking the '帖子' (Posts) button, which likely leads to managing or viewing personal posts. Since there's only one action here, the flow is a single step focused on interacting with the posts feature.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            17,
+                            0
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click the '帖子' button to access post management or viewing."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 27,
+            "function_description": "This page functions as the user's personal profile page, allowing the user to view and manage their posts, comments, collections, and other interactions, as well as access various account-related features and tasks.",
+            "action_refs": [
+                [
+                    17,
+                    1
+                ]
+            ],
+            "data_in": [
+                "评论功能入口"
+            ],
+            "data_out": [
+                "进入评论页面"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 17,
+                "logic": "The user starts on the personal profile page (page 17). The core action is clicking the '评论' (Comments) button, which likely leads to a page or interaction related to managing comments, though the destination page remains the same here (page 17), suggesting it might refresh or open a sub - view within the profile context. There are no branches or loops as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            17,
+                            1
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click the '评论' (Comments) button on the personal profile page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 28,
+            "function_description": "This page is the user's personal profile page, allowing the user to view and manage their posts, comments, collections, and other personal content, as well as access various features and tasks related to their account.",
+            "action_refs": [
+                [
+                    17,
+                    2
+                ]
+            ],
+            "data_in": [
+                "收藏设置"
+            ],
+            "data_out": [
+                "收藏设置更新"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 17,
+                "logic": "The user starts on the personal profile page (page 17). The core action is clicking the '收藏' (Collection) button, which likely allows the user to view or manage their collected content. Since there's only one action here, the flow is a single step focused on interacting with the collection feature.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            17,
+                            2
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click the '收藏' (Collection) button to access or manage collected content."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 29,
+            "function_description": "This page displays the user's personal profile information (including username, ID, likes, follows, and followers), provides access to post - related actions (posts, comments, collections, etc.), offers new user tasks with rewards, and presents various functional entrances such as community - building, content - related, and service - related features.",
+            "action_refs": [
+                [
+                    17,
+                    3
+                ]
+            ],
+            "data_in": [
+                "插眼功能入口"
+            ],
+            "data_out": [
+                "插眼功能触发"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 17,
+                "logic": "The user starts on the personal profile page (page 17). The core action is clicking the '插眼' (Eye - insert) button, which likely triggers a related function or state change on the same page. There are no branches or loops as it's a single - action flow for now.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            17,
+                            3
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click the '插眼' button on the personal profile page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 30,
+            "function_description": "This page functions as the user's personal post management and profile overview page, allowing the user to view and manage their own posts (along with related interactions like comments, collections, etc.), check profile stats (likes, follows, fans), and access various personal center - related features and tasks.",
+            "action_refs": [
+                [
+                    17,
+                    4
+                ]
+            ],
+            "data_in": [
+                "赞过内容列表"
+            ],
+            "data_out": [
+                "赞过内容列表（加载后）"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 17,
+                "logic": "The user starts on the personal profile page (page 17). The core action is clicking the '赞过' (Liked) button, which likely navigates or updates the view to show the user's liked posts or related content, with the page remaining on the personal profile context (dst_page_idx 17).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            17,
+                            4
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click the '赞过' button to view liked posts or related content."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 31,
+            "function_description": "This page allows the user to view and manage their own posts on the social media platform, along with other personal account - related information and functional entrances.",
+            "action_refs": [
+                [
+                    17,
+                    5
+                ]
+            ],
+            "data_in": [
+                "夜间模式设置"
+            ],
+            "data_out": [
+                "夜间模式设置状态更新"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 17,
+                "logic": "The user starts on the personal account page (page 17). The core action is clicking the '夜间模式' (night mode) button, which likely toggles the app's night mode setting. Since there's only one action here, the flow is a single step with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            17,
+                            5
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click the night mode button to toggle night mode"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 32,
+            "function_description": "This page functions as the user's personal post management and profile overview section, allowing the user to view and manage their posts, comments, collections, and other interactions, as well as access various personal tasks and feature entrances.",
+            "action_refs": [
+                [
+                    17,
+                    6
+                ]
+            ],
+            "data_in": [
+                "浏览历史功能入口"
+            ],
+            "data_out": [
+                "浏览历史页面加载请求"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 17,
+                "logic": "The user starts on the personal profile page (page 17). The core action is clicking the '浏览历史' (browsing history) button, which likely navigates to or opens the browsing history section, with the flow remaining on the same page context after the click (as dst_page_idx matches src_page_idx).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            17,
+                            6
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click the '浏览历史' (browsing history) button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 33,
+            "function_description": "Join topic button (e.g., 生活中漂亮的小姐姐们)",
+            "action_refs": [
+                [
+                    18,
+                    1
+                ]
+            ],
+            "data_in": [
+                "topic (生活中漂亮的小姐姐们)"
+            ],
+            "data_out": [
+                "joined topic (生活中漂亮的小姐姐们)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 18,
+                "logic": "The user starts on page 18 (topic plaza). The core action is clicking the 'Join topic' button (e.g., for a topic like '生活中漂亮的小姐姐们'), which navigates to page 19. There are no branches or loops as it's a single click action to join a topic.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            18,
+                            1
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click the 'Join topic' button (e.g., for a specific topic) to proceed."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 34,
+            "function_description": "This page displays a chat conversation (likely from a social media or messaging app) showing text messages, a ¥20 WeChat transfer, and interaction buttons (like comment, share, like) for engaging with the content.",
+            "action_refs": [
+                [
+                    29,
+                    0
+                ],
+                [
+                    30,
+                    0
+                ]
+            ],
+            "data_in": [
+                "video post",
+                "post detail view",
+                "chat screenshot (post content)"
+            ],
+            "data_out": [
+                "video playback started",
+                "post detail view exited",
+                "post list/feed view loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 29,
+                "logic": "The flow starts on page 29 (a chat - related post page). First, a click action is performed on the video play button (action_ref [29, 0]), which leads to page 30 (a video - related page). Then, a click action is done on the back button (action_ref [30, 0]), and this action navigates back to page 9.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            29,
+                            0
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 30,
+                        "action": "click",
+                        "summary": "Click the video play button on page 29 to go to page 30."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            30,
+                            0
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click the back button on page 30 to return to page 9."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 35,
+            "function_description": "This page displays a social media post (including images, interaction metrics like shares/comments/likes), a related chat - themed tag entry, the \"hottest comments\" section with user comments and replies, and a bottom input area for users to post comments, along with function buttons for chat, emoji, favorites, and sharing.",
+            "action_refs": [
+                [
+                    29,
+                    1
+                ]
+            ],
+            "data_in": [
+                "评论列表"
+            ],
+            "data_out": [
+                "全部评论列表"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 29,
+                "logic": "The user starts on the social media post page. The core action is clicking the '查看全部 (1371)' button, which likely expands or navigates to show all related content (e.g., more comments or details) while remaining on the same page contextually. There are no branching or looping steps here as only one action is defined.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            29,
+                            1
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 29,
+                        "action": "click",
+                        "summary": "Click the '查看全部 (1371)' button to view all related content (e.g., comments/details)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 36,
+            "function_description": "This page displays a social media post (from \"哈基米南北绿豆\") with a chat - style image and text content, and provides interactive functions such as expressing attitudes (via preset reactions), commenting, liking, sharing, and viewing the most popular comments.",
+            "action_refs": [
+                [
+                    32,
+                    1
+                ]
+            ],
+            "data_in": [
+                "post",
+                "WeChat friend sharing target"
+            ],
+            "data_out": [
+                "shared post (to WeChat friend)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 32,
+                "logic": "The process starts on the social media post page (page 32). The user performs a click action to share the post to WeChat Friends, which transitions the flow to page 35. This is a straight - line flow with no branches or loops as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            32,
+                            1
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": 35,
+                        "action": "click",
+                        "summary": "Click the option to share to WeChat Friends"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 37,
+            "function_description": "Copy post text button",
+            "action_refs": [
+                [
+                    32,
+                    2
+                ]
+            ],
+            "data_in": [
+                "post text"
+            ],
+            "data_out": [
+                "copied post text"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 32,
+                "logic": "The user starts on page 32 (post view). The core action is clicking the 'Copy post text' button (action_ref [32,2]), which transitions to page 36 (likely confirming the copy or returning to the post view). There are no branches or loops as it’s a single click action to copy the post text.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            32,
+                            2
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": 36,
+                        "action": "click",
+                        "summary": "Click the 'Copy post text' button to copy the post's text content."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 38,
+            "function_description": "Blue voice recording button",
+            "action_refs": [
+                [
+                    33,
+                    0
+                ]
+            ],
+            "data_in": [
+                "voice recording function"
+            ],
+            "data_out": [
+                "voice recording (started)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 33,
+                "logic": "The user interacts with the blue voice recording button on page 33. Upon clicking this button, the app transitions to page 37, likely to initiate or manage voice recording functionality.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            33,
+                            0
+                        ],
+                        "src_page_idx": 33,
+                        "dst_page_idx": 37,
+                        "action": "click",
+                        "summary": "Click the blue voice recording button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 39,
+            "function_description": "This page is for real - name authentication, enabling users to bind their mobile phone numbers by entering the phone number, verification code, and agreeing to the privacy statement to complete the authentication process.",
+            "action_refs": [
+                [
+                    33,
+                    2
+                ]
+            ],
+            "data_in": [
+                "comment",
+                "user account"
+            ],
+            "data_out": [
+                "authentication request",
+                "phone number input"
+            ],
+            "data_dependencies": [
+                22,
+                23,
+                24
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 33,
+                "logic": "The user starts on page 33 and clicks the send comment button, which navigates to page 15. This action likely initiates a comment - sending or related process.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            33,
+                            2
+                        ],
+                        "src_page_idx": 33,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click the send comment button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 40,
+            "function_description": "This page provides a menu with options for batch deleting private messages, marking all private messages as read, or canceling the action, accessible from the private message management page.",
+            "action_refs": [
+                [
+                    46,
+                    0
+                ],
+                [
+                    47,
+                    2
+                ]
+            ],
+            "data_in": [
+                "private message page",
+                "more options menu",
+                "popup menu"
+            ],
+            "data_out": [
+                "more options menu opened",
+                "popup menu closed"
+            ],
+            "data_dependencies": [
+                42
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 46,
+                "logic": "The flow starts on the private message management page (page 46). First, the user clicks the three - dot 'More options' menu icon (action from [46, 0]) to open the menu (navigating to page 47). Then, from the menu page (page 47), the user clicks the 'Cancel popup button' (action from [47, 2]) to cancel the action and navigate to page 49.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            46,
+                            0
+                        ],
+                        "src_page_idx": 46,
+                        "dst_page_idx": 47,
+                        "action": "click",
+                        "summary": "Click the three - dot 'More options' menu icon to open the menu."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            47,
+                            2
+                        ],
+                        "src_page_idx": 47,
+                        "dst_page_idx": 49,
+                        "action": "click",
+                        "summary": "Click the 'Cancel popup button' to cancel the action."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 41,
+            "function_description": "This page enables users to batch delete private messages, with options to select all messages, confirm deletion, or cancel the batch operation, while also displaying a prompt (主动才会有故事~) when no private messages exist.",
+            "action_refs": [
+                [
+                    47,
+                    0
+                ]
+            ],
+            "data_in": [
+                "private message"
+            ],
+            "data_out": [
+                "private message (to be deleted)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 47,
+                "logic": "The user starts on the private messages page (with a prompt if empty) and clicks the batch delete button. This opens a menu with options like batch delete, mark all as read, or cancel. The flow then depends on subsequent actions (not fully detailed here, but the initial step is triggering batch delete mode).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            47,
+                            0
+                        ],
+                        "src_page_idx": 47,
+                        "dst_page_idx": 46,
+                        "action": "click",
+                        "summary": "Click batch delete private messages button to enter batch delete mode"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 42,
+            "function_description": "This page is a confirmation dialog for marking all unread private messages as read, asking the user to confirm or cancel the action of marking unread private messages as read.",
+            "action_refs": [
+                [
+                    47,
+                    1
+                ],
+                [
+                    48,
+                    1
+                ]
+            ],
+            "data_in": [
+                "private message",
+                "unread message",
+                "unread private message",
+                "mark as read confirmation dialog"
+            ],
+            "data_out": [
+                "private message (marked as read)",
+                "unread message (marked as read)"
+            ],
+            "data_dependencies": [
+                43
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 47,
+                "logic": "The process starts on page 47. First, the user clicks the 'Mark all as read' button (action from [47,1]), which leads to a confirmation dialog on page 48. At this dialog (step S2), the user can choose to cancel the action (by clicking the '取消标记未读私信为已读按钮' action from [48,1], leading to page 51) or potentially confirm (though the confirm action isn't in the provided list here, but the branch at S2 is an if-else for cancel or confirm).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            47,
+                            1
+                        ],
+                        "src_page_idx": 47,
+                        "dst_page_idx": 48,
+                        "action": "click",
+                        "summary": "Click 'Mark all as read' button to open confirmation dialog"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            48,
+                            1
+                        ],
+                        "src_page_idx": 48,
+                        "dst_page_idx": 51,
+                        "action": "click",
+                        "summary": "Click '取消标记未读私信为已读按钮' to cancel marking all as read"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2",
+                                "condition": "User chooses to cancel (click the cancel button)"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "User chooses to confirm (not shown in provided actions)"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 43,
+            "function_description": "确认标记未读私信为已读按钮",
+            "action_refs": [
+                [
+                    48,
+                    0
+                ]
+            ],
+            "data_in": [
+                "未读私信"
+            ],
+            "data_out": [
+                "已读私信"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 48,
+                "logic": "On the page with the confirmation dialog for marking unread private messages as read, click the '确认' (Confirm) button to complete the action of marking unread private messages as read.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            48,
+                            0
+                        ],
+                        "src_page_idx": 48,
+                        "dst_page_idx": 50,
+                        "action": "click",
+                        "summary": "Click the '确认' button to mark unread private messages as read"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        }
+    ]
+}

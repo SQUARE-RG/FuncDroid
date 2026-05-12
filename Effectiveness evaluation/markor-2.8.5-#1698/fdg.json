@@ -1,0 +1,4721 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "File and note management interface",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    3
+                ],
+                [
+                    0,
+                    4
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the file management page. First, the user can click the menu icon in the top bar. Then, they can click the more options icon in the top bar. Finally, they can switch to the To-Do tab via the bottom navigation bar. All actions keep the user on the same page (or switch to the To-Do tab for the last action).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click menu icon in top bar"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click more options icon in top bar"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click To-Do tab in bottom nav"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 1,
+            "function_description": "This page in the Markor app functions as a file management interface within the \"Files\" tab, allowing users to view, organize, and access files (like \"QuickNote.md\") and folders (like the \"Documents\" directory) stored in the device's storage, with options to navigate, search, and create new items.",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ]
+            ],
+            "data_in": [
+                "folder navigation feature"
+            ],
+            "data_out": [
+                "folder navigation result (files/folders)"
+            ],
+            "data_dependencies": [
+                2,
+                43
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the Markor app's file management page (Files tab). The user clicks the folder icon in the top bar, which likely navigates or interacts with the folder structure. Since there's only one action here, the flow is a single step with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the folder icon in the top bar"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "The page provides a search interface with options for recursive directory search, allowing users to input a search term and configure settings like regex search, case sensitivity, and content search to find files or notes.",
+            "action_refs": [
+                [
+                    0,
+                    2
+                ],
+                [
+                    1,
+                    0
+                ],
+                [
+                    1,
+                    3
+                ],
+                [
+                    1,
+                    4
+                ],
+                [
+                    1,
+                    5
+                ]
+            ],
+            "data_in": [
+                "file list",
+                "search parameters",
+                "search query",
+                "search configuration (regex, case sensitive, content)",
+                "search configuration",
+                "search in content setting",
+                "search configuration (regex, case sensitive, content search)",
+                "current directory files"
+            ],
+            "data_out": [
+                "search configuration",
+                "updated search configuration",
+                "search results (files)"
+            ],
+            "data_dependencies": [
+                6,
+                7
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts by clicking the search icon (entry page 0) to open the search interface (page 1). Next, the user interacts with the search input field (step S2) to enter a term. Then, optional configurations like enabling 'Search in content' (step S3) can be made. Finally, the user either cancels (returning to page 0) or confirms (executing search) via the OK button (step S5), with the CANCEL button (step S4) providing an exit option.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click search icon to open search interface"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            1,
+                            0
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click search input field to enter term"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            1,
+                            3
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Toggle 'Search in content' checkbox"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            1,
+                            4
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click CANCEL to exit search"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            1,
+                            5
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click OK to execute search"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S5"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S3",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "The QuickNote page in the file and note management app allows users to create, edit, and format notes (including text styling, adding media/links, and managing content) with additional options for navigation, saving, searching, and accessing more features.",
+            "action_refs": [
+                [
+                    0,
+                    5
+                ],
+                [
+                    2,
+                    0
+                ],
+                [
+                    2,
+                    1
+                ],
+                [
+                    2,
+                    3
+                ],
+                [
+                    2,
+                    6
+                ],
+                [
+                    2,
+                    7
+                ]
+            ],
+            "data_in": [
+                "QuickNote feature entry",
+                "note content"
+            ],
+            "data_out": [
+                "QuickNote content (loaded)",
+                "updated note content",
+                "updated note",
+                "formatted note content"
+            ],
+            "data_dependencies": [
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                23,
+                24,
+                25,
+                26,
+                27,
+                28,
+                33,
+                36,
+                37,
+                39
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts by navigating to the QuickNote page via the bottom nav tab. Once on QuickNote, users can perform actions like undoing/redoing edits, saving the note, or formatting text (bold/italic). These actions (undo, redo, save, bold, italic) are available in a loop-like manner, as they can be repeated while on the QuickNote page to manage or style the note content.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Navigate to QuickNote page via bottom nav tab"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            2,
+                            0
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Undo last edit action"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            2,
+                            1
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Redo a previously undone action"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            2,
+                            3
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Save the current note content"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            2,
+                            6
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Format text as bold"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            2,
+                            7
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Format text as italic"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S5",
+                        "to": "S6"
+                    },
+                    {
+                        "from": "S6",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S6",
+                        "type": "loop",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "The \"More\" page in the Markor app provides options for app-related actions (rate, settings, help), contributions (donate, report bugs, translate), project team info, and community links, serving as a hub for additional app functionalities and engagement.",
+            "action_refs": [
+                [
+                    0,
+                    6
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the main page (page 0). The user clicks the 'More' tab in the bottom navigation bar, which navigates to the 'More' page (page 3) containing app actions, contribution options, project team info, and community links. No branches or loops exist here as it’s a single navigation step to access the hub.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            6
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click 'More' tab in bottom nav to navigate to More page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "This page allows the user to create a new file (or folder) by specifying the file name, type (e.g., Markdown), and template, with options to confirm, cancel, or create a folder instead.",
+            "action_refs": [
+                [
+                    0,
+                    7
+                ],
+                [
+                    4,
+                    0
+                ],
+                [
+                    4,
+                    1
+                ],
+                [
+                    4,
+                    2
+                ],
+                [
+                    4,
+                    3
+                ],
+                [
+                    4,
+                    4
+                ],
+                [
+                    4,
+                    5
+                ]
+            ],
+            "data_in": [
+                "file name",
+                "file creation options",
+                "file creation configuration",
+                "file type setting",
+                "Markdown type",
+                "template setting",
+                "folder path",
+                "note creation configuration",
+                "file type",
+                "file template"
+            ],
+            "data_out": [
+                "new note file",
+                "updated file name",
+                "updated file creation configuration",
+                "folder selection result",
+                "new markdown file",
+                "file creation confirmation"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "To create a new file or folder, start by clicking the red plus floating action button. Then, on the creation dialog, you can input the name, select the type (e.g., Markdown), and choose a template. At this point, you can decide to create a folder (by clicking FOLDER), cancel the operation (by clicking CANCEL), or confirm the file creation (by clicking OK).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            7
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click red plus floating action button to open creation dialog"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            4,
+                            0
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click name input field to enter file/folder name"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            4,
+                            1
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click type dropdown to select file type (e.g., Markdown)"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            4,
+                            2
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click template dropdown to select template (e.g., Empty file)"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            4,
+                            3
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click FOLDER button to create a folder"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            4,
+                            4
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click CANCEL button to cancel creation"
+                    },
+                    {
+                        "id": "S7",
+                        "action_ref": [
+                            4,
+                            5
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click OK button to confirm file creation"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S6"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S7"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S4",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S5",
+                                "condition": "User wants to create a folder"
+                            },
+                            {
+                                "next_step": "S6",
+                                "condition": "User wants to cancel creation"
+                            },
+                            {
+                                "next_step": "S7",
+                                "condition": "User wants to confirm file creation"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "Regex search checkbox",
+            "action_refs": [
+                [
+                    1,
+                    1
+                ]
+            ],
+            "data_in": [
+                "regex search setting"
+            ],
+            "data_out": [
+                "updated regex search setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The functional point starts on page 1. The user performs a click action on the 'Regex search' checkbox, which transitions the app to page 6. This is a single-step flow with no branches or loops, as the action directly toggles the checkbox and navigates to the destination page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            1
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click the Regex search checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "Case sensitive checkbox",
+            "action_refs": [
+                [
+                    1,
+                    2
+                ]
+            ],
+            "data_in": [
+                "case sensitive search setting",
+                "search configuration"
+            ],
+            "data_out": [
+                "updated case sensitive search setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts on page 1. The user clicks the 'Case sensitive' checkbox, which transitions the app to page 7. This action toggles the case-sensitive search option in the search interface.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            2
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click the 'Case sensitive' checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "The current page is a QuickNote editing interface where the \"Undo\" button (curved arrow pointing left) allows the user to reverse the most recent action performed while editing the note content, which includes text and embedded media/HTML elements.",
+            "action_refs": [
+                [
+                    2,
+                    2
+                ]
+            ],
+            "data_in": [
+                "note content"
+            ],
+            "data_out": [
+                "previewed note content"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The user starts on the QuickNote editing page (page 2). The only action is clicking the Preview button, which likely toggles the preview mode of the note content (text and embedded elements) while remaining on the same page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            2
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click the Preview button to toggle note preview mode"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "The current page is a QuickNote editing interface where users can edit a note (containing text and HTML-like content), with the Undo button available to revert the most recent edit action.",
+            "action_refs": [
+                [
+                    2,
+                    4
+                ]
+            ],
+            "data_in": [
+                "note content",
+                "checklist toggle setting"
+            ],
+            "data_out": [
+                "updated note content",
+                "updated checklist toggle state"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The user starts on the QuickNote editing page (page 2). The core action is clicking the Checklist toggle button, which likely modifies the note's formatting or content structure (e.g., enabling checklist mode) while remaining on the same page. There are no branches or loops here as only one action is defined.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            4
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click the Checklist toggle button to modify note formatting/content structure"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "The current page (QuickNote editing interface) allows users to edit a QuickNote, with the \"Undo\" button enabling them to reverse the most recent edit action, and also provides tools for formatting, attaching files, and managing the note.",
+            "action_refs": [
+                [
+                    2,
+                    5
+                ]
+            ],
+            "data_in": [
+                "note content",
+                "list toggle setting"
+            ],
+            "data_out": [
+                "updated note content (list formatting)",
+                "updated list toggle state"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The user starts on the QuickNote editing page (page 2). They click the List toggle button, which likely toggles a list - related formatting or view option for the note. Since there's only one action here, the flow is a single step with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            5
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click the List toggle button on the QuickNote editing page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "The current page (QuickNote editing interface) allows users to edit a QuickNote, with the Undo button enabling them to reverse the most recent edit action.",
+            "action_refs": [
+                [
+                    2,
+                    8
+                ]
+            ],
+            "data_in": [
+                "note"
+            ],
+            "data_out": [
+                "deleted note"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The user is on the QuickNote editing page. The core logic involves a click action on the Trash button, which likely triggers a deletion-related operation (e.g., deleting the note or its content) while remaining on the same page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            8
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click the Trash button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "The current page is a QuickNote editing interface where users can create, edit, and format notes, with the \"Undo\" button allowing users to reverse their most recent editing action.",
+            "action_refs": [
+                [
+                    2,
+                    9
+                ]
+            ],
+            "data_in": [
+                "note"
+            ],
+            "data_out": [
+                "exported note"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The user is on the QuickNote editing page. The core action here is clicking the Export button, which likely triggers an export-related operation (though the exact outcome post - click isn't fully detailed from the single action provided).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            9
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click the Export button on the QuickNote page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "This page provides a menu of attachment options (Color, Insert Link, File, Image, Audio, Date) for enhancing the content of a QuickNote, with options to confirm (OK) or cancel (CANCEL) the selection.",
+            "action_refs": [
+                [
+                    2,
+                    10
+                ],
+                [
+                    9,
+                    6
+                ],
+                [
+                    9,
+                    7
+                ]
+            ],
+            "data_in": [
+                "note",
+                "note editing session",
+                "insertion options menu",
+                "note editing operation",
+                "note content"
+            ],
+            "data_out": [
+                "note with attachment options",
+                "closed insertion options menu",
+                "note editing session (resumed)",
+                "updated note content"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The flow starts by clicking the Attachment button to open the attachment options menu. Then, at the menu, the user can choose to either click CANCEL to dismiss the menu and return to the previous page, or click OK to confirm the attachment selection and proceed to the next page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            10
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click Attachment button to open attachment options menu"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            9,
+                            6
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click CANCEL button to dismiss menu and return"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            9,
+                            7
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click OK button to confirm selection and proceed"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "The current page is a \"Special Key\" selection menu in the QuickNote editing interface, allowing the user to choose from various text navigation and manipulation commands (e.g., Page Up, Line Start, Document End) to perform actions within the note, with options to confirm (OK) or cancel the selection.",
+            "action_refs": [
+                [
+                    2,
+                    11
+                ],
+                [
+                    10,
+                    1
+                ],
+                [
+                    10,
+                    7
+                ],
+                [
+                    10,
+                    8
+                ],
+                [
+                    10,
+                    9
+                ]
+            ],
+            "data_in": [
+                "note content",
+                "keyboard toggle setting",
+                "special key option list",
+                "QuickNote text editor context",
+                "special key option",
+                "document end option",
+                "special key configuration"
+            ],
+            "data_out": [
+                "updated note editing state",
+                "keyboard toggle state",
+                "selected special key setting",
+                "updated special key setting"
+            ],
+            "data_dependencies": [
+                29,
+                31,
+                32,
+                34
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The flow starts by clicking the keyboard toggle button to open the 'Special Key' menu. Once in the menu, the user can choose a text navigation/manipulation option (e.g., Page Down, Document End) or select CANCEL/OK. After choosing an option or button, the flow ends as no further steps are defined here.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            11
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Open 'Special Key' menu via keyboard toggle"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            10,
+                            1
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Select Page Down option"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            10,
+                            7
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Select Document End option"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            10,
+                            8
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click CANCEL button"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            10,
+                            9
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click OK button"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "The current page is a dialog for configuring date and time formatting options (including format selection, date/time picking, and a toggle for using current date/time) to insert or manage date/time information within a QuickNote.",
+            "action_refs": [
+                [
+                    2,
+                    12
+                ],
+                [
+                    11,
+                    0
+                ],
+                [
+                    11,
+                    1
+                ],
+                [
+                    11,
+                    2
+                ],
+                [
+                    11,
+                    3
+                ],
+                [
+                    11,
+                    4
+                ],
+                [
+                    11,
+                    6
+                ],
+                [
+                    11,
+                    7
+                ]
+            ],
+            "data_in": [
+                "note content",
+                "date/time format setting",
+                "format setting",
+                "date format setting",
+                "quick note content",
+                "date/time format configuration"
+            ],
+            "data_out": [
+                "updated note content (with date/time format change)",
+                "date/time format setting (updated)",
+                "updated format setting",
+                "formatted note content",
+                "updated date format setting",
+                "updated note content",
+                "time-only format setting",
+                "updated quick note content",
+                "applied date format setting",
+                "applied date/time format setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The flow starts by clicking the Clock button to open the date/time format dialog. In the dialog, users can perform actions like interacting with the format input field, selecting date/time format buttons (Date only, Time only, yyyy-MM-dd), toggling the format checkbox, or canceling/confirming with CANCEL/OK buttons, all of which return to the previous page (page 2).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            12
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click Clock button to open date/time format dialog"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            11,
+                            0
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 37,
+                        "action": "click",
+                        "summary": "Click Format input field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            11,
+                            1
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click Date only button"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            11,
+                            2
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click Time only button"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            11,
+                            3
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click yyyy-MM-dd button"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            11,
+                            4
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 38,
+                        "action": "click",
+                        "summary": "Click Format instead checkbox"
+                    },
+                    {
+                        "id": "S7",
+                        "action_ref": [
+                            11,
+                            6
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click CANCEL button"
+                    },
+                    {
+                        "id": "S8",
+                        "action_ref": [
+                            11,
+                            7
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click OK button"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S6"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S7"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S8"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "Rate this app option",
+            "action_refs": [
+                [
+                    3,
+                    0
+                ]
+            ],
+            "data_in": [
+                "rate this app option"
+            ],
+            "data_out": [
+                "rate this app request"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The flow starts on page 3 (the 'More' page). The user clicks the 'Rate this app' option. Since there are no further actions or branches provided, this is the sole step in the flow for the 'Rate this app' functional point.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            0
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'Rate this app' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "Settings option",
+            "action_refs": [
+                [
+                    3,
+                    1
+                ]
+            ],
+            "data_in": [
+                "settings entry"
+            ],
+            "data_out": [
+                "settings page navigation"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The flow starts on the 'More' page (page 3). The user clicks on the 'Settings' option, which is expected to navigate to the Settings page (though the destination page index is null in the action, implying the next page load or navigation trigger).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            1
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the 'Settings' option in the 'More' page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "Help / FAQ option",
+            "action_refs": [
+                [
+                    3,
+                    2
+                ]
+            ],
+            "data_in": [
+                "help/faq option"
+            ],
+            "data_out": [
+                "help/faq page access"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The user starts on page 3 (the 'More' page). The core logic is to click the 'Help / FAQ' option. This action likely leads to a page with help or FAQ content, though the destination page isn't specified here. There are no branches or loops as only one action is involved.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            2
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the 'Help / FAQ' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "Donate option",
+            "action_refs": [
+                [
+                    3,
+                    3
+                ]
+            ],
+            "data_in": [
+                "donate option"
+            ],
+            "data_out": [
+                "donation info (or contribution info)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The core execution logic for the Donate option starts on the 'More' page (page 3). The user performs a click action on the 'Donate' option, which is part of the 'Contribute' section. This action is the initial and only step in the flow for accessing the donate functionality, with no branches or loops as it's a single click to initiate the donate process (though the destination page isn't specified here).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            3
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the 'Donate' option in the 'Contribute' section of the 'More' page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "Report bugs option",
+            "action_refs": [
+                [
+                    3,
+                    4
+                ]
+            ],
+            "data_in": [
+                "report bugs option"
+            ],
+            "data_out": [
+                "bug report entry"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The user starts on the 'More' page (page 3). The core logic is to click the 'Report bugs' option, which is the only step here. This action likely initiates the bug - reporting process, though the destination page after the click isn't specified in the given action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            4
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the 'Report bugs' option on the 'More' page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "Translate option",
+            "action_refs": [
+                [
+                    3,
+                    5
+                ]
+            ],
+            "data_in": [
+                "translate app feature"
+            ],
+            "data_out": [
+                "initiated translate app process"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The user starts on page 3 (the 'More' page of the app). The core action is clicking the 'Translate' option, which is the only step here. There are no branches or loops as it's a single click action to initiate the translate functionality (though the destination page is null, implying a possible navigation or action trigger).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            5
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'Translate' option on the 'More' page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "Gregor Santner info",
+            "action_refs": [
+                [
+                    3,
+                    6
+                ]
+            ],
+            "data_in": [
+                "Gregor Santner info item"
+            ],
+            "data_out": [
+                "Gregor Santner info (displayed)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The flow starts on page 3 (the 'More' page). The user performs a click action on the 'Gregor Santner info' element. Since there's only one action, the flow is a single step with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            6
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on Gregor Santner info"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "The current page is a color - setting interface for QuickNote, which enables users to set the foreground or background color of text, and also allows the insertion of hex color codes.",
+            "action_refs": [
+                [
+                    9,
+                    0
+                ],
+                [
+                    12,
+                    0
+                ],
+                [
+                    12,
+                    1
+                ],
+                [
+                    12,
+                    2
+                ],
+                [
+                    12,
+                    3
+                ],
+                [
+                    12,
+                    4
+                ],
+                [
+                    20,
+                    0
+                ],
+                [
+                    20,
+                    1
+                ],
+                [
+                    20,
+                    2
+                ],
+                [
+                    20,
+                    3
+                ],
+                [
+                    20,
+                    4
+                ]
+            ],
+            "data_in": [
+                "note content",
+                "color setting option",
+                "color setting",
+                "hexcode input",
+                "text color configuration",
+                "text color setting",
+                "color setting dialog",
+                "color setting (hexcode/foreground/background)",
+                "note color setting",
+                "color wheel (color selection interface)",
+                "brightness/saturation slider",
+                "color selection dialog",
+                "note",
+                "color selection (from color wheel)",
+                "note (QuickNote)"
+            ],
+            "data_out": [
+                "updated note content with color configuration",
+                "updated text color setting",
+                "updated text foreground color setting",
+                "updated text background color setting",
+                "note content (unchanged)",
+                "closed color setting dialog",
+                "updated color setting (color wheel configuration)",
+                "updated note color setting",
+                "updated color setting (brightness/saturation adjusted)",
+                "updated color brightness/saturation setting",
+                "note (no color change applied)",
+                "updated note (with color setting applied)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts by clicking the 'Color' option. Then, at the color-setting interface, they choose among hexcode input, foreground color, or background color (or cancel/confirm). If they confirm (click OK), they enter a color adjustment screen where they can pick a color dot, adjust sliders, and then either cancel or confirm the color choice.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            0
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click 'Color' option to open color-setting interface"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            12,
+                            0
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click 'Hexcode input option' (branch 1)"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            12,
+                            1
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click 'Foreground color option' (branch 2)"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            12,
+                            2
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click 'Background color option' (branch 3)"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            12,
+                            3
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click 'CANCEL button' (branch 4)"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            12,
+                            4
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 20,
+                        "action": "click",
+                        "summary": "Click 'OK button' to proceed to color adjustment"
+                    },
+                    {
+                        "id": "S7",
+                        "action_ref": [
+                            20,
+                            0
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 21,
+                        "action": "click",
+                        "summary": "Click color wheel dot to select color"
+                    },
+                    {
+                        "id": "S8",
+                        "action_ref": [
+                            20,
+                            1
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 22,
+                        "action": "click",
+                        "summary": "Click top slider to adjust color"
+                    },
+                    {
+                        "id": "S9",
+                        "action_ref": [
+                            20,
+                            2
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 23,
+                        "action": "click",
+                        "summary": "Click bottom slider to adjust color"
+                    },
+                    {
+                        "id": "S10",
+                        "action_ref": [
+                            20,
+                            3
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click 'CANCEL button' to exit color adjustment"
+                    },
+                    {
+                        "id": "S11",
+                        "action_ref": [
+                            20,
+                            4
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click 'OK button' to confirm color choice"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S6"
+                    },
+                    {
+                        "from": "S6",
+                        "to": "S7"
+                    },
+                    {
+                        "from": "S6",
+                        "to": "S8"
+                    },
+                    {
+                        "from": "S6",
+                        "to": "S9"
+                    },
+                    {
+                        "from": "S6",
+                        "to": "S10"
+                    },
+                    {
+                        "from": "S6",
+                        "to": "S11"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            },
+                            {
+                                "next_step": "S6"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S6",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S7"
+                            },
+                            {
+                                "next_step": "S8"
+                            },
+                            {
+                                "next_step": "S9"
+                            },
+                            {
+                                "next_step": "S10"
+                            },
+                            {
+                                "next_step": "S11"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "The current page allows users to insert a link into a QuickNote by entering a description, a URL/path, or browsing the filesystem to select a file, with options to confirm or cancel the action.",
+            "action_refs": [
+                [
+                    9,
+                    1
+                ],
+                [
+                    13,
+                    0
+                ],
+                [
+                    13,
+                    1
+                ],
+                [
+                    13,
+                    2
+                ],
+                [
+                    13,
+                    3
+                ],
+                [
+                    13,
+                    4
+                ],
+                [
+                    26,
+                    0
+                ],
+                [
+                    26,
+                    2
+                ],
+                [
+                    26,
+                    3
+                ],
+                [
+                    27,
+                    0
+                ],
+                [
+                    27,
+                    1
+                ],
+                [
+                    27,
+                    2
+                ]
+            ],
+            "data_in": [
+                "note content",
+                "link description",
+                "note",
+                "link insertion form",
+                "link URL/path",
+                "note (for insert link)",
+                "filesystem (to browse)",
+                "insert link dialog",
+                "file selection interface",
+                "folder path",
+                "search input",
+                "file selection context",
+                "insert link dialog state",
+                "document list",
+                "search query",
+                "folder (storage/emulated/0)",
+                "folder (markor)"
+            ],
+            "data_out": [
+                "note content with link (to be inserted)",
+                "updated link description",
+                "updated note (with link)",
+                "updated note with link",
+                "file selection (for link path)",
+                "note content (no link inserted)",
+                "updated note content",
+                "inserted link",
+                "updated folder list",
+                "cancelled file selection",
+                "restored insert link dialog state",
+                "navigated folder content",
+                "selected folder (markor)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "To insert a link into a QuickNote, start by clicking the 'Insert Link' option. On the Insert Link page, you can choose to input a description, a URL/path, or browse the filesystem (with folder navigation options like home, parent, or subfolders). Finally, confirm the action with 'OK' or cancel it with 'CANCEL'.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            1
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click 'Insert Link' option"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            13,
+                            0
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 24,
+                        "action": "click",
+                        "summary": "Click Description input field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            13,
+                            1
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 25,
+                        "action": "click",
+                        "summary": "Click URL / Path input field"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            13,
+                            2
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 26,
+                        "action": "click",
+                        "summary": "Click 'BROWSE FILESYSTEM' button"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            26,
+                            0
+                        ],
+                        "src_page_idx": 26,
+                        "dst_page_idx": 26,
+                        "action": "click",
+                        "summary": "Click Home icon button (filesystem)"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            26,
+                            2
+                        ],
+                        "src_page_idx": 26,
+                        "dst_page_idx": 27,
+                        "action": "click",
+                        "summary": "Click folder path /storage/emulated/0/Documents"
+                    },
+                    {
+                        "id": "S7",
+                        "action_ref": [
+                            27,
+                            0
+                        ],
+                        "src_page_idx": 27,
+                        "dst_page_idx": 28,
+                        "action": "click",
+                        "summary": "Click Search documents input field"
+                    },
+                    {
+                        "id": "S8",
+                        "action_ref": [
+                            27,
+                            1
+                        ],
+                        "src_page_idx": 27,
+                        "dst_page_idx": 26,
+                        "action": "click",
+                        "summary": "Click folder /storage/emulated/0 (parent)"
+                    },
+                    {
+                        "id": "S9",
+                        "action_ref": [
+                            27,
+                            2
+                        ],
+                        "src_page_idx": 27,
+                        "dst_page_idx": 26,
+                        "action": "click",
+                        "summary": "Click folder markor (/storage/emulated/0/Documents)"
+                    },
+                    {
+                        "id": "S10",
+                        "action_ref": [
+                            26,
+                            3
+                        ],
+                        "src_page_idx": 26,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click 'CANCEL' button (filesystem)"
+                    },
+                    {
+                        "id": "S11",
+                        "action_ref": [
+                            13,
+                            3
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click 'CANCEL' button (Insert Link)"
+                    },
+                    {
+                        "id": "S12",
+                        "action_ref": [
+                            13,
+                            4
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click 'OK' button (Insert Link)"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S6"
+                    },
+                    {
+                        "from": "S6",
+                        "to": "S7"
+                    },
+                    {
+                        "from": "S6",
+                        "to": "S8"
+                    },
+                    {
+                        "from": "S6",
+                        "to": "S9"
+                    },
+                    {
+                        "from": "S5",
+                        "to": "S10"
+                    },
+                    {
+                        "from": "S6",
+                        "to": "S10"
+                    },
+                    {
+                        "from": "S7",
+                        "to": "S10"
+                    },
+                    {
+                        "from": "S8",
+                        "to": "S10"
+                    },
+                    {
+                        "from": "S9",
+                        "to": "S10"
+                    },
+                    {
+                        "from": "S10",
+                        "to": "S11"
+                    },
+                    {
+                        "from": "S10",
+                        "to": "S12"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S11"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S12"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S11"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S12"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S4",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S5"
+                            },
+                            {
+                                "next_step": "S6"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S6",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S7"
+                            },
+                            {
+                                "next_step": "S8"
+                            },
+                            {
+                                "next_step": "S9"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S10",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S11"
+                            },
+                            {
+                                "next_step": "S12"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S11"
+                            },
+                            {
+                                "next_step": "S12"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S3",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S11"
+                            },
+                            {
+                                "next_step": "S12"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 25,
+            "function_description": "The current page is a dialog for inserting a link into a QuickNote, allowing the user to input a description, a URL/path (or browse the filesystem for a path), and then confirm or cancel the link insertion.",
+            "action_refs": [
+                [
+                    9,
+                    2
+                ]
+            ],
+            "data_in": [
+                "note content",
+                "file insertion option"
+            ],
+            "data_out": [
+                "note with file link (pending)",
+                "insert link dialog"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts on page 9 and clicks the 'File' option (action_ref [9,2]). This action leads to page 13, likely initiating the process of browsing the filesystem for a file path to insert as a link in the QuickNote. The flow is a single step with a transition to the next page for further file - related operations.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            2
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click the 'File' option to proceed to the next page (likely for filesystem browsing)"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": null
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 26,
+            "function_description": "The current page is an \"Insert Image\" interface within the QuickNote editing section, allowing users to add an image to their note by providing a description and URL/path, or by browsing the filesystem, taking a camera picture, selecting a gallery picture, or editing a picture, with options to cancel or confirm the insertion.",
+            "action_refs": [
+                [
+                    9,
+                    3
+                ],
+                [
+                    14,
+                    0
+                ],
+                [
+                    14,
+                    1
+                ],
+                [
+                    14,
+                    2
+                ],
+                [
+                    14,
+                    6
+                ],
+                [
+                    14,
+                    7
+                ]
+            ],
+            "data_in": [
+                "note",
+                "image insertion option",
+                "image description",
+                "image (for insertion)",
+                "image insertion details",
+                "URL / Path input",
+                "image insertion configuration",
+                "filesystem",
+                "insert image dialog",
+                "note content"
+            ],
+            "data_out": [
+                "note with image insertion interface opened",
+                "updated image description",
+                "filesystem browsing interface",
+                "note (no image inserted)",
+                "updated note content",
+                "inserted image reference"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts on page 9 and clicks the 'Image' option to enter the Insert Image interface (page 14). In this interface, the user can input a description (clicking the description field), input a URL/path (clicking the URL/path field), browse the filesystem (clicking the BROWSE FILESYSTEM button), or choose to cancel (clicking CANCEL) or confirm (clicking OK) the image insertion. Major decision points are choosing between inputting details, browsing, canceling, or confirming.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            3
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click 'Image' option to open Insert Image interface"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            14,
+                            0
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 29,
+                        "action": "click",
+                        "summary": "Click description input field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            14,
+                            1
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 30,
+                        "action": "click",
+                        "summary": "Click URL / Path input field"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            14,
+                            2
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 26,
+                        "action": "click",
+                        "summary": "Click BROWSE FILESYSTEM button"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            14,
+                            6
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click CANCEL button to exit Insert Image"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            14,
+                            7
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click OK button to confirm image insertion"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S6"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            },
+                            {
+                                "next_step": "S6"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 27,
+            "function_description": "The current page is an audio attachment interface within the QuickNote editing screen, allowing users to add an audio file to a note by either browsing the filesystem for an existing audio file, recording a new audio file, and providing a description for the audio attachment.",
+            "action_refs": [
+                [
+                    9,
+                    4
+                ],
+                [
+                    15,
+                    0
+                ],
+                [
+                    15,
+                    1
+                ],
+                [
+                    15,
+                    2
+                ],
+                [
+                    15,
+                    4
+                ],
+                [
+                    15,
+                    5
+                ]
+            ],
+            "data_in": [
+                "note content",
+                "audio option",
+                "audio description",
+                "audio (for configuration)",
+                "audio note",
+                "audio URL/path",
+                "audio file",
+                "filesystem",
+                "audio configuration (in note)",
+                "audio configuration"
+            ],
+            "data_out": [
+                "audio configuration interface",
+                "updated audio description",
+                "updated audio note",
+                "selected audio file path",
+                "note (with audio config canceled)",
+                "updated note content"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts by clicking the 'Audio' option to open the audio attachment interface. In this interface, the user can choose to input a description, input a URL/path, browse the filesystem for an audio file, record a new audio file, cancel the action, or confirm with OK. The flow branches based on which button (description input, URL/path input, browse, record, cancel, or OK) the user clicks.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            4
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click 'Audio' option to open audio attachment interface"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            15,
+                            0
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 33,
+                        "action": "click",
+                        "summary": "Click description input field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            15,
+                            1
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 34,
+                        "action": "click",
+                        "summary": "Click URL / Path input field"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            15,
+                            2
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 26,
+                        "action": "click",
+                        "summary": "Click BROWSE FILESYSTEM button"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            15,
+                            4
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click CANCEL button"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            15,
+                            5
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click OK button"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S6"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            },
+                            {
+                                "next_step": "S6"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 28,
+            "function_description": "The current page is a date and time formatting interface within the QuickNote editing screen, allowing users to configure date/time formats (e.g., Date only, Time only, custom format like yyyy - MM - dd), choose to use the current date/time, and pick specific dates/times for insertion into the QuickNote, with options to confirm, cancel, or get help.",
+            "action_refs": [
+                [
+                    9,
+                    5
+                ]
+            ],
+            "data_in": [
+                "note",
+                "date setting"
+            ],
+            "data_out": [
+                "updated note",
+                "updated date setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts on the QuickNote editing page (page 9) and clicks the 'Date' option (action [9,5]). This action navigates to the date/time formatting interface (page 11), where format configuration, date/time selection, and confirmation/cancellation options are available. The flow proceeds from the initial page to the formatting interface via this click.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            5
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click the 'Date' option to open the date/time formatting interface"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 29,
+            "function_description": "Page Up (Page Up) option",
+            "action_refs": [
+                [
+                    10,
+                    0
+                ]
+            ],
+            "data_in": [
+                "special key configuration",
+                "note editing context"
+            ],
+            "data_out": [
+                "updated special key setting",
+                "note editing key binding"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The user interacts with the 'Page Up (Page Up)' option. The flow starts on page 10, where the user clicks the 'Page Up (Page Up)' option. Since there are no further branches or loops, this is a single-step flow focused on selecting this option.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            0
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'Page Up (Page Up)' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 30,
+            "function_description": "Line Start (Pos Home) option",
+            "action_refs": [
+                [
+                    10,
+                    2
+                ]
+            ],
+            "data_in": [
+                "text editing command setting"
+            ],
+            "data_out": [
+                "updated text editing command setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The user interacts with the 'Line Start (Pos Home)' option. The flow begins on page 10, where the user clicks the 'Line Start (Pos Home)' option. Since there are no subsequent steps or branches indicated, this action is the core step of the functional point.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            2
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the Line Start (Pos Home) option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 31,
+            "function_description": "Line End (Pos End) option",
+            "action_refs": [
+                [
+                    10,
+                    3
+                ]
+            ],
+            "data_in": [
+                "special key option",
+                "Line End (Pos End) option"
+            ],
+            "data_out": [
+                "selected special key setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The user interacts with the 'Line End (Pos End)' option. The flow starts on page 10, where the user clicks the 'Line End (Pos End)' option, and this action does not navigate to a new page (dst_page_idx is null).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            3
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'Line End (Pos End)' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 32,
+            "function_description": "Move text one line up option",
+            "action_refs": [
+                [
+                    10,
+                    4
+                ]
+            ],
+            "data_in": [
+                "special key configuration",
+                "text editing setting"
+            ],
+            "data_out": [
+                "updated special key setting",
+                "move text one line up configuration"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The flow starts on page 10. The user clicks the 'Move text one line up' option. Since there are no further branches or loops, the action completes here.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            4
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'Move text one line up' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 33,
+            "function_description": "Move text one line down option",
+            "action_refs": [
+                [
+                    10,
+                    5
+                ]
+            ],
+            "data_in": [
+                "text editing command setting",
+                "QuickNote text content"
+            ],
+            "data_out": [
+                "updated text editing command setting",
+                "text with adjusted position (after moving down)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The user initiates the process on page 10. The core action is to click the 'Move text one line down' option, which is the only step in this functional point's execution flow, with no branches or loops as it's a single action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            5
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'Move text one line down' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 34,
+            "function_description": "Document Start option",
+            "action_refs": [
+                [
+                    10,
+                    6
+                ]
+            ],
+            "data_in": [
+                "special key configuration",
+                "document start option"
+            ],
+            "data_out": [
+                "updated special key setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The user interacts with the 'Document Start' option by clicking it. This action is part of a 'Special Key' menu, likely to navigate to the start of the document in the associated text editor.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            6
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'Document Start' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 35,
+            "function_description": "This page is a web browser window loading a URL from the Android developer documentation, likely to provide help or reference information related to the QuickNote formatting functionality.",
+            "action_refs": [
+                [
+                    11,
+                    5
+                ],
+                [
+                    39,
+                    0
+                ]
+            ],
+            "data_in": [
+                "date format setting dialog",
+                "URL address bar"
+            ],
+            "data_out": [
+                "help documentation (web page)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The flow starts on page 11. First, the HELP button is clicked (action from page 11 to 39). Then, the URL address bar is clicked (action from page 39 to 40), which is the final step as it's a leaf action. There are no branches or loops in this straight - line flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            5
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 39,
+                        "action": "click",
+                        "summary": "Click the HELP button"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            39,
+                            0
+                        ],
+                        "src_page_idx": 39,
+                        "dst_page_idx": 40,
+                        "action": "click",
+                        "summary": "Click the URL address bar"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 36,
+            "function_description": "This page functions as a camera interface to capture a photo (using the shutter button) for inserting into a QuickNote, with options to adjust camera settings or switch camera modes.",
+            "action_refs": [
+                [
+                    14,
+                    3
+                ],
+                [
+                    31,
+                    2
+                ]
+            ],
+            "data_in": [
+                "note (for inserting image)"
+            ],
+            "data_out": [
+                "camera-captured image"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The flow starts by clicking the CAMERA PICTURE button to open the camera interface. Then, on the camera page, the user can click the left icon to adjust camera modes or settings, and this action keeps the user on the camera page (allowing repeated adjustments if needed).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            3
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 31,
+                        "action": "click",
+                        "summary": "Click CAMERA PICTURE to open camera interface"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            31,
+                            2
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": 31,
+                        "action": "click",
+                        "summary": "Click left camera mode/settings icon to adjust settings (stays on camera page)"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "loop",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": null
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 37,
+            "function_description": "This page allows the user to select an application (Gallery or Photos) to complete the action of inserting an image from the gallery into a QuickNote, after choosing the \"GALLERY PICTURE\" option in the Insert Image dialog.",
+            "action_refs": [
+                [
+                    14,
+                    4
+                ]
+            ],
+            "data_in": [
+                "note",
+                "image insertion configuration"
+            ],
+            "data_out": [
+                "image selection intent",
+                "updated image insertion workflow state"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The user starts on the Insert Image dialog page (page 14). They click the 'GALLERY PICTURE' button, which triggers a 'Complete action using' dialog to appear (page 32), offering options to use Gallery or Photos for selecting the image.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            4
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 32,
+                        "action": "click",
+                        "summary": "Click the 'GALLERY PICTURE' button in the Insert Image dialog"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 38,
+            "function_description": "The current page (Insert Image dialog in QuickNote) allows the user to add a description, input a URL/path, or select from options (BROWSE FILESYSTEM, CAMERA PICTURE, GALLERY PICTURE, EDIT PICTURE) to insert an image into the QuickNote, with the \"EDIT PICTURE\" option enabling image editing before insertion.",
+            "action_refs": [
+                [
+                    14,
+                    5
+                ]
+            ],
+            "data_in": [
+                "picture"
+            ],
+            "data_out": [
+                "edited picture"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The user is on the Insert Image dialog in QuickNote. The core logic involves interacting with the EDIT PICTURE button, which likely initiates an image editing process before inserting the image into the note. Since there's only one action provided, the flow is a single step of clicking the EDIT PICTURE button.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            5
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click the EDIT PICTURE button to initiate image editing before insertion."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 39,
+            "function_description": "This page allows the user to record audio (in WAV format) for attaching to a QuickNote, with options to start recording, cancel, or confirm the recording, and also displays the recording duration and file size.",
+            "action_refs": [
+                [
+                    15,
+                    3
+                ],
+                [
+                    35,
+                    2
+                ],
+                [
+                    35,
+                    3
+                ]
+            ],
+            "data_in": [
+                "audio note attachment",
+                "audio recording session",
+                "audio record",
+                "note"
+            ],
+            "data_out": [
+                "new audio recording",
+                "audio record",
+                "note with audio"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user starts by clicking the RECORD AUDIO button to open the recording interface. Once in the Record Audio page, they can choose to either cancel the recording (returning to the previous page) or confirm the recording (also returning to the previous page) via the respective buttons.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            3
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 35,
+                        "action": "click",
+                        "summary": "Click RECORD AUDIO button to open recording interface"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            35,
+                            2
+                        ],
+                        "src_page_idx": 35,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click CANCEL button to cancel recording and return"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            35,
+                            3
+                        ],
+                        "src_page_idx": 35,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click OK button to confirm recording and return"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 40,
+            "function_description": "Open app again option",
+            "action_refs": [
+                [
+                    16,
+                    0
+                ]
+            ],
+            "data_in": [
+                "Markor app session"
+            ],
+            "data_out": [
+                "restarted Markor app session"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 16,
+                "logic": "When the app (Markor) stops, a dialog appears with an 'Open app again' option. The user clicks this option to attempt to restart the app. This is a single step with no branching or looping, as the action is to trigger the app to open again.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            16,
+                            0
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'Open app again' option in the dialog"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 41,
+            "function_description": "This page functions as a browser tab management interface, allowing the user to view, switch between, and manage (e.g., close) open browser tabs, including a YouTube tab, a GitHub discussions tab, and an Android API reference tab.",
+            "action_refs": [
+                [
+                    39,
+                    1
+                ]
+            ],
+            "data_in": [
+                "tab indicator (3 open tabs)"
+            ],
+            "data_out": [
+                "tab list (displayed tabs)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 39,
+                "logic": "The user starts on a page with a browser tab. They click the '3 open tabs' indicator, which navigates to the tab management interface where open tabs (YouTube, GitHub, Android API) are visible for further actions like switching or closing.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            39,
+                            1
+                        ],
+                        "src_page_idx": 39,
+                        "dst_page_idx": 41,
+                        "action": "click",
+                        "summary": "Click the 3 open tabs indicator to open the tab management interface."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 42,
+            "function_description": "The current page is a browser menu (Chrome) that provides options like opening new tabs, accessing bookmarks/history/downloads, sharing, finding in page, adding to home screen, enabling desktop site, adjusting settings, and accessing help/feedback, while the underlying page displays Android date and time formatting documentation.",
+            "action_refs": [
+                [
+                    39,
+                    2
+                ]
+            ],
+            "data_in": [
+                "browser menu"
+            ],
+            "data_out": [
+                "opened browser menu"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 39,
+                "logic": "The flow starts on the Chrome page displaying Android date/time documentation. The user clicks the browser menu button, which opens the menu with options like new tabs, bookmarks, sharing, and more. This is a single-step flow with no branches, as the action opens the menu to access its options.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            39,
+                            2
+                        ],
+                        "src_page_idx": 39,
+                        "dst_page_idx": 42,
+                        "action": "click",
+                        "summary": "Click the browser menu button to open the menu with various options"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 43,
+            "function_description": "This page functions as a file selection dialog (within a QuickNote link - insertion workflow) that allows navigation to the home directory (via the Home icon) and file/folder exploration (or cancellation via the \"CANCEL\" button) to select a file for linking in the QuickNote.",
+            "action_refs": [
+                [
+                    26,
+                    1
+                ]
+            ],
+            "data_in": [
+                "file list (Documents directory)"
+            ],
+            "data_out": [
+                "search interface (for files)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 26,
+                "logic": "The file selection dialog for QuickNote link insertion starts on page 26. The user can click the Search icon button (on page 26) to initiate a search, with the flow remaining on page 26 after this action. Other actions like navigating via the Home icon or canceling via 'CANCEL' are implied but not in the provided actions list here, so the core step shown is the search button click.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            26,
+                            1
+                        ],
+                        "src_page_idx": 26,
+                        "dst_page_idx": 26,
+                        "action": "click",
+                        "summary": "Click the Search icon button on the file selection dialog page (page 26)."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 44,
+            "function_description": "The current page is an \"Insert Image\" dialog within the QuickNote editing interface, allowing users to add an image to their note by providing a description, entering a URL/path, or selecting an image source (filesystem, camera, gallery) and optionally editing the image before confirming or canceling the insertion.",
+            "action_refs": [
+                [
+                    31,
+                    0
+                ]
+            ],
+            "data_in": [
+                "camera view",
+                "insert image dialog context"
+            ],
+            "data_out": [
+                "closed camera view",
+                "returned to insert image dialog"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 31,
+                "logic": "The user starts in the camera interface (page 31) and clicks the close camera button (X). This action navigates them back to the 'Insert Image' dialog (page 14) in the QuickNote editing interface, allowing them to continue the image insertion process or choose other options.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            31,
+                            0
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click the close camera button (X) to exit the camera interface and return to the Insert Image dialog."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 45,
+            "function_description": "This page functions as a camera viewfinder interface, allowing the user to capture a photo (via the blue circle button) for insertion into a QuickNote, with additional options for camera settings (left icon) and switching camera (right icon), and an option to exit the camera (X button).",
+            "action_refs": [
+                [
+                    31,
+                    1
+                ]
+            ],
+            "data_in": [
+                "camera view (scene)"
+            ],
+            "data_out": [
+                "captured photo"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 31,
+                "logic": "The camera viewfinder interface is displayed. The user can click the blue circle capture button to take a photo for insertion into a QuickNote. There are also options to adjust camera settings (left icon), switch the camera (right icon), or exit the camera (X button).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            31,
+                            1
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": 31,
+                        "action": "click",
+                        "summary": "Click the blue circle capture button to take a photo"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 46,
+            "function_description": "This page functions as a camera viewfinder interface, allowing the user to capture a photo (via the blue circle button) for insertion into a QuickNote, with additional options for closing the camera (X button) and toggling camera settings/modes (left and right icons).",
+            "action_refs": [
+                [
+                    31,
+                    3
+                ]
+            ],
+            "data_in": [
+                "camera view (current)"
+            ],
+            "data_out": [
+                "camera view (switched)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 31,
+                "logic": "The user starts on the camera viewfinder page (page 31). The core action here is clicking the camera switch icon (right side of the screen). After this click, the flow remains on the same page (page 31), likely updating the camera mode or settings as a result of the switch action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            31,
+                            3
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": 31,
+                        "action": "click",
+                        "summary": "Click the camera switch icon (right) to toggle camera mode/settings"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 47,
+            "function_description": "This page allows the user to select the Gallery app (from available options like Gallery or Photos) to insert a picture from the gallery into the QuickNote, after initiating the image insertion process in the QuickNote editing interface.",
+            "action_refs": [
+                [
+                    32,
+                    0
+                ]
+            ],
+            "data_in": [
+                "image insertion task",
+                "gallery app option"
+            ],
+            "data_out": [
+                "image selection initiation"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 32,
+                "logic": "After initiating image insertion in QuickNote, the user is presented with a choice of apps (Gallery or Photos) to complete the action. The core logic is selecting the Gallery app: the user clicks on the 'Gallery' option to proceed with inserting an image from the gallery into the QuickNote.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            32,
+                            0
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": 32,
+                        "action": "click",
+                        "summary": "Click on the 'Gallery' app option to select it for inserting an image into the QuickNote"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 48,
+            "function_description": "This page allows the user to select an app (either Gallery or Photos) to complete the action of inserting a gallery picture into the QuickNote.",
+            "action_refs": [
+                [
+                    32,
+                    1
+                ]
+            ],
+            "data_in": [
+                "image insertion request"
+            ],
+            "data_out": [
+                "image source selection (Photos app)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 32,
+                "logic": "The flow starts on page 32 (Insert Image dialog with app selection). The user clicks the 'Photos' app option (action_ref [32,1]). Since there's only one step here (as per the provided action), the logic is a single click action to select the Photos app for inserting a gallery picture into QuickNote.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            32,
+                            1
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": 32,
+                        "action": "click",
+                        "summary": "Click the 'Photos' app option to select it for inserting a gallery picture into QuickNote."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 49,
+            "function_description": "Speaker audio toggle icon",
+            "action_refs": [
+                [
+                    35,
+                    0
+                ]
+            ],
+            "data_in": [
+                "audio playback setting",
+                "audio recording session"
+            ],
+            "data_out": [
+                "updated audio playback setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 35,
+                "logic": "The core execution logic starts on page 35. The user performs a click action on the speaker audio toggle icon, which transitions the app to page 36. There are no branches or loops in this flow as it is a single, direct action to toggle the speaker audio.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            35,
+                            0
+                        ],
+                        "src_page_idx": 35,
+                        "dst_page_idx": 36,
+                        "action": "click",
+                        "summary": "Click the speaker audio toggle icon"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 50,
+            "function_description": "This page allows the user to start recording audio (in WAV format) for attachment to a QuickNote, with options to cancel or confirm the recording, and also displays recording duration and file size metrics.",
+            "action_refs": [
+                [
+                    35,
+                    1
+                ]
+            ],
+            "data_in": [
+                "audio recording session"
+            ],
+            "data_out": [
+                "audio recording session (started)"
+            ],
+            "data_dependencies": [
+                49
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 35,
+                "logic": "The flow starts by clicking the red record start button to initiate audio recording. Since only one action is provided, the current logic focuses on starting the recording process, with the expectation that subsequent steps (not yet provided) would handle duration/file size updates, and choices to cancel or confirm the recording.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            35,
+                            1
+                        ],
+                        "src_page_idx": 35,
+                        "dst_page_idx": 35,
+                        "action": "click",
+                        "summary": "Click the red record start button to begin audio recording"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 51,
+            "function_description": "New tab button (+)",
+            "action_refs": [
+                [
+                    41,
+                    0
+                ]
+            ],
+            "data_in": [],
+            "data_out": [
+                "new browser tab"
+            ],
+            "data_dependencies": [
+                52,
+                53,
+                54,
+                55
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 41,
+                "logic": "The functional point starts on page 41. The user clicks the 'New tab button (+)' (action_ref [41, 0]), which leads to page 43. There are no branches or loops as this is a single action flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            41,
+                            0
+                        ],
+                        "src_page_idx": 41,
+                        "dst_page_idx": 43,
+                        "action": "click",
+                        "summary": "Click the New tab button (+) on page 41"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 52,
+            "function_description": "Close YouTube tab (X)",
+            "action_refs": [
+                [
+                    41,
+                    1
+                ]
+            ],
+            "data_in": [
+                "YouTube tab"
+            ],
+            "data_out": [
+                "closed YouTube tab"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 41,
+                "logic": "The process starts on the page with multiple tabs. The user clicks the 'X' button associated with the YouTube tab to close it, completing the task of closing the YouTube tab.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            41,
+                            1
+                        ],
+                        "src_page_idx": 41,
+                        "dst_page_idx": 44,
+                        "action": "click",
+                        "summary": "Click the 'X' button to close the YouTube tab"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 53,
+            "function_description": "Search YouTube tab (magnifier)",
+            "action_refs": [
+                [
+                    41,
+                    2
+                ]
+            ],
+            "data_in": [
+                "YouTube tab"
+            ],
+            "data_out": [
+                "search interface (YouTube tab)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 41,
+                "logic": "The core execution logic starts on page 41. The user performs a click action on the 'Search YouTube tab (magnifier)', which navigates to page 45. There are no branches or loops in this flow as it is a single, direct action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            41,
+                            2
+                        ],
+                        "src_page_idx": 41,
+                        "dst_page_idx": 45,
+                        "action": "click",
+                        "summary": "Click on the Search YouTube tab (magnifier)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 54,
+            "function_description": "Close GitHub tab (X)",
+            "action_refs": [
+                [
+                    41,
+                    3
+                ]
+            ],
+            "data_in": [
+                "GitHub tab"
+            ],
+            "data_out": [
+                "closed GitHub tab"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 41,
+                "logic": "The process starts on page 41 (tab management view). The user clicks the 'X' button (close icon) associated with the GitHub tab. This action closes the GitHub tab, leading to the destination page 46. There are no branches or loops in this flow as it is a single, direct action to close the tab.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            41,
+                            3
+                        ],
+                        "src_page_idx": 41,
+                        "dst_page_idx": 46,
+                        "action": "click",
+                        "summary": "Click the 'X' (close) button for the GitHub tab"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 55,
+            "function_description": "Close Android Dev tab (X)",
+            "action_refs": [
+                [
+                    41,
+                    4
+                ]
+            ],
+            "data_in": [
+                "Android Dev tab"
+            ],
+            "data_out": [
+                "closed Android Dev tab"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 41,
+                "logic": "To close the Android Dev tab, the user starts on the page with the tab visible (page 41). The user then clicks the 'X' button associated with the Android Dev tab, which results in the tab being closed and navigation to the destination page (47).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            41,
+                            4
+                        ],
+                        "src_page_idx": 41,
+                        "dst_page_idx": 47,
+                        "action": "click",
+                        "summary": "Click the 'X' button to close the Android Dev tab"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 56,
+            "function_description": "This page in the browser (Chrome) displays Android developer documentation related to date/time pattern letters, and the browser menu is accessed to potentially update Chrome.",
+            "action_refs": [
+                [
+                    42,
+                    0
+                ]
+            ],
+            "data_in": [
+                "Update Chrome option"
+            ],
+            "data_out": [
+                "Updated Chrome option state"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 42,
+                "logic": "The browser displays Android developer documentation about date/time pattern letters. The Chrome menu is accessed, and the 'Update Chrome' option is clicked, which likely leads to a page related to updating Chrome (though the flow here is a single click action from the menu on the documentation page).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            42,
+                            0
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": 48,
+                        "action": "click",
+                        "summary": "Click the 'Update Chrome' option in the Chrome menu while on the Android developer documentation page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 57,
+            "function_description": "This page is the new tab page of the Chrome browser, providing a search bar, quick access icons to popular websites, personalized article suggestions (currently empty), and an option to sign in to Chrome for personalized content, allowing users to start web browsing or access favorite sites quickly.",
+            "action_refs": [
+                [
+                    42,
+                    1
+                ]
+            ],
+            "data_in": [
+                "browser menu option"
+            ],
+            "data_out": [
+                "new browser tab"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 42,
+                "logic": "The user starts on page 42 and clicks the 'New tab' option (action_ref [42,1]). This action navigates to page 49, which is the Chrome new tab page. The new tab page displays a search bar, quick access icons for popular sites, an empty personalized article section, and a sign-in prompt for Chrome. No branches or loops are present as this is a single navigation step to the new tab interface.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            42,
+                            1
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": 49,
+                        "action": "click",
+                        "summary": "Click 'New tab' option to open Chrome's new tab page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 58,
+            "function_description": "New incognito tab option",
+            "action_refs": [
+                [
+                    42,
+                    2
+                ]
+            ],
+            "data_in": [
+                "browser menu option",
+                "incognito tab setting"
+            ],
+            "data_out": [
+                "new incognito tab"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 42,
+                "logic": "The flow starts on page 42. The user performs a click action on the 'New incognito tab' option. This action likely initiates the opening of a new incognito tab, with no further branching or looping in this core logic.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            42,
+                            2
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the New incognito tab option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 59,
+            "function_description": "Bookmarks option",
+            "action_refs": [
+                [
+                    42,
+                    3
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 42,
+                "logic": "The user initiates the process on page 42. The core action is clicking the 'Bookmarks' option, which is the only step in this flow as it directly interacts with the bookmarks functionality (with no further branching or looping shown in the provided actions).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            42,
+                            3
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the Bookmarks option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 60,
+            "function_description": "Recent tabs option",
+            "action_refs": [
+                [
+                    42,
+                    4
+                ]
+            ],
+            "data_in": [
+                "recent tabs option"
+            ],
+            "data_out": [
+                "recent tabs list"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 42,
+                "logic": "The flow starts on page 42. The user performs a click action on the 'Recent tabs' option. Since there are no further steps or branches indicated, this is a single-step flow focused on selecting the Recent tabs option.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            42,
+                            4
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the 'Recent tabs' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 61,
+            "function_description": "History option",
+            "action_refs": [
+                [
+                    42,
+                    5
+                ]
+            ],
+            "data_in": [
+                "history option"
+            ],
+            "data_out": [
+                "history page (loaded)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 42,
+                "logic": "The core execution logic starts on page 42. The user performs a click action on the 'History' option. Since there are no further steps or branches from this action (as the action is marked as non-leaf but no subsequent actions are provided), the flow ends here.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            42,
+                            5
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the History option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 62,
+            "function_description": "Downloads option",
+            "action_refs": [
+                [
+                    42,
+                    6
+                ]
+            ],
+            "data_in": [
+                "downloads feature entry"
+            ],
+            "data_out": [
+                "downloads page navigation"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 42,
+                "logic": "The core execution logic for the Downloads option involves a single step: clicking on the 'Downloads' option. This action is performed on the page with index 42, and there are no subsequent branches or loops as the action is a leaf (though the 'is_leaf' flag here is false, the main flow is just this click action).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            42,
+                            6
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the 'Downloads' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 63,
+            "function_description": "Share... option",
+            "action_refs": [
+                [
+                    42,
+                    7
+                ]
+            ],
+            "data_in": [
+                "web page content"
+            ],
+            "data_out": [
+                "sharing options (for web page)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 42,
+                "logic": "The flow starts on page 42. The user clicks the 'Share...' option. Since there are no further actions or branches provided, this is the only step in the flow for the 'Share... option' functional point.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            42,
+                            7
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the 'Share...' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 64,
+            "function_description": "Find in page option",
+            "action_refs": [
+                [
+                    42,
+                    8
+                ]
+            ],
+            "data_in": [
+                "web page content"
+            ],
+            "data_out": [
+                "find in page interface"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 42,
+                "logic": "The core execution logic for the 'Find in page' option involves a single step: clicking on the 'Find in page' option. This action is performed on the page with index 42, and there are no subsequent branches or loops as the action is a leaf (no further navigation implied here).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            42,
+                            8
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the 'Find in page' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 65,
+            "function_description": "Add to Home screen option",
+            "action_refs": [
+                [
+                    42,
+                    9
+                ]
+            ],
+            "data_in": [
+                "web page"
+            ],
+            "data_out": [
+                "home screen shortcut"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 42,
+                "logic": "The flow starts on page 42. The user performs a click action on the 'Add to Home screen' option. Since there are no further steps or branches (as only one action is provided), the logic consists of this single click to initiate the 'Add to Home screen' functionality.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            42,
+                            9
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the 'Add to Home screen' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 66,
+            "function_description": "Desktop site toggle",
+            "action_refs": [
+                [
+                    42,
+                    10
+                ]
+            ],
+            "data_in": [
+                "desktop site setting"
+            ],
+            "data_out": [
+                "updated desktop site setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 42,
+                "logic": "The core execution logic involves interacting with the desktop site toggle. The user initiates by clicking the 'Desktop site' toggle option. Since there's only one action here, the flow is a single step with no branches or loops, focusing on toggling the desktop site setting.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            42,
+                            10
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the Desktop site toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 67,
+            "function_description": "Settings option",
+            "action_refs": [
+                [
+                    42,
+                    11
+                ]
+            ],
+            "data_in": [
+                "settings option"
+            ],
+            "data_out": [
+                "settings page entry"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 42,
+                "logic": "The user initiates the process by interacting with the Settings option. This action is a click on the Settings option, which is part of a menu (likely a browser menu given the context). The flow is a single step as there are no further actions or branches provided here, so the core logic is just the click on the Settings option to presumably access the settings page (though the destination page isn't fully resolved in the given action, but the action itself is the key step here).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            42,
+                            11
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the Settings option in the menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 68,
+            "function_description": "Help & feedback option",
+            "action_refs": [
+                [
+                    42,
+                    12
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 42,
+                "logic": "The flow starts on page 42. The user performs a click action on the 'Help & feedback' option. Since there's only one action, the flow is a single step with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            42,
+                            12
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the 'Help & feedback' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 69,
+            "function_description": "Close 'Add to Home screen' banner",
+            "action_refs": [
+                [
+                    48,
+                    0
+                ]
+            ],
+            "data_in": [
+                "add to home screen banner"
+            ],
+            "data_out": [
+                "closed add to home screen banner"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 48,
+                "logic": "The process starts on page 48. The user clicks the close button (X) for the 'Add to Home screen' banner. This action closes the banner, completing the task with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            48,
+                            0
+                        ],
+                        "src_page_idx": 48,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the close button (X) of the 'Add to Home screen' banner"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 70,
+            "function_description": "Search or type web address bar",
+            "action_refs": [
+                [
+                    49,
+                    0
+                ]
+            ],
+            "data_in": [
+                "search query",
+                "web address"
+            ],
+            "data_out": [
+                "search suggestions",
+                "web navigation target"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 49,
+                "logic": "The core execution logic starts at page 49. The user performs a click action on the 'Search or type web address' bar. Since there are no subsequent steps or branches provided, this is a single-step flow focused on interacting with the address bar.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            49,
+                            0
+                        ],
+                        "src_page_idx": 49,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the 'Search or type web address' bar"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 71,
+            "function_description": "YouTube shortcut icon",
+            "action_refs": [
+                [
+                    49,
+                    1
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 49,
+                "logic": "The flow starts on page 49. The user clicks the YouTube shortcut icon. Since this is a single-step action with no branches or loops, the execution completes with this click.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            49,
+                            1
+                        ],
+                        "src_page_idx": 49,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the YouTube shortcut icon"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 72,
+            "function_description": "Baidu shortcut icon",
+            "action_refs": [
+                [
+                    49,
+                    2
+                ]
+            ],
+            "data_in": [
+                "Baidu shortcut icon"
+            ],
+            "data_out": [
+                "Baidu website navigation result"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 49,
+                "logic": "The user starts on page 49 (a browser homepage with shortcuts). The core action is clicking the Baidu shortcut icon, which likely navigates to the Baidu website or related page. There are no branches or loops here as it's a single click action to trigger the shortcut.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            49,
+                            2
+                        ],
+                        "src_page_idx": 49,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the Baidu shortcut icon"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 73,
+            "function_description": "虎扑 shortcut icon",
+            "action_refs": [
+                [
+                    49,
+                    3
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 49,
+                "logic": "The process starts on the Chrome homepage (page 49). The user clicks the 虎扑 shortcut icon, which is the core action to initiate navigation related to the 虎扑 app or site. There are no branches or loops as it's a single click action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            49,
+                            3
+                        ],
+                        "src_page_idx": 49,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 虎扑 shortcut icon on the Chrome homepage"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 74,
+            "function_description": "Facebook shortcut icon",
+            "action_refs": [
+                [
+                    49,
+                    4
+                ]
+            ],
+            "data_in": [
+                "Facebook shortcut icon"
+            ],
+            "data_out": [
+                "Facebook app navigation"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 49,
+                "logic": "The flow starts on page 49 (a browser homepage). The user clicks the Facebook shortcut icon. Since there are no further branches or loops here, the action of clicking the icon is the core step, likely leading to Facebook's page (though the dst_page_idx is null here, but the step captures the click action on the Facebook shortcut icon).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            49,
+                            4
+                        ],
+                        "src_page_idx": 49,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the Facebook shortcut icon"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 75,
+            "function_description": "GitHub shortcut icon",
+            "action_refs": [
+                [
+                    49,
+                    5
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 49,
+                "logic": "The user initiates the interaction by clicking the GitHub shortcut icon. This action is the sole step in the flow, as the icon is clicked to presumably navigate to GitHub (though the destination page is not yet loaded or confirmed in the provided action).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            49,
+                            5
+                        ],
+                        "src_page_idx": 49,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the GitHub shortcut icon"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 76,
+            "function_description": "维基百科 shortcut icon",
+            "action_refs": [
+                [
+                    49,
+                    6
+                ]
+            ],
+            "data_in": [
+                "维基百科 shortcut icon"
+            ],
+            "data_out": [
+                "维基百科 page navigation"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 49,
+                "logic": "The user initiates the action by clicking on the 维基百科 (Wikipedia) shortcut icon. This single step is the core execution logic for accessing the Wikipedia shortcut, with no branches or loops as it directly triggers the intended action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            49,
+                            6
+                        ],
+                        "src_page_idx": 49,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the 维基百科 shortcut icon"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 77,
+            "function_description": "V2EX shortcut icon",
+            "action_refs": [
+                [
+                    49,
+                    7
+                ]
+            ],
+            "data_in": [
+                "V2EX shortcut"
+            ],
+            "data_out": [
+                "V2EX website access"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 49,
+                "logic": "The user interacts with the V2EX shortcut icon. The core logic involves clicking the V2EX shortcut icon, which likely navigates to the V2EX page (though the destination page index is null here, implying the action initiates navigation).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            49,
+                            7
+                        ],
+                        "src_page_idx": 49,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the V2EX shortcut icon"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 78,
+            "function_description": "百度知道 shortcut icon",
+            "action_refs": [
+                [
+                    49,
+                    8
+                ]
+            ],
+            "data_in": [
+                "百度知道 shortcut icon"
+            ],
+            "data_out": [
+                "navigation to 百度知道 page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 49,
+                "logic": "The user starts on page 49 (a browser homepage). The core action is clicking the '百度知道' shortcut icon, which is expected to navigate to the Baidu Zhidao service (though the destination page isn't fully resolved here, the step captures the click on the shortcut).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            49,
+                            8
+                        ],
+                        "src_page_idx": 49,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '百度知道' shortcut icon on the page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 79,
+            "function_description": "MORE button",
+            "action_refs": [
+                [
+                    49,
+                    9
+                ]
+            ],
+            "data_in": [
+                "articles for you section"
+            ],
+            "data_out": [
+                "expanded articles for you section"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 49,
+                "logic": "The functional point starts on page 49. The user clicks the 'MORE' button. Since there are no further actions or branches provided, the flow ends after this click.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            49,
+                            9
+                        ],
+                        "src_page_idx": 49,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the MORE button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 80,
+            "function_description": "SIGN IN TO CHROME button",
+            "action_refs": [
+                [
+                    49,
+                    10
+                ]
+            ],
+            "data_in": [
+                "login session",
+                "user profile"
+            ],
+            "data_out": [
+                "updated login session",
+                "personalized content setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 49,
+                "logic": "The user initiates the sign-in process by clicking the 'SIGN IN TO CHROME' button on the Chrome homepage. This action is the first and only step in the current flow, with no subsequent branches or loops as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            49,
+                            10
+                        ],
+                        "src_page_idx": 49,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'SIGN IN TO CHROME' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        }
+    ]
+}

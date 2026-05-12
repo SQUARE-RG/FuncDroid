@@ -1,0 +1,5043 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "Real estate browsing, search, and services",
+            "action_refs": [
+                [
+                    0,
+                    14
+                ],
+                [
+                    0,
+                    15
+                ],
+                [
+                    0,
+                    16
+                ],
+                [
+                    0,
+                    17
+                ],
+                [
+                    0,
+                    18
+                ],
+                [
+                    0,
+                    22
+                ]
+            ],
+            "data_in": [
+                "new house tab"
+            ],
+            "data_out": [
+                "new house tab"
+            ],
+            "data_dependencies": [
+                34,
+                37,
+                63,
+                64,
+                65,
+                66,
+                67,
+                78,
+                83,
+                89,
+                93
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The app starts on the home page (page 0). Users can choose to browse different real estate categories: click the 'New house' tab to view new properties, 'Second - hand house' for pre - owned, 'Rental house' for rentals, 'Commercial real estate' for commercial properties, or 'Decoration' for renovation - related content. Also, they can click the bottom 'Home' tab to stay on or return to the main home page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            14
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click New house tab"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            0,
+                            15
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click Second - hand house tab"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            0,
+                            16
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click Rental house tab"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            0,
+                            17
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click Commercial real estate tab"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            0,
+                            18
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click Decoration tab"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            0,
+                            22
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click bottom tab: Home"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S5",
+                        "to": "S6"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 1,
+            "function_description": "This page enables users to select a city (via search, history, popular cities, or alphabetical list) to proceed with real estate - related browsing, searching, or services specific to that city.",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ],
+                [
+                    1,
+                    0
+                ],
+                [
+                    23,
+                    0
+                ]
+            ],
+            "data_in": [
+                "city selection setting",
+                "city search input",
+                "city data",
+                "city search session",
+                "search input (上海)"
+            ],
+            "data_out": [
+                "city selection setting (entered city selection interface)",
+                "filtered city list",
+                "cancelled city search session",
+                "reset search interface"
+            ],
+            "data_dependencies": [
+                75,
+                91
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts by clicking the city selection dropdown (S1) to open the city selection page. On this page, the user can either input a city name (S2) to search or click the cancel button (S3) to return to the previous page. The input action leads to a new state, while canceling loops back to the dropdown interaction.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Open city selection page via dropdown"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            1,
+                            0
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 23,
+                        "action": "input",
+                        "summary": "Input city name in search field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            23,
+                            0
+                        ],
+                        "src_page_idx": 23,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Cancel and return to city selection page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S1"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "Property search input field",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ]
+            ],
+            "data_in": [
+                "property search query"
+            ],
+            "data_out": [
+                "property search results (to be loaded)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on page 0. They input the property name '北京城建·北京合院 顺义城' into the property search input field, which leads to page 2. There are no branches or loops in this flow as it's a single input action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "input",
+                        "summary": "Input '北京城建·北京合院 顺义城' into the property search input field"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "The current page is in a loading state, likely preparing to display a map - based interface for users to search for houses, which will enable them to browse real - estate properties on a map.",
+            "action_refs": [
+                [
+                    0,
+                    2
+                ],
+                [
+                    3,
+                    0
+                ]
+            ],
+            "data_in": [
+                "house search query",
+                "location (Shanghai)"
+            ],
+            "data_out": [
+                "map-based house search results"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The process starts on page 0. First, the 'Map-based house search button' is clicked, leading to page 3 (presumably the map - based house search interface). Then, there's an option to click the 'System back button' to return, but the main flow is the click to enter the map - based search.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click the map - based house search button to enter the map - based house search page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            3,
+                            0
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the system back button (optional action to return)"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "The current page functions as a new house real estate browsing platform, providing features such as searching for properties, filtering by region/price/type, accessing tools like mortgage calculation and map house - finding, and displaying property listings with details like price, area, and features.",
+            "action_refs": [
+                [
+                    0,
+                    3
+                ],
+                [
+                    4,
+                    0
+                ],
+                [
+                    26,
+                    2
+                ],
+                [
+                    26,
+                    3
+                ],
+                [
+                    29,
+                    0
+                ],
+                [
+                    32,
+                    2
+                ]
+            ],
+            "data_in": [
+                "new houses category entry",
+                "house search input",
+                "search bar",
+                "search input text",
+                "search query",
+                "property search query",
+                "property data"
+            ],
+            "data_out": [
+                "new houses page content",
+                "updated house search input",
+                "search suggestion",
+                "cleared search input text",
+                "updated search query",
+                "filtered property list",
+                "search result for property"
+            ],
+            "data_dependencies": [
+                34,
+                37,
+                63,
+                64,
+                65,
+                66,
+                67,
+                76,
+                77,
+                78,
+                83,
+                89,
+                93
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts by clicking the new houses category icon to enter the new house browsing page. Then, a property name is input into the search field. If the input needs to be cleared, the clear button is clicked; otherwise, the search proceeds. After clearing, a new property name can be input, and this input-clear loop can repeat as needed.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click new houses category icon to enter new house page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            4,
+                            0
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 26,
+                        "action": "input",
+                        "summary": "Input property name in new house search field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            26,
+                            2
+                        ],
+                        "src_page_idx": 26,
+                        "dst_page_idx": 29,
+                        "action": "click",
+                        "summary": "Click clear input button to empty search field"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            29,
+                            0
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 32,
+                        "action": "input",
+                        "summary": "Input new property name after clearing"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S4",
+                        "type": "loop",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "The page provides functionality for browsing second - hand houses, including features like searching for houses, finding communities, map - based house - finding, selling houses, viewing recommended houses, and using tools such as house price calculation and decoration valuation report, to help users with second - hand house transactions and related services.",
+            "action_refs": [
+                [
+                    0,
+                    4
+                ]
+            ],
+            "data_in": [
+                "second - hand house category entry"
+            ],
+            "data_out": [
+                "second - hand house related page and data loaded"
+            ],
+            "data_dependencies": [
+                27,
+                34,
+                63,
+                64,
+                65,
+                66,
+                67,
+                78,
+                89,
+                93
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the main page (page 0) and clicks the 'Second - hand houses' category icon. This action navigates them to the second - hand houses page (page 5), where they can access various second - hand house - related features like searching, map - based house - finding, and using tools such as house price calculation.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click the 'Second - hand houses' category icon to enter the second - hand houses page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "This page functions as a rental housing browsing and search interface, allowing users to search for rental properties by location, filter by rental type (e.g., entire rent, shared rent), explore different property categories (e.g., apartments, personal listings), view recommended and nearby rental listings, and access features like video tours, transaction guarantees, and live streaming看房 to find suitable rental housing options.",
+            "action_refs": [
+                [
+                    0,
+                    5
+                ],
+                [
+                    6,
+                    0
+                ]
+            ],
+            "data_in": [
+                "rental houses category entry",
+                "rental search query",
+                "rental listing"
+            ],
+            "data_out": [
+                "rental houses page content",
+                "filtered rental listing"
+            ],
+            "data_dependencies": [
+                28,
+                29,
+                30,
+                31,
+                34,
+                63,
+                64,
+                65,
+                66,
+                67,
+                78,
+                89,
+                93
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on page 0, clicks the rental houses category icon to navigate to page 6, then inputs a location into the rental search field. The flow is a straight line with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click rental houses category icon"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            6,
+                            0
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": null,
+                        "action": "input",
+                        "summary": "Input location into rental search field"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "The current page functions as a hub for browsing, searching, and accessing services related to commercial properties (shops, offices, factories, warehouses, land, parking spaces), offering category-based navigation, property listings, and transaction-related options.",
+            "action_refs": [
+                [
+                    0,
+                    6
+                ]
+            ],
+            "data_in": [
+                "shops/offices category entry"
+            ],
+            "data_out": [
+                "shops/offices related property listings",
+                "shops/offices category page content"
+            ],
+            "data_dependencies": [
+                32,
+                33,
+                35
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the main hub page (page 0). The user clicks the 'Shops/offices category icon' (action from [0,6]), which navigates to the commercial property services page (page 7). This page provides further category-based navigation and property listings for commercial properties like shops, offices, and more.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            6
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click 'Shops/offices category icon' to navigate to commercial property services page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "The current page is in a loading state, likely fetching and preparing to display landlord - related services (such as property management, rental assistance, etc.) after the user clicked on the landlord services category icon from the real estate browsing page.",
+            "action_refs": [
+                [
+                    0,
+                    7
+                ],
+                [
+                    8,
+                    0
+                ]
+            ],
+            "data_in": [
+                "landlord services category"
+            ],
+            "data_out": [
+                "landlord services page (loading)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the real estate browsing page (page 0). They click the landlord services category icon (action S1), which initiates a loading process to fetch and prepare landlord - related services (destination page 8 is in a loading state). There are no branches or loops in this core flow as it's a straightforward action to trigger the loading of landlord - related services.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            7
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click the landlord services category icon to start fetching landlord - related services"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "The current page provides functionality for users to explore and access various home decoration - related services and resources, including estimating costs, viewing cases, finding decoration companies, and browsing related products and promotional information, facilitating users' home decoration planning and implementation.",
+            "action_refs": [
+                [
+                    0,
+                    8
+                ],
+                [
+                    9,
+                    0
+                ]
+            ],
+            "data_in": [
+                "decoration materials category entry",
+                "search bar",
+                "home furnishing search term"
+            ],
+            "data_out": [
+                "装修 service page (loaded)",
+                "search input updated"
+            ],
+            "data_dependencies": [
+                36,
+                51
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on page 0 and clicks the 'Decoration materials' icon to navigate to page 9. On page 9, the user inputs '现代简约沙发套' into the home furnishing search field. This flow involves navigating to a category page and then performing a search within that category.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            8
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click 'Decoration materials' icon to go to page 9"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            9,
+                            0
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": null,
+                        "action": "input",
+                        "summary": "Input '现代简约沙发套' in home furnishing search"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "The page displays a list of upcoming (unopened) real estate projects in Beijing, providing details such as location, address boundaries, and property features, with options to filter by region and view more new housing listings.",
+            "action_refs": [
+                [
+                    0,
+                    9
+                ],
+                [
+                    10,
+                    0
+                ],
+                [
+                    10,
+                    1
+                ]
+            ],
+            "data_in": [
+                "unopened projects category",
+                "real estate listing list",
+                "real estate project list",
+                "region filter setting"
+            ],
+            "data_out": [
+                "unopened projects list",
+                "filtered real estate project list"
+            ],
+            "data_dependencies": [
+                34,
+                37,
+                38,
+                44,
+                63,
+                64,
+                65,
+                66,
+                67,
+                78,
+                89,
+                93
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on page 0, where the user clicks the 'Unopened projects category icon' to navigate to page 10 (S1). On page 10, the user can either click the 'Back navigation arrow' to return (S2) or interact with the 'Region filter dropdown' to filter projects (S3), or click 'View more new housing listings' (though not in the given actions, but the provided actions show S1 leads to S10, then S2 and S3 as options).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            9
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click unopened projects category icon to navigate to the list page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            10,
+                            0
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click back navigation arrow to return"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            10,
+                            1
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click region filter dropdown to filter projects"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "This page enables users to search for residential communities by name/address, filter by categories (e.g., popular, commute - friendly), and view detailed listings with price, availability, and location info for real - estate community exploration.",
+            "action_refs": [
+                [
+                    0,
+                    10
+                ],
+                [
+                    11,
+                    0
+                ]
+            ],
+            "data_in": [
+                "community search category",
+                "search input (community name/address)",
+                "community search input",
+                "community list"
+            ],
+            "data_out": [
+                "community list (with details)",
+                "filtered community list"
+            ],
+            "data_dependencies": [
+                34,
+                39,
+                40,
+                63,
+                64,
+                65,
+                66,
+                67,
+                78,
+                89,
+                93
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on page 0 and clicks the '找小区' (community search) category icon to navigate to page 11. Then, on page 11, the user inputs a community name (e.g., '百环家园') into the search field to initiate the community search process.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            10
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click community search category icon"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            11,
+                            0
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": null,
+                        "action": "input",
+                        "summary": "Input community name in search field"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "The current page functions as a long - term apartment rental platform, enabling users to search for long - term rental apartments through a search bar, filter listings by criteria like location, rent, and apartment type, and browse various long - term apartment rental options with different features (such as short - term rentable, monthly payment available) and recommended listings.",
+            "action_refs": [
+                [
+                    0,
+                    11
+                ],
+                [
+                    12,
+                    0
+                ],
+                [
+                    12,
+                    4
+                ]
+            ],
+            "data_in": [
+                "long - term apartment category icon",
+                "apartment search criteria",
+                "apartment list",
+                "rental listing page state"
+            ],
+            "data_out": [
+                "long - term apartment related page (including apartment type options, apartment listings)",
+                "updated apartment search criteria",
+                "previous page state (navigation back)"
+            ],
+            "data_dependencies": [
+                34,
+                42,
+                43,
+                63,
+                64,
+                65,
+                66,
+                67,
+                78,
+                89,
+                93
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The process starts by clicking the long - term apartment category icon on the initial page to enter the long - term apartment page. Then, on this page, users can input apartment - related search content in the search field. Also, there is an option to go back to the previous page by clicking the back arrow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            11
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click the long - term apartment category icon to enter the long - term apartment page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            12,
+                            0
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": null,
+                        "action": "input",
+                        "summary": "Input apartment - related search content in the search field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            12,
+                            4
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the back navigation arrow to go back"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if - else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "The current page enables users to quickly list their house for sale by entering property details (community, building number), leveraging agent assistance, and accessing service advantages like privacy protection and market data, with an option to publish the listing for free after agreeing to terms.",
+            "action_refs": [
+                [
+                    0,
+                    12
+                ],
+                [
+                    16,
+                    0
+                ],
+                [
+                    16,
+                    2
+                ]
+            ],
+            "data_in": [
+                "sell house function entry",
+                "快速卖房页面数据",
+                "楼栋号输入框",
+                "卖房信息表单"
+            ],
+            "data_out": [
+                "sell house form page loaded",
+                "返回后的首页数据",
+                "楼栋号输入内容",
+                "更新的卖房信息表单"
+            ],
+            "data_dependencies": [
+                45,
+                46,
+                47,
+                48
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the home page and clicks the 'One-click sell house' button to enter the quick sell house page. On this page, the user inputs the building number (e.g., '1号楼') into the designated field. The flow includes navigation and data entry steps to progress toward publishing the listing, with the option to leverage agent assistance and service advantages like privacy protection.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            12
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click 'One-click sell house' button to navigate to the quick sell house page."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            16,
+                            2
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 16,
+                        "action": "input",
+                        "summary": "Input '1号楼' into the building number input field."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "The current page (Recommendation tab) of the real estate app provides a centralized hub for users to browse various real estate services (new homes, second - hand homes, rentals, etc.), access real - estate - related news, explore property listings (including hot - ranked properties and 3D sales offices), and utilize features like one - click house selling, with a focus on offering recommended real estate content and services for Shanghai's East Bund area.",
+            "action_refs": [
+                [
+                    0,
+                    13
+                ]
+            ],
+            "data_in": [
+                "recommendation tab",
+                "property listing data"
+            ],
+            "data_out": [
+                "recommended property listing data"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the app's main page (Recommendation tab) and clicks the 'Recommendation tab' action, which keeps them on the same page to access real estate services, news, property listings, and the one - click house - selling feature focused on Shanghai's East Bund area.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            13
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click on the Recommendation tab to stay on the page with real estate services, news, listings, and one - click house - selling for Shanghai's East Bund."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "This page enables users to simulate home renovations (including whole - house, wall, kitchen - bathroom, and furniture renewal) by first selecting a city (defaulted to Beijing) and then a community, with a floor plan display to visualize the renovation effect.",
+            "action_refs": [
+                [
+                    0,
+                    19
+                ],
+                [
+                    17,
+                    2
+                ]
+            ],
+            "data_in": [
+                "special price house zone feature entry",
+                "模拟装修页面数据"
+            ],
+            "data_out": [
+                "simulated decoration page loaded",
+                "返回前一页面的导航操作结果"
+            ],
+            "data_dependencies": [
+                51
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The process starts on page 0. First, the user clicks the 'Special price house zone button' (action from [0,19]) to navigate to page 17. Then, on page 17, the user clicks the '返回按钮' (back button, action from [17,2]), though the destination of this back action is not specified in the provided data.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            19
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click 'Special price house zone button' to go to page 17"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            17,
+                            2
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click '返回按钮' (back button) on page 17"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "The current page functions as a detailed product showcase for the OPPein smart built - in refrigerator, providing product images, descriptions, and options to contact the seller (such as online chat and phone), as well as a link to view more details about the OPPein full - house customization dealer.",
+            "action_refs": [
+                [
+                    0,
+                    20
+                ],
+                [
+                    18,
+                    0
+                ],
+                [
+                    18,
+                    1
+                ]
+            ],
+            "data_in": [
+                "activity discount button",
+                "product detail page",
+                "search query",
+                "product information"
+            ],
+            "data_out": [
+                "activity details page",
+                "product detail page closed"
+            ],
+            "data_dependencies": [
+                52,
+                53,
+                54
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on page 0 and clicks the Activity discount button (action_ref [0,20]) to navigate to page 18, which showcases the OPPein smart built - in refrigerator. On page 18, the user can either click the Close page button (action_ref [18,0]) to exit or input text in the Search input field (action_ref [18,1]).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            20
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click the Activity discount button to navigate to the product showcase page."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            18,
+                            0
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the Close page button to exit the product showcase page."
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            18,
+                            1
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": null,
+                        "action": "input",
+                        "summary": "Input text in the Search input field on the product showcase page."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "The current page (Recommendation tab) of the real estate app provides a centralized hub for users to browse various real estate services (new homes, second - hand homes, rentals, etc.), access real - estate - related news, list properties for sale, and view recommended real estate listings, facilitating users' real estate search and transaction - related operations.",
+            "action_refs": [
+                [
+                    0,
+                    21
+                ]
+            ],
+            "data_in": [
+                "property card (北投·栖澐湾)"
+            ],
+            "data_out": [
+                "property details page (北投·栖澐湾)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the Recommendation tab (page 0). The core action is clicking on the property card (北投·栖澐湾) at the specified position. This action likely leads to more details about the property, and since it's a leaf action, the flow concludes here with this property - related interaction.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            21
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click on the property card (北投·栖澐湾) at position [540, 1756]"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "The Messages page in the real estate app displays chat status (currently no chats), offers a prompt to bind a public account for chat updates, and recommends top real estate consultants with their associated properties, enabling users to initiate micro-chats with these consultants.",
+            "action_refs": [
+                [
+                    0,
+                    23
+                ]
+            ],
+            "data_in": [
+                "messages feature entry"
+            ],
+            "data_out": [
+                "messages page loaded"
+            ],
+            "data_dependencies": [
+                55,
+                56,
+                57,
+                59,
+                85
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the app's home page and clicks the 'Messages' bottom tab. This navigates to the Messages page, where chat status (no chats), a public account binding prompt, and recommended real estate consultants with their properties are displayed, allowing micro-chat initiation with consultants.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            23
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click the 'Messages' bottom tab to navigate to the Messages page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "This page provides options for users to post property listings, including selling a house, renting out a property, or listing commercial properties (shops, office buildings, etc.), allowing users to initiate the process of posting real estate for sale or rent.",
+            "action_refs": [
+                [
+                    0,
+                    24
+                ],
+                [
+                    20,
+                    3
+                ]
+            ],
+            "data_in": [
+                "post house feature entry",
+                "popup window"
+            ],
+            "data_out": [
+                "post house options menu",
+                "popup window closed"
+            ],
+            "data_dependencies": [
+                60,
+                61,
+                62,
+                74,
+                84
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The process starts on page 0. First, the user clicks the 'Post House' bottom tab (action from page 0 to 20). Then, on page 20, the user clicks the '关闭弹窗' (close popup) button, which is a leaf action ending the flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            24
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 20,
+                        "action": "click",
+                        "summary": "Click bottom tab 'Post House' to navigate to page 20"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            20,
+                            3
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click '关闭弹窗' button to close popup (leaf action)"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "The \"Real Shot House\" page enables users to browse, search (with filters like region, price, and new listings in 7 days), and view detailed real - estate listings (including price, area, description, and agent info) along with real - estate - related news.",
+            "action_refs": [
+                [
+                    0,
+                    25
+                ],
+                [
+                    21,
+                    0
+                ],
+                [
+                    21,
+                    2
+                ]
+            ],
+            "data_in": [
+                "real shot house feature entry",
+                "房产搜索条件",
+                "房源列表",
+                "区域筛选条件"
+            ],
+            "data_out": [
+                "real shot house page loaded",
+                "输入后的房产搜索条件",
+                "筛选后的房源列表"
+            ],
+            "data_dependencies": [
+                34,
+                44,
+                63,
+                64,
+                65,
+                66,
+                67,
+                68,
+                78,
+                79,
+                89,
+                93
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the entry page and clicks the 'Real Shot House' bottom tab to navigate to the Real Shot House page. On this page, the user can input search terms (like '海景房') in the search box or click the region filter dropdown to refine listings. The flow includes navigating to the page, then either searching or filtering, with no loops (just optional branches for search/filter actions).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            25
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 21,
+                        "action": "click",
+                        "summary": "Navigate to Real Shot House page via bottom tab"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            21,
+                            0
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": null,
+                        "action": "input",
+                        "summary": "Input search term (e.g., 海景房) in the property search box"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            21,
+                            2
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Open region filter dropdown to refine listings"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "The \"My\" page in the real estate app provides user - centered real - estate - related services. It offers personal information management (like browsing history, collections), financial services (such as loans, account management), property - related tools (including price checking, house - finding), and services for landlords (like house - selling and - renting management) to meet users' diverse real estate - related needs.",
+            "action_refs": [
+                [
+                    0,
+                    26
+                ]
+            ],
+            "data_in": [
+                "user profile",
+                "user-related services"
+            ],
+            "data_out": [
+                "user profile page (displayed)",
+                "user-related services (displayed)"
+            ],
+            "data_dependencies": [
+                69,
+                70,
+                72,
+                73
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the app's main page. The user clicks the 'My' tab in the bottom navigation bar, which navigates to the 'My' page. On the 'My' page, various services are available, but the core logic here is the initial navigation to access user - centered real - estate - related services.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            26
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 22,
+                        "action": "click",
+                        "summary": "Click the 'My' tab in the bottom navigation bar to navigate to the 'My' page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "This page functions as a real estate service hub for Shanghai, providing access to new/second - hand homes, rentals, commercial properties, housing - related services (like selling, loan, decoration), property listings, market news, and enabling property searches and map - based house - finding.",
+            "action_refs": [
+                [
+                    1,
+                    1
+                ]
+            ],
+            "data_in": [
+                "城市选择项（上海）"
+            ],
+            "data_out": [
+                "上海城市的房产信息页面"
+            ],
+            "data_dependencies": [
+                75
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts on the city selection page. The user clicks the '上海' (Shanghai) button in the popular cities section, which navigates to the Shanghai real estate service hub page. From there, the hub provides access to various real estate services, listings, and search options for Shanghai properties.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            1
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click '上海' button in popular cities to navigate to Shanghai real estate hub"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "Displays new house listings with search/filter options (region, price, layout, etc.) and additional features (e.g., VR viewing), along with a \"smart house - finding\" assistant prompt and a \"recommended for you\" section.",
+            "action_refs": [
+                [
+                    4,
+                    1
+                ]
+            ],
+            "data_in": [
+                "property listing",
+                "filter settings"
+            ],
+            "data_out": [
+                "filtered property listing"
+            ],
+            "data_dependencies": [
+                34,
+                37,
+                41,
+                63,
+                64,
+                65,
+                66,
+                67,
+                78,
+                89,
+                93
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The flow starts on page 4 (new house listings). The user clicks the 'All properties filter button' (action_ref [4,1]), which navigates to page 27. This action likely applies or modifies filters to refine the displayed new house listings, enabling the user to explore properties with updated search criteria.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            1
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 27,
+                        "action": "click",
+                        "summary": "Click the 'All properties filter button' to navigate to page 27 (updated/new filter-applied listings)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "This page functions as a region filter interface for new house listings, allowing users to select a specific region (or \"不限\" for no region restriction) and confirm the selection to refine the search results of new house properties.",
+            "action_refs": [
+                [
+                    4,
+                    2
+                ],
+                [
+                    28,
+                    1
+                ],
+                [
+                    28,
+                    3
+                ]
+            ],
+            "data_in": [
+                "region filter setting",
+                "区域筛选设置",
+                "浦东区域选项",
+                "filter settings (region, price, house type, etc.)",
+                "real estate listing data"
+            ],
+            "data_out": [
+                "region filter options (expanded)",
+                "更新的区域筛选条件",
+                "filtered real estate listing data"
+            ],
+            "data_dependencies": [
+                34,
+                37,
+                41,
+                63,
+                64,
+                65,
+                66,
+                67,
+                78,
+                79,
+                80,
+                89,
+                93
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user starts on the new house listing page and clicks the region filter dropdown to open the region selection interface. Then, the user selects a specific region (e.g., 浦东) from the list. Finally, the user clicks the confirm button to apply the region filter and update the new house search results.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            2
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 28,
+                        "action": "click",
+                        "summary": "Open region filter dropdown"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            28,
+                            1
+                        ],
+                        "src_page_idx": 28,
+                        "dst_page_idx": 34,
+                        "action": "click",
+                        "summary": "Select a region (e.g., 浦东)"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            28,
+                            3
+                        ],
+                        "src_page_idx": 28,
+                        "dst_page_idx": 36,
+                        "action": "click",
+                        "summary": "Confirm region filter selection"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 25,
+            "function_description": "Second - hand house search bar",
+            "action_refs": [
+                [
+                    5,
+                    0
+                ]
+            ],
+            "data_in": [
+                "二手房搜索条件"
+            ],
+            "data_out": [
+                "二手房搜索结果"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The process starts on the second - hand house page. The user inputs the content '橡树湾二手房' into the second - hand house search bar. Since there is only one action here, the flow is a single - step input operation without any branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            0
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": null,
+                        "action": "input",
+                        "summary": "Input '橡树湾二手房' into the second - hand house search bar"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 26,
+            "function_description": "Find community button",
+            "action_refs": [
+                [
+                    5,
+                    1
+                ]
+            ],
+            "data_in": [
+                "community button"
+            ],
+            "data_out": [
+                "community button found"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The process starts on page 5. The user clicks the 'Find community' button (action_ref [5,1]). Since this is a single-step action with no branching or further steps, the flow ends here.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            1
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'Find community' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 27,
+            "function_description": "Second - hand house listing card",
+            "action_refs": [
+                [
+                    5,
+                    2
+                ]
+            ],
+            "data_in": [
+                "second - hand house listing"
+            ],
+            "data_out": [
+                "detailed second - hand house information"
+            ],
+            "data_dependencies": [
+                34,
+                63,
+                64,
+                65,
+                66,
+                67,
+                78,
+                89,
+                93
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The process starts on the second - hand house page (page 5). The user clicks on a second - hand house listing card. Since there are no further branches or loops indicated by the provided action, this is a single - step interaction focused on engaging with the listing card.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            2
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the second - hand house listing card"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 28,
+            "function_description": "Rental search button",
+            "action_refs": [
+                [
+                    6,
+                    1
+                ]
+            ],
+            "data_in": [
+                "rental search criteria",
+                "rental listing data"
+            ],
+            "data_out": [
+                "filtered rental listing data"
+            ],
+            "data_dependencies": [
+                34,
+                63,
+                64,
+                65,
+                66,
+                67,
+                78,
+                89,
+                93
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The core execution logic for the rental search button involves a single step: clicking the rental search button located on the rental page. This action is expected to trigger the search functionality, though the destination page (if any) is not yet determined from the provided action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            1
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the rental search button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 29,
+            "function_description": "“整租一居” rental filter",
+            "action_refs": [
+                [
+                    6,
+                    2
+                ]
+            ],
+            "data_in": [
+                "rental filter setting",
+                "rental listing data"
+            ],
+            "data_out": [
+                "updated rental filter setting",
+                "filtered rental listing data"
+            ],
+            "data_dependencies": [
+                34,
+                63,
+                64,
+                65,
+                66,
+                67,
+                78,
+                89,
+                93
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on the rental page (page 6). The core action is clicking the '整租一居' (whole rent one-bedroom) filter option, which likely refines the rental listings to show only whole-rent one-bedroom properties. There are no branches or loops here as it's a single click action to apply the filter.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            2
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '整租一居' rental filter option to apply the filter for whole-rent one-bedroom properties."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 30,
+            "function_description": "“整租” category icon",
+            "action_refs": [
+                [
+                    6,
+                    3
+                ]
+            ],
+            "data_in": [
+                "租房分类选项",
+                "租房信息列表"
+            ],
+            "data_out": [
+                "筛选后的整租租房信息列表"
+            ],
+            "data_dependencies": [
+                34,
+                63,
+                64,
+                65,
+                66,
+                67,
+                78,
+                89,
+                93
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The core execution logic starts on page 6. The user clicks on the '整租' (whole rent) category icon. This action likely navigates to a page (or updates the current page) to display listings or options related to whole-rent properties. There are no branches or loops as it's a single click action to select the category.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            3
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the '整租' category icon"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 31,
+            "function_description": "Rental property listing card",
+            "action_refs": [
+                [
+                    6,
+                    4
+                ]
+            ],
+            "data_in": [
+                "rental property listing"
+            ],
+            "data_out": [
+                "detailed rental property information"
+            ],
+            "data_dependencies": [
+                34,
+                63,
+                64,
+                65,
+                66,
+                67,
+                78,
+                89,
+                93
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The core execution logic starts on page 6. The user performs a click action on a rental property listing card (positioned at [540, 1560]). This action likely leads to more details about the selected rental property, though the destination page is not specified here. There are no branch points as the flow is a single step for now.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            4
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the rental property listing card"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 32,
+            "function_description": "Commercial property search bar",
+            "action_refs": [
+                [
+                    7,
+                    0
+                ]
+            ],
+            "data_in": [
+                "commercial property search query"
+            ],
+            "data_out": [
+                "commercial property search results"
+            ],
+            "data_dependencies": [
+                34,
+                63,
+                64,
+                65,
+                66,
+                67,
+                78,
+                89,
+                93
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The user interacts with the commercial property search bar on page 7. The core action is inputting the search query 'office space for rent' into the search bar. This step initiates the search process for commercial properties matching the entered criteria.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            0
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": null,
+                        "action": "input",
+                        "summary": "Input 'office space for rent' into the commercial property search bar"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 33,
+            "function_description": "Rent office buildings button",
+            "action_refs": [
+                [
+                    7,
+                    1
+                ]
+            ],
+            "data_in": [
+                "rent office buildings feature entry"
+            ],
+            "data_out": [
+                "rent office buildings page loaded"
+            ],
+            "data_dependencies": [
+                34,
+                63,
+                64,
+                65,
+                66,
+                67,
+                78,
+                89,
+                93
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The core execution logic starts on page 7. The user clicks the 'Rent office buildings' button (action_ref [7,1]). Since there are no further steps or branches provided, this is a single-step flow with no decision points.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            1
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'Rent office buildings' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 34,
+            "function_description": "Certified source filter",
+            "action_refs": [
+                [
+                    7,
+                    2
+                ]
+            ],
+            "data_in": [
+                "certified source filter",
+                "property listings"
+            ],
+            "data_out": [
+                "filtered property listings"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The user initiates the certified source filter process by clicking on the 'Certified source filter' option. This action likely triggers the filtering mechanism to display only certified sources, though the exact result (e.g., updated listings) is implied by the filter's purpose.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            2
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the 'Certified source filter' option to apply the filter for certified sources."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 35,
+            "function_description": "28㎡ shop listing card",
+            "action_refs": [
+                [
+                    7,
+                    3
+                ]
+            ],
+            "data_in": [
+                "shop listing"
+            ],
+            "data_out": [
+                "detailed shop listing view"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The user starts on page 7 (a property listing page). The core action is clicking the 28㎡ shop listing card, which likely leads to a detailed view of that shop (though the destination page isn't specified here, the action initiates interaction with this specific listing).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            3
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the 28㎡ shop listing card"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 36,
+            "function_description": "Decoration company category button",
+            "action_refs": [
+                [
+                    9,
+                    1
+                ]
+            ],
+            "data_in": [
+                "装修公司分类入口"
+            ],
+            "data_out": [
+                "装修公司列表数据"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts on page 9. The core action is clicking the 'Decoration company' category button. Since the action is a click with no further branching (as the provided action has no subsequent steps or conditions), the flow is a single step: clicking the button to interact with the decoration company category.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            1
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the Decoration company category button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 37,
+            "function_description": "View more new properties link",
+            "action_refs": [
+                [
+                    10,
+                    2
+                ]
+            ],
+            "data_in": [
+                "new property list"
+            ],
+            "data_out": [
+                "new property list (extended)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The user starts on page 10 (a property listing page). The core action is clicking the 'View more new properties' link. This action likely navigates to a page with more property listings (though dst_page_idx is null here, implying the next page is loaded). There are no branches or loops as it's a single click action to view more properties.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            2
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'View more new properties link' to load more property listings"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 38,
+            "function_description": "Representative unopened project card",
+            "action_refs": [
+                [
+                    10,
+                    3
+                ]
+            ],
+            "data_in": [
+                "unopened project card"
+            ],
+            "data_out": [
+                "opened project details"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The core execution logic starts on page 10, where a click action is performed on the representative unopened project card. This action is the primary step in interacting with the unopened project card, and there are no subsequent branches or loops as the action is a single, direct interaction with the card.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            3
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the representative unopened project card"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 39,
+            "function_description": "Popular communities filter button",
+            "action_refs": [
+                [
+                    11,
+                    1
+                ]
+            ],
+            "data_in": [
+                "community filter setting"
+            ],
+            "data_out": [
+                "updated community filter setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The user starts on page 11. The core action is clicking the 'Popular communities filter button' (action_ref [11,1]). This click likely triggers a filtering or navigation related to popular communities, though the exact post - click flow (like opening a filter menu or updating the list) isn't fully detailed here as the action has 'is_leaf': false, suggesting more steps could follow, but the current step is the click on the filter button.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            1
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the Popular communities filter button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 40,
+            "function_description": "百环家园 community detail card",
+            "action_refs": [
+                [
+                    11,
+                    2
+                ]
+            ],
+            "data_in": [
+                "百环家园 community card"
+            ],
+            "data_out": [
+                "百环家园 community detail page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The core execution logic starts on page 11. The user clicks on the '百环家园' community detail card, which is the main action to access the community's detailed information. There are no subsequent steps or branches as this action is the focal point of the functional point.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            2
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the '百环家园' community detail card"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 41,
+            "function_description": "Region filter dropdown button",
+            "action_refs": [
+                [
+                    11,
+                    3
+                ]
+            ],
+            "data_in": [
+                "region filter setting",
+                "housing list data"
+            ],
+            "data_out": [
+                "filtered housing list data"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The user interacts with the region filter dropdown button. The core action is clicking the '区域' (Region) filter dropdown button, which likely triggers the display of region filtering options (though the destination page is not yet determined from the single action provided).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            3
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the Region filter dropdown button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 42,
+            "function_description": "Whole-rent apartment category button",
+            "action_refs": [
+                [
+                    12,
+                    1
+                ]
+            ],
+            "data_in": [
+                "apartment category filter",
+                "apartment listing data"
+            ],
+            "data_out": [
+                "filtered apartment listing data (whole - rent apartments)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The user clicks the 'Whole - rent apartment category button' (the '整租' button in the UI). This action is expected to trigger a change in the app's state, likely to display or filter apartment listings related to whole - rent apartments. There are no branches or loops in this simple execution flow as it's a single click action to initiate the relevant apartment category view.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            1
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the whole - rent apartment (整租) category button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 43,
+            "function_description": "First apartment listing card",
+            "action_refs": [
+                [
+                    12,
+                    2
+                ]
+            ],
+            "data_in": [
+                "apartment listing"
+            ],
+            "data_out": [
+                "detailed apartment information"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The functional point starts on page 12 (the long - term apartment listing page). The user performs a click action on the first apartment listing card. Since there are no further actions or branches provided, the flow ends after this click.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            2
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the first apartment listing card"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 44,
+            "function_description": "Area filter dropdown (全北京)",
+            "action_refs": [
+                [
+                    12,
+                    3
+                ]
+            ],
+            "data_in": [
+                "area filter setting"
+            ],
+            "data_out": [
+                "updated area filter setting"
+            ],
+            "data_dependencies": [
+                45
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The core execution logic starts on page 12. The user clicks the '全北京' area filter dropdown. This action likely opens a menu or page to select a different area, but since there's only one action here, the flow is a single step of clicking the area filter dropdown.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            3
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '全北京' area filter dropdown"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 45,
+            "function_description": "This page allows users to select a city (initially set to Shanghai) and input a community name or address to search for and choose the relevant community during the quick house - selling process.",
+            "action_refs": [
+                [
+                    16,
+                    1
+                ],
+                [
+                    42,
+                    0
+                ],
+                [
+                    42,
+                    1
+                ],
+                [
+                    42,
+                    2
+                ]
+            ],
+            "data_in": [
+                "community name input field",
+                "city selection",
+                "小区名/地址搜索框",
+                "城市选择（上海）",
+                "城市选择设置",
+                "city and community selection session"
+            ],
+            "data_out": [
+                "selected city and community",
+                "搜索输入内容（小区名或地址）",
+                "城市选择设置（待展开选择）",
+                "cancelled city and community selection session"
+            ],
+            "data_dependencies": [
+                48,
+                50
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 16,
+                "logic": "The process starts on page 16 where the user inputs a community name. Then, the user moves to page 42, where they can either input a community name/address, click the city selection dropdown, or click the cancel button. There are no major decision or loop points as the actions are parallel options on page 42.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            16,
+                            1
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 42,
+                        "action": "input",
+                        "summary": "Input community name on page 16"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            42,
+                            0
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": null,
+                        "action": "input",
+                        "summary": "Input community name/address on page 42"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            42,
+                            1
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click city selection dropdown on page 42"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            42,
+                            2
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click cancel button on page 42"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 46,
+            "function_description": "Broker assistance toggle",
+            "action_refs": [
+                [
+                    16,
+                    3
+                ]
+            ],
+            "data_in": [
+                "broker assistance setting"
+            ],
+            "data_out": [
+                "broker assistance setting toggled"
+            ],
+            "data_dependencies": [
+                48
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 16,
+                "logic": "The user starts on page 16 (the '快速卖房' page). The core action is clicking the 'Broker assistance toggle' (labeled '经纪人帮卖') to enable or disable broker assistance for selling the property. This action transitions the app to page 43, completing the toggle interaction.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            16,
+                            3
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 43,
+                        "action": "click",
+                        "summary": "Click the 'Broker assistance toggle' (经纪人帮卖) to toggle broker assistance."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 47,
+            "function_description": "Terms acceptance checkbox",
+            "action_refs": [
+                [
+                    16,
+                    4
+                ]
+            ],
+            "data_in": [
+                "terms acceptance setting"
+            ],
+            "data_out": [
+                "terms acceptance setting enabled"
+            ],
+            "data_dependencies": [
+                48
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 16,
+                "logic": "The flow starts on page 16. The user clicks the 'Terms acceptance checkbox' (labeled '我已阅读并接受...') at the specified position. This action likely enables further steps (like the '免费发布' button) or navigates to page 44, depending on the app's logic.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            16,
+                            4
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 44,
+                        "action": "click",
+                        "summary": "Click the terms acceptance checkbox (labeled '我已阅读并接受...')"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 48,
+            "function_description": "The current page is a form for quickly selling a house, allowing users to input the building number (with address protection) and other property details, and offers services like broker assistance and various service advantages before submitting the listing for free.",
+            "action_refs": [
+                [
+                    16,
+                    5
+                ]
+            ],
+            "data_in": [
+                "house selling information",
+                "agreement acceptance status"
+            ],
+            "data_out": [
+                "published house selling information"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 16,
+                "logic": "The user starts on the '快速卖房' (Quick Sell House) page. After reviewing property details and service options, the user clicks the '免费发布' (Free Publish) button to submit the listing. The flow is a straight line as there are no branches or loops shown in the provided actions.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            16,
+                            5
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click the '免费发布' (Free Publish) button to submit the house listing."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 49,
+            "function_description": "The current page is an online customer service interface for a real estate app, allowing users to select from different problem types (account certification, Anxuan issues, new house issues, second - hand house issues) and then start interacting with the intelligent customer service to get answers to their real - estate - related questions.",
+            "action_refs": [
+                [
+                    16,
+                    6
+                ],
+                [
+                    45,
+                    2
+                ]
+            ],
+            "data_in": [
+                "online customer service entry",
+                "客服问题输入框"
+            ],
+            "data_out": [
+                "online customer service interface loaded",
+                "客服问题输入内容"
+            ],
+            "data_dependencies": [
+                81,
+                82
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 16,
+                "logic": "The user starts on page 16 and clicks the 'Online customer service' option to navigate to page 45. Then, on page 45, the user inputs a question about account certification into the customer service input box. There are no branches or loops in this flow as it is a linear sequence of actions to interact with the intelligent customer service.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            16,
+                            6
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 45,
+                        "action": "click",
+                        "summary": "Click 'Online customer service' to navigate to the customer service page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            45,
+                            2
+                        ],
+                        "src_page_idx": 45,
+                        "dst_page_idx": null,
+                        "action": "input",
+                        "summary": "Input the question about account certification into the customer service input box"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 50,
+            "function_description": "小区选择下拉按钮",
+            "action_refs": [
+                [
+                    17,
+                    0
+                ]
+            ],
+            "data_in": [
+                "小区选择设置"
+            ],
+            "data_out": [
+                "小区选择界面（展开）"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 17,
+                "logic": "The core execution logic starts on page 17. The user clicks the '小区选择下拉按钮' (community selection dropdown button) at the specified position. Since there are no further actions or branches provided, the flow consists of this single click action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            17,
+                            0
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the community selection dropdown button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 51,
+            "function_description": "全屋装修选项卡",
+            "action_refs": [
+                [
+                    17,
+                    1
+                ]
+            ],
+            "data_in": [
+                "全屋装修选项卡",
+                "模拟装修页面数据"
+            ],
+            "data_out": [
+                "全屋装修功能页面数据"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 17,
+                "logic": "The core execution logic starts on page 17. The user clicks on the '全屋装修' (Whole House Renovation) tab. Since there are no further branches or loops indicated by the provided action, this is a single-step flow focused on selecting the whole house renovation option.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            17,
+                            1
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the '全屋装修' tab"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 52,
+            "function_description": "Online chat button",
+            "action_refs": [
+                [
+                    18,
+                    2
+                ]
+            ],
+            "data_in": [
+                "product details",
+                "chat feature entry"
+            ],
+            "data_out": [
+                "chat session initiated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 18,
+                "logic": "The core execution logic for the online chat button is a single step: click the '在线聊' (Online Chat) button located at the bottom of the page. This action initiates the online chat functionality, with no branching or looping as it is a direct interaction to open the chat interface.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            18,
+                            2
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the online chat button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 53,
+            "function_description": "Call button",
+            "action_refs": [
+                [
+                    18,
+                    3
+                ]
+            ],
+            "data_in": [
+                "欧派家居商家信息",
+                "商品信息"
+            ],
+            "data_out": [
+                "电话呼叫请求"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 18,
+                "logic": "The core execution logic for the call button functional point involves a single step: clicking the call button. This action is performed on page 18, and there are no subsequent steps or branches as the action is a leaf node (no further navigation or actions follow this click).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            18,
+                            3
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the Call button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 54,
+            "function_description": "Favorite toggle button",
+            "action_refs": [
+                [
+                    18,
+                    4
+                ]
+            ],
+            "data_in": [
+                "欧派冰箱商品信息",
+                "收藏设置"
+            ],
+            "data_out": [
+                "收藏设置（更新为已收藏/未收藏）"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 18,
+                "logic": "The flow starts on page 18. The user clicks the favorite (收藏) toggle button. Since there's only one action, the logic is a single step of interacting with the toggle.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            18,
+                            4
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the favorite toggle button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 55,
+            "function_description": "去绑定按钮",
+            "action_refs": [
+                [
+                    19,
+                    0
+                ]
+            ],
+            "data_in": [
+                "公众号绑定设置"
+            ],
+            "data_out": [
+                "公众号绑定设置更新"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 19,
+                "logic": "The core execution logic starts on page 19 (the '消息' page). The user clicks the '去绑定' button, which is the only action in this functional point. Since there are no subsequent steps or branches, the flow ends after this click.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            19,
+                            0
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '去绑定' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 56,
+            "function_description": "关闭通知按钮",
+            "action_refs": [
+                [
+                    19,
+                    1
+                ]
+            ],
+            "data_in": [
+                "通知设置"
+            ],
+            "data_out": [
+                "通知设置已关闭"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 19,
+                "logic": "The core execution logic is to perform a single click action on the notification toggle button. There are no branches or loops, as the action directly closes the notification button in one step.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            19,
+                            1
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the notification toggle button to close it"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 57,
+            "function_description": "删除消息按钮",
+            "action_refs": [
+                [
+                    19,
+                    2
+                ]
+            ],
+            "data_in": [
+                "聊天消息"
+            ],
+            "data_out": [
+                "删除后的聊天消息状态"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 19,
+                "logic": "在消息页面，用户点击位于页面右上角的删除消息按钮，触发删除消息相关的操作流程。",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            19,
+                            2
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "点击消息页面右上角的删除消息按钮"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 58,
+            "function_description": "添加按钮",
+            "action_refs": [
+                [
+                    19,
+                    3
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 19,
+                "logic": "The core execution logic starts on page 19 (the '消息' page). The user performs a click action on the '添加按钮' (Add button) located at the specified position. Since there are no further actions provided, the flow ends here with this single click step.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            19,
+                            3
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '添加按钮' (Add button) on page 19."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 59,
+            "function_description": "微聊按钮（张竞雄）",
+            "action_refs": [
+                [
+                    19,
+                    4
+                ]
+            ],
+            "data_in": [
+                "张竞雄的微聊入口"
+            ],
+            "data_out": [
+                "进入与张竞雄的聊天界面"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 19,
+                "logic": "The functional point involves a single step: clicking the '微聊' (chat) button for 张竞雄. Since there's only one action, the flow is a straight line with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            19,
+                            4
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 微聊 button for 张竞雄"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 60,
+            "function_description": "我要卖房 卖房服务按钮",
+            "action_refs": [
+                [
+                    20,
+                    0
+                ]
+            ],
+            "data_in": [
+                "卖房服务入口"
+            ],
+            "data_out": [
+                "卖房服务页面导航"
+            ],
+            "data_dependencies": [
+                74,
+                84
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The user starts on page 20 and clicks the '我要卖房 卖房服务按钮' (I want to sell a house - selling service button). This action likely initiates the process of accessing卖房 (house - selling) related services, with no further branching or looping shown in the provided actions.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            0
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '我要卖房 卖房服务按钮' to initiate house - selling related services"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 61,
+            "function_description": "我要出租 租房服务按钮",
+            "action_refs": [
+                [
+                    20,
+                    1
+                ]
+            ],
+            "data_in": [
+                "租房服务入口"
+            ],
+            "data_out": [
+                "进入租房服务页面"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The user starts on page 20 and clicks the '我要出租' (I want to rent out) rental service button. This action likely initiates the process for posting a rental listing, with no branching or looping in this single-step flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            1
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '我要出租' 租房服务 button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 62,
+            "function_description": "商铺写字楼 商业地产按钮",
+            "action_refs": [
+                [
+                    20,
+                    2
+                ]
+            ],
+            "data_in": [
+                "商业地产相关房产信息"
+            ],
+            "data_out": [
+                "商业地产房产列表"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The user starts on page 20. The core action is clicking the '商铺写字楼 商业地产' button. This action likely leads to a new page (though dst_page_idx is null here, implying a transition to a relevant commercial property page). There are no branches or loops as it's a single click action to navigate to commercial real estate content.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            2
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '商铺写字楼 商业地产' button to navigate to commercial property - related content."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 63,
+            "function_description": "搜索按钮",
+            "action_refs": [
+                [
+                    21,
+                    1
+                ]
+            ],
+            "data_in": [
+                "搜索关键词",
+                "房源信息"
+            ],
+            "data_out": [
+                "搜索结果（房源列表）"
+            ],
+            "data_dependencies": [
+                34,
+                64,
+                65,
+                66,
+                67,
+                78,
+                89,
+                93
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 21,
+                "logic": "The core execution logic for the search button functional point starts with clicking the search button located at the specified position on page 21. This action is expected to trigger the search functionality, though the destination page (if any) is not yet determined from the provided action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            21,
+                            1
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the search button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 64,
+            "function_description": "价格筛选下拉框",
+            "action_refs": [
+                [
+                    21,
+                    3
+                ]
+            ],
+            "data_in": [
+                "价格筛选设置",
+                "房源列表"
+            ],
+            "data_out": [
+                "筛选后的房源列表"
+            ],
+            "data_dependencies": [
+                34,
+                63,
+                65,
+                66,
+                67,
+                78,
+                79,
+                80,
+                89,
+                93
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 21,
+                "logic": "The core execution logic starts on page 21, where the user clicks the '价格筛选下拉框' (price filter dropdown) to open the price filtering options. Since there's only one action here, the flow is a single step with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            21,
+                            3
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the price filter dropdown to open price filtering options"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 65,
+            "function_description": "7日新上按钮",
+            "action_refs": [
+                [
+                    21,
+                    4
+                ]
+            ],
+            "data_in": [
+                "房源列表",
+                "7日新上筛选条件"
+            ],
+            "data_out": [
+                "筛选后的房源列表"
+            ],
+            "data_dependencies": [
+                34,
+                63,
+                64,
+                66,
+                67,
+                78,
+                89,
+                93
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 21,
+                "logic": "On the '实拍好房' page (page 21), the user clicks the '7日新上' button. This action likely filters or refreshes the property listings to show those newly listed in the past 7 days. There are no branches or loops as it's a single click action to trigger the filter.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            21,
+                            4
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '7日新上' button to filter properties newly listed in 7 days"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 66,
+            "function_description": "列表视图切换按钮",
+            "action_refs": [
+                [
+                    21,
+                    5
+                ]
+            ],
+            "data_in": [
+                "房源列表视图设置"
+            ],
+            "data_out": [
+                "更新后的房源列表视图"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 21,
+                "logic": "The user starts on page 21 (the '实拍好房' page). They click the list view toggle button (labeled '单列' initially). This action likely toggles the property list's display format, such as switching between single-column and multi-column (or grid) view. The flow is a single step with the click action, and no branches as it's a direct toggle operation.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            21,
+                            5
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the list view toggle button (labeled '单列') to switch the property list's display format."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 67,
+            "function_description": "实拍房源卡片（金茂·北京国际社区）",
+            "action_refs": [
+                [
+                    21,
+                    6
+                ]
+            ],
+            "data_in": [
+                "房源卡片（金茂·北京国际社区）"
+            ],
+            "data_out": [
+                "房源详情（金茂·北京国际社区）"
+            ],
+            "data_dependencies": [
+                34,
+                63,
+                64,
+                65,
+                78,
+                89,
+                93
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 21,
+                "logic": "The core execution logic starts on page 21 (实拍好房 page). The user performs a click action on the 实拍房源卡片 (金茂·北京国际社区) to interact with this specific property card. There are no branches or loops as it's a single action step.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            21,
+                            6
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the 实拍房源卡片 (金茂·北京国际社区) property card"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 68,
+            "function_description": "安居头条新闻卡片（顺义新地）",
+            "action_refs": [
+                [
+                    21,
+                    7
+                ]
+            ],
+            "data_in": [
+                "安居头条新闻（顺义新地）"
+            ],
+            "data_out": [
+                "新闻详情页面"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 21,
+                "logic": "The core execution logic starts on page 21 (the '实拍好房' page). The user performs a click action on the '安居头条新闻卡片（顺义新地）' (the news card about Shunyi new land) at the specified position. This action likely leads to viewing the detailed content of that news card, and there are no branching or looping steps in this flow as it's a single click to access the news details.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            21,
+                            7
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the '安居头条新闻卡片（顺义新地）' to access its detailed content"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 69,
+            "function_description": "Personal homepage button",
+            "action_refs": [
+                [
+                    22,
+                    0
+                ]
+            ],
+            "data_in": [
+                "personal homepage entry"
+            ],
+            "data_out": [
+                "personal homepage loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 22,
+                "logic": "The user starts on page 22 (the 'My' page). The core action is clicking the 'Personal homepage' button. Since there's only one action here, the flow is a single step with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            22,
+                            0
+                        ],
+                        "src_page_idx": 22,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the Personal homepage button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 70,
+            "function_description": "Customer service icon",
+            "action_refs": [
+                [
+                    22,
+                    1
+                ]
+            ],
+            "data_in": [
+                "customer service feature entry"
+            ],
+            "data_out": [
+                "customer service page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 22,
+                "logic": "The user starts on page 22. The core action is clicking the customer service icon located at position [791, 132]. This action likely initiates the customer service interaction, though the destination page is not yet determined from the given action (dst_page_idx is null).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            22,
+                            1
+                        ],
+                        "src_page_idx": 22,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the customer service icon at position [791, 132]"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 71,
+            "function_description": "Scan icon",
+            "action_refs": [
+                [
+                    22,
+                    2
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 22,
+                "logic": "The core execution logic for the 'Scan icon' functional point involves a single step: clicking the '扫一扫' (Scan) icon located at the top right of the page. This action is expected to initiate the scanning functionality, with no branching or looping in this simple flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            22,
+                            2
+                        ],
+                        "src_page_idx": 22,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '扫一扫' (Scan) icon at the top right of the page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 72,
+            "function_description": "Settings icon",
+            "action_refs": [
+                [
+                    22,
+                    3
+                ]
+            ],
+            "data_in": [
+                "settings entry"
+            ],
+            "data_out": [
+                "settings page access"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 22,
+                "logic": "The core execution logic for the Settings icon functional point involves a single step: clicking the Settings icon located at the top - right corner of the page. There are no further branches or loops in this simple flow as it's just the action of initiating the interaction with the Settings icon.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            22,
+                            3
+                        ],
+                        "src_page_idx": 22,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the Settings icon at the top - right corner of the page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 73,
+            "function_description": "Service progress tool",
+            "action_refs": [
+                [
+                    22,
+                    4
+                ]
+            ],
+            "data_in": [
+                "service progress tool"
+            ],
+            "data_out": [
+                "service progress page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 22,
+                "logic": "The user starts on page 22 (the 'My' page). The core logic involves clicking the 'Service progress tool' option. Since there's only one action here, the flow is a single step: clicking the tool to access its functionality (or proceed, though the dst is null here, so maybe it's the end of the captured flow for this point).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            22,
+                            4
+                        ],
+                        "src_page_idx": 22,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the 'Service progress tool' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 74,
+            "function_description": "Sell house button",
+            "action_refs": [
+                [
+                    22,
+                    5
+                ]
+            ],
+            "data_in": [
+                "sell house service option"
+            ],
+            "data_out": [
+                "sell house service initiation"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 22,
+                "logic": "The core execution logic starts on page 22 (the 'My' page). The user clicks the 'Sell house' button (labeled '去卖房') located in the 'Landlord Services' section. This action is the primary step to initiate the house-selling process, with no branching or looping at this stage as it’s a single click action to proceed.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            22,
+                            5
+                        ],
+                        "src_page_idx": 22,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'Sell house' (去卖房) button in the landlord services section to start the house - selling process"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 75,
+            "function_description": "This page serves as the main interface for Shanghai - based real estate services, enabling users to search for properties (new, second - hand, rental, commercial, etc.), access real - estate - related news, list properties for sale, and utilize various real - estate - associated functions like getting loans and finding communities.",
+            "action_refs": [
+                [
+                    23,
+                    1
+                ],
+                [
+                    24,
+                    1
+                ],
+                [
+                    25,
+                    0
+                ]
+            ],
+            "data_in": [
+                "city selection item (上海)",
+                "房源搜索输入框内容",
+                "房源搜索输入内容"
+            ],
+            "data_out": [
+                "selected city (上海)",
+                "real estate home page with Shanghai context",
+                "搜索结果（房源信息）"
+            ],
+            "data_dependencies": [
+                90,
+                92
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 23,
+                "logic": "The process starts by selecting the Shanghai city option. Then, it proceeds to input the property search query '缦云上海 东外滩' into the search box. Finally, it repeats the input action for the same property search query in the search box, likely to confirm or refine the search.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            23,
+                            1
+                        ],
+                        "src_page_idx": 23,
+                        "dst_page_idx": 24,
+                        "action": "click",
+                        "summary": "Click on the Shanghai city option"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            24,
+                            1
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 25,
+                        "action": "input",
+                        "summary": "Input '缦云上海 东外滩' into the property search box"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            25,
+                            0
+                        ],
+                        "src_page_idx": 25,
+                        "dst_page_idx": 25,
+                        "action": "input",
+                        "summary": "Repeat input '缦云上海 东外滩' into the property search box"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "loop",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 76,
+            "function_description": "Displays search results for new houses, including property listings with details like location, size, price, and features, along with options for filtering, sorting, and intelligent house - finding assistance.",
+            "action_refs": [
+                [
+                    26,
+                    0
+                ]
+            ],
+            "data_in": [
+                "search query (璞瑅润府)"
+            ],
+            "data_out": [
+                "search results (properties)"
+            ],
+            "data_dependencies": [
+                86
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 26,
+                "logic": "The process starts on page 26. The user clicks the search suggestion '搜索‘璞瑅润府’' (action S1), which navigates to page 27 to display search results for new houses, including property details and options for filtering, sorting, or intelligent house - finding assistance.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            26,
+                            0
+                        ],
+                        "src_page_idx": 26,
+                        "dst_page_idx": 27,
+                        "action": "click",
+                        "summary": "Click the search suggestion '搜索‘璞瑅润府’' to initiate the search and view results."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 77,
+            "function_description": "The current page functions as a new house real estate browsing and search interface, providing access to property listings, search filters, property - related tools (like mortgage calculation), and various property - related information (such as real - time real estate news, popular property rankings) to help users find and explore new housing options.",
+            "action_refs": [
+                [
+                    26,
+                    1
+                ]
+            ],
+            "data_in": [
+                "search interface",
+                "search input (璞瑅润府)"
+            ],
+            "data_out": [
+                "exited search interface",
+                "returned to new houses page"
+            ],
+            "data_dependencies": [
+                76
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 26,
+                "logic": "The user starts on page 26 (a search interface) and clicks the 'Cancel' button. This action navigates them to page 4, which is the main new house real estate browsing page with property listings, tools, and news. There are no decision or loop points in this flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            26,
+                            1
+                        ],
+                        "src_page_idx": 26,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the Cancel button to exit the search interface and navigate to the main new house browsing page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 78,
+            "function_description": "The page provides detailed information about the \"缦云上海\" property, including pricing, size, location, floor plans, and options for online viewing, consultation, and contacting the sales office.",
+            "action_refs": [
+                [
+                    27,
+                    0
+                ]
+            ],
+            "data_in": [
+                "property (缦云上海)"
+            ],
+            "data_out": [
+                "detailed property information (缦云上海)"
+            ],
+            "data_dependencies": [
+                34,
+                63,
+                64,
+                65,
+                66,
+                67,
+                89,
+                93,
+                96
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 27,
+                "logic": "The user starts on page 27, which displays property listings including '缦云上海'. The core action is clicking the '缦云上海' property card (action_ref [27,0]), which navigates to page 31. On page 31, detailed property info (pricing, size, location, floor plans) and options (online viewing, consultation, contact) are available. This is a straight - line flow with no branches or loops as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            27,
+                            0
+                        ],
+                        "src_page_idx": 27,
+                        "dst_page_idx": 31,
+                        "action": "click",
+                        "summary": "Click the '缦云上海' property card to view its detailed information."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 79,
+            "function_description": "Region category tab (附近)",
+            "action_refs": [
+                [
+                    28,
+                    0
+                ]
+            ],
+            "data_in": [
+                "区域筛选条件",
+                "房产信息"
+            ],
+            "data_out": [
+                "更新后的区域筛选条件",
+                "筛选后的房产信息"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 28,
+                "logic": "The user starts on page 28 and clicks the '附近' (Nearby) region category tab. This action navigates to page 33, likely displaying properties or content related to the nearby region. There are no branches or loops as this is a single click action leading to a new page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            28,
+                            0
+                        ],
+                        "src_page_idx": 28,
+                        "dst_page_idx": 33,
+                        "action": "click",
+                        "summary": "Click the '附近' (Nearby) region category tab"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 80,
+            "function_description": "Clear filter button (清空)",
+            "action_refs": [
+                [
+                    28,
+                    2
+                ]
+            ],
+            "data_in": [
+                "filter settings (region)"
+            ],
+            "data_out": [
+                "filter settings (region) cleared"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 28,
+                "logic": "The user starts on page 28 (filter interface). They click the 'Clear filter' button (清空), which transitions the app to page 35, likely resetting the applied filters.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            28,
+                            2
+                        ],
+                        "src_page_idx": 28,
+                        "dst_page_idx": 35,
+                        "action": "click",
+                        "summary": "Click the 'Clear filter' button to reset filters"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 81,
+            "function_description": "账号认证问题选择按钮",
+            "action_refs": [
+                [
+                    45,
+                    0
+                ]
+            ],
+            "data_in": [
+                "账号认证问题类型选项"
+            ],
+            "data_out": [
+                "账号认证问题咨询请求"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 45,
+                "logic": "The flow starts on page 45 (the online customer service page). The user clicks the '账号认证' (Account Authentication) button, which is the target action. There are no branches or loops here as it's a single click action to select the account authentication problem type.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            45,
+                            0
+                        ],
+                        "src_page_idx": 45,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '账号认证' (Account Authentication) button to select the account authentication problem type."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 82,
+            "function_description": "立即体验客服服务按钮",
+            "action_refs": [
+                [
+                    45,
+                    1
+                ]
+            ],
+            "data_in": [
+                "客服服务入口"
+            ],
+            "data_out": [
+                "客服服务会话"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 45,
+                "logic": "The user starts on page 45 and clicks the '立即体验客服服务' (immediately experience customer service) button. This action likely initiates the customer service experience, with no branching or looping as it's a single click action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            45,
+                            1
+                        ],
+                        "src_page_idx": 45,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '立即体验客服服务' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 83,
+            "function_description": "The current page functions as a new property (新房) browsing interface for Shanghai, providing search capabilities, property categorization (e.g., all listings, for sale, newly certified), tools (e.g., home purchase qualification, lottery points, mortgage calculation), property news, featured listings, filtering options (region, price, layout, etc.), and sorting, along with interactive features like video tours and 3D showrooms.",
+            "action_refs": [
+                [
+                    24,
+                    0
+                ]
+            ],
+            "data_in": [
+                "新房功能入口"
+            ],
+            "data_out": [
+                "新房功能页面内容"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 24,
+                "logic": "The core logic starts with the user on the entry page (page 24). The user clicks the '新房' (new property) button, which navigates to the new property browsing page (page 4). On this page, the user can then explore various features like property categorization, tools, news, listings, filters, sorting, and interactive tours, though the initial flow is a straight navigation to the new property interface.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            24,
+                            0
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the '新房' button to navigate to the new property browsing page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 84,
+            "function_description": "The current page is the \"Quick Sell House\" page, which allows users to input property details (community, building number), opt for broker-assisted selling, view service advantages, and submit a free listing to sell their house, with features like privacy protection, access to numerous buyers, and professional brokerage services.",
+            "action_refs": [
+                [
+                    24,
+                    2
+                ]
+            ],
+            "data_in": [
+                "卖房服务入口"
+            ],
+            "data_out": [
+                "快速卖房功能页面"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 24,
+                "logic": "The user starts on page 24 and clicks the '一键卖房' button to navigate to the '快速卖房' page (page 16). This initiates the process of listing a property for sale, where further details like community and building number can be entered, and options like broker-assisted selling and service advantages are presented.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            24,
+                            2
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click the '一键卖房' button to enter the quick sell house page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 85,
+            "function_description": "The page functions as a messaging center for the real estate app, displaying chat status (currently no chat messages), recommending excellent property consultants with their associated properties and micro - chat options, and providing navigation buttons for other app functions.",
+            "action_refs": [
+                [
+                    24,
+                    3
+                ]
+            ],
+            "data_in": [
+                "消息功能入口"
+            ],
+            "data_out": [
+                "消息页面内容"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 24,
+                "logic": "The user starts on page 24 (the app's main page) and clicks the '消息' (Messages) bottom button. This action navigates to page 19 (the messaging center), where chat status (no messages) and recommended property consultants with micro - chat options are displayed.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            24,
+                            3
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click the '消息' bottom button on page 24 to navigate to the messaging center page 19."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 86,
+            "function_description": "This page displays the search results for the property \"缦云上海 东外滩\", including property details, and offers options for filtering, sorting, and intelligent house - finding, along with a \"Guess you like\" section.",
+            "action_refs": [
+                [
+                    29,
+                    1
+                ]
+            ],
+            "data_in": [
+                "search history item (璞瑅润府)"
+            ],
+            "data_out": [
+                "search results (for 璞瑅润府)"
+            ],
+            "data_dependencies": [
+                86
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 29,
+                "logic": "The flow starts with a click on the search history item '璞瑅润府' (though the target property is '缦云上海 东外滩', this action likely transitions to a search context). Then, the app displays the search results for '缦云上海 东外滩', showing property details, filtering/sorting options, an intelligent house - finding section, and a 'Guess you like' area. There are no branches or loops as the provided action leads to the results page directly.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            29,
+                            1
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 27,
+                        "action": "click",
+                        "summary": "Click on the search history item '璞瑅润府' to transition to the search results context (for the target property '缦云上海 东外滩')"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 87,
+            "function_description": "The page provides detailed information about the \"缦云上海\" property, including pricing, size, location, available unit types, and options for contacting the sales office,预约看房 (scheduling a viewing), and getting notifications about price changes or project launches.",
+            "action_refs": [
+                [
+                    29,
+                    2
+                ]
+            ],
+            "data_in": [
+                "光明星城楼盘信息"
+            ],
+            "data_out": [
+                "光明星城楼盘详情页加载完成"
+            ],
+            "data_dependencies": [
+                88,
+                94,
+                95
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 29,
+                "logic": "The user starts on page 29 and clicks the '光明星城' property card (action_ref [29,2]), navigating to page 31. On page 31 (the '缦云上海' details page), the user can view property info like pricing, size, location, and unit types, and choose actions like contacting sales, scheduling a viewing, or setting notifications. No branches are shown in the provided actions, so the flow is linear after the initial click.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            29,
+                            2
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 31,
+                        "action": "click",
+                        "summary": "Click the '光明星城' property card to navigate to the '缦云上海' details page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 88,
+            "function_description": "This page displays a high - angle view image of the construction site of the \"Poly·Hongqiao Hezhu\" property, and it is related to the function of initiating the process of immediately viewing this property (likely leading to a service or page for arranging a property viewing).",
+            "action_refs": [
+                [
+                    31,
+                    0
+                ],
+                [
+                    40,
+                    0
+                ],
+                [
+                    41,
+                    1
+                ]
+            ],
+            "data_in": [
+                "房产项目信息",
+                "current view session",
+                "exit confirmation dialog"
+            ],
+            "data_out": [
+                "看房功能启动",
+                "exit confirmation dialog",
+                "exit operation canceled (dialog dismissed)"
+            ],
+            "data_dependencies": [
+                87,
+                97,
+                98
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 31,
+                "logic": "The process starts on page 31. First, click the '立即看房' button to navigate to page 40. Then, click the Back button on page 40 to go to page 41. Finally, click the '再看看' button on page 41, which has no destination page. There are no branch or loop points in this flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            31,
+                            0
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": 40,
+                        "action": "click",
+                        "summary": "Click '立即看房' button to go to page 40"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            40,
+                            0
+                        ],
+                        "src_page_idx": 40,
+                        "dst_page_idx": 41,
+                        "action": "click",
+                        "summary": "Click Back button to go to page 41"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            41,
+                            1
+                        ],
+                        "src_page_idx": 41,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click '再看看' button"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 89,
+            "function_description": "This page displays detailed information about the \"保利·外滩曜\" property, including its price, location, opening date, contact details, and visual/descriptive content to showcase the real estate project.",
+            "action_refs": [
+                [
+                    36,
+                    0
+                ]
+            ],
+            "data_in": [
+                "property listing (保利·外滩曜)"
+            ],
+            "data_out": [
+                "detailed property information (保利·外滩曜)"
+            ],
+            "data_dependencies": [
+                34,
+                63,
+                64,
+                65,
+                66,
+                67,
+                78,
+                93,
+                96
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 36,
+                "logic": "The user starts on a property listing page. They click on the '保利·外滩曜' property card, which navigates to the detailed property page displaying information like price, location, opening date, contact details, and visual content for the real estate project.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            36,
+                            0
+                        ],
+                        "src_page_idx": 36,
+                        "dst_page_idx": 37,
+                        "action": "click",
+                        "summary": "Click on the '保利·外滩曜' property listing card to view its detailed information."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 90,
+            "function_description": "The page functions as a real estate service main interface for Shanghai, providing entrance to various property - related services (such as new houses, second - hand houses, rentals, etc.), a property search function, real - estate - related news, and recommended property listings.",
+            "action_refs": [
+                [
+                    25,
+                    1
+                ]
+            ],
+            "data_in": [
+                "search session",
+                "search input text"
+            ],
+            "data_out": [
+                "cancelled search session"
+            ],
+            "data_dependencies": [
+                92
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 25,
+                "logic": "The user starts on a page with a search result or input state. By clicking the '取消' (Cancel) button, the user navigates back to the main real estate service interface for Shanghai, which provides access to various property services, news, and recommended listings.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            25,
+                            1
+                        ],
+                        "src_page_idx": 25,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the '取消' (Cancel) button to return to the main real estate interface."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 91,
+            "function_description": "The current page is a notification interface that informs the user that the city has been switched to Haidong, with a \"Confirm\" button to acknowledge the city switch and return to the real estate listing page for Haidong.",
+            "action_refs": [
+                [
+                    25,
+                    2
+                ],
+                [
+                    38,
+                    0
+                ]
+            ],
+            "data_in": [
+                "城市设置",
+                "city switch confirmation dialog"
+            ],
+            "data_out": [
+                "城市设置（切换至海东）",
+                "dismissed city switch confirmation dialog"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 25,
+                "logic": "The user starts on page 25 and clicks the 'Switch City' button (action_ref [25,2]) to navigate to page 38 (the city switch confirmation page). Then, the user clicks the 'Confirm' button (action_ref [38,0]) on page 38 to acknowledge the city switch and navigate to page 39 (the real estate listing page for Haidong). There are no branches or loops in this flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            25,
+                            2
+                        ],
+                        "src_page_idx": 25,
+                        "dst_page_idx": 38,
+                        "action": "click",
+                        "summary": "Click the 'Switch City' button to go to the city switch confirmation page."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            38,
+                            0
+                        ],
+                        "src_page_idx": 38,
+                        "dst_page_idx": 39,
+                        "action": "click",
+                        "summary": "Click the 'Confirm' button to acknowledge the city switch and go to the Haidong real estate listing page."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 92,
+            "function_description": "The current page displays property search results for \"缦云上海 东外滩\" in Shanghai, providing details of the listed property, filtering options (region, price, house type, etc.), a prompt for intelligent house - finding if no desired property is found, and a \"Guess you like\" section (currently empty), with additional features like map - based house - finding, micro - chat, and a house - picking assistant.",
+            "action_refs": [
+                [
+                    25,
+                    3
+                ]
+            ],
+            "data_in": [
+                "搜索建议项",
+                "搜索关键词"
+            ],
+            "data_out": [
+                "搜索结果（楼盘信息）"
+            ],
+            "data_dependencies": [
+                90,
+                92
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 25,
+                "logic": "The process starts on page 25 with a search for '缦云上海 东外滩'. The user clicks on a search suggestion (action_ref [25,3]), which navigates to page 27. On page 27, the property search results for '缦云上海 东外滩' are displayed, including property details, filtering options, an intelligent house - finding prompt, and a (currently empty) 'Guess you like' section, along with additional features like map - based house - finding, micro - chat, and a house - picking assistant.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            25,
+                            3
+                        ],
+                        "src_page_idx": 25,
+                        "dst_page_idx": 27,
+                        "action": "click",
+                        "summary": "Click on the search suggestion item for '缦云上海 东外滩' to navigate to the property search results page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 93,
+            "function_description": "The current page provides detailed information about the \"缦云上海\" real estate property, including pricing, size, location, available户型, and options for contacting the sales office,预约看房, and receiving notifications about price changes or开盘, along with visual and interactive features like 3D看房, VR, and online consultation.",
+            "action_refs": [
+                [
+                    25,
+                    4
+                ]
+            ],
+            "data_in": [
+                "房源信息卡片"
+            ],
+            "data_out": [
+                "房源详情页面"
+            ],
+            "data_dependencies": [
+                34,
+                63,
+                64,
+                65,
+                66,
+                67,
+                78,
+                89,
+                96
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 25,
+                "logic": "The user starts on page 25 (search results for '缦云上海') and clicks the property information card (action_ref [25,4]). This action navigates to page 31, which displays detailed property info for '缦云上海' including pricing, size, location, and interactive options like 3D/VR viewing, consultation, and notifications.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            25,
+                            4
+                        ],
+                        "src_page_idx": 25,
+                        "dst_page_idx": 31,
+                        "action": "click",
+                        "summary": "Click the '缦云上海' property information card to view detailed property info."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 94,
+            "function_description": "Property listing for 光明星城",
+            "action_refs": [
+                [
+                    32,
+                    0
+                ]
+            ],
+            "data_in": [
+                "光明星城 property"
+            ],
+            "data_out": [
+                "光明星城 property listing"
+            ],
+            "data_dependencies": [
+                95
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 32,
+                "logic": "The user initiates the process by clicking on the property listing for 光明星城. This action likely leads to viewing detailed information about the property, as it is the key step to access the listing's content.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            32,
+                            0
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the property listing for 光明星城"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 95,
+            "function_description": "Search '光明星城' button",
+            "action_refs": [
+                [
+                    32,
+                    1
+                ]
+            ],
+            "data_in": [
+                "search query (光明星城)",
+                "property search context"
+            ],
+            "data_out": [
+                "search results for 光明星城"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 32,
+                "logic": "The core execution logic starts on page 32. The user clicks the 'Search 光明星城' button. This action likely triggers a search or navigates to a related page for the '光明星城' query.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            32,
+                            1
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'Search 光明星城' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 96,
+            "function_description": "3D model view button",
+            "action_refs": [
+                [
+                    37,
+                    0
+                ]
+            ],
+            "data_in": [
+                "property 3D model view option"
+            ],
+            "data_out": [
+                "property 3D model view initiated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 37,
+                "logic": "The user starts on page 37 and clicks the 3D model view button. This action likely initiates the loading or display of a 3D model related to the property, with no further branching or looping in this single-step flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            37,
+                            0
+                        ],
+                        "src_page_idx": 37,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 3D model view button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 97,
+            "function_description": "退出按钮（确认退出弹窗）",
+            "action_refs": [
+                [
+                    41,
+                    0
+                ]
+            ],
+            "data_in": [
+                "exit confirmation dialog",
+                "current session"
+            ],
+            "data_out": [
+                "session terminated",
+                "exit confirmation result (confirmed)"
+            ],
+            "data_dependencies": [
+                97
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 41,
+                "logic": "The user clicks the exit button, triggering a confirmation dialog asking '确定退出吗?' (Are you sure to exit?). After this click, the flow reaches a decision point where the user can choose to exit or stay (再看看).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            41,
+                            0
+                        ],
+                        "src_page_idx": 41,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the exit button to trigger the confirmation dialog."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": null,
+                                "condition": "User clicks '退出' (Exit)"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "User clicks '再看看' (Look again)"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 98,
+            "function_description": "取消按钮（等待弹窗）",
+            "action_refs": [
+                [
+                    41,
+                    2
+                ]
+            ],
+            "data_in": [
+                "waiting session"
+            ],
+            "data_out": [
+                "waiting session canceled"
+            ],
+            "data_dependencies": [
+                98
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 41,
+                "logic": "The user initiates the action by clicking the '取消' (Cancel) button. This action is expected to trigger a waiting dialog or some form of confirmation/processing, but in this case, the flow ends here as the action is a leaf node (no further navigation).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            41,
+                            2
+                        ],
+                        "src_page_idx": 41,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '取消' (Cancel) button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 99,
+            "function_description": "周边按钮（顶部右侧）",
+            "action_refs": [
+                [
+                    41,
+                    3
+                ]
+            ],
+            "data_in": [
+                "周边功能入口"
+            ],
+            "data_out": [
+                "周边功能界面"
+            ],
+            "data_dependencies": [
+                99,
+                100
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 41,
+                "logic": "The user clicks the '周边' (Surroundings) button at the top right. This action triggers a dialog asking '确定退出吗?' (Confirm exit?), presenting two options: '退出' (Exit) and '再看看' (Look again). The flow branches here based on the user's choice between these two options.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            41,
+                            3
+                        ],
+                        "src_page_idx": 41,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '周边' button at the top right."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2",
+                                "condition": "User chooses '退出' (Exit)"
+                            },
+                            {
+                                "next_step": "S3",
+                                "condition": "User chooses '再看看' (Look again)"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 100,
+            "function_description": "东侧标签（视图切换）",
+            "action_refs": [
+                [
+                    41,
+                    4
+                ]
+            ],
+            "data_in": [
+                "view toggle option (东侧)"
+            ],
+            "data_out": [
+                "updated view (东侧 view)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 41,
+                "logic": "The core execution logic starts on page 41. The user performs a click action on the '东侧' tab to switch the view. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            41,
+                            4
+                        ],
+                        "src_page_idx": 41,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the '东侧' tab to switch the view"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        }
+    ]
+}

@@ -1,0 +1,3003 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "Music streaming with recommendations & playback",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    2
+                ],
+                [
+                    0,
+                    3
+                ],
+                [
+                    0,
+                    7
+                ]
+            ],
+            "data_in": [
+                "recommended song",
+                "music playback state"
+            ],
+            "data_out": [
+                "updated music playback state"
+            ],
+            "data_dependencies": [
+                2,
+                3,
+                23
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The app starts on the home page (page 0). The user can take multiple actions: play a recommended song, open a playlist, adjust preference settings, or stay on the home page via the bottom tab. These actions are mutually exclusive, allowing the user to choose how to interact with the music streaming and recommendation features.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Play a recommended song"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Open the 周杰伦歌曲大全 playlist"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Open preference settings"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            0,
+                            7
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Stay on the home page via bottom tab"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": null,
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S1"
+                            },
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 1,
+            "function_description": "The \"乐馆 (Music Hall)\" page in the music streaming app provides a curated space for music discovery, featuring recommended playlists, popular songs, personalized suggestions, and promotional content, along with playback controls and navigation options to explore different music categories and user-specific content.",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ]
+            ],
+            "data_in": [
+                "music hall feature entry"
+            ],
+            "data_out": [
+                "music hall page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The core logic starts at the entry page (page 0). The user clicks on the '乐馆 (Music Hall)' tab (action_ref [0,0]). This action navigates to the '乐馆' page (dst_page_idx 0), where curated music discovery content (playlists, songs, suggestions, promotions) and playback/navigation options are presented. There are no branches or loops as the action is a direct navigation to the target page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click on the '乐馆 (Music Hall)' tab to navigate to the Music Hall page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "Like button for current song",
+            "action_refs": [
+                [
+                    0,
+                    4
+                ]
+            ],
+            "data_in": [
+                "current song",
+                "like setting of song"
+            ],
+            "data_out": [
+                "like setting of song updated (liked)"
+            ],
+            "data_dependencies": [
+                23
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The core execution logic for the like button of the current song starts on the initial page (page 0). The user performs a click action on the like button associated with the currently playing song. This action leads to a destination page (page 2), completing the like functionality for the current song.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click the like button for the current song"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "Play/Pause button for current song",
+            "action_refs": [
+                [
+                    0,
+                    5
+                ]
+            ],
+            "data_in": [
+                "current song playback state",
+                "current song"
+            ],
+            "data_out": [
+                "updated song playback state"
+            ],
+            "data_dependencies": [
+                2,
+                4,
+                23
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The core logic is to interact with the Play/Pause button for the current song. The user clicks the Play/Pause button located at the bottom of the screen (near the song info). This action likely toggles the playback state (play to pause or vice versa) and may navigate to a related page (dst_page_idx 3) or update the UI to reflect the new playback state.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click the Play/Pause button for the current song at the bottom of the screen."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "Displays the currently playing song, playback queue, and provides options for playback settings, song management (e.g., download, add, delete), and navigation between playing, played songs, and played playlists within a music streaming app.",
+            "action_refs": [
+                [
+                    0,
+                    6
+                ],
+                [
+                    4,
+                    0
+                ]
+            ],
+            "data_in": [
+                "song",
+                "playlist",
+                "song entry"
+            ],
+            "data_out": [
+                "playlist menu"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts by clicking the more options button for a song (on the main page) to navigate to the song's options page. Then, on that page, another more options button (for the song entry) is clicked, likely to access further song - related actions or settings.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            6
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the more options button for a song on the main page to go to the song's options page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            4,
+                            0
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the more options button for the song entry on the song's options page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "The \"My\" page in the music streaming app provides access to user - specific content and features, including the user's profile, membership center, options like collection, local, and purchased content, recent playback history, self - created and collected playlists, AI - related works, and also enables music playback control.",
+            "action_refs": [
+                [
+                    0,
+                    8
+                ]
+            ],
+            "data_in": [
+                "user profile"
+            ],
+            "data_out": [
+                "user profile page loaded"
+            ],
+            "data_dependencies": [
+                26
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the app's main page (page 0) and clicks the '我的 (My)' bottom tab. This action navigates to the 'My' page (page 5), where user - specific content like profile, membership center, collection, local, purchased options, recent playback, playlists, and AI works, along with music playback control, become accessible.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            8
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click the '我的 (My)' bottom tab to navigate to the 'My' page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "This page enables users to import playlists by providing options to copy and paste playlist links or text - based song information, and then use the \"One - click Import\" function to complete the playlist import process.",
+            "action_refs": [
+                [
+                    5,
+                    0
+                ],
+                [
+                    7,
+                    0
+                ],
+                [
+                    7,
+                    3
+                ],
+                [
+                    7,
+                    4
+                ],
+                [
+                    14,
+                    1
+                ],
+                [
+                    14,
+                    2
+                ],
+                [
+                    16,
+                    0
+                ],
+                [
+                    16,
+                    1
+                ],
+                [
+                    22,
+                    0
+                ]
+            ],
+            "data_in": [
+                "歌单",
+                "歌单信息",
+                "粘贴文字输入框内容",
+                "歌单信息（链接/文字）",
+                "歌单链接输入框内容",
+                "playlist link",
+                "playlist",
+                "歌单导入提示信息"
+            ],
+            "data_out": [
+                "导入的歌单",
+                "清空的粘贴文字输入框",
+                "输入框中的歌单信息",
+                "清空后的歌单链接输入框",
+                "imported playlist",
+                "import notification (QQ Music)",
+                "关闭的导入提示弹窗"
+            ],
+            "data_dependencies": [
+                16,
+                17
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user starts by clicking the '新建/导入歌单选项' to enter the playlist import flow. Then, they click '导入歌单标签' to access the input page. Next, they input the playlist link (or text) into the '歌单信息粘贴输入框'. After that, they click the '一键导入歌单按钮' to initiate the import. Finally, they click '我知道了' to confirm the import completion.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            0
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click to enter the new/import playlist option page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            7,
+                            4
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click to enter the playlist import input page"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            14,
+                            1
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 16,
+                        "action": "input",
+                        "summary": "Input playlist link (or text) into the input box"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            16,
+                            1
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 22,
+                        "action": "click",
+                        "summary": "Click the one - click import playlist button"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            22,
+                            0
+                        ],
+                        "src_page_idx": 22,
+                        "dst_page_idx": 23,
+                        "action": "click",
+                        "summary": "Click '我知道了' to confirm import completion"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S5"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "The \"更多\" (More) page in the music streaming app provides access to additional features (like music games, settings, song identification, playlist import), account-related actions (QQ music import), storage management, mode customization, membership promotions, and other value - added services (ringtone section, VIP benefits).",
+            "action_refs": [
+                [
+                    5,
+                    1
+                ],
+                [
+                    9,
+                    0
+                ]
+            ],
+            "data_in": [
+                "menu entry (hamburger)",
+                "more page state"
+            ],
+            "data_out": [
+                "more features page loaded",
+                "user profile page state"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The flow starts on page 5. First, click the hamburger menu button (action from [5,1]) to navigate to page 9 (the 'More' page). Then, click the back button (action from [9,0]) to return to page 5. There are no branches or loops as the actions form a simple navigation round - trip.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            1
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click the hamburger menu button to go to the 'More' page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            9,
+                            0
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click the back button to return to the original page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "设为互动歌单切换框",
+            "action_refs": [
+                [
+                    7,
+                    1
+                ]
+            ],
+            "data_in": [
+                "互动歌单设置项"
+            ],
+            "data_out": [
+                "互动歌单设置项状态更新"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The process starts on page 7. The user clicks the '设为互动歌单切换框' (Set as Interactive Playlist Toggle) element. This action leads to page 11, completing the toggle operation.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            1
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click the '设为互动歌单切换框' toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "This page functions as the detail page for a newly created playlist (\"华语流行歌单\"), allowing users to view playlist information, edit the playlist, collect the playlist, play all songs (currently empty), add songs, and perform other operations related to the playlist.",
+            "action_refs": [
+                [
+                    7,
+                    2
+                ]
+            ],
+            "data_in": [
+                "歌单创建操作"
+            ],
+            "data_out": [
+                "新创建的歌单（华语流行歌单）"
+            ],
+            "data_dependencies": [
+                6,
+                14,
+                15
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The flow starts on page 7. The user clicks the '确定创建歌单按钮' (confirm create playlist button), which navigates to page 12 (the playlist detail page for '华语流行歌单'). On the detail page, the user can perform operations like editing, collecting, playing all (empty), or adding songs, but the core step here is the initial navigation to the playlist detail page via the create confirmation click.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            2
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click the confirm create playlist button to navigate to the playlist detail page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "This page enables users to watch advertisements to earn time for free listening to VIP songs, with options to extend listening duration, track daily extension attempts, and view VIP songs available for free listening after ad - watching.",
+            "action_refs": [
+                [
+                    9,
+                    1
+                ],
+                [
+                    57,
+                    0
+                ],
+                [
+                    61,
+                    0
+                ],
+                [
+                    62,
+                    0
+                ],
+                [
+                    62,
+                    2
+                ],
+                [
+                    62,
+                    3
+                ]
+            ],
+            "data_in": [
+                "免费模式入口",
+                "advertisement",
+                "listening duration setting",
+                "advertisement reward setting",
+                "free listening duration page"
+            ],
+            "data_out": [
+                "免费听歌时长页面",
+                "VIP歌曲畅听列表",
+                "advertisement closed",
+                "updated listening duration",
+                "updated advertisement reward options",
+                "free listening duration reward notification"
+            ],
+            "data_dependencies": [
+                39,
+                46
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts by clicking the '免费模式' button to enter the free mode page. Then, they close the advertisement via the X icon. Next, they click the '点击继续浏览按钮' to proceed. After that, at the page with multiple options, the user can either click the '返回按钮' to go back, or click '更多选项按钮' or '立即下载按钮' (with the latter two being leaf actions that don’t change the page).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            1
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 57,
+                        "action": "click",
+                        "summary": "Click '免费模式' button to enter free mode page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            57,
+                            0
+                        ],
+                        "src_page_idx": 57,
+                        "dst_page_idx": 61,
+                        "action": "click",
+                        "summary": "Click Close advertisement button (X icon) to dismiss ad"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            61,
+                            0
+                        ],
+                        "src_page_idx": 61,
+                        "dst_page_idx": 62,
+                        "action": "click",
+                        "summary": "Click '点击继续浏览按钮' to proceed to next page"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            62,
+                            0
+                        ],
+                        "src_page_idx": 62,
+                        "dst_page_idx": 64,
+                        "action": "click",
+                        "summary": "Click '返回按钮' to go back"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            62,
+                            2
+                        ],
+                        "src_page_idx": 62,
+                        "dst_page_idx": 62,
+                        "action": "click",
+                        "summary": "Click '更多选项按钮' (leaf action, no page change)"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            62,
+                            3
+                        ],
+                        "src_page_idx": 62,
+                        "dst_page_idx": 62,
+                        "action": "click",
+                        "summary": "Click '立即下载按钮' (leaf action, no page change)"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S4",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            },
+                            {
+                                "next_step": "S6"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "定时关闭 toggle switch",
+            "action_refs": [
+                [
+                    9,
+                    2
+                ]
+            ],
+            "data_in": [
+                "定时关闭 setting"
+            ],
+            "data_out": [
+                "定时关闭 setting enabled"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts on page 9 (the '更多' page). The core action is to click the '定时关闭' toggle switch, which transitions the app to page 58. This is a single-step flow with no branches or loops, as the action directly toggles the switch and navigates to the destination page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            2
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 58,
+                        "action": "click",
+                        "summary": "Click the '定时关闭' toggle switch"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "The settings page of the music app allows users to configure account - related settings (such as personal information, push, message, privacy, and blacklist settings), lyrics - related settings (including desktop, status bar, lock screen, and car Bluetooth lyrics), as well as playback and download - related settings (like playback, sound effect, and sound quality settings, and options for simultaneous playback with other apps and dynamic cover on the playback page).",
+            "action_refs": [
+                [
+                    9,
+                    3
+                ]
+            ],
+            "data_in": [
+                "设置入口"
+            ],
+            "data_out": [
+                "设置页面加载完成"
+            ],
+            "data_dependencies": [
+                19,
+                20,
+                21
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts on page 9 (a 'more' options page) and clicks the '设置' (Settings) option. This action navigates to the settings page (page 59), where account, lyrics, and playback/download - related configuration options are available. No branches or loops are present as only this initial navigation step is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            3
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 59,
+                        "action": "click",
+                        "summary": "Click the '设置' option on page 9 to navigate to the settings page (page 59)."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "This page in QQ Music is for the \"Song Recognition\" feature, actively identifying playing music (currently in a 2 - second recognition process) and provides tips to improve recognition accuracy, with an option to manage floating window permissions for timely result reception.",
+            "action_refs": [
+                [
+                    9,
+                    4
+                ],
+                [
+                    60,
+                    0
+                ]
+            ],
+            "data_in": [
+                "听歌识曲功能入口",
+                "QQ音乐通知"
+            ],
+            "data_out": [
+                "听歌识曲识别状态（识别中）"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The flow starts by clicking the '听歌识曲' option on the '更多' page. Then, it proceeds to click the notification bar dropdown arrow, likely to manage floating window permissions or view recognition results. The flow is a straight line with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            4
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 60,
+                        "action": "click",
+                        "summary": "Click '听歌识曲' option"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            60,
+                            0
+                        ],
+                        "src_page_idx": 60,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click notification bar dropdown arrow"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "收藏歌单按钮",
+            "action_refs": [
+                [
+                    12,
+                    0
+                ]
+            ],
+            "data_in": [
+                "华语流行歌单"
+            ],
+            "data_out": [
+                "华语流行歌单收藏状态更新"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The core execution logic for the '收藏歌单' (favorite playlist) button involves a single step: clicking the '收藏歌单' button on the playlist page. This action is intended to mark the playlist as a favorite, and since there are no subsequent branches or loops, the flow ends here.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            0
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '收藏歌单' button to favorite the playlist."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "添加歌曲按钮",
+            "action_refs": [
+                [
+                    12,
+                    1
+                ]
+            ],
+            "data_in": [
+                "华语流行歌单",
+                "歌曲"
+            ],
+            "data_out": [
+                "添加到歌单的歌曲"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The core execution logic starts on page 12 (歌单页面). The user clicks the '添加歌曲' button (action_ref [12,1]). Since this is a single-step action with no branching or looping, the flow ends here after the click.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            1
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '添加歌曲' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "This page enables users to import a playlist by uploading images containing song information (with a maximum of 9 clear, unobstructed images) and then using the \"One - Click Import\" function, while also providing an option to view detailed tutorials.",
+            "action_refs": [
+                [
+                    14,
+                    0
+                ],
+                [
+                    15,
+                    0
+                ],
+                [
+                    18,
+                    0
+                ],
+                [
+                    18,
+                    2
+                ]
+            ],
+            "data_in": [
+                "歌单导入功能",
+                "图片导入选项",
+                "歌单导入任务",
+                "图片文件",
+                "image selection session",
+                "image selection operation",
+                "image list"
+            ],
+            "data_out": [
+                "图片导入界面加载完成",
+                "待选择的图片文件列表",
+                "return to previous page (歌单导入 - 图片导入)",
+                "completed image selection result"
+            ],
+            "data_dependencies": [
+                17
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The user starts on page 14, clicks to switch to the image import tab (page 15), then clicks to upload images (page 18). At page 18, there's a branch: either cancel (return to page 15) or click 'Complete' (finalize the import, a leaf action).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            0
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Switch to image import tab"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            15,
+                            0
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click to upload images"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            18,
+                            0
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Cancel image upload"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            18,
+                            2
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click 'Complete' to finalize import"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "This page provides a detailed tutorial for the QQ Music playlist import feature, explaining how to import songs from text, images, or web links to generate a playlist, and also shows the function entrances for this feature.",
+            "action_refs": [
+                [
+                    14,
+                    3
+                ],
+                [
+                    17,
+                    0
+                ]
+            ],
+            "data_in": [
+                "歌单导入教程信息",
+                "歌单导入功能介绍页面"
+            ],
+            "data_out": [
+                "加载后的歌单导入教程页面内容",
+                "歌单导入操作页面"
+            ],
+            "data_dependencies": [
+                22
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The flow starts on page 14. First, the user clicks the '查看详细教程' link (action S1) to navigate to page 17. Then, from page 17, the user clicks the back button (action S2) to return to page 7. There are no branches or loops as the steps are sequential navigation actions.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            3
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click '查看详细教程' link to open tutorial page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            17,
+                            0
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click back button to return to previous page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "The \"个人资料\" (Personal Information) page in the music app allows users to view and edit their personal details including avatar, nickname, gender, phone number, and birthday, along with a promotional banner for a custom avatar camera.",
+            "action_refs": [
+                [
+                    59,
+                    0
+                ]
+            ],
+            "data_in": [
+                "个人资料设置项"
+            ],
+            "data_out": [
+                "个人资料页面加载完成"
+            ],
+            "data_dependencies": [
+                25,
+                26,
+                27,
+                28,
+                29
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 59,
+                "logic": "The user starts on the settings page (page 59) and clicks the '个人资料' (Personal Information) option. This action navigates to the personal information page (page 66), where details like avatar, nickname, gender, phone number, birthday, and a promotional banner are accessible for viewing or editing.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            59,
+                            0
+                        ],
+                        "src_page_idx": 59,
+                        "dst_page_idx": 66,
+                        "action": "click",
+                        "summary": "Click '个人资料' option to navigate to personal info page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "桌面歌词 toggle switch",
+            "action_refs": [
+                [
+                    59,
+                    1
+                ]
+            ],
+            "data_in": [
+                "桌面歌词设置"
+            ],
+            "data_out": [
+                "桌面歌词设置已启用"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 59,
+                "logic": "The flow starts on the settings page (page 59). The user clicks the '桌面歌词' (desktop lyrics) toggle switch, which changes its state (either enabling or disabling desktop lyrics) and navigates to page 67. This is a single-step action with no branches, as the toggle’s state change is the core logic here.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            59,
+                            1
+                        ],
+                        "src_page_idx": 59,
+                        "dst_page_idx": 67,
+                        "action": "click",
+                        "summary": "Click the '桌面歌词' toggle switch to change its state (enable/disable desktop lyrics)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "车载蓝牙歌词 toggle switch",
+            "action_refs": [
+                [
+                    59,
+                    2
+                ]
+            ],
+            "data_in": [
+                "车载蓝牙歌词设置"
+            ],
+            "data_out": [
+                "车载蓝牙歌词设置状态更新"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 59,
+                "logic": "The process starts on the settings page (page 59). The user clicks the '车载蓝牙歌词' toggle switch, which completes the action (as it's a leaf step) and likely toggles the switch's state (on/off) on the same or a related page (page 68).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            59,
+                            2
+                        ],
+                        "src_page_idx": 59,
+                        "dst_page_idx": 68,
+                        "action": "click",
+                        "summary": "Click the 车载蓝牙歌词 toggle switch"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "The playback settings page in the music app allows users to configure audio playback features, including toggling playback transition effects, volume balance, loudness adaptation, and intelligent sound quality enhancement, as well as previewing different audio transition modes.",
+            "action_refs": [
+                [
+                    59,
+                    3
+                ]
+            ],
+            "data_in": [
+                "播放设置"
+            ],
+            "data_out": [
+                "播放设置页面内容"
+            ],
+            "data_dependencies": [
+                31,
+                32,
+                33,
+                34,
+                35
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 59,
+                "logic": "The user starts on the settings page and clicks the '播放设置' (Playback Settings) option to navigate to the playback settings page, where audio playback features like transition effects, volume balance, and sound quality enhancement can be configured or previewed.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            59,
+                            3
+                        ],
+                        "src_page_idx": 59,
+                        "dst_page_idx": 69,
+                        "action": "click",
+                        "summary": "Click the '播放设置' option to enter the playback settings page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "This page provides sharing options for the \"十八籽手串\" (Eighteen-seed Bracelet) product, allowing users to share the product details via various social platforms (WeChat Friends, Moments, Sina Weibo, QQ Friends, QQ Space, Putong Dynamics, Private Message) or copy the product link.",
+            "action_refs": [
+                [
+                    17,
+                    1
+                ],
+                [
+                    24,
+                    2
+                ]
+            ],
+            "data_in": [
+                "QQ音乐歌单导入页面数据",
+                "十八籽手串兑换福利信息",
+                "分享选项"
+            ],
+            "data_out": [
+                "分享选项列表"
+            ],
+            "data_dependencies": [
+                37,
+                38
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 17,
+                "logic": "The flow starts on page 17, where the user clicks the refresh button (action_ref [17,1]) to navigate to page 24. Then, on page 24, the user clicks the cancel button (action_ref [24,2]), which is a leaf action (no further navigation).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            17,
+                            1
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 24,
+                        "action": "click",
+                        "summary": "Click the refresh button on page 17 to go to page 24"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            24,
+                            2
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the cancel button on page 24 (leaf action)"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "This page displays a tutorial for importing QQ Music playlists, while also providing music playback controls (play/pause, like, playlist) for currently playing music.",
+            "action_refs": [
+                [
+                    17,
+                    2
+                ]
+            ],
+            "data_in": [
+                "music track"
+            ],
+            "data_out": [
+                "music track (playing state updated)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 17,
+                "logic": "The page displays the QQ Music playlist import tutorial. The user interacts with the music playback controls: clicking the play/pause button (as the only action here) to control the currently playing music. There are no branches or loops as only one action is defined.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            17,
+                            2
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click the play/pause button for the currently playing music"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "放弃领取按钮",
+            "action_refs": [
+                [
+                    61,
+                    1
+                ]
+            ],
+            "data_in": [
+                "reward claim option"
+            ],
+            "data_out": [
+                "reward claim cancelled"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 61,
+                "logic": "The user starts on page 61. They perform a click action on the '放弃领取' (abandon claim) button. This action leads to the transition to page 63, completing the functional point's execution.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            61,
+                            1
+                        ],
+                        "src_page_idx": 61,
+                        "dst_page_idx": 63,
+                        "action": "click",
+                        "summary": "Click the '放弃领取' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 25,
+            "function_description": "This page provides options to set or change the user's avatar, including using a magic avatar, a dynamic avatar, or replacing the current avatar.",
+            "action_refs": [
+                [
+                    66,
+                    0
+                ],
+                [
+                    70,
+                    3
+                ]
+            ],
+            "data_in": [
+                "头像设置项"
+            ],
+            "data_out": [
+                "头像设置选项列表"
+            ],
+            "data_dependencies": [
+                40
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 66,
+                "logic": "The flow starts by clicking the avatar settings button on the personal info page (page 66) to navigate to the avatar settings page (page 70). Then, clicking the cancel button on the avatar settings page (page 70) completes the action (or exits the settings).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            66,
+                            0
+                        ],
+                        "src_page_idx": 66,
+                        "dst_page_idx": 70,
+                        "action": "click",
+                        "summary": "Click avatar settings button to go to avatar settings page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            70,
+                            3
+                        ],
+                        "src_page_idx": 70,
+                        "dst_page_idx": 77,
+                        "action": "click",
+                        "summary": "Click cancel button on avatar settings page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 26,
+            "function_description": "This page allows the user to edit their nickname (with a text input field, character count, clear button, and confirm button) to update their profile nickname in the music app.",
+            "action_refs": [
+                [
+                    66,
+                    1
+                ],
+                [
+                    71,
+                    0
+                ],
+                [
+                    71,
+                    1
+                ],
+                [
+                    71,
+                    2
+                ]
+            ],
+            "data_in": [
+                "nickname setting item",
+                "current nickname",
+                "nickname setting",
+                "current nickname text",
+                "nickname input content",
+                "nickname input",
+                "user profile"
+            ],
+            "data_out": [
+                "entered nickname editing page",
+                "updated nickname text",
+                "cleared nickname input content",
+                "updated user profile"
+            ],
+            "data_dependencies": [
+                29,
+                41,
+                42
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 66,
+                "logic": "The user starts on the personal info page and clicks the nickname edit button to enter the nickname editing page. On this page, the user can either input a new nickname, clear the input (if needed), or click the confirm button to save the updated nickname.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            66,
+                            1
+                        ],
+                        "src_page_idx": 66,
+                        "dst_page_idx": 71,
+                        "action": "click",
+                        "summary": "Click the nickname edit button to enter the nickname editing page."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            71,
+                            0
+                        ],
+                        "src_page_idx": 71,
+                        "dst_page_idx": null,
+                        "action": "input",
+                        "summary": "Input a new nickname (e.g., 'lovelycat') into the nickname input field."
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            71,
+                            1
+                        ],
+                        "src_page_idx": 71,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the clear button to remove the inputted nickname content."
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            71,
+                            2
+                        ],
+                        "src_page_idx": 71,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the confirm button to save the updated nickname."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2",
+                                "condition": "User wants to input a new nickname"
+                            },
+                            {
+                                "next_step": "S3",
+                                "condition": "User wants to clear the input"
+                            },
+                            {
+                                "next_step": "S4",
+                                "condition": "User wants to confirm the nickname"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S3",
+                        "type": "loop",
+                        "branches": [
+                            {
+                                "next_step": "S2",
+                                "condition": "User still needs to input a nickname after clearing"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 27,
+            "function_description": "This page provides options for setting or changing the user's avatar, including using a magic avatar, a dynamic avatar, or replacing the avatar, with a cancel option available.",
+            "action_refs": [
+                [
+                    66,
+                    2
+                ]
+            ],
+            "data_in": [
+                "头像设置项"
+            ],
+            "data_out": [
+                "头像操作选项列表"
+            ],
+            "data_dependencies": [
+                40,
+                42
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 66,
+                "logic": "The process starts on the personal information page. The user clicks the avatar option, which opens a menu with choices: magic avatar, dynamic avatar, replace avatar, or cancel. The user then selects one of these options (or cancels) to proceed with setting or changing the avatar.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            66,
+                            2
+                        ],
+                        "src_page_idx": 66,
+                        "dst_page_idx": 70,
+                        "action": "click",
+                        "summary": "Click the avatar option on the personal info page to open the avatar selection menu."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2",
+                                "condition": "Select 'Magic Avatar'"
+                            },
+                            {
+                                "next_step": "S3",
+                                "condition": "Select 'Dynamic Avatar'"
+                            },
+                            {
+                                "next_step": "S4",
+                                "condition": "Select 'Replace Avatar'"
+                            },
+                            {
+                                "next_step": "S5",
+                                "condition": "Select 'Cancel'"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 28,
+            "function_description": "This page allows users to input a mobile phone number (for binding to their QQ Music account, with details on usage and change restrictions) and proceed to the next step.",
+            "action_refs": [
+                [
+                    66,
+                    3
+                ],
+                [
+                    72,
+                    0
+                ],
+                [
+                    72,
+                    1
+                ]
+            ],
+            "data_in": [
+                "手机号设置项",
+                "phone number input field",
+                "phone number input",
+                "phone number binding configuration"
+            ],
+            "data_out": [
+                "进入手机号设置页面",
+                "entered phone number",
+                "phone number verification request",
+                "phone number binding progress"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 66,
+                "logic": "The user starts on the personal info page, clicks the mobile number setting button to enter the mobile number input page. Then, the user inputs a mobile number into the input field. Finally, the user clicks the 'Next Step' button to proceed (assuming the input is valid, though the flow here is a straight line of these three actions).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            66,
+                            3
+                        ],
+                        "src_page_idx": 66,
+                        "dst_page_idx": 72,
+                        "action": "click",
+                        "summary": "Click the mobile number setting button to navigate to the input page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            72,
+                            0
+                        ],
+                        "src_page_idx": 72,
+                        "dst_page_idx": null,
+                        "action": "input",
+                        "summary": "Input a mobile number into the input field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            72,
+                            1
+                        ],
+                        "src_page_idx": 72,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'Next Step' button to proceed"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 29,
+            "function_description": "This page allows the user to set or edit their date of birth within the personal profile section of the music app, with options to confirm or cancel the changes.",
+            "action_refs": [
+                [
+                    66,
+                    4
+                ],
+                [
+                    73,
+                    0
+                ],
+                [
+                    73,
+                    1
+                ],
+                [
+                    73,
+                    2
+                ],
+                [
+                    73,
+                    3
+                ],
+                [
+                    73,
+                    4
+                ]
+            ],
+            "data_in": [
+                "生日设置项",
+                "个人资料",
+                "birthday setting",
+                "生日设置",
+                "选择的日期",
+                "year selection wheel",
+                "月份选择器",
+                "日期选择器"
+            ],
+            "data_out": [
+                "生日设置更新",
+                "更新后的生日设置",
+                "updated birthday year (2026)",
+                "更新后的生日月份设置",
+                "更新的生日日期"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 66,
+                "logic": "The user starts on the personal profile page and clicks the birthday setting button to enter the birthday editing interface. In this interface, the user can optionally adjust the year, month, or day using their respective selection wheels. After making changes (or not), the user can choose to either cancel the changes (by clicking the cancel button) or confirm the changes (by clicking the confirm button) to finalize the date of birth setting.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            66,
+                            4
+                        ],
+                        "src_page_idx": 66,
+                        "dst_page_idx": 73,
+                        "action": "click",
+                        "summary": "Click the birthday setting button to open the birthday editing interface."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            73,
+                            2
+                        ],
+                        "src_page_idx": 73,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the year selection wheel to adjust the year."
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            73,
+                            3
+                        ],
+                        "src_page_idx": 73,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the month selection wheel to adjust the month."
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            73,
+                            4
+                        ],
+                        "src_page_idx": 73,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the day selection wheel to adjust the day."
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            73,
+                            0
+                        ],
+                        "src_page_idx": 73,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the cancel button to discard changes and exit the editing interface."
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            73,
+                            1
+                        ],
+                        "src_page_idx": 73,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the confirm button to save changes and exit the editing interface."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S6"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S4",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S5",
+                                "condition": "User clicks '取消' (Cancel)"
+                            },
+                            {
+                                "next_step": "S6",
+                                "condition": "User clicks '确定' (Confirm)"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 30,
+            "function_description": "The page functions as the interface for the \"奇喵相机\" (Qi Miao Camera) app, allowing users to upload images for DIY editing, browse and use various themed photo templates (e.g., wedding, love, graduation), and access additional features via the navigation and action buttons.",
+            "action_refs": [
+                [
+                    66,
+                    5
+                ]
+            ],
+            "data_in": [
+                "奇喵相机广告"
+            ],
+            "data_out": [
+                "奇喵相机功能页面"
+            ],
+            "data_dependencies": [
+                47
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 66,
+                "logic": "The user starts on the personal information page (page 66). They click the '奇喵相机' advertisement button, which navigates them to the Qi Miao Camera main interface (page 74) where they can access image upload and template browsing features.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            66,
+                            5
+                        ],
+                        "src_page_idx": 66,
+                        "dst_page_idx": 74,
+                        "action": "click",
+                        "summary": "Click the '奇喵相机' advertisement button to navigate to the Qi Miao Camera page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 31,
+            "function_description": "播放过渡效果开关",
+            "action_refs": [
+                [
+                    69,
+                    0
+                ]
+            ],
+            "data_in": [
+                "播放过渡效果设置"
+            ],
+            "data_out": [
+                "播放过渡效果设置已启用"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 69,
+                "logic": "The core execution logic involves a single step: clicking the '播放过渡效果' (Play Transition Effect) toggle switch. This action is performed on the '播放设置' (Playback Settings) page, and there are no subsequent branches or loops as it is a leaf action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            69,
+                            0
+                        ],
+                        "src_page_idx": 69,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '播放过渡效果' toggle switch"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 32,
+            "function_description": "智能混音·进阶交融 试听按钮",
+            "action_refs": [
+                [
+                    69,
+                    1
+                ]
+            ],
+            "data_in": [
+                "智能混音·进阶交融设置",
+                "播放设置页面数据"
+            ],
+            "data_out": [
+                "智能混音·进阶交融试听结果",
+                "试听状态更新"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 69,
+                "logic": "The user starts on the playback settings page (page 69). The core logic is to click the '试听' (preview) button for the '智能混音·进阶交融' (Intelligent Mixing - Advanced Blending) option. This action initiates the preview of this mixing effect, with no branching or looping as it’s a single action to trigger the preview.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            69,
+                            1
+                        ],
+                        "src_page_idx": 69,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '试听' button next to '智能混音·进阶交融' to preview the advanced mixing effect."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 33,
+            "function_description": "了解智能混音 链接",
+            "action_refs": [
+                [
+                    69,
+                    2
+                ]
+            ],
+            "data_in": [
+                "智能混音相关信息"
+            ],
+            "data_out": [
+                "智能混音介绍内容"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 69,
+                "logic": "The user starts on page 69 (播放设置). The core logic is to click the '了解智能混音' link. This action likely navigates to a page with more details about intelligent mixing, as the link is designed to provide additional information on this feature.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            69,
+                            2
+                        ],
+                        "src_page_idx": 69,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '了解智能混音' link to access more information about intelligent mixing."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 34,
+            "function_description": "音量平衡开关",
+            "action_refs": [
+                [
+                    69,
+                    3
+                ]
+            ],
+            "data_in": [
+                "音量平衡设置"
+            ],
+            "data_out": [
+                "音量平衡设置启用"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 69,
+                "logic": "The core execution logic for the volume balance switch involves a single step: clicking the '音量平衡(Replay Gain)' toggle switch. This action is performed on the playback settings page, and there are no subsequent branches or loops as it is a direct toggle operation.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            69,
+                            3
+                        ],
+                        "src_page_idx": 69,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '音量平衡(Replay Gain)' toggle switch"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 35,
+            "function_description": "增强前 视频预览按钮",
+            "action_refs": [
+                [
+                    69,
+                    4
+                ]
+            ],
+            "data_in": [
+                "增强前 视频预览按钮",
+                "音频可视化数据"
+            ],
+            "data_out": [
+                "视频预览内容（增强前效果展示）"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 69,
+                "logic": "The core execution logic starts on page 69 (播放设置 page). The user performs a click action on the '增强前 视频预览按钮' (the preview button for the '增强前' audio visualization). This action likely triggers a preview of the audio with the '增强前' (pre - enhancement) settings, and since there are no further branches or loops indicated by the provided action, the flow is a single - step click action to preview the pre - enhancement audio.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            69,
+                            4
+                        ],
+                        "src_page_idx": 69,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '增强前 视频预览按钮' to preview the audio with pre - enhancement settings."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 36,
+            "function_description": "This page functions as an image selection interface for importing a playlist, allowing the user to choose an image (from the \"All Images\" category, currently showing 0 images) to proceed with the playlist import process.",
+            "action_refs": [
+                [
+                    18,
+                    1
+                ]
+            ],
+            "data_in": [
+                "image category selection menu"
+            ],
+            "data_out": [
+                "expanded image category menu"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 18,
+                "logic": "The user starts on page 18 (image selection interface) and clicks the '所有图片' dropdown menu. This action navigates to page 19, where the '所有图片' category (showing 0 images) is displayed. The flow is a straight line as there are no branches or loops here, focusing on accessing the image category for playlist import.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            18,
+                            1
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click the '所有图片' dropdown menu to navigate to the image category view."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 37,
+            "function_description": "This page functions as a chat selection interface (likely within WeChat) for sharing the QQ Music playlist import tutorial, allowing the user to select a chat (from recent chats or via search/new chat) to send the tutorial to.",
+            "action_refs": [
+                [
+                    24,
+                    0
+                ]
+            ],
+            "data_in": [
+                "十八籽手串商品信息",
+                "微信好友列表"
+            ],
+            "data_out": [
+                "微信分享界面"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 24,
+                "logic": "The user starts on page 24 and clicks the WeChat friend sharing button. This action navigates to page 25, which is the chat selection interface for WeChat, allowing the user to choose a chat (from recent chats, via search, or new chat) to send the content to.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            24,
+                            0
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 25,
+                        "action": "click",
+                        "summary": "Click the WeChat friend sharing button to navigate to the chat selection page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 38,
+            "function_description": "复制链接按钮",
+            "action_refs": [
+                [
+                    24,
+                    1
+                ]
+            ],
+            "data_in": [
+                "十八籽手串商品链接"
+            ],
+            "data_out": [
+                "复制的十八籽手串商品链接"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 24,
+                "logic": "The user starts on page 24 (product details) and clicks the '复制链接' (Copy Link) button. This action transitions to page 26, completing the link-copying process. There are no branches or loops as it’s a single click action to copy the link.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            24,
+                            1
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 26,
+                        "action": "click",
+                        "summary": "Click the '复制链接' (Copy Link) button to copy the product link."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 39,
+            "function_description": "The \"More\" page in the music app provides access to various features (e.g., music games, settings, song recognition, account imports, space cleaning) and options for mode customization, membership promotions, and exclusive benefits.",
+            "action_refs": [
+                [
+                    62,
+                    1
+                ]
+            ],
+            "data_in": [
+                "广告时长页面"
+            ],
+            "data_out": [
+                "更多功能页面"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 62,
+                "logic": "The flow starts on page 62. The user performs a click action (on the '关闭按钮' at [54, 120]), which navigates to page 9 (the 'More' page) that provides access to various features like music games, settings, and membership benefits. This is a straight-line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            62,
+                            1
+                        ],
+                        "src_page_idx": 62,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click the '关闭按钮' to navigate to the 'More' page (page 9)."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 40,
+            "function_description": "This page in the music app’s avatar - setting section (via the “Magic Avatar” option) is part of the “Qimiao Camera” feature. It enables users to upload images for DIY avatar creation and provides themed avatar templates (like “My Family Has Joy”, “Love Materialized”, “Graduation Season”) for users to generate personalized avatars, with some templates offering rewards for usage.",
+            "action_refs": [
+                [
+                    70,
+                    0
+                ]
+            ],
+            "data_in": [
+                "魔法头像设置"
+            ],
+            "data_out": [
+                "进入奇喵相机页面"
+            ],
+            "data_dependencies": [
+                47
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 70,
+                "logic": "The user starts on the personal info page (page 70). They click the 'Magic Avatar' option, which navigates to the Qimiao Camera page (page 75). On this page, users can either upload an image for DIY avatar creation or select from themed templates (like 'My Family Has Joy', 'Love Materialized', 'Graduation Season') to generate personalized avatars, with some templates offering rewards for usage.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            70,
+                            0
+                        ],
+                        "src_page_idx": 70,
+                        "dst_page_idx": 75,
+                        "action": "click",
+                        "summary": "Click the 'Magic Avatar' option to navigate to the Qimiao Camera page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 41,
+            "function_description": "使用动态头像选项",
+            "action_refs": [
+                [
+                    70,
+                    1
+                ]
+            ],
+            "data_in": [
+                "头像设置",
+                "个人资料"
+            ],
+            "data_out": [
+                "动态头像设置更新"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 70,
+                "logic": "The process starts on the personal information page (page 70). The user clicks on the '使用动态头像选项' (Use dynamic avatar option), which navigates to page 76. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            70,
+                            1
+                        ],
+                        "src_page_idx": 70,
+                        "dst_page_idx": 76,
+                        "action": "click",
+                        "summary": "Click the '使用动态头像选项' to navigate to the next page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 42,
+            "function_description": "This page functions as an image selection interface for changing the user's avatar in the music app, allowing the user to browse and select an image (though currently showing no image files are available) with options to cancel or complete the selection.",
+            "action_refs": [
+                [
+                    70,
+                    2
+                ]
+            ],
+            "data_in": [
+                "头像设置",
+                "个人资料"
+            ],
+            "data_out": [
+                "图片选择界面",
+                "待更换的头像"
+            ],
+            "data_dependencies": [
+                40,
+                41
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 70,
+                "logic": "The user starts on page 70 (personal info) and clicks the '更换头像' (change avatar) option. This action navigates to page 18, which is the image selection interface showing no available image files, with '取消' (cancel) and '完成' (complete) options.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            70,
+                            2
+                        ],
+                        "src_page_idx": 70,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click '更换头像' to enter image selection page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 43,
+            "function_description": "上传图片自己DIY按钮",
+            "action_refs": [
+                [
+                    74,
+                    0
+                ]
+            ],
+            "data_in": [
+                "image (to upload)"
+            ],
+            "data_out": [
+                "diy image (created)"
+            ],
+            "data_dependencies": [
+                48
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 74,
+                "logic": "The core execution logic starts on page 74. The user clicks the '上传图片自己DIY' (Upload Image to DIY) button. Since there are no further actions or branches provided, this is a single-step flow focused on initiating the image upload DIY process.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            74,
+                            0
+                        ],
+                        "src_page_idx": 74,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '上传图片自己DIY' button to start the image upload DIY process"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 44,
+            "function_description": "所有图片 category selection item",
+            "action_refs": [
+                [
+                    19,
+                    0
+                ]
+            ],
+            "data_in": [
+                "image category selection item"
+            ],
+            "data_out": [
+                "selected image category state"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 19,
+                "logic": "The user starts on page 19 and clicks the '所有图片' category selection item. This action navigates to page 20, completing the selection of the '所有图片' category.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            19,
+                            0
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 20,
+                        "action": "click",
+                        "summary": "Click the '所有图片' category selection item"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 45,
+            "function_description": "关闭广告弹窗按钮",
+            "action_refs": [
+                [
+                    64,
+                    0
+                ]
+            ],
+            "data_in": [
+                "广告弹窗"
+            ],
+            "data_out": [
+                "广告弹窗关闭状态"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 64,
+                "logic": "The core execution logic is to close the advertisement pop - up. First, on page 64 (where the ad pop - up is present), the user clicks the close advertisement pop - up button. After this click, the flow moves to page 65, and the ad pop - up is closed.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            64,
+                            0
+                        ],
+                        "src_page_idx": 64,
+                        "dst_page_idx": 65,
+                        "action": "click",
+                        "summary": "Click the close advertisement pop - up button"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": null
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 46,
+            "function_description": "This page in the music app allows users to watch advertisements to gain free time for listening to VIP songs, with options to extend the duration, track daily usage, unlock rewards via ad - viewing, and also promotes VIP membership for full - access to the VIP song library.",
+            "action_refs": [
+                [
+                    64,
+                    1
+                ]
+            ],
+            "data_in": [
+                "广告",
+                "免费听歌时长获取选项"
+            ],
+            "data_out": [
+                "进入看广告得时长页面",
+                "免费听歌时长获取相关信息"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 64,
+                "logic": "The user starts on page 64 and clicks the button to browse ads for free listening time, which navigates to page 57. On page 57, the user can extend the duration, track daily usage, unlock rewards via ad - viewing, and see VIP membership promotion.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            64,
+                            1
+                        ],
+                        "src_page_idx": 64,
+                        "dst_page_idx": 57,
+                        "action": "click",
+                        "summary": "Click the button to browse ads for free listening time"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 47,
+            "function_description": "This page allows users to view and edit their personal profile information, including avatar, nickname, gender, phone number, and birthday, and also provides an option to customize a magic avatar via the \"奇喵相机\" (Magic Cat Camera) feature.",
+            "action_refs": [
+                [
+                    75,
+                    0
+                ]
+            ],
+            "data_in": [
+                "奇喵相机页面内容"
+            ],
+            "data_out": [
+                "个人资料页面内容"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 75,
+                "logic": "The user starts on the Magic Cat Camera page (page 75). They click the back button, which navigates them to the personal profile page (page 66) where they can view and edit personal information or access the Magic Cat Camera feature again.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            75,
+                            0
+                        ],
+                        "src_page_idx": 75,
+                        "dst_page_idx": 66,
+                        "action": "click",
+                        "summary": "Click the back button to navigate from the Magic Cat Camera page to the personal profile page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 48,
+            "function_description": "This page functions as a product detail page for a \"奇喵相机\" (Qimiao Camera) themed item featuring 李希侃 (Li Xikan), allowing users to view product information, pricing, purchase options, and related details to proceed with buying the item.",
+            "action_refs": [
+                [
+                    75,
+                    1
+                ],
+                [
+                    78,
+                    2
+                ],
+                [
+                    78,
+                    3
+                ]
+            ],
+            "data_in": [
+                "上传图片DIY功能入口",
+                "商品选项信息",
+                "service details (compressed)"
+            ],
+            "data_out": [
+                "商品详情页面",
+                "展开的商品选项信息",
+                "service details (expanded)"
+            ],
+            "data_dependencies": [
+                51,
+                52
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 75,
+                "logic": "The flow starts on the Qimiao Camera main page (page 75). First, the user clicks the '上传图片DIY' (Upload Image DIY) button to navigate to the product detail page (page 78). On this detail page, the user can optionally click the '已选选项展开' button to view selected options or the '服务详情展开' button to view service details. These two actions are parallel and optional, with no further flow specified after them.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            75,
+                            1
+                        ],
+                        "src_page_idx": 75,
+                        "dst_page_idx": 78,
+                        "action": "click",
+                        "summary": "Click '上传图片DIY' button to go to product detail page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            78,
+                            2
+                        ],
+                        "src_page_idx": 78,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click '已选选项展开' button to view selected options"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            78,
+                            3
+                        ],
+                        "src_page_idx": 78,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click '服务详情展开' button to view service details"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 49,
+            "function_description": "This page enables users to customize the \"吾家有囍\" (My Family Has Joy) avatar template by adding images to the marked areas, adjusting the similarity between the generated avatar and the template or the user’s actual appearance, and proceeding with the avatar creation process.",
+            "action_refs": [
+                [
+                    75,
+                    2
+                ],
+                [
+                    79,
+                    0
+                ],
+                [
+                    79,
+                    1
+                ]
+            ],
+            "data_in": [
+                "吾家有囍模板卡片",
+                "groom image placeholder",
+                "wedding photo template",
+                "photo style adjustment setting",
+                "photo"
+            ],
+            "data_out": [
+                "吾家有囍模板详情页",
+                "groom image (to be added)",
+                "updated photo style setting",
+                "adjusted photo"
+            ],
+            "data_dependencies": [
+                48
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 75,
+                "logic": "The user starts by selecting the '吾家有囍' avatar template. Then, they can add the groom’s image via the plus button. Finally, they adjust the style slider to control the similarity between the generated avatar and the template or their actual appearance. These steps are sequential with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            75,
+                            2
+                        ],
+                        "src_page_idx": 75,
+                        "dst_page_idx": 79,
+                        "action": "click",
+                        "summary": "Select the '吾家有囍' template card"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            79,
+                            0
+                        ],
+                        "src_page_idx": 79,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the plus button to add the groom’s image"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            79,
+                            1
+                        ],
+                        "src_page_idx": 79,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Adjust the style slider for similarity control"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 50,
+            "function_description": "This page allows users to browse and select from various \"吾家有囍\" (My Family Has Joy) themed photo templates for DIY image creation, with each template showing usage statistics.",
+            "action_refs": [
+                [
+                    75,
+                    3
+                ]
+            ],
+            "data_in": [
+                "吾家有囍主题列表"
+            ],
+            "data_out": [
+                "吾家有囍主题详情列表"
+            ],
+            "data_dependencies": [
+                49,
+                54
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 75,
+                "logic": "The user starts on page 75 (the main template browsing page). They click the '更多' (More) button next to the '吾家有囍' section, which navigates to page 80. On page 80, the user can browse all '吾家有囍' themed templates with their usage statistics, allowing selection for DIY image creation.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            75,
+                            3
+                        ],
+                        "src_page_idx": 75,
+                        "dst_page_idx": 80,
+                        "action": "click",
+                        "summary": "Click '更多' button next to '吾家有囍' to view all related templates"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 51,
+            "function_description": "视频播放按钮",
+            "action_refs": [
+                [
+                    78,
+                    0
+                ]
+            ],
+            "data_in": [
+                "video (product promotion)"
+            ],
+            "data_out": [
+                "video playback started"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 78,
+                "logic": "The core execution logic for the video play button involves a single step: clicking the video play button located on the page. This action is intended to initiate video playback, and since there are no subsequent branches or loops indicated by the provided actions, the flow is a straight line from the entry page to the action of clicking the play button.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            78,
+                            0
+                        ],
+                        "src_page_idx": 78,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the video play button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 52,
+            "function_description": "立即购买按钮",
+            "action_refs": [
+                [
+                    78,
+                    1
+                ]
+            ],
+            "data_in": [
+                "李希侃人生四格商品"
+            ],
+            "data_out": [
+                "购买订单(待支付)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 78,
+                "logic": "The core execution logic for the '立即购买' (Buy Now) button starts on the product detail page (page 78). The user initiates the purchase process by clicking the '立即购买' button. Since there are no further actions or branches provided, the flow consists of this single click action, which likely leads to the next stage of the purchase process (though the destination page is not specified in the given action).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            78,
+                            1
+                        ],
+                        "src_page_idx": 78,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '立即购买' (Buy Now) button on the product detail page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 53,
+            "function_description": "客服按钮",
+            "action_refs": [
+                [
+                    78,
+                    4
+                ]
+            ],
+            "data_in": [
+                "customer service feature entry"
+            ],
+            "data_out": [
+                "customer service interface access"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 78,
+                "logic": "The core execution logic for the customer service button involves a single step: clicking the customer service button located at the bottom left of the page. This action is expected to initiate the process of accessing customer service, with no branching or looping logic as it is a direct interaction.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            78,
+                            4
+                        ],
+                        "src_page_idx": 78,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the customer service button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 54,
+            "function_description": "吾家有囍 photo template card",
+            "action_refs": [
+                [
+                    80,
+                    0
+                ]
+            ],
+            "data_in": [
+                "photo template card"
+            ],
+            "data_out": [
+                "selected photo template card"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 80,
+                "logic": "The user starts on page 80 and clicks the '吾家有囍 photo template card' element. This action likely leads to a new page (though dst_page_idx is null here, implying a transition to a template selection or preview page for the '吾家有囍' photo templates).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            80,
+                            0
+                        ],
+                        "src_page_idx": 80,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the '吾家有囍 photo template card' element"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        }
+    ]
+}

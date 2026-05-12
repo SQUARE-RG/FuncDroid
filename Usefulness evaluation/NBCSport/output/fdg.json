@@ -1,0 +1,2740 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "Sports streaming/news with navigation tabs",
+            "action_refs": [
+                [
+                    0,
+                    6
+                ]
+            ],
+            "data_in": [
+                "home tab"
+            ],
+            "data_out": [],
+            "data_dependencies": [
+                1,
+                2,
+                3,
+                7,
+                8,
+                9,
+                21,
+                24,
+                53,
+                55
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The app starts on the home page (page 0). The user can click the Home tab button (which is already active, as indicated by the UI), and this action keeps the app on the home page, likely refreshing or confirming the home tab's content. There are no branches or loops here as it's a single action to interact with the home tab.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            6
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the Home tab button (already active) to stay on the home page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 1,
+            "function_description": "The profile page enables users to sign in or sign up for a NBCUniversal Profile, link a cable provider, and access settings for app language and playback, along with links to Peacock, FAQ, and Contact Us.",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ]
+            ],
+            "data_in": [
+                "user profile entry point"
+            ],
+            "data_out": [
+                "profile page loaded"
+            ],
+            "data_dependencies": [
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the home page. The user clicks the profile icon (on the home page) to navigate to the profile page, where options for signing in/signing up, linking a cable provider, and accessing settings/links are available.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the user profile icon on the home page to open the profile page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "The current page functions as a video playback interface for streaming a Peacock Original trailer (titled \"All Her Fault\") after initiating the streaming process from a sports streaming/news page via the \"START WATCHING\" button.",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ]
+            ],
+            "data_in": [
+                "sports video (PFT Pro Football Talk)"
+            ],
+            "data_out": [
+                "video playback session (Peacock Trailers)"
+            ],
+            "data_dependencies": [
+                18,
+                44
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The process starts on the sports streaming/news page (page 0). The user clicks the 'START WATCHING' button, which navigates to the video playback interface (page 2) where the Peacock Original trailer 'All Her Fault' is streamed. There are no branches or loops in this flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click the 'START WATCHING' button to navigate to the video playback page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "The page functions as a sports category selection interface, displaying a list of featured and all sports (e.g., NFL, NBA, Premier League, Big Ten, Cycling) for the user to choose from to access related streaming or news content.",
+            "action_refs": [
+                [
+                    0,
+                    2
+                ],
+                [
+                    3,
+                    0
+                ]
+            ],
+            "data_in": [
+                "sports category selection (All Sports)",
+                "sports list modal"
+            ],
+            "data_out": [
+                "expanded sports categories list",
+                "sports list modal closed",
+                "home page displayed"
+            ],
+            "data_dependencies": [
+                4,
+                5,
+                6,
+                19,
+                46
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the sports home page. First, the user clicks the 'All Sports' button to open the sports list page. Then, the user can click the 'Close sports list' button to return to the home page, completing the navigation between the home page and the sports list.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click 'All Sports' button to open sports list"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            3,
+                            0
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click 'Close sports list' button to return to home"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "The current page provides NFL - related content, including video - based news, Sunday Night Football highlights, and live broadcast schedules from NBC Sports Regional Networks, enabling users to access various NFL - centric media and scheduling information.",
+            "action_refs": [
+                [
+                    0,
+                    3
+                ]
+            ],
+            "data_in": [
+                "NFL category"
+            ],
+            "data_out": [
+                "NFL sports content"
+            ],
+            "data_dependencies": [
+                5
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the home page (page 0) and clicks the NFL category button. This action navigates to the NFL - focused page (page 4), where NFL - related content like video news, Sunday Night Football highlights, and live broadcast schedules from NBC Sports Regional Networks is accessible. There are no branches or loops in this core flow as it's a single - step navigation to the relevant content page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the NFL category button to navigate to the NFL - related content page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "The page provides information about NBA games, including details of live and upcoming matches, as well as games broadcast on NBC Sports Regional Networks, allowing users to view schedules and potentially access streaming or news related to NBA events.",
+            "action_refs": [
+                [
+                    0,
+                    4
+                ],
+                [
+                    5,
+                    0
+                ]
+            ],
+            "data_in": [
+                "NBA category (sports category)",
+                "NBA sports content"
+            ],
+            "data_out": [
+                "NBA - related sports content (games, schedules)",
+                "app home page content"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on page 0. First, the user clicks the NBA category button (on page 0) to navigate to page 5, which likely displays NBA game information. Then, if needed, the user can click the back arrow icon (on page 5) to return to page 0, completing a navigation cycle for accessing NBA-related content.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click NBA category button to go to NBA content page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            5,
+                            0
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click back arrow to return to the previous page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "The current page provides NFL - related content, including video news, Sunday Night Football highlights, and broadcast schedules from NBC Sports Regional Networks, enabling users to access NFL - focused sports streaming and news.",
+            "action_refs": [
+                [
+                    0,
+                    5
+                ]
+            ],
+            "data_in": [
+                "MLB sports category"
+            ],
+            "data_out": [
+                "MLB sports content"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the home page (page 0) and clicks the NFL category button. This action navigates to the NFL - focused page (page 4), where NFL - related content like video news, Sunday Night Football highlights, and broadcast schedules from NBC Sports Regional Networks becomes accessible.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the NFL category button on the home page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "The current page, accessed via the Articles tab, displays a curated list of sports - related articles (covering football and basketball, for example) with options to view all articles in each respective sports category, enabling users to read and explore sports news content.",
+            "action_refs": [
+                [
+                    0,
+                    7
+                ]
+            ],
+            "data_in": [
+                "sports articles"
+            ],
+            "data_out": [
+                "loaded sports articles"
+            ],
+            "data_dependencies": [
+                23
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the home page (page 0) and clicks the Articles tab button. This action navigates to the Articles page (page 6), where curated sports articles (e.g., football, basketball) are displayed, with options to view all articles in each sports category for further exploration.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            7
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click the Articles tab button to navigate to the Articles page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "The current page (Live tab) in the sports streaming/news app is designed to display live sports events, scores, or streaming options, providing real - time sports - related content to users.",
+            "action_refs": [
+                [
+                    0,
+                    8
+                ]
+            ],
+            "data_in": [
+                "live sports content"
+            ],
+            "data_out": [
+                "loaded live sports page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the Home page (page 0) and clicks the 'Live' tab button. This action navigates to the Live tab page (page 7), where live sports content (events, scores, streaming options) is loaded and displayed. The flow is a straight line with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            8
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click the 'Live' tab button to navigate to the Live tab page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "The Browse page in the sports app allows users to search for and explore various sports - related shows (such as \"The 2 Robbies\", \"B1G College Countdown\", etc.) through a search bar and category tabs (A - Z, Football, Soccer), and also provides access to user account and casting features.",
+            "action_refs": [
+                [
+                    0,
+                    9
+                ]
+            ],
+            "data_in": [
+                "browse feature entry"
+            ],
+            "data_out": [
+                "browse page content"
+            ],
+            "data_dependencies": [
+                26,
+                27,
+                28
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the home page and clicks the Browse tab button. This action navigates to the Browse page, where sports - related shows can be explored via a search bar and category tabs (A - Z, Football, Soccer), and account/casting features are accessible.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            9
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click the Browse tab button to navigate to the Browse page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "The page enables users to sign in to their NBCUniversal profile using email and password, or via Google/Apple, and also provides options to reset a forgotten password or sign up for a new profile.",
+            "action_refs": [
+                [
+                    1,
+                    0
+                ],
+                [
+                    9,
+                    0
+                ]
+            ],
+            "data_in": [
+                "login session",
+                "NBCUniversal profile",
+                "email input field",
+                "sign in form"
+            ],
+            "data_out": [
+                "login session (updated)",
+                "entered email"
+            ],
+            "data_dependencies": [
+                29,
+                30,
+                31,
+                32,
+                33,
+                38
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts with clicking the 'Sign In' button on the profile page (step S1), which navigates to the sign-in page. Then, the user inputs their email address into the email field (step S2) on the sign-in page, with the page remaining the same after input. The flow includes a branch point at S2 (though the current actions only show the email input, the overall logic implies further steps for password, social sign-in, or other options would follow).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            0
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click 'Sign In' button to navigate to sign-in page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            9,
+                            0
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 9,
+                        "action": "input",
+                        "summary": "Input email address into email field on sign-in page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": null
+                            },
+                            {
+                                "next_step": null
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "The page allows users to create an NBCUniversal profile by providing options to sign up using email, Google, or Apple, and also offers a link for existing users to log in.",
+            "action_refs": [
+                [
+                    1,
+                    1
+                ]
+            ],
+            "data_in": [
+                "sign up option"
+            ],
+            "data_out": [
+                "profile creation options"
+            ],
+            "data_dependencies": [
+                34,
+                35,
+                36,
+                37
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts on the profile page. The user clicks the 'Sign Up' button, which navigates to the profile creation page. On this page, the user can choose to create a profile with email, Google, or Apple, or log in if they already have a profile.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            1
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click the 'Sign Up' button to navigate to the profile creation page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "This page allows the user to select their TV provider from a list (or view a full list) to link their account for accessing full episodes and additional content, as part of a multi - step process (select provider, verify account, watch episodes).",
+            "action_refs": [
+                [
+                    1,
+                    2
+                ],
+                [
+                    11,
+                    0
+                ]
+            ],
+            "data_in": [
+                "cable provider linking setup",
+                "TV provider selection modal"
+            ],
+            "data_out": [
+                "cable provider selection interface loaded",
+                "closed TV provider selection modal"
+            ],
+            "data_dependencies": [
+                39,
+                40,
+                41
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The process starts on the profile page. First, the user clicks the 'Link Provider' button to open the TV provider selection modal (page 11). Then, the user can either proceed with provider selection (implied by the modal's purpose) or click the close button to return to the profile page (page 1).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            2
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click 'Link Provider' button to open TV provider selection modal"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            11,
+                            0
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click close button to exit TV provider selection modal and return to profile page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": null
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "The page allows the user to select their preferred language (English or Spanish) for the app, with a note that not all TV shows and movies are available in all languages.",
+            "action_refs": [
+                [
+                    1,
+                    3
+                ],
+                [
+                    12,
+                    0
+                ]
+            ],
+            "data_in": [
+                "app language setting",
+                "app language setting page",
+                "profile page"
+            ],
+            "data_out": [
+                "app language setting (entered configuration page)",
+                "navigated back to profile page"
+            ],
+            "data_dependencies": [
+                42
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user starts on page 1. They click the 'App Language' option (action_ref [1,3]) to navigate to page 12. Then, they can click the back arrow (action_ref [12,0]) to return to page 1. The flow involves navigating to the language selection page and optionally returning to the original page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            3
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click 'App Language' to go to language selection page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            12,
+                            0
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click back arrow to return to original page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "The page allows the user to configure video playback preferences, specifically enabling or disabling the \"Wi - Fi Only\" option which restricts video playback to Wi - Fi connections.",
+            "action_refs": [
+                [
+                    1,
+                    4
+                ]
+            ],
+            "data_in": [
+                "playback setting item"
+            ],
+            "data_out": [
+                "video playback preferences page loaded"
+            ],
+            "data_dependencies": [
+                43
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user starts on page 1 and clicks the 'Playback' option (action_ref [1,4]) to navigate to page 13, which is the Video Playback Preferences page where the 'Wi-Fi Only' toggle can be configured. This single step initiates access to the playback preferences configuration.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            4
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click on the 'Playback' option to navigate to Video Playback Preferences page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "The current page functions as a promotional and exploratory hub for the Peacock streaming service, showcasing its content (shows, movies, sports, etc.), providing a sign - up option, and allowing users to explore available Peacock - exclusive and other streaming content.",
+            "action_refs": [
+                [
+                    1,
+                    5
+                ],
+                [
+                    14,
+                    0
+                ]
+            ],
+            "data_in": [
+                "Peacock Preview option",
+                "peacock promotional page"
+            ],
+            "data_out": [
+                "Peacock Preview page content",
+                "profile page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts on page 1. First, the user clicks the 'Peacock Preview' option (navigating to page 14 to explore Peacock content). Then, the user can click the back arrow icon to return to page 1, completing the navigation cycle for exploring or exiting the Peacock promotional hub.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            5
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click Peacock Preview to navigate to Peacock content page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            14,
+                            0
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click back arrow to return to original page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "This page is a Cloudflare - powered security verification page for help.nbc.com, which is verifying that the user is human and reviewing the security of the user's connection before allowing access to the NBC Sports FAQ section.",
+            "action_refs": [
+                [
+                    1,
+                    6
+                ],
+                [
+                    15,
+                    0
+                ]
+            ],
+            "data_in": [
+                "FAQ option"
+            ],
+            "data_out": [
+                "FAQ page loaded (with security verification)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user starts on page 1 and clicks the FAQ option (action S1) to navigate to page 15. From page 15, the user can click the back arrow (action S2) to return to page 1, creating a navigation loop between these two pages.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            6
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click FAQ option to go to page 15"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            15,
+                            0
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click back arrow to return to page 1"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S1"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "loop",
+                        "branches": [
+                            {
+                                "next_step": "S1"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "This page displays an error message indicating that the NBC Sports app has crashed, with an option to close the app.",
+            "action_refs": [
+                [
+                    1,
+                    7
+                ]
+            ],
+            "data_in": [
+                "contact us option"
+            ],
+            "data_out": [
+                "contact us page (attempted to load)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": null,
+                "logic": "The app crashes, displaying an error message 'NBC Sports keeps stopping' with a 'Close app' option. The user can then click 'Close app' to terminate the app. This is a straight-line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            7
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click the 'Close app' option to close the crashed NBC Sports app"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "The current page functions as a video playback interface for a sports - related (or featured) video, showing the video content with rating and platform branding, and it is reached after navigating through sports streaming/news and sports content preview pages.",
+            "action_refs": [
+                [
+                    2,
+                    0
+                ],
+                [
+                    35,
+                    0
+                ]
+            ],
+            "data_in": [
+                "trailer video (Peacock Trailers)",
+                "video content"
+            ],
+            "data_out": [
+                "video playback (trailer)",
+                "video playback state (paused/playing)"
+            ],
+            "data_dependencies": [
+                18
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The flow starts at page 2. First, click on the featured sports article image (on page 2) to navigate to page 35. Then, click on the video playback area (on page 35) to reach the final video playback page (page 36). There are no branches or loops in this straight - line flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            0
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 35,
+                        "action": "click",
+                        "summary": "Click on the featured sports article image to go to page 35"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            35,
+                            0
+                        ],
+                        "src_page_idx": 35,
+                        "dst_page_idx": 36,
+                        "action": "click",
+                        "summary": "Click on the video playback area to go to page 36"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "The current page provides NFL - related content, including video highlights, news articles, and information about upcoming NBC Sports Regional Networks broadcasts, allowing users to browse and access NFL - specific sports media.",
+            "action_refs": [
+                [
+                    3,
+                    1
+                ]
+            ],
+            "data_in": [
+                "NFL sports category"
+            ],
+            "data_out": [
+                "NFL sports content (videos, highlights, schedules)"
+            ],
+            "data_dependencies": [
+                20,
+                22,
+                25
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The user starts on the sports selection page (page 3). They click the NFL sports category button, which navigates to the NFL - specific content page (page 4). On this page, users can browse NFL - related video highlights, news articles, and broadcast information from NBC Sports Regional Networks.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            1
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the NFL sports category button to navigate to NFL - specific content page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "The current page functions to display and allow interaction with a specific NFL - related video (Burden III fantasy - related) or content, likely for the purpose of watching, getting details about, or engaging with that NFL - themed media.",
+            "action_refs": [
+                [
+                    4,
+                    0
+                ],
+                [
+                    37,
+                    0
+                ]
+            ],
+            "data_in": [
+                "NFL video (Burden III fantasy)",
+                "video"
+            ],
+            "data_out": [
+                "NFL video playback (Burden III fantasy)",
+                "video (play/pause state updated)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The flow starts on page 4, where the user clicks the NFL video card about Burden III fantasy (step S1) to navigate to page 37. Then, on page 37, the user clicks the video play/pause button (step S2) to interact with the video content, completing the functional point's interaction.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            0
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 37,
+                        "action": "click",
+                        "summary": "Click the NFL video card (Burden III fantasy) to navigate to its detail page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            37,
+                            0
+                        ],
+                        "src_page_idx": 37,
+                        "dst_page_idx": 38,
+                        "action": "click",
+                        "summary": "Click the video play/pause button to interact with the video"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "The page functions as a sports category selection menu, allowing users to choose from featured sports (e.g., NFL, NBA) and a broader list of all sports (e.g., Big Ten, Cycling) to navigate to content related to their selected sport.",
+            "action_refs": [
+                [
+                    5,
+                    1
+                ]
+            ],
+            "data_in": [
+                "sports category selection trigger"
+            ],
+            "data_out": [
+                "sports categories list"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user starts on page 5 (NBA content page) and clicks the NBA dropdown menu (action_ref [5,1]). This action navigates to page 3, which displays a sports selection menu with featured sports (e.g., NFL, NBA) and all sports (e.g., Big Ten, Cycling). The flow is a straight line as there are no branches or loops here, just a single click to access the sports selection menu.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            1
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click NBA dropdown menu to open sports selection menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "This page allows users to select their TV provider from a list (or view a full list) to link their account for accessing full episodes and additional content, as part of a multi - step process (select provider, verify account, watch episodes) for the NBC Sports app.",
+            "action_refs": [
+                [
+                    5,
+                    2
+                ]
+            ],
+            "data_in": [
+                "Mavericks vs Trail Blazers event"
+            ],
+            "data_out": [
+                "TV provider selection interface"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user starts on page 5 and clicks the 'Mavericks vs Trail Blazers' event card, which navigates to page 11. This action initiates the process of accessing content related to the selected event, likely leading to further steps for TV provider selection or content viewing.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            2
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click on the Mavericks vs Trail Blazers event card to navigate to the next page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "Displays the full content of the sports news article titled \"Sean McVay says Rams will play their starters in Week 18\", including the headline, author, publication details, social sharing options, and the article text, allowing users to read and share the news about Sean McVay's statement on the Rams' Week 18 lineup.",
+            "action_refs": [
+                [
+                    6,
+                    0
+                ]
+            ],
+            "data_in": [
+                "sports article (Sean McVay Rams Week 18)"
+            ],
+            "data_out": [
+                "opened sports article (Sean McVay Rams Week 18)"
+            ],
+            "data_dependencies": [
+                45,
+                50
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on page 6 (the Articles page). They click on the article titled 'Sean McVay says Rams will play their starters in Week 18', which navigates to page 39. On page 39, the full article content (headline, author, publication details, sharing options, and text) is displayed, allowing the user to read and share the news.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            0
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 39,
+                        "action": "click",
+                        "summary": "Click on the article 'Sean McVay says Rams will play their starters in Week 18' to open and view its full content."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "The page functions as a sports category selection menu, allowing users to choose from various sports (e.g., NFL, Soccer, Golf, NBA) to filter or navigate to sports - specific live events, news, or streaming content.",
+            "action_refs": [
+                [
+                    7,
+                    0
+                ],
+                [
+                    41,
+                    0
+                ]
+            ],
+            "data_in": [
+                "sports category list",
+                "sports menu"
+            ],
+            "data_out": [
+                "expanded sports category dropdown",
+                "closed sports menu"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The user starts on page 7 and clicks the 'All Sports' dropdown menu (action_ref [7,0]) to navigate to page 41 (the sports selection menu). Then, from page 41, the user clicks the 'Close menu button (X)' (action_ref [41,0]) to navigate to page 43 (closing the menu).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            0
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 41,
+                        "action": "click",
+                        "summary": "Click 'All Sports' dropdown menu to open sports selection menu"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            41,
+                            0
+                        ],
+                        "src_page_idx": 41,
+                        "dst_page_idx": 43,
+                        "action": "click",
+                        "summary": "Click 'Close menu button (X)' to close sports selection menu"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 25,
+            "function_description": "Displays a countdown timer for the upcoming NFL 49ers Pregame Live event and provides an \"OK\" button to acknowledge the message.",
+            "action_refs": [
+                [
+                    7,
+                    1
+                ],
+                [
+                    42,
+                    0
+                ]
+            ],
+            "data_in": [
+                "NFL event reminder",
+                "countdown message",
+                "confirmation action"
+            ],
+            "data_out": [
+                "dismissed NFL event reminder",
+                "confirmed countdown message"
+            ],
+            "data_dependencies": [
+                47
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The flow starts on page 7, where the user clicks the Premier League event card (though the functional point is for NFL 49ers, this action navigates to page 42). On page 42, the user clicks the 'OK' button to acknowledge the countdown message, completing the flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            1
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 42,
+                        "action": "click",
+                        "summary": "Click Premier League event card (navigates to page 42)"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            42,
+                            0
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": 45,
+                        "action": "click",
+                        "summary": "Click OK button to confirm countdown message"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 26,
+            "function_description": "The page allows users to search for sports shows (e.g., \"football shows\") and displays a message indicating whether any matching results are found.",
+            "action_refs": [
+                [
+                    8,
+                    0
+                ],
+                [
+                    47,
+                    0
+                ]
+            ],
+            "data_in": [
+                "search query",
+                "sports shows list",
+                "search input (football shows)"
+            ],
+            "data_out": [
+                "search results (empty)",
+                "cleared search input"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The user starts on page 8 and inputs 'football shows' into the search bar (action S1). After inputting, the app transitions to page 47, and then the user clicks the clear search input button (action S2), which leads to page 50. The flow is a straight line with no branches as the actions are sequential.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            0
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 47,
+                        "action": "input",
+                        "summary": "Input 'football shows' into the search bar"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            47,
+                            0
+                        ],
+                        "src_page_idx": 47,
+                        "dst_page_idx": 50,
+                        "action": "click",
+                        "summary": "Click the clear search input button"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 27,
+            "function_description": "The current page functions as a browsing interface for football - related sports shows, enabling users to search (via the search bar) and view a collection of football - themed shows (like \"B1G College Countdown\", \"Chris Simms Unbuttoned\", etc.) for selection and likely streaming or accessing more details.",
+            "action_refs": [
+                [
+                    8,
+                    1
+                ]
+            ],
+            "data_in": [
+                "football category content",
+                "browse page data"
+            ],
+            "data_out": [
+                "filtered football shows list"
+            ],
+            "data_dependencies": [
+                48
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The user starts on the browsing page (page 8). They click the 'Football' category tab, which navigates to a page (page 48) displaying football - themed shows. This action filters the shows to only those related to football, allowing the user to browse the relevant content.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            1
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 48,
+                        "action": "click",
+                        "summary": "Click the 'Football' category tab to navigate to the page with football - themed shows"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 28,
+            "function_description": "Displays details of the \"Chris Simms Unbuttoned\" sports news segment (including a clip to watch, description, and timestamp) and provides access to latest and more NFL - related sports content.",
+            "action_refs": [
+                [
+                    8,
+                    2
+                ],
+                [
+                    49,
+                    2
+                ]
+            ],
+            "data_in": [
+                "The 2 Robbies show card",
+                "news article summary"
+            ],
+            "data_out": [
+                "The 2 Robbies show details page",
+                "expanded news article summary"
+            ],
+            "data_dependencies": [
+                49,
+                51
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "Start on page 8 (Browse). Click the 'The 2 Robbies' show card (action_ref [8,2]) to navigate to page 49. Then, click the 'See More' link (action_ref [49,2]) to reach page 52, where details of 'Chris Simms Unbuttoned' and related NFL content are accessed. The flow is a straight line with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            2
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 49,
+                        "action": "click",
+                        "summary": "Click 'The 2 Robbies' show card to navigate to page 49"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            49,
+                            2
+                        ],
+                        "src_page_idx": 49,
+                        "dst_page_idx": 52,
+                        "action": "click",
+                        "summary": "Click 'See More' link to access content on page 52"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 29,
+            "function_description": "Show Password toggle",
+            "action_refs": [
+                [
+                    9,
+                    1
+                ]
+            ],
+            "data_in": [
+                "show password setting"
+            ],
+            "data_out": [
+                "show password setting updated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The flow starts on the sign-in page (page 9). The user clicks the 'Show Password' toggle, which likely toggles the visibility of the password entered in the password field, and the flow ends (or transitions to page 17, though the exact post-action page is part of the app's response to the toggle click).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            1
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click the 'Show Password' toggle to toggle password visibility"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 30,
+            "function_description": "This page enables users to sign in to their NBCUniversal profile by entering their email (and subsequent password) or using Google/Apple authentication, with options to reset password or sign up for a new profile.",
+            "action_refs": [
+                [
+                    9,
+                    2
+                ]
+            ],
+            "data_in": [
+                "login credentials",
+                "NBCUniversal profile sign-in request"
+            ],
+            "data_out": [
+                "login session",
+                "authenticated NBCUniversal profile session"
+            ],
+            "data_dependencies": [
+                56
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts on the sign-in page. They can click the 'SIGN IN' button (after entering email/password), or use 'CONTINUE WITH GOOGLE'/'CONTINUE WITH APPLE' for authentication. Alternatively, they can reset their password or sign up for a new profile, but the core flow here focuses on the sign-in action triggered by clicking 'SIGN IN'.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            2
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click the SIGN IN button to attempt email/password sign-in"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 31,
+            "function_description": "This page enables users to sign in to their NBCUniversal profile, offering options to sign in with email (requiring email and password) or authenticate using Google or Apple, along with password reset and account creation links.",
+            "action_refs": [
+                [
+                    9,
+                    3
+                ]
+            ],
+            "data_in": [
+                "login session",
+                "Google account credentials"
+            ],
+            "data_out": [
+                "NBCUniversal profile login session"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts on the NBCUniversal sign - in page. They can choose to sign in via Google by clicking the 'Continue with Google' button, which leads to the next page (page 18) for Google - based authentication. Other sign - in options like email or Apple are also available but not part of this specific flow here.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            3
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click the 'Continue with Google' button to initiate Google - based sign - in."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 32,
+            "function_description": "This page allows users to initiate the password reset process for their NBCUniversal profile by entering their associated email address, with options to cancel or proceed (once the email is entered).",
+            "action_refs": [
+                [
+                    9,
+                    4
+                ],
+                [
+                    19,
+                    0
+                ],
+                [
+                    19,
+                    2
+                ]
+            ],
+            "data_in": [
+                "password reset request",
+                "user profile (email)",
+                "password reset email input",
+                "user email"
+            ],
+            "data_out": [
+                "password reset initiation (page loaded)",
+                "filled password reset email input",
+                "password reset process initiated"
+            ],
+            "data_dependencies": [
+                52
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The process starts by clicking the 'Reset Password' link (on page 9) to navigate to the password reset page (page 19). On the password reset page, the user inputs their email address. After entering the email, clicking the 'Continue' button (on page 19) likely proceeds with the password reset workflow (though the final destination here is page 19, implying a possible confirmation or next step).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            4
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click 'Reset Password' link to navigate to password reset page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            19,
+                            0
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 21,
+                        "action": "input",
+                        "summary": "Input email address for password reset"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            19,
+                            2
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click 'Continue' button to proceed with password reset"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 33,
+            "function_description": "Close sign-in modal button",
+            "action_refs": [
+                [
+                    9,
+                    5
+                ]
+            ],
+            "data_in": [
+                "sign-in modal"
+            ],
+            "data_out": [
+                "sign-in modal closed"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts on the sign-in modal page (page 9). They perform a click action on the close sign-in modal button, which transitions the app to page 20, closing the modal.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            5
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 20,
+                        "action": "click",
+                        "summary": "Click the close sign-in modal button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 34,
+            "function_description": "The page enables users to manage their profile by signing in, signing up for a NBCUniversal profile, linking a cable provider, and adjusting app settings like language and playback, while also providing navigation to other app sections.",
+            "action_refs": [
+                [
+                    10,
+                    0
+                ]
+            ],
+            "data_in": [
+                "profile creation page"
+            ],
+            "data_out": [
+                "closed profile creation page",
+                "returned to profile page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The flow starts on the profile creation page (page 10). The user clicks the close button, which navigates them to the main profile page (page 1). This is a single-step flow with no branches, as the action directly closes the creation page and returns to the main profile interface.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            0
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the close button on the profile creation page to navigate to the main profile page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 35,
+            "function_description": "This page enables users to create an NBCUniversal profile by entering personal details (first name, last name, birth year, gender, zip code) and account credentials (email, password) via the \"Create profile with email\" form.",
+            "action_refs": [
+                [
+                    10,
+                    1
+                ],
+                [
+                    25,
+                    0
+                ]
+            ],
+            "data_in": [
+                "profile creation option (email)",
+                "user profile"
+            ],
+            "data_out": [
+                "profile creation form (email-based)",
+                "user profile (with first name updated)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "To create an NBCUniversal profile, first click the 'Create profile with email' button (on page 10) to navigate to the form page (25). Then, input the first name (e.g., 'John') into the First Name field on the form page (25).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            1
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 25,
+                        "action": "click",
+                        "summary": "Click 'Create profile with email' button to open the profile creation form page."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            25,
+                            0
+                        ],
+                        "src_page_idx": 25,
+                        "dst_page_idx": 28,
+                        "action": "input",
+                        "summary": "Input 'John' into the First Name input field on the profile creation form."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 36,
+            "function_description": "This page is in the process of verifying user information after initiating the sign - up process using a Google account, likely to authenticate the Google account details and proceed with the NBCUniversal profile creation.",
+            "action_refs": [
+                [
+                    10,
+                    2
+                ]
+            ],
+            "data_in": [
+                "Google account credentials",
+                "NBCUniversal profile creation session"
+            ],
+            "data_out": [
+                "Profile creation progress (checking info)",
+                "Authenticated session (pending)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The process starts on the profile creation page. The user clicks the 'Continue with Google' button, which initiates the Google account information verification process, leading to a loading page with 'Checking info...' text.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            2
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 26,
+                        "action": "click",
+                        "summary": "Click 'Continue with Google' button to start Google account info verification"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 37,
+            "function_description": "This page facilitates signing in to NBCUniversal using an Apple Account by prompting the user to enter their email or phone number and then proceed with the \"Continue\" button, while also providing information about data management and fraud prevention during the Sign in with Apple setup.",
+            "action_refs": [
+                [
+                    10,
+                    3
+                ],
+                [
+                    27,
+                    0
+                ],
+                [
+                    27,
+                    1
+                ]
+            ],
+            "data_in": [
+                "login session",
+                "Apple account credentials",
+                "user's email or phone number",
+                "Apple account sign - in information",
+                "email or phone number input"
+            ],
+            "data_out": [
+                "initiated Apple sign-in process",
+                "Apple account authentication request",
+                "entered email or phone number (for sign-in)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The flow starts with clicking the 'Continue with Apple' button (from page 10 to 27). On page 27, the user can either input an email/phone number (leading to page 29) or click the 'Continue' button (staying on page 27). The main path involves entering credentials, while the 'Continue' click repeats the current step.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            3
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 27,
+                        "action": "click",
+                        "summary": "Click 'Continue with Apple' button to proceed to Apple Account sign-in page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            27,
+                            0
+                        ],
+                        "src_page_idx": 27,
+                        "dst_page_idx": 29,
+                        "action": "input",
+                        "summary": "Input email or phone number in the input field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            27,
+                            1
+                        ],
+                        "src_page_idx": 27,
+                        "dst_page_idx": 27,
+                        "action": "click",
+                        "summary": "Click 'Continue' button (remains on current page)"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 38,
+            "function_description": "This page enables users to sign in to their NBCUniversal profile using email (with password), Google, or Apple, and also provides options for password reset and account sign - up.",
+            "action_refs": [
+                [
+                    10,
+                    4
+                ]
+            ],
+            "data_in": [
+                "login session",
+                "NBCUniversal profile"
+            ],
+            "data_out": [
+                "login session (initiated)",
+                "NBCUniversal profile (access attempt)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The flow starts on the profile creation page (page 10). The user clicks the 'Log In' link, which navigates to the sign - in page (page 9). On the sign - in page, the user can choose to sign in with email (by entering email and password), Google, or Apple. There are also options to reset the password (if forgotten) or sign up for a new account (if no profile exists).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            4
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click the 'Log In' link on the profile creation page to navigate to the sign - in page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 39,
+            "function_description": "This page allows the user to choose an application (either Chrome or WebView Browser Tester) to open the Xfinity TV provider linking process, with options to set the chosen app as the default or use it just once.",
+            "action_refs": [
+                [
+                    11,
+                    1
+                ]
+            ],
+            "data_in": [
+                "TV provider selection (Xfinity)"
+            ],
+            "data_out": [
+                "Initiated TV provider verification workflow"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The user starts on the TV provider selection page. First, they click to select the Xfinity TV provider. This action triggers a dialog to choose an app (Chrome or WebView Browser Tester) to open the linking process, with options to set the app as default or use it once.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            1
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 30,
+                        "action": "click",
+                        "summary": "Click to select Xfinity TV provider"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 40,
+            "function_description": "This page allows the user to select a TV provider from a comprehensive list to link their account for accessing full episodes and additional content on the NBC Sports app.",
+            "action_refs": [
+                [
+                    11,
+                    2
+                ],
+                [
+                    31,
+                    0
+                ]
+            ],
+            "data_in": [
+                "TV provider list (partial)",
+                "TV provider selection list",
+                "AAFES – Exchange TV provider"
+            ],
+            "data_out": [
+                "TV provider list (full)",
+                "TV provider selection result (AAFES – Exchange)",
+                "app open request (for TV provider verification)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The user starts on the TV provider selection page. First, they click to view the full list of TV providers. Then, they select a specific TV provider (e.g., AAFES – Exchange) from the full list. This flow allows the user to find and choose their TV provider to link the account for accessing content.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            2
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 31,
+                        "action": "click",
+                        "summary": "Click to view the full list of TV providers"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            31,
+                            0
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": 30,
+                        "action": "click",
+                        "summary": "Click on a specific TV provider option (e.g., AAFES – Exchange)"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 41,
+            "function_description": "The page provides step - by - step instructions (select provider, link account, start watching) to help users link their TV provider account to the NBC Sports app and start accessing its content.",
+            "action_refs": [
+                [
+                    11,
+                    3
+                ],
+                [
+                    32,
+                    0
+                ]
+            ],
+            "data_in": [
+                "TV provider linking help request",
+                "TV provider linking guide page"
+            ],
+            "data_out": [
+                "TV provider linking instructions",
+                "TV provider selection page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The flow starts on page 11. First, the user can click 'Get help linking TV provider' to go to page 32. From page 32, the user can click the back arrow to return to page 11, creating a navigational loop between these two pages for help and return actions.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            3
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 32,
+                        "action": "click",
+                        "summary": "Click 'Get help linking TV provider' to navigate to help page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            32,
+                            0
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click back navigation arrow to return to previous page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S1"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "loop",
+                        "branches": [
+                            {
+                                "next_step": "S1"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 42,
+            "function_description": "Spanish (Español) language option",
+            "action_refs": [
+                [
+                    12,
+                    1
+                ]
+            ],
+            "data_in": [
+                "app language setting"
+            ],
+            "data_out": [
+                "app language setting (Spanish)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The user starts on page 12 (the App Language selection page). They click on the 'Spanish (Español)' language option, which navigates to page 33. This is a straight - line flow with no branches or loops as there's only one action to select the Spanish language option.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            1
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 33,
+                        "action": "click",
+                        "summary": "Click on the Spanish (Español) language option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 43,
+            "function_description": "Wi-Fi Only playback toggle switch",
+            "action_refs": [
+                [
+                    13,
+                    0
+                ]
+            ],
+            "data_in": [
+                "Wi-Fi Only playback setting"
+            ],
+            "data_out": [
+                "Wi-Fi Only playback setting (updated state)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 13,
+                "logic": "The flow starts on page 13. The user clicks the 'Wi-Fi Only playback toggle switch' (on page 13), which navigates to page 34. This action toggles the Wi-Fi Only playback setting, completing the functional point's execution.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            13,
+                            0
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 34,
+                        "action": "click",
+                        "summary": "Click the Wi-Fi Only playback toggle switch"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 44,
+            "function_description": "The current page functions as a preview or detail page for the Peacock Original show \"All Her Fault,\" displaying a trailer clip with associated metadata (e.g., release date) and promotional imagery to showcase the show's content.",
+            "action_refs": [
+                [
+                    14,
+                    1
+                ]
+            ],
+            "data_in": [
+                "All Her Fault show card"
+            ],
+            "data_out": [
+                "All Her Fault show details"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The flow starts on page 14. The user clicks the 'All Her Fault' show card, which navigates to page 2 (the show's preview/detail page) to display the trailer, metadata, and promotional imagery. There are no branches or loops as it’s a single navigation step.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            1
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click the 'All Her Fault' show card to navigate to its preview/detail page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 45,
+            "function_description": "The page displays a system dialog indicating the NBC Sports app has crashed, with an option to restart the app, overlaid on a Google Sign - in screen.",
+            "action_refs": [
+                [
+                    39,
+                    0
+                ]
+            ],
+            "data_in": [
+                "article",
+                "Facebook share configuration"
+            ],
+            "data_out": [
+                "share action trigger (app crash side effect)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 39,
+                "logic": "The app crashes, displaying a system dialog ('NBC Sports has stopped') over a Google Sign - in screen. The user can choose to click 'Open app again' to restart the app. This is a straight - line flow with the key action being the potential click on the restart option.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            39,
+                            0
+                        ],
+                        "src_page_idx": 39,
+                        "dst_page_idx": 40,
+                        "action": "click",
+                        "summary": "Click the 'Open app again' option in the crash dialog to restart the app"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 46,
+            "function_description": "The current page allows users to browse and access live and upcoming NFL - related sports events, with a live poker event currently streaming at the top and NFL - specific event listings (like 49ers pregame/postgame live) organized by date below.",
+            "action_refs": [
+                [
+                    41,
+                    1
+                ]
+            ],
+            "data_in": [
+                "sports category list",
+                "NFL sports category"
+            ],
+            "data_out": [
+                "NFL sports content",
+                "selected sports category (NFL)"
+            ],
+            "data_dependencies": [
+                54
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 41,
+                "logic": "The user starts on page 41 (a sports category selection menu). They click the 'NFL' option, which navigates to page 44. On page 44, the user can browse NFL - related live and upcoming events, with a live poker event at the top and NFL event listings (like 49ers pregame/postgame) organized by date below. There are no branches or loops in this core flow as it's a single navigation action to access the NFL - specific event browsing page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            41,
+                            1
+                        ],
+                        "src_page_idx": 41,
+                        "dst_page_idx": 44,
+                        "action": "click",
+                        "summary": "Click the NFL sports category option to navigate to the NFL - related events page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 47,
+            "function_description": "Close (X) button to dismiss modal",
+            "action_refs": [
+                [
+                    42,
+                    1
+                ]
+            ],
+            "data_in": [
+                "countdown modal"
+            ],
+            "data_out": [
+                "countdown modal dismissed"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 42,
+                "logic": "The flow starts on page 42 (with the modal). The user clicks the Close (X) button, which dismisses the modal and navigates to page 46. There are no branches or loops as this is a single action to close the modal.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            42,
+                            1
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": 46,
+                        "action": "click",
+                        "summary": "Click the Close (X) button to dismiss the modal"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 48,
+            "function_description": "The page provides details about the \"Chris Simms Unbuttoned\" show, including a description of a segment analyzing Ravens vs. Steelers odds, a \"WATCH CLIP\" button to view the segment, and sections (\"The Latest,\" \"More NFL\") showcasing related NFL - themed video content.",
+            "action_refs": [
+                [
+                    48,
+                    0
+                ]
+            ],
+            "data_in": [
+                "Chris Simms Unbuttoned show card"
+            ],
+            "data_out": [
+                "Chris Simms Unbuttoned show details page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 48,
+                "logic": "The flow starts on the browse page (page 48). The user clicks the 'Chris Simms Unbuttoned' show card, navigating to the show's details page (page 49), where segment details, a 'WATCH CLIP' button, and related NFL video sections are displayed. There are no branches or loops in this core flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            48,
+                            0
+                        ],
+                        "src_page_idx": 48,
+                        "dst_page_idx": 49,
+                        "action": "click",
+                        "summary": "Click the 'Chris Simms Unbuttoned' show card to navigate to its details page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 49,
+            "function_description": "The current page allows users to watch a clip related to 'The 2 Robbies' sports show, likely presenting video content or highlights from the show.",
+            "action_refs": [
+                [
+                    49,
+                    0
+                ]
+            ],
+            "data_in": [
+                "sports news clip"
+            ],
+            "data_out": [
+                "loaded sports news clip"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 49,
+                "logic": "The user starts on page 49. They click the 'WATCH CLIP' button, which navigates to page 37 to view the clip related to 'The 2 Robbies' sports show. This is a straight-line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            49,
+                            0
+                        ],
+                        "src_page_idx": 49,
+                        "dst_page_idx": 37,
+                        "action": "click",
+                        "summary": "Click the WATCH CLIP button to start watching the clip"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 50,
+            "function_description": "Favorite toggle icon",
+            "action_refs": [
+                [
+                    49,
+                    1
+                ]
+            ],
+            "data_in": [
+                "news item",
+                "favorite setting (news)"
+            ],
+            "data_out": [
+                "favorite setting (news) updated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 49,
+                "logic": "The flow starts on page 49. The user clicks the favorite toggle icon, which leads to page 51. This is a straightforward action with no branching or looping.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            49,
+                            1
+                        ],
+                        "src_page_idx": 49,
+                        "dst_page_idx": 51,
+                        "action": "click",
+                        "summary": "Click the favorite toggle icon"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 51,
+            "function_description": "The current page functions to play a clip related to 'The 2 Robbies' sports show, providing video content for users to watch.",
+            "action_refs": [
+                [
+                    49,
+                    3
+                ]
+            ],
+            "data_in": [
+                "video card (Ravens vs Steelers)"
+            ],
+            "data_out": [
+                "video content (Ravens face Steelers for AFC North title)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 49,
+                "logic": "The flow starts on page 49. The user clicks the latest video card (Calvert-Lewin) to navigate to page 37, where the video content related to 'The 2 Robbies' sports show is likely to play.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            49,
+                            3
+                        ],
+                        "src_page_idx": 49,
+                        "dst_page_idx": 37,
+                        "action": "click",
+                        "summary": "Click the latest video card (Calvert-Lewin) to navigate to the video page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 52,
+            "function_description": "This page serves as the entry point for users to log in to their NBCUniversal Profile to manage profile, communication preferences, and security settings, with an option to scroll down for more information.",
+            "action_refs": [
+                [
+                    19,
+                    1
+                ],
+                [
+                    22,
+                    1
+                ]
+            ],
+            "data_in": [
+                "password reset process",
+                "profile information"
+            ],
+            "data_out": [
+                "password reset process cancelled",
+                "expanded profile information"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 19,
+                "logic": "The flow starts with clicking the 'Cancel password reset' button (from page 19 to 22). Then, on page 22, the user clicks the downward arrow scroll/expand button to view more information, which is the final step.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            19,
+                            1
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 22,
+                        "action": "click",
+                        "summary": "Click 'Cancel password reset' button"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            22,
+                            1
+                        ],
+                        "src_page_idx": 22,
+                        "dst_page_idx": 24,
+                        "action": "click",
+                        "summary": "Click downward arrow scroll/expand button"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 53,
+            "function_description": "The page functions as a sports category selection menu, allowing users to choose from various sports categories (e.g., NFL, Soccer, Golf, NBA) to filter and access related sports content or streaming options.",
+            "action_refs": [
+                [
+                    44,
+                    0
+                ]
+            ],
+            "data_in": [
+                "sports category selection interface",
+                "NFL sports category setting"
+            ],
+            "data_out": [
+                "expanded sports category list"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 44,
+                "logic": "The user starts on the sports selection page (page 44). They click the NFL dropdown button, which opens a menu (page 41) listing various sports categories like Soccer, Golf, NBA, etc. This action allows the user to access and potentially select a different sports category to filter content.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            44,
+                            0
+                        ],
+                        "src_page_idx": 44,
+                        "dst_page_idx": 41,
+                        "action": "click",
+                        "summary": "Click the NFL sports category dropdown button to open the sports selection menu."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 54,
+            "function_description": "Displays a countdown timer indicating the time remaining until the \"49ers Pregame Live\" NFL event starts, along with an \"OK\" button to acknowledge the message.",
+            "action_refs": [
+                [
+                    44,
+                    1
+                ]
+            ],
+            "data_in": [
+                "49ers Pregame Live event card"
+            ],
+            "data_out": [
+                "49ers Pregame Live countdown info"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 44,
+                "logic": "The flow starts on the sports content page (page 44). The user clicks the '49ers Pregame Live' event card, which navigates to a page (page 42) displaying a countdown timer for the event and an 'OK' button to acknowledge the message. This is a straight-line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            44,
+                            1
+                        ],
+                        "src_page_idx": 44,
+                        "dst_page_idx": 42,
+                        "action": "click",
+                        "summary": "Click the '49ers Pregame Live' event card to navigate to the countdown page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 55,
+            "function_description": "The page functions as the NFL home screen within the NBC Sports app, providing featured NFL content (like the \"Pro Football Talk\" segment), quick access to start watching NFL-related programming, and navigation options (Home, Articles, Live, Browse) along with featured sports category buttons for easy access to different sports sections.",
+            "action_refs": [
+                [
+                    44,
+                    2
+                ]
+            ],
+            "data_in": [
+                "home tab entry"
+            ],
+            "data_out": [
+                "home page content"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 44,
+                "logic": "The flow starts on a page (page 44) and involves clicking the Home bottom navigation tab. This action navigates to the NFL home screen (page 0) of the NBC Sports app, where featured NFL content, a 'START WATCHING' option, and navigation/featured sports buttons are available. There are no branches or loops as it is a single navigation step.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            44,
+                            2
+                        ],
+                        "src_page_idx": 44,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click Home bottom navigation tab to navigate to NFL home screen"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 56,
+            "function_description": "This page is in a loading state, likely attempting to authenticate or load the NBCUniversal profile login interface after the user clicked the Log in button, to enable access to NBCUniversal profile - related features for the sports streaming/news app.",
+            "action_refs": [
+                [
+                    22,
+                    0
+                ]
+            ],
+            "data_in": [
+                "NBCUniversal profile login session"
+            ],
+            "data_out": [
+                "loading state for NBCUniversal profile login"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 22,
+                "logic": "The user starts on the NBCUniversal profile introduction page (page 22). They click the 'Log in' button, which triggers the app to transition to a loading state (page 23) as it attempts to load the NBCUniversal profile login interface. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            22,
+                            0
+                        ],
+                        "src_page_idx": 22,
+                        "dst_page_idx": 23,
+                        "action": "click",
+                        "summary": "Click the 'Log in' button for NBCUniversal profile"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        }
+    ]
+}

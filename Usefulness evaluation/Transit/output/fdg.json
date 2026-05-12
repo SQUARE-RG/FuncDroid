@@ -1,0 +1,3382 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "Navigation and transit route planning",
+            "action_refs": [],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": false,
+            "core_logic": null
+        },
+        {
+            "index": 1,
+            "function_description": "The current page functions as a search interface for finding destinations (e.g., \"Foothill College\") and related transit stops/stations, displaying recent searches, stops/stations, and search results to assist in navigation and transit route planning.",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ],
+                [
+                    1,
+                    0
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    2
+                ],
+                [
+                    7,
+                    0
+                ]
+            ],
+            "data_in": [
+                "destination search input",
+                "location data",
+                "search query",
+                "location records",
+                "transit stop records",
+                "bus stop records"
+            ],
+            "data_out": [
+                "search results for destination",
+                "updated search results",
+                "cleared search query",
+                "filtered location records",
+                "search results (loading)"
+            ],
+            "data_dependencies": [
+                10
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the main page (page 0) and inputs 'Foothill College' into the search bar (step S1), leading to a search interface (page 1). On page 1, the user can either clear the search (S2 branch 1) or proceed with the search input (S2 branch 2) or select a contacts option (S2 branch 3), with the latter two leading to further search processing (page 7 or page 6/7).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "input",
+                        "summary": "Input 'Foothill College' into the main search bar"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            1,
+                            0
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 7,
+                        "action": "input",
+                        "summary": "Proceed with search input 'Foothill College' on page 1"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            1,
+                            1
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click clear search button (X) on page 1"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            1,
+                            2
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click search 'Foothill College' (contacts option) on page 1"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            7,
+                            0
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 10,
+                        "action": "input",
+                        "summary": "Input 'Foothill College' into search field on page 7"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "The current page provides options for different modes of transportation (public transit, sidewalk, two wheels, four wheels) and a section for upgrading to a 'royale' plan, likely as part of a navigation or transit app's settings or main menu.",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ]
+            ],
+            "data_in": [
+                "settings entry (gear icon)"
+            ],
+            "data_out": [
+                "user profile page (or settings page) loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the main map page (page 0). The user clicks the settings gear icon, which navigates to the page (page 2) displaying transportation mode options (public transit, sidewalk, two wheels, four wheels) and a 'royale' plan upgrade section. This is a straight-line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click the settings gear icon to navigate to the page with transportation options and upgrade section"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "The current page provides real - time navigation for an Uber ride, showing the route, estimated travel time (45 minutes), arrival time (1:43 AM), and guiding the user with turn - by - turn directions (starting with heading west on Charleston Road) to reach the destination.",
+            "action_refs": [
+                [
+                    0,
+                    2
+                ],
+                [
+                    3,
+                    0
+                ],
+                [
+                    3,
+                    3
+                ],
+                [
+                    3,
+                    5
+                ],
+                [
+                    34,
+                    0
+                ]
+            ],
+            "data_in": [
+                "Uber ride option",
+                "navigation route",
+                "destination setting",
+                "navigation instruction card",
+                "route information",
+                "user location"
+            ],
+            "data_out": [
+                "ride route",
+                "ride duration update",
+                "updated navigation route",
+                "updated destination setting",
+                "minimized navigation instruction card",
+                "updated navigation instructions",
+                "updated user location tracking"
+            ],
+            "data_dependencies": [
+                17,
+                56,
+                57,
+                58
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts by selecting the Uber ride option. Then, they set the destination. Finally, they initiate navigation by clicking the green 'GO' button, which starts the real - time navigation with turn - by - turn directions, estimated travel time, and arrival time displayed.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click on the Uber ride option"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            3,
+                            0
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 34,
+                        "action": "click",
+                        "summary": "Click the Set destination button"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            34,
+                            0
+                        ],
+                        "src_page_idx": 34,
+                        "dst_page_idx": 39,
+                        "action": "click",
+                        "summary": "Click the green 'GO' button to start navigation"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "Hide inactive lines toggle",
+            "action_refs": [
+                [
+                    0,
+                    3
+                ]
+            ],
+            "data_in": [
+                "hide inactive lines setting"
+            ],
+            "data_out": [
+                "hide inactive lines setting updated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on page 0. They perform a click action on the 'Hide inactive lines' toggle. This action leads to page 4, completing the functional point's execution.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the 'Hide inactive lines' toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "Displays the real - time location of Route 40 on a map, along with the scheduled arrival times at the Mountain View Transit Center, to assist in navigating and planning the transit route to Foothill College.",
+            "action_refs": [
+                [
+                    0,
+                    4
+                ]
+            ],
+            "data_in": [
+                "route 40 transit info"
+            ],
+            "data_out": [
+                "route 40 detailed schedule",
+                "route 40 map path"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the initial page (page 0). They click on the 'Route 40 to Foothill College' option, which navigates to page 5. On page 5, the real - time location of Route 40 is displayed on the map, along with the scheduled arrival times at the Mountain View Transit Center, fulfilling the functional point's goal of assisting in transit route planning to Foothill College.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click on 'Route 40 to Foothill College' to navigate to the page showing Route 40's real - time location and scheduled arrival times at Mountain View Transit Center"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "Displays the real - time location of Route 40 on a map and provides the scheduled arrival times at the Mountain View Transit Center for the trip to Foothill College, along with relevant transit details.",
+            "action_refs": [
+                [
+                    0,
+                    5
+                ]
+            ],
+            "data_in": [
+                "ACE Orange route",
+                "route schedule data"
+            ],
+            "data_out": [
+                "ACE Orange route details",
+                "route schedule display"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The process starts on the initial map page. The user clicks on the ACE Orange route option, which navigates to a new page displaying the real - time location of Route 40 on the map, along with the scheduled arrival times at the Mountain View Transit Center for the trip to Foothill College and relevant transit details.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click on the ACE Orange route option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "Displays the transit route for Route 40 to Foothill College, including the map of the route, the destination (Mountain View Transit Center), and scheduled arrival times at the transit center on Friday, along with a note about Christmas Day and walking time to the next stop.",
+            "action_refs": [
+                [
+                    0,
+                    6
+                ]
+            ],
+            "data_in": [
+                "route C transit information",
+                "transit center location"
+            ],
+            "data_out": [
+                "route C to transit center schedule",
+                "route C to transit center map"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the initial page (page 0). The user clicks on the 'Route C to Transit Center' option (action from page 0 to 5). This action navigates to the page (page 5) that displays the transit route for Route 40 to Foothill College, including the map, destination (Mountain View Transit Center), Friday arrival times, a Christmas Day note, and walking time to the next stop. There are no branches or loops as it is a straight-line flow to display the required transit information.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            6
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click on 'Route C to Transit Center' to navigate to the page showing Route 40's transit details."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "The current page allows users to input a destination (via search, map selection, or setting home/work), access recent destinations, and view active navigation directions with estimated arrival time and duration.",
+            "action_refs": [
+                [
+                    0,
+                    7
+                ]
+            ],
+            "data_in": [
+                "destination input interface",
+                "recent destinations"
+            ],
+            "data_out": [
+                "destination selection options"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the main map page (page 0). They click the 'Add destination' button, which navigates to a page (page 6) where they can input a destination via search, choose on map, set home/work, or select from recent destinations. This initiates the process of adding a destination for navigation or viewing directions.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            7
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click 'Add destination' button to open destination input options"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "The current page provides transit, bike, and ride - sharing (Uber) route options and estimated travel times from the current location (or \"12345 El Monte Road\") to a destination related to Foothill College, along with a navigation prompt for a specific leg of the journey.",
+            "action_refs": [
+                [
+                    1,
+                    3
+                ],
+                [
+                    8,
+                    4
+                ]
+            ],
+            "data_in": [
+                "Foothill College (stops/stations option)",
+                "route plan",
+                "departure time setting"
+            ],
+            "data_out": [
+                "updated travel plan",
+                "route options",
+                "updated route plan",
+                "updated departure time setting"
+            ],
+            "data_dependencies": [
+                34
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts by clicking the 'Foothill College (stops/stations option)' to select the destination. Then, it proceeds to click the 'Go at 8:31 AM button' to initiate navigation for the journey, which likely displays route options and estimated times for transit, bike, or ride - sharing to Foothill College.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            3
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click on Foothill College (stops/stations option) to select the destination"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            8,
+                            4
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click on Go at 8:31 AM button to initiate navigation"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "The page provides navigation and transit route options (including bike and Uber) from the current location to Foothill College, with timing details, cost for rideshare, and step - by - step navigation instructions.",
+            "action_refs": [
+                [
+                    1,
+                    4
+                ],
+                [
+                    9,
+                    1
+                ],
+                [
+                    9,
+                    5
+                ]
+            ],
+            "data_in": [
+                "Foothill College location entry",
+                "search results",
+                "destination address field",
+                "route planning context",
+                "travel plan",
+                "departure time setting"
+            ],
+            "data_out": [
+                "route planning data",
+                "transportation options",
+                "active destination input field",
+                "destination address suggestions",
+                "updated travel plan",
+                "updated arrival time"
+            ],
+            "data_dependencies": [
+                30,
+                34,
+                36
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The process starts by selecting 'Foothill College' from search results. Then, the destination address is input as '12345 El Monte Road'. Finally, the 'Go at 8:59 AM' button is clicked to view transit options with timing and cost details.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            4
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Select Foothill College from search results"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            9,
+                            1
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 12,
+                        "action": "input",
+                        "summary": "Input destination address as 12345 El Monte Road"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            9,
+                            5
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click Go at 8:59 AM button to view transit options"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "Public transit mode button",
+            "action_refs": [
+                [
+                    2,
+                    0
+                ]
+            ],
+            "data_in": [
+                "public transit mode option"
+            ],
+            "data_out": [
+                "public transit mode selected"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The user starts on page 2. The core action is clicking the public transit mode button, which likely triggers a change or navigates to a related interface (though the destination page is not yet determined from the single action provided).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            0
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the Public transit mode button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "On the sidewalk mode button",
+            "action_refs": [
+                [
+                    2,
+                    1
+                ]
+            ],
+            "data_in": [
+                "sidewalk mode entry"
+            ],
+            "data_out": [
+                "sidewalk mode activated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The user starts on page 2 and clicks the 'On the sidewalk' mode button. This action likely initiates or toggles the sidewalk mode functionality, with no further branching or looping in this core flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            1
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'On the sidewalk' mode button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "Two wheels mode button",
+            "action_refs": [
+                [
+                    2,
+                    2
+                ]
+            ],
+            "data_in": [
+                "two wheels mode option"
+            ],
+            "data_out": [
+                "two wheels mode selected"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The user starts on page 2. The core action is clicking the 'Two wheels mode button' (in the 'Two wheels' card). This action likely triggers a change or navigates to a related state (though dst_page is null here, implying a UI update or internal state change).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            2
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'Two wheels' mode button (in the 'Two wheels' card on page 2)."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "Four wheels mode button",
+            "action_refs": [
+                [
+                    2,
+                    3
+                ]
+            ],
+            "data_in": [
+                "four wheels mode setting"
+            ],
+            "data_out": [
+                "four wheels mode setting activated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The user starts on page 2. The core action is clicking the 'Four wheels' mode button, which likely triggers a change or navigates to a related state (though the destination page is null here, implying a UI update or internal state change).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            3
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'Four wheels' mode button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "Upgrade button",
+            "action_refs": [
+                [
+                    2,
+                    4
+                ]
+            ],
+            "data_in": [
+                "upgrade option",
+                "royale plan"
+            ],
+            "data_out": [
+                "upgrade initiation"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The core execution logic starts on page 2. The user performs a click action on the Upgrade button located on this page. Since there are no further steps or branches provided, this is a single-step flow focused on initiating the upgrade process by clicking the button.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            4
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the Upgrade button on page 2"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "This page appears to be the loading or splash screen for the \"Transit\" app, likely initializing or preparing to display transit - related information or options, such as continuing the process of booking an UberX ride as per the previous navigation path.",
+            "action_refs": [
+                [
+                    3,
+                    1
+                ]
+            ],
+            "data_in": [
+                "UberX ride option"
+            ],
+            "data_out": [
+                "Ride request initiation"
+            ],
+            "data_dependencies": [
+                54
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The flow starts on page 3 (a transit - related map page). The user clicks the 'Open UberX button' (action from [3,1]). This action leads to page 35, likely to continue the UberX ride - booking process. There are no branch points as it's a single - step flow with a direct transition.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            1
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 35,
+                        "action": "click",
+                        "summary": "Click the 'Open UberX button' to proceed to the next page (35) for continuing the UberX ride - booking process."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "The current page provides turn - by - turn navigation for a journey, showing the current location on a map, the direction to head (west on Charleston Road), the estimated arrival time (1:43 AM), and the total travel time (45 minutes), along with options to close the navigation or access help.",
+            "action_refs": [
+                [
+                    3,
+                    2
+                ],
+                [
+                    15,
+                    1
+                ]
+            ],
+            "data_in": [
+                "navigation help setting",
+                "navigation session",
+                "navigation route",
+                "current location",
+                "destination location"
+            ],
+            "data_out": [
+                "navigation help information loaded",
+                "updated navigation instructions",
+                "updated location display"
+            ],
+            "data_dependencies": [
+                56,
+                57,
+                58
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The navigation starts on page 3. First, the user can click the Help icon (action from [3,2]) to go to page 15. From page 15, the user can click the Location target icon (action from [15,1]) to reach page 41, which is a leaf step. The flow is a straight line with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            2
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click Help icon to navigate to page 15"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            15,
+                            1
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 41,
+                        "action": "click",
+                        "summary": "Click Location target icon to navigate to page 41 (leaf step)"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "Current location toggle (top)",
+            "action_refs": [
+                [
+                    3,
+                    4
+                ]
+            ],
+            "data_in": [
+                "current location setting"
+            ],
+            "data_out": [
+                "current location setting updated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The user starts on page 3 (a map/navigation page). They perform a click action on the 'Current location toggle (top)' element. This action leads to page 37, likely changing the state of the current location functionality (e.g., enabling/disabling location-based navigation).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            4
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 37,
+                        "action": "click",
+                        "summary": "Click the Current location toggle (top)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "Bus route 40 schedule card (9:03 AM)",
+            "action_refs": [
+                [
+                    5,
+                    0
+                ]
+            ],
+            "data_in": [
+                "bus route 40 schedule card"
+            ],
+            "data_out": [
+                "bus route 40 schedule details"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user interacts with the app by clicking on the Bus route 40 schedule card (9:03 AM) on page 5. This action is the core step to access or view details related to this specific bus schedule. There are no branches or loops as it's a single click action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            0
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on Bus route 40 schedule card (9:03 AM)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "Bus route 40 schedule card (9:55 AM)",
+            "action_refs": [
+                [
+                    5,
+                    1
+                ]
+            ],
+            "data_in": [
+                "bus route 40 schedule card (9:55 AM)"
+            ],
+            "data_out": [
+                "detailed bus route 40 schedule information"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user starts on page 5 and clicks the Bus route 40 schedule card (9:55 AM) at the specified position. This action likely leads to further details or interaction related to this bus schedule, with no branching or looping in this initial step.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            1
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the Bus route 40 schedule card (9:55 AM)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "Bus route 40 schedule card (10:32 AM)",
+            "action_refs": [
+                [
+                    5,
+                    2
+                ]
+            ],
+            "data_in": [
+                "bus route 40 schedule card"
+            ],
+            "data_out": [
+                "detailed bus route 40 schedule information"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user starts on page 5 (a transit map and schedule page) and clicks the Bus route 40 schedule card (10:32 AM) at the specified position. This action likely interacts with the schedule card to view or access more details about the route 40 schedule at that time.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            2
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the Bus route 40 schedule card (10:32 AM) at position [849, 1660]"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "Pin location button",
+            "action_refs": [
+                [
+                    5,
+                    3
+                ]
+            ],
+            "data_in": [
+                "map location",
+                "pin location setting"
+            ],
+            "data_out": [
+                "pinned location (updated state)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user starts on page 5 (a map interface with transit details). The core action is clicking the 'Pin location button' (visible on the map’s top-right). This action likely pins the current location or a selected point, with no subsequent steps (as the action is a leaf, implying it completes the functional point’s logic).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            3
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the Pin location button on the map interface."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "Locate current position button",
+            "action_refs": [
+                [
+                    5,
+                    4
+                ]
+            ],
+            "data_in": [
+                "map view",
+                "user location data"
+            ],
+            "data_out": [
+                "updated map view (centered on user location)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user starts on page 5 (a map interface). The core action is clicking the 'Locate current position button' (action_ref [5,4]). This button is likely used to center the map on the user’s current location, with no branching as it’s a single click action to trigger location-based map adjustment.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            4
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'Locate current position' button to trigger map adjustment to current location."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "This page allows the user to set a work address by selecting a location on the map, with the map displaying a specific area (near Googleplex) and providing navigation details for the selected destination (Charleston Road) including travel time and arrival time.",
+            "action_refs": [
+                [
+                    6,
+                    0
+                ],
+                [
+                    17,
+                    0
+                ]
+            ],
+            "data_in": [
+                "destination selection option",
+                "origin location setting",
+                "route planning context"
+            ],
+            "data_out": [
+                "map - based destination interface",
+                "confirmed origin location",
+                "updated route planning context"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on page 6 and clicks the 'Choose on map' button (action_ref [6,0]) to navigate to page 17. Then, on page 17, the user clicks the 'Confirm origin location' button (action_ref [17,0]) to proceed to page 9, where navigation details for the destination (Charleston Road) including travel time and arrival time are displayed.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            0
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click 'Choose on map' button to go to page 17"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            17,
+                            0
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click 'Confirm origin location' button to go to page 9"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 25,
+            "function_description": "The page allows the user to set a destination for navigation or transit route planning by selecting from options like choosing on a map, using the current location, or selecting from recent locations.",
+            "action_refs": [
+                [
+                    6,
+                    1
+                ],
+                [
+                    43,
+                    0
+                ],
+                [
+                    43,
+                    1
+                ],
+                [
+                    43,
+                    2
+                ],
+                [
+                    43,
+                    3
+                ],
+                [
+                    43,
+                    4
+                ],
+                [
+                    43,
+                    5
+                ],
+                [
+                    44,
+                    0
+                ]
+            ],
+            "data_in": [
+                "current location setting",
+                "location data",
+                "destination input",
+                "location suggestions",
+                "current location option",
+                "destination field",
+                "destination input field",
+                "recent location record (Foothill College)",
+                "recent location entry (1600 Amphitheatre Parkway)",
+                "recent location list",
+                "destination search input",
+                "destination search results"
+            ],
+            "data_out": [
+                "current location set",
+                "location input updated",
+                "updated current location input",
+                "updated destination input",
+                "filtered location results",
+                "updated destination field (current location)",
+                "destination input field (updated with Foothill College)",
+                "updated destination input field (1600 Amphitheatre Parkway)",
+                "selected destination (Foothill College transit)",
+                "updated destination search input",
+                "updated destination search results"
+            ],
+            "data_dependencies": [
+                1,
+                3,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                17,
+                26,
+                31,
+                32,
+                33,
+                39,
+                40,
+                55,
+                65
+            ],
+            "to_test": true,
+            "core_logic": null
+        },
+        {
+            "index": 26,
+            "function_description": "The page allows users to set their starting point (either by choosing on a map, using their current location, or selecting from recent locations) to plan transit or travel to Foothill College or other destinations.",
+            "action_refs": [
+                [
+                    8,
+                    0
+                ],
+                [
+                    12,
+                    0
+                ],
+                [
+                    12,
+                    2
+                ],
+                [
+                    12,
+                    3
+                ]
+            ],
+            "data_in": [
+                "current location setting",
+                "location input field",
+                "destination address",
+                "destination input field",
+                "recent location (Foothill College)",
+                "origin location",
+                "destination location"
+            ],
+            "data_out": [
+                "updated location input (current location)",
+                "location selection options",
+                "updated destination address",
+                "route planning result",
+                "updated destination input field",
+                "route search result",
+                "route information",
+                "navigation instructions"
+            ],
+            "data_dependencies": [
+                1,
+                3,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                17,
+                30,
+                31,
+                32,
+                33,
+                36,
+                39,
+                40,
+                55,
+                65
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The user starts on page 8 and can choose to set the starting point by clicking the 'Current location' button (leading to page 12), inputting an address (on page 12), selecting a recent location like Foothill College (on page 12), or choosing a search result (on page 12). After selecting a starting point, the flow proceeds to the next step for destination or transit planning.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            0
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click 'Current location' button to set starting point"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            12,
+                            0
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 11,
+                        "action": "input",
+                        "summary": "Input address '12345 El Monte Road' as starting point"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            12,
+                            2
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click recent location 'Foothill College' as starting point"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            12,
+                            3
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click search result '12345 El Monte Road' as starting point"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S1"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S1"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S1"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 27,
+            "function_description": "This page is likely in a loading state, and its function (based on the navigation path) is to initiate the process of planning a transit or travel route to Foothill College with the \"Leave now\" action, likely to calculate and display immediate transit options to the destination.",
+            "action_refs": [
+                [
+                    8,
+                    1
+                ]
+            ],
+            "data_in": [
+                "trip plan",
+                "departure time setting"
+            ],
+            "data_out": [
+                "trip initiation (leave now)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The process starts on page 8. The user clicks the 'Leave now' button, which initiates the transition to page 20 (likely to display immediate transit options to Foothill College). There are no branches or loops in this flow as it is a single action triggering a transition.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            1
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 20,
+                        "action": "click",
+                        "summary": "Click the 'Leave now' button to start planning immediate transit to Foothill College"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 28,
+            "function_description": "The current page is the Android Settings page, which allows users to configure various system settings such as email accounts, voice commands, wireless networks, device display, notifications, sound, and installed apps.",
+            "action_refs": [
+                [
+                    8,
+                    2
+                ]
+            ],
+            "data_in": [
+                "navigation data",
+                "transportation options data"
+            ],
+            "data_out": [
+                "refreshed navigation data",
+                "refreshed transportation options data"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The user starts on page 8 (a navigation/transport page) and clicks the refresh button. This action navigates to page 21 (the Android Settings page), where various system configuration options are available.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            2
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 21,
+                        "action": "click",
+                        "summary": "Click the refresh button on page 8 to navigate to the Android Settings page (21)."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 29,
+            "function_description": "The current page is the Android Settings page, which allows users to configure various system settings such as email accounts, voice commands, wireless networks, device display, notifications, sound, and installed apps.",
+            "action_refs": [
+                [
+                    8,
+                    3
+                ]
+            ],
+            "data_in": [
+                "settings entry"
+            ],
+            "data_out": [
+                "settings page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The user starts on page 8 and clicks the Settings button, navigating to the Android Settings page (page 21) where various system settings can be configured.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            3
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 21,
+                        "action": "click",
+                        "summary": "Click the Settings button to navigate to the Android Settings page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 30,
+            "function_description": "Provides real - time bike navigation guidance (including route, direction, speed, estimated arrival time, and duration) for traveling to Foothill College.",
+            "action_refs": [
+                [
+                    8,
+                    5
+                ]
+            ],
+            "data_in": [
+                "bike travel option",
+                "route planning data"
+            ],
+            "data_out": [
+                "bike navigation route",
+                "navigation instructions"
+            ],
+            "data_dependencies": [
+                66
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "To get real - time bike navigation to Foothill College, start by clicking the bike travel option on the page with travel options. This action will then lead to the page that shows the real - time bike navigation details like the route, direction, speed, estimated arrival time, and duration.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            5
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click the bike travel option to proceed to the real - time bike navigation page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 31,
+            "function_description": "The page displays Uber travel options (UberX, UberXL) with estimated arrival times and fares, along with a map showing the route from the current location to Foothill College, to facilitate booking a ride to the destination.",
+            "action_refs": [
+                [
+                    8,
+                    6
+                ]
+            ],
+            "data_in": [
+                "Uber travel option",
+                "route information",
+                "location information"
+            ],
+            "data_out": [
+                "Uber ride options",
+                "detailed route map",
+                "ride time and cost details"
+            ],
+            "data_dependencies": [
+                37
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The process starts on page 8. The user clicks on the Uber travel option (action at [8,6]), which navigates to page 16. On page 16, the map shows the route to the destination, and Uber options (UberX, UberXL) with fares and arrival times are displayed, completing the task of presenting ride options and the route for booking.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            6
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click on the Uber travel option to navigate to the page showing Uber ride options and route map."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 32,
+            "function_description": "The page displays commute options (including walking directions) from the user’s current location to Foothill College, indicating if transit routes are available and providing estimated travel details.",
+            "action_refs": [
+                [
+                    9,
+                    0
+                ],
+                [
+                    11,
+                    0
+                ],
+                [
+                    11,
+                    1
+                ],
+                [
+                    11,
+                    4
+                ]
+            ],
+            "data_in": [
+                "destination location setting",
+                "route planning context",
+                "location data",
+                "destination location input",
+                "destination input field",
+                "location options"
+            ],
+            "data_out": [
+                "destination location setting updated to current location",
+                "map view with location details",
+                "updated route timing",
+                "updated destination location",
+                "updated route options",
+                "updated destination input",
+                "destination selection options"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The process starts by clicking the 'Current location' button on page 9. This leads to page 11, where a branch occurs: the user can either choose 'Choose on map', 'Current location', or input an origin. The flow diverges based on this selection to different destination pages (17, 8, or 12) to proceed with showing commute options to Foothill College.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            0
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click 'Current location' button"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            11,
+                            0
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click 'Choose on map' option"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            11,
+                            1
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click 'Current location' option"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            11,
+                            4
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 12,
+                        "action": "input",
+                        "summary": "Input origin in 'Origin input field'"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 33,
+            "function_description": "This page allows the user to set a departure time (or arrival time) and date for their commute to Foothill College, then proceed to find available transit trips by confirming the selected time with the \"Find trips\" button.",
+            "action_refs": [
+                [
+                    9,
+                    2
+                ],
+                [
+                    13,
+                    0
+                ],
+                [
+                    13,
+                    2
+                ],
+                [
+                    13,
+                    3
+                ],
+                [
+                    13,
+                    4
+                ],
+                [
+                    13,
+                    5
+                ],
+                [
+                    13,
+                    6
+                ],
+                [
+                    13,
+                    7
+                ],
+                [
+                    24,
+                    0
+                ]
+            ],
+            "data_in": [
+                "departure time setting",
+                "destination location",
+                "current location",
+                "trip schedule setting",
+                "leave at time setting",
+                "leave time setting",
+                "AM/PM toggle setting",
+                "trip date setting",
+                "trip time setting",
+                "trip schedule date",
+                "trip search parameters",
+                "destination address",
+                "trip schedule (date)"
+            ],
+            "data_out": [
+                "updated departure time setting",
+                "trip search parameters",
+                "updated leave at time setting",
+                "updated leave time setting",
+                "updated leave time (AM)",
+                "updated trip date setting",
+                "updated trip time setting",
+                "updated trip schedule date",
+                "trip search results",
+                "updated trip schedule (date)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts by clicking the 'Leave now' button to access the time/date selection page. On this page, they can adjust the departure time (hour, minute, AM/PM) and date (via previous/next day arrows). After setting the desired time/date, they click 'Find trips' to proceed to view available transit trips. Date adjustment may loop (using previous/next arrows) until the correct date is selected.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            2
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click 'Leave now' to open time/date selection page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            13,
+                            2
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Select departure hour"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            13,
+                            3
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Select departure minute"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            13,
+                            4
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Toggle AM/PM for departure time"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            13,
+                            5
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 24,
+                        "action": "click",
+                        "summary": "Click previous day arrow to adjust date"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            13,
+                            6
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 24,
+                        "action": "click",
+                        "summary": "Click next day arrow to adjust date"
+                    },
+                    {
+                        "id": "S7",
+                        "action_ref": [
+                            24,
+                            0
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Navigate back to time/date page after date adjustment"
+                    },
+                    {
+                        "id": "S8",
+                        "action_ref": [
+                            13,
+                            7
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click 'Find trips' to search for transit trips"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S5",
+                        "to": "S7"
+                    },
+                    {
+                        "from": "S7",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S6"
+                    },
+                    {
+                        "from": "S6",
+                        "to": "S7"
+                    },
+                    {
+                        "from": "S7",
+                        "to": "S6"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S8"
+                    },
+                    {
+                        "from": "S5",
+                        "to": "S8"
+                    },
+                    {
+                        "from": "S6",
+                        "to": "S8"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S4",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S5",
+                                "condition": "Need to adjust date backward"
+                            },
+                            {
+                                "next_step": "S6",
+                                "condition": "Need to adjust date forward"
+                            },
+                            {
+                                "next_step": "S8",
+                                "condition": "Date is correct"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S7",
+                        "type": "loop",
+                        "branches": [
+                            {
+                                "next_step": "S5",
+                                "condition": "Date still needs adjustment backward"
+                            },
+                            {
+                                "next_step": "S6",
+                                "condition": "Date still needs adjustment forward"
+                            },
+                            {
+                                "next_step": "S8",
+                                "condition": "Date is correct"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 34,
+            "function_description": "The page displays commute options (e.g., bike, Uber, driving) from the current location to Foothill College, with timing, cost (for Uber), and navigation details, and includes a refresh button to update the commute information.",
+            "action_refs": [
+                [
+                    9,
+                    3
+                ]
+            ],
+            "data_in": [
+                "route options",
+                "arrival time",
+                "Uber price range"
+            ],
+            "data_out": [
+                "updated route options",
+                "updated arrival time",
+                "updated Uber price range"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The app starts on the page displaying commute options to Foothill College. The user can click the refresh button, which triggers an update to the commute information (like timing, cost) shown on the page. This refresh action can be repeated if the user wants updated commute details again.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            3
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click the refresh button to update commute information"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "loop",
+                        "branches": [
+                            {
+                                "next_step": "S1"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 35,
+            "function_description": "The current page functions as a customization settings interface for a transit app, allowing users to enable/disable step - free accessibility features, select which nearby transit systems (such as Subway, Commuter Rail, etc.) and additional travel options (like Walking, Bikes) are shown when using the app for commute planning.",
+            "action_refs": [
+                [
+                    9,
+                    4
+                ]
+            ],
+            "data_in": [
+                "settings entry (customize)"
+            ],
+            "data_out": [
+                "customize settings page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts on page 9 and clicks the Settings button (action_ref [9,4]) to navigate to page 14, which is the customization settings interface for the transit app. On page 14, the user can then interact with various toggles and checkboxes to enable/disable step - free accessibility features, select nearby transit systems, and choose additional travel options for commute planning.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            4
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click the Settings button to navigate to the customization settings page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 36,
+            "function_description": "The current page provides real - time bike navigation guidance for the commute from the user's current location to Foothill College, including the route on the map, direction instructions, speed, estimated arrival time, and total travel time.",
+            "action_refs": [
+                [
+                    9,
+                    6
+                ]
+            ],
+            "data_in": [
+                "bike commute option",
+                "route information"
+            ],
+            "data_out": [
+                "bike navigation route",
+                "navigation instructions"
+            ],
+            "data_dependencies": [
+                66
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts on page 9 and clicks the 'Bike commute option' to transition to page 15, where real - time bike navigation guidance (including route, directions, speed, estimated arrival time, and total travel time) for the commute to Foothill College is displayed.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            6
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click the Bike commute option to access bike navigation to Foothill College"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 37,
+            "function_description": "The page displays the Uber commute route from the current location to Foothill College, along with available Uber ride options (UberX, UberXL) showing estimated arrival times and fare ranges.",
+            "action_refs": [
+                [
+                    9,
+                    7
+                ]
+            ],
+            "data_in": [
+                "commute request",
+                "Uber commute option"
+            ],
+            "data_out": [
+                "Uber ride options",
+                "commute route"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The process starts on page 9. The user clicks the 'Uber commute option' (action_ref [9,7]), which navigates to page 16. On page 16, the Uber commute route to Foothill College is displayed, along with ride options (UberX, UberXL) showing estimated arrival times and fare ranges.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            7
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click the Uber commute option to navigate to the page showing the route and ride options."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 38,
+            "function_description": "The page prompts the user to confirm starting a new bike commute navigation trip (via the \"START GO\" button) or cancel, with a warning that starting will exit the previous trip.",
+            "action_refs": [
+                [
+                    15,
+                    0
+                ],
+                [
+                    40,
+                    0
+                ]
+            ],
+            "data_in": [
+                "bike commute trip",
+                "previous trip record",
+                "trip confirmation dialog",
+                "trip operation context"
+            ],
+            "data_out": [
+                "new bike commute trip",
+                "previous trip exited",
+                "dismissed trip confirmation dialog",
+                "maintained current trip state"
+            ],
+            "data_dependencies": [
+                59
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The flow starts on page 15, where the user can click the green 'GO' button to proceed to a confirmation page (page 40). On the confirmation page (page 40), the user faces a decision: clicking the 'Cancel' button (which completes the flow as a leaf action) or potentially confirming the start (though the latter's action isn't in the provided list here). The key branch is at the confirmation page, with the cancel path defined.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            0
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 40,
+                        "action": "click",
+                        "summary": "Click green 'GO' button to go to trip confirmation page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            40,
+                            0
+                        ],
+                        "src_page_idx": 40,
+                        "dst_page_idx": 42,
+                        "action": "click",
+                        "summary": "Click cancel trip confirmation button"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 39,
+            "function_description": "The page provides transit, bike, and ride - sharing (Uber) route options from the current location (or \"12345 El Monte Road\") to a destination (Foothill College, from the navigation path), along with timing, cost (for Uber), and departure/arrival details, and also offers the ability to adjust departure time.",
+            "action_refs": [
+                [
+                    10,
+                    0
+                ]
+            ],
+            "data_in": [
+                "Foothill College location entry",
+                "recent location record"
+            ],
+            "data_out": [
+                "updated destination location",
+                "route planning data"
+            ],
+            "data_dependencies": [
+                42,
+                43
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The user starts on page 10 and clicks the recent location entry for Foothill College. This action navigates to page 9, where transit, bike, and Uber route options (with timing, cost for Uber, and departure/arrival details) are displayed, and the user can adjust departure time.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            0
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click recent location entry (Foothill College) to navigate to route options page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 40,
+            "function_description": "The page provides navigation and transit route options (including bike and Uber) from the current location to 12345 El Monte Road, with timing details and a step - by - step navigation instruction for a specific route.",
+            "action_refs": [
+                [
+                    10,
+                    1
+                ]
+            ],
+            "data_in": [
+                "transit stop (Foothill College)"
+            ],
+            "data_out": [
+                "updated trip plan (with Foothill College as destination)"
+            ],
+            "data_dependencies": [
+                41,
+                42,
+                43
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The process starts on page 10. The user clicks on the recent transit stop 'Foothill College' (with address 12345 El Monte Road) from the list. This action navigates to page 8, where transit options (bike, Uber) and timing details for the route from current location to 12345 El Monte Road are displayed.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            1
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click on the recent transit stop 'Foothill College' (12345 El Monte Road) to navigate to the route options page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 41,
+            "function_description": "The page displays the result of checking transit routes between the origin (12345 El Monte Road) and the same destination, indicating no transit routes are available, with options to adjust departure time, swap locations, or access settings.",
+            "action_refs": [
+                [
+                    11,
+                    2
+                ]
+            ],
+            "data_in": [
+                "bus stop location",
+                "route planning setting"
+            ],
+            "data_out": [
+                "updated departure location",
+                "updated route planning parameters"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The app starts on page 11, where a click action is performed on the 'Recent Foothill College (bus icon)' element. This action leads to page 18, which displays the transit route check result (no routes available) with options to adjust time, swap locations, or access settings. The flow is a straight line as there are no branches or loops here.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            2
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click on 'Recent Foothill College (bus icon)' to check transit routes."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 42,
+            "function_description": "The page displays commute options (walk, bike) and transit route status (no transit routes) for traveling from \"12345 El Monte Road\" to \"Foothill College\", with options to adjust departure time and route settings.",
+            "action_refs": [
+                [
+                    11,
+                    3
+                ],
+                [
+                    19,
+                    1
+                ]
+            ],
+            "data_in": [
+                "Foothill College location",
+                "12345 El Monte Road location",
+                "route information",
+                "location information"
+            ],
+            "data_out": [
+                "updated route origin and destination",
+                "updated travel options (walk, bike)",
+                "refreshed route information",
+                "refreshed location information"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The flow starts on page 11, where the user clicks the 'Recent Foothill College (pin icon)' to navigate to page 19. On page 19, the user can click the 'Refresh button' to return to page 11, potentially to re - check or update the commute options and transit route status.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            3
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click 'Recent Foothill College (pin icon)' to go from page 11 to page 19"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            19,
+                            1
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click 'Refresh button' to go from page 19 back to page 11"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 43,
+            "function_description": "Clear address button",
+            "action_refs": [
+                [
+                    12,
+                    1
+                ]
+            ],
+            "data_in": [
+                "origin address"
+            ],
+            "data_out": [
+                "cleared origin address"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The flow starts on page 12. The user clicks the clear address button, which transitions the app to page 22. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            1
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 22,
+                        "action": "click",
+                        "summary": "Click the clear address button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 44,
+            "function_description": "This page allows users to plan transit trips by selecting an \"Arrive By\" time (along with date adjustment options) and then initiate the search for trips that meet the specified arrival time criteria.",
+            "action_refs": [
+                [
+                    13,
+                    1
+                ],
+                [
+                    23,
+                    0
+                ]
+            ],
+            "data_in": [
+                "trip planning setting",
+                "time setting",
+                "trip planning time setting",
+                "arrive by option"
+            ],
+            "data_out": [
+                "trip planning setting (arrive by mode enabled)",
+                "updated trip planning time setting (arrive by)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 13,
+                "logic": "The user starts on page 13 and clicks the 'ARRIVE BY' tab button (action S1) to switch to the 'ARRIVE BY' mode (page 23). Then, on page 23, the user clicks the 'ARRIVE BY' tab button again (action S2), which likely confirms or finalizes the 'ARRIVE BY' selection, keeping the user on page 23 to proceed with trip planning.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            13,
+                            1
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 23,
+                        "action": "click",
+                        "summary": "Click 'ARRIVE BY' tab to switch to arrival-based trip planning mode"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            23,
+                            0
+                        ],
+                        "src_page_idx": 23,
+                        "dst_page_idx": 23,
+                        "action": "click",
+                        "summary": "Click 'ARRIVE BY' tab again (likely to confirm or finalize the mode)"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 45,
+            "function_description": "Display accessibility info toggle",
+            "action_refs": [
+                [
+                    14,
+                    0
+                ]
+            ],
+            "data_in": [
+                "display accessibility info setting"
+            ],
+            "data_out": [
+                "display accessibility info setting updated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The user starts on page 14 and clicks the 'Display accessibility info' toggle. This action navigates to page 25, completing the interaction with the toggle.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            0
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 25,
+                        "action": "click",
+                        "summary": "Click the 'Display accessibility info' toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 46,
+            "function_description": "Show accessible trips first toggle",
+            "action_refs": [
+                [
+                    14,
+                    1
+                ]
+            ],
+            "data_in": [
+                "show accessible trips first setting"
+            ],
+            "data_out": [
+                "show accessible trips first setting updated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The user interacts with the 'Show accessible trips first' toggle. The flow starts on page 14 (Customize settings) and involves clicking the toggle, which leads to page 26 (presumably reflecting the updated state of the toggle).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            1
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 26,
+                        "action": "click",
+                        "summary": "Click the 'Show accessible trips first' toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 47,
+            "function_description": "Subway (BART) checkbox",
+            "action_refs": [
+                [
+                    14,
+                    2
+                ]
+            ],
+            "data_in": [
+                "Subway (BART) system setting"
+            ],
+            "data_out": [
+                "Updated Subway (BART) system setting state"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The user interacts with the Subway (BART) checkbox. The flow starts on page 14, and upon clicking the checkbox (action_ref [14,2]), the app navigates to page 27. There are no branches or loops as this is a single action with a direct navigation.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            2
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 27,
+                        "action": "click",
+                        "summary": "Click the Subway (BART) checkbox"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": null
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 48,
+            "function_description": "Commuter Rail checkbox",
+            "action_refs": [
+                [
+                    14,
+                    3
+                ]
+            ],
+            "data_in": [
+                "Commuter Rail system setting"
+            ],
+            "data_out": [
+                "Commuter Rail system setting (updated state)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The user interacts with the Commuter Rail checkbox on the Customize page. The flow starts at page 14, where the user clicks the Commuter Rail checkbox, leading to page 28. There are no branches or loops as this is a single action to interact with the checkbox.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            3
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 28,
+                        "action": "click",
+                        "summary": "Click the Commuter Rail checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 49,
+            "function_description": "Caltrain checkbox",
+            "action_refs": [
+                [
+                    14,
+                    4
+                ]
+            ],
+            "data_in": [
+                "Caltrain system setting"
+            ],
+            "data_out": [
+                "Updated Caltrain system setting (toggled state)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The user interacts with the Caltrain checkbox. The flow starts on page 14, and upon clicking the Caltrain checkbox (action_ref [14,4]), the app navigates to page 29. There are no branches or loops as it's a single click action leading to a destination page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            4
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 29,
+                        "action": "click",
+                        "summary": "Click on the Caltrain checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 50,
+            "function_description": "Light Rail (VTA) checkbox",
+            "action_refs": [
+                [
+                    14,
+                    5
+                ]
+            ],
+            "data_in": [
+                "Light Rail (VTA) system setting"
+            ],
+            "data_out": [
+                "Light Rail (VTA) system setting (updated state)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The user interacts with the Light Rail (VTA) checkbox. The flow starts on page 14, and upon clicking the checkbox (action_ref [14,5]), the app transitions to page 30. There are no branches or loops as this is a single action flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            5
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 30,
+                        "action": "click",
+                        "summary": "Click the Light Rail (VTA) checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 51,
+            "function_description": "Bus checkbox",
+            "action_refs": [
+                [
+                    14,
+                    6
+                ]
+            ],
+            "data_in": [
+                "bus system setting"
+            ],
+            "data_out": [
+                "bus system setting enabled"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The user starts on page 14 (Customize settings) and clicks the Bus checkbox. This action navigates to page 31, completing the interaction with the Bus checkbox in the app's customization flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            6
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 31,
+                        "action": "click",
+                        "summary": "Click the Bus checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 52,
+            "function_description": "Walking checkbox",
+            "action_refs": [
+                [
+                    14,
+                    7
+                ]
+            ],
+            "data_in": [
+                "walking setting"
+            ],
+            "data_out": [
+                "walking setting updated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The user starts on page 14 and performs a click action on the 'Walking' checkbox. This action leads to page 32, completing the interaction with the Walking checkbox functional point.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            7
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 32,
+                        "action": "click",
+                        "summary": "Click the Walking checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 53,
+            "function_description": "Bikes checkbox",
+            "action_refs": [
+                [
+                    14,
+                    8
+                ]
+            ],
+            "data_in": [
+                "bikes system setting"
+            ],
+            "data_out": [
+                "bikes system setting updated"
+            ],
+            "data_dependencies": [
+                54
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The user starts on page 14 and clicks the Bikes checkbox, which leads to page 33. This is a straightforward action with no branching or looping.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            8
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 33,
+                        "action": "click",
+                        "summary": "Click the Bikes checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 54,
+            "function_description": "This page displays the route map and ride details (including estimated arrival time, fare range) for the selected UberX (and UberXL) ride option to travel to Foothill College, allowing users to review the Uber commute option's specifics.",
+            "action_refs": [
+                [
+                    16,
+                    0
+                ]
+            ],
+            "data_in": [
+                "UberX ride option"
+            ],
+            "data_out": [
+                "selected UberX ride option"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 16,
+                "logic": "The user starts on the page showing ride options. They click the UberX ride option button, which likely updates the display to show the route map and detailed ride information (like estimated arrival time and fare range) for the UberX (and potentially UberXL) option to Foothill College, allowing review of the commute specifics.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            16,
+                            0
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click the UberX ride option button to view its detailed route and ride info"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 55,
+            "function_description": "The page provides travel options (bike, Uber, etc.) and initiates navigation for traveling from the current location (or 12345 El Monte Road) to Foothill College, with a \"Leave now\" option to start the journey immediately and display estimated arrival times.",
+            "action_refs": [
+                [
+                    20,
+                    0
+                ]
+            ],
+            "data_in": [
+                "navigation setup",
+                "location data"
+            ],
+            "data_out": [
+                "navigation initiation",
+                "route guidance"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The flow starts on a page with travel options and a 'Leave now' button. The user clicks the 'Leave now' button, which transitions the app to a new page (or state) to initiate navigation and display estimated arrival times for traveling to Foothill College from the current location or 12345 El Monte Road.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            0
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click the 'Leave now' button to start the journey immediately"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 56,
+            "function_description": "This page provides real - time navigation guidance, showing the route on a map, turn - by - turn directions, estimated travel time, arrival time, and other related travel information to help the user reach the destination.",
+            "action_refs": [
+                [
+                    39,
+                    0
+                ]
+            ],
+            "data_in": [
+                "navigation session"
+            ],
+            "data_out": [
+                "navigation session closed"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 39,
+                "logic": "The user starts on the navigation guidance page (page 39). They click the red close button, which transitions the app to a different page (page 34) that likely shows a broader route overview or exits the detailed turn - by - turn navigation view.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            39,
+                            0
+                        ],
+                        "src_page_idx": 39,
+                        "dst_page_idx": 34,
+                        "action": "click",
+                        "summary": "Click the red close button on the navigation guidance page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 57,
+            "function_description": "The current page provides real - time navigation guidance, showing the route on a map, turn - by - turn directions (like heading west on Charleston Road), estimated travel time (45 minutes), estimated arrival time, and other route - related information, and also has a 'GO' button to continue or start the navigation process.",
+            "action_refs": [
+                [
+                    39,
+                    1
+                ]
+            ],
+            "data_in": [
+                "notification setting",
+                "navigation session"
+            ],
+            "data_out": [
+                "notification setting updated",
+                "navigation view updated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 39,
+                "logic": "The user starts on the navigation page (page 39) showing real - time route details. They click the bell - shaped notification button, which leads to page 34. There are no branches or loops in this simple flow as it's a single click action to navigate to another page related to the navigation context.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            39,
+                            1
+                        ],
+                        "src_page_idx": 39,
+                        "dst_page_idx": 34,
+                        "action": "click",
+                        "summary": "Click the bell - shaped notification button on the navigation page (page 39) to navigate to page 34."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 58,
+            "function_description": "The current page provides real - time navigation guidance, showing the route on a map, turn - by - turn directions (like \"HEAD WEST Charleston Road\"), estimated travel time (45 min), estimated arrival time (1:41 AM), distance (9.7 km), and a safety route percentage (90% on safe routes), with a 'GO' button to start navigation and a close button to exit.",
+            "action_refs": [
+                [
+                    39,
+                    2
+                ]
+            ],
+            "data_in": [
+                "help setting",
+                "navigation information"
+            ],
+            "data_out": [
+                "help information displayed"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 39,
+                "logic": "The user starts on the navigation page (page 39) with real - time route info. They can click the question - mark - shaped help button (action from [39,2]), which navigates to page 34. There are no branches or loops here as it's a single click action to a new page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            39,
+                            2
+                        ],
+                        "src_page_idx": 39,
+                        "dst_page_idx": 34,
+                        "action": "click",
+                        "summary": "Click the question - mark - shaped help button on the navigation page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 59,
+            "function_description": "The current page provides turn - by - turn navigation guidance for a bike commute, showing the route on a map, the current speed, the estimated arrival time, and the total duration of the trip, and it starts the navigation process after the trip is confirmed.",
+            "action_refs": [
+                [
+                    40,
+                    1
+                ]
+            ],
+            "data_in": [
+                "GO trip (new)"
+            ],
+            "data_out": [
+                "GO trip (started)",
+                "previous GO trip (exited)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 40,
+                "logic": "The process starts on the trip confirmation page (page 40). The user clicks the 'Start GO' trip confirmation button, which transitions the app to the navigation page (page 39) to begin turn - by - turn bike commute navigation, showing the route, speed, estimated arrival time, and trip duration.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            40,
+                            1
+                        ],
+                        "src_page_idx": 40,
+                        "dst_page_idx": 39,
+                        "action": "click",
+                        "summary": "Click the 'Start GO' button to confirm the trip and start navigation."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 60,
+            "function_description": "This page allows the user to set a departure time (or arrival time) and date for transit route planning, then initiate a search for available trips based on the specified schedule.",
+            "action_refs": [
+                [
+                    18,
+                    0
+                ]
+            ],
+            "data_in": [
+                "departure time setting"
+            ],
+            "data_out": [
+                "updated departure time interface"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 18,
+                "logic": "The user starts on page 18 and clicks the 'Leave now' button (or equivalent time-setting trigger). This action opens a time/date selection interface (page 13) where the user can set departure/arrival time and date. After setting the schedule, the user would proceed to initiate a trip search (though the provided action focuses on opening the time-setting flow).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            18,
+                            0
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click 'Leave now' button to open time/date selection interface"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 61,
+            "function_description": "The page functions to display transit route planning results (or lack thereof) between a specified origin and destination, with options to adjust departure time, refresh the route search, and modify route settings, after navigating through location search and origin/destination setup steps.",
+            "action_refs": [
+                [
+                    18,
+                    1
+                ]
+            ],
+            "data_in": [
+                "transit route data",
+                "destination data",
+                "departure time data"
+            ],
+            "data_out": [
+                "refreshed transit route data"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 18,
+                "logic": "The flow starts on the transit route results page (page 18). The user can click the refresh button to re - search for transit routes between the specified origin and destination. Since there's only one action here, the flow is a single - step action of clicking the refresh button, and there are no branches or loops as per the provided action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            18,
+                            1
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click the refresh button to re - search for transit routes."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 62,
+            "function_description": "The current page allows users to customize transit route planning settings, including enabling step - free accessibility features and selecting which nearby transit systems (such as Subway, Commuter Rail, etc.) and additional travel options (like Walking, Bikes) are shown when using the app.",
+            "action_refs": [
+                [
+                    18,
+                    2
+                ]
+            ],
+            "data_in": [
+                "settings entry (customize)"
+            ],
+            "data_out": [
+                "customize settings page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 18,
+                "logic": "The user starts on page 18 and clicks the Settings button, which navigates to page 14 (the Customize transit settings page). On page 14, the user can then adjust settings like step - free accessibility toggles, select/deselect nearby transit systems, and choose additional travel options as needed.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            18,
+                            2
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click the Settings button to navigate to the Customize transit settings page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 63,
+            "function_description": "This page allows the user to select a departure time (either \"Leave At\" or \"Arrive By\") and date to plan transit trips between the set origin and destination locations.",
+            "action_refs": [
+                [
+                    19,
+                    0
+                ]
+            ],
+            "data_in": [
+                "trip planning setting",
+                "destination",
+                "origin"
+            ],
+            "data_out": [
+                "trip planning time setting updated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 19,
+                "logic": "The user starts on page 19 and clicks the 'Leave now' button. This action opens a time selection dialog (destination page 24) where the user can choose between 'Leave At' or 'Arrive By' and set a specific time/date to plan transit trips between the origin and destination.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            19,
+                            0
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 24,
+                        "action": "click",
+                        "summary": "Click 'Leave now' button to open time selection dialog"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 64,
+            "function_description": "The page allows users to customize transit route planning settings, including enabling step - free accessibility features and selecting which nearby transit systems (such as Subway, Commuter Rail, etc.) and additional options (like Walking, Bikes) are shown when using the app.",
+            "action_refs": [
+                [
+                    19,
+                    2
+                ]
+            ],
+            "data_in": [
+                "trip planning settings"
+            ],
+            "data_out": [
+                "customize settings page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 19,
+                "logic": "The user starts on page 19 and clicks the Settings button, which navigates them to page 14 (the Customize transit route planning settings page). This is the initial step to access the settings for customizing transit options like accessibility features and nearby transit systems.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            19,
+                            2
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click the Settings button to navigate to the Customize transit settings page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 65,
+            "function_description": "The page provides turn - by - turn walking navigation directions, including the current route (Charleston Road, heading west), the estimated arrival time (1:46 AM), and the total travel duration (45 minutes), to guide the user from the origin (Recent Foothill College) to the destination (Foothill College) on foot.",
+            "action_refs": [
+                [
+                    19,
+                    3
+                ]
+            ],
+            "data_in": [
+                "walk route option",
+                "navigation origin",
+                "navigation destination"
+            ],
+            "data_out": [
+                "walk navigation instructions",
+                "walk route map"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 19,
+                "logic": "The user starts on page 19 and clicks the 'Walk' option. This action navigates to page 39, where the turn - by - turn walking navigation is displayed, including the current route, estimated arrival time, and total travel duration to guide the user from the origin to the destination on foot.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            19,
+                            3
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 39,
+                        "action": "click",
+                        "summary": "Click the 'Walk' option to view walking navigation details"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 66,
+            "function_description": "The page provides real - time walking navigation directions, including the current route (Charleston Road, heading west), speed, estimated arrival time, and total travel time for a planned walk from a recent Foothill College location to a destination.",
+            "action_refs": [
+                [
+                    19,
+                    4
+                ]
+            ],
+            "data_in": [
+                "bike route option",
+                "navigation request",
+                "origin destination pair"
+            ],
+            "data_out": [
+                "bike navigation instructions",
+                "route map",
+                "estimated arrival time"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 19,
+                "logic": "The user starts on page 19 and clicks the 'Bike option' (though the functional point is for walking navigation, this action transitions to page 39, which displays the real - time walking navigation details like the current route, speed, estimated arrival time, and total travel time).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            19,
+                            4
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 39,
+                        "action": "click",
+                        "summary": "Click the Bike option (which transitions to the page showing walking navigation details)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        }
+    ]
+}

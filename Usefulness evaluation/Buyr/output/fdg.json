@@ -1,0 +1,1485 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "Product search, brand info, and activity tracking",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    2
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts with inputting 'organic pasta' in the search bar. Then, one can either click the 'Read Now' button for the Racconto brand or click the 'Recent Searches' tab, with these being two separate branches from the initial input step.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "input",
+                        "summary": "Input 'organic pasta' in the search bar"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click 'Read Now' button for Racconto brand"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click 'Recent Searches' tab"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 1,
+            "function_description": "The current page functions as a camera - based scanning interface, enabling users to scan items (presumably for pantry - related purposes) by using the device's camera to capture the relevant objects within the designated scanning frame.",
+            "action_refs": [
+                [
+                    0,
+                    3
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "data_in": [
+                "scan product function",
+                "app session (Buy'r)",
+                "barcode (for pantry)"
+            ],
+            "data_out": [
+                "scan interface (for pantry)",
+                "restarted app session (Buy'r)",
+                "scanned pantry data"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on page 0, where the user clicks the 'Scan product' floating action button to navigate to the scanning page (page 1). On the scanning page, the user can repeatedly click the 'Trigger barcode scan' button (looping on the same page) to initiate barcode scans for pantry - related items, with each click attempting to scan an item within the scanning frame.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click 'Scan product' button to enter scanning page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            1,
+                            1
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click 'Trigger barcode scan' button to scan item"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "loop",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "Home tab (bottom navigation)",
+            "action_refs": [
+                [
+                    0,
+                    4
+                ]
+            ],
+            "data_in": [
+                "home tab navigation"
+            ],
+            "data_out": [
+                "home tab page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The core execution logic for the Home tab functional point involves a single step: clicking the Home tab in the bottom navigation. This action navigates from the initial page (page 0) to the destination page (page 2), with no branching or looping logic as it is a straightforward navigation action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click the Home tab in bottom navigation"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "The page allows users to view and manage their shopping lists, with the option to create a new shopping list when no lists currently exist.",
+            "action_refs": [
+                [
+                    0,
+                    5
+                ],
+                [
+                    3,
+                    1
+                ]
+            ],
+            "data_in": [
+                "activity tab (navigation item)"
+            ],
+            "data_out": [
+                "shopping lists page (view)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on page 0 and clicks the Activity tab in bottom navigation to navigate to page 3 (Shopping Lists page). On page 3, if there are no lists (UI shows 'No Lists Yet'), the user can click the top right '+' button to create a new shopping list.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click Activity tab in bottom navigation to go to Shopping Lists page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            3,
+                            1
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click top right '+' button to create new shopping list"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "The \"My Pantry\" page allows users to search for stored items, categorize them (e.g., All Items, Frozen, Fridge, Produce), add new items, and view the results of their search within a selected category (currently showing no items for \"canned tomatoes\").",
+            "action_refs": [
+                [
+                    0,
+                    6
+                ],
+                [
+                    4,
+                    0
+                ],
+                [
+                    4,
+                    4
+                ]
+            ],
+            "data_in": [
+                "products tab entry",
+                "pantry items",
+                "search term (canned tomatoes)",
+                "produce category button"
+            ],
+            "data_out": [
+                "products page loaded",
+                "search results (pantry items)"
+            ],
+            "data_dependencies": [
+                8,
+                9,
+                10,
+                12,
+                13,
+                22,
+                25
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts by clicking the Products tab in bottom navigation to reach the My Pantry page. Then, they input 'canned tomatoes' into the search bar. Finally, they click the Produce category button to view search results (which show no items) within that category.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            6
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Navigate to My Pantry via Products tab"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            4,
+                            0
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 4,
+                        "action": "input",
+                        "summary": "Search for 'canned tomatoes' in pantry"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            4,
+                            4
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "View results in Produce category"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "The current page (Profile tab) functions as a user dashboard to view and track personal activity metrics (e.g., scans, quizzes, spotlights), progress on tasks, and access profile editing or settings, with navigation to stats and badges sections.",
+            "action_refs": [
+                [
+                    0,
+                    7
+                ],
+                [
+                    5,
+                    0
+                ]
+            ],
+            "data_in": [
+                "profile feature entry",
+                "user profile page"
+            ],
+            "data_out": [
+                "profile page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on page 0, where the user clicks the Profile tab in the bottom navigation (action [0,7]) to navigate to page 5 (the Profile dashboard). From page 5, the user can click the back arrow button (action [5,0]) to return to page 0. This creates a simple navigation loop between the initial page and the Profile dashboard.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            7
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click Profile tab in bottom navigation to go to Profile dashboard"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            5,
+                            0
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click back arrow button to return to previous page (page 0)"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S1"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "loop",
+                        "branches": [
+                            {
+                                "next_step": "S1"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "Close scan barcode window",
+            "action_refs": [
+                [
+                    1,
+                    0
+                ]
+            ],
+            "data_in": [
+                "scan barcode window"
+            ],
+            "data_out": [
+                "scan barcode window closed"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user starts on the scan barcode (Scan for Pantry) page. The core logic is to click the close button (X icon) at the top-left of the scan window, which navigates to the destination page (page 6), completing the action of closing the scan barcode window.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            0
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click the close (X) button to close the scan barcode window"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "The current page displays a \"Pantry Limit Reached\" message, informing the user they've hit the 20 - item limit for free users and offering an option to upgrade to Premium for unlimited pantry storage, along with a \"Not Now\" option.",
+            "action_refs": [
+                [
+                    3,
+                    0
+                ]
+            ],
+            "data_in": [],
+            "data_out": [
+                "shopping list"
+            ],
+            "data_dependencies": [
+                21
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The user encounters the 'Pantry Limit Reached' message. At this point, the user can choose to either click 'Upgrade to Premium' to proceed with upgrading for unlimited storage or click 'Not Now' to dismiss the message. These are mutually exclusive options, so the flow branches based on the user's choice.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            0
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click the 'Create List' button (though this action leads to the pantry limit dialog context)"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": null,
+                        "src_page_idx": 7,
+                        "dst_page_idx": null,
+                        "action": "choose",
+                        "summary": "Choose between 'Upgrade to Premium' or 'Not Now' in the pantry limit dialog"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3",
+                                "condition": "User clicks 'Upgrade to Premium'"
+                            },
+                            {
+                                "next_step": "S4",
+                                "condition": "User clicks 'Not Now'"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "The page functions as a pantry management interface where users can search for pantry items (e.g., \"canned tomatoes\"), view categorized pantry items (with categories like All Items, Frozen, Fridge, Produce), and add new items (via the + button) or scan items (via the scan icon), with feedback provided when no items match the search term.",
+            "action_refs": [
+                [
+                    4,
+                    1
+                ]
+            ],
+            "data_in": [
+                "All Items category",
+                "pantry items"
+            ],
+            "data_out": [
+                "filtered pantry items (All Items category)"
+            ],
+            "data_dependencies": [
+                4,
+                12,
+                13,
+                22,
+                25
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user starts on the My Pantry page. They click the 'All Items' category button, which likely updates the displayed pantry items to show all items (though in this case, no items are present).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            1
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the 'All Items' category button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "The page allows users to search for pantry items (e.g., \"canned tomatoes\") and view categorized (All Items, Frozen, Fridge, Produce) pantry inventory, with options to add items or scan products.",
+            "action_refs": [
+                [
+                    4,
+                    2
+                ]
+            ],
+            "data_in": [
+                "frozen category setting",
+                "pantry items"
+            ],
+            "data_out": [
+                "frozen category items list updated"
+            ],
+            "data_dependencies": [
+                4,
+                12,
+                13,
+                22,
+                25
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user starts on the My Pantry page. They can click the Frozen category button (or other category buttons like All Items, Fridge, Produce) to view pantry inventory filtered by that category. The flow focuses on selecting the Frozen category to see its associated items, with the page remaining on the My Pantry view after the click.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            2
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the Frozen category button to view pantry items in the Frozen category"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "The \"My Pantry\" page allows users to search for pantry items (e.g., \"canned tomatoes\"), organize items by categories (All Items, Frozen, Fridge, Produce), add new items, and scan products, with the current search showing no results for the entered term.",
+            "action_refs": [
+                [
+                    4,
+                    3
+                ]
+            ],
+            "data_in": [
+                "fridge category setting",
+                "pantry items"
+            ],
+            "data_out": [
+                "fridge category view updated"
+            ],
+            "data_dependencies": [
+                4,
+                12,
+                13,
+                22,
+                25
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user is on the 'My Pantry' page with a search for 'canned tomatoes' showing no results. The core logic involves interacting with the Fridge category button, likely to filter pantry items by the Fridge category, though the exact post-action flow (e.g., checking for items) isn't fully detailed here due to the single action provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            3
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the Fridge category button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "The page functions as a scanner interface for adding or managing pantry items by capturing product barcodes or images using the device's camera.",
+            "action_refs": [
+                [
+                    4,
+                    5
+                ]
+            ],
+            "data_in": [
+                "pantry scanning feature"
+            ],
+            "data_out": [
+                "pantry scan session"
+            ],
+            "data_dependencies": [
+                23
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The process starts on the 'My Pantry' page. The user clicks the 'Start Scanning' button, which navigates to the scanning interface (page 1) to capture product barcodes or images for pantry item management.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            5
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click 'Start Scanning' button to open the scanning interface"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "The \"My Pantry\" page allows users to search for pantry items (e.g., \"canned tomatoes\"), organize items by categories (All Items, Frozen, Fridge, Produce), add new items, and scan products, with the current search showing no results for the entered term.",
+            "action_refs": [
+                [
+                    4,
+                    6
+                ]
+            ],
+            "data_in": [
+                "pantry items",
+                "search query (canned tomatoes)"
+            ],
+            "data_out": [
+                "refreshed pantry items",
+                "refreshed search results"
+            ],
+            "data_dependencies": [
+                4,
+                8,
+                9,
+                10,
+                13,
+                22,
+                25
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user is on the 'My Pantry' page with a search term entered that shows no results. The core logic involves clicking the refresh icon button, which likely attempts to reload or update the pantry item list (though the page remains on the same screen here).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            6
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the refresh icon button on the My Pantry page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "The current page (a modal) allows users to select a method to add items to their pantry, with options including searching products, scanning barcodes, scanning receipts (premium), and syncing the pantry (premium).",
+            "action_refs": [
+                [
+                    4,
+                    7
+                ]
+            ],
+            "data_in": [
+                "pantry item"
+            ],
+            "data_out": [
+                "add item to pantry options"
+            ],
+            "data_dependencies": [
+                22
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The flow starts with clicking the 'Add item button' (from page 4) to open the 'Add Items to Pantry' modal. This modal presents four options: Search Products, Scan Barcode, Receipt Scan (premium), and Sync Pantry (premium). The user then selects one of these options to proceed with adding items to the pantry.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            7
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click the 'Add item button' to open the 'Add Items to Pantry' modal with options to add items."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "The Settings page allows users to edit their first name, last name, and username (with a 30 - day change restriction for username) and save the changes made to their account information.",
+            "action_refs": [
+                [
+                    5,
+                    1
+                ],
+                [
+                    13,
+                    0
+                ],
+                [
+                    13,
+                    1
+                ],
+                [
+                    13,
+                    3
+                ]
+            ],
+            "data_in": [
+                "settings entry",
+                "first name setting",
+                "last name setting",
+                "user profile (first name, last name, username)"
+            ],
+            "data_out": [
+                "settings page loaded",
+                "updated first name setting",
+                "updated last name setting",
+                "updated user profile"
+            ],
+            "data_dependencies": [
+                15,
+                17,
+                26
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user starts on page 5 and clicks the Settings gear icon to navigate to the Settings page (page 13). On the Settings page, the user inputs a new first name (John) into the First Name field, then inputs a new last name (Doe) into the Last Name field. Finally, the user clicks the Save Changes button to save the updated account information.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            1
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click Settings gear icon to open Settings page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            13,
+                            0
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": null,
+                        "action": "input",
+                        "summary": "Input 'John' into First Name field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            13,
+                            1
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": null,
+                        "action": "input",
+                        "summary": "Input 'Doe' into Last Name field"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            13,
+                            3
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click Save Changes button to save edits"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "The page functions as a modal dialog for managing the user's profile photo, providing options to cancel the action, remove the current photo, or choose a new photo from the device's library.",
+            "action_refs": [
+                [
+                    5,
+                    2
+                ],
+                [
+                    14,
+                    0
+                ],
+                [
+                    14,
+                    2
+                ]
+            ],
+            "data_in": [
+                "user profile",
+                "profile photo action dialog",
+                "profile photo setting",
+                "photo library"
+            ],
+            "data_out": [
+                "profile photo options (modal)",
+                "profile photo action dialog closed",
+                "updated profile photo"
+            ],
+            "data_dependencies": [
+                14,
+                17,
+                27
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The flow starts by clicking the Edit profile button to open the profile photo management modal. Once the modal is open, the user can choose to cancel the action, remove the current photo, or choose a new photo from the library, with the cancel and choose from library actions being directly executable steps.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            2
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click Edit profile button to open profile photo modal"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            14,
+                            0
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click Cancel profile photo action button"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            14,
+                            2
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click Choose from library button"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "Stats tab button",
+            "action_refs": [
+                [
+                    5,
+                    3
+                ]
+            ],
+            "data_in": [
+                "user stats"
+            ],
+            "data_out": [
+                "loaded user stats"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user starts on page 5 (a user-related page with tabs). The core action is clicking the Stats tab button. This action likely navigates to the Stats section (though the dst_page_idx is null here, implying the action's result is a navigation or state change related to the Stats tab).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            3
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the Stats tab button on the current page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "Badges tab button",
+            "action_refs": [
+                [
+                    5,
+                    4
+                ]
+            ],
+            "data_in": [
+                "badges tab",
+                "user profile"
+            ],
+            "data_out": [
+                "badges tab content loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user is on a page with a 'Badges' tab button. The core logic is to click the 'Badges' tab button, which likely navigates to the Badges section (though the destination page isn't fully confirmed here, the action is to initiate that navigation).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            4
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'Badges' tab button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "First Scan task card",
+            "action_refs": [
+                [
+                    5,
+                    5
+                ]
+            ],
+            "data_in": [
+                "First Scan task card"
+            ],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The core execution logic starts on page 5. The user performs a click action on the 'First Scan' task card, which is the main step in this functional point. There are no branches or loops as it's a single action to interact with the task card.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            5
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the 'First Scan' task card"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "Scanner Novice task card",
+            "action_refs": [
+                [
+                    5,
+                    6
+                ]
+            ],
+            "data_in": [
+                "Scanner Novice task card"
+            ],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user starts on page 5 (a user dashboard). The core action is clicking the 'Scanner Novice' task card, which is part of the 'Next to Complete' section. This click likely initiates the task or navigates to a related screen for the Scanner Novice task. There are no branches or loops here as it's a single click action to interact with the task card.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            6
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'Scanner Novice' task card"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "The page displays a popup notifying the user that the pantry item limit for free users has been reached and prompts them to either upgrade to Premium for unlimited pantry storage or select \"Not Now\".",
+            "action_refs": [
+                [
+                    7,
+                    0
+                ]
+            ],
+            "data_in": [
+                "premium upgrade option"
+            ],
+            "data_out": [
+                "premium upgrade initiation"
+            ],
+            "data_dependencies": [
+                21
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The app displays a popup notifying the user that the pantry item limit for free users has been reached. The user is then presented with two options: upgrade to Premium or select 'Not Now'. The flow branches at the popup step, where clicking 'Upgrade to Premium' (action in S1) leads to the Premium upgrade flow, and clicking 'Not Now' (implied but not in the single action provided here) would dismiss the popup. Here, we capture the 'Upgrade to Premium' action step.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            0
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click the 'Upgrade to Premium' button in the pantry limit popup"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": null,
+                                "condition": "User clicks 'Upgrade to Premium'"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "User clicks 'Not Now'"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "Not Now button",
+            "action_refs": [
+                [
+                    7,
+                    1
+                ]
+            ],
+            "data_in": [
+                "pantry limit notification"
+            ],
+            "data_out": [
+                "dismissed pantry limit notification"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The flow starts on page 7 (with a 'Pantry Limit Reached' dialog). The user clicks the 'Not Now' button, which transitions the app to page 8, dismissing the dialog and returning to the main interface.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            1
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click the 'Not Now' button in the 'Pantry Limit Reached' dialog"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "This page allows users to add items to their pantry by searching for products or adding them manually, while also displaying a section for recent product scans (currently empty).",
+            "action_refs": [
+                [
+                    9,
+                    0
+                ],
+                [
+                    10,
+                    0
+                ],
+                [
+                    11,
+                    0
+                ],
+                [
+                    11,
+                    1
+                ],
+                [
+                    11,
+                    2
+                ]
+            ],
+            "data_in": [
+                "product search query",
+                "pantry item",
+                "pantry item search term",
+                "pantry product database",
+                "rice (search term)",
+                "pantry item addition context",
+                "rice (pantry item)"
+            ],
+            "data_out": [
+                "search results",
+                "manual add option",
+                "search results for pantry items",
+                "reset search bar state",
+                "updated search interface (shows recent scans)",
+                "rice added to pantry"
+            ],
+            "data_dependencies": [
+                13,
+                23,
+                25,
+                28
+            ],
+            "to_test": true,
+            "core_logic": null
+        },
+        {
+            "index": 23,
+            "function_description": "This page functions as a barcode scanner interface for adding pantry items, allowing users to scan product barcodes using the device's camera to include them in their pantry inventory.",
+            "action_refs": [
+                [
+                    9,
+                    1
+                ]
+            ],
+            "data_in": [
+                "pantry item addition option"
+            ],
+            "data_out": [
+                "barcode scanning interface"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts on the 'Add Items to Pantry' modal (page 9). They click the 'Scan Barcode' button, which navigates to the 'Scan for Pantry' camera interface (page 1) to begin scanning product barcodes for pantry inventory.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            1
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click 'Scan Barcode' button in add items modal"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "The page notifies free users that they have reached the 20 - item pantry limit and prompts them to upgrade to Premium for unlimited pantry storage, with options to upgrade or select \"Not Now\".",
+            "action_refs": [
+                [
+                    9,
+                    2
+                ]
+            ],
+            "data_in": [
+                "receipt scan feature",
+                "pantry item limit setting"
+            ],
+            "data_out": [
+                "pantry limit reached notification",
+                "upgrade prompt"
+            ],
+            "data_dependencies": [
+                21
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The flow starts when a free user tries to add an item to the pantry (from page 9). A dialog appears notifying them of the 20 - item limit and prompting an upgrade. At this point, the user can choose to click 'Upgrade to Premium' to proceed with upgrading or 'Not Now' to dismiss the dialog, creating an if - else branch at the dialog step.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            2
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "User attempts to add an item, triggering the pantry limit dialog"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2",
+                                "condition": "User clicks 'Upgrade to Premium'"
+                            },
+                            {
+                                "next_step": "S3",
+                                "condition": "User clicks 'Not Now'"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 25,
+            "function_description": "The page notifies free users that their pantry item limit (20 items) has been reached and prompts them to upgrade to Premium for unlimited pantry storage, with options to upgrade or dismiss the prompt.",
+            "action_refs": [
+                [
+                    9,
+                    3
+                ]
+            ],
+            "data_in": [
+                "pantry items",
+                "sync pantry setting"
+            ],
+            "data_out": [
+                "pantry limit notification",
+                "sync attempt result"
+            ],
+            "data_dependencies": [
+                4,
+                8,
+                9,
+                10,
+                12,
+                13,
+                21,
+                22,
+                24
+            ],
+            "to_test": true,
+            "core_logic": null
+        },
+        {
+            "index": 26,
+            "function_description": "Username input field",
+            "action_refs": [
+                [
+                    13,
+                    2
+                ]
+            ],
+            "data_in": [
+                "username setting"
+            ],
+            "data_out": [
+                "unlocked username input field"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 13,
+                "logic": "The process starts on the Settings page (page 13). The user inputs the username 'johndoe123' into the Username input field. There are no branches or loops here as it's a single input action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            13,
+                            2
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": null,
+                        "action": "input",
+                        "summary": "Input 'johndoe123' into the Username input field"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 27,
+            "function_description": "Remove profile photo button",
+            "action_refs": [
+                [
+                    14,
+                    1
+                ]
+            ],
+            "data_in": [
+                "profile photo setting"
+            ],
+            "data_out": [
+                "profile photo setting (photo removed)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The user initiates the process by clicking the 'Remove profile photo button' on page 14. This action likely triggers a confirmation dialog or directly removes the profile photo, as the flow is a single step with no further branches or loops shown here.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            1
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the Remove profile photo button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 28,
+            "function_description": "Close 'Add Items' page button",
+            "action_refs": [
+                [
+                    10,
+                    1
+                ]
+            ],
+            "data_in": [
+                "add items to pantry page"
+            ],
+            "data_out": [
+                "closed add items to pantry page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The user starts on the 'Add Items to Pantry' page (page 10). They click the close button (X) at the top right of this page, which navigates them to page 12, completing the action of closing the 'Add Items' page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            1
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click the close button (X) on the 'Add Items to Pantry' page to navigate to the destination page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        }
+    ]
+}

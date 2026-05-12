@@ -1,0 +1,1280 @@
+
+================= [TaskTest] FDG[0] =================
+[Function] File and note management interface
+
+[Core Logic Task]
+The flow starts on the file management page. First, the user can click the menu icon in the top bar. Then, they can click the more options icon in the top bar. Finally, they can switch to the To-Do tab via the bottom navigation bar. All actions keep the user on the same page (or switch to the To-Do tab for the last action).
+
+[Variant Paths] (3)
+ - V1: Tap <More options icon in top bar> first, then tap <Menu icon in top bar>, then tap <To-Do tab in bottom nav>
+ - V2: Omit tapping <Menu icon in top bar>, directly tap <More options icon in top bar> then <To-Do tab in bottom nav>
+ - V3: Tap <Menu icon in top bar> twice, then tap <More options icon in top bar>, then tap <To-Do tab in bottom nav>
+
+================= [TaskTest] FDG[1] =================
+[Function] This page in the Markor app functions as a file management interface within the "Files" tab, allowing users to view, organize, and access files (like "QuickNote.md") and folders (like the "Documents" directory) stored in the device's storage, with options to navigate, search, and create new items.
+
+[Core Logic Task]
+The flow starts on the Markor app's file management page (Files tab). The user clicks the folder icon in the top bar, which likely navigates or interacts with the folder structure. Since there's only one action here, the flow is a single step with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Tap <Folder icon in top bar> twice (repeat operation)
+ - V2: Omit tapping <Folder icon in top bar> (skip the step)
+ - V3: Tap <Folder icon in top bar> (original step, included for reference as a base case)
+
+================= [TaskTest] FDG[2] =================
+[Function] The page provides a search interface with options for recursive directory search, allowing users to input a search term and configure settings like regex search, case sensitivity, and content search to find files or notes.
+
+[Core Logic Task]
+The flow starts by clicking the search icon (entry page 0) to open the search interface (page 1). Next, the user interacts with the search input field (step S2) to enter a term. Then, optional configurations like enabling 'Search in content' (step S3) can be made. Finally, the user either cancels (returning to page 0) or confirms (executing search) via the OK button (step S5), with the CANCEL button (step S4) providing an exit option.
+
+[Variant Paths] (3)
+ - V1: Tap <Search icon in top bar> to open search interface. Omit input in <Search input field>. Tap <OK button> to attempt search.
+ - V2: Tap <Search icon in top bar> to open search interface. Input a very long string (e.g., 1000 'a's) into <Search input field>. Tap <OK button> to perform search.
+ - V3: Tap <Search icon in top bar> to open search interface. Tap <OK button> first, then input into <Search input field> (swap order of input and confirm).
+
+================= [TaskTest] FDG[3] =================
+[Function] The QuickNote page in the file and note management app allows users to create, edit, and format notes (including text styling, adding media/links, and managing content) with additional options for navigation, saving, searching, and accessing more features.
+
+[Core Logic Task]
+The flow starts by navigating to the QuickNote page via the bottom nav tab. Once on QuickNote, users can perform actions like undoing/redoing edits, saving the note, or formatting text (bold/italic). These actions (undo, redo, save, bold, italic) are available in a loop-like manner, as they can be repeated while on the QuickNote page to manage or style the note content.
+
+[Variant Paths] (3)
+ - V1: Navigate to <QuickNote tab in bottom nav>, then tap <Redo button> before any edits (test redo without prior undo/edits)
+ - V2: Navigate to <QuickNote tab in bottom nav>, omit tapping <Save button> after formatting with <Bold text button> and <Italic text button>
+ - V3: Navigate to <QuickNote tab in bottom nav>, tap <Bold text button> twice (repeat formatting action) then tap <Save button>
+
+================= [TaskTest] FDG[4] =================
+[Function] The "More" page in the Markor app provides options for app-related actions (rate, settings, help), contributions (donate, report bugs, translate), project team info, and community links, serving as a hub for additional app functionalities and engagement.
+
+[Core Logic Task]
+The flow starts on the main page (page 0). The user clicks the 'More' tab in the bottom navigation bar, which navigates to the 'More' page (page 3) containing app actions, contribution options, project team info, and community links. No branches or loops exist here as it’s a single navigation step to access the hub.
+
+[Variant Paths] (2)
+ - V1: Omit tapping <More tab in bottom nav> to see if the 'More' page still loads (though it shouldn't, testing the necessity of the step)
+ - V2: Tap <More tab in bottom nav> twice to see if there's any unexpected behavior (like reloading the page or navigating away and back)
+
+================= [TaskTest] FDG[5] =================
+[Function] This page allows the user to create a new file (or folder) by specifying the file name, type (e.g., Markdown), and template, with options to confirm, cancel, or create a folder instead.
+
+[Core Logic Task]
+To create a new file or folder, start by clicking the red plus floating action button. Then, on the creation dialog, you can input the name, select the type (e.g., Markdown), and choose a template. At this point, you can decide to create a folder (by clicking FOLDER), cancel the operation (by clicking CANCEL), or confirm the file creation (by clicking OK).
+
+[Variant Paths] (3)
+ - V1: Tap <Red plus floating action button>, then tap <FOLDER> without inputting name or selecting type/template
+ - V2: Tap <Red plus floating action button>, input a very long string (e.g., 1000 characters) into <Name input field>, select a different type from <Type dropdown (Markdown)>, choose a non - default template from <Template dropdown (Empty file)>, then tap <OK>
+ - V3: Tap <Red plus floating action button>, input an empty string into <Name input field>, select <Type dropdown (Markdown)>, choose <Template dropdown (Empty file)>, then tap <OK>
+
+================= [TaskTest] FDG[6] =================
+[Function] Regex search checkbox
+
+[Core Logic Task]
+The functional point starts on page 1. The user performs a click action on the 'Regex search' checkbox, which transitions the app to page 6. This is a single-step flow with no branches or loops, as the action directly toggles the checkbox and navigates to the destination page.
+
+[Variant Paths] (3)
+ - V1: Tap <Regex search checkbox> twice (repeat the tap operation)
+ - V2: Omit tapping <Regex search checkbox> (skip the action)
+ - V3: Long-press <Regex search checkbox> instead of tapping (alternative interaction type)
+
+================= [TaskTest] FDG[7] =================
+[Function] Case sensitive checkbox
+
+[Core Logic Task]
+The flow starts on page 1. The user clicks the 'Case sensitive' checkbox, which transitions the app to page 7. This action toggles the case-sensitive search option in the search interface.
+
+[Variant Paths] (2)
+ - V1: Do not tap <Case sensitive checkbox> and check if the app still transitions to page 7 (omit step)
+ - V2: Tap <Case sensitive checkbox> twice (repeat operation) and check the resulting page and case - sensitive setting
+
+================= [TaskTest] FDG[8] =================
+[Function] The current page is a QuickNote editing interface where the "Undo" button (curved arrow pointing left) allows the user to reverse the most recent action performed while editing the note content, which includes text and embedded media/HTML elements.
+
+[Core Logic Task]
+The user starts on the QuickNote editing page (page 2). The only action is clicking the Preview button, which likely toggles the preview mode of the note content (text and embedded elements) while remaining on the same page.
+
+[Variant Paths] (3)
+ - V1: Tap <Preview button> twice in a row (repeat operation)
+ - V2: Omit tapping <Preview button> (do not perform the preview action)
+ - V3: Tap <Preview button> and then immediately tap <Preview button> again (order mutation with repeated step)
+
+================= [TaskTest] FDG[9] =================
+[Function] The current page is a QuickNote editing interface where users can edit a note (containing text and HTML-like content), with the Undo button available to revert the most recent edit action.
+
+[Core Logic Task]
+The user starts on the QuickNote editing page (page 2). The core action is clicking the Checklist toggle button, which likely modifies the note's formatting or content structure (e.g., enabling checklist mode) while remaining on the same page. There are no branches or loops here as only one action is defined.
+
+[Variant Paths] (3)
+ - V1: Tap <Checklist toggle button> twice (repeat the toggle action)
+ - V2: Omit tapping <Checklist toggle button> (do nothing on the page)
+ - V3: Tap <Checklist toggle button> then immediately tap it again (swap the order of a single repeated action, though trivial here, represents order mutation)
+
+================= [TaskTest] FDG[10] =================
+[Function] The current page (QuickNote editing interface) allows users to edit a QuickNote, with the "Undo" button enabling them to reverse the most recent edit action, and also provides tools for formatting, attaching files, and managing the note.
+
+[Core Logic Task]
+The user starts on the QuickNote editing page (page 2). They click the List toggle button, which likely toggles a list - related formatting or view option for the note. Since there's only one action here, the flow is a single step with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Tap <List toggle button> twice (repeat the operation)
+ - V2: Omit tapping <List toggle button> (skip the step)
+ - V3: Tap <List toggle button> (original step, included for reference but as a mutation it's the base; however, since only one widget, other mutations are limited to repeat/omit as above)
+
+================= [TaskTest] FDG[11] =================
+[Function] The current page (QuickNote editing interface) allows users to edit a QuickNote, with the Undo button enabling them to reverse the most recent edit action.
+
+[Core Logic Task]
+The user is on the QuickNote editing page. The core logic involves a click action on the Trash button, which likely triggers a deletion-related operation (e.g., deleting the note or its content) while remaining on the same page.
+
+[Variant Paths] (3)
+ - V1: Tap <Trash button> twice (repeat the deletion-related operation)
+ - V2: Omit tapping <Trash button> (skip the deletion-related operation)
+ - V3: Tap <Trash button> and then immediately tap <Trash button> again (order mutation with repeated action)
+
+================= [TaskTest] FDG[12] =================
+[Function] The current page is a QuickNote editing interface where users can create, edit, and format notes, with the "Undo" button allowing users to reverse their most recent editing action.
+
+[Core Logic Task]
+The user is on the QuickNote editing page. The core action here is clicking the Export button, which likely triggers an export-related operation (though the exact outcome post - click isn't fully detailed from the single action provided).
+
+[Variant Paths] (3)
+ - V1: Tap <Export button> twice (repeat the export action)
+ - V2: Omit tapping <Export button> (skip the export step)
+ - V3: Tap <Export button> with a delay (simulate a different interaction timing, though the widget only allows tap, this is a mutation of the action's context)
+
+================= [TaskTest] FDG[13] =================
+[Function] This page provides a menu of attachment options (Color, Insert Link, File, Image, Audio, Date) for enhancing the content of a QuickNote, with options to confirm (OK) or cancel (CANCEL) the selection.
+
+[Core Logic Task]
+The flow starts by clicking the Attachment button to open the attachment options menu. Then, at the menu, the user can choose to either click CANCEL to dismiss the menu and return to the previous page, or click OK to confirm the attachment selection and proceed to the next page.
+
+[Variant Paths] (3)
+ - V1: Tap <Attachment button>, then Tap <OK button> (instead of possible cancel, testing confirmation path)
+ - V2: Tap <Attachment button>, then Tap <CANCEL button> (testing cancellation path)
+ - V3: Tap <Attachment button>, then Tap <OK button> twice (repeating confirmation, testing repeat mutation)
+
+================= [TaskTest] FDG[14] =================
+[Function] The current page is a "Special Key" selection menu in the QuickNote editing interface, allowing the user to choose from various text navigation and manipulation commands (e.g., Page Up, Line Start, Document End) to perform actions within the note, with options to confirm (OK) or cancel the selection.
+
+[Core Logic Task]
+The flow starts by clicking the keyboard toggle button to open the 'Special Key' menu. Once in the menu, the user can choose a text navigation/manipulation option (e.g., Page Down, Document End) or select CANCEL/OK. After choosing an option or button, the flow ends as no further steps are defined here.
+
+[Variant Paths] (3)
+ - V1: Tap <Keyboard toggle button>, then tap <CANCEL button> (instead of choosing a special key option)
+ - V2: Tap <Keyboard toggle button>, then tap <Document End option> (alternative special key selection)
+ - V3: Tap <Keyboard toggle button>, then tap <OK button> without selecting any special key option (omit special key selection step)
+
+================= [TaskTest] FDG[15] =================
+[Function] The current page is a dialog for configuring date and time formatting options (including format selection, date/time picking, and a toggle for using current date/time) to insert or manage date/time information within a QuickNote.
+
+[Core Logic Task]
+The flow starts by clicking the Clock button to open the date/time format dialog. In the dialog, users can perform actions like interacting with the format input field, selecting date/time format buttons (Date only, Time only, yyyy-MM-dd), toggling the format checkbox, or canceling/confirming with CANCEL/OK buttons, all of which return to the previous page (page 2).
+
+[Variant Paths] (3)
+ - V1: Tap <Clock button> to open the dialog, then tap <CANCEL button> without interacting with other widgets
+ - V2: Tap <Clock button> to open the dialog, input a very long string into <Format input field>, then tap <OK button>
+ - V3: Tap <Clock button> to open the dialog, tap <Date only button>, then tap <Time only button> (swap the order of selecting format buttons)
+
+================= [TaskTest] FDG[16] =================
+[Function] Rate this app option
+
+[Core Logic Task]
+The flow starts on page 3 (the 'More' page). The user clicks the 'Rate this app' option. Since there are no further actions or branches provided, this is the sole step in the flow for the 'Rate this app' functional point.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Rate this app option> (check if the app still proceeds to rating without interaction, though unlikely but a mutation test)
+ - V2: Tap <Rate this app option> twice (test if repeated action causes any different behavior like multiple rating prompts or errors)
+ - V3: Tap <Rate this app option> after a short delay (test timing-based mutation, though simple interaction but a variant in execution context)
+
+================= [TaskTest] FDG[17] =================
+[Function] Settings option
+
+[Core Logic Task]
+The flow starts on the 'More' page (page 3). The user clicks on the 'Settings' option, which is expected to navigate to the Settings page (though the destination page index is null in the action, implying the next page load or navigation trigger).
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Settings option> (check if navigation still occurs or if an error is shown)
+ - V2: Tap <Settings option> twice (check if it navigates twice or has a different behavior like opening a duplicate page or an error)
+ - V3: Tap a non-<Settings option> area on the 'More' page (check if it still navigates to Settings or does nothing/navigates elsewhere)
+
+================= [TaskTest] FDG[18] =================
+[Function] Help / FAQ option
+
+[Core Logic Task]
+The user starts on page 3 (the 'More' page). The core logic is to click the 'Help / FAQ' option. This action likely leads to a page with help or FAQ content, though the destination page isn't specified here. There are no branches or loops as only one action is involved.
+
+[Variant Paths] (3)
+ - V1: Tap <Help / FAQ option> twice
+ - V2: Omit tapping <Help / FAQ option> (though this skips the core action, testing if the app behaves as expected without it)
+ - V3: Tap <Help / FAQ option> (original action, included for reference as a base case comparison)
+
+================= [TaskTest] FDG[19] =================
+[Function] Donate option
+
+[Core Logic Task]
+The core execution logic for the Donate option starts on the 'More' page (page 3). The user performs a click action on the 'Donate' option, which is part of the 'Contribute' section. This action is the initial and only step in the flow for accessing the donate functionality, with no branches or loops as it's a single click to initiate the donate process (though the destination page isn't specified here).
+
+[Variant Paths] (3)
+ - V1: Tap <Donate option> twice
+ - V2: Omit tapping <Donate option> (though this skips the donate initiation)
+ - V3: Tap <Donate option> after a short delay (simulating a timing mutation)
+
+================= [TaskTest] FDG[20] =================
+[Function] Report bugs option
+
+[Core Logic Task]
+The user starts on the 'More' page (page 3). The core logic is to click the 'Report bugs' option, which is the only step here. This action likely initiates the bug - reporting process, though the destination page after the click isn't specified in the given action.
+
+[Variant Paths] (3)
+ - V1: Tap <Report bugs option> twice (repeat the operation)
+ - V2: Omit tapping <Report bugs option> (skip the core step)
+ - V3: Long - press <Report bugs option> instead of tapping (branch mutation with alternative interaction)
+
+================= [TaskTest] FDG[21] =================
+[Function] Translate option
+
+[Core Logic Task]
+The user starts on page 3 (the 'More' page of the app). The core action is clicking the 'Translate' option, which is the only step here. There are no branches or loops as it's a single click action to initiate the translate functionality (though the destination page is null, implying a possible navigation or action trigger).
+
+[Variant Paths] (3)
+ - V1: Tap <Translate option> twice (repeat the click)
+ - V2: Omit tapping <Translate option> (skip the core action)
+ - V3: Tap <Translate option> after a short delay (simulate a timing variation, though the action is still the same click)
+
+================= [TaskTest] FDG[22] =================
+[Function] Gregor Santner info
+
+[Core Logic Task]
+The flow starts on page 3 (the 'More' page). The user performs a click action on the 'Gregor Santner info' element. Since there's only one action, the flow is a single step with no branches or loops.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[23] =================
+[Function] The current page is a color - setting interface for QuickNote, which enables users to set the foreground or background color of text, and also allows the insertion of hex color codes.
+
+[Core Logic Task]
+The user starts by clicking the 'Color' option. Then, at the color-setting interface, they choose among hexcode input, foreground color, or background color (or cancel/confirm). If they confirm (click OK), they enter a color adjustment screen where they can pick a color dot, adjust sliders, and then either cancel or confirm the color choice.
+
+[Variant Paths] (3)
+ - V1: Tap <Color option>, then tap <CANCEL button> (omit color selection steps)
+ - V2: Tap <Color option>, tap <Hexcode input option>, input "" (empty hexcode) into <Hexcode input option>, then tap <OK button>
+ - V3: Tap <Color option>, tap <Foreground color option>, tap <CANCEL button> at color adjustment screen (cancel after entering color adjustment)
+
+================= [TaskTest] FDG[24] =================
+[Function] The current page allows users to insert a link into a QuickNote by entering a description, a URL/path, or browsing the filesystem to select a file, with options to confirm or cancel the action.
+
+[Core Logic Task]
+To insert a link into a QuickNote, start by clicking the 'Insert Link' option. On the Insert Link page, you can choose to input a description, a URL/path, or browse the filesystem (with folder navigation options like home, parent, or subfolders). Finally, confirm the action with 'OK' or cancel it with 'CANCEL'.
+
+[Variant Paths] (3)
+ - V1: Tap <Insert Link option>, Input empty string into <Description input field>, Tap <OK button>
+ - V2: Tap <Insert Link option>, Tap <BROWSE FILESYSTEM button>, Tap <Home icon button>, Tap <CANCEL button>
+ - V3: Tap <Insert Link option>, Input a very long string (e.g., 1000 characters) into <URL / Path input field>, Tap <OK button>
+
+================= [TaskTest] FDG[25] =================
+[Function] The current page is a dialog for inserting a link into a QuickNote, allowing the user to input a description, a URL/path (or browse the filesystem for a path), and then confirm or cancel the link insertion.
+
+[Core Logic Task]
+The user starts on page 9 and clicks the 'File' option (action_ref [9,2]). This action leads to page 13, likely initiating the process of browsing the filesystem for a file path to insert as a link in the QuickNote. The flow is a single step with a transition to the next page for further file - related operations.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <File option> and see if the link insertion process proceeds without it
+ - V2: Click <File option> twice to see if it leads to any different behavior or page state
+ - V3: Try to click <File option> after a short delay to check for any timing - related issues in the transition
+
+================= [TaskTest] FDG[26] =================
+[Function] The current page is an "Insert Image" interface within the QuickNote editing section, allowing users to add an image to their note by providing a description and URL/path, or by browsing the filesystem, taking a camera picture, selecting a gallery picture, or editing a picture, with options to cancel or confirm the insertion.
+
+[Core Logic Task]
+The user starts on page 9 and clicks the 'Image' option to enter the Insert Image interface (page 14). In this interface, the user can input a description (clicking the description field), input a URL/path (clicking the URL/path field), browse the filesystem (clicking the BROWSE FILESYSTEM button), or choose to cancel (clicking CANCEL) or confirm (clicking OK) the image insertion. Major decision points are choosing between inputting details, browsing, canceling, or confirming.
+
+[Variant Paths] (3)
+ - V1: Start on page 9, click <Image option> to enter Insert Image interface. Omit inputting description and URL/path, directly click <OK button> to confirm image insertion.
+ - V2: Start on page 9, click <Image option> to enter Insert Image interface. Input a very long string (e.g., 1000 characters) into <Description input field>, then click <OK button> to confirm image insertion.
+ - V3: Start on page 9, click <Image option> to enter Insert Image interface. Click <BROWSE FILESYSTEM button> instead of inputting description or URL/path, then click <OK button> to confirm image insertion.
+
+================= [TaskTest] FDG[27] =================
+[Function] The current page is an audio attachment interface within the QuickNote editing screen, allowing users to add an audio file to a note by either browsing the filesystem for an existing audio file, recording a new audio file, and providing a description for the audio attachment.
+
+[Core Logic Task]
+The user starts by clicking the 'Audio' option to open the audio attachment interface. In this interface, the user can choose to input a description, input a URL/path, browse the filesystem for an audio file, record a new audio file, cancel the action, or confirm with OK. The flow branches based on which button (description input, URL/path input, browse, record, cancel, or OK) the user clicks.
+
+[Variant Paths] (3)
+ - V1: Tap <Audio option>, then omit inputting in <Description input field> and directly tap <OK button>
+ - V2: Tap <Audio option>, input a very long text with special chars into <Description input field>, then tap <OK button>
+ - V3: Tap <Audio option>, then tap <URL / Path input field> instead of <Description input field>, input some text, and tap <OK button>
+
+================= [TaskTest] FDG[28] =================
+[Function] The current page is a date and time formatting interface within the QuickNote editing screen, allowing users to configure date/time formats (e.g., Date only, Time only, custom format like yyyy - MM - dd), choose to use the current date/time, and pick specific dates/times for insertion into the QuickNote, with options to confirm, cancel, or get help.
+
+[Core Logic Task]
+The user starts on the QuickNote editing page (page 9) and clicks the 'Date' option (action [9,5]). This action navigates to the date/time formatting interface (page 11), where format configuration, date/time selection, and confirmation/cancellation options are available. The flow proceeds from the initial page to the formatting interface via this click.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Date option> and check if the date/time formatting interface still appears (repeat/omit mutation)
+ - V2: Click <Date option> multiple times in quick succession to see if it causes any unexpected behavior (repeat/omit mutation)
+ - V3: Try clicking <Date option> after performing some other non - related action (if any) on the QuickNote editing page to see if the navigation to the date/time formatting interface is affected (order mutation, assuming there are other actions)
+
+================= [TaskTest] FDG[29] =================
+[Function] Page Up (Page Up) option
+
+[Core Logic Task]
+The user interacts with the 'Page Up (Page Up)' option. The flow starts on page 10, where the user clicks the 'Page Up (Page Up)' option. Since there are no further branches or loops, this is a single-step flow focused on selecting this option.
+
+[Variant Paths] (3)
+ - V1: Tap <Page Up (Page Up) option> twice
+ - V2: Omit tapping <Page Up (Page Up) option> (stay on page 10)
+ - V3: Tap <Page Up (Page Up) option> after waiting 5 seconds (simulating delayed interaction)
+
+================= [TaskTest] FDG[30] =================
+[Function] Line Start (Pos Home) option
+
+[Core Logic Task]
+The user interacts with the 'Line Start (Pos Home)' option. The flow begins on page 10, where the user clicks the 'Line Start (Pos Home)' option. Since there are no subsequent steps or branches indicated, this action is the core step of the functional point.
+
+[Variant Paths] (3)
+ - V1: Tap <Line Start (Pos Home) option> twice
+ - V2: Omit tapping <Line Start (Pos Home) option> (though this skips the core action, for mutation testing)
+ - V3: Tap <Line Start (Pos Home) option> after a short delay (simulating timing variation)
+
+================= [TaskTest] FDG[31] =================
+[Function] Line End (Pos End) option
+
+[Core Logic Task]
+The user interacts with the 'Line End (Pos End)' option. The flow starts on page 10, where the user clicks the 'Line End (Pos End)' option, and this action does not navigate to a new page (dst_page_idx is null).
+
+[Variant Paths] (3)
+ - V1: Long-press <Line End (Pos End) option> (instead of click)
+ - V2: Tap <Line End (Pos End) option> twice (repeat the tap)
+ - V3: Omit tapping <Line End (Pos End) option> (skip the interaction)
+
+================= [TaskTest] FDG[32] =================
+[Function] Move text one line up option
+
+[Core Logic Task]
+The flow starts on page 10. The user clicks the 'Move text one line up' option. Since there are no further branches or loops, the action completes here.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <Move text one line up option> (test if the action still completes without it)
+ - V2: Repeat clicking <Move text one line up option> (test repeated execution of the same action)
+
+================= [TaskTest] FDG[33] =================
+[Function] Move text one line down option
+
+[Core Logic Task]
+The user initiates the process on page 10. The core action is to click the 'Move text one line down' option, which is the only step in this functional point's execution flow, with no branches or loops as it's a single action.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <Move text one line down option> (intended action not performed)
+ - V2: Repeat clicking <Move text one line down option> (perform the action multiple times instead of once)
+
+================= [TaskTest] FDG[34] =================
+[Function] Document Start option
+
+[Core Logic Task]
+The user interacts with the 'Document Start' option by clicking it. This action is part of a 'Special Key' menu, likely to navigate to the start of the document in the associated text editor.
+
+[Variant Paths] (3)
+ - V1: Tap <Document Start option> twice (repeat operation)
+ - V2: Omit tapping <Document Start option> (omit step, though this is a no-op mutation to check behavior without the action)
+ - V3: Tap <Document Start option> (original action, included as a base for comparison, but since only one widget, limited mutations)
+
+================= [TaskTest] FDG[35] =================
+[Function] This page is a web browser window loading a URL from the Android developer documentation, likely to provide help or reference information related to the QuickNote formatting functionality.
+
+[Core Logic Task]
+The flow starts on page 11. First, the HELP button is clicked (action from page 11 to 39). Then, the URL address bar is clicked (action from page 39 to 40), which is the final step as it's a leaf action. There are no branches or loops in this straight - line flow.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <HELP button> and directly click <URL address bar>
+ - V2: Click <HELP button> twice and then click <URL address bar>
+ - V3: Click <URL address bar> first and then click <HELP button>
+
+================= [TaskTest] FDG[36] =================
+[Function] This page functions as a camera interface to capture a photo (using the shutter button) for inserting into a QuickNote, with options to adjust camera settings or switch camera modes.
+
+[Core Logic Task]
+The flow starts by clicking the CAMERA PICTURE button to open the camera interface. Then, on the camera page, the user can click the left icon to adjust camera modes or settings, and this action keeps the user on the camera page (allowing repeated adjustments if needed).
+
+[Variant Paths] (3)
+ - V1: Tap <CAMERA PICTURE button> to open camera, then repeatedly tap <Camera mode/settings icon (left)> multiple times
+ - V2: Omit tapping <Camera mode/settings icon (left)> after tapping <CAMERA PICTURE button> and directly try to capture (even though core logic says to adjust, but mutation is to omit the adjustment step)
+ - V3: Tap <Camera mode/settings icon (left)> first, then tap <CAMERA PICTURE button> (swap the order of opening camera and adjusting settings)
+
+================= [TaskTest] FDG[37] =================
+[Function] This page allows the user to select an application (Gallery or Photos) to complete the action of inserting an image from the gallery into a QuickNote, after choosing the "GALLERY PICTURE" option in the Insert Image dialog.
+
+[Core Logic Task]
+The user starts on the Insert Image dialog page (page 14). They click the 'GALLERY PICTURE' button, which triggers a 'Complete action using' dialog to appear (page 32), offering options to use Gallery or Photos for selecting the image.
+
+[Variant Paths] (2)
+ - V1: Tap <GALLERY PICTURE button> twice (repeat the tap)
+ - V2: Omit tapping <GALLERY PICTURE button> (though this skips the core action, testing if the app handles the omission)
+
+================= [TaskTest] FDG[38] =================
+[Function] The current page (Insert Image dialog in QuickNote) allows the user to add a description, input a URL/path, or select from options (BROWSE FILESYSTEM, CAMERA PICTURE, GALLERY PICTURE, EDIT PICTURE) to insert an image into the QuickNote, with the "EDIT PICTURE" option enabling image editing before insertion.
+
+[Core Logic Task]
+The user is on the Insert Image dialog in QuickNote. The core logic involves interacting with the EDIT PICTURE button, which likely initiates an image editing process before inserting the image into the note. Since there's only one action provided, the flow is a single step of clicking the EDIT PICTURE button.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <EDIT PICTURE button> and try to insert image directly (though original flow implies it's needed, but for mutation, omit)
+ - V2: Tap <EDIT PICTURE button> twice (repeat the operation)
+ - V3: Since only one widget, branch mutation not possible with other widgets, but try to see if no interaction (though original has one step, but mutation could be no action)
+
+================= [TaskTest] FDG[39] =================
+[Function] This page allows the user to record audio (in WAV format) for attaching to a QuickNote, with options to start recording, cancel, or confirm the recording, and also displays the recording duration and file size.
+
+[Core Logic Task]
+The user starts by clicking the RECORD AUDIO button to open the recording interface. Once in the Record Audio page, they can choose to either cancel the recording (returning to the previous page) or confirm the recording (also returning to the previous page) via the respective buttons.
+
+[Variant Paths] (3)
+ - V1: Tap <RECORD AUDIO button>, then immediately tap <CANCEL button in Record Audio> (skip actual recording attempt)
+ - V2: Tap <RECORD AUDIO button>, then tap <OK button in Record Audio> without waiting for any recording (confirm empty recording)
+ - V3: Tap <RECORD AUDIO button>, tap <CANCEL button in Record Audio>, then tap <RECORD AUDIO button> again (repeat opening recording interface)
+
+================= [TaskTest] FDG[40] =================
+[Function] Open app again option
+
+[Core Logic Task]
+When the app (Markor) stops, a dialog appears with an 'Open app again' option. The user clicks this option to attempt to restart the app. This is a single step with no branching or looping, as the action is to trigger the app to open again.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Open app again option> (to see if app restarts without interaction, though this is against normal flow but for mutation testing)
+ - V2: Tap <Open app again option> twice (repeat the action to see if multiple triggers have an effect)
+ - V3: Tap <Open app again option> (original action, included for completeness as a base but mutation here is about variations around it)
+
+================= [TaskTest] FDG[41] =================
+[Function] This page functions as a browser tab management interface, allowing the user to view, switch between, and manage (e.g., close) open browser tabs, including a YouTube tab, a GitHub discussions tab, and an Android API reference tab.
+
+[Core Logic Task]
+The user starts on a page with a browser tab. They click the '3 open tabs' indicator, which navigates to the tab management interface where open tabs (YouTube, GitHub, Android API) are visible for further actions like switching or closing.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <3 open tabs indicator> and try to manage tabs directly (though this may not work as per core logic, but it's a mutation of omitting the step)
+ - V2: Repeat clicking <3 open tabs indicator> multiple times (e.g., click it twice in a row instead of once)
+ - V3: Click <3 open tabs indicator> and then immediately click it again (order and repeat mutation)
+
+================= [TaskTest] FDG[42] =================
+[Function] The current page is a browser menu (Chrome) that provides options like opening new tabs, accessing bookmarks/history/downloads, sharing, finding in page, adding to home screen, enabling desktop site, adjusting settings, and accessing help/feedback, while the underlying page displays Android date and time formatting documentation.
+
+[Core Logic Task]
+The flow starts on the Chrome page displaying Android date/time documentation. The user clicks the browser menu button, which opens the menu with options like new tabs, bookmarks, sharing, and more. This is a single-step flow with no branches, as the action opens the menu to access its options.
+
+[Variant Paths] (3)
+ - V1: Tap <Browser menu button> twice (repeat the action)
+ - V2: Omit tapping <Browser menu button> (skip opening the menu)
+ - V3: Long-press <Browser menu button> instead of tapping (alternative interaction type)
+
+================= [TaskTest] FDG[43] =================
+[Function] This page functions as a file selection dialog (within a QuickNote link - insertion workflow) that allows navigation to the home directory (via the Home icon) and file/folder exploration (or cancellation via the "CANCEL" button) to select a file for linking in the QuickNote.
+
+[Core Logic Task]
+The file selection dialog for QuickNote link insertion starts on page 26. The user can click the Search icon button (on page 26) to initiate a search, with the flow remaining on page 26 after this action. Other actions like navigating via the Home icon or canceling via 'CANCEL' are implied but not in the provided actions list here, so the core step shown is the search button click.
+
+[Variant Paths] (2)
+ - V1: Omit tapping <Search icon button> (test if the dialog still functions or has default behavior without search initiation)
+ - V2: Tap <Search icon button> twice (test if repeated search initiation has any different behavior or side effects)
+
+================= [TaskTest] FDG[44] =================
+[Function] The current page is an "Insert Image" dialog within the QuickNote editing interface, allowing users to add an image to their note by providing a description, entering a URL/path, or selecting an image source (filesystem, camera, gallery) and optionally editing the image before confirming or canceling the insertion.
+
+[Core Logic Task]
+The user starts in the camera interface (page 31) and clicks the close camera button (X). This action navigates them back to the 'Insert Image' dialog (page 14) in the QuickNote editing interface, allowing them to continue the image insertion process or choose other options.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Close camera button (X)> and see if the camera interface remains (repeat the current state)
+ - V2: Click <Close camera button (X)> twice (repeat the operation)
+ - V3: Do not click <Close camera button (X)> and check if the camera interface times out or has other behavior (omit the step)
+
+================= [TaskTest] FDG[45] =================
+[Function] This page functions as a camera viewfinder interface, allowing the user to capture a photo (via the blue circle button) for insertion into a QuickNote, with additional options for camera settings (left icon) and switching camera (right icon), and an option to exit the camera (X button).
+
+[Core Logic Task]
+The camera viewfinder interface is displayed. The user can click the blue circle capture button to take a photo for insertion into a QuickNote. There are also options to adjust camera settings (left icon), switch the camera (right icon), or exit the camera (X button).
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[46] =================
+[Function] This page functions as a camera viewfinder interface, allowing the user to capture a photo (via the blue circle button) for insertion into a QuickNote, with additional options for closing the camera (X button) and toggling camera settings/modes (left and right icons).
+
+[Core Logic Task]
+The user starts on the camera viewfinder page (page 31). The core action here is clicking the camera switch icon (right side of the screen). After this click, the flow remains on the same page (page 31), likely updating the camera mode or settings as a result of the switch action.
+
+[Variant Paths] (3)
+ - V1: Tap <Camera switch icon (right)> twice (repeat the switch action)
+ - V2: Omit tapping <Camera switch icon (right)> (skip the core action)
+ - V3: Tap <Camera switch icon (right)> and then immediately tap it again (order mutation with repeated step)
+
+================= [TaskTest] FDG[47] =================
+[Function] This page allows the user to select the Gallery app (from available options like Gallery or Photos) to insert a picture from the gallery into the QuickNote, after initiating the image insertion process in the QuickNote editing interface.
+
+[Core Logic Task]
+After initiating image insertion in QuickNote, the user is presented with a choice of apps (Gallery or Photos) to complete the action. The core logic is selecting the Gallery app: the user clicks on the 'Gallery' option to proceed with inserting an image from the gallery into the QuickNote.
+
+[Variant Paths] (3)
+ - V1: Omit selecting <Gallery app option> (test if the system handles the absence of app selection)
+ - V2: Repeat tapping <Gallery app option> (test if multiple selections cause issues)
+ - V3: Tap <Gallery app option> twice in a row (simulate repeated app selection)
+
+================= [TaskTest] FDG[48] =================
+[Function] This page allows the user to select an app (either Gallery or Photos) to complete the action of inserting a gallery picture into the QuickNote.
+
+[Core Logic Task]
+The flow starts on page 32 (Insert Image dialog with app selection). The user clicks the 'Photos' app option (action_ref [32,1]). Since there's only one step here (as per the provided action), the logic is a single click action to select the Photos app for inserting a gallery picture into QuickNote.
+
+[Variant Paths] (3)
+ - V1: Tap <Photos app option> twice (repeat the selection step)
+ - V2: Omit tapping <Photos app option> (simulate not selecting any app)
+ - V3: Tap <Photos app option> (original step, included as a base for comparison, though mutation here is about alternative if existed, but since only one widget, these are the possible mutations)
+
+================= [TaskTest] FDG[49] =================
+[Function] Speaker audio toggle icon
+
+[Core Logic Task]
+The core execution logic starts on page 35. The user performs a click action on the speaker audio toggle icon, which transitions the app to page 36. There are no branches or loops in this flow as it is a single, direct action to toggle the speaker audio.
+
+[Variant Paths] (3)
+ - V1: Tap <Speaker audio toggle icon> twice (repeat operation)
+ - V2: Omit tapping <Speaker audio toggle icon> (skip the step)
+ - V3: Tap <Speaker audio toggle icon> after a very long delay (simulate timing variation, though action is same but contextually a mutation in execution timing)
+
+================= [TaskTest] FDG[50] =================
+[Function] This page allows the user to start recording audio (in WAV format) for attachment to a QuickNote, with options to cancel or confirm the recording, and also displays recording duration and file size metrics.
+
+[Core Logic Task]
+The flow starts by clicking the red record start button to initiate audio recording. Since only one action is provided, the current logic focuses on starting the recording process, with the expectation that subsequent steps (not yet provided) would handle duration/file size updates, and choices to cancel or confirm the recording.
+
+[Variant Paths] (3)
+ - V1: Tap <Red record start button> twice (repeat the start action)
+ - V2: Omit tapping <Red record start button> (simulate not starting recording)
+ - V3: Tap <Red record start button> with an unexpected long press (alter interaction type, though original is click; assuming long-press is a mutation here as a different interaction)
+
+================= [TaskTest] FDG[51] =================
+[Function] New tab button (+)
+
+[Core Logic Task]
+The functional point starts on page 41. The user clicks the 'New tab button (+)' (action_ref [41, 0]), which leads to page 43. There are no branches or loops as this is a single action flow.
+
+[Variant Paths] (3)
+ - V1: Tap <New tab button (+)> twice (repeat operation)
+ - V2: Omit tapping <New tab button (+)> (omit step)
+ - V3: Tap <New tab button (+)> after a very long delay (simulate timing variation, though action is same but contextually a mutation in interaction timing interpretation)
+
+================= [TaskTest] FDG[52] =================
+[Function] Close YouTube tab (X)
+
+[Core Logic Task]
+The process starts on the page with multiple tabs. The user clicks the 'X' button associated with the YouTube tab to close it, completing the task of closing the YouTube tab.
+
+[Variant Paths] (3)
+ - V1: Tap <Close YouTube tab (X)> twice (repeat operation)
+ - V2: Omit tapping <Close YouTube tab (X)> (omit step, check if tab remains open)
+ - V3: Tap <Close YouTube tab (X)> (original step for comparison)
+
+================= [TaskTest] FDG[53] =================
+[Function] Search YouTube tab (magnifier)
+
+[Core Logic Task]
+The core execution logic starts on page 41. The user performs a click action on the 'Search YouTube tab (magnifier)', which navigates to page 45. There are no branches or loops in this flow as it is a single, direct action.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[54] =================
+[Function] Close GitHub tab (X)
+
+[Core Logic Task]
+The process starts on page 41 (tab management view). The user clicks the 'X' button (close icon) associated with the GitHub tab. This action closes the GitHub tab, leading to the destination page 46. There are no branches or loops in this flow as it is a single, direct action to close the tab.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Close GitHub tab (X)> and check if the tab closes (repeat the original step if needed to verify)
+ - V2: Tap <Close GitHub tab (X)> twice (repeat the close action)
+ - V3: Tap <Close GitHub tab (X)> after a short delay (simulate a different timing of the same action)
+
+================= [TaskTest] FDG[55] =================
+[Function] Close Android Dev tab (X)
+
+[Core Logic Task]
+To close the Android Dev tab, the user starts on the page with the tab visible (page 41). The user then clicks the 'X' button associated with the Android Dev tab, which results in the tab being closed and navigation to the destination page (47).
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Close Android Dev tab (X)> and check if the tab closes
+ - V2: Click <Close Android Dev tab (X)> twice to see if it causes an error or closes additional tabs
+ - V3: Click <Close Android Dev tab (X)> and then immediately click it again before the page navigates
+
+================= [TaskTest] FDG[56] =================
+[Function] This page in the browser (Chrome) displays Android developer documentation related to date/time pattern letters, and the browser menu is accessed to potentially update Chrome.
+
+[Core Logic Task]
+The browser displays Android developer documentation about date/time pattern letters. The Chrome menu is accessed, and the 'Update Chrome' option is clicked, which likely leads to a page related to updating Chrome (though the flow here is a single click action from the menu on the documentation page).
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Update Chrome option> (just view the documentation without attempting an update)
+ - V2: Repeat clicking <Update Chrome option> (click it multiple times instead of once)
+ - V3: Try to interact with <Update Chrome option> in a different way (e.g., long-press instead of tap, though the description doesn't specify tap, but assuming default is tap, this is a mutation in interaction type)
+
+================= [TaskTest] FDG[57] =================
+[Function] This page is the new tab page of the Chrome browser, providing a search bar, quick access icons to popular websites, personalized article suggestions (currently empty), and an option to sign in to Chrome for personalized content, allowing users to start web browsing or access favorite sites quickly.
+
+[Core Logic Task]
+The user starts on page 42 and clicks the 'New tab' option (action_ref [42,1]). This action navigates to page 49, which is the Chrome new tab page. The new tab page displays a search bar, quick access icons for popular sites, an empty personalized article section, and a sign-in prompt for Chrome. No branches or loops are present as this is a single navigation step to the new tab interface.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <New tab option> (check if the new tab page still appears or if the app stays on the original page)
+ - V2: Click <New tab option> twice (see if the app opens two new tab pages or behaves unexpectedly, e.g., crashes or shows an error)
+
+================= [TaskTest] FDG[58] =================
+[Function] New incognito tab option
+
+[Core Logic Task]
+The flow starts on page 42. The user performs a click action on the 'New incognito tab' option. This action likely initiates the opening of a new incognito tab, with no further branching or looping in this core logic.
+
+[Variant Paths] (3)
+ - V1: Tap <New incognito tab option> twice
+ - V2: Omit tapping <New incognito tab option> (simulate not starting the incognito tab opening)
+ - V3: Tap <New incognito tab option> after a short delay (simulate a timing variation)
+
+================= [TaskTest] FDG[59] =================
+[Function] Bookmarks option
+
+[Core Logic Task]
+The user initiates the process on page 42. The core action is clicking the 'Bookmarks' option, which is the only step in this flow as it directly interacts with the bookmarks functionality (with no further branching or looping shown in the provided actions).
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Bookmarks option> (to see if the bookmarks functionality is still accessible without this action, though per core logic it's the only step so this is a mutation test)
+ - V2: Repeat clicking <Bookmarks option> (to check if repeated clicks have any unexpected behavior like multiple triggers or errors)
+ - V3: Click <Bookmarks option> on a different page (simulating a user error of not starting on page 42, but since the widget is just <Bookmarks option> and no page navigation widget is given, this is a stretch but assuming page context can be changed, click <Bookmarks option> on page 43 instead of 42)
+
+================= [TaskTest] FDG[60] =================
+[Function] Recent tabs option
+
+[Core Logic Task]
+The flow starts on page 42. The user performs a click action on the 'Recent tabs' option. Since there are no further steps or branches indicated, this is a single-step flow focused on selecting the Recent tabs option.
+
+[Variant Paths] (3)
+ - V1: Omit the step: do not tap <Recent tabs option>
+ - V2: Repeat the step: tap <Recent tabs option> twice
+ - V3: Branch mutation (though limited here, simulate an alternative: tap <Recent tabs option> in a different context, but since only this widget, just tap it again as a variant)
+
+================= [TaskTest] FDG[61] =================
+[Function] History option
+
+[Core Logic Task]
+The core execution logic starts on page 42. The user performs a click action on the 'History' option. Since there are no further steps or branches from this action (as the action is marked as non-leaf but no subsequent actions are provided), the flow ends here.
+
+[Variant Paths] (3)
+ - V1: Tap <History option> twice
+ - V2: Omit tapping <History option>
+ - V3: Tap <History option> after a short delay (simulating a different timing)
+
+================= [TaskTest] FDG[62] =================
+[Function] Downloads option
+
+[Core Logic Task]
+The core execution logic for the Downloads option involves a single step: clicking on the 'Downloads' option. This action is performed on the page with index 42, and there are no subsequent branches or loops as the action is a leaf (though the 'is_leaf' flag here is false, the main flow is just this click action).
+
+[Variant Paths] (3)
+ - V1: Tap <Downloads option> twice
+ - V2: Omit tapping <Downloads option> (though this skips the core action, for mutation testing)
+ - V3: Tap <Downloads option> after a short delay (simulating timing variation)
+
+================= [TaskTest] FDG[63] =================
+[Function] Share... option
+
+[Core Logic Task]
+The flow starts on page 42. The user clicks the 'Share...' option. Since there are no further actions or branches provided, this is the only step in the flow for the 'Share... option' functional point.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Share... option> (no action taken)
+ - V2: Repeat tapping <Share... option> (tap it twice in a row)
+ - V3: Tap <Share... option> with a delay (simulate a slow interaction)
+
+================= [TaskTest] FDG[64] =================
+[Function] Find in page option
+
+[Core Logic Task]
+The core execution logic for the 'Find in page' option involves a single step: clicking on the 'Find in page' option. This action is performed on the page with index 42, and there are no subsequent branches or loops as the action is a leaf (no further navigation implied here).
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[65] =================
+[Function] Add to Home screen option
+
+[Core Logic Task]
+The flow starts on page 42. The user performs a click action on the 'Add to Home screen' option. Since there are no further steps or branches (as only one action is provided), the logic consists of this single click to initiate the 'Add to Home screen' functionality.
+
+[Variant Paths] (3)
+ - V1: Long-press <Add to Home screen option> (instead of click, changing interaction type)
+ - V2: Tap <Add to Home screen option> twice (repeating the action)
+ - V3: Omit tapping <Add to Home screen option> (skipping the core action)
+
+================= [TaskTest] FDG[66] =================
+[Function] Desktop site toggle
+
+[Core Logic Task]
+The core execution logic involves interacting with the desktop site toggle. The user initiates by clicking the 'Desktop site' toggle option. Since there's only one action here, the flow is a single step with no branches or loops, focusing on toggling the desktop site setting.
+
+[Variant Paths] (3)
+ - V1: Tap <Desktop site toggle> twice (repeat toggle)
+ - V2: Omit tapping <Desktop site toggle> (skip the toggle action)
+ - V3: Tap <Desktop site toggle> with an unexpected long-press (alter interaction type)
+
+================= [TaskTest] FDG[67] =================
+[Function] Settings option
+
+[Core Logic Task]
+The user initiates the process by interacting with the Settings option. This action is a click on the Settings option, which is part of a menu (likely a browser menu given the context). The flow is a single step as there are no further actions or branches provided here, so the core logic is just the click on the Settings option to presumably access the settings page (though the destination page isn't fully resolved in the given action, but the action itself is the key step here).
+
+[Variant Paths] (3)
+ - V1: Long-press <Settings option> (instead of tap)
+ - V2: Tap <Settings option> twice (repeat the tap)
+ - V3: Omit tapping <Settings option> (simulate not initiating the settings access)
+
+================= [TaskTest] FDG[68] =================
+[Function] Help & feedback option
+
+[Core Logic Task]
+The flow starts on page 42. The user performs a click action on the 'Help & feedback' option. Since there's only one action, the flow is a single step with no branches or loops.
+
+[Variant Paths] (2)
+ - V1: Omit tapping <Help & feedback option> (skip the only step)
+ - V2: Repeat tapping <Help & feedback option> (perform the action twice instead of once)
+
+================= [TaskTest] FDG[69] =================
+[Function] Close 'Add to Home screen' banner
+
+[Core Logic Task]
+The process starts on page 48. The user clicks the close button (X) for the 'Add to Home screen' banner. This action closes the banner, completing the task with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Close 'Add to Home screen' banner> and check if the banner closes automatically
+ - V2: Tap <Close 'Add to Home screen' banner> twice to see if any unexpected behavior occurs
+ - V3: Wait for a while and then tap <Close 'Add to Home screen' banner> to check if the timing affects the closing
+
+================= [TaskTest] FDG[70] =================
+[Function] Search or type web address bar
+
+[Core Logic Task]
+The core execution logic starts at page 49. The user performs a click action on the 'Search or type web address' bar. Since there are no subsequent steps or branches provided, this is a single-step flow focused on interacting with the address bar.
+
+[Variant Paths] (3)
+ - V1: Tap <Search or type web address bar> twice (repeat operation)
+ - V2: Omit tapping <Search or type web address bar> (omit step)
+ - V3: Tap <Search or type web address bar> and then tap it again immediately (order mutation with repeated step)
+
+================= [TaskTest] FDG[71] =================
+[Function] YouTube shortcut icon
+
+[Core Logic Task]
+The flow starts on page 49. The user clicks the YouTube shortcut icon. Since this is a single-step action with no branches or loops, the execution completes with this click.
+
+[Variant Paths] (3)
+ - V1: Long-press <YouTube shortcut icon> (instead of tap)
+ - V2: Tap <YouTube shortcut icon> twice (repeat the tap)
+ - V3: Omit tapping <YouTube shortcut icon> (skip the action)
+
+================= [TaskTest] FDG[72] =================
+[Function] Baidu shortcut icon
+
+[Core Logic Task]
+The user starts on page 49 (a browser homepage with shortcuts). The core action is clicking the Baidu shortcut icon, which likely navigates to the Baidu website or related page. There are no branches or loops here as it's a single click action to trigger the shortcut.
+
+[Variant Paths] (3)
+ - V1: Tap <Baidu shortcut icon> twice
+ - V2: Omit tapping <Baidu shortcut icon> (do nothing)
+ - V3: Tap <Baidu shortcut icon> after waiting for 5 seconds (simulating a delayed action)
+
+================= [TaskTest] FDG[73] =================
+[Function] 虎扑 shortcut icon
+
+[Core Logic Task]
+The process starts on the Chrome homepage (page 49). The user clicks the 虎扑 shortcut icon, which is the core action to initiate navigation related to the 虎扑 app or site. There are no branches or loops as it's a single click action.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[74] =================
+[Function] Facebook shortcut icon
+
+[Core Logic Task]
+The flow starts on page 49 (a browser homepage). The user clicks the Facebook shortcut icon. Since there are no further branches or loops here, the action of clicking the icon is the core step, likely leading to Facebook's page (though the dst_page_idx is null here, but the step captures the click action on the Facebook shortcut icon).
+
+[Variant Paths] (3)
+ - V1: Tap <Facebook shortcut icon> twice (repeat the click operation)
+ - V2: Omit tapping <Facebook shortcut icon> (skip the core action)
+ - V3: Long-press <Facebook shortcut icon> instead of tapping (branch mutation: alternative interaction with the same widget)
+
+================= [TaskTest] FDG[75] =================
+[Function] GitHub shortcut icon
+
+[Core Logic Task]
+The user initiates the interaction by clicking the GitHub shortcut icon. This action is the sole step in the flow, as the icon is clicked to presumably navigate to GitHub (though the destination page is not yet loaded or confirmed in the provided action).
+
+[Variant Paths] (3)
+ - V1: Tap <GitHub shortcut icon> twice (repeat operation)
+ - V2: Omit tapping <GitHub shortcut icon> (skip the only step)
+ - V3: Long-press <GitHub shortcut icon> instead of tapping (alternative interaction type)
+
+================= [TaskTest] FDG[76] =================
+[Function] 维基百科 shortcut icon
+
+[Core Logic Task]
+The user initiates the action by clicking on the 维基百科 (Wikipedia) shortcut icon. This single step is the core execution logic for accessing the Wikipedia shortcut, with no branches or loops as it directly triggers the intended action.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[77] =================
+[Function] V2EX shortcut icon
+
+[Core Logic Task]
+The user interacts with the V2EX shortcut icon. The core logic involves clicking the V2EX shortcut icon, which likely navigates to the V2EX page (though the destination page index is null here, implying the action initiates navigation).
+
+[Variant Paths] (3)
+ - V1: Tap <V2EX shortcut icon> twice
+ - V2: Omit tapping <V2EX shortcut icon> (simulate not triggering the navigation)
+ - V3: Tap <V2EX shortcut icon> with a long press (if long press is a plausible alternative interaction, assuming the widget supports it; since the original is a tap, this is a branch mutation)
+
+================= [TaskTest] FDG[78] =================
+[Function] 百度知道 shortcut icon
+
+[Core Logic Task]
+The user starts on page 49 (a browser homepage). The core action is clicking the '百度知道' shortcut icon, which is expected to navigate to the Baidu Zhidao service (though the destination page isn't fully resolved here, the step captures the click on the shortcut).
+
+[Variant Paths] (3)
+ - V1: Tap <百度知道 shortcut icon> twice (repeat the click operation)
+ - V2: Omit tapping <百度知道 shortcut icon> (skip the core action)
+ - V3: Tap <百度知道 shortcut icon> after a short delay (simulate a timing variation in the click)
+
+================= [TaskTest] FDG[79] =================
+[Function] MORE button
+
+[Core Logic Task]
+The functional point starts on page 49. The user clicks the 'MORE' button. Since there are no further actions or branches provided, the flow ends after this click.
+
+[Variant Paths] (3)
+ - V1: Tap <MORE button> twice
+ - V2: Omit tapping <MORE button>
+ - V3: Tap <MORE button> after a 10 - second delay
+
+================= [TaskTest] FDG[80] =================
+[Function] SIGN IN TO CHROME button
+
+[Core Logic Task]
+The user initiates the sign-in process by clicking the 'SIGN IN TO CHROME' button on the Chrome homepage. This action is the first and only step in the current flow, with no subsequent branches or loops as only one action is provided.
+
+[Variant Paths] (0)
+
+
+[AppTest] Found 31 dependency pairs to test.
+
+==============================================
+[AppTest] Pair 1/31: 1 -> 2
+Producer: This page in the Markor app functions as a file management interface within the "Files" tab, allowing users to view, organize, and access files (like "QuickNote.md") and folders (like the "Documents" directory) stored in the device's storage, with options to navigate, search, and create new items.
+Consumer: The page provides a search interface with options for recursive directory search, allowing users to input a search term and configure settings like regex search, case sensitivity, and content search to find files or notes.
+
+[Plan]
+Case 1/1
+Producer task:
+ In Markor app's Files tab, click the folder icon in the top bar to navigate the folder structure and load the current directory's files/folders.
+Consumer task:
+ Click the search icon to open the search interface. Enter a search term (e.g., 'QuickNote') in the input field. Optionally, enable 'Search in content'. Then click OK to execute the search and verify it uses the current directory files from the Producer's folder navigation.
+------------------------------
+
+==============================================
+[AppTest] Pair 2/31: 1 -> 43
+Producer: This page in the Markor app functions as a file management interface within the "Files" tab, allowing users to view, organize, and access files (like "QuickNote.md") and folders (like the "Documents" directory) stored in the device's storage, with options to navigate, search, and create new items.
+Consumer: This page functions as a file selection dialog (within a QuickNote link - insertion workflow) that allows navigation to the home directory (via the Home icon) and file/folder exploration (or cancellation via the "CANCEL" button) to select a file for linking in the QuickNote.
+
+[Plan]
+Case 1/1
+Producer task:
+ In Markor app's Files tab, click the folder icon to navigate the folder structure (producing folder navigation result with files/folders like 'Documents' and 'QuickNote.md').
+Consumer task:
+ In the QuickNote link - insertion file selection dialog (page 26), use the file list (from the producer's folder navigation result, including 'Documents' directory) and click the Search icon button to initiate a search for a file (using the produced file list as the basis for file exploration).
+------------------------------
+
+==============================================
+[AppTest] Pair 3/31: 2 -> 6
+Producer: The page provides a search interface with options for recursive directory search, allowing users to input a search term and configure settings like regex search, case sensitivity, and content search to find files or notes.
+Consumer: Regex search checkbox
+
+[Plan]
+Case 1/1
+Producer task:
+ Click the search icon (entry page 0) to open the search interface (page 1). Enter a search term in the search input field (step S2). Enable 'Search in content' (step S3). Click the OK button (step S5) to execute the search and produce search configuration, updated search configuration, and search results (files).
+Consumer task:
+ On page 1, click the 'Regex search' checkbox (which uses the regex search setting from the producer's search configuration) to toggle it and transition to page 6. Verify that the regex search setting reflects the configuration from the producer's search setup.
+------------------------------
+
+==============================================
+[AppTest] Pair 4/31: 2 -> 7
+Producer: The page provides a search interface with options for recursive directory search, allowing users to input a search term and configure settings like regex search, case sensitivity, and content search to find files or notes.
+Consumer: Case sensitive checkbox
+
+[Plan]
+Case 1/1
+Producer task:
+ Click the search icon to open the search interface. Enter a search term in the input field. Then, click the OK button to execute the search and produce search configuration and results.
+Consumer task:
+ On the search interface (page 1), click the 'Case sensitive' checkbox (transitioning to page 7) to toggle the case - sensitive setting, and verify that this setting is part of the search configuration produced by the producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 5/31: 3 -> 8
+Producer: The QuickNote page in the file and note management app allows users to create, edit, and format notes (including text styling, adding media/links, and managing content) with additional options for navigation, saving, searching, and accessing more features.
+Consumer: The current page is a QuickNote editing interface where the "Undo" button (curved arrow pointing left) allows the user to reverse the most recent action performed while editing the note content, which includes text and embedded media/HTML elements.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to QuickNote page via bottom nav tab, then format note text as bold (or italic) to update note content.
+Consumer task:
+ On the QuickNote editing page, click the Preview button to verify the preview shows the bold (or italic) formatted note content produced earlier.
+------------------------------
+
+==============================================
+[AppTest] Pair 6/31: 3 -> 9
+Producer: The QuickNote page in the file and note management app allows users to create, edit, and format notes (including text styling, adding media/links, and managing content) with additional options for navigation, saving, searching, and accessing more features.
+Consumer: The current page is a QuickNote editing interface where users can edit a note (containing text and HTML-like content), with the Undo button available to revert the most recent edit action.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to QuickNote via bottom nav, type 'Test Note' as content, then tap the Bold button to format the text.
+Consumer task:
+ On the QuickNote editing page, tap the Checklist toggle button; verify the note content (including the bold 'Test Note') is present and the checklist mode modifies the note's structure as expected.
+------------------------------
+
+==============================================
+[AppTest] Pair 7/31: 3 -> 10
+Producer: The QuickNote page in the file and note management app allows users to create, edit, and format notes (including text styling, adding media/links, and managing content) with additional options for navigation, saving, searching, and accessing more features.
+Consumer: The current page (QuickNote editing interface) allows users to edit a QuickNote, with the "Undo" button enabling them to reverse the most recent edit action, and also provides tools for formatting, attaching files, and managing the note.
+
+[Plan]
+Case 1/2
+Producer task:
+ Navigate to QuickNote page via bottom nav tab, then format note text as bold.
+Consumer task:
+ On QuickNote editing page, click List toggle button to check if note content (with bold formatting) reflects list - related formatting change.
+------------------------------
+Case 2/2
+Producer task:
+ Navigate to QuickNote page via bottom nav tab, then update note content with new text.
+Consumer task:
+ On QuickNote editing page, click List toggle button to check if the updated note content reflects list - related formatting change.
+------------------------------
+
+==============================================
+[AppTest] Pair 8/31: 3 -> 11
+Producer: The QuickNote page in the file and note management app allows users to create, edit, and format notes (including text styling, adding media/links, and managing content) with additional options for navigation, saving, searching, and accessing more features.
+Consumer: The current page (QuickNote editing interface) allows users to edit a QuickNote, with the Undo button enabling them to reverse the most recent edit action.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to QuickNote via bottom nav tab, then format note text as bold (to update note content).
+Consumer task:
+ On the QuickNote editing page, click the Trash button to attempt deletion of the note with the bold-formatted (updated) content.
+------------------------------
+
+==============================================
+[AppTest] Pair 9/31: 3 -> 12
+Producer: The QuickNote page in the file and note management app allows users to create, edit, and format notes (including text styling, adding media/links, and managing content) with additional options for navigation, saving, searching, and accessing more features.
+Consumer: The current page is a QuickNote editing interface where users can create, edit, and format notes, with the "Undo" button allowing users to reverse their most recent editing action.
+
+[Plan]
+Case 1/2
+Producer task:
+ Navigate to QuickNote page via bottom nav tab, then edit the note content (e.g., type new text) and save the updated note.
+Consumer task:
+ On the QuickNote editing interface, click the Export button to export the note that was just updated and saved by the Producer.
+------------------------------
+Case 2/2
+Producer task:
+ Go to QuickNote page using bottom nav tab, format the note content (e.g., apply bold formatting) and save the formatted note.
+Consumer task:
+ In the QuickNote editing interface, click the Export button to export the formatted note that was created by the Producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 10/31: 3 -> 13
+Producer: The QuickNote page in the file and note management app allows users to create, edit, and format notes (including text styling, adding media/links, and managing content) with additional options for navigation, saving, searching, and accessing more features.
+Consumer: This page provides a menu of attachment options (Color, Insert Link, File, Image, Audio, Date) for enhancing the content of a QuickNote, with options to confirm (OK) or cancel (CANCEL) the selection.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to QuickNote page via bottom nav tab, then edit note content (e.g., type some text) and save the note.
+Consumer task:
+ Click Attachment button to open attachment options menu, then click OK to confirm attachment selection (using the note content produced by Producer) and proceed, or click CANCEL to dismiss and return to QuickNote with the produced note content.
+------------------------------
+
+==============================================
+[AppTest] Pair 11/31: 3 -> 14
+Producer: The QuickNote page in the file and note management app allows users to create, edit, and format notes (including text styling, adding media/links, and managing content) with additional options for navigation, saving, searching, and accessing more features.
+Consumer: The current page is a "Special Key" selection menu in the QuickNote editing interface, allowing the user to choose from various text navigation and manipulation commands (e.g., Page Up, Line Start, Document End) to perform actions within the note, with options to confirm (OK) or cancel the selection.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to QuickNote via bottom nav tab, type 'Sample Note Content', then apply bold formatting to the text.
+Consumer task:
+ Click keyboard toggle button to open 'Special Key' menu, select 'Document End' option, then confirm with OK; verify the cursor moves to the end of the bold-formatted 'Sample Note Content'.
+------------------------------
+
+==============================================
+[AppTest] Pair 12/31: 3 -> 15
+Producer: The QuickNote page in the file and note management app allows users to create, edit, and format notes (including text styling, adding media/links, and managing content) with additional options for navigation, saving, searching, and accessing more features.
+Consumer: The current page is a dialog for configuring date and time formatting options (including format selection, date/time picking, and a toggle for using current date/time) to insert or manage date/time information within a QuickNote.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to QuickNote page via bottom nav tab, then type and save new note content (e.g., 'Test Note') using the save option.
+Consumer task:
+ Click Clock button to open date/time format dialog, then confirm (OK) to insert date/time into the previously saved 'Test Note' content and verify the note now includes the date/time.
+------------------------------
+
+==============================================
+[AppTest] Pair 13/31: 3 -> 23
+Producer: The QuickNote page in the file and note management app allows users to create, edit, and format notes (including text styling, adding media/links, and managing content) with additional options for navigation, saving, searching, and accessing more features.
+Consumer: The current page is a color - setting interface for QuickNote, which enables users to set the foreground or background color of text, and also allows the insertion of hex color codes.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to QuickNote page via bottom nav tab, then edit and save note content (e.g., add some text and save).
+Consumer task:
+ Click 'Color' option, at color - setting interface, choose a color setting option (e.g., foreground color), confirm, then in color adjustment screen, pick a color dot, adjust sliders, and confirm to apply color setting to the saved note content from Producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 14/31: 3 -> 24
+Producer: The QuickNote page in the file and note management app allows users to create, edit, and format notes (including text styling, adding media/links, and managing content) with additional options for navigation, saving, searching, and accessing more features.
+Consumer: The current page allows users to insert a link into a QuickNote by entering a description, a URL/path, or browsing the filesystem to select a file, with options to confirm or cancel the action.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to QuickNote page via bottom nav tab, then format some note content (e.g., make text bold) and save the updated note.
+Consumer task:
+ On the QuickNote page, click 'Insert Link' option. In the Insert Link page, input a description and a URL/path, then confirm the action with 'OK' to insert the link into the previously saved and formatted note.
+------------------------------
+
+==============================================
+[AppTest] Pair 15/31: 3 -> 25
+Producer: The QuickNote page in the file and note management app allows users to create, edit, and format notes (including text styling, adding media/links, and managing content) with additional options for navigation, saving, searching, and accessing more features.
+Consumer: The current page is a dialog for inserting a link into a QuickNote, allowing the user to input a description, a URL/path (or browse the filesystem for a path), and then confirm or cancel the link insertion.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to QuickNote page via bottom nav tab, then add some text content to the note and save it.
+Consumer task:
+ From the current page, click the 'File' option, then browse the filesystem to select a file path, and confirm to insert the file link into the QuickNote with the previously saved note content.
+------------------------------
+
+==============================================
+[AppTest] Pair 16/31: 3 -> 26
+Producer: The QuickNote page in the file and note management app allows users to create, edit, and format notes (including text styling, adding media/links, and managing content) with additional options for navigation, saving, searching, and accessing more features.
+Consumer: The current page is an "Insert Image" interface within the QuickNote editing section, allowing users to add an image to their note by providing a description and URL/path, or by browsing the filesystem, taking a camera picture, selecting a gallery picture, or editing a picture, with options to cancel or confirm the insertion.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to QuickNote page via bottom nav tab, then edit note content (e.g., add sample text) to prepare the note for image insertion.
+Consumer task:
+ From the QuickNote editing section, click 'Image' option to open Insert Image interface. Then, input a description for the image (related to the note content edited earlier) and click OK to confirm insertion, verifying the image is added to the note content.
+------------------------------
+
+==============================================
+[AppTest] Pair 17/31: 3 -> 27
+Producer: The QuickNote page in the file and note management app allows users to create, edit, and format notes (including text styling, adding media/links, and managing content) with additional options for navigation, saving, searching, and accessing more features.
+Consumer: The current page is an audio attachment interface within the QuickNote editing screen, allowing users to add an audio file to a note by either browsing the filesystem for an existing audio file, recording a new audio file, and providing a description for the audio attachment.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to QuickNote page via bottom nav tab, then save a note with initial text content.
+Consumer task:
+ Click 'Audio' option in QuickNote to open audio attachment interface, then browse filesystem for an audio file and confirm with OK to attach it to the previously saved note.
+------------------------------
+
+==============================================
+[AppTest] Pair 18/31: 3 -> 28
+Producer: The QuickNote page in the file and note management app allows users to create, edit, and format notes (including text styling, adding media/links, and managing content) with additional options for navigation, saving, searching, and accessing more features.
+Consumer: The current page is a date and time formatting interface within the QuickNote editing screen, allowing users to configure date/time formats (e.g., Date only, Time only, custom format like yyyy - MM - dd), choose to use the current date/time, and pick specific dates/times for insertion into the QuickNote, with options to confirm, cancel, or get help.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to QuickNote page via bottom nav tab, then edit the note content (e.g., type some text) and save the note.
+Consumer task:
+ From the QuickNote editing page, click the 'Date' option to open the date/time formatting interface, then confirm inserting a date into the note (the one edited and saved by Producer) to check if the note reflects the updated content with the inserted date.
+------------------------------
+
+==============================================
+[AppTest] Pair 19/31: 3 -> 33
+Producer: The QuickNote page in the file and note management app allows users to create, edit, and format notes (including text styling, adding media/links, and managing content) with additional options for navigation, saving, searching, and accessing more features.
+Consumer: Move text one line down option
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to QuickNote page via bottom nav tab, then edit the note content (e.g., type sample text) and save the updated note content.
+Consumer task:
+ On page 10, click the 'Move text one line down' option, then verify the text from the saved QuickNote content is moved one line down as expected.
+------------------------------
+
+==============================================
+[AppTest] Pair 20/31: 3 -> 36
+Producer: The QuickNote page in the file and note management app allows users to create, edit, and format notes (including text styling, adding media/links, and managing content) with additional options for navigation, saving, searching, and accessing more features.
+Consumer: This page functions as a camera interface to capture a photo (using the shutter button) for inserting into a QuickNote, with options to adjust camera settings or switch camera modes.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to QuickNote page via bottom nav tab, then create a new note (e.g., type sample text) and save it.
+Consumer task:
+ Click CAMERA PICTURE button to open camera interface, then take a photo (using shutter button) to insert into the saved QuickNote.
+------------------------------
+
+==============================================
+[AppTest] Pair 21/31: 3 -> 37
+Producer: The QuickNote page in the file and note management app allows users to create, edit, and format notes (including text styling, adding media/links, and managing content) with additional options for navigation, saving, searching, and accessing more features.
+Consumer: This page allows the user to select an application (Gallery or Photos) to complete the action of inserting an image from the gallery into a QuickNote, after choosing the "GALLERY PICTURE" option in the Insert Image dialog.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to QuickNote page via bottom nav tab, then perform note - related actions (e.g., edit, format text) to create/update note content.
+Consumer task:
+ On Insert Image dialog page, click 'GALLERY PICTURE' button. Then, in the 'Complete action using' dialog, verify that the options (Gallery or Photos) for inserting an image into the note (created/updated by Producer) are available.
+------------------------------
+
+==============================================
+[AppTest] Pair 22/31: 3 -> 39
+Producer: The QuickNote page in the file and note management app allows users to create, edit, and format notes (including text styling, adding media/links, and managing content) with additional options for navigation, saving, searching, and accessing more features.
+Consumer: This page allows the user to record audio (in WAV format) for attaching to a QuickNote, with options to start recording, cancel, or confirm the recording, and also displays the recording duration and file size.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to QuickNote page via bottom nav tab, then save a new note with sample text content
+Consumer task:
+ Click RECORD AUDIO button, record audio, confirm recording, then verify the audio recording is attached to the saved QuickNote
+------------------------------
+
+==============================================
+[AppTest] Pair 23/31: 14 -> 29
+Producer: The current page is a "Special Key" selection menu in the QuickNote editing interface, allowing the user to choose from various text navigation and manipulation commands (e.g., Page Up, Line Start, Document End) to perform actions within the note, with options to confirm (OK) or cancel the selection.
+Consumer: Page Up (Page Up) option
+
+[Plan]
+Case 1/1
+Producer task:
+ Click the keyboard toggle button to open the 'Special Key' menu, then select the 'Page Up' option and click OK to confirm the selection.
+Consumer task:
+ On page 10, click the 'Page Up (Page Up)' option to verify that the selected special key setting from the producer is used.
+------------------------------
+
+==============================================
+[AppTest] Pair 24/31: 14 -> 31
+Producer: The current page is a "Special Key" selection menu in the QuickNote editing interface, allowing the user to choose from various text navigation and manipulation commands (e.g., Page Up, Line Start, Document End) to perform actions within the note, with options to confirm (OK) or cancel the selection.
+Consumer: Line End (Pos End) option
+
+[Plan]
+Case 1/1
+Producer task:
+ Click the keyboard toggle button to open the 'Special Key' menu, then select the 'Line End (Pos End)' option (or relevant option for Line End) and confirm (if needed) to set the special key setting.
+Consumer task:
+ On page 10, click the 'Line End (Pos End)' option and verify that the action reflects the updated special key setting from the producer (e.g., the note editing state or special key setting is applied as expected, and no new page is navigated to).
+------------------------------
+
+==============================================
+[AppTest] Pair 25/31: 14 -> 32
+Producer: The current page is a "Special Key" selection menu in the QuickNote editing interface, allowing the user to choose from various text navigation and manipulation commands (e.g., Page Up, Line Start, Document End) to perform actions within the note, with options to confirm (OK) or cancel the selection.
+Consumer: Move text one line up option
+
+[Plan]
+Case 1/1
+Producer task:
+ Click the keyboard toggle button to open the 'Special Key' menu, then select the 'Move text one line up' option (or relevant special key for text movement) and click OK to confirm the selection.
+Consumer task:
+ On page 10, click the 'Move text one line up' option to verify that the text editing action uses the selected special key setting from the Producer to move the text as expected.
+------------------------------
+
+==============================================
+[AppTest] Pair 26/31: 14 -> 34
+Producer: The current page is a "Special Key" selection menu in the QuickNote editing interface, allowing the user to choose from various text navigation and manipulation commands (e.g., Page Up, Line Start, Document End) to perform actions within the note, with options to confirm (OK) or cancel the selection.
+Consumer: Document Start option
+
+[Plan]
+Case 1/1
+Producer task:
+ Click the keyboard toggle button to open the 'Special Key' menu, then select the 'Document Start' option from the menu, and click OK to confirm the selection.
+Consumer task:
+ Click the 'Document Start' option (which should now reflect the selected special key setting from the Producer) to navigate to the start of the document in the text editor.
+------------------------------
+
+==============================================
+[AppTest] Pair 27/31: 50 -> 49
+Producer: This page allows the user to start recording audio (in WAV format) for attachment to a QuickNote, with options to cancel or confirm the recording, and also displays recording duration and file size metrics.
+Consumer: Speaker audio toggle icon
+
+[Plan]
+Case 1/1
+Producer task:
+ On the audio recording page (index 50), click the red record start button to initiate an audio recording session.
+Consumer task:
+ On page 35, click the speaker audio toggle icon (related to the started audio recording session from the producer) and verify the app transitions to page 36.
+------------------------------
+
+==============================================
+[AppTest] Pair 28/31: 51 -> 52
+Producer: New tab button (+)
+Consumer: Close YouTube tab (X)
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 41, click the 'New tab button (+)' to open a new browser tab (leading to page 43).
+Consumer task:
+ On the page with multiple tabs (including the newly opened tab), identify the YouTube tab and click its associated 'X' button to close the YouTube tab.
+------------------------------
+
+==============================================
+[AppTest] Pair 29/31: 51 -> 53
+Producer: New tab button (+)
+Consumer: Search YouTube tab (magnifier)
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 41, click the 'New tab button (+)' to open a new browser tab (leading to page 43).
+Consumer task:
+ On page 41, click the 'Search YouTube tab (magnifier)' to search the newly opened YouTube tab (navigating to page 45).
+------------------------------
+
+==============================================
+[AppTest] Pair 30/31: 51 -> 54
+Producer: New tab button (+)
+Consumer: Close GitHub tab (X)
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 41, click the 'New tab button (+)' to open a new browser tab (leading to page 43).
+Consumer task:
+ On page 41 (tab management view), click the 'X' button associated with the newly opened GitHub tab (from the producer step) to close it and navigate to page 46.
+------------------------------
+
+==============================================
+[AppTest] Pair 31/31: 51 -> 55
+Producer: New tab button (+)
+Consumer: Close Android Dev tab (X)
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 41, click the 'New tab button (+)' to open a new browser tab (leading to page 43).
+Consumer task:
+ On the page with the Android Dev tab visible (page 41), click the 'X' button for the Android Dev tab (opened via the new tab action) to close it and navigate to page 47.
+------------------------------

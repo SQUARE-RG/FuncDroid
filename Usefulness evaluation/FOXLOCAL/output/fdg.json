@@ -1,0 +1,1151 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "News, live stream, and user navigation",
+            "action_refs": [
+                [
+                    0,
+                    6
+                ]
+            ],
+            "data_in": [
+                "news feed"
+            ],
+            "data_out": [
+                "news feed"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The app starts on page 0. The user clicks the bottom tab 'Feed' (action_ref [0,6]), which keeps the app on page 0, likely refreshing or confirming the Feed view for news and live stream access. There are no branches or loops as only one action is present.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            6
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click bottom tab 'Feed' to stay on page 0 (Feed view)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 1,
+            "function_description": "This page provides a search interface where users can input a city name or ZIP code to search for location - related information (such as local news, weather, or other location - specific content).",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ],
+                [
+                    1,
+                    0
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "data_in": [
+                "search input field",
+                "location search query"
+            ],
+            "data_out": [
+                "entered search query"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on page 0 and clicks the search icon to navigate to the search page (page 1). On the search page, the user can either input a city/ZIP code (e.g., 'local news') or click the back button to return to page 0. The input action is a leaf step, while the back button navigates back.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click search icon to open search page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            1,
+                            0
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click back button to return to previous page"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            1,
+                            1
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 1,
+                        "action": "input",
+                        "summary": "Input location-related query in search field"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "Displays the current weather conditions (including temperature, feels - like temperature, and weather type) for Los Angeles, CA, along with hourly weather forecasts for the day and a multi - day (daily) weather forecast.",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    2,
+                    3
+                ]
+            ],
+            "data_in": [
+                "weather feature entry",
+                "tomorrow daily forecast item"
+            ],
+            "data_out": [
+                "weather forecast data"
+            ],
+            "data_dependencies": [
+                9
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts by clicking the weather icon on the initial page to navigate to the weather page for Los Angeles, CA, which displays current conditions and forecasts. Then, a click on the 'Tomorrow' daily forecast item (on the weather page) likely provides more details about that day’s forecast, with no branching or looping in this core logic.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click weather icon to open Los Angeles weather page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            2,
+                            3
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click 'Tomorrow' daily forecast item"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "The current page functions as a live streaming hub, displaying the \"Good Day Atlanta at 5:30 AM\" broadcast at the top and providing access to other live streams like \"LiveNOW from FOX\" and \"FOX WEATHER\" for users to watch live content.",
+            "action_refs": [
+                [
+                    0,
+                    2
+                ]
+            ],
+            "data_in": [
+                "live stream entry"
+            ],
+            "data_out": [
+                "live stream content"
+            ],
+            "data_dependencies": [
+                4,
+                12,
+                14,
+                15,
+                17,
+                21
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the main page (page 0) and clicks the 'Watch Live' button. This action navigates to the live streaming hub (page 3), where the 'Good Day Atlanta at 5:30 AM' broadcast is shown at the top, and other live streams like 'LiveNOW from FOX' and 'FOX WEATHER' are accessible for viewing.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click the 'Watch Live' button to navigate to the live streaming hub page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "The current page functions as a live streaming hub, displaying an ongoing live news broadcast (\"Good Day Atlanta at 5:30 AM\") at the top and providing access to additional live streams (e.g., \"LiveNOW from FOX,\" \"FOX WEATHER\") for users to watch live content.",
+            "action_refs": [
+                [
+                    0,
+                    3
+                ]
+            ],
+            "data_in": [
+                "Good Day Atlanta live card"
+            ],
+            "data_out": [
+                "Good Day Atlanta live broadcast view"
+            ],
+            "data_dependencies": [
+                12,
+                14,
+                15,
+                17,
+                21
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the live streaming hub page (page 0). They click the 'Good Day Atlanta live card' (action from page 0 to 3), which navigates to a page displaying the 'Good Day Atlanta at 5:30 AM' live broadcast at the top, along with additional live stream options like 'LiveNOW from FOX' and 'FOX WEATHER' below.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click the 'Good Day Atlanta live card' to navigate to the live broadcast and additional streams page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "The page displays a list of top news stories from Atlanta, including headlines, timestamps, and associated images, to provide users with the latest local news updates.",
+            "action_refs": [
+                [
+                    0,
+                    4
+                ],
+                [
+                    4,
+                    0
+                ]
+            ],
+            "data_in": [
+                "top stories list",
+                "Atlanta top stories page"
+            ],
+            "data_out": [
+                "expanded top stories list",
+                "previous page (FOX Local feed page)"
+            ],
+            "data_dependencies": [
+                6,
+                16
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the main feed page (page 0). The user clicks the 'Top Stories more arrow' to navigate to the detailed Top Stories page (page 4). To return, the user clicks the 'Back navigation arrow' on page 4, which takes them back to the main feed page (page 0).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click Top Stories more arrow to view detailed top stories"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            4,
+                            0
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click Back navigation arrow to return to main feed"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "Displays the full content of a top news article about a former Atlanta Housing executive expected to plead guilty in a fraud case, including a headline, author, image/video, summary, additional details, and options for interaction (e.g., show more, bookmark, share, next article, close live stream).",
+            "action_refs": [
+                [
+                    0,
+                    5
+                ]
+            ],
+            "data_in": [
+                "news article card"
+            ],
+            "data_out": [
+                "news article content"
+            ],
+            "data_dependencies": [
+                16
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the app's main page (page 0) and clicks the top news article card about the former Atlanta Housing executive. This action navigates to the article's detail page (page 5), where the full content (headline, author, media, summary, and interaction options) is displayed. No branches or loops are present as it is a straight-line flow to view the article.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click the top news article card to open its detailed view"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "The \"Watch\" page in the FOX LOCAL app enables users to view live broadcasts (like \"Good Day Atlanta at 5:00 AM\"), offers a prompt to sign up/in to resume previously watched content, and provides access to ongoing live streams.",
+            "action_refs": [
+                [
+                    0,
+                    7
+                ]
+            ],
+            "data_in": [
+                "watch feature entry"
+            ],
+            "data_out": [
+                "watch feature page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the Feed page (page 0) and clicks the 'Watch' bottom tab. This navigates to the Watch page (page 6), where live broadcasts (like 'Good Day Atlanta at 5:00 AM') are displayed, along with a prompt to sign up/in to resume previous content and access to ongoing live streams.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            7
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click bottom tab 'Watch' to navigate to Watch page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "The \"You\" page in the FOX LOCAL app displays the user's news alerts (currently showing \"No Alerts Yet\" with a message about alerts appearing as they arrive) and provides access to tabs for Alerts, Viewed, Saved, and My Shows, along with a Content Preferences option.",
+            "action_refs": [
+                [
+                    0,
+                    8
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the main page (page 0). The user clicks the 'You' bottom tab, navigating to the 'You' page (page 7). On this page, the 'Alerts' tab is active, showing 'No Alerts Yet', and tabs for 'Viewed', 'Saved', 'My Shows', plus 'Content Preferences' are accessible.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            8
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click bottom tab 'You' to navigate to the 'You' page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "The current page functions as a news feed interface for FOX LOCAL, providing access to live streams, top news stories, and user navigation options (Feed, Watch, You) after closing the weather view.",
+            "action_refs": [
+                [
+                    2,
+                    0
+                ]
+            ],
+            "data_in": [
+                "weather view"
+            ],
+            "data_out": [
+                "weather view closed"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The user starts on the weather view page (page 2). They click the close weather view button, which navigates them to the FOX LOCAL news feed page (page 0). On this news feed page, the user can access live streams, top news stories, and navigation options like Feed, Watch, and You.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            0
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the close weather view button to navigate to the FOX LOCAL news feed page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "This page provides a search interface for users to input a city name or ZIP code to look up weather information for a specific location.",
+            "action_refs": [
+                [
+                    2,
+                    1
+                ]
+            ],
+            "data_in": [
+                "location search setting"
+            ],
+            "data_out": [
+                "location search interface opened"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The user starts on page 2 (weather details) and clicks the location search icon. This action navigates to page 1, which presents a search bar for entering a city name or ZIP code to look up weather information for a specific location.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            1
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the location search icon on the weather details page to navigate to the search page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "Displays the current weather conditions, hourly forecast (including 12 PM), and daily weather forecast for Los Angeles, CA, with options to view additional details or navigate.",
+            "action_refs": [
+                [
+                    2,
+                    2
+                ]
+            ],
+            "data_in": [
+                "12 PM hourly forecast data"
+            ],
+            "data_out": [
+                "12 PM hourly forecast details (displayed)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The app starts on the Los Angeles weather page. The user clicks the '12 PM' hourly forecast tab to view its detailed weather information. This action completes the task of accessing the 12 PM forecast while the page also displays current conditions and daily forecasts.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            2
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click the '12 PM' hourly forecast tab to view its weather details"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "This page functions as the main feed of the FOX LOCAL app, providing access to news articles, live news previews, a live stream (with an option to close it), and navigation to other sections like Watch and user - related content, while also featuring a \"Watch Live\" button to start live news streaming.",
+            "action_refs": [
+                [
+                    3,
+                    0
+                ]
+            ],
+            "data_in": [
+                "live view (video)"
+            ],
+            "data_out": [
+                "live view closed (video hidden)"
+            ],
+            "data_dependencies": [
+                13,
+                19
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The main feed of the FOX LOCAL app is accessed, where a live stream or preview may be active. To close the live view, the 'Close live view button' is clicked, transitioning from the live - focused page (page 3) back to the main feed page (page 0) which provides access to news articles, live previews, and navigation options.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            0
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the close live view button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "Volume control button",
+            "action_refs": [
+                [
+                    3,
+                    1
+                ]
+            ],
+            "data_in": [
+                "video volume setting"
+            ],
+            "data_out": [
+                "video volume setting updated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The user starts on page 3. They click the volume control button, which leads to page 8. This is a single-step flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            1
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click the volume control button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "The page functions as a live news streaming hub, providing the \"LiveNOW from FOX\" broadcast along with access to other live news streams like \"Good Day Atlanta at 5:30 AM\" and \"FOX Weather\" for users to watch live news content.",
+            "action_refs": [
+                [
+                    3,
+                    2
+                ]
+            ],
+            "data_in": [
+                "LiveNOW from FOX stream card"
+            ],
+            "data_out": [
+                "LiveNOW from FOX stream (loaded/playing)"
+            ],
+            "data_dependencies": [
+                12,
+                15,
+                17,
+                19,
+                21
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The user starts on page 3 (the live news hub). They click the 'LiveNOW from FOX' stream card, which navigates to page 9 to play that live stream. This is a straight-line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            2
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click 'LiveNOW from FOX' stream card to navigate to its live stream page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "Close live banner button",
+            "action_refs": [
+                [
+                    4,
+                    1
+                ]
+            ],
+            "data_in": [
+                "live banner"
+            ],
+            "data_out": [
+                "live banner closed"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user starts on page 4 (with a live banner). The core action is clicking the close live banner button, which navigates to page 10, removing the live banner from view. There are no branches or loops as it’s a single action flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            1
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click the close live banner button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "Displays detailed information about a news story regarding a DeKalb officer placed on leave after a pedestrian was killed on I - 75, including key points of the incident and a live news stream option.",
+            "action_refs": [
+                [
+                    4,
+                    2
+                ],
+                [
+                    11,
+                    0
+                ]
+            ],
+            "data_in": [
+                "DeKalb officer news story card",
+                "news article"
+            ],
+            "data_out": [
+                "DeKalb officer news story details",
+                "new news article loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The flow starts on the Top Stories page (page 4). First, the user clicks the DeKalb officer news story card (action S1) to view its details (page 11). Then, the user can click the 'Next news article' button (action S2) to navigate to the next news article (page 5), or stay on the current story page (no further action shown here).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            2
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click the DeKalb officer news story card to open its details page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            11,
+                            0
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click the Next news article button to navigate to the next article"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2",
+                                "condition": "User clicks Next news article button"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "User does not click Next news article button (stays on story details)"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "Close live stream banner button",
+            "action_refs": [
+                [
+                    5,
+                    0
+                ]
+            ],
+            "data_in": [
+                "live stream banner"
+            ],
+            "data_out": [
+                "live stream banner closed"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "On page 5, the user clicks the close live stream banner button. This action transitions the app to page 12, completing the task of closing the banner.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            0
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click the close live stream banner button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "The page (from the 'Watch' tab of the FOX LOCAL app) enables viewing live video (e.g., \"Good Day Atlanta at 5:30 AM\") and prompts users to sign in/sign up to resume previously watched content, with a concurrent app - selection dialog for opening content (offering Chrome and WebView Browser Tester options).",
+            "action_refs": [
+                [
+                    6,
+                    0
+                ]
+            ],
+            "data_in": [
+                "login session",
+                "user account"
+            ],
+            "data_out": [
+                "login session (initiated)",
+                "user account (accessed)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The flow starts on the 'Watch' tab of the FOX LOCAL app, where live video (e.g., 'Good Day Atlanta') is viewable. A 'Sign In or Sign Up' button is present to resume watched content. Clicking this button triggers an app-selection dialog with Chrome and WebView Browser Tester options, creating a branch point for choosing the app to open the content.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            0
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click the 'Sign In or Sign Up' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": null,
+                                "condition": "Select Chrome to open content"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "Select WebView Browser Tester to open content"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "Close video preview button",
+            "action_refs": [
+                [
+                    6,
+                    1
+                ]
+            ],
+            "data_in": [
+                "video preview"
+            ],
+            "data_out": [
+                "video preview closed"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on page 6 (with a video preview). The core action is clicking the close video preview button, which navigates to page 14. There are no branches or loops as it’s a single, direct action to close the preview.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            1
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click the close video preview button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "The Preferences page allows users to view and edit their home station (e.g., Fox 5 Atlanta) and provides an option to share feedback about the app's features and improvements.",
+            "action_refs": [
+                [
+                    7,
+                    0
+                ],
+                [
+                    15,
+                    0
+                ]
+            ],
+            "data_in": [
+                "content preferences entry",
+                "preferences page state"
+            ],
+            "data_out": [
+                "preferences page loaded",
+                "navigation back to previous page state"
+            ],
+            "data_dependencies": [
+                23
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The user starts on page 7 and clicks the 'Content Preferences' navigation button to go to page 15. From page 15, the user can click the back navigation arrow to return to page 7, creating a navigational loop between these two pages for managing preferences.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            0
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click 'Content Preferences' to navigate to page 15"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            15,
+                            0
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click back arrow to return to page 7"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S1"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "loop",
+                        "branches": [
+                            {
+                                "next_step": "S1"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "The page functions to play the \"Good Day Atlanta at 5:30 AM\" live news stream while also providing access to other live news streams like \"LiveNOW from FOX\" and \"FOX WEATHER\" for users to watch live news content.",
+            "action_refs": [
+                [
+                    9,
+                    0
+                ]
+            ],
+            "data_in": [
+                "Good Day Atlanta at 5:30 AM stream card"
+            ],
+            "data_out": [
+                "Good Day Atlanta at 5:30 AM live stream"
+            ],
+            "data_dependencies": [
+                12,
+                14,
+                15,
+                17,
+                19
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The flow starts on page 9. The user clicks the 'Good Day Atlanta at 5:30 AM' stream card, which navigates to page 3 to play that live news stream. Other live streams like 'LiveNOW from FOX' and 'FOX WEATHER' are accessible similarly (implied by the UI structure, though only one action is provided here).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            0
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click 'Good Day Atlanta at 5:30 AM' stream card to play its live news stream"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "The \"Set Home Station\" page allows users to select a primary news location by choosing from a list of cities (each associated with a FOX news station) to set as their home station for news content.",
+            "action_refs": [
+                [
+                    15,
+                    1
+                ]
+            ],
+            "data_in": [
+                "home station setting"
+            ],
+            "data_out": [
+                "home station selection page loaded"
+            ],
+            "data_dependencies": [
+                24
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user starts on the Preferences page. They click the 'Edit home station' button, which navigates to the 'Set Home Station' page where a list of cities (each with a FOX news station) is displayed for selection. This initiates the process to choose a primary news location as the home station.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            1
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click the 'Edit home station' button on the Preferences page to navigate to the Set Home Station page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "This page functions as an email composition interface pre - populated with the recipient (feedback@foxlocal.com), a subject related to app feedback, and the sender's email, allowing the user to write and send feedback about the app.",
+            "action_refs": [
+                [
+                    15,
+                    2
+                ]
+            ],
+            "data_in": [
+                "feedback request (from app)"
+            ],
+            "data_out": [
+                "feedback email draft"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user starts on the Preferences page (page 15). They click the 'Share Feedback' button, which navigates to the email composition page (page 17) pre - populated with the recipient (feedback@foxlocal.com), a subject related to app feedback, and the sender's email. From here, the user can write and send their feedback.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            2
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click the 'Share Feedback' button to navigate to the email composition page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "The page allows users to view and edit their home news station (currently set to Fox 5 Atlanta) and provides an option to share feedback about the app's development.",
+            "action_refs": [
+                [
+                    16,
+                    0
+                ]
+            ],
+            "data_in": [
+                "home station setting",
+                "Atlanta (FOX 5) station card"
+            ],
+            "data_out": [
+                "updated home station setting (Fox 5 Atlanta)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 16,
+                "logic": "The user starts on the Preferences page (page 16). They click the Atlanta (FOX 5) station card, which navigates to the Set Home Station page (page 15) to view or edit the home news station. This flow focuses on accessing the station editing interface from the preferences.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            16,
+                            0
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click Atlanta (FOX 5) station card to navigate to Set Home Station page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        }
+    ]
+}

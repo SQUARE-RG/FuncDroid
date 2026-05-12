@@ -1,0 +1,1275 @@
+
+================= [TaskTest] FDG[0] =================
+[Function] Manage photos in a folder
+
+[Core Logic Task]
+The process starts on the folder page (page 0). The user clicks on a photo thumbnail, which leads to the next page (page 4). This action initiates the management of the selected photo in the folder.
+
+[Variant Paths] (3)
+ - V1: Tap <Photo thumbnail,Manage photos in a folder> twice (repeat the tap operation)
+ - V2: Omit tapping <Photo thumbnail,Manage photos in a folder> (skip the step to see if management is still initiated, though likely fails but is a mutation)
+ - V3: Tap <Photo thumbnail,Manage photos in a folder> and then immediately tap it again (another repeat variation)
+
+================= [TaskTest] FDG[1] =================
+[Function] The page functions as a folder selection interface to choose a folder (containing images) for photo management, with options to cancel or confirm the selection once a valid folder with images is chosen.
+
+[Core Logic Task]
+The flow starts by clicking the folder icon to open the folder selection interface. Once in the selection interface, the user can either choose a folder via the dropdown or confirm the selection with the OK button. If the folder has images (enabling OK), clicking OK confirms the choice; otherwise, the dropdown allows folder navigation.
+
+[Variant Paths] (3)
+ - V1: Tap <OK confirmation button> without first selecting a folder via <Folder path selection dropdown> (omit folder selection step)
+ - V2: Tap <Folder path selection dropdown> multiple times (repeat folder selection step) then tap <OK confirmation button>
+ - V3: Tap <Folder icon,Select a folder for photo management> then immediately tap <OK confirmation button> without using <Folder path selection dropdown> (skip dropdown navigation)
+
+================= [TaskTest] FDG[2] =================
+[Function] The page allows the user to set up a map area filter (likely to filter photos based on their geographic location) and confirm the setup using the "OK" button, with map tiles provided by OpenStreetMap contributors.
+
+[Core Logic Task]
+The user starts by clicking the map view icon to enter the map area filter setup page. On this page, they can either adjust the filter slider (to modify the filter settings) or click the 'OK' button to confirm the current filter settings. The flow branches at the setup page based on which action the user chooses.
+
+[Variant Paths] (3)
+ - V1: Tap <Map view icon,Map area filter setup>, then omit adjusting the filter slider and directly tap <Confirm filter settings>
+ - V2: Tap <Map view icon,Map area filter setup>, repeat tapping <Adjust filter slider> twice, then tap <Confirm filter settings>
+ - V3: Tap <Map view icon,Map area filter setup>, tap <Confirm filter settings> first without adjusting the filter slider
+
+================= [TaskTest] FDG[3] =================
+[Function] The current page's menu provides options for photo management including tag filtering, filtering, sorting, loading bookmarks, accessing settings, and more actions for the photos in the folder.
+
+[Core Logic Task]
+The process starts on the folder page (page 0). First, the menu icon for photo management is clicked (S1), leading to the menu options page (page 3). Then, the 'Sort: Date V' option is clicked (S2), opening the sorting options page (page 11). At this point, a branch point exists where the user can choose different sorting criteria (e.g., Date, Place, Width, File path length) by clicking the respective option (S3, S4, S5, S6), each leading to a final page for that sort action.
+
+[Variant Paths] (3)
+ - V1: Tap <Menu icon,Menu options for photo management> (S1), then tap <Sort: Date V option,Sorting options for photo files> (S2), then tap <Sort by Place> (S4) instead of <Sort by Date> (S3)
+ - V2: Tap <Menu icon,Menu options for photo management> (S1), then tap <Sort: Date V option,Sorting options for photo files> (S2), then tap <Sort by Width> (S5) instead of <Sort by Date> (S3)
+ - V3: Tap <Menu icon,Menu options for photo management> (S1), then tap <Sort: Date V option,Sorting options for photo files> (S2), then tap <Sort by File path length> (S6) instead of <Sort by Date> (S3)
+
+================= [TaskTest] FDG[4] =================
+[Function] The current page provides a tag filtering and search interface, allowing users to filter photos by selecting or searching for specific tags (e.g., Activities, People, Places, Themes, Projects) to manage and organize their photo collection.
+
+[Core Logic Task]
+The user starts by clicking the 'Tag Filter' option to open the tag filtering interface. Once in the interface, the user can choose to either input a tag in the search text field, apply a selected tag filter, or add a new tag. These actions are mutually exclusive branches from the tag filter interface step.
+
+[Variant Paths] (3)
+ - V1: Tap <Tag Filter option,Tag filtering and search interface>, then omit using <Tag search text input>, <Apply tag filter> or <Add tag> (test if the interface loads without action)
+ - V2: Tap <Tag Filter option,Tag filtering and search interface>, then input an extremely long string (e.g., 1000 characters of random text) into <Tag search text input> (test boundary input handling)
+ - V3: Tap <Tag Filter option,Tag filtering and search interface>, then tap <Add tag> instead of <Apply tag filter> (branch mutation: choose alternative widget)
+
+================= [TaskTest] FDG[5] =================
+[Function] The current page allows users to configure various filter criteria (such as find term, path, date, tags, rating, geolocation, etc.) to search and sort photos within a folder for more efficient photo management.
+
+[Core Logic Task]
+The user starts by clicking the Filter option to enter the photo filtering settings page. On this page, the user can configure various filters (find term, path, date, tags, rating, geolocation, etc.) through optional steps (e.g., clicking input fields or options buttons for each filter type). After configuring the desired filters, the user can either confirm the settings to apply the filter or undo to discard changes. The filter configuration steps can be repeated or skipped based on the user’s needs for different filter criteria.
+
+[Variant Paths] (3)
+ - V1: Tap <Filter option,Photo filtering settings page,Photo filtering settings page>, then omit configuring any filter and directly tap <Confirm filter settings>
+ - V2: Tap <Filter option,Photo filtering settings page,Photo filtering settings page>, input a very long string (e.g., 1000 characters) into <Find input field>, then tap <Confirm filter settings>
+ - V3: Tap <Filter option,Photo filtering settings page,Photo filtering settings page>, tap <Path options button,Select folder for filtering>, then swap the order: tap <Find input field> before confirming folder selection, then tap <Confirm folder selection> and <Confirm filter settings>
+
+================= [TaskTest] FDG[6] =================
+[Function] The page provides options to load a bookmark from a specific source (with a << RESET >> option) or cancel the bookmark loading action within a photo management application.
+
+[Core Logic Task]
+The process starts on page 3. The user clicks the 'Load bookmark from ...' option, which opens a dialog (destination page 12) with << RESET >> and Cancel options. At this dialog, the user can choose to load from a source (via << RESET >> or another implied source) or cancel the action.
+
+[Variant Paths] (3)
+ - V1: On page 3, Tap <Cancel> (omit loading bookmark step)
+ - V2: On page 3, Tap <Load bookmark from ... option,Manage bookmark loading options>, then on page 12, Tap <Cancel> (cancel after opening dialog)
+ - V3: On page 3, Tap <Load bookmark from ... option,Manage bookmark loading options>, then on page 12, Tap << RESET >> (choose reset option)
+
+================= [TaskTest] FDG[7] =================
+[Function] Settings option
+
+[Core Logic Task]
+The flow starts on page 3. The user clicks the 'Settings' option (from the menu), which navigates to page 13. There are no branches or loops as this is a single action to access settings.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <Settings option> (check if page remains on page 3)
+ - V2: Repeat clicking <Settings option> (check if multiple navigations to page 13 occur or if there's an error)
+
+================= [TaskTest] FDG[8] =================
+[Function] The current page provides a dropdown menu with additional options for photo management, including selection actions, media scanning, app details, and further options.
+
+[Core Logic Task]
+On the initial page (page 3), the user clicks the 'More ...' option in the dropdown menu. This action navigates to page 14, which displays additional photo management options like selection actions, media scanning, app details, and another 'More ...' option for further choices.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <More ... option,Dropdown menu with more options> and check if page 14 still loads
+ - V2: Tap <More ... option,Dropdown menu with more options> twice in a row and observe the navigation behavior
+ - V3: Tap <More ... option,Dropdown menu with more options> and then immediately tap it again before page 14 fully loads
+
+================= [TaskTest] FDG[9] =================
+[Function] Toggle favorite tag
+
+[Core Logic Task]
+The process starts on page 9. The user clicks the toggle favorite tag element, which leads to page 17. There are no branches or loops in this flow as it is a single action to toggle the favorite tag.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Toggle favorite tag> (skip the toggle action)
+ - V2: Tap <Toggle favorite tag> twice (repeat the toggle action)
+ - V3: Tap <Toggle favorite tag> and then tap it again immediately (another repeat variation)
+
+================= [TaskTest] FDG[10] =================
+[Function] The page provides a more options menu for the photo manager, including settings, bookmark management, gallery and map display, app information, and other supplementary actions related to photo management.
+
+[Core Logic Task]
+The flow starts on page 10. The user clicks the more options menu for the photo manager (action at S1), which navigates to page 21. This menu provides supplementary actions like settings, bookmark management, gallery/map display, and app info, with no branching as it’s a single action to open the menu.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <More options menu,More options menu for photo manager> and stay on page 10
+ - V2: Click <More options menu,More options menu for photo manager> twice in a row (repeat the action)
+ - V3: Click <More options menu,More options menu for photo manager> then immediately click it again to see if any different behavior occurs (though core logic says single action, mutation tests repetition)
+
+================= [TaskTest] FDG[11] =================
+[Function] This page allows the user to select a date for filtering photos, with the option to confirm the selection (after selecting a folder with images) or cancel it.
+
+[Core Logic Task]
+The user starts on page 10 and clicks the Date options button (action_ref [10,7]) to open the date selection interface (page 24). This step initiates the process of selecting a date for photo filtering, with subsequent steps (not shown here) likely involving choosing a date and then either confirming (if a folder with images is selected) or canceling the selection.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Date options button> (to see if the app still allows date - related actions without initiating via this button)
+ - V2: Click <Date options button> twice (to check if repeated initiation causes any issues like multiple date selection interfaces opening or errors)
+ - V3: Click <Date options button> and then immediately click it again (testing the app's response to rapid repeated clicks on the button)
+
+================= [TaskTest] FDG[12] =================
+[Function] Public Image checkbox
+
+[Core Logic Task]
+The user interacts with the 'Public Image' checkbox. The flow starts on page 10, and upon clicking the checkbox (action_ref [10,8]), the app navigates to page 26. There are no branches or loops as this is a single action to interact with the checkbox.
+
+[Variant Paths] (3)
+ - V1: Tap <Public Image checkbox> twice (repeat interaction)
+ - V2: Omit tapping <Public Image checkbox> (skip the interaction)
+ - V3: Long-press <Public Image checkbox> instead of tapping (alternative interaction type)
+
+================= [TaskTest] FDG[13] =================
+[Function] Private Image checkbox
+
+[Core Logic Task]
+The flow starts on page 10. The user performs a click action on the 'Private Image' checkbox, which transitions the app to page 27. There are no branches or loops as this is a single action flow.
+
+[Variant Paths] (3)
+ - V1: Tap <Private Image checkbox> twice
+ - V2: Omit tapping <Private Image checkbox> (stay on page 10)
+ - V3: Tap <Private Image checkbox> then tap it again (check then uncheck, but observe page transitions)
+
+================= [TaskTest] FDG[14] =================
+[Function] With no Tags checkbox
+
+[Core Logic Task]
+The user starts on page 10 (a filter interface) and clicks the 'With no Tags' checkbox. This action leads to page 28, completing the interaction with this checkbox.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <With no Tags checkbox> and see if it still leads to page 28 (though expected to not change page)
+ - V2: Click <With no Tags checkbox> twice (repeat the action) and observe the result
+ - V3: Long-press <With no Tags checkbox> instead of clicking to see if it still functions as expected
+
+================= [TaskTest] FDG[15] =================
+[Function] Rating star
+
+[Core Logic Task]
+The core execution logic for the rating star functional point involves a single step: clicking on a rating star (from the set of star icons under the 'Rating' label) to perform the rating action. This action transitions the app from the initial page (page 10) to the destination page (page 33). There are no branches or loops in this logic as it consists of a single click action on the rating star.
+
+[Variant Paths] (3)
+ - V1: Tap <Rating star> twice (repeat the rating action)
+ - V2: Omit tapping <Rating star> (attempt to proceed without rating)
+ - V3: Tap <Rating star> with a long-press (alter the interaction type, though original is click; this is a mutation of interaction style)
+
+================= [TaskTest] FDG[16] =================
+[Function] With no geo info checkbox
+
+[Core Logic Task]
+The flow starts on page 10. The user clicks the 'With no geo info' checkbox, which transitions the app to page 34. This is a single-step action with no branching or looping.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <With no geo info checkbox> and check if the app still transitions to page 34 (repeat the original action if needed to verify normal flow first)
+ - V2: Tap <With no geo info checkbox> twice (repeat operation) and observe if the app still transitions to page 34 or behaves differently
+ - V3: Tap <With no geo info checkbox> and then immediately tap it again (order mutation of repeating the tap step)
+
+================= [TaskTest] FDG[17] =================
+[Function] Sort by Name
+
+[Core Logic Task]
+The process starts on page 11. The user clicks on the 'Sort by Name' option, which transitions the app to page 56. This action initiates the sorting of items by their name.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <Sort by Name> (to test if sorting still happens without the action)
+ - V2: Repeat clicking <Sort by Name> (to test if multiple clicks affect the sorting or app state)
+
+================= [TaskTest] FDG[18] =================
+[Function] Sort by Rating
+
+[Core Logic Task]
+The user starts on page 11 (a folder view with a sort menu open). The user clicks on the 'Sort by Rating' option in the sort menu, which navigates to page 59 (presumably the folder view with items sorted by rating).
+
+[Variant Paths] (2)
+ - V1: The user starts on page 11 (a folder view with a sort menu open). The user omits clicking on the 'Sort by Rating' option in the sort menu, staying on page 11.
+ - V2: The user starts on page 11 (a folder view with a sort menu open). The user repeats clicking on <Sort by Rating> in the sort menu, attempting to navigate to page 59 multiple times.
+
+================= [TaskTest] FDG[19] =================
+[Function] Sort by Last Modified
+
+[Core Logic Task]
+The user starts on page 11 (a folder view with a sort menu open). The core action is clicking the 'Last Modified' option in the sort menu, which navigates to page 60 (presumably applying the Last Modified sort to the folder's contents).
+
+[Variant Paths] (2)
+ - V1: Omit clicking <Sort by Last Modified> and stay on page 11
+ - V2: Repeat clicking <Sort by Last Modified> multiple times (e.g., twice) to see if it still navigates to page 60 each time
+
+================= [TaskTest] FDG[20] =================
+[Function] Sort by Size
+
+[Core Logic Task]
+The user starts on page 11 (a folder view with a sort menu open). The core logic is: click the 'Sort by Size' option in the sort menu, which navigates to page 62 (presumably the folder view with items sorted by size). There are no branches or loops as it's a single action to apply the size-based sort.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[21] =================
+[Function] Reset bookmark loading
+
+[Core Logic Task]
+The flow starts on page 12. The user clicks the 'Reset bookmark loading' option (labeled << RESET >>) in the 'Load bookmark from ...' dialog. This action leads to page 64, completing the reset of bookmark loading.
+
+[Variant Paths] (3)
+ - V1: Tap <Reset bookmark loading> twice (repeat operation)
+ - V2: Omit tapping <Reset bookmark loading> (skip the reset step)
+ - V3: Tap <Reset bookmark loading> and then tap it again immediately (repeat operation with quick succession)
+
+================= [TaskTest] FDG[22] =================
+[Function] The current page displays a single photo within a folder, allowing for the management of photos (such as adding all visible photos) through the available menu options, and also shows a "Screen unpinned" status at the bottom.
+
+[Core Logic Task]
+The flow starts on the folder page displaying a single photo. The user clicks the 'Selection: Add all visible' option from the menu. After this action, the page updates to show the 'Screen unpinned' status at the bottom, completing the photo management action.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Selection: Add all visible> and check if the 'Screen unpinned' status still appears
+ - V2: Tap <Selection: Add all visible> twice and observe the page update and 'Screen unpinned' status
+ - V3: Tap <Selection: Add all visible> and then immediately tap it again before the page updates fully
+
+================= [TaskTest] FDG[23] =================
+[Function] The current page provides a dropdown menu with various sorting options (Name, Date, Place, Rating, Last Modified, Width, Size, File path length) to organize the photos displayed in the folder, with the current sorting set to "Date" in descending order.
+
+[Core Logic Task]
+The process starts on page 14. The user clicks on the 'Selection: Remove all visible' option, which navigates to page 11. There are no branches or loops as only this single action is defined for the functional point.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Selection: Remove all visible> (to test if the page remains on page 14 without this action)
+ - V2: Repeat clicking <Selection: Remove all visible> (to test if multiple clicks have any different effect, e.g., repeated navigation or error)
+ - V3: Click <Selection: Remove all visible> twice in a row (similar to repeat mutation, testing repeated action impact)
+
+================= [TaskTest] FDG[24] =================
+[Function] This page allows the user to select a specific folder (from a list of system and user - created folders) to initiate a media scan, likely for the purpose of detecting and managing media files (such as photos) within that folder.
+
+[Core Logic Task]
+The user starts by clicking to open the media scanner's folder selection (S1). Then, on the folder selection page (S2), they choose either a specific folder (S3) or confirm the scanning of the selected folder (S4), with the choice determining the next step.
+
+[Variant Paths] (3)
+ - V1: Tap <Media scanner,Select folder for media scanning>, then omit selecting a <Folder selection option> and directly tap <Confirm scanning folder>
+ - V2: Tap <Media scanner,Select folder for media scanning>, then tap <Confirm scanning folder> before selecting a <Folder selection option>
+ - V3: Tap <Media scanner,Select folder for media scanning>, then tap a <Folder selection option> twice and then tap <Confirm scanning folder>
+
+================= [TaskTest] FDG[25] =================
+[Function] The current page displays detailed information about a photo folder, including technical details like adapter and fragment references, and a SQL query related to media file retrieval, to provide insights into the folder's content and underlying data handling.
+
+[Core Logic Task]
+First, click the 'Details' option to show folder details, transitioning to a dialog page. Then, click to confirm and close the dialog, completing the process.
+
+[Variant Paths] (3)
+ - V1: Omit step: Do not click <Details,Show folder details> and directly click <Confirm and close dialog>
+ - V2: Repeat step: Click <Details,Show folder details> twice and then click <Confirm and close dialog>
+ - V3: Order mutation: Click <Confirm and close dialog> first and then click <Details,Show folder details>
+
+================= [TaskTest] FDG[26] =================
+[Function] The page allows the user to view and potentially manage (via the menu options) the photos within a specific folder, with the current view showing a single photo file.
+
+[Core Logic Task]
+The user starts on the folder page (page 14) showing a photo. They click on the 'App protected/pinned' option in the menu, which leads to a screen pinning confirmation dialog (page 67).
+
+[Variant Paths] (2)
+ - V1: Omit clicking <App protected/pinned,Screen pinning confirmation dialog> and stay on the folder page showing the photo
+ - V2: Repeat clicking <App protected/pinned,Screen pinning confirmation dialog> multiple times (though the app may have no new behavior, but as a mutation test, we try repeating the action)
+
+================= [TaskTest] FDG[27] =================
+[Function] The current page provides information about "A Photo Manager" app, including its version, a brief description of its purpose (managing local photos with capabilities like finding, copying, editing Exif, and displaying in Gallery or Map), and a list of its features such as fast photo search, display options, detail view, file management, Exif editing, autop processing, privacy marking, and protected mode.
+
+[Core Logic Task]
+The flow starts on page 14. The user clicks the 'About "A Photo Manager"' option, which navigates to page 68. On page 68, the app displays information about 'A Photo Manager', including its version, purpose, and feature list. There are no branches or loops as it is a straight-line flow to view the about information.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <About 'A Photo Manager'> and check if the about page is still accessible
+ - V2: Click <About 'A Photo Manager'> multiple times (e.g., 3 times) and observe if there are any unexpected behaviors like multiple page loads or errors
+
+================= [TaskTest] FDG[28] =================
+[Function] The current page provides a dropdown menu with additional options (Tag Filter, Filter, Sort, Load bookmark, Settings, More ...) for managing photos in a folder, likely to access extended photo management functionalities.
+
+[Core Logic Task]
+On the folder photo management page, the user clicks the 'More ...' option. This action opens a submenu with additional photo management options (Tag Filter, Filter, Sort, Load bookmark, Settings, and another 'More ...'), allowing the user to choose a specific functionality to manage photos in the folder.
+
+[Variant Paths] (3)
+ - V1: Tap <More ...> twice in a row
+ - V2: Omit tapping <More ...> (do nothing)
+ - V3: Tap <More ...> and then immediately tap <More ...> again
+
+================= [TaskTest] FDG[29] =================
+[Function] Settings option
+
+[Core Logic Task]
+The user starts on page 21 (a photo manager interface with filters/tags). The core logic is clicking the 'Settings' option in the menu (from the three-dot menu) to navigate to page 38 (the settings page). This is a single-step flow with no branches or loops.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <Settings option> (to test if the app stays on page 21 without navigation)
+ - V2: Repeat clicking <Settings option> (to test if multiple clicks still navigate to page 38 or cause an error)
+
+================= [TaskTest] FDG[30] =================
+[Function] The current page (Save bookmark dialog) allows the user to specify a name for a bookmark and either confirm (OK) or cancel the action of saving the bookmarked photo filtering settings.
+
+[Core Logic Task]
+The user starts by clicking the 'Save bookmark as...' option to open the Save bookmark dialog. In the dialog, the user can either click the name input field to enter a bookmark name or click the OK button to confirm saving the bookmark with the (possibly default) name. These two actions (input or OK) are alternative paths from the dialog.
+
+[Variant Paths] (3)
+ - V1: Tap <OK button> without interacting with <Name input field> (omit input step)
+ - V2: Input a very long string (e.g., 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa') into <Name input field> then tap <OK button>
+ - V3: Input an empty string into <Name input field> then tap <OK button>
+
+================= [TaskTest] FDG[31] =================
+[Function] The current page is a dialog for bookmark loading management in the photo filtering settings, allowing the user to load a bookmark, reset settings, or cancel the action.
+
+[Core Logic Task]
+The user starts on page 21 (filter settings) and clicks the 'Load bookmark from...' option, triggering a dialog with three choices: load bookmark, reset, or cancel. This is the initial step to access the bookmark loading management dialog.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[32] =================
+[Function] Displays the contents of a specific photo folder, showing a single image file with options for folder navigation and additional photo management actions.
+
+[Core Logic Task]
+The process starts on page 21. A click action is performed on the 'Show in new gallery' option. This action navigates to page 0, which displays the contents of a specific photo folder with a single image file and options for further management or navigation.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Show in new gallery option> and check if page 0 is still reached (repeat original step to see if it's necessary)
+ - V2: Click <Show in new gallery option> twice (repeat the action to see if it causes unexpected behavior)
+ - V3: Attempt to click <Show in new gallery option> after already being on page 0 (order mutation by redoing the action in a different context)
+
+================= [TaskTest] FDG[33] =================
+[Function] The current page, "A Photo Map", functions as an interface to display photos on a map, likely showing the geographical locations where the photos were taken, with map tiles provided by OpenStreetMap contributors.
+
+[Core Logic Task]
+The user starts on page 21 and clicks the 'Show in map' option. This action navigates to the 'A Photo Map' page (page 41), which displays a map interface with tiles from OpenStreetMap contributors. The flow is a straight line with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Show in map option> and directly check if <Display photo map interface> is accessible
+ - V2: Click <Show in map option> twice and observe if <Display photo map interface> behaves unexpectedly
+ - V3: Click <Show in map option> and then immediately click it again before <Display photo map interface> fully loads
+
+================= [TaskTest] FDG[34] =================
+[Function] The current page displays information about the "A Photo Manager" app, including its version, a brief description of its purpose (managing local photos with capabilities like finding, copying, editing Exif data, and displaying in gallery or map), and a list of its features.
+
+[Core Logic Task]
+The flow starts on page 21. The user clicks the 'About "A Photo Manager"' option, which navigates to page 42. On page 42, the app’s version, purpose (managing local photos with find/copy/edit Exif and gallery/map display), and features are displayed. There are no branches or loops as it’s a straight navigation to view the about information.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <About app option> and check if app information is still displayed
+ - V2: Click <About app option> twice and observe the result
+ - V3: Click <About app option> and then immediately click <Display app information> (if applicable)
+
+================= [TaskTest] FDG[35] =================
+[Function] << RESET >> option
+
+[Core Logic Task]
+The user starts on page 40 and clicks the << RESET >> option, which leads to page 45. This is a straight - line flow with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Omit clicking << RESET >> option (to test if the app stays on page 40 without reset)
+ - V2: Repeat clicking << RESET >> option (to test if multiple resets still lead to page 45 or cause issues)
+ - V3: Click << RESET >> option, then click << RESET >> option again immediately (similar to repeat but emphasizing quick successive action)
+
+================= [TaskTest] FDG[36] =================
+[Function] The page provides a menu with options (Filter, Show Photo(s), Show in new gallery, Settings, About "A Photo Manager") for managing photos within the photo map interface of the photo manager application.
+
+[Core Logic Task]
+The flow starts on the photo map page. The user clicks the menu button to open a dropdown with options (Filter, Show Photo(s), Show in new gallery, Settings, About). This action reveals the menu for managing photos in the photo map interface.
+
+[Variant Paths] (3)
+ - V1: Tap <Open menu options,Menu options for photo map> twice (repeat the menu opening action)
+ - V2: Omit tapping <Open menu options,Menu options for photo map> (skip opening the menu)
+ - V3: Tap <Open menu options,Menu options for photo map> and then immediately tap it again (order mutation with repeated tap)
+
+================= [TaskTest] FDG[37] =================
+[Function] Adjust map detail slider
+
+[Core Logic Task]
+The process starts on page 41. The user performs a click action to adjust the map detail slider, which leads to page 47. There are no branches or loops in this flow as it is a single action to complete the task.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Adjust map detail slider> and check if page 47 is still reached
+ - V2: Tap <Adjust map detail slider> twice and observe the result
+ - V3: Tap <Adjust map detail slider> and then immediately tap it again before the page transition
+
+================= [TaskTest] FDG[38] =================
+[Function] The page allows users to filter photos in the photo map interface by specifying criteria such as search term, path, date, image privacy, tags, rating, and geographic information.
+
+[Core Logic Task]
+The user starts on the photo map page (page 46) and clicks the 'Filter' option from the menu. This action navigates to the filter interface (page 10), where various filtering criteria (search term, path, date, etc.) are available for specifying photo filters.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Filter option> and check if photo filtering still occurs (though likely no filtering happens, testing the omission)
+ - V2: Repeat clicking <Filter option> multiple times to see if it causes any unexpected behavior in the filter interface navigation
+ - V3: Click <Filter option> but then immediately click it again to see if it toggles or has a different effect on the filter interface
+
+================= [TaskTest] FDG[39] =================
+[Function] The page functions to display photos on a map view, though in this instance it indicates no photos were found for the given (null) context.
+
+[Core Logic Task]
+The user starts on page 46 and clicks the 'Show Photo(s)' option to attempt displaying photos on a map view. After this action, the app navigates to page 48, where it indicates that no photos were found for the given (null) context.
+
+[Variant Paths] (3)
+ - V1: Start on page 46, omit clicking <Show Photo(s) option,Display photos on a map view> and check if page 48 still loads with no photos found
+ - V2: Start on page 46, click <Show Photo(s) option,Display photos on a map view> twice and check if page 48 still shows no photos found
+ - V3: Start on a different page (not 46), click <Show Photo(s) option,Display photos on a map view> and check if page 48 shows no photos found
+
+================= [TaskTest] FDG[40] =================
+[Function] This page functions as an interface for managing photo folders, allowing users to organize, view, or navigate through different photo directories, with options to switch to a map view or access additional menu features.
+
+[Core Logic Task]
+The user starts on page 46 (a menu or map view) and clicks the 'Show in new gallery' option. This action navigates to page 49, which is the folder management interface for organizing photo directories. There are no branches or loops here as it’s a single navigation step.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Show in new gallery option> and directly try to access <Manage photo folders> (though this may not be valid as per core logic, but for mutation testing)
+ - V2: Click <Show in new gallery option> twice (repeat the navigation step)
+ - V3: Click <Manage photo folders> first and then <Show in new gallery option> (swap order)
+
+================= [TaskTest] FDG[41] =================
+[Function] Settings option
+
+[Core Logic Task]
+The execution starts on page 46. The user clicks the 'Settings' option, which navigates to page 50. This is a straight - line flow with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Settings option> (check if navigation still happens, though core logic says it's needed)
+ - V2: Repeat clicking <Settings option> multiple times (see if multiple navigations or errors occur)
+ - V3: Tap <Settings option> but in a different simulated timing (e.g., very fast repeated taps to test responsiveness)
+
+================= [TaskTest] FDG[42] =================
+[Function] The current page displays information about the "A Photo Manager" app (version AndroFotoFinder 0.6.4.180314), including its purpose (managing local photos with capabilities like finding, copying, editing Exif, and displaying in gallery or map) and a list of its features.
+
+[Core Logic Task]
+The flow starts on page 46. The user clicks the 'About "A Photo Manager"' option, which navigates to page 51. On page 51, the app’s information (purpose, version, features) is displayed. This is a straight - line flow with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <About app option>, directly check if app information is shown
+ - V2: Click <About app option> twice and check if app information is shown both times
+ - V3: Click <About app option> and then immediately click <Show app information> and check the result
+
+
+[AppTest] Found 62 dependency pairs to test.
+
+==============================================
+[AppTest] Pair 1/62: 0 -> 3
+Producer: Manage photos in a folder
+Consumer: The current page's menu provides options for photo management including tag filtering, filtering, sorting, loading bookmarks, accessing settings, and more actions for the photos in the folder.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the folder page (page 0), click a photo thumbnail to navigate to page 4 and initiate photo management.
+Consumer task:
+ On the folder page (page 0), click the photo management menu icon (S1) to open the menu options page (page 3). Then click the 'Sort: Date V' option (S2) to open the sorting options page (page 11), and select a sort option (e.g., Date via S3) to verify the sorted photos reflect the folder's photo data managed by the producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 2/62: 0 -> 5
+Producer: Manage photos in a folder
+Consumer: The current page allows users to configure various filter criteria (such as find term, path, date, tags, rating, geolocation, etc.) to search and sort photos within a folder for more efficient photo management.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the folder page (page 0), click on a photo thumbnail to navigate to page 4 and initiate photo management.
+Consumer task:
+ Click the Filter option to enter the photo filtering settings page. Configure a filter (e.g., path filter with the folder path of the photo managed by the Producer) and confirm the settings to apply the filter, then verify the filtered results include the photo from the Producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 3/62: 0 -> 32
+Producer: Manage photos in a folder
+Consumer: Displays the contents of a specific photo folder, showing a single image file with options for folder navigation and additional photo management actions.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the folder page (page 0), click on a photo thumbnail to navigate to page 4 and initiate management of the selected photo in the folder.
+Consumer task:
+ On page 21, click on the 'Show in new gallery' option to navigate to page 0 and verify that the photo folder displays the single image file produced by the Producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 4/62: 0 -> 33
+Producer: Manage photos in a folder
+Consumer: The current page, "A Photo Map", functions as an interface to display photos on a map, likely showing the geographical locations where the photos were taken, with map tiles provided by OpenStreetMap contributors.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the folder page (page 0), click on a photo thumbnail to navigate to page 4 and initiate management of the selected photo.
+Consumer task:
+ On page 21, click the 'Show in map' option to navigate to the 'A Photo Map' page (page 41). Verify that the photo (from the producer task) is displayed on the map with its metadata used to position it, and the map interface is configured with OpenStreetMap tiles.
+------------------------------
+
+==============================================
+[AppTest] Pair 5/62: 0 -> 36
+Producer: Manage photos in a folder
+Consumer: The page provides a menu with options (Filter, Show Photo(s), Show in new gallery, Settings, About "A Photo Manager") for managing photos within the photo map interface of the photo manager application.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the folder page (page 0), click a photo thumbnail to navigate to page 4 and initiate management of the selected photo.
+Consumer task:
+ On the photo map page, click the menu button to open the dropdown menu and verify that the options for managing photos (Filter, Show Photo(s), etc.) are available for the photo managed by the Producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 6/62: 0 -> 38
+Producer: Manage photos in a folder
+Consumer: The page allows users to filter photos in the photo map interface by specifying criteria such as search term, path, date, image privacy, tags, rating, and geographic information.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the folder page (page 0), click on a photo thumbnail to navigate to page 4 and initiate management of the selected photo.
+Consumer task:
+ On the photo map page (page 46), click the 'Filter' option from the menu to navigate to the filter interface (page 10). Verify that the photo managed in the Producer task is available for filtering (e.g., appears in the list of photos to filter by relevant criteria like path, date, etc.).
+------------------------------
+
+==============================================
+[AppTest] Pair 7/62: 0 -> 39
+Producer: Manage photos in a folder
+Consumer: The page functions to display photos on a map view, though in this instance it indicates no photos were found for the given (null) context.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the folder page (page 0), click on a photo thumbnail to navigate to page 4 and initiate photo management.
+Consumer task:
+ On page 46, click the 'Show Photo(s)' option to navigate to page 48 and verify if the photo managed in the producer task is reflected (or if the 'no photos found' message is accurate based on the producer's action).
+------------------------------
+
+==============================================
+[AppTest] Pair 8/62: 0 -> 40
+Producer: Manage photos in a folder
+Consumer: This page functions as an interface for managing photo folders, allowing users to organize, view, or navigate through different photo directories, with options to switch to a map view or access additional menu features.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the folder page (page 0), click a photo thumbnail to navigate to page 4 and initiate photo management.
+Consumer task:
+ From page 46, click 'Show in new gallery' to navigate to page 49 (folder management interface) and verify it reflects the photo folder managed in the producer step.
+------------------------------
+
+==============================================
+[AppTest] Pair 9/62: 1 -> 5
+Producer: The page functions as a folder selection interface to choose a folder (containing images) for photo management, with options to cancel or confirm the selection once a valid folder with images is chosen.
+Consumer: The current page allows users to configure various filter criteria (such as find term, path, date, tags, rating, geolocation, etc.) to search and sort photos within a folder for more efficient photo management.
+
+[Plan]
+Case 1/1
+Producer task:
+ Click the folder icon to open the folder selection interface. Select a folder with images via the dropdown, then click the OK button to confirm the folder selection.
+Consumer task:
+ Click the Filter option to enter the photo filtering settings page. In the path filter input field, use the folder path (from the selected folder) as the path filter criterion, then confirm the filter settings to apply the filter and verify photos from the selected folder are displayed.
+------------------------------
+
+==============================================
+[AppTest] Pair 10/62: 2 -> 5
+Producer: The page allows the user to set up a map area filter (likely to filter photos based on their geographic location) and confirm the setup using the "OK" button, with map tiles provided by OpenStreetMap contributors.
+Consumer: The current page allows users to configure various filter criteria (such as find term, path, date, tags, rating, geolocation, etc.) to search and sort photos within a folder for more efficient photo management.
+
+[Plan]
+Case 1/1
+Producer task:
+ Click the map view icon to enter the map area filter setup page, then adjust the filter slider to update the map area filter setting, and finally click the 'OK' button to confirm the updated setting.
+Consumer task:
+ Click the Filter option to enter the photo filtering settings page, then verify that the map area filter configuration reflects the updated setting produced by the Producer, and optionally configure other filters or confirm the settings to apply the filter.
+------------------------------
+
+==============================================
+[AppTest] Pair 11/62: 3 -> 5
+Producer: The current page's menu provides options for photo management including tag filtering, filtering, sorting, loading bookmarks, accessing settings, and more actions for the photos in the folder.
+Consumer: The current page allows users to configure various filter criteria (such as find term, path, date, tags, rating, geolocation, etc.) to search and sort photos within a folder for more efficient photo management.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the folder page (page 0), click the menu icon for photo management (S1) to open the menu options page (page 3). Then click the 'Sort: Date V' option (S2) to open the sorting options page (page 11), and select the 'File path length' sorting option (S6) to update the sort configuration and sort the image files by file path length.
+Consumer task:
+ Click the Filter option to enter the photo filtering settings page. Configure a path filter by entering the folder path of the sorted image files (from the Producer task) into the path input field. Then confirm the filter settings to apply the filter and verify that the filtered photos reflect the sorted image files from the Producer task.
+------------------------------
+
+==============================================
+[AppTest] Pair 12/62: 3 -> 33
+Producer: The current page's menu provides options for photo management including tag filtering, filtering, sorting, loading bookmarks, accessing settings, and more actions for the photos in the folder.
+Consumer: The current page, "A Photo Map", functions as an interface to display photos on a map, likely showing the geographical locations where the photos were taken, with map tiles provided by OpenStreetMap contributors.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the folder page (page 0), click the menu icon for photo management (S1) to open the menu options page (page 3). Then, click the 'Sort: Date V' option (S2) to access the sorting options page (page 11). Next, click the 'Place' sorting option (S4) to sort the image files by their location metadata.
+Consumer task:
+ From page 21, click the 'Show in map' option. This will navigate to the 'A Photo Map' page (page 41). Verify that the map interface displays the photos at their respective geographical locations, using the location metadata from the sorted image files produced by the Producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 13/62: 3 -> 36
+Producer: The current page's menu provides options for photo management including tag filtering, filtering, sorting, loading bookmarks, accessing settings, and more actions for the photos in the folder.
+Consumer: The page provides a menu with options (Filter, Show Photo(s), Show in new gallery, Settings, About "A Photo Manager") for managing photos within the photo map interface of the photo manager application.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the folder page, click the menu icon for photo management, then click the 'Sort: Date V' option, and finally select a sorting criterion (e.g., Date) to sort the image files.
+Consumer task:
+ On the photo map page, click the menu button to open the dropdown and verify that the 'photo map menu' reflects the context of the sorted image files from the producer's action.
+------------------------------
+
+==============================================
+[AppTest] Pair 14/62: 3 -> 38
+Producer: The current page's menu provides options for photo management including tag filtering, filtering, sorting, loading bookmarks, accessing settings, and more actions for the photos in the folder.
+Consumer: The page allows users to filter photos in the photo map interface by specifying criteria such as search term, path, date, image privacy, tags, rating, and geographic information.
+
+[Plan]
+Case 1/2
+Producer task:
+ 1. Start on the folder page (page 0). 2. Click the menu icon for photo management (S1) to open the menu options page (page 3). 3. Click the 'Sort: Date V' option (S2) to open the sorting options page (page 11), then click the 'Date' sorting option (S3) to sort image files by date.
+Consumer task:
+ 1. Start on the photo map page (page 46). 2. Click the 'Filter' option from the menu to navigate to the filter interface (page 10). 3. Verify that the filtered photos (based on applied criteria) reflect the photos sorted by date in the Producer step (e.g., check if the date-sorted photo set aligns with the filtered photo set's date-related content).
+------------------------------
+Case 2/2
+Producer task:
+ 1. Start on the folder page (page 0). 2. Click the menu icon for photo management (S1) to open the menu options page (page 3). 3. Click the 'Sort: Date V' option (S2) to open the sorting options page (page 11), then click the 'Place' sorting option (S4) to sort image files by Place.
+Consumer task:
+ 1. Start on the photo map page (page 46). 2. Click the 'Filter' option from the menu to navigate to the filter interface (page 10). 3. Use the geographic information filter criteria and verify that the filtered photos (based on geographic info) reflect the photos sorted by Place in the Producer step (e.g., check if the place-sorted photo set aligns with the geographically filtered photo set's location-related content).
+------------------------------
+
+==============================================
+[AppTest] Pair 15/62: 3 -> 39
+Producer: The current page's menu provides options for photo management including tag filtering, filtering, sorting, loading bookmarks, accessing settings, and more actions for the photos in the folder.
+Consumer: The page functions to display photos on a map view, though in this instance it indicates no photos were found for the given (null) context.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the folder page (page 0), click the menu icon for photo management (S1) to open the menu options page (page 3). Then click the 'Sort: Date V' option (S2) to open the sorting options page (page 11). Next, click the 'Date' sorting option (S3) to sort the image files by date.
+Consumer task:
+ On page 46, click the 'Show Photo(s)' option to attempt displaying the photos (sorted by date from the producer task) on a map view. Verify if the map view (page 48) reflects the sorted photo data or still shows no photos found.
+------------------------------
+
+==============================================
+[AppTest] Pair 16/62: 3 -> 40
+Producer: The current page's menu provides options for photo management including tag filtering, filtering, sorting, loading bookmarks, accessing settings, and more actions for the photos in the folder.
+Consumer: This page functions as an interface for managing photo folders, allowing users to organize, view, or navigate through different photo directories, with options to switch to a map view or access additional menu features.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the folder page (page 0), click the menu icon for photo management (S1) to open the menu options page (page 3). Then, click the 'Sort: Date V' option (S2) to open the sorting options page (page 11). Next, click the 'Date' sorting option (S3) to sort the image files by date.
+Consumer task:
+ Start on page 46, click the 'Show in new gallery' option to navigate to page 49 (folder management interface). Verify that the photos displayed in the folder management interface are sorted by date (matching the sorted image files produced by the Producer).
+------------------------------
+
+==============================================
+[AppTest] Pair 17/62: 4 -> 5
+Producer: The current page provides a tag filtering and search interface, allowing users to filter photos by selecting or searching for specific tags (e.g., Activities, People, Places, Themes, Projects) to manage and organize their photo collection.
+Consumer: The current page allows users to configure various filter criteria (such as find term, path, date, tags, rating, geolocation, etc.) to search and sort photos within a folder for more efficient photo management.
+
+[Plan]
+Case 1/1
+Producer task:
+ Click 'Tag Filter' to open the tag filtering interface, then select a tag (e.g., 'People') to update the tag filter state.
+Consumer task:
+ Click 'Filter' to enter the photo filtering settings page, then configure the 'tags filter setting' to use the selected tag (e.g., 'People') from the Producer, and confirm the settings to apply the filter.
+------------------------------
+
+==============================================
+[AppTest] Pair 18/62: 4 -> 36
+Producer: The current page provides a tag filtering and search interface, allowing users to filter photos by selecting or searching for specific tags (e.g., Activities, People, Places, Themes, Projects) to manage and organize their photo collection.
+Consumer: The page provides a menu with options (Filter, Show Photo(s), Show in new gallery, Settings, About "A Photo Manager") for managing photos within the photo map interface of the photo manager application.
+
+[Plan]
+Case 1/1
+Producer task:
+ Click 'Tag Filter' to open the tag filtering interface, then select a tag (e.g., 'People') to apply the filter and update the tag filter state.
+Consumer task:
+ On the photo map page, click the menu button to open the photo map menu, then select the 'Filter' option to verify it reflects the tag filter (e.g., 'People') applied by the Producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 19/62: 5 -> 35
+Producer: The current page allows users to configure various filter criteria (such as find term, path, date, tags, rating, geolocation, etc.) to search and sort photos within a folder for more efficient photo management.
+Consumer: << RESET >> option
+
+[Plan]
+Case 1/1
+Producer task:
+ Click Filter to enter photo filtering settings page, configure some filter criteria (e.g., set a find term, select a folder path), then confirm the settings to apply the filter.
+Consumer task:
+ On page 40, click the << RESET >> option; verify that the reset action relates to the previously applied search/filter configuration (e.g., the reset should revert the filter settings configured by the producer).
+------------------------------
+
+==============================================
+[AppTest] Pair 20/62: 5 -> 36
+Producer: The current page allows users to configure various filter criteria (such as find term, path, date, tags, rating, geolocation, etc.) to search and sort photos within a folder for more efficient photo management.
+Consumer: The page provides a menu with options (Filter, Show Photo(s), Show in new gallery, Settings, About "A Photo Manager") for managing photos within the photo map interface of the photo manager application.
+
+[Plan]
+Case 1/1
+Producer task:
+ Click the Filter option to enter the photo filtering settings page. Configure a filter (e.g., set a find term) and confirm the settings to apply the filter.
+Consumer task:
+ On the photo map page, click the menu button. Verify that the 'Filter' option in the dropdown menu reflects the applied filter settings from the Producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 21/62: 6 -> 36
+Producer: The page provides options to load a bookmark from a specific source (with a << RESET >> option) or cancel the bookmark loading action within a photo management application.
+Consumer: The page provides a menu with options (Filter, Show Photo(s), Show in new gallery, Settings, About "A Photo Manager") for managing photos within the photo map interface of the photo manager application.
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 3, click 'Load bookmark from ...' to open the dialog (page 12) with << RESET >> and Cancel options, then select << RESET >> to update the bookmark loading option.
+Consumer task:
+ On the photo map page, click the menu button to open the dropdown and verify that the photo map menu reflects the updated bookmark loading option from the producer's action.
+------------------------------
+
+==============================================
+[AppTest] Pair 22/62: 7 -> 36
+Producer: Settings option
+Consumer: The page provides a menu with options (Filter, Show Photo(s), Show in new gallery, Settings, About "A Photo Manager") for managing photos within the photo map interface of the photo manager application.
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 3, click the 'Settings' option from the menu to navigate to page 13 (settings page).
+Consumer task:
+ On the photo map page, click the menu button. Verify that the 'Settings' option (produced by the Producer's action) is present in the dropdown menu.
+------------------------------
+
+==============================================
+[AppTest] Pair 23/62: 11 -> 5
+Producer: This page allows the user to select a date for filtering photos, with the option to confirm the selection (after selecting a folder with images) or cancel it.
+Consumer: The current page allows users to configure various filter criteria (such as find term, path, date, tags, rating, geolocation, etc.) to search and sort photos within a folder for more efficient photo management.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 10, click the Date options button (action_ref [10,7]) to open the date selection interface (page 24) and confirm the date filter selection (assuming a folder with images is selected).
+Consumer task:
+ Click the Filter option to enter the photo filtering settings page, then verify that the date filter setting (from the Producer) is reflected in the date input/setting field for photo filtering.
+------------------------------
+
+==============================================
+[AppTest] Pair 24/62: 12 -> 5
+Producer: Public Image checkbox
+Consumer: The current page allows users to configure various filter criteria (such as find term, path, date, tags, rating, geolocation, etc.) to search and sort photos within a folder for more efficient photo management.
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 10, click the 'Public Image' checkbox (action_ref [10,8]) to update the public image setting state and navigate to page 26.
+Consumer task:
+ Click the Filter option to enter the photo filtering settings page. Then, configure the 'photo filtering setting' (using the updated public image setting state from the Producer) by optionally interacting with input fields/option buttons for relevant filter types (e.g., path, tags, etc.), and confirm the settings to apply the filter.
+------------------------------
+
+==============================================
+[AppTest] Pair 25/62: 13 -> 5
+Producer: Private Image checkbox
+Consumer: The current page allows users to configure various filter criteria (such as find term, path, date, tags, rating, geolocation, etc.) to search and sort photos within a folder for more efficient photo management.
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 10, click the 'Private Image' checkbox to transition to page 27 (updating the private image setting).
+Consumer task:
+ Click the Filter option to enter the photo filtering settings page. Verify that the filter configuration options (e.g., for tags, path, etc.) reflect the updated private image setting's impact on photo filtering (e.g., private images are included/excluded as per the setting when filters are applied).
+------------------------------
+
+==============================================
+[AppTest] Pair 26/62: 14 -> 5
+Producer: With no Tags checkbox
+Consumer: The current page allows users to configure various filter criteria (such as find term, path, date, tags, rating, geolocation, etc.) to search and sort photos within a folder for more efficient photo management.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 10 (filter interface), click the 'With no Tags' checkbox, and proceed to page 28.
+Consumer task:
+ Click the Filter option to enter the photo filtering settings page, verify that the 'With no Tags' tag filtering setting (from the producer's action) is reflected in the filter configuration options, and then either confirm or undo the settings as needed.
+------------------------------
+
+==============================================
+[AppTest] Pair 27/62: 15 -> 5
+Producer: Rating star
+Consumer: The current page allows users to configure various filter criteria (such as find term, path, date, tags, rating, geolocation, etc.) to search and sort photos within a folder for more efficient photo management.
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 10, click a rating star under the 'Rating' label to perform the rating action (transition to page 33).
+Consumer task:
+ Click the Filter option to enter the photo filtering settings page. Then, check the rating filter setting to verify it reflects the rating set by the Producer's rating star click.
+------------------------------
+
+==============================================
+[AppTest] Pair 28/62: 16 -> 5
+Producer: With no geo info checkbox
+Consumer: The current page allows users to configure various filter criteria (such as find term, path, date, tags, rating, geolocation, etc.) to search and sort photos within a folder for more efficient photo management.
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 10, click the 'With no geo info' checkbox to transition to page 34 (updating with no geo info setting).
+Consumer task:
+ Click the Filter option to enter the photo filtering settings page. Verify that the geolocation filter setting reflects the 'no geo info' configuration from the Producer step (e.g., geolocation filter is disabled or shows no geo info applied), then optionally configure other filters or confirm/undo the settings.
+------------------------------
+
+==============================================
+[AppTest] Pair 29/62: 17 -> 5
+Producer: Sort by Name
+Consumer: The current page allows users to configure various filter criteria (such as find term, path, date, tags, rating, geolocation, etc.) to search and sort photos within a folder for more efficient photo management.
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 11, click the 'Sort by Name' option to transition to page 56 and initiate sorting items by name.
+Consumer task:
+ Click the Filter option to enter the photo filtering settings page. Verify that the filter configuration reflects the updated file sort configuration (by name) from the Producer step, then either confirm or undo the filter settings as needed.
+------------------------------
+
+==============================================
+[AppTest] Pair 30/62: 18 -> 5
+Producer: Sort by Rating
+Consumer: The current page allows users to configure various filter criteria (such as find term, path, date, tags, rating, geolocation, etc.) to search and sort photos within a folder for more efficient photo management.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 11 (folder view with sort menu open), click 'Sort by Rating' in the sort menu to navigate to page 59 (folder view with items sorted by rating).
+Consumer task:
+ Click the Filter option to enter the photo filtering settings page. On this page, configure the rating filter to match the sorted rating order from the Producer's output (sorted file list by rating), then confirm the settings to apply the filter and verify the filtered photos reflect the sorted rating data from the Producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 31/62: 19 -> 5
+Producer: Sort by Last Modified
+Consumer: The current page allows users to configure various filter criteria (such as find term, path, date, tags, rating, geolocation, etc.) to search and sort photos within a folder for more efficient photo management.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 11 (folder view with sort menu open), click 'Last Modified' in the sort menu to navigate to page 60 (applying Last Modified sort to folder contents).
+Consumer task:
+ Click the Filter option to enter the photo filtering settings page. On this page, configure a path filter to use the folder (from the Producer's sorted folder) as the path input, then confirm the filter settings to apply the filter and verify that the filtered photos match the Last Modified - sorted folder's contents.
+------------------------------
+
+==============================================
+[AppTest] Pair 32/62: 20 -> 5
+Producer: Sort by Size
+Consumer: The current page allows users to configure various filter criteria (such as find term, path, date, tags, rating, geolocation, etc.) to search and sort photos within a folder for more efficient photo management.
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 11 (folder view with sort menu open), click 'Sort by Size' in the sort menu to navigate to page 62 (folder view with items sorted by size).
+Consumer task:
+ Click the Filter option to enter the photo filtering settings page. Then, configure the 'path' filter to match the folder path of the sorted folder (from Producer step) and confirm the filter settings to verify that the filtered photos reflect the size - sorted folder's contents.
+------------------------------
+
+==============================================
+[AppTest] Pair 33/62: 24 -> 5
+Producer: This page allows the user to select a specific folder (from a list of system and user - created folders) to initiate a media scan, likely for the purpose of detecting and managing media files (such as photos) within that folder.
+Consumer: The current page allows users to configure various filter criteria (such as find term, path, date, tags, rating, geolocation, etc.) to search and sort photos within a folder for more efficient photo management.
+
+[Plan]
+Case 1/1
+Producer task:
+ 1. Click to open the media scanner's folder selection. 2. On the folder selection page, choose a specific folder (e.g., 'Photos' folder). 3. Confirm the scanning of the selected folder.
+Consumer task:
+ 1. Click the Filter option to enter the photo filtering settings page. 2. In the path filter input field, enter the path of the folder (the one selected in the producer task) to filter photos within that folder. 3. Confirm the filter settings to apply the filter and verify that photos from the selected folder are displayed.
+------------------------------
+
+==============================================
+[AppTest] Pair 34/62: 25 -> 5
+Producer: The current page displays detailed information about a photo folder, including technical details like adapter and fragment references, and a SQL query related to media file retrieval, to provide insights into the folder's content and underlying data handling.
+Consumer: The current page allows users to configure various filter criteria (such as find term, path, date, tags, rating, geolocation, etc.) to search and sort photos within a folder for more efficient photo management.
+
+[Plan]
+Case 1/1
+Producer task:
+ Click 'Details' to show folder details (dialog), then confirm to close dialog (restoring folder view).
+Consumer task:
+ Click 'Filter' to enter settings. Configure path filter using the folder (from Producer’s folder details) as path input, then confirm to apply filter.
+------------------------------
+
+==============================================
+[AppTest] Pair 35/62: 26 -> 5
+Producer: The page allows the user to view and potentially manage (via the menu options) the photos within a specific folder, with the current view showing a single photo file.
+Consumer: The current page allows users to configure various filter criteria (such as find term, path, date, tags, rating, geolocation, etc.) to search and sort photos within a folder for more efficient photo management.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on folder page (page 14) showing a photo. Click 'App protected/pinned' menu option, confirm pinning in dialog (page 67).
+Consumer task:
+ Click Filter option to enter photo filtering settings page. Configure path filter to use the folder (from Producer’s folder page) and apply filter to verify photos (including the pinned one) are filtered as expected.
+------------------------------
+
+==============================================
+[AppTest] Pair 36/62: 27 -> 34
+Producer: The current page provides information about "A Photo Manager" app, including its version, a brief description of its purpose (managing local photos with capabilities like finding, copying, editing Exif, and displaying in Gallery or Map), and a list of its features such as fast photo search, display options, detail view, file management, Exif editing, autop processing, privacy marking, and protected mode.
+Consumer: The current page displays information about the "A Photo Manager" app, including its version, a brief description of its purpose (managing local photos with capabilities like finding, copying, editing Exif data, and displaying in gallery or map), and a list of its features.
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 14, click the 'About "A Photo Manager"' option to navigate to page 68 and view the app's about information (version, purpose, features).
+Consumer task:
+ On page 21, click the 'About "A Photo Manager"' option to navigate to page 42. Verify that the displayed app information (version, purpose, features) matches the information produced by the Producer on page 68.
+------------------------------
+
+==============================================
+[AppTest] Pair 37/62: 27 -> 42
+Producer: The current page provides information about "A Photo Manager" app, including its version, a brief description of its purpose (managing local photos with capabilities like finding, copying, editing Exif, and displaying in Gallery or Map), and a list of its features such as fast photo search, display options, detail view, file management, Exif editing, autop processing, privacy marking, and protected mode.
+Consumer: The current page displays information about the "A Photo Manager" app (version AndroFotoFinder 0.6.4.180314), including its purpose (managing local photos with capabilities like finding, copying, editing Exif, and displaying in gallery or map) and a list of its features.
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 14, click the 'About "A Photo Manager"' option to navigate to page 68 and view the app's version, purpose, and feature list.
+Consumer task:
+ On page 46, click the 'About "A Photo Manager"' option to navigate to page 51, then verify that the displayed app information (purpose, version, features) matches what was shown on page 68 from the producer step.
+------------------------------
+
+==============================================
+[AppTest] Pair 38/62: 28 -> 5
+Producer: The current page provides a dropdown menu with additional options (Tag Filter, Filter, Sort, Load bookmark, Settings, More ...) for managing photos in a folder, likely to access extended photo management functionalities.
+Consumer: The current page allows users to configure various filter criteria (such as find term, path, date, tags, rating, geolocation, etc.) to search and sort photos within a folder for more efficient photo management.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the folder photo management page, click the 'More ...' option to open the submenu with additional photo management options (including Filter).
+Consumer task:
+ From the submenu opened by the Producer task, click the Filter option to enter the photo filtering settings page. Then, configure a filter (e.g., set a find term, select a date range, or add a tag) to verify that the Filter option from the Producer's submenu leads to the correct filtering configuration interface as expected.
+------------------------------
+
+==============================================
+[AppTest] Pair 39/62: 28 -> 36
+Producer: The current page provides a dropdown menu with additional options (Tag Filter, Filter, Sort, Load bookmark, Settings, More ...) for managing photos in a folder, likely to access extended photo management functionalities.
+Consumer: The page provides a menu with options (Filter, Show Photo(s), Show in new gallery, Settings, About "A Photo Manager") for managing photos within the photo map interface of the photo manager application.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the folder photo management page, click the 'More ...' option to open its submenu with additional photo management options.
+Consumer task:
+ On the photo map page, click the menu button to open the dropdown menu and verify that the 'photo map menu' reflects the updated menu structure influenced by the producer's 'More ...' submenu (e.g., check for consistency in management - related options).
+------------------------------
+
+==============================================
+[AppTest] Pair 40/62: 29 -> 36
+Producer: Settings option
+Consumer: The page provides a menu with options (Filter, Show Photo(s), Show in new gallery, Settings, About "A Photo Manager") for managing photos within the photo map interface of the photo manager application.
+
+[Plan]
+Case 1/1
+Producer task:
+ From page 21 (photo manager interface), open the three - dot menu and click the 'Settings' option to navigate to page 38 (settings page).
+Consumer task:
+ On the photo map page, click the menu button to open the dropdown menu and check if the 'Settings' option (produced by the producer's action of navigating to the settings page) is present in the menu.
+------------------------------
+
+==============================================
+[AppTest] Pair 41/62: 30 -> 5
+Producer: The current page (Save bookmark dialog) allows the user to specify a name for a bookmark and either confirm (OK) or cancel the action of saving the bookmarked photo filtering settings.
+Consumer: The current page allows users to configure various filter criteria (such as find term, path, date, tags, rating, geolocation, etc.) to search and sort photos within a folder for more efficient photo management.
+
+[Plan]
+Case 1/1
+Producer task:
+ Click 'Save bookmark as...' to open the dialog, enter a name in the input field, then click OK to save the bookmark with the entered name.
+Consumer task:
+ Click the Filter option to enter the photo filtering settings page, verify that the filter settings (used to create the bookmark) are reflected in the configurable filter criteria (e.g., path, tags, etc.) as expected from the saved bookmark.
+------------------------------
+
+==============================================
+[AppTest] Pair 42/62: 30 -> 36
+Producer: The current page (Save bookmark dialog) allows the user to specify a name for a bookmark and either confirm (OK) or cancel the action of saving the bookmarked photo filtering settings.
+Consumer: The page provides a menu with options (Filter, Show Photo(s), Show in new gallery, Settings, About "A Photo Manager") for managing photos within the photo map interface of the photo manager application.
+
+[Plan]
+Case 1/1
+Producer task:
+ Click 'Save bookmark as...' to open the Save bookmark dialog, then click the name input field to enter a bookmark name (e.g., 'TestBookmark') and click OK to save the bookmark.
+Consumer task:
+ On the photo map page, click the menu button to open the dropdown menu and verify that the menu (for managing photos) is displayed as expected, with no direct dependency on the saved bookmark visible here (note: the data_in might have a misalignment, but follow the task to open the menu after producing the bookmark).
+------------------------------
+
+==============================================
+[AppTest] Pair 43/62: 32 -> 5
+Producer: Displays the contents of a specific photo folder, showing a single image file with options for folder navigation and additional photo management actions.
+Consumer: The current page allows users to configure various filter criteria (such as find term, path, date, tags, rating, geolocation, etc.) to search and sort photos within a folder for more efficient photo management.
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 21, click 'Show in new gallery' to navigate to page 0 (specific photo folder with one image).
+Consumer task:
+ Click 'Filter' to enter photo filtering settings. Configure 'path' filter with the folder path from the producer’s gallery (page 0), then confirm to apply and check if the filtered results include the single image from the producer’s folder.
+------------------------------
+
+==============================================
+[AppTest] Pair 44/62: 33 -> 5
+Producer: The current page, "A Photo Map", functions as an interface to display photos on a map, likely showing the geographical locations where the photos were taken, with map tiles provided by OpenStreetMap contributors.
+Consumer: The current page allows users to configure various filter criteria (such as find term, path, date, tags, rating, geolocation, etc.) to search and sort photos within a folder for more efficient photo management.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 21, click 'Show in map' to navigate to 'A Photo Map' page (page 41) to generate the photo map interface.
+Consumer task:
+ Click Filter option to enter photo filtering settings page. Configure geolocation filter using the map area from the 'A Photo Map' interface (page 41) as the map area filter setting, then confirm to apply the filter.
+------------------------------
+
+==============================================
+[AppTest] Pair 45/62: 33 -> 38
+Producer: The current page, "A Photo Map", functions as an interface to display photos on a map, likely showing the geographical locations where the photos were taken, with map tiles provided by OpenStreetMap contributors.
+Consumer: The page allows users to filter photos in the photo map interface by specifying criteria such as search term, path, date, image privacy, tags, rating, and geographic information.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 21, click the 'Show in map' option to navigate to the 'A Photo Map' page (page 41) which displays the photo map interface with OpenStreetMap tiles.
+Consumer task:
+ From the photo map page (page 46), click the 'Filter' option from the menu to navigate to the filter interface (page 10) and verify that the filter interface is able to filter the photos from the photo map interface produced earlier.
+------------------------------
+
+==============================================
+[AppTest] Pair 46/62: 33 -> 39
+Producer: The current page, "A Photo Map", functions as an interface to display photos on a map, likely showing the geographical locations where the photos were taken, with map tiles provided by OpenStreetMap contributors.
+Consumer: The page functions to display photos on a map view, though in this instance it indicates no photos were found for the given (null) context.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 21, click the 'Show in map' option to navigate to the 'A Photo Map' page (page 41) which displays a map interface with OpenStreetMap tiles.
+Consumer task:
+ Start on page 46, click the 'Show Photo(s)' option to navigate to page 48 and verify if the map view reflects the photo map interface produced by the 'A Photo Map' page (check for presence of photos or the expected map - photo relationship based on the producer's output).
+------------------------------
+
+==============================================
+[AppTest] Pair 47/62: 33 -> 40
+Producer: The current page, "A Photo Map", functions as an interface to display photos on a map, likely showing the geographical locations where the photos were taken, with map tiles provided by OpenStreetMap contributors.
+Consumer: This page functions as an interface for managing photo folders, allowing users to organize, view, or navigate through different photo directories, with options to switch to a map view or access additional menu features.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 21, click 'Show in map' to navigate to 'A Photo Map' page (page 41) to generate the photo map interface.
+Consumer task:
+ From the photo map interface (page 41, acting as page 46 here), click 'Show in new gallery' to navigate to page 49 and verify the folder management interface for organizing the photo folders/photos produced by the photo map interface.
+------------------------------
+
+==============================================
+[AppTest] Pair 48/62: 34 -> 42
+Producer: The current page displays information about the "A Photo Manager" app, including its version, a brief description of its purpose (managing local photos with capabilities like finding, copying, editing Exif data, and displaying in gallery or map), and a list of its features.
+Consumer: The current page displays information about the "A Photo Manager" app (version AndroFotoFinder 0.6.4.180314), including its purpose (managing local photos with capabilities like finding, copying, editing Exif, and displaying in gallery or map) and a list of its features.
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 21, click the 'About "A Photo Manager"' option to navigate to page 42 and view the app's version, purpose, and features.
+Consumer task:
+ On page 46, click the 'About "A Photo Manager"' option to navigate to page 51 and verify that the app's information (purpose, version, features) displayed matches the data produced on page 42.
+------------------------------
+
+==============================================
+[AppTest] Pair 49/62: 38 -> 5
+Producer: The page allows users to filter photos in the photo map interface by specifying criteria such as search term, path, date, image privacy, tags, rating, and geographic information.
+Consumer: The current page allows users to configure various filter criteria (such as find term, path, date, tags, rating, geolocation, etc.) to search and sort photos within a folder for more efficient photo management.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on the photo map page (page 46), click the 'Filter' option from the menu to navigate to the filter interface (page 10) and specify filter criteria (e.g., set a search term, select a date range) to generate a filtered photo list.
+Consumer task:
+ Click the Filter option to enter the photo filtering settings page. Verify that the filter configuration (e.g., the search term, date range set in the producer task) is pre - populated or can be used to apply the same filter as in the producer task, and that applying the filter results in a photo list consistent with the filtered photo list from the producer task.
+------------------------------
+
+==============================================
+[AppTest] Pair 50/62: 38 -> 33
+Producer: The page allows users to filter photos in the photo map interface by specifying criteria such as search term, path, date, image privacy, tags, rating, and geographic information.
+Consumer: The current page, "A Photo Map", functions as an interface to display photos on a map, likely showing the geographical locations where the photos were taken, with map tiles provided by OpenStreetMap contributors.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on the photo map page (page 46), click the 'Filter' option from the menu to navigate to the filter interface (page 10), and specify filtering criteria (e.g., search term, date) to generate a filtered photo list.
+Consumer task:
+ Start on page 21, click the 'Show in map' option to navigate to the 'A Photo Map' page (page 41), and verify that the map interface displays the photos from the filtered photo list produced earlier, with their correct geographic locations.
+------------------------------
+
+==============================================
+[AppTest] Pair 51/62: 38 -> 39
+Producer: The page allows users to filter photos in the photo map interface by specifying criteria such as search term, path, date, image privacy, tags, rating, and geographic information.
+Consumer: The page functions to display photos on a map view, though in this instance it indicates no photos were found for the given (null) context.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on the photo map page (page 46), click the 'Filter' option from the menu to navigate to the filter interface (page 10) and specify filter criteria to generate a filtered photo list.
+Consumer task:
+ Start on page 46, click the 'Show Photo(s)' option to attempt displaying the photos (from the filtered list generated by the Producer) on a map view; check if the map view reflects the filtered photos or if no photos are found as per the context.
+------------------------------
+
+==============================================
+[AppTest] Pair 52/62: 38 -> 40
+Producer: The page allows users to filter photos in the photo map interface by specifying criteria such as search term, path, date, image privacy, tags, rating, and geographic information.
+Consumer: This page functions as an interface for managing photo folders, allowing users to organize, view, or navigate through different photo directories, with options to switch to a map view or access additional menu features.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on the photo map page (page 46), click the 'Filter' option from the menu to navigate to the filter interface (page 10) and specify filtering criteria to generate a filtered photo list.
+Consumer task:
+ Start on page 46, click the 'Show in new gallery' option to navigate to page 49 (folder management interface) and verify that the photo folders/photos shown reflect the filtered photo list produced by the filter operation.
+------------------------------
+
+==============================================
+[AppTest] Pair 53/62: 39 -> 5
+Producer: The page functions to display photos on a map view, though in this instance it indicates no photos were found for the given (null) context.
+Consumer: The current page allows users to configure various filter criteria (such as find term, path, date, tags, rating, geolocation, etc.) to search and sort photos within a folder for more efficient photo management.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 46, click 'Show Photo(s)' to navigate to page 48 (where no photos are found for null context).
+Consumer task:
+ Click Filter option to enter photo filtering settings page. Configure a filter (e.g., path to a folder with images) to search for photos, then confirm settings to check if filtered results reflect the context from the Producer (e.g., no photos found or relevant filtered photos).
+------------------------------
+
+==============================================
+[AppTest] Pair 54/62: 39 -> 33
+Producer: The page functions to display photos on a map view, though in this instance it indicates no photos were found for the given (null) context.
+Consumer: The current page, "A Photo Map", functions as an interface to display photos on a map, likely showing the geographical locations where the photos were taken, with map tiles provided by OpenStreetMap contributors.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 46, click 'Show Photo(s)' to navigate to page 48 (confirm no photos found context).
+Consumer task:
+ Start on page 21, click 'Show in map' to navigate to 'A Photo Map' page 41 (verify map interface reflects no photos context from producer).
+------------------------------
+
+==============================================
+[AppTest] Pair 55/62: 39 -> 38
+Producer: The page functions to display photos on a map view, though in this instance it indicates no photos were found for the given (null) context.
+Consumer: The page allows users to filter photos in the photo map interface by specifying criteria such as search term, path, date, image privacy, tags, rating, and geographic information.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 46, click 'Show Photo(s)' to navigate to page 48 (where no photos are found for the null context).
+Consumer task:
+ From the photo map page (page 46), click 'Filter' to open the filter interface (page 10) and attempt to filter the (non - existent) photos produced by the producer (based on criteria like search term, path, etc.).
+------------------------------
+
+==============================================
+[AppTest] Pair 56/62: 39 -> 40
+Producer: The page functions to display photos on a map view, though in this instance it indicates no photos were found for the given (null) context.
+Consumer: This page functions as an interface for managing photo folders, allowing users to organize, view, or navigate through different photo directories, with options to switch to a map view or access additional menu features.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 46, click 'Show Photo(s)' to attempt displaying photos on map view (navigates to page 48 where no photos are found for null context).
+Consumer task:
+ Start on page 46, click 'Show in new gallery' to navigate to page 49 (photo folder management interface) and verify that the folder management reflects the absence of photos (consistent with producer's 'no photos found' result).
+------------------------------
+
+==============================================
+[AppTest] Pair 57/62: 40 -> 5
+Producer: This page functions as an interface for managing photo folders, allowing users to organize, view, or navigate through different photo directories, with options to switch to a map view or access additional menu features.
+Consumer: The current page allows users to configure various filter criteria (such as find term, path, date, tags, rating, geolocation, etc.) to search and sort photos within a folder for more efficient photo management.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 46 (menu or map view), click 'Show in new gallery' to navigate to page 49 (folder management interface).
+Consumer task:
+ From page 49 (folder management interface), click the Filter option to enter the photo filtering settings page. Configure a path filter using the folder (from the new gallery view on page 49) as the folder path, then confirm the filter settings to apply it and verify the filtered photos match the folder's contents.
+------------------------------
+
+==============================================
+[AppTest] Pair 58/62: 40 -> 33
+Producer: This page functions as an interface for managing photo folders, allowing users to organize, view, or navigate through different photo directories, with options to switch to a map view or access additional menu features.
+Consumer: The current page, "A Photo Map", functions as an interface to display photos on a map, likely showing the geographical locations where the photos were taken, with map tiles provided by OpenStreetMap contributors.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 46, click 'Show in new gallery' to navigate to page 49 (folder management interface for photos).
+Consumer task:
+ Start on page 21, click 'Show in map' to navigate to page 41 ('A Photo Map' page). Verify that the map interface displays photo metadata (from the gallery/organized photo directories) and correct map interface configuration.
+------------------------------
+
+==============================================
+[AppTest] Pair 59/62: 40 -> 38
+Producer: This page functions as an interface for managing photo folders, allowing users to organize, view, or navigate through different photo directories, with options to switch to a map view or access additional menu features.
+Consumer: The page allows users to filter photos in the photo map interface by specifying criteria such as search term, path, date, image privacy, tags, rating, and geographic information.
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 46, click the 'Show in new gallery' option to navigate to page 49 (the folder management interface for photo directories).
+Consumer task:
+ On the photo map page (page 46), click the 'Filter' option from the menu to navigate to the filter interface (page 10), and verify that the photos from the new gallery (produced by the Producer) are available to be filtered using the various criteria (search term, path, date, etc.).
+------------------------------
+
+==============================================
+[AppTest] Pair 60/62: 40 -> 39
+Producer: This page functions as an interface for managing photo folders, allowing users to organize, view, or navigate through different photo directories, with options to switch to a map view or access additional menu features.
+Consumer: The page functions to display photos on a map view, though in this instance it indicates no photos were found for the given (null) context.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 46, click the 'Show in new gallery' option to navigate to page 49 (the folder management interface for organizing photo directories).
+Consumer task:
+ Start on page 46, click the 'Show Photo(s)' option to attempt displaying photos (from the new gallery view produced earlier) on a map view, then verify the navigation to page 48 and check if the photo data from the new gallery is reflected (or if no photos found is accurate based on the new gallery's data).
+------------------------------
+
+==============================================
+[AppTest] Pair 61/62: 42 -> 5
+Producer: The current page displays information about the "A Photo Manager" app (version AndroFotoFinder 0.6.4.180314), including its purpose (managing local photos with capabilities like finding, copying, editing Exif, and displaying in gallery or map) and a list of its features.
+Consumer: The current page allows users to configure various filter criteria (such as find term, path, date, tags, rating, geolocation, etc.) to search and sort photos within a folder for more efficient photo management.
+
+[Plan]
+Case 1/1
+Producer task:
+ Click the 'About "A Photo Manager"' option (starting from page 46) to navigate to page 51 and view the app’s information (purpose, version, features).
+Consumer task:
+ Click the Filter option to enter the photo filtering settings page. Then, configure a filter (e.g., enter a folder path in the path input field) using the app’s purpose (managing local photos) as context for selecting an appropriate folder with images, and confirm the filter settings to apply it.
+------------------------------
+
+==============================================
+[AppTest] Pair 62/62: 42 -> 34
+Producer: The current page displays information about the "A Photo Manager" app (version AndroFotoFinder 0.6.4.180314), including its purpose (managing local photos with capabilities like finding, copying, editing Exif, and displaying in gallery or map) and a list of its features.
+Consumer: The current page displays information about the "A Photo Manager" app, including its version, a brief description of its purpose (managing local photos with capabilities like finding, copying, editing Exif data, and displaying in gallery or map), and a list of its features.
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 46, click the 'About "A Photo Manager"' option to navigate to page 51 and view the app’s information (purpose, version, features).
+Consumer task:
+ On page 21, click the 'About "A Photo Manager"' option to navigate to page 42. Verify that the app’s version, purpose (managing local photos with find/copy/edit Exif and gallery/map display), and features displayed match the information produced by the Producer on page 51.
+------------------------------

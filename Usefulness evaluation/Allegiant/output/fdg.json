@@ -1,0 +1,1189 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "Travel management (flight, check - in, hotel)",
+            "action_refs": [
+                [
+                    0,
+                    4
+                ],
+                [
+                    0,
+                    7
+                ],
+                [
+                    6,
+                    0
+                ]
+            ],
+            "data_in": [
+                "departure date selection context",
+                "departure date setting",
+                "flight status query parameters"
+            ],
+            "data_out": [
+                "selected departure date",
+                "updated departure date setting",
+                "updated flight status query parameters"
+            ],
+            "data_dependencies": [
+                1,
+                4,
+                5,
+                10,
+                12,
+                13,
+                14,
+                15
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts with clicking the Home bottom tab (staying on the same page). Then, clicking the More bottom tab navigates to a new page. Finally, clicking the Remove Trips list item navigates to another page, completing the sequence of actions related to travel management.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click Home bottom tab"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            0,
+                            7
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click More bottom tab"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            6,
+                            0
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click Remove Trips list item"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 1,
+            "function_description": "This page allows users to input flight details (departure location, destination, travel dates, number of passengers) to search for and book flights with Allegiant.",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ],
+                [
+                    1,
+                    4
+                ],
+                [
+                    1,
+                    6
+                ]
+            ],
+            "data_in": [
+                "return date setting",
+                "flight booking form",
+                "flight search parameters"
+            ],
+            "data_out": [
+                "return date setting (updated)"
+            ],
+            "data_dependencies": [
+                7,
+                8,
+                10
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts by clicking the 'Book Flight' button to enter the flight booking page. On this page, users can interact with elements like the return date picker (to set return dates) or the flight search button (to initiate a flight search). The main path involves moving from the home-like page to the booking interface, with optional interactions on the booking page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click 'Book Flight' button to navigate to the flight booking page."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            1,
+                            4
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the return date picker to set or modify return travel dates."
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            1,
+                            6
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the 'SEARCH' button to initiate a flight search with the entered details."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "This page allows users to add a trip by entering the passenger's first name, last name, and confirmation number, then submitting the information via the \"ADD TRIP\" button.",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    2,
+                    0
+                ],
+                [
+                    2,
+                    1
+                ],
+                [
+                    2,
+                    2
+                ],
+                [
+                    2,
+                    3
+                ]
+            ],
+            "data_in": [
+                "trip passenger first name input field",
+                "trip passenger data",
+                "trip passenger last name input field",
+                "trip passenger first name",
+                "trip passenger last name",
+                "trip confirmation number",
+                "trip details (first name, last name, confirmation #)"
+            ],
+            "data_out": [
+                "updated trip passenger first name input field",
+                "updated trip passenger data",
+                "updated trip passenger last name input field",
+                "new trip record"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "To add a trip, start by clicking the 'Add Existing Trip' button (or the relevant entry point, here represented by the Check - In/Add Trip flow start). Then, input the passenger's first name, followed by the last name, then the confirmation number. Finally, click the 'ADD TRIP' button to submit the trip information. The flow is a straight - line sequence of entering details and submitting.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click the button to enter the Add Trip page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            2,
+                            0
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 10,
+                        "action": "input",
+                        "summary": "Input the passenger's first name"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            2,
+                            1
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 11,
+                        "action": "input",
+                        "summary": "Input the passenger's last name"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            2,
+                            2
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 12,
+                        "action": "input",
+                        "summary": "Input the confirmation number"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            2,
+                            3
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click the 'ADD TRIP' button to submit"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S5"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "The current page allows users to add a trip by entering the passenger's first name, last name, and confirmation number, then submitting the information via the \"ADD TRIP\" button.",
+            "action_refs": [
+                [
+                    0,
+                    2
+                ]
+            ],
+            "data_in": [
+                "trip addition interface"
+            ],
+            "data_out": [
+                "trip addition form"
+            ],
+            "data_dependencies": [
+                2
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the home page and clicks the 'Add Existing Trip' button to navigate to the Add Trip page. On the Add Trip page, the user will enter the passenger's first name, last name, and confirmation number (steps not shown here), then click the 'ADD TRIP' button to submit the trip information. The current provided action is the initial navigation to the Add Trip page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click 'Add Existing Trip' button to go to Add Trip page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "The current page (after clicking \"Explore Hotels button (promo)\" from the travel management page) appears to be the main Allegiant app interface, but the immediate action is a system prompt to choose an app (Chrome or WebView Browser Tester) to open content, likely related to hotel exploration or promotional offers, with options to book flights, check - in, add trips, and view a credit card bonus offer.",
+            "action_refs": [
+                [
+                    0,
+                    3
+                ]
+            ],
+            "data_in": [
+                "hotel exploration promo"
+            ],
+            "data_out": [
+                "browser app selection prompt"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts with clicking the 'Explore Hotels button (promo)' on page 0. This action triggers a system prompt to choose an app (Chrome or WebView Browser Tester) to open the related content, with options to proceed using either app.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click the 'Explore Hotels button (promo)' to initiate the process of opening hotel-related content."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": null,
+                                "condition": "Choose to open with Chrome (either 'JUST ONCE' or 'ALWAYS')"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "Choose to open with WebView Browser Tester"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "The current page allows users to check flight status either by airport (by specifying departure date, departure airport, and arrival airport) or by flight number, with options to set parameters and then click \"CHECK STATUS\" to retrieve flight - related information.",
+            "action_refs": [
+                [
+                    0,
+                    5
+                ],
+                [
+                    4,
+                    0
+                ],
+                [
+                    4,
+                    3
+                ]
+            ],
+            "data_in": [
+                "departure airport input"
+            ],
+            "data_out": [
+                "cleared departure airport input"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the home page and clicks the 'Flight Status' bottom tab to navigate to the flight status page. From there, the user can either click the back arrow to return to the previous page or click the clear departure airport button to modify the departure airport field.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click 'Flight Status' bottom tab to go to flight status page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            4,
+                            0
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click back navigation arrow"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            4,
+                            3
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click clear departure airport button"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "The \"My Account\" page enables users to log in to their Allways Rewards account (with credentials matching Sunseeker login info) or sign up for a new account, and also provides a \"Forgot Password?\" option.",
+            "action_refs": [
+                [
+                    0,
+                    6
+                ],
+                [
+                    5,
+                    0
+                ]
+            ],
+            "data_in": [
+                "login credentials (email address)"
+            ],
+            "data_out": [
+                "entered email address"
+            ],
+            "data_dependencies": [
+                16,
+                18
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the home page (page 0). First, the user clicks the 'My Account' bottom tab (action [0,6]) to navigate to the My Account page (page 5). Then, the user inputs an email address into the Email Address input field (action [5,0]) on the My Account page (page 5), which likely leads to further login or account-related steps (page 17).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            6
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click 'My Account' bottom tab to navigate to My Account page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            5,
+                            0
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 17,
+                        "action": "input",
+                        "summary": "Input email address into Email Address field on My Account page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "This page allows users to search for and select a destination airport from a list (or via the search bar) as part of the flight booking process.",
+            "action_refs": [
+                [
+                    1,
+                    0
+                ],
+                [
+                    7,
+                    0
+                ],
+                [
+                    7,
+                    1
+                ]
+            ],
+            "data_in": [
+                "departure location input",
+                "airport list",
+                "airport search input",
+                "departure airport selection"
+            ],
+            "data_out": [
+                "selected departure airport",
+                "filtered airport list",
+                "selected departure airport (Akron-Canton, OH (CAK))",
+                "updated flight booking form"
+            ],
+            "data_dependencies": [
+                8
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The user starts on the destination airport page. They can either input a destination airport name in the search field (leading to a confirmation step) or directly select a listed airport (returning to the main booking page). The flow branches based on whether the user chooses to search via input or select from the list.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            0
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 9,
+                        "action": "input",
+                        "summary": "Input destination airport name in search field"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            7,
+                            1
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Select listed destination airport"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S1"
+                            },
+                            {
+                                "next_step": "S2"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "This page allows the user to select or search for a destination airport from a list of airports, as part of the flight booking process.",
+            "action_refs": [
+                [
+                    1,
+                    1
+                ]
+            ],
+            "data_in": [
+                "flight booking form",
+                "destination airport input"
+            ],
+            "data_out": [
+                "destination airport selection interface"
+            ],
+            "data_dependencies": [
+                7
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user starts on the 'Book a Trip' page (page 1) and interacts with the 'To' (destination) input field. They input 'Orlando' into this field, which transitions the flow to the 'DESTINATION AIRPORT' page (page 7) to either select from the list or refine the search further.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            1
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 7,
+                        "action": "input",
+                        "summary": "Input 'Orlando' into the 'To' (destination) input field"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "Trip type toggle (swap icon)",
+            "action_refs": [
+                [
+                    1,
+                    2
+                ]
+            ],
+            "data_in": [
+                "trip type setting"
+            ],
+            "data_out": [
+                "trip type setting updated (swap icon)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts on the 'Book a Trip' page (page 1). The user clicks the trip type toggle (swap icon) at the specified position. This action transitions the app to a new page (page 8), completing the toggle operation.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            2
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click the trip type toggle (swap icon)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "This page functions as a flight booking interface where users can input trip details (departure/arrival locations, dates, number of travelers) and initiate a flight search, with the current action being to select the departure date via the 'Depart' date picker.",
+            "action_refs": [
+                [
+                    1,
+                    3
+                ]
+            ],
+            "data_in": [
+                "departure date setting",
+                "flight booking form"
+            ],
+            "data_out": [
+                "departure date picker opened"
+            ],
+            "data_dependencies": [
+                13
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The core execution logic starts on the flight booking page (page 1). The user performs a single action: clicking the 'Depart' date picker to open the date selection interface (or trigger date-related functionality). There are no branches or loops as only this one action is defined for selecting the departure date.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            3
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the 'Depart' date picker to initiate departure date selection"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "This page functions as a flight booking interface where users can input trip details (departure/arrival locations, travel dates, number of travelers) to search for available flights.",
+            "action_refs": [
+                [
+                    1,
+                    5
+                ]
+            ],
+            "data_in": [
+                "passenger count setting"
+            ],
+            "data_out": [
+                "updated passenger count setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts on the flight booking page (page 1). The user clicks the passenger count selector ('1 Seated') to adjust the number of travelers. Since there's only one action provided, the flow currently consists of this single step with no branches or further navigation shown.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            5
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the passenger count selector ('1 Seated') to modify the number of travelers."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "This page allows users to search for the status of a flight by entering the flight number and selecting the departure date, then clicking the \"CHECK STATUS\" button to retrieve the relevant flight status information.",
+            "action_refs": [
+                [
+                    4,
+                    1
+                ],
+                [
+                    13,
+                    0
+                ]
+            ],
+            "data_in": [
+                "flight status query mode setting",
+                "flight number input",
+                "flight status query parameters"
+            ],
+            "data_out": [
+                "flight status query mode set to By Flight #",
+                "entered flight number"
+            ],
+            "data_dependencies": [
+                5,
+                14,
+                15
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user starts on page 4 and clicks the 'By Flight #' tab to switch to the flight number - based search page (page 13). Then, on page 13, the user inputs the flight number 'AA1234' into the flight number input field. After these steps, presumably, the user would click the 'CHECK STATUS' button (not in the provided actions but implied by the functional point) to retrieve the flight status, but with the given actions, the flow is to switch to the 'By Flight #' tab and input the flight number.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            1
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click on 'By Flight #' tab to switch to flight number search page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            13,
+                            0
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 13,
+                        "action": "input",
+                        "summary": "Input flight number 'AA1234' into the flight number input field"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "This page allows the user to select a departure date (yesterday, today, or tomorrow) for the purpose of searching flight status, with the selected date being used to filter flight status results.",
+            "action_refs": [
+                [
+                    4,
+                    2
+                ]
+            ],
+            "data_in": [
+                "departure date setting"
+            ],
+            "data_out": [
+                "updated departure date setting"
+            ],
+            "data_dependencies": [
+                12
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user starts on the flight status page. They click the departure date selector to open the date selection page, where they can choose between yesterday, today, or tomorrow as the departure date for flight status search.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            2
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click the departure date selector to open the date selection page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "This page functions as an arrival airport selection interface, allowing users to browse or search for and select a specific airport as the arrival destination for flight status inquiries.",
+            "action_refs": [
+                [
+                    4,
+                    4
+                ],
+                [
+                    15,
+                    0
+                ],
+                [
+                    15,
+                    1
+                ]
+            ],
+            "data_in": [
+                "arrival airport setting",
+                "flight status query parameters",
+                "arrival airport search input",
+                "arrival airport option (Akron-Canton, OH (CAK))",
+                "flight status query configuration"
+            ],
+            "data_out": [
+                "arrival airport selection interface",
+                "updated arrival airport query parameter",
+                "filtered arrival airport list",
+                "updated flight status query configuration (arrival airport set to CAK)"
+            ],
+            "data_dependencies": [
+                15
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user starts on the flight status page (page 4) and clicks the Arrival Airport selector to open the selection interface (page 15). At the selection interface, the user can either input an airport code (e.g., ORD) in the search field or click a listed airport option (e.g., Akron-Canton, OH (CAK)) to select it as the arrival airport.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            4
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click Arrival Airport selector to open selection interface"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            15,
+                            0
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 16,
+                        "action": "input",
+                        "summary": "Input airport code (e.g., ORD) in search field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            15,
+                            1
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click listed airport option (e.g., Akron-Canton, OH (CAK))"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2",
+                                "condition": "User chooses to search by inputting airport code"
+                            },
+                            {
+                                "next_step": "S3",
+                                "condition": "User chooses to select from listed airport options"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "The current page allows users to search for flight status either by airport (by specifying departure date, departure airport, and arrival airport) or by flight number, and then check the flight's status with the provided details, while also presenting disclaimers about flight information changes and local time usage.",
+            "action_refs": [
+                [
+                    4,
+                    5
+                ]
+            ],
+            "data_in": [
+                "flight search criteria",
+                "departure date",
+                "arrival airport"
+            ],
+            "data_out": [
+                "flight status information"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user starts on the Flight Status page. They click the 'Check Status' button to check the flight status using the provided airport details (departure date, departure airport, arrival airport) or flight number, with disclaimers about flight info changes and local time displayed.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            5
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the 'Check Status' button to check flight status."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "The current page functions as a login interface for the Allways Rewards account associated with Allegiant, allowing users to enter their email address and password to log in, or to sign up for a new account or reset their password.",
+            "action_refs": [
+                [
+                    5,
+                    1
+                ]
+            ],
+            "data_in": [
+                "login credentials",
+                "login session"
+            ],
+            "data_out": [
+                "login session established"
+            ],
+            "data_dependencies": [
+                18
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The flow starts on the login page (page 5). The user clicks the 'LOG IN' button, which (based on the action's dst_page_idx) keeps them on the same page (likely for post-click handling or validation).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            1
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click the 'LOG IN' button on the login page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "The current page functions as a sign - up form for the Allways service within the travel management app, where users can input their personal details (first name, last name, date of birth, email address, confirm email address, password, re - type password) following the specified password requirements to create a new account.",
+            "action_refs": [
+                [
+                    5,
+                    2
+                ],
+                [
+                    18,
+                    0
+                ]
+            ],
+            "data_in": [
+                "user profile"
+            ],
+            "data_out": [
+                "updated user profile"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The process starts on the My Account page. First, the user clicks the SIGN UP button to navigate to the sign - up form page. Then, on the sign - up form page, the user inputs their first name (e.g., 'John') into the First Name input field. The flow is a straight - line sequence without branches or loops based on the provided actions.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            2
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click the SIGN UP button to go to the sign - up form page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            18,
+                            0
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 20,
+                        "action": "input",
+                        "summary": "Input 'John' into the First Name input field"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "This page enables users to initiate a password reset process by entering their email address and submitting it, with a note to ensure a specific email address is in their contacts to avoid the reset email being filtered as junk or spam.",
+            "action_refs": [
+                [
+                    5,
+                    3
+                ],
+                [
+                    19,
+                    0
+                ],
+                [
+                    19,
+                    1
+                ]
+            ],
+            "data_in": [
+                "password reset request",
+                "email address"
+            ],
+            "data_out": [
+                "password reset form loaded",
+                "entered email address",
+                "password reset email request submitted"
+            ],
+            "data_dependencies": [
+                16
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user starts on the My Account page, clicks the 'Forgot Password?' link to navigate to the password reset page. On this page, the user inputs their email address into the designated field, then clicks the 'SUBMIT' button to initiate the password reset process, with a note to add a specific email to contacts to avoid spam filtering.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            3
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click 'Forgot Password?' link to go to password reset page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            19,
+                            0
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 21,
+                        "action": "input",
+                        "summary": "Input email address into the Email Address field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            19,
+                            1
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click 'SUBMIT' button to submit the email for password reset"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        }
+    ]
+}

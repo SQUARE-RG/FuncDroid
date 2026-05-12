@@ -1,0 +1,2568 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "Manage photos in a folder",
+            "action_refs": [
+                [
+                    0,
+                    3
+                ]
+            ],
+            "data_in": [
+                "photo file",
+                "photo folder"
+            ],
+            "data_out": [],
+            "data_dependencies": [
+                3,
+                5,
+                32,
+                33,
+                36,
+                38,
+                39,
+                40
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The process starts on the folder page (page 0). The user clicks on a photo thumbnail, which leads to the next page (page 4). This action initiates the management of the selected photo in the folder.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click on the photo thumbnail to start managing the photo"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 1,
+            "function_description": "The page functions as a folder selection interface to choose a folder (containing images) for photo management, with options to cancel or confirm the selection once a valid folder with images is chosen.",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ],
+                [
+                    1,
+                    0
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "data_in": [
+                "photo",
+                "folder",
+                "folder path",
+                "image folder",
+                "selected folder",
+                "image folder selection context"
+            ],
+            "data_out": [
+                "selected folder for photo",
+                "selected folder path",
+                "confirmed folder selection",
+                "updated folder selection state"
+            ],
+            "data_dependencies": [
+                5
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts by clicking the folder icon to open the folder selection interface. Once in the selection interface, the user can either choose a folder via the dropdown or confirm the selection with the OK button. If the folder has images (enabling OK), clicking OK confirms the choice; otherwise, the dropdown allows folder navigation.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click folder icon to open selection interface"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            1,
+                            0
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click folder dropdown for path selection"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            1,
+                            1
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click OK to confirm folder selection"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S2"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "The page allows the user to set up a map area filter (likely to filter photos based on their geographic location) and confirm the setup using the \"OK\" button, with map tiles provided by OpenStreetMap contributors.",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    2,
+                    0
+                ],
+                [
+                    2,
+                    1
+                ]
+            ],
+            "data_in": [
+                "map area filter setting",
+                "map area filter settings",
+                "filter slider"
+            ],
+            "data_out": [
+                "updated map area filter setting",
+                "updated map area filter settings"
+            ],
+            "data_dependencies": [
+                5
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts by clicking the map view icon to enter the map area filter setup page. On this page, they can either adjust the filter slider (to modify the filter settings) or click the 'OK' button to confirm the current filter settings. The flow branches at the setup page based on which action the user chooses.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click map view icon to open map area filter setup page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            2,
+                            0
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click 'OK' to confirm filter settings"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            2,
+                            1
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click to adjust filter slider"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "The current page's menu provides options for photo management including tag filtering, filtering, sorting, loading bookmarks, accessing settings, and more actions for the photos in the folder.",
+            "action_refs": [
+                [
+                    0,
+                    2
+                ],
+                [
+                    3,
+                    2
+                ],
+                [
+                    11,
+                    1
+                ],
+                [
+                    11,
+                    2
+                ],
+                [
+                    11,
+                    5
+                ],
+                [
+                    11,
+                    7
+                ]
+            ],
+            "data_in": [
+                "photo folder",
+                "menu icon",
+                "photo files",
+                "sorting setting (Date V)",
+                "image file",
+                "sort option (date)",
+                "sort option (Place)",
+                "sort option (Width)",
+                "file",
+                "sort configuration"
+            ],
+            "data_out": [
+                "menu options for photo management",
+                "sorting options (for photo files)",
+                "sorted image files (by date)",
+                "sorted image files (by Place)",
+                "sorted image files (by Width)",
+                "updated sort configuration (by File path length)"
+            ],
+            "data_dependencies": [
+                5,
+                33,
+                36,
+                38,
+                39,
+                40
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The process starts on the folder page (page 0). First, the menu icon for photo management is clicked (S1), leading to the menu options page (page 3). Then, the 'Sort: Date V' option is clicked (S2), opening the sorting options page (page 11). At this point, a branch point exists where the user can choose different sorting criteria (e.g., Date, Place, Width, File path length) by clicking the respective option (S3, S4, S5, S6), each leading to a final page for that sort action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click menu icon for photo management options"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            3,
+                            2
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click 'Sort: Date V' to open sorting options"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            11,
+                            1
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 57,
+                        "action": "click",
+                        "summary": "Click 'Sort by Date' to apply date sorting"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            11,
+                            2
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 58,
+                        "action": "click",
+                        "summary": "Click 'Sort by Place' to apply place sorting"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            11,
+                            5
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 61,
+                        "action": "click",
+                        "summary": "Click 'Sort by Width' to apply width sorting"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            11,
+                            7
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 63,
+                        "action": "click",
+                        "summary": "Click 'Sort by File path length' to apply path length sorting"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S6"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            },
+                            {
+                                "next_step": "S6"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "The current page provides a tag filtering and search interface, allowing users to filter photos by selecting or searching for specific tags (e.g., Activities, People, Places, Themes, Projects) to manage and organize their photo collection.",
+            "action_refs": [
+                [
+                    3,
+                    0
+                ],
+                [
+                    9,
+                    0
+                ],
+                [
+                    9,
+                    1
+                ],
+                [
+                    9,
+                    3
+                ]
+            ],
+            "data_in": [
+                "tag filter option",
+                "tags (Activities, People, Places, Themes, Projects)",
+                "tag filter",
+                "search text",
+                "tag list",
+                "tag filter interface"
+            ],
+            "data_out": [
+                "tag filtering and search interface (opened)",
+                "filtered tag list",
+                "filtered tag result",
+                "updated tag filter state"
+            ],
+            "data_dependencies": [
+                5,
+                36
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The user starts by clicking the 'Tag Filter' option to open the tag filtering interface. Once in the interface, the user can choose to either input a tag in the search text field, apply a selected tag filter, or add a new tag. These actions are mutually exclusive branches from the tag filter interface step.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            0
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click 'Tag Filter' to open the tag filtering interface"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            9,
+                            0
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click the tag search text input field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            9,
+                            1
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click 'Apply tag filter' button"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            9,
+                            3
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click 'Add tag' button"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "The current page allows users to configure various filter criteria (such as find term, path, date, tags, rating, geolocation, etc.) to search and sort photos within a folder for more efficient photo management.",
+            "action_refs": [
+                [
+                    3,
+                    1
+                ],
+                [
+                    10,
+                    0
+                ],
+                [
+                    10,
+                    1
+                ],
+                [
+                    10,
+                    3
+                ],
+                [
+                    10,
+                    4
+                ],
+                [
+                    10,
+                    5
+                ],
+                [
+                    10,
+                    6
+                ],
+                [
+                    10,
+                    11
+                ],
+                [
+                    10,
+                    12
+                ],
+                [
+                    10,
+                    13
+                ],
+                [
+                    10,
+                    14
+                ],
+                [
+                    10,
+                    17
+                ],
+                [
+                    10,
+                    18
+                ],
+                [
+                    10,
+                    19
+                ],
+                [
+                    24,
+                    0
+                ],
+                [
+                    24,
+                    1
+                ],
+                [
+                    36,
+                    0
+                ],
+                [
+                    36,
+                    1
+                ]
+            ],
+            "data_in": [
+                "photo filtering setting",
+                "filter settings",
+                "filter configuration",
+                "search filter settings",
+                "filter criteria",
+                "path input",
+                "folder (for path filter)",
+                "date input",
+                "tags filter setting",
+                "tag filtering configuration",
+                "tags",
+                "tags exclusion setting",
+                "photo filtering settings",
+                "tags exclusion option",
+                "latitude input value",
+                "photo filter settings",
+                "latitude filter setting",
+                "longitude value",
+                "folder path",
+                "date setting",
+                "date selection",
+                "folder with images",
+                "map area filter configuration",
+                "map area filter setting"
+            ],
+            "data_out": [
+                "photo filtering setting",
+                "applied filter settings",
+                "filter configuration (reverted)",
+                "updated filter criteria",
+                "updated filter configuration",
+                "updated tags filter setting",
+                "updated tag filtering configuration",
+                "updated photo filtering settings",
+                "map area filter configuration",
+                "selected folder path",
+                "updated date setting",
+                "confirmed date setting",
+                "confirmed folder selection",
+                "updated map area filter setting"
+            ],
+            "data_dependencies": [
+                35,
+                36
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The user starts by clicking the Filter option to enter the photo filtering settings page. On this page, the user can configure various filters (find term, path, date, tags, rating, geolocation, etc.) through optional steps (e.g., clicking input fields or options buttons for each filter type). After configuring the desired filters, the user can either confirm the settings to apply the filter or undo to discard changes. The filter configuration steps can be repeated or skipped based on the user’s needs for different filter criteria.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            1
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click Filter option to open photo filtering settings"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            10,
+                            0
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click Confirm filter settings to apply filters"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            10,
+                            1
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 20,
+                        "action": "click",
+                        "summary": "Click Undo button to discard filter changes"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            10,
+                            3
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 22,
+                        "action": "click",
+                        "summary": "Click Find input field to configure find term filter"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            10,
+                            4
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 23,
+                        "action": "click",
+                        "summary": "Click Path input field to configure path filter"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            10,
+                            5
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 24,
+                        "action": "click",
+                        "summary": "Click Path options button to select folder for path filter"
+                    },
+                    {
+                        "id": "S7",
+                        "action_ref": [
+                            10,
+                            6
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 25,
+                        "action": "click",
+                        "summary": "Click Date input field to configure date filter"
+                    },
+                    {
+                        "id": "S8",
+                        "action_ref": [
+                            10,
+                            11
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 29,
+                        "action": "click",
+                        "summary": "Click Tags inclusion input to configure tags inclusion filter"
+                    },
+                    {
+                        "id": "S9",
+                        "action_ref": [
+                            10,
+                            12
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 30,
+                        "action": "click",
+                        "summary": "Click Tags inclusion options to configure tag inclusion filter"
+                    },
+                    {
+                        "id": "S10",
+                        "action_ref": [
+                            10,
+                            13
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 31,
+                        "action": "click",
+                        "summary": "Click Tags exclusion input to configure tags exclusion filter"
+                    },
+                    {
+                        "id": "S11",
+                        "action_ref": [
+                            10,
+                            14
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 32,
+                        "action": "click",
+                        "summary": "Click Tags exclusion options to configure tag exclusion filter"
+                    },
+                    {
+                        "id": "S12",
+                        "action_ref": [
+                            10,
+                            17
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 35,
+                        "action": "click",
+                        "summary": "Click Latitude input to configure latitude filter"
+                    },
+                    {
+                        "id": "S13",
+                        "action_ref": [
+                            10,
+                            18
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 36,
+                        "action": "click",
+                        "summary": "Click Latitude options to configure map area filter"
+                    },
+                    {
+                        "id": "S14",
+                        "action_ref": [
+                            10,
+                            19
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 37,
+                        "action": "click",
+                        "summary": "Click Longitude input to configure longitude filter"
+                    },
+                    {
+                        "id": "S15",
+                        "action_ref": [
+                            24,
+                            0
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 52,
+                        "action": "click",
+                        "summary": "Click Folder path selection to choose folder for path filter"
+                    },
+                    {
+                        "id": "S16",
+                        "action_ref": [
+                            24,
+                            1
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 53,
+                        "action": "click",
+                        "summary": "Click Confirm folder selection to finalize path filter folder"
+                    },
+                    {
+                        "id": "S17",
+                        "action_ref": [
+                            36,
+                            0
+                        ],
+                        "src_page_idx": 36,
+                        "dst_page_idx": 54,
+                        "action": "click",
+                        "summary": "Click Confirm map area filter to finalize geolocation filter"
+                    },
+                    {
+                        "id": "S18",
+                        "action_ref": [
+                            36,
+                            1
+                        ],
+                        "src_page_idx": 36,
+                        "dst_page_idx": 55,
+                        "action": "click",
+                        "summary": "Click Adjust map area filter slider to modify geolocation filter"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S6"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S7"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S8"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S9"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S10"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S11"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S12"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S13"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S14"
+                    },
+                    {
+                        "from": "S6",
+                        "to": "S15"
+                    },
+                    {
+                        "from": "S15",
+                        "to": "S16"
+                    },
+                    {
+                        "from": "S13",
+                        "to": "S17"
+                    },
+                    {
+                        "from": "S13",
+                        "to": "S18"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "loop",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            },
+                            {
+                                "next_step": "S6"
+                            },
+                            {
+                                "next_step": "S7"
+                            },
+                            {
+                                "next_step": "S8"
+                            },
+                            {
+                                "next_step": "S9"
+                            },
+                            {
+                                "next_step": "S10"
+                            },
+                            {
+                                "next_step": "S11"
+                            },
+                            {
+                                "next_step": "S12"
+                            },
+                            {
+                                "next_step": "S13"
+                            },
+                            {
+                                "next_step": "S14"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "The page provides options to load a bookmark from a specific source (with a << RESET >> option) or cancel the bookmark loading action within a photo management application.",
+            "action_refs": [
+                [
+                    3,
+                    3
+                ]
+            ],
+            "data_in": [
+                "bookmark loading option"
+            ],
+            "data_out": [
+                "updated bookmark loading option"
+            ],
+            "data_dependencies": [
+                36
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The process starts on page 3. The user clicks the 'Load bookmark from ...' option, which opens a dialog (destination page 12) with << RESET >> and Cancel options. At this dialog, the user can choose to load from a source (via << RESET >> or another implied source) or cancel the action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            3
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click 'Load bookmark from ...' to open bookmark loading options dialog"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": null,
+                                "condition": "User selects << RESET >> or another source option"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "User selects Cancel"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "Settings option",
+            "action_refs": [
+                [
+                    3,
+                    4
+                ]
+            ],
+            "data_in": [
+                "settings menu item"
+            ],
+            "data_out": [
+                "settings page (navigation result)"
+            ],
+            "data_dependencies": [
+                36
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The flow starts on page 3. The user clicks the 'Settings' option (from the menu), which navigates to page 13. There are no branches or loops as this is a single action to access settings.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            4
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click the Settings option in the menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "The current page provides a dropdown menu with additional options for photo management, including selection actions, media scanning, app details, and further options.",
+            "action_refs": [
+                [
+                    3,
+                    5
+                ]
+            ],
+            "data_in": [
+                "folder content",
+                "more options menu"
+            ],
+            "data_out": [
+                "expanded more options menu"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "On the initial page (page 3), the user clicks the 'More ...' option in the dropdown menu. This action navigates to page 14, which displays additional photo management options like selection actions, media scanning, app details, and another 'More ...' option for further choices.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            5
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click 'More ...' option in the dropdown menu to access additional photo management options."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "Toggle favorite tag",
+            "action_refs": [
+                [
+                    9,
+                    2
+                ]
+            ],
+            "data_in": [
+                "favorite tag setting"
+            ],
+            "data_out": [
+                "updated favorite tag setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The process starts on page 9. The user clicks the toggle favorite tag element, which leads to page 17. There are no branches or loops in this flow as it is a single action to toggle the favorite tag.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            2
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click the toggle favorite tag element"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "The page provides a more options menu for the photo manager, including settings, bookmark management, gallery and map display, app information, and other supplementary actions related to photo management.",
+            "action_refs": [
+                [
+                    10,
+                    2
+                ]
+            ],
+            "data_in": [
+                "photo manager options menu"
+            ],
+            "data_out": [
+                "photo manager options menu (expanded)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The flow starts on page 10. The user clicks the more options menu for the photo manager (action at S1), which navigates to page 21. This menu provides supplementary actions like settings, bookmark management, gallery/map display, and app info, with no branching as it’s a single action to open the menu.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            2
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 21,
+                        "action": "click",
+                        "summary": "Click the more options menu for the photo manager"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "This page allows the user to select a date for filtering photos, with the option to confirm the selection (after selecting a folder with images) or cancel it.",
+            "action_refs": [
+                [
+                    10,
+                    7
+                ]
+            ],
+            "data_in": [
+                "date filter setting"
+            ],
+            "data_out": [
+                "date filter setting (updated)"
+            ],
+            "data_dependencies": [
+                5
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The user starts on page 10 and clicks the Date options button (action_ref [10,7]) to open the date selection interface (page 24). This step initiates the process of selecting a date for photo filtering, with subsequent steps (not shown here) likely involving choosing a date and then either confirming (if a folder with images is selected) or canceling the selection.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            7
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 24,
+                        "action": "click",
+                        "summary": "Click Date options button to open date selection interface"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "Public Image checkbox",
+            "action_refs": [
+                [
+                    10,
+                    8
+                ]
+            ],
+            "data_in": [
+                "public image setting"
+            ],
+            "data_out": [
+                "updated public image setting state"
+            ],
+            "data_dependencies": [
+                5
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The user interacts with the 'Public Image' checkbox. The flow starts on page 10, and upon clicking the checkbox (action_ref [10,8]), the app navigates to page 26. There are no branches or loops as this is a single action to interact with the checkbox.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            8
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 26,
+                        "action": "click",
+                        "summary": "Click the Public Image checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "Private Image checkbox",
+            "action_refs": [
+                [
+                    10,
+                    9
+                ]
+            ],
+            "data_in": [
+                "private image setting"
+            ],
+            "data_out": [
+                "updated private image setting"
+            ],
+            "data_dependencies": [
+                5
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The flow starts on page 10. The user performs a click action on the 'Private Image' checkbox, which transitions the app to page 27. There are no branches or loops as this is a single action flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            9
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 27,
+                        "action": "click",
+                        "summary": "Click the Private Image checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "With no Tags checkbox",
+            "action_refs": [
+                [
+                    10,
+                    10
+                ]
+            ],
+            "data_in": [
+                "with no tags setting"
+            ],
+            "data_out": [
+                "updated with no tags setting"
+            ],
+            "data_dependencies": [
+                5
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The user starts on page 10 (a filter interface) and clicks the 'With no Tags' checkbox. This action leads to page 28, completing the interaction with this checkbox.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            10
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 28,
+                        "action": "click",
+                        "summary": "Click the 'With no Tags' checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "Rating star",
+            "action_refs": [
+                [
+                    10,
+                    15
+                ]
+            ],
+            "data_in": [
+                "rating setting"
+            ],
+            "data_out": [
+                "updated rating setting"
+            ],
+            "data_dependencies": [
+                5
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The core execution logic for the rating star functional point involves a single step: clicking on a rating star (from the set of star icons under the 'Rating' label) to perform the rating action. This action transitions the app from the initial page (page 10) to the destination page (page 33). There are no branches or loops in this logic as it consists of a single click action on the rating star.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            15
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 33,
+                        "action": "click",
+                        "summary": "Click on the rating star (from the set of star icons under 'Rating') to transition to the destination page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "With no geo info checkbox",
+            "action_refs": [
+                [
+                    10,
+                    16
+                ]
+            ],
+            "data_in": [
+                "with no geo info setting"
+            ],
+            "data_out": [
+                "updated with no geo info setting"
+            ],
+            "data_dependencies": [
+                5
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The flow starts on page 10. The user clicks the 'With no geo info' checkbox, which transitions the app to page 34. This is a single-step action with no branching or looping.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            16
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 34,
+                        "action": "click",
+                        "summary": "Click the 'With no geo info' checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "Sort by Name",
+            "action_refs": [
+                [
+                    11,
+                    0
+                ]
+            ],
+            "data_in": [
+                "folder contents (files)"
+            ],
+            "data_out": [
+                "updated file sort configuration (by name)"
+            ],
+            "data_dependencies": [
+                5
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The process starts on page 11. The user clicks on the 'Sort by Name' option, which transitions the app to page 56. This action initiates the sorting of items by their name.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            0
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 56,
+                        "action": "click",
+                        "summary": "Click on 'Sort by Name' to initiate sorting by name"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "Sort by Rating",
+            "action_refs": [
+                [
+                    11,
+                    3
+                ]
+            ],
+            "data_in": [
+                "folder contents (files)"
+            ],
+            "data_out": [
+                "sorted file list (by rating)"
+            ],
+            "data_dependencies": [
+                5
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The user starts on page 11 (a folder view with a sort menu open). The user clicks on the 'Sort by Rating' option in the sort menu, which navigates to page 59 (presumably the folder view with items sorted by rating).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            3
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 59,
+                        "action": "click",
+                        "summary": "Click on 'Sort by Rating' in the sort menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "Sort by Last Modified",
+            "action_refs": [
+                [
+                    11,
+                    4
+                ]
+            ],
+            "data_in": [
+                "image file",
+                "sort option (Last Modified)"
+            ],
+            "data_out": [
+                "sorted image files (by Last Modified)"
+            ],
+            "data_dependencies": [
+                5
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The user starts on page 11 (a folder view with a sort menu open). The core action is clicking the 'Last Modified' option in the sort menu, which navigates to page 60 (presumably applying the Last Modified sort to the folder's contents).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            4
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 60,
+                        "action": "click",
+                        "summary": "Click 'Last Modified' in the sort menu to apply the sort."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "Sort by Size",
+            "action_refs": [
+                [
+                    11,
+                    6
+                ]
+            ],
+            "data_in": [
+                "folder files",
+                "sort option (size)"
+            ],
+            "data_out": [
+                "sorted folder files (by size)"
+            ],
+            "data_dependencies": [
+                5
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The user starts on page 11 (a folder view with a sort menu open). The core logic is: click the 'Sort by Size' option in the sort menu, which navigates to page 62 (presumably the folder view with items sorted by size). There are no branches or loops as it's a single action to apply the size-based sort.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            6
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 62,
+                        "action": "click",
+                        "summary": "Click on 'Sort by Size' option in the sort menu to sort items by size"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "Reset bookmark loading",
+            "action_refs": [
+                [
+                    12,
+                    0
+                ]
+            ],
+            "data_in": [
+                "bookmark loading setting"
+            ],
+            "data_out": [
+                "reseted bookmark loading setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The flow starts on page 12. The user clicks the 'Reset bookmark loading' option (labeled << RESET >>) in the 'Load bookmark from ...' dialog. This action leads to page 64, completing the reset of bookmark loading.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            0
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 64,
+                        "action": "click",
+                        "summary": "Click << RESET >> to reset bookmark loading"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "The current page displays a single photo within a folder, allowing for the management of photos (such as adding all visible photos) through the available menu options, and also shows a \"Screen unpinned\" status at the bottom.",
+            "action_refs": [
+                [
+                    14,
+                    0
+                ]
+            ],
+            "data_in": [
+                "visible photos",
+                "photo selection state"
+            ],
+            "data_out": [
+                "updated photo selection state"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The flow starts on the folder page displaying a single photo. The user clicks the 'Selection: Add all visible' option from the menu. After this action, the page updates to show the 'Screen unpinned' status at the bottom, completing the photo management action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            0
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click 'Selection: Add all visible' to manage photos"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "The current page provides a dropdown menu with various sorting options (Name, Date, Place, Rating, Last Modified, Width, Size, File path length) to organize the photos displayed in the folder, with the current sorting set to \"Date\" in descending order.",
+            "action_refs": [
+                [
+                    14,
+                    1
+                ]
+            ],
+            "data_in": [
+                "visible photo selection state"
+            ],
+            "data_out": [
+                "updated photo selection state"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The process starts on page 14. The user clicks on the 'Selection: Remove all visible' option, which navigates to page 11. There are no branches or loops as only this single action is defined for the functional point.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            1
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click on 'Selection: Remove all visible' to navigate to page 11"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "This page allows the user to select a specific folder (from a list of system and user - created folders) to initiate a media scan, likely for the purpose of detecting and managing media files (such as photos) within that folder.",
+            "action_refs": [
+                [
+                    14,
+                    2
+                ],
+                [
+                    65,
+                    0
+                ],
+                [
+                    65,
+                    1
+                ]
+            ],
+            "data_in": [
+                "media scanner setting",
+                "folder list",
+                "scanning configuration",
+                "scanning folder selection"
+            ],
+            "data_out": [
+                "selected folder for media scanning",
+                "selected folder for scanning",
+                "confirmed scanning folder"
+            ],
+            "data_dependencies": [
+                5
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The user starts by clicking to open the media scanner's folder selection (S1). Then, on the folder selection page (S2), they choose either a specific folder (S3) or confirm the scanning of the selected folder (S4), with the choice determining the next step.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            2
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 65,
+                        "action": "click",
+                        "summary": "Click to open folder selection for media scanning"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            65,
+                            -1
+                        ],
+                        "src_page_idx": 65,
+                        "dst_page_idx": null,
+                        "action": "none",
+                        "summary": "At folder selection page"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            65,
+                            0
+                        ],
+                        "src_page_idx": 65,
+                        "dst_page_idx": 69,
+                        "action": "click",
+                        "summary": "Click a folder selection option"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            65,
+                            1
+                        ],
+                        "src_page_idx": 65,
+                        "dst_page_idx": 70,
+                        "action": "click",
+                        "summary": "Click to confirm scanning the selected folder"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 25,
+            "function_description": "The current page displays detailed information about a photo folder, including technical details like adapter and fragment references, and a SQL query related to media file retrieval, to provide insights into the folder's content and underlying data handling.",
+            "action_refs": [
+                [
+                    14,
+                    3
+                ],
+                [
+                    66,
+                    0
+                ]
+            ],
+            "data_in": [
+                "folder",
+                "dialog (with folder and query info)"
+            ],
+            "data_out": [
+                "folder details",
+                "closed dialog",
+                "updated UI state (folder view restored)"
+            ],
+            "data_dependencies": [
+                5
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "First, click the 'Details' option to show folder details, transitioning to a dialog page. Then, click to confirm and close the dialog, completing the process.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            3
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 66,
+                        "action": "click",
+                        "summary": "Click 'Details' to show folder details"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            66,
+                            0
+                        ],
+                        "src_page_idx": 66,
+                        "dst_page_idx": 71,
+                        "action": "click",
+                        "summary": "Click to confirm and close dialog"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 26,
+            "function_description": "The page allows the user to view and potentially manage (via the menu options) the photos within a specific folder, with the current view showing a single photo file.",
+            "action_refs": [
+                [
+                    14,
+                    4
+                ]
+            ],
+            "data_in": [
+                "app protected/pinned setting"
+            ],
+            "data_out": [
+                "updated app protected/pinned setting"
+            ],
+            "data_dependencies": [
+                5
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The user starts on the folder page (page 14) showing a photo. They click on the 'App protected/pinned' option in the menu, which leads to a screen pinning confirmation dialog (page 67).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            4
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 67,
+                        "action": "click",
+                        "summary": "Click 'App protected/pinned' in the menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 27,
+            "function_description": "The current page provides information about \"A Photo Manager\" app, including its version, a brief description of its purpose (managing local photos with capabilities like finding, copying, editing Exif, and displaying in Gallery or Map), and a list of its features such as fast photo search, display options, detail view, file management, Exif editing, autop processing, privacy marking, and protected mode.",
+            "action_refs": [
+                [
+                    14,
+                    5
+                ]
+            ],
+            "data_in": [
+                "about app information"
+            ],
+            "data_out": [
+                "displayed about app information"
+            ],
+            "data_dependencies": [
+                34,
+                42
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The flow starts on page 14. The user clicks the 'About \"A Photo Manager\"' option, which navigates to page 68. On page 68, the app displays information about 'A Photo Manager', including its version, purpose, and feature list. There are no branches or loops as it is a straight-line flow to view the about information.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            5
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 68,
+                        "action": "click",
+                        "summary": "Click 'About \"A Photo Manager\"' to navigate to the about page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 28,
+            "function_description": "The current page provides a dropdown menu with additional options (Tag Filter, Filter, Sort, Load bookmark, Settings, More ...) for managing photos in a folder, likely to access extended photo management functionalities.",
+            "action_refs": [
+                [
+                    14,
+                    6
+                ]
+            ],
+            "data_in": [
+                "menu interaction context",
+                "photo manager menu state"
+            ],
+            "data_out": [
+                "updated menu options",
+                "menu expansion result"
+            ],
+            "data_dependencies": [
+                5,
+                36
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "On the folder photo management page, the user clicks the 'More ...' option. This action opens a submenu with additional photo management options (Tag Filter, Filter, Sort, Load bookmark, Settings, and another 'More ...'), allowing the user to choose a specific functionality to manage photos in the folder.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            6
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click 'More ...' to open the extended photo management options menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 29,
+            "function_description": "Settings option",
+            "action_refs": [
+                [
+                    21,
+                    0
+                ]
+            ],
+            "data_in": [
+                "settings option"
+            ],
+            "data_out": [
+                "settings page entry"
+            ],
+            "data_dependencies": [
+                36
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 21,
+                "logic": "The user starts on page 21 (a photo manager interface with filters/tags). The core logic is clicking the 'Settings' option in the menu (from the three-dot menu) to navigate to page 38 (the settings page). This is a single-step flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            21,
+                            0
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": 38,
+                        "action": "click",
+                        "summary": "Click the 'Settings' option in the menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 30,
+            "function_description": "The current page (Save bookmark dialog) allows the user to specify a name for a bookmark and either confirm (OK) or cancel the action of saving the bookmarked photo filtering settings.",
+            "action_refs": [
+                [
+                    21,
+                    1
+                ],
+                [
+                    39,
+                    0
+                ],
+                [
+                    39,
+                    1
+                ]
+            ],
+            "data_in": [
+                "bookmark",
+                "bookmark name (input)"
+            ],
+            "data_out": [
+                "saved bookmark",
+                "bookmark name (updated)"
+            ],
+            "data_dependencies": [
+                5,
+                36
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 21,
+                "logic": "The user starts by clicking the 'Save bookmark as...' option to open the Save bookmark dialog. In the dialog, the user can either click the name input field to enter a bookmark name or click the OK button to confirm saving the bookmark with the (possibly default) name. These two actions (input or OK) are alternative paths from the dialog.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            21,
+                            1
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": 39,
+                        "action": "click",
+                        "summary": "Open Save bookmark dialog by clicking 'Save bookmark as...' option"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            39,
+                            0
+                        ],
+                        "src_page_idx": 39,
+                        "dst_page_idx": 43,
+                        "action": "click",
+                        "summary": "Click name input field in Save bookmark dialog"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            39,
+                            1
+                        ],
+                        "src_page_idx": 39,
+                        "dst_page_idx": 44,
+                        "action": "click",
+                        "summary": "Click OK button in Save bookmark dialog"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 31,
+            "function_description": "The current page is a dialog for bookmark loading management in the photo filtering settings, allowing the user to load a bookmark, reset settings, or cancel the action.",
+            "action_refs": [
+                [
+                    21,
+                    2
+                ]
+            ],
+            "data_in": [
+                "bookmark"
+            ],
+            "data_out": [
+                "bookmark (loaded state)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 21,
+                "logic": "The user starts on page 21 (filter settings) and clicks the 'Load bookmark from...' option, triggering a dialog with three choices: load bookmark, reset, or cancel. This is the initial step to access the bookmark loading management dialog.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            21,
+                            2
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": 40,
+                        "action": "click",
+                        "summary": "Click 'Load bookmark from...' option to open the bookmark management dialog"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 32,
+            "function_description": "Displays the contents of a specific photo folder, showing a single image file with options for folder navigation and additional photo management actions.",
+            "action_refs": [
+                [
+                    21,
+                    3
+                ]
+            ],
+            "data_in": [
+                "photo file"
+            ],
+            "data_out": [
+                "gallery view (new)"
+            ],
+            "data_dependencies": [
+                5
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 21,
+                "logic": "The process starts on page 21. A click action is performed on the 'Show in new gallery' option. This action navigates to page 0, which displays the contents of a specific photo folder with a single image file and options for further management or navigation.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            21,
+                            3
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click 'Show in new gallery' option to navigate to the photo folder view."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 33,
+            "function_description": "The current page, \"A Photo Map\", functions as an interface to display photos on a map, likely showing the geographical locations where the photos were taken, with map tiles provided by OpenStreetMap contributors.",
+            "action_refs": [
+                [
+                    21,
+                    4
+                ]
+            ],
+            "data_in": [
+                "photo metadata",
+                "map interface configuration"
+            ],
+            "data_out": [
+                "photo map interface"
+            ],
+            "data_dependencies": [
+                5,
+                38,
+                39,
+                40
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 21,
+                "logic": "The user starts on page 21 and clicks the 'Show in map' option. This action navigates to the 'A Photo Map' page (page 41), which displays a map interface with tiles from OpenStreetMap contributors. The flow is a straight line with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            21,
+                            4
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": 41,
+                        "action": "click",
+                        "summary": "Click 'Show in map' to open the photo map interface"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 34,
+            "function_description": "The current page displays information about the \"A Photo Manager\" app, including its version, a brief description of its purpose (managing local photos with capabilities like finding, copying, editing Exif data, and displaying in gallery or map), and a list of its features.",
+            "action_refs": [
+                [
+                    21,
+                    5
+                ]
+            ],
+            "data_in": [
+                "app information request"
+            ],
+            "data_out": [
+                "app information (A Photo Manager)"
+            ],
+            "data_dependencies": [
+                42
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 21,
+                "logic": "The flow starts on page 21. The user clicks the 'About \"A Photo Manager\"' option, which navigates to page 42. On page 42, the app’s version, purpose (managing local photos with find/copy/edit Exif and gallery/map display), and features are displayed. There are no branches or loops as it’s a straight navigation to view the about information.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            21,
+                            5
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": 42,
+                        "action": "click",
+                        "summary": "Click 'About \"A Photo Manager\"' to navigate to the about page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 35,
+            "function_description": "<< RESET >> option",
+            "action_refs": [
+                [
+                    40,
+                    0
+                ]
+            ],
+            "data_in": [
+                "search/filter configuration"
+            ],
+            "data_out": [
+                "reset search/filter configuration"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 40,
+                "logic": "The user starts on page 40 and clicks the << RESET >> option, which leads to page 45. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            40,
+                            0
+                        ],
+                        "src_page_idx": 40,
+                        "dst_page_idx": 45,
+                        "action": "click",
+                        "summary": "Click the << RESET >> option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 36,
+            "function_description": "The page provides a menu with options (Filter, Show Photo(s), Show in new gallery, Settings, About \"A Photo Manager\") for managing photos within the photo map interface of the photo manager application.",
+            "action_refs": [
+                [
+                    41,
+                    0
+                ]
+            ],
+            "data_in": [
+                "photo map menu"
+            ],
+            "data_out": [
+                "opened photo map menu"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 41,
+                "logic": "The flow starts on the photo map page. The user clicks the menu button to open a dropdown with options (Filter, Show Photo(s), Show in new gallery, Settings, About). This action reveals the menu for managing photos in the photo map interface.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            41,
+                            0
+                        ],
+                        "src_page_idx": 41,
+                        "dst_page_idx": 46,
+                        "action": "click",
+                        "summary": "Click menu button to open photo map options menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 37,
+            "function_description": "Adjust map detail slider",
+            "action_refs": [
+                [
+                    41,
+                    1
+                ]
+            ],
+            "data_in": [
+                "map detail setting"
+            ],
+            "data_out": [
+                "updated map detail setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 41,
+                "logic": "The process starts on page 41. The user performs a click action to adjust the map detail slider, which leads to page 47. There are no branches or loops in this flow as it is a single action to complete the task.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            41,
+                            1
+                        ],
+                        "src_page_idx": 41,
+                        "dst_page_idx": 47,
+                        "action": "click",
+                        "summary": "Click to adjust map detail slider"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 38,
+            "function_description": "The page allows users to filter photos in the photo map interface by specifying criteria such as search term, path, date, image privacy, tags, rating, and geographic information.",
+            "action_refs": [
+                [
+                    46,
+                    0
+                ]
+            ],
+            "data_in": [
+                "photo"
+            ],
+            "data_out": [
+                "filtered photo list"
+            ],
+            "data_dependencies": [
+                5,
+                33,
+                39,
+                40
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 46,
+                "logic": "The user starts on the photo map page (page 46) and clicks the 'Filter' option from the menu. This action navigates to the filter interface (page 10), where various filtering criteria (search term, path, date, etc.) are available for specifying photo filters.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            46,
+                            0
+                        ],
+                        "src_page_idx": 46,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click 'Filter' option to open the filter interface"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 39,
+            "function_description": "The page functions to display photos on a map view, though in this instance it indicates no photos were found for the given (null) context.",
+            "action_refs": [
+                [
+                    46,
+                    1
+                ]
+            ],
+            "data_in": [
+                "photo",
+                "map view"
+            ],
+            "data_out": [
+                "displayed photo(s) on map view"
+            ],
+            "data_dependencies": [
+                5,
+                33,
+                38,
+                40
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 46,
+                "logic": "The user starts on page 46 and clicks the 'Show Photo(s)' option to attempt displaying photos on a map view. After this action, the app navigates to page 48, where it indicates that no photos were found for the given (null) context.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            46,
+                            1
+                        ],
+                        "src_page_idx": 46,
+                        "dst_page_idx": 48,
+                        "action": "click",
+                        "summary": "Click 'Show Photo(s)' to try displaying photos on map view"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 40,
+            "function_description": "This page functions as an interface for managing photo folders, allowing users to organize, view, or navigate through different photo directories, with options to switch to a map view or access additional menu features.",
+            "action_refs": [
+                [
+                    46,
+                    2
+                ]
+            ],
+            "data_in": [
+                "photo folders",
+                "photos"
+            ],
+            "data_out": [
+                "gallery view (new)"
+            ],
+            "data_dependencies": [
+                5,
+                33,
+                38,
+                39
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 46,
+                "logic": "The user starts on page 46 (a menu or map view) and clicks the 'Show in new gallery' option. This action navigates to page 49, which is the folder management interface for organizing photo directories. There are no branches or loops here as it’s a single navigation step.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            46,
+                            2
+                        ],
+                        "src_page_idx": 46,
+                        "dst_page_idx": 49,
+                        "action": "click",
+                        "summary": "Click 'Show in new gallery' to navigate to photo folder management page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 41,
+            "function_description": "Settings option",
+            "action_refs": [
+                [
+                    46,
+                    3
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 46,
+                "logic": "The execution starts on page 46. The user clicks the 'Settings' option, which navigates to page 50. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            46,
+                            3
+                        ],
+                        "src_page_idx": 46,
+                        "dst_page_idx": 50,
+                        "action": "click",
+                        "summary": "Click on the Settings option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 42,
+            "function_description": "The current page displays information about the \"A Photo Manager\" app (version AndroFotoFinder 0.6.4.180314), including its purpose (managing local photos with capabilities like finding, copying, editing Exif, and displaying in gallery or map) and a list of its features.",
+            "action_refs": [
+                [
+                    46,
+                    4
+                ]
+            ],
+            "data_in": [
+                "app information request"
+            ],
+            "data_out": [
+                "app information (A Photo Manager)"
+            ],
+            "data_dependencies": [
+                5,
+                34
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 46,
+                "logic": "The flow starts on page 46. The user clicks the 'About \"A Photo Manager\"' option, which navigates to page 51. On page 51, the app’s information (purpose, version, features) is displayed. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            46,
+                            4
+                        ],
+                        "src_page_idx": 46,
+                        "dst_page_idx": 51,
+                        "action": "click",
+                        "summary": "Click the 'About \"A Photo Manager\"' option to navigate to the app information page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        }
+    ]
+}

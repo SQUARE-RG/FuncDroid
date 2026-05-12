@@ -1,0 +1,1232 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "Sports event streaming & navigation (DofuStream)",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    5
+                ],
+                [
+                    0,
+                    6
+                ],
+                [
+                    0,
+                    10
+                ],
+                [
+                    0,
+                    11
+                ],
+                [
+                    0,
+                    12
+                ]
+            ],
+            "data_in": [
+                "sports event data",
+                "DofuStream feature context",
+                "live sports events list",
+                "search events input field",
+                "sports events list"
+            ],
+            "data_out": [],
+            "data_dependencies": [
+                8
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the DofuStream page (entry page 0). They can navigate via bottom tab (DofuStream), top tabs (Live, Other, NCAAI), search events (input 'nfl games'), or click an event card (Texans vs Chargers). These actions are parallel options for streaming/navigating sports events, with no sequential flow (each action is a leaf, so flow is a set of independent starting points).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click bottom tab 'DofuStream' (navigates to/remains on DofuStream page)"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click top tab 'Live' (filters to live sports events)"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            0,
+                            6
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click top tab 'Other' (filters to other sports events)"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            0,
+                            10
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click top tab 'NCAAI' (filters to NCAAI sports events)"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            0,
+                            11
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 5,
+                        "action": "input",
+                        "summary": "Input 'nfl games' in search events field (searches for NFL games)"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            0,
+                            12
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click event card 'Texans vs Chargers' (selects this sports event for streaming/navigation)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 1,
+            "function_description": "The current page (News tab) in the DofuStream app displays the latest news articles related to various sports (initially focused on NFL) with headlines, images, brief descriptions, and timestamps to keep users informed about recent sports - related events and updates.",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ]
+            ],
+            "data_in": [
+                "news feature entry"
+            ],
+            "data_out": [
+                "news page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the initial page (page 0) and clicks the 'News' bottom tab. This action navigates to the News page (page 1), where the latest sports (initially NFL) news articles with headlines, images, descriptions, and timestamps are displayed. There are no further branches or loops in this core logic as it’s a direct navigation to the news content.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the 'News' bottom tab to navigate to the News page displaying sports news."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "The page (via the \"Events\" tab) displays sports events (like NFL) with timings, teams, and streaming options, and the pop - up asks whether to open a related link (with \"CANCEL\" and \"OPEN\" options).",
+            "action_refs": [
+                [
+                    0,
+                    2
+                ]
+            ],
+            "data_in": [
+                "events feature entry"
+            ],
+            "data_out": [
+                "events page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts by clicking the 'Events' bottom tab (from page 0 to page 2), which navigates to the events page displaying sports events with timings, teams, and streaming options. Upon interacting with a streaming option, a pop - up appears asking whether to open the related link, presenting 'CANCEL' and 'OPEN' options (though the pop - up interaction steps are not fully detailed in the provided actions yet).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click on the 'Events' bottom tab to navigate to the events page showing sports events with details."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "The page displays sports team standings (initially for NFL, with tabs for other leagues like NBA, MLB, etc.) showing win - loss records and point percentages for different divisions’ teams, allowing users to view the competitive rankings of sports teams.",
+            "action_refs": [
+                [
+                    0,
+                    3
+                ],
+                [
+                    3,
+                    1
+                ]
+            ],
+            "data_in": [
+                "sports standings data",
+                "Patriots team standings"
+            ],
+            "data_out": [
+                "loaded sports standings data"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on page 0 and clicks the 'Standing' bottom tab (action [0,3]) to navigate to page 3, which displays sports team standings (initially NFL). Then, on page 3, the user clicks the 'Patriots team standings row' (action [3,1]) to view detailed standings for that team. There are no branches or loops as the flow is a straight sequence of clicks to access and interact with team standings.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click 'Standing' bottom tab to navigate to standings page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            3,
+                            1
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click Patriots team standings row to view its details"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "The Settings page in the DofuStream app provides options to manage notifications, rate/review the app, share the app, access the homepage, join the group community, and view information about the app (About Us, Privacy Policy, Terms & Conditions).",
+            "action_refs": [
+                [
+                    0,
+                    4
+                ],
+                [
+                    4,
+                    6
+                ]
+            ],
+            "data_in": [
+                "setting feature entry",
+                "privacy policy setting"
+            ],
+            "data_out": [
+                "setting page loaded"
+            ],
+            "data_dependencies": [
+                21
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts by clicking the 'Setting' bottom tab (from page 0 to page 4) to access the Settings page. Then, on the Settings page, clicking the 'PRIVACY POLICY' dropdown button (staying on page 4) reveals its related content. There are no branches or loops as the actions are sequential and focused on navigating to and interacting with the Settings page elements.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click bottom tab 'Setting' to navigate to Settings page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            4,
+                            6
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click 'PRIVACY POLICY' dropdown button on Settings page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "The DofuStream page provides access to live and upcoming sports events (including NFL, football, baseball, etc.), with options to search for events, view streaming sources for specific matchups, and navigate to other sports categories or app sections.",
+            "action_refs": [
+                [
+                    0,
+                    7
+                ]
+            ],
+            "data_in": [
+                "NFL sports events"
+            ],
+            "data_out": [
+                "NFL sports events (filtered)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the DofuStream page. They click the 'NFL' top tab, which remains on the same page (likely to filter or focus on NFL events). This action is a single step with no branching or looping in the provided flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            7
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the 'NFL' top tab to interact with NFL-related content (stays on same page)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "The DofuStream page provides a platform for streaming live sports events across various leagues (NFL, football, baseball, etc.), allowing users to search for events, view upcoming and live matches, and access different streaming options for each event.",
+            "action_refs": [
+                [
+                    0,
+                    8
+                ]
+            ],
+            "data_in": [
+                "NBA sports content"
+            ],
+            "data_out": [
+                "NBA sports content loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the DofuStream page. They click on the 'NBA' top tab, which likely filters or navigates to NBA - related sports events, with the page remaining on the DofuStream interface (dst_page_idx 0).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            8
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click on the 'NBA' top tab to interact with NBA - related sports event content"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "The DofuStream page provides a platform to browse, search, and access live streaming options for various sports events (including NFL, football, baseball, etc.), with categorized event listings and streaming channel buttons for each event.",
+            "action_refs": [
+                [
+                    0,
+                    9
+                ]
+            ],
+            "data_in": [
+                "NHL sports events data"
+            ],
+            "data_out": [
+                "NHL sports events data (displayed)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the DofuStream page. They click the 'NHL' top tab, which likely filters or navigates to NHL - related sports event streaming options. Since there's only one action here, the flow is a single step of clicking the NHL tab to access its content.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            9
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the 'NHL' top tab to access NHL - related sports event streaming options"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "The DofuStream page provides a platform to browse, search, and access live streaming options for various sports events (including NFL, football, baseball, etc.) across different networks, with tabs to filter by sport category and a search bar to find specific events.",
+            "action_refs": [
+                [
+                    0,
+                    13
+                ]
+            ],
+            "data_in": [
+                "sports events data"
+            ],
+            "data_out": [
+                "updated sports events data"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the DofuStream page. They can click the refresh events button to update the list of sports events displayed. This action refreshes the content on the same page, allowing the user to see the latest live streaming options for sports events.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            13
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the refresh events button to update sports event listings"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "Displays the full content of an NFL news article titled \"Broncos snap losing streak in Arrowhead with gritty win\", including a video, author information, publication time, and the detailed written report of the Broncos' victory over the Chiefs.",
+            "action_refs": [
+                [
+                    1,
+                    0
+                ],
+                [
+                    6,
+                    0
+                ]
+            ],
+            "data_in": [
+                "news article card (Broncos win)",
+                "sports news article",
+                "sports news list"
+            ],
+            "data_out": [
+                "news article content (Broncos win)",
+                "sports news list (navigation back to)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts on the NFL news list page. First, the user clicks the news article card for the Broncos' win to open the full article (page 6). There are no branches or loops, as the task is to display the article content, and the back arrow is for navigation back (not part of the core display logic here).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            0
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click the Broncos win news article card to open its full content"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "The current page displays a list of recent NFL - related sports news articles, including article titles, brief descriptions, timestamps, and associated images, allowing users to browse and access the latest NFL news content.",
+            "action_refs": [
+                [
+                    1,
+                    1
+                ]
+            ],
+            "data_in": [
+                "NBA news category"
+            ],
+            "data_out": [
+                "NBA news displayed"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The app starts on the NFL news page (entry page 1), displaying recent NFL - related sports news articles. Users can browse the list of articles which include titles, brief descriptions, timestamps, and associated images. If a user wants to switch to the NBA news category, they can click the NBA category tab (action at step S1). After clicking, the page remains on page 1 (dst_page_idx is 1), but this action is for switching to the NBA news view (though in this case, the page index doesn't change, perhaps indicating a UI update within the same page context).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            1
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the NBA category tab to attempt to switch to the NBA news category"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "Favorite toggle for a sports event",
+            "action_refs": [
+                [
+                    2,
+                    0
+                ]
+            ],
+            "data_in": [
+                "sports event favorite setting",
+                "Houston Texans vs Los Angeles Chargers event"
+            ],
+            "data_out": [
+                "sports event favorite setting updated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The user starts on page 2 (sports event list) and clicks the favorite toggle for a sports event. This action transitions to page 7, completing the toggle interaction.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            0
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click the favorite toggle for a sports event"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "This page functions as the streaming interface for the selected sports event (from the \"S-FIGHT\" button action), likely in a loading or playback state with audio and security/feature - related icons at the bottom.",
+            "action_refs": [
+                [
+                    2,
+                    1
+                ]
+            ],
+            "data_in": [
+                "S-FIGHT event link",
+                "event details"
+            ],
+            "data_out": [
+                "stream page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The user starts on page 2 and clicks the S-FIGHT stream button for a sports event. This action navigates to page 8, where the stream interface (with audio and security icons) loads, likely for playback or loading the event stream.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            1
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click the S-FIGHT stream button to navigate to the event's stream interface."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "This page functions as a loading or playback screen for streaming the selected S - FIGHT sports event, with audio control and a security - related (possibly for reporting or protecting the stream) option available.",
+            "action_refs": [
+                [
+                    2,
+                    2
+                ]
+            ],
+            "data_in": [
+                "PRO-ESPN 2 stream link"
+            ],
+            "data_out": [
+                "stream loading state (PRO-ESPN 2)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The user starts on page 2 and clicks the 'PRO-ESPN 2 stream button', which navigates to page 8 (the streaming/playback screen for the selected S-FIGHT sports event).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            2
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click the PRO-ESPN 2 stream button to navigate to the streaming screen."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "The page displays the standings (wins, losses, and point percentages) of NFL teams organized by their respective conferences (AFC East, AFC North, AFC South, AFC West) and allows switching to view standings for other sports (NBA, MLB, NHL, NCAAF) via top - tab navigation.",
+            "action_refs": [
+                [
+                    3,
+                    0
+                ]
+            ],
+            "data_in": [
+                "NBA sport data"
+            ],
+            "data_out": [
+                "NBA sport data loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The app starts on the NFL standings page (displaying AFC divisions). To switch sports, the user clicks a top - tab (e.g., NBA, MLB, NHL, or NCAAF). This click action changes the displayed standings to those of the selected sport, with the flow being a simple click - based switch between sports' standings views.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            0
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click the NBA (or other sport) tab to switch the displayed standings from NFL to the selected sport's standings."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "The current page (within the app's settings) allows users to manage notification preferences for different sports leagues (NFL, NBA, MLB, NHL, NCAAF) and provides an option to open system settings, along with additional options for rating/reviewing, sharing the app, accessing the homepage, and joining the group community.",
+            "action_refs": [
+                [
+                    4,
+                    0
+                ]
+            ],
+            "data_in": [
+                "notification setting"
+            ],
+            "data_out": [
+                "expanded notification setting options"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The flow starts on the settings page. The user clicks the NOTIFICATION dropdown button, which expands the section to show notification preferences for sports leagues (NFL, NBA, MLB, NHL, NCAAF) and an 'Open Settings' option. This action reveals the detailed notification management options.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            0
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click the NOTIFICATION dropdown button to expand notification settings"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "This page in the Google Play Store for the DofuStream app allows users to uninstall or open the app, view update details, see device compatibility, and rate/review the app.",
+            "action_refs": [
+                [
+                    4,
+                    1
+                ]
+            ],
+            "data_in": [
+                "rating & review setting"
+            ],
+            "data_out": [
+                "app's Google Play page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The flow starts on page 4 (app settings). The user clicks the 'RATING & REVIEW' button (with a typo) to navigate to page 11 (Google Play Store page for DofuStream), where options to uninstall/open the app, view updates, check device compatibility, and rate/review are available. There are no branches or loops here as it's a single navigation step.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            1
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click 'RATING & REVIEW' (typo) button to navigate to Google Play Store page for DofuStream"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "The current page provides a sharing interface for the DofuStream app, allowing users to share the app via various options such as Gmail, Chrome, Messages, Copy to clipboard, Drive, and Hangouts.",
+            "action_refs": [
+                [
+                    4,
+                    2
+                ]
+            ],
+            "data_in": [
+                "share app setting"
+            ],
+            "data_out": [
+                "app sharing options"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The flow starts on the Settings page. The user clicks the 'SHARE APP' button, which opens a sharing interface with options like Gmail, Chrome, Messages, etc. This action initiates the app-sharing process, presenting the user with multiple sharing methods to choose from.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            2
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click the 'SHARE APP' button to open the sharing interface"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "The current page is a system dialog for selecting an app to open the DofuStream app's homepage, offering options to use Chrome (with \"JUST ONCE\" or \"ALWAYS\" preferences) or a different app like WebView Browser Tester.",
+            "action_refs": [
+                [
+                    4,
+                    3
+                ]
+            ],
+            "data_in": [
+                "homepage feature entry"
+            ],
+            "data_out": [
+                "homepage navigation request"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The process starts on the settings page. The user clicks the HOMEPAGE button, which triggers a system dialog to open, offering options to use Chrome (with 'JUST ONCE' or 'ALWAYS' preferences) or a different app like WebView Browser Tester. The flow then branches based on the user's choice of app or preference.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            3
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click the HOMEPAGE button on the settings page to trigger the app selection dialog."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": null,
+                                "condition": "Select 'JUST ONCE' with Chrome"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "Select 'ALWAYS' with Chrome"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "Select WebView Browser Tester or another different app"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "The current page is a system - level app - selection interface that appears after clicking the \"HOMEPAGE\" button in the DofuStream app's settings. It enables the user to choose an app (such as Chrome or WebView Browser Tester) to open the app's homepage, and also offers options to set the app - opening behavior as \"JUST ONCE\" or \"ALWAYS\".",
+            "action_refs": [
+                [
+                    4,
+                    4
+                ]
+            ],
+            "data_in": [
+                "group community feature entry"
+            ],
+            "data_out": [
+                "group community page navigation (via browser choice)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user starts on the DofuStream settings page. They click the 'HOMEPAGE' button, which triggers an app - selection dialog to appear. In this dialog, the user can then choose an app (like Chrome or WebView Browser Tester) and also select the app - opening behavior as either 'JUST ONCE' or 'ALWAYS'.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            4
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click the HOMEPAGE button on the settings page to trigger the app - selection dialog."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "The current page (App settings) provides configuration options like notifications, app rating, sharing, homepage access, community, and displays \"About Us\" info about Darato Sport's mission and app features.",
+            "action_refs": [
+                [
+                    4,
+                    5
+                ]
+            ],
+            "data_in": [
+                "about us setting"
+            ],
+            "data_out": [
+                "about us setting expanded"
+            ],
+            "data_dependencies": [
+                27
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The flow starts on the App settings page. The user clicks the 'ABOUT US' dropdown button, which expands to display information about Darato Sport's mission and app features. There are no branches or loops as this is a single action to reveal the 'About Us' content.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            5
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click the 'ABOUT US' dropdown button to expand and view Darato Sport's mission and app features."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "The current page (App settings) provides options to configure app preferences (notifications, app rating/review, sharing, homepage, community, about, privacy policy) for the DofuStream sports streaming app.",
+            "action_refs": [
+                [
+                    4,
+                    7
+                ],
+                [
+                    15,
+                    0
+                ]
+            ],
+            "data_in": [
+                "terms & conditions setting",
+                "privacy policy setting"
+            ],
+            "data_out": [
+                "terms & conditions setting expanded",
+                "privacy policy setting (toggled state)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The flow starts on the App settings page. First, the user clicks the 'TERMS & CONDITIONS' dropdown button (navigating to a new page). Then, on that new page, the user clicks the 'PRIVACY POLICY' dropdown toggle, which likely expands or interacts with the privacy policy section without changing the page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            7
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click TERMS & CONDITIONS dropdown button to navigate to its page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            15,
+                            0
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click PRIVACY POLICY dropdown toggle on the TERMS & CONDITIONS page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "This page functions to display the details of a sports news article (about the Broncos' win) and provide a video playback option related to the article's content.",
+            "action_refs": [
+                [
+                    6,
+                    1
+                ]
+            ],
+            "data_in": [
+                "sports video",
+                "article content"
+            ],
+            "data_out": [
+                "playing sports video"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on the Broncos news article page (page 6). The core action is clicking the video play button on the article’s embedded video. This action initiates video playback related to the article’s content, and the flow remains on the same page (page 6) after the click.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            1
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click the video play button on the Broncos news article page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "Audio mute toggle button",
+            "action_refs": [
+                [
+                    8,
+                    0
+                ]
+            ],
+            "data_in": [
+                "audio mute setting"
+            ],
+            "data_out": [
+                "audio mute setting toggled"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The user starts on page 8. They click the audio mute toggle button, which transitions the app to page 9. This action toggles the audio mute state, completing the functional point's logic.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            0
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click the audio mute toggle button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "The page prompts the user with a dialog box to confirm whether they want to open a linked resource, providing \"CANCEL\" and \"OPEN\" options.",
+            "action_refs": [
+                [
+                    8,
+                    1
+                ]
+            ],
+            "data_in": [
+                "ad banner's link"
+            ],
+            "data_out": [
+                "link open confirmation dialog"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The flow starts when a 'Learn more' link in an ad banner is clicked (on page 8). This action triggers a dialog box asking whether to open the linked resource, presenting 'CANCEL' and 'OPEN' options. The user then chooses either option to proceed, with the dialog closing and the app acting on the choice (e.g., opening the link or staying on the current page).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            1
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click 'Learn more' link in ad banner to trigger link-opening dialog"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": null,
+                                "condition": "User clicks 'CANCEL' in the dialog"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "User clicks 'OPEN' in the dialog"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 25,
+            "function_description": "NFL notification toggle checkbox",
+            "action_refs": [
+                [
+                    10,
+                    0
+                ]
+            ],
+            "data_in": [
+                "NFL notification setting"
+            ],
+            "data_out": [
+                "NFL notification setting disabled"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The user starts on the settings page (page 10). The core action is clicking the NFL notification toggle checkbox, which likely toggles its state (enabled/disabled) and may navigate to a related page (page 16) or update the UI. There are no branches or loops here as it's a single action to toggle the NFL notification setting.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            0
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click the NFL notification toggle checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 26,
+            "function_description": "This page (App info for DofuStream) provides detailed management options for the DofuStream app, including uninstalling, force - stopping, viewing storage, data usage, permissions, notifications, and other app - related settings.",
+            "action_refs": [
+                [
+                    10,
+                    1
+                ]
+            ],
+            "data_in": [
+                "app info setting",
+                "DofuStream app"
+            ],
+            "data_out": [
+                "app info page (DofuStream)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The user starts on the app's Setting page (page 10) and clicks the 'Open Settings' button. This action navigates to the App info page (page 17) for DofuStream, where detailed app management options (uninstall, force stop, storage, etc.) are available. There are no branches or loops in this initial flow, as it is a single navigation step to access the app info page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            1
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click 'Open Settings' button to navigate to DofuStream's App info page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 27,
+            "function_description": "ABOUT US dropdown toggle button",
+            "action_refs": [
+                [
+                    14,
+                    0
+                ]
+            ],
+            "data_in": [
+                "about us setting"
+            ],
+            "data_out": [
+                "about us setting (toggled state)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The flow starts on page 14. The user clicks the ABOUT US dropdown toggle button, which navigates to page 18. This is a single-step flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            0
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click the ABOUT US dropdown toggle button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        }
+    ]
+}

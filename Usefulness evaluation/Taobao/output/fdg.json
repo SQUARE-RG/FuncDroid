@@ -1,0 +1,1461 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "淘宝推荐页，商品浏览与购物",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ],
+                [
+                    0,
+                    4
+                ]
+            ],
+            "data_in": [
+                "商品搜索输入框内容"
+            ],
+            "data_out": [
+                "更新后的商品搜索输入框内容"
+            ],
+            "data_dependencies": [
+                1
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "用户首先在淘宝推荐页的商品搜索输入框中输入“miu里miu气袜子”，随后可以点击底部的“首页（淘）”tab，该操作会让页面保持在推荐页（即循环回到当前页）。",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "input",
+                        "summary": "在商品搜索输入框输入“miu里miu气袜子”"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "点击首页（淘）底部tab"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "loop",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 1,
+            "function_description": "This page functions as a search results page on Taobao, displaying various listings for \"苹果 iphone17手机\" (Apple iPhone 17 phones) with options to filter by criteria like model, color, and storage, and allowing users to browse and compare different iPhone 17 product offers from different sellers.",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    2,
+                    0
+                ]
+            ],
+            "data_in": [
+                "搜索关键词（苹果iphone17手机）",
+                "商品数据",
+                "search results page state",
+                "navigation stack state"
+            ],
+            "data_out": [
+                "搜索结果（苹果iphone17手机相关商品）",
+                "returned to previous page state"
+            ],
+            "data_dependencies": [
+                6,
+                7,
+                14
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the Taobao homepage (page 0). First, the search button is clicked to navigate to the search results page (page 2) for iPhone 17 listings. From the search results page, there is an option to click the back button to return to the homepage (page 0), creating a simple navigation loop between these two pages.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click the search button to go to the iPhone 17 search results page."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            2,
+                            0
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the back button to return to the Taobao homepage."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S1"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "loop",
+                        "branches": [
+                            {
+                                "next_step": "S1"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "The current page is a pop - up window in the Taobao Factory section. It is used to promote the Taobao Factory flash sale activity, offering an 88 - yuan coupon (valid for a limited time with a countdown) that can be claimed, and the coupon supports delivery within 4 hours at the fastest.",
+            "action_refs": [
+                [
+                    0,
+                    2
+                ]
+            ],
+            "data_in": [
+                "淘工厂入口图标"
+            ],
+            "data_out": [
+                "进入淘工厂功能页面"
+            ],
+            "data_dependencies": [
+                9
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the Taobao homepage. They click the '淘工厂' (Taobao Factory) icon, which leads to a page where a pop - up window for the Taobao Factory flash sale activity appears. The pop - up promotes an 88 - yuan coupon with a countdown and 4 - hour delivery support.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click the Taobao Factory entry icon on the Taobao homepage to enter the Taobao Factory - related page and trigger the flash sale pop - up."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "The current page is the \"Billion Subsidy\" section of Taobao, which showcases various discounted products, subsidy - related activities, and exclusive benefits, and also provides a search function, aiming to help users find and purchase cost - effective goods during the New Year's shopping spree.",
+            "action_refs": [
+                [
+                    0,
+                    3
+                ],
+                [
+                    4,
+                    0
+                ]
+            ],
+            "data_in": [
+                "百亿补贴商品卡片",
+                "相机商品信息",
+                "Canon相机商品卡片"
+            ],
+            "data_out": [
+                "百亿补贴相机商品详情页"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the Taobao homepage (page 0) and clicks on a camera product card in the 'Billion Subsidy' section (action S1), navigating to the Billion Subsidy product list page (page 4). Then, the user clicks on a Canon camera product card (action S2) to view its details, which is a leaf action (no further navigation).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click on the camera product card in the 'Billion Subsidy' section"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            4,
+                            0
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click on the Canon camera product card"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "The current page (Taobao Shopping Cart) enables users to view, manage (e.g., adjust quantities, select items), and proceed to checkout with the items they have added, while also providing options for coupons, price drops, grouping, and frequent purchases.",
+            "action_refs": [
+                [
+                    0,
+                    5
+                ],
+                [
+                    6,
+                    3
+                ]
+            ],
+            "data_in": [
+                "购物车入口"
+            ],
+            "data_out": [
+                "购物车页面"
+            ],
+            "data_dependencies": [
+                10,
+                11,
+                12
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the Taobao homepage (page 0) and clicks the shopping cart tab at the bottom to navigate to the shopping cart page (page 6). On the shopping cart page, the user can then click on a specific product card (e.g., the Xiaomi REDMIA27U monitor or other items) to manage or view details of that item. This flow allows accessing the shopping cart and interacting with individual product entries.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click the shopping cart tab at the bottom to navigate to the shopping cart page."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            6,
+                            3
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click on the product card (e.g., Xiaomi REDMIA27U monitor) in the shopping cart to manage or view details of the item."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "The \"My Taobao\" page provides a centralized hub for users to manage their orders (pending payment, shipment, receipt, review, refund/return), access membership benefits, track coupons and savings, view delivery status, manage collections and followed stores, browse browsing history, explore promotional offers, and utilize additional features like mini-games and farm activities, all while offering quick navigation to other key sections of the Taobao app.",
+            "action_refs": [
+                [
+                    0,
+                    6
+                ]
+            ],
+            "data_in": [
+                "我的淘宝功能入口"
+            ],
+            "data_out": [
+                "我的淘宝页面数据"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the Taobao home page (page 0) and clicks the '我的淘宝' (My Taobao) bottom tab. This action navigates to the My Taobao page (page 7), which serves as the hub for managing orders, accessing membership benefits, tracking savings, and using other features like games or farm activities.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            6
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click '我的淘宝' bottom tab to navigate to My Taobao page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "This page functions as a model - filtering interface for Apple iPhone 17 series mobile phones on Taobao. It enables users to filter the search results of Apple iPhone 17 mobile phones by selecting specific models (such as iPhone 17, iPhone 17 Pro, iPhone 17 Pro Max), so as to more precisely find the iPhone 17 - related products they are interested in.",
+            "action_refs": [
+                [
+                    2,
+                    1
+                ]
+            ],
+            "data_in": [
+                "型号筛选设置",
+                "商品列表（苹果iPhone17手机）"
+            ],
+            "data_out": [
+                "展开的型号筛选选项",
+                "待筛选的商品列表（苹果iPhone17手机）"
+            ],
+            "data_dependencies": [
+                7,
+                14
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The user starts on the iPhone 17 search results page (page 2). They click the '型号' (model) filter button, which opens the model selection overlay (page 8). This action initiates the process of filtering iPhone 17 series products by specific models like iPhone 17, Pro, or Pro Max.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            1
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click the '型号' (model) filter button to open the model selection overlay."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "This page functions as the product detail page for the Apple iPhone 17 on Taobao, providing information such as price, color/style options, purchase methods (single purchase, trade - in), payment and shipping details, customer reviews, and buttons for adding to cart or immediate purchase.",
+            "action_refs": [
+                [
+                    2,
+                    2
+                ],
+                [
+                    9,
+                    0
+                ],
+                [
+                    20,
+                    0
+                ],
+                [
+                    20,
+                    1
+                ],
+                [
+                    20,
+                    3
+                ]
+            ],
+            "data_in": [
+                "iPhone 17商品卡片",
+                "iPhone 17商品",
+                "商品配置选项",
+                "配置弹窗",
+                "手机配置（机身颜色选项）",
+                "商品购买数量设置"
+            ],
+            "data_out": [
+                "iPhone 17商品详情页",
+                "购物车更新",
+                "配置弹窗关闭状态",
+                "更新的手机配置（机身颜色为鼠尾草绿色）",
+                "更新后的商品购买数量"
+            ],
+            "data_dependencies": [
+                19,
+                20
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The flow starts by clicking the iPhone 17 product card to enter its detail page. Then, clicking the 'Add to Cart' button opens a configuration popup. At this popup, the flow can branch: either close the popup, select the 'Sage Green' color option, or increase the purchase quantity, each leading to different subsequent steps.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            2
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click iPhone 17 product card to enter detail page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            9,
+                            0
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 20,
+                        "action": "click",
+                        "summary": "Click 'Add to Cart' button to open configuration popup"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            20,
+                            0
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 21,
+                        "action": "click",
+                        "summary": "Click button to close configuration popup"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            20,
+                            1
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 22,
+                        "action": "click",
+                        "summary": "Click 'Sage Green' color option in configuration popup"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            20,
+                            3
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 24,
+                        "action": "click",
+                        "summary": "Click '+' button to increase purchase quantity in configuration popup"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "该页面为淘工厂闪购的优惠券领取弹窗，功能是让用户领取一张限时（23:59:57后失效）的88元淘工厂闪购优惠券，以用于后续在淘工厂闪购相关购物场景中抵扣金额。",
+            "action_refs": [
+                [
+                    3,
+                    0
+                ]
+            ],
+            "data_in": [
+                "淘工厂闪购88元优惠券领取入口"
+            ],
+            "data_out": [
+                "淘工厂闪购88元优惠券领取状态（待领取或领取中）"
+            ],
+            "data_dependencies": [
+                9
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The user is presented with a Taobao Factory Flash Sale coupon popup. The core action is to click the '领' (claim) button to obtain the 88-yuan coupon, which expires in 23:59:57. This is a single-step action with no branching or looping.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            0
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click the '领' button to claim the 88-yuan Taobao Factory Flash Sale coupon."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "弹窗右上角关闭按钮",
+            "action_refs": [
+                [
+                    3,
+                    1
+                ]
+            ],
+            "data_in": [
+                "淘工厂闪购弹窗"
+            ],
+            "data_out": [
+                "淘工厂闪购弹窗关闭状态"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The process starts on page 3 where a pop - up is visible. Then, the close button at the top - right corner of the pop - up is clicked, and this action leads to page 11.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            1
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click the close button at the top - right corner of the pop - up"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "全选购物车商品复选框",
+            "action_refs": [
+                [
+                    6,
+                    0
+                ]
+            ],
+            "data_in": [
+                "购物车商品"
+            ],
+            "data_out": [
+                "已全选的购物车商品"
+            ],
+            "data_dependencies": [
+                15,
+                16,
+                22,
+                23,
+                24
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "在购物车页面（页面索引6），执行点击全选购物车商品复选框的操作，该操作完成后跳转到页面索引36，此为核心执行逻辑，无分支或循环。",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            0
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 36,
+                        "action": "click",
+                        "summary": "点击全选购物车商品复选框"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "This page in Taobao's shopping cart section allows users to manage items (e.g., view, adjust quantities, select for checkout), access promotional offers like 88VIP coupons, and use features like search, comparison, and batch cleanup to organize or remove multiple cart items at once.",
+            "action_refs": [
+                [
+                    6,
+                    1
+                ]
+            ],
+            "data_in": [
+                "购物车商品"
+            ],
+            "data_out": [
+                "购物车商品清理结果"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on the shopping cart page (page 6). The core action is clicking the '批量清理' (batch cleanup) button, which likely initiates a process to organize or remove multiple cart items. Since there's only one action here, the flow is a single step focused on triggering batch cleanup functionality.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            1
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click the batch cleanup button to start organizing/removing multiple cart items"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "This page functions as Taobao's shopping cart interface, allowing users to manage items (e.g., delete, adjust quantity), view product details, apply filters/sorts, access promotional offers, and proceed to checkout, while also showing recommended products.",
+            "action_refs": [
+                [
+                    6,
+                    2
+                ],
+                [
+                    37,
+                    0
+                ],
+                [
+                    37,
+                    1
+                ],
+                [
+                    37,
+                    4
+                ]
+            ],
+            "data_in": [
+                "购物车商品项",
+                "电子分类标签",
+                "购物车商品数量设置",
+                "iPhone 1商品",
+                "购物车商品列表",
+                "结算操作"
+            ],
+            "data_out": [
+                "购物车商品项（电子分类下）移除",
+                "电子分类标签移除",
+                "更新后的购物车商品数量",
+                "结算操作反馈"
+            ],
+            "data_dependencies": [
+                10,
+                11,
+                15,
+                16,
+                22,
+                23,
+                24
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on the shopping cart page (page 6). They can delete an item (S1), adjust the quantity of an item (S2), proceed to checkout (S3), or confirm the quantity input (S4). After deleting (S1), the flow returns to the shopping cart. Adjusting quantity (S2) leads to the quantity input page, where they can either checkout (S3) or confirm the input (S4), with S4 returning to the shopping cart.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            2
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 37,
+                        "action": "click",
+                        "summary": "Click the delete button to remove an item from the shopping cart."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            37,
+                            0
+                        ],
+                        "src_page_idx": 37,
+                        "dst_page_idx": 38,
+                        "action": "input",
+                        "summary": "Input the desired quantity for a product in the shopping cart."
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            37,
+                            1
+                        ],
+                        "src_page_idx": 37,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click the checkout button to proceed with the purchase."
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            37,
+                            4
+                        ],
+                        "src_page_idx": 37,
+                        "dst_page_idx": 41,
+                        "action": "click",
+                        "summary": "Click the Done button on the keyboard to confirm the quantity input."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "This page functions as a personal profile hub for a Taobao user, displaying account details (followers, membership, shopping history), offering options to edit personal info, manage size/wardrobe/skin profile, and access styling tools.",
+            "action_refs": [
+                [
+                    7,
+                    0
+                ],
+                [
+                    43,
+                    0
+                ]
+            ],
+            "data_in": [
+                "user profile",
+                "user profile page state"
+            ],
+            "data_out": [
+                "user profile page (entered)",
+                "navigation back to previous page (My Taobao main page)"
+            ],
+            "data_dependencies": [
+                17,
+                18
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The flow starts on the 'My Taobao' page (page 7). First, the user clicks the profile avatar (action [7,0]) to navigate to the personal profile page (page 43). From there, the user can click the back arrow (action [43,0]) to return to the 'My Taobao' page (page 7).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            0
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 43,
+                        "action": "click",
+                        "summary": "Click profile avatar to open personal profile page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            43,
+                            0
+                        ],
+                        "src_page_idx": 43,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click back arrow to return to My Taobao page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "型号筛选选项 - iPhone 17",
+            "action_refs": [
+                [
+                    8,
+                    0
+                ]
+            ],
+            "data_in": [
+                "iPhone 17 型号筛选设置",
+                "商品列表（iPhone 17 相关）"
+            ],
+            "data_out": [
+                "筛选后的 iPhone 17 商品列表",
+                "更新后的型号筛选状态"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The process starts on page 8. The user clicks on the 'iPhone 17' model filter option, which navigates to page 10. This action applies the model filter to display only iPhone 17-related products.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            0
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click on the 'iPhone 17' model filter option to apply the filter and navigate to the filtered results page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "全选商品复选框",
+            "action_refs": [
+                [
+                    37,
+                    2
+                ]
+            ],
+            "data_in": [
+                "购物车商品列表",
+                "全选复选框"
+            ],
+            "data_out": [
+                "已全选的购物车商品列表",
+                "更新后的全选复选框状态"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 37,
+                "logic": "The user starts on the shopping cart page (page 37). The core action is clicking the '全选' (select all) checkbox, which likely transitions to a state (page 39) where all items in the cart are selected. There are no branches or loops as it's a single click action to select all.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            37,
+                            2
+                        ],
+                        "src_page_idx": 37,
+                        "dst_page_idx": 39,
+                        "action": "click",
+                        "summary": "Click the '全选商品复选框' (select all items checkbox) on the shopping cart page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "The current page is the Taobao shopping cart interface, which allows users to manage shopping cart items (such as viewing, selecting, adjusting quantities, and accessing promotional offers) and proceed to checkout, with additional functionalities like filtering, comparing, and managing cart contents.",
+            "action_refs": [
+                [
+                    37,
+                    3
+                ],
+                [
+                    40,
+                    0
+                ]
+            ],
+            "data_in": [
+                "购物车商品列表",
+                "购物车筛选弹窗"
+            ],
+            "data_out": [
+                "筛选后的购物车商品列表",
+                "购物车筛选弹窗关闭状态"
+            ],
+            "data_dependencies": [
+                15,
+                22,
+                23,
+                24
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 37,
+                "logic": "The user starts on the Taobao shopping cart page. First, they click the filter button to open the filter popup. Then, they click the close filter popup button to return to the shopping cart page, completing the filter interaction flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            37,
+                            3
+                        ],
+                        "src_page_idx": 37,
+                        "dst_page_idx": 40,
+                        "action": "click",
+                        "summary": "Click the filter button to open the filter popup"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            40,
+                            0
+                        ],
+                        "src_page_idx": 40,
+                        "dst_page_idx": 42,
+                        "action": "click",
+                        "summary": "Click the close filter popup button to return to the shopping cart page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "This page provides options to change the user's profile avatar, including using a Taobao virtual avatar, uploading from the album, taking a photo, or changing the avatar accessory.",
+            "action_refs": [
+                [
+                    43,
+                    1
+                ],
+                [
+                    44,
+                    0
+                ]
+            ],
+            "data_in": [
+                "user profile",
+                "头像和挂件设置"
+            ],
+            "data_out": [
+                "updated user profile"
+            ],
+            "data_dependencies": [
+                18
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 43,
+                "logic": "The flow starts by clicking the 'Edit profile' button on the profile page (page 43) to enter the personal information page (page 44). Then, on the personal information page, clicking the '更换头像和挂件' (Change Avatar and Accessory) button triggers a pop - up with options for changing the avatar, such as using a Taobao virtual avatar, uploading from the album, taking a photo, or changing the avatar accessory.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            43,
+                            1
+                        ],
+                        "src_page_idx": 43,
+                        "dst_page_idx": 44,
+                        "action": "click",
+                        "summary": "Click the 'Edit profile' button to enter the personal information page."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            44,
+                            0
+                        ],
+                        "src_page_idx": 44,
+                        "dst_page_idx": 44,
+                        "action": "click",
+                        "summary": "Click the '更换头像和挂件' button to trigger the avatar - changing option pop - up."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "This page displays the \"Size Assistant Authorization Agreement\" for users to review and confirm their agreement to authorize Taobao to store and use related body measurement data (like height, weight) for the size assistant tool, with an option to agree or close the agreement prompt.",
+            "action_refs": [
+                [
+                    43,
+                    2
+                ],
+                [
+                    45,
+                    1
+                ]
+            ],
+            "data_in": [
+                "user profile",
+                "size information",
+                "尺码助手授权协议",
+                "协议同意确认项"
+            ],
+            "data_out": [
+                "size information (to be filled)",
+                "agreement confirmation state"
+            ],
+            "data_dependencies": [
+                26
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 43,
+                "logic": "The flow starts with clicking the 'Fill size info' button (from page 43) to open the size assistant authorization agreement page (page 45). On this page, the user can either click the 'Agree' button to confirm agreement with the authorization terms (completing the action) or close the agreement prompt (though the provided actions only include the agree path here).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            43,
+                            2
+                        ],
+                        "src_page_idx": 43,
+                        "dst_page_idx": 45,
+                        "action": "click",
+                        "summary": "Click 'Fill size info' button to open the size assistant authorization agreement page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            45,
+                            1
+                        ],
+                        "src_page_idx": 45,
+                        "dst_page_idx": 45,
+                        "action": "click",
+                        "summary": "Click 'Agree' button to confirm agreement with the size assistant authorization terms"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "存储容量-512GB选项",
+            "action_refs": [
+                [
+                    20,
+                    2
+                ]
+            ],
+            "data_in": [
+                "手机配置选项",
+                "存储容量设置项"
+            ],
+            "data_out": [
+                "已选择的存储容量（512GB）",
+                "更新的手机配置信息"
+            ],
+            "data_dependencies": [
+                20
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The process starts on page 20. The user clicks on the '存储容量-512GB选项' (Storage Capacity - 512GB option), which navigates to page 23. This is a straightforward action with no branching or looping.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            2
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 23,
+                        "action": "click",
+                        "summary": "Click on the 512GB storage capacity option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "This page allows users to view detailed information about the Apple iPhone 17 (including price, color options, purchase methods like single purchase or trade - in, and service policies), and provides buttons for adding the product to the shopping cart and for immediate purchase.",
+            "action_refs": [
+                [
+                    20,
+                    4
+                ]
+            ],
+            "data_in": [
+                "iPhone 17商品",
+                "商品配置（颜色、存储容量、数量）"
+            ],
+            "data_out": [
+                "购物车商品项（新增）"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "On the iPhone 17 product page, users can view details like price, colors, and policies. When the 'Add to Cart' button is clicked, the app processes adding the configured product (with selected color, storage, etc.) to the shopping cart, and the cart icon updates to reflect the addition.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            4
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click the 'Add to Cart' button to add the iPhone 17 to the shopping cart"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "The current page is the Taobao recommendation page, which enables users to browse various recommended products, access different functional entrances (such as Taobao Factory, Live Streaming, etc.), and use shopping - related features like searching for products and checking shopping - related information.",
+            "action_refs": [
+                [
+                    38,
+                    0
+                ]
+            ],
+            "data_in": [
+                "首页标签按钮"
+            ],
+            "data_out": [
+                "首页页面"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 38,
+                "logic": "The user starts on the shopping cart page (page 38). They click the '首页' (Home) tab button, which navigates them to the Taobao recommendation page (page 0). On this page, users can browse recommended products, access functional entrances like Taobao Factory or Live Streaming, and use shopping features like searching or checking shopping - related information.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            38,
+                            0
+                        ],
+                        "src_page_idx": 38,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the '首页' (Home) tab button to navigate from the shopping cart page to the Taobao recommendation page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "This page functions as a shopping cart interface in Taobao, allowing users to view, manage (e.g., select, adjust quantity), and proceed to checkout for the items (specifically filtered to electronic products here) added to the cart, along with additional features like coupon access and price comparison.",
+            "action_refs": [
+                [
+                    40,
+                    1
+                ]
+            ],
+            "data_in": [
+                "购物车商品",
+                "电子分类筛选条件"
+            ],
+            "data_out": [
+                "筛选后的购物车商品列表"
+            ],
+            "data_dependencies": [
+                23,
+                24
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 40,
+                "logic": "The flow starts on the shopping cart page (page 40). The user clicks the '宝贝分类-电子1筛选按钮' to filter electronic products in the cart. Since there's only one action here, the flow is a single step with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            40,
+                            1
+                        ],
+                        "src_page_idx": 40,
+                        "dst_page_idx": 40,
+                        "action": "click",
+                        "summary": "Click the '宝贝分类-电子1筛选按钮' to filter electronic products in the shopping cart."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "This page functions as a Taobao shopping cart interface, allowing users to view, manage (e.g., select, adjust quantity), and proceed to checkout for the filtered electronic product (Apple iPhone) added to the cart, with additional options like applying coupons, viewing price drops, grouping items, and accessing frequently purchased goods.",
+            "action_refs": [
+                [
+                    40,
+                    2
+                ]
+            ],
+            "data_in": [
+                "购物车商品列表",
+                "即将售罄筛选设置"
+            ],
+            "data_out": [
+                "筛选后的购物车商品列表"
+            ],
+            "data_dependencies": [
+                24
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 40,
+                "logic": "The user starts on the Taobao shopping cart page (page 40). The core action is clicking the '即将售罄' (soon to be out of stock) filter button, which likely updates the cart view to show only items with that status, while remaining on the same page (40).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            40,
+                            2
+                        ],
+                        "src_page_idx": 40,
+                        "dst_page_idx": 40,
+                        "action": "click",
+                        "summary": "Click the '即将售罄' filter button to apply the soon-to-be-out-of-stock filter to the shopping cart items."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "This page in the Taobao app's shopping cart section displays and manages items (specifically filtered to the \"电子\" (Electronics) category), allowing users to view product details, adjust quantities, select items for checkout, and access additional features like coupons and price drop notifications.",
+            "action_refs": [
+                [
+                    40,
+                    3
+                ]
+            ],
+            "data_in": [
+                "购物车商品列表",
+                "宝贝状态筛选设置"
+            ],
+            "data_out": [
+                "筛选后的购物车商品列表"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 40,
+                "logic": "The user starts on the Taobao shopping cart page filtered to Electronics. The core action is clicking the '宝贝状态-失效筛选按钮' (item status - invalid filter button) on this page, which likely refines or toggles the display of items based on their validity status.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            40,
+                            3
+                        ],
+                        "src_page_idx": 40,
+                        "dst_page_idx": 40,
+                        "action": "click",
+                        "summary": "Click the '宝贝状态-失效筛选按钮' to filter or toggle item status visibility."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 25,
+            "function_description": "This page allows users to set or edit their self - introduction (where they can input text like a name - related introduction) and save it, so that friends can see this introduction in friend requests and the user's personal information page to recognize the user more easily.",
+            "action_refs": [
+                [
+                    44,
+                    1
+                ],
+                [
+                    46,
+                    0
+                ]
+            ],
+            "data_in": [
+                "自我介绍设置项",
+                "自我介绍文本输入框"
+            ],
+            "data_out": [
+                "更新后的自我介绍内容"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 44,
+                "logic": "The user starts on the personal information page (page 44). First, they click the '自我介绍' (self - introduction) edit entry (action from [44,1]) to enter the self - introduction editing page (page 46). Then, on the self - introduction editing page (page 46), they click the self - introduction editing entry (action from [46,0]) to start editing the self - introduction content. There are no branch points as the flow is a straight - line sequence of actions for accessing and starting to edit the self - introduction.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            44,
+                            1
+                        ],
+                        "src_page_idx": 44,
+                        "dst_page_idx": 46,
+                        "action": "click",
+                        "summary": "Click the self - introduction edit entry on the personal information page to enter the self - introduction editing page."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            46,
+                            0
+                        ],
+                        "src_page_idx": 46,
+                        "dst_page_idx": 46,
+                        "action": "click",
+                        "summary": "Click the self - introduction editing entry on the self - introduction editing page to start editing the self - introduction content."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 26,
+            "function_description": "协议同意复选框",
+            "action_refs": [
+                [
+                    45,
+                    0
+                ]
+            ],
+            "data_in": [
+                "尺码助手授权协议同意设置"
+            ],
+            "data_out": [
+                "尺码助手授权协议同意设置（已勾选）"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 45,
+                "logic": "The user starts on page 45 (where the agreement checkbox is presented). The core action is clicking the '协议同意复选框' (agreement checkbox) on page 45, which leads to page 47. This is a single-step flow with no branches, as the action directly transitions to the next page upon clicking the checkbox.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            45,
+                            0
+                        ],
+                        "src_page_idx": 45,
+                        "dst_page_idx": 47,
+                        "action": "click",
+                        "summary": "Click the agreement checkbox (协议同意复选框) to proceed."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        }
+    ]
+}

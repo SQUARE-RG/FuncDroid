@@ -1,0 +1,3349 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "Music recommendation, playback, and discovery",
+            "action_refs": [
+                [
+                    0,
+                    5
+                ],
+                [
+                    0,
+                    7
+                ]
+            ],
+            "data_in": [
+                "current playing song",
+                "playback state setting"
+            ],
+            "data_out": [
+                "updated playback state"
+            ],
+            "data_dependencies": [
+                2,
+                3,
+                4,
+                6,
+                19,
+                21,
+                23,
+                25,
+                27,
+                30,
+                31,
+                33,
+                38,
+                39
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the music app's main page. First, the user can click the home tab (which stays on the same page, likely to refresh or confirm the home view). Then, the user can click the play/pause button to control music playback, which navigates to a different page (possibly the music player interface).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            7
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click home tab to stay on home page (or refresh)"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click play/pause button to control music and navigate to player page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 1,
+            "function_description": "This page serves as a user account and feature menu for a music application, providing options for VIP subscription, music - related features (like song recognition, timed shutdown), personalized settings (such as listening preference settings), and additional functions (like decoration center, pet park).",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ]
+            ],
+            "data_in": [
+                "menu entry"
+            ],
+            "data_out": [
+                "opened menu"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the music app's main page. The user clicks the top menu icon (at page 0) to open the account and feature menu (page 1), which provides access to VIP subscription, music features, settings, and additional functions.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the top menu icon to open the account/feature menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "Search input field",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ]
+            ],
+            "data_in": [
+                "search input",
+                "music content (recommended songs, playlists)"
+            ],
+            "data_out": [
+                "search results (music-related)"
+            ],
+            "data_dependencies": [
+                6,
+                31
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the main page (page 0) and inputs the search term '周杰伦' into the search input field. This action leads to the next page (page 2), completing the search input process.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "input",
+                        "summary": "Input '周杰伦' into the search input field"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "The current page, accessed via the history icon from the music recommendation/playback/discovery page, provides a \"Song Recognition\" feature with options for humming recognition, video recognition, link recognition, and live recognition, along with a button to start recognizing songs and a toggle for enabling a floating ball for background recognition while browsing videos.",
+            "action_refs": [
+                [
+                    0,
+                    2
+                ]
+            ],
+            "data_in": [
+                "music recognition feature entry"
+            ],
+            "data_out": [
+                "navigation to music recognition page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the music recommendation/playback/discovery page (page 0). They click the history icon, which navigates to the 'Song Recognition' page (page 4). On this page, options like humming recognition, video recognition, link recognition, live recognition, a start recognition button, and a floating ball toggle for background recognition while browsing videos are available.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the history icon to navigate to the Song Recognition page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "The current page allows the user to play the song \"茫\" by 李润祺, provides options to adjust playback (like play/pause, skip, repeat), interact with the song (like liking, commenting, sharing), and includes a feedback prompt to refine music recommendations by indicating if the recommended song (specifically a DJ - style one here) doesn't match the user's taste.",
+            "action_refs": [
+                [
+                    0,
+                    3
+                ],
+                [
+                    6,
+                    0
+                ]
+            ],
+            "data_in": [
+                "猜你喜欢 playlist",
+                "song",
+                "music playback state",
+                "current playing song"
+            ],
+            "data_out": [
+                "song playback page",
+                "song recommendation feedback option",
+                "updated music playback state"
+            ],
+            "data_dependencies": [
+                41
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the main page, clicks the '猜你喜欢' playlist card to navigate to its page, then clicks the Play/Pause music control button to manage playback of the song '茫' by 李润祺. No branches are present as actions are sequential.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click '猜你喜欢' playlist card to open its page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            6,
+                            0
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click Play/Pause music control button to manage playback"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "Song like button (大东北我的家乡)",
+            "action_refs": [
+                [
+                    0,
+                    4
+                ]
+            ],
+            "data_in": [
+                "歌曲《大东北我的家乡》"
+            ],
+            "data_out": [
+                "歌曲《大东北我的家乡》的喜欢状态更新"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The core execution logic starts on page 0. The user performs a click action on the song like button for '大东北我的家乡', which leads to page 7. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click the like button for the song '大东北我的家乡'"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "The current page, accessed via the playlist icon from the music recommendation/playback/discovery page, functions as a playlist management interface where users can view, preview, edit, and manage the songs in their current playlist (including \"正在播放\" - currently playing, \"单曲足迹\" - single track history, \"歌单足迹\" - playlist history), with options to like, remove, or reorder tracks, and also view membership-related song access information.",
+            "action_refs": [
+                [
+                    0,
+                    6
+                ],
+                [
+                    10,
+                    0
+                ],
+                [
+                    16,
+                    0
+                ],
+                [
+                    16,
+                    2
+                ],
+                [
+                    18,
+                    0
+                ],
+                [
+                    18,
+                    1
+                ]
+            ],
+            "data_in": [
+                "playlist",
+                "播放列表",
+                "搜索输入内容",
+                "音乐相关数据",
+                "current playing song",
+                "搜索关键词",
+                "search query (年度听歌报告)"
+            ],
+            "data_out": [
+                "playlist view",
+                "收起的播放列表状态",
+                "搜索建议列表",
+                "updated song playback state",
+                "search results (for 年度听歌报告)"
+            ],
+            "data_dependencies": [
+                20,
+                31,
+                35
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts by clicking the playlist icon from the recommendation page to enter the playlist interface. Then, a button to collapse the playlist is clicked. Next, text is input into the top search box. After that, the bottom playback bar's play button is clicked (which may return to the recommendation page, but the flow here focuses on the search path). Then, text is input again in the search box, followed by clicking the search button to proceed with the search.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            6
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click playlist icon to enter playlist interface"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            10,
+                            0
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click button to collapse playlist"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            16,
+                            0
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 18,
+                        "action": "input",
+                        "summary": "Input text into top search input box"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            16,
+                            2
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click bottom playback bar play button"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            18,
+                            0
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 18,
+                        "action": "input",
+                        "summary": "Input text into search input box"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            18,
+                            1
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 21,
+                        "action": "click",
+                        "summary": "Click search button to proceed with search"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S5",
+                        "to": "S6"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "The \"My\" page in the music app provides personalized music management and discovery, including access to user-specific features like favorite songs, local/cloud storage, audiobooks, purchased content, recent preferences, and recent playbacks, along with user profile and membership/coin center options.",
+            "action_refs": [
+                [
+                    0,
+                    8
+                ]
+            ],
+            "data_in": [
+                "user profile",
+                "music app navigation"
+            ],
+            "data_out": [
+                "user profile page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the app's home page (page 0). The user clicks the 'My' tab (我的) at the bottom right, navigating to the 'My' page (page 11), which displays personalized music management features like favorite songs, local/cloud storage, audiobooks, purchased content, recent preferences, recent playbacks, and user profile/membership/coin center options.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            8
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click 'My' tab (我的) to navigate to the 'My' page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "自适应系统深浅色 切换开关",
+            "action_refs": [
+                [
+                    1,
+                    0
+                ]
+            ],
+            "data_in": [
+                "自适应系统深浅色设置"
+            ],
+            "data_out": [
+                "自适应系统深浅色设置启用"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The core execution logic starts on page 1. The user clicks the '自适应系统深浅色' toggle switch, which likely toggles its state (on/off) and may navigate to page 12 (or update the current page's state).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            0
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click the '自适应系统深浅色' toggle switch"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "The current page is the settings page of a music app, providing functionality to configure various app - related options such as audio effects, listening preferences, app - specific settings, and appearance - related settings, as well as access features like song recognition, timed shutdown, and scanning.",
+            "action_refs": [
+                [
+                    1,
+                    1
+                ]
+            ],
+            "data_in": [
+                "设置功能入口"
+            ],
+            "data_out": [
+                "进入设置页面的导航操作结果"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user starts on the main page (page 1) and clicks the '设置' (Settings) button. This action navigates to the settings page (page 1, as the destination is the same page or a sub - page within the same context), where various app - related configuration options like audio effects, listening preferences, and appearance settings, as well as features like song recognition, timed shutdown, and scanning, can be accessed.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            1
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the '设置' button to enter the settings page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "歌曲喜欢（心形）按钮",
+            "action_refs": [
+                [
+                    10,
+                    1
+                ]
+            ],
+            "data_in": [
+                "歌曲喜欢设置",
+                "歌曲（可不可以）"
+            ],
+            "data_out": [
+                "歌曲喜欢设置（已喜欢）",
+                "已喜欢的歌曲记录"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "On the page with index 10, the user clicks the heart - shaped 'like' button for a song. This action triggers a transition to page 17, likely to reflect the updated like status of the song.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            1
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click the heart - shaped like button for a song"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "This page functions as an advertisement interface where users can watch ads (with options to view 1 or 2 ads for 30 minutes of free music each) and interact with the ad content (like clicking to view details of the Taobao Flash Sale promotion) to earn free music listening time.",
+            "action_refs": [
+                [
+                    10,
+                    2
+                ]
+            ],
+            "data_in": [
+                "ad viewing option",
+                "music playback list"
+            ],
+            "data_out": [
+                "ad playback session",
+                "free music listening permission"
+            ],
+            "data_dependencies": [
+                16,
+                17,
+                45
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The user starts on page 10 and clicks the '立即观看广告' button to enter the advertisement interface. In the ad interface, the user can choose to watch 1 or 2 ads (each for 30 minutes of free music) and interact with ad content like the Taobao Flash Sale promotion to earn free listening time.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            2
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click the '立即观看广告' button to enter the advertisement interface."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "我喜欢 (I Like) button",
+            "action_refs": [
+                [
+                    11,
+                    0
+                ]
+            ],
+            "data_in": [
+                "music track (年轮 - 汪苏泷)"
+            ],
+            "data_out": [
+                "liked music track (年轮 - 汪苏泷)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The core execution logic starts on page 11. The user performs a click action on the '我喜欢 (I Like)' button. Since there are no further steps or branches indicated by the provided actions, this is a single-step flow focusing on the click of the 'I Like' button.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            0
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '我喜欢 (I Like)' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "关注 (Follow) tab",
+            "action_refs": [
+                [
+                    11,
+                    1
+                ]
+            ],
+            "data_in": [
+                "关注标签页"
+            ],
+            "data_out": [
+                "进入关注标签页的内容"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The core execution logic for the '关注 (Follow)' tab involves a single action: clicking on the '关注 (Follow)' tab located at the top of the page. This action is intended to navigate to or display the content associated with the Follow tab.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            1
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the '关注 (Follow)' tab"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "最近偏爱 close (X) button",
+            "action_refs": [
+                [
+                    11,
+                    2
+                ]
+            ],
+            "data_in": [
+                "最近偏爱模块"
+            ],
+            "data_out": [
+                "最近偏爱模块隐藏"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The user starts on page 11. The core action is clicking the close (X) button associated with the '最近偏爱' (Recently Favorite) section. This action likely dismisses or hides the '最近偏爱' section or its associated content.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            2
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the close (X) button for the '最近偏爱' section"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "歌曲 '离开我的依赖' 项",
+            "action_refs": [
+                [
+                    11,
+                    3
+                ]
+            ],
+            "data_in": [
+                "歌曲项 离开我的依赖"
+            ],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The functional point starts on page 11. The user performs a click action on the song item '离开我的依赖'. This is a single-step flow with no branching or looping.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            3
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the song item '离开我的依赖'"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "Close ad button",
+            "action_refs": [
+                [
+                    3,
+                    0
+                ]
+            ],
+            "data_in": [
+                "ad page"
+            ],
+            "data_out": [
+                "ad closed, app returns to main content"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The core execution logic for the close ad button functional point starts on page 3 where an ad is displayed. The user performs a click action on the close ad button, which transitions the app to page 13, presumably closing the ad and navigating to the next relevant page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            0
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click the close ad button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "This page is a permission request dialog asking the user to allow Kugou Music to open the Dianping (大众点评) app, with options to allow once, always allow, or deny the request, likely triggered after interacting with an ad in the music app's reward - related ad popup flow.",
+            "action_refs": [
+                [
+                    3,
+                    1
+                ]
+            ],
+            "data_in": [
+                "advertisement"
+            ],
+            "data_out": [
+                "application launch permission request"
+            ],
+            "data_dependencies": [
+                16,
+                45
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The flow starts with a click on the 'View ad details' button. This action leads to a permission request dialog where Kugou Music asks to open the Dianping app. At this dialog, the user can choose to allow once, always allow, or deny the request, creating a branching point for different outcomes.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            1
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click the 'View ad details' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": null,
+                                "condition": "User selects '本次允许' (Allow Once)"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "User selects '始终允许' (Always Allow)"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "User selects '拒绝' (Deny)"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "歌曲‘分你一坛天子笑’收藏按钮",
+            "action_refs": [
+                [
+                    16,
+                    1
+                ]
+            ],
+            "data_in": [
+                "歌曲‘分你一坛天子笑’",
+                "收藏设置（歌曲）"
+            ],
+            "data_out": [
+                "歌曲‘分你一坛天子笑’收藏状态更新（已收藏）"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 16,
+                "logic": "The process starts on page 16. The user clicks the favorite (heart) button for the song '分你一坛天子笑', which leads to page 19. There are no branches or loops as this is a single action flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            16,
+                            1
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click the favorite button for the song '分你一坛天子笑'"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "This page functions as a music playback interface, enabling users to play, pause, skip tracks, adjust playback progress, like songs, view lyrics, and access additional options like exiting preview or listening to the full song, while also displaying song details and interactive elements.",
+            "action_refs": [
+                [
+                    16,
+                    3
+                ],
+                [
+                    20,
+                    1
+                ],
+                [
+                    20,
+                    7
+                ],
+                [
+                    20,
+                    8
+                ]
+            ],
+            "data_in": [
+                "猜你喜欢推荐卡片",
+                "音乐推荐内容",
+                "music playback state",
+                "current playing song",
+                "current song",
+                "playlist (or song queue)",
+                "playlist (implicit)"
+            ],
+            "data_out": [
+                "音乐播放页面",
+                "当前播放音乐信息",
+                "updated music playback state",
+                "previous song (to play)",
+                "new playing song",
+                "updated playback state"
+            ],
+            "data_dependencies": [
+                4,
+                6,
+                11,
+                21,
+                23,
+                25,
+                27,
+                29,
+                30,
+                31,
+                32,
+                33,
+                38,
+                39,
+                55
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 16,
+                "logic": "The flow starts with clicking the '猜你喜欢' recommendation card to enter the music playback page. On this page, users can play/pause the song, skip to the previous track (which stays on the same page), or skip to the next track (navigating to a new page). These playback controls form the core interaction logic for the music interface.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            16,
+                            3
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 20,
+                        "action": "click",
+                        "summary": "Click '猜你喜欢' recommendation card to enter music playback page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            20,
+                            1
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 30,
+                        "action": "click",
+                        "summary": "Click play/pause button to control playback"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            20,
+                            7
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 20,
+                        "action": "click",
+                        "summary": "Click previous track button to play previous song (stays on page)"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            20,
+                            8
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click next track button to play next song (navigates to new page)"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "This page prompts the user to agree to the authorization agreement in order to access the 2025 Annual Music Report, with a modal dialog asking for consent to proceed.",
+            "action_refs": [
+                [
+                    18,
+                    2
+                ],
+                [
+                    22,
+                    1
+                ]
+            ],
+            "data_in": [
+                "2025年度听歌报告功能入口",
+                "听歌报告",
+                "授权协议"
+            ],
+            "data_out": [
+                "进入2025年度听歌报告页面（含授权提示）"
+            ],
+            "data_dependencies": [
+                34,
+                36
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 18,
+                "logic": "The user starts on page 18 and clicks the '2025年度听歌报告' search suggestion (action S1) to navigate to page 22. On page 22, the user clicks the '点击开启报告按钮' (action S2) to proceed, which triggers a modal dialog asking for agreement to the authorization agreement. The flow then requires the user to agree (implied next step, though not explicitly listed here as the provided actions end at S2, but the core logic is navigating to the report page and initiating the agreement prompt).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            18,
+                            2
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 22,
+                        "action": "click",
+                        "summary": "Click '2025年度听歌报告' search suggestion to navigate to report page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            22,
+                            1
+                        ],
+                        "src_page_idx": 22,
+                        "dst_page_idx": 22,
+                        "action": "click",
+                        "summary": "Click '点击开启报告按钮' to trigger authorization agreement modal"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "This page functions as a music recommendation hub, providing various music recommendation cards (like \"猜你喜欢\", \"每日推荐\"), song lists based on specific works, and popular song selections, along with a music player bar for playback control at the bottom.",
+            "action_refs": [
+                [
+                    20,
+                    0
+                ]
+            ],
+            "data_in": [
+                "music player session",
+                "current song playback context"
+            ],
+            "data_out": [
+                "navigation back to music app home page",
+                "updated app page context"
+            ],
+            "data_dependencies": [
+                19,
+                30,
+                33
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The user starts on a music player page (page 20). They click the back arrow button, which navigates them to the music recommendation hub page (page 0). This hub provides various music recommendation cards, song lists, and popular selections, with a music player bar at the bottom.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            0
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the back arrow button to navigate from the music player page to the music recommendation hub page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "喜欢按钮",
+            "action_refs": [
+                [
+                    20,
+                    2
+                ]
+            ],
+            "data_in": [
+                "歌曲《南半球与北海道》的喜欢状态设置"
+            ],
+            "data_out": [
+                "歌曲《南半球与北海道》的喜欢状态更新（点赞数增加，喜欢状态改变）"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The core execution logic for the 'like' button functional point starts on page 20. The user clicks the like button (action_ref [20, 2]), which leads to page 31. There are no branches or loops as this is a straightforward click action to perform the like operation.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            2
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 31,
+                        "action": "click",
+                        "summary": "Click the like button on page 20"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "This page provides a variety of functional options for the currently playing song, including adding to a playlist, setting a timer to turn off, downloading, adjusting player styles, and various music - related features such as KTV mode, speed adjustment, sound quality selection, and also includes social - related functions like sharing and instant commenting, as well as AI - related music creation and transformation functions.",
+            "action_refs": [
+                [
+                    20,
+                    3
+                ],
+                [
+                    32,
+                    0
+                ],
+                [
+                    32,
+                    3
+                ]
+            ],
+            "data_in": [
+                "current playing song",
+                "music playback volume setting",
+                "music playback menu popup"
+            ],
+            "data_out": [
+                "song operation menu (displayed)",
+                "updated music playback volume setting",
+                "closed music playback menu popup"
+            ],
+            "data_dependencies": [
+                29
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The flow starts by clicking the '更多选项按钮' (more options button) on the music playback page to open the options menu. Once in the menu, there's a choice: either adjust the volume using the slider (input action) or close the popup via the close button. The main flow involves opening the options, then branching to volume adjustment or closing the menu.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            3
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 32,
+                        "action": "click",
+                        "summary": "Click the more options button to open the music options menu"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            32,
+                            0
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": 38,
+                        "action": "input",
+                        "summary": "Adjust the volume using the volume slider (set to 50)"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            32,
+                            3
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": 41,
+                        "action": "click",
+                        "summary": "Click the close popup button to exit the options menu"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "关注按钮",
+            "action_refs": [
+                [
+                    20,
+                    4
+                ]
+            ],
+            "data_in": [
+                "关注设置",
+                "歌手信息"
+            ],
+            "data_out": [
+                "关注状态更新"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The core execution logic for the '关注按钮' functional point involves a single step: clicking the '关注' button located on the music playback page (page 20). This action transitions the app to a new page (page 33), likely confirming the follow action or updating the follow status.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            4
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 33,
+                        "action": "click",
+                        "summary": "Click the '关注' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 25,
+            "function_description": "This page provides functionality for managing and applying different audio effects (such as HiFi, 3D surround, and DTS effects) to enhance music playback, with options to try or use various sound enhancement presets.",
+            "action_refs": [
+                [
+                    20,
+                    5
+                ]
+            ],
+            "data_in": [
+                "音效设置入口",
+                "音乐播放状态"
+            ],
+            "data_out": [
+                "音效设置页面加载完成",
+                "音效试听状态"
+            ],
+            "data_dependencies": [
+                40
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The user starts on the music playback page (page 20) and clicks the '音效' (Sound Effects) button. This action navigates to the sound effects management page (page 34), where various audio enhancement options (like HiFi, 3D surround, DTS) are available for trying or using.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            5
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 34,
+                        "action": "click",
+                        "summary": "Click the '音效' button to navigate to the sound effects management page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 26,
+            "function_description": "This page functions as a music playback interface, allowing users to control the playback of the song \"南半球与北海道\" (Southern Hemisphere and Hokkaido), view song details, interact with the song (like, comment, share), and switch between preview and full - length playback modes.",
+            "action_refs": [
+                [
+                    20,
+                    6
+                ]
+            ],
+            "data_in": [
+                "歌曲信息",
+                "分享功能"
+            ],
+            "data_out": [
+                "分享操作触发"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The core execution logic starts on page 20. The user clicks the WeChat share button, which likely initiates the sharing process for the song '南半球与北海道' (Southern Hemisphere and Hokkaido) while remaining on the same page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            6
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 20,
+                        "action": "click",
+                        "summary": "Click the WeChat share button to start sharing the song"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 27,
+            "function_description": "This page functions as a music playlist management interface, allowing users to view and manage the currently playing playlist, including operations like liking songs, removing songs, and switching playback modes, while also providing information about the playlist's origin and membership-related details.",
+            "action_refs": [
+                [
+                    20,
+                    9
+                ]
+            ],
+            "data_in": [
+                "歌单按钮",
+                "播放列表"
+            ],
+            "data_out": [
+                "歌单界面",
+                "播放列表展示"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The user starts on page 20 (music playback interface) and clicks the playlist button. This action navigates to page 10, which displays the currently playing playlist with options to manage songs (like, remove) and view playlist details (origin, membership info).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            9
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click the playlist button to open the playlist management interface."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 28,
+            "function_description": "弹幕/歌词切换按钮",
+            "action_refs": [
+                [
+                    20,
+                    10
+                ]
+            ],
+            "data_in": [
+                "弹幕/歌词显示设置"
+            ],
+            "data_out": [
+                "更新后的弹幕/歌词显示设置"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "On the initial page (page 20), the user clicks the 弹幕/歌词切换 button. This action transitions the app to page 35, completing the toggle between danmaku and lyrics display modes.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            10
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 35,
+                        "action": "click",
+                        "summary": "Click 弹幕/歌词切换 button to switch between danmaku and lyrics display"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 29,
+            "function_description": "This page functions as a music playback interface with lyrics display, audio quality selection, and options for singing-related features like \"开始演唱\" (Start Singing) and \"AI帮唱\" (AI Accompaniment), along with a prompt to unlock exclusive accompaniments via membership.",
+            "action_refs": [
+                [
+                    20,
+                    11
+                ]
+            ],
+            "data_in": [
+                "music playback interface",
+                "search feature entry"
+            ],
+            "data_out": [
+                "song search result",
+                "new song playback interface"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The user starts on the music playback page (page 20). They click the search - like button, which navigates to the singing interface (page 36). On this new page, lyrics are displayed, audio quality options are available, and there are buttons for 'Start Singing' and 'AI Accompaniment', along with a prompt to unlock exclusive accompaniments via membership. There are no decision or loop points in this flow as it's a straight - line navigation to the singing interface.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            11
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 36,
+                        "action": "click",
+                        "summary": "Click the search - like button to navigate to the singing interface page."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": null
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 30,
+            "function_description": "This page functions as a music recommendation and playback control interface, providing song recommendations (e.g., \"Guess You Like\", daily recommendations, rankings) and playback controls (play/pause, like, playlist access) for users to discover and listen to music.",
+            "action_refs": [
+                [
+                    20,
+                    12
+                ]
+            ],
+            "data_in": [
+                "music preview session"
+            ],
+            "data_out": [
+                "music preview session exited",
+                "main music app page loaded"
+            ],
+            "data_dependencies": [
+                19,
+                21,
+                33
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The flow starts on the music playback page (page 20). The user clicks the '30秒跳过按钮' (30-second skip button), which navigates to page 16 (likely the music recommendation page). This action allows skipping a preview or ad to access the main recommendation/playback interface.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            12
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click the 30-second skip button to navigate from the playback page to the recommendation page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 31,
+            "function_description": "This page functions as a music recommendation and playback control interface, providing song recommendations (e.g., \"猜你喜欢\", \"每日推荐\", themed recommendations), search functionality, and playback controls (play/pause, playlist access) for music streaming.",
+            "action_refs": [
+                [
+                    20,
+                    13
+                ]
+            ],
+            "data_in": [
+                "收藏数查看按钮",
+                "音乐相关数据"
+            ],
+            "data_out": [
+                "收藏数查看结果"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The user starts on page 20 (music playback interface) and clicks the '收藏数查看按钮' (favorite count view button). This action navigates to page 16, likely to view details about the song's favorite count or related content.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            13
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click the favorite count view button to navigate to page 16."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 32,
+            "function_description": "This page functions as a music comment section, allowing users to view, interact with (like, reply), and post comments related to the currently playing song, while also displaying song - related information and advertisements.",
+            "action_refs": [
+                [
+                    20,
+                    14
+                ],
+                [
+                    37,
+                    0
+                ],
+                [
+                    37,
+                    2
+                ],
+                [
+                    37,
+                    3
+                ],
+                [
+                    37,
+                    4
+                ]
+            ],
+            "data_in": [
+                "歌曲评论功能入口",
+                "歌曲信息",
+                "评论输入框",
+                "评论区内容",
+                "comment page state",
+                "song comment context",
+                "评论分类标签（全部）",
+                "评论列表",
+                "排序标签（推荐）"
+            ],
+            "data_out": [
+                "歌曲评论页面加载完成",
+                "评论列表数据",
+                "用户输入的评论内容",
+                "previous page navigation (from comment page)",
+                "评论列表（全部分类下）",
+                "按推荐排序的评论列表"
+            ],
+            "data_dependencies": [
+                42,
+                43,
+                44
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The user starts on page 20 and clicks the comment button to enter the comment section (page 37). Once in the comment section, the user can choose to input a comment, return to the previous page, or interact with comment category/sorting tags. The flow branches at the comment section page, allowing different interactions like posting, navigating back, or filtering comments.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            14
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 37,
+                        "action": "click",
+                        "summary": "Click the comment button to enter the comment section"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            37,
+                            0
+                        ],
+                        "src_page_idx": 37,
+                        "dst_page_idx": null,
+                        "action": "input",
+                        "summary": "Input a comment in the comment box"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            37,
+                            2
+                        ],
+                        "src_page_idx": 37,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the back button to return"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            37,
+                            3
+                        ],
+                        "src_page_idx": 37,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'All' comment category tag"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            37,
+                            4
+                        ],
+                        "src_page_idx": 37,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'Recommended' comment sorting tag"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S5"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 33,
+            "function_description": "This page functions as a music recommendation and playback control interface, providing music recommendations (e.g., \"猜你喜欢\", \"每日推荐\", themed recommendations), a search bar, user membership info, and playback controls (play/pause, like, playlist access) for the currently playing song.",
+            "action_refs": [
+                [
+                    20,
+                    15
+                ]
+            ],
+            "data_in": [
+                "music player state",
+                "music track"
+            ],
+            "data_out": [
+                "music player state updated",
+                "music track playback progress updated"
+            ],
+            "data_dependencies": [
+                19,
+                21,
+                30
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The flow starts on page 20 (music playback/rec interface). The user clicks the progress bar (action from [20,15]), which navigates to page 16. This action likely adjusts playback or transitions to a related music page, with no branches as it’s a single navigational step.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            15
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click the progress bar to navigate to page 16"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 34,
+            "function_description": "This page prompts the user to agree to the authorization agreement before accessing the 2025 Annual Music Report, with a modal dialog containing the agreement link and an \"Agree\" button for confirmation.",
+            "action_refs": [
+                [
+                    21,
+                    0
+                ]
+            ],
+            "data_in": [
+                "2025年度听歌报告入口"
+            ],
+            "data_out": [
+                "2025年度听歌报告授权页面"
+            ],
+            "data_dependencies": [
+                36
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 21,
+                "logic": "The user starts on the search results page for the 2025 Annual Music Report. They click the '立即查看' (View Now) button for the 2025 Annual Music Report, which triggers a modal dialog asking to agree to the authorization agreement. The flow then waits for the user to either agree (to proceed) or dismiss (though the latter is not shown in the provided action, the core step here is initiating the report access which brings up the agreement dialog).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            21,
+                            0
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": 22,
+                        "action": "click",
+                        "summary": "Click the '2025年度听歌报告 立即查看' button to initiate access to the report, triggering the authorization agreement modal."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 35,
+            "function_description": "This page functions as a music search results interface for \"annual listening report\", displaying the 2025 listening report, related music report cards, and a list of songs (including \"画中游(纯音乐)\") with options to play, like, share, and access additional song - related features.",
+            "action_refs": [
+                [
+                    21,
+                    1
+                ]
+            ],
+            "data_in": [
+                "歌曲条目 画中游(纯音乐)"
+            ],
+            "data_out": [
+                "歌曲收藏状态更新"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 21,
+                "logic": "The flow starts on the annual listening report music search results page. The user clicks on the song entry '画中游(纯音乐)', which likely triggers an action related to this song (e.g., playing, opening details). There are no decision or loop points as it's a single action step.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            21,
+                            1
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": 21,
+                        "action": "click",
+                        "summary": "Click on the song entry '画中游(纯音乐)'"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 36,
+            "function_description": "同意授权协议复选框",
+            "action_refs": [
+                [
+                    22,
+                    0
+                ]
+            ],
+            "data_in": [
+                "授权协议设置"
+            ],
+            "data_out": [
+                "授权协议设置（已同意）"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 22,
+                "logic": "The process starts on page 22. The user clicks the '同意授权协议复选框' (Agree to Authorization Agreement Checkbox) on page 22, which leads to page 23. There are no branches or loops in this flow as it is a single action to proceed.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            22,
+                            0
+                        ],
+                        "src_page_idx": 22,
+                        "dst_page_idx": 23,
+                        "action": "click",
+                        "summary": "Click the '同意授权协议复选框' to proceed"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 37,
+            "function_description": "This page enables users to switch accounts, manage account - related settings, and log in to the Kugou Music app through methods like one - click login or other login options.",
+            "action_refs": [
+                [
+                    22,
+                    2
+                ]
+            ],
+            "data_in": [
+                "account switching setting"
+            ],
+            "data_out": [
+                "account switching page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 22,
+                "logic": "The process starts on page 22. The user clicks the '切换帐号' (Switch Account) button, which navigates to page 24. On page 24, the user can manage accounts, log in with one - click login, or choose other login methods.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            22,
+                            2
+                        ],
+                        "src_page_idx": 22,
+                        "dst_page_idx": 24,
+                        "action": "click",
+                        "summary": "Click the '切换帐号' button to switch to the account - related operation page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 38,
+            "function_description": "This page functions as a popup interface for adding the currently playing song to existing playlists or creating a new playlist, providing options to select from user - created playlists or create a new one.",
+            "action_refs": [
+                [
+                    32,
+                    1
+                ],
+                [
+                    39,
+                    0
+                ]
+            ],
+            "data_in": [
+                "song",
+                "playlist list",
+                "歌曲",
+                "歌单（我的歌单2、我喜欢）"
+            ],
+            "data_out": [
+                "song added to playlist",
+                "歌单（我的歌单2、我喜欢）更新（添加歌曲）"
+            ],
+            "data_dependencies": [
+                38,
+                39,
+                52,
+                53,
+                54,
+                64
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 32,
+                "logic": "The process starts by clicking the 'Add to playlist' button on the song's options page. This action opens the playlist selection or creation popup. Then, the user clicks the confirmation button to add the currently playing song to the selected playlist (or a newly created one), completing the addition process.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            32,
+                            1
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": 39,
+                        "action": "click",
+                        "summary": "Click 'Add to playlist' button to open the playlist popup"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            39,
+                            0
+                        ],
+                        "src_page_idx": 39,
+                        "dst_page_idx": 20,
+                        "action": "click",
+                        "summary": "Click the confirmation button to add the song to the playlist"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 39,
+            "function_description": "This page enables users to share the currently playing song through various social platforms (e.g., WeChat, QQ, Sina Weibo) and via different sharing formats (lyrics card, song card, music video, WeChat status card).",
+            "action_refs": [
+                [
+                    32,
+                    2
+                ],
+                [
+                    40,
+                    0
+                ],
+                [
+                    40,
+                    2
+                ]
+            ],
+            "data_in": [
+                "song",
+                "WeChat friend selection interface",
+                "share popup"
+            ],
+            "data_out": [
+                "share options for song",
+                "shared song to WeChat friend (pending selection)",
+                "share popup closed"
+            ],
+            "data_dependencies": [
+                67
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 32,
+                "logic": "The flow starts with clicking the 'Share song' button (S1) to open the sharing options page. On the sharing page (S2), the user can either choose to share to a platform like WeChat Friends (S3) or cancel the sharing process (S4).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            32,
+                            2
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": 40,
+                        "action": "click",
+                        "summary": "Click the 'Share song' button to open sharing options."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": null,
+                        "src_page_idx": 40,
+                        "dst_page_idx": null,
+                        "action": "none",
+                        "summary": "Reach the sharing options page with multiple choices."
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            40,
+                            0
+                        ],
+                        "src_page_idx": 40,
+                        "dst_page_idx": 47,
+                        "action": "click",
+                        "summary": "Click 'Share to WeChat Friends' to proceed with sharing."
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            40,
+                            2
+                        ],
+                        "src_page_idx": 40,
+                        "dst_page_idx": 49,
+                        "action": "click",
+                        "summary": "Click 'Cancel Share Popup' to exit the sharing process."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3",
+                                "condition": "User selects a sharing platform (e.g., WeChat Friends)"
+                            },
+                            {
+                                "next_step": "S4",
+                                "condition": "User cancels the sharing process"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 40,
+            "function_description": "HiFi现场 音效使用按钮",
+            "action_refs": [
+                [
+                    34,
+                    0
+                ]
+            ],
+            "data_in": [
+                "HiFi现场音效设置"
+            ],
+            "data_out": [
+                "HiFi现场音效设置已使用"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 34,
+                "logic": "The core execution logic involves a single step: clicking the '使用' (Use) button for the 'HiFi现场' (HiFi Live) sound effect. This action is performed on the page where the HiFi Live sound effect option is displayed, and there are no subsequent branches or loops as the action is a direct interaction with the button.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            34,
+                            0
+                        ],
+                        "src_page_idx": 34,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '使用' button for HiFi现场 sound effect"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 41,
+            "function_description": "开始演唱 (Start Singing) button",
+            "action_refs": [
+                [
+                    36,
+                    0
+                ]
+            ],
+            "data_in": [
+                "song (茫)",
+                "singing session configuration"
+            ],
+            "data_out": [
+                "singing session (started)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 36,
+                "logic": "The core execution logic for the 'Start Singing' functional point involves a single step: clicking the '开始演唱 (Start Singing)' button. This action is performed on page 36, and there are no subsequent steps or branches as the destination page is null, indicating the action may initiate the singing functionality directly.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            36,
+                            0
+                        ],
+                        "src_page_idx": 36,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '开始演唱 (Start Singing)' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 42,
+            "function_description": "表情选择按钮",
+            "action_refs": [
+                [
+                    37,
+                    1
+                ]
+            ],
+            "data_in": [
+                "comment input area",
+                "emoji selection interface trigger"
+            ],
+            "data_out": [
+                "emoji selection interface opened"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 37,
+                "logic": "The core execution logic for the emoji selection button involves a single step: clicking the emoji selection button located at the specified position. This action is expected to open the emoji selection interface or provide access to emojis for input, with no branching or looping logic as it is a straightforward click action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            37,
+                            1
+                        ],
+                        "src_page_idx": 37,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the emoji selection button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 43,
+            "function_description": "回复展开按钮（第一条评论）",
+            "action_refs": [
+                [
+                    37,
+                    5
+                ]
+            ],
+            "data_in": [
+                "第一条评论的回复列表"
+            ],
+            "data_out": [
+                "展开后的第一条评论回复列表"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 37,
+                "logic": "On the comment page (page 37), the user clicks the 'Expand 112 Replies' button for the first comment. This action triggers the expansion of the replies associated with that comment, completing the functional point's execution.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            37,
+                            5
+                        ],
+                        "src_page_idx": 37,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'Expand 112 Replies' button for the first comment"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 44,
+            "function_description": "评论点赞按钮（第一条）",
+            "action_refs": [
+                [
+                    37,
+                    6
+                ]
+            ],
+            "data_in": [
+                "第一条评论点赞设置"
+            ],
+            "data_out": [
+                "第一条评论点赞设置更新"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 37,
+                "logic": "The core execution logic is to perform a click action on the like button of the first comment. The process starts on the comment page (page 37) and involves clicking the like button associated with the first comment, with no further branching or looping as it's a single action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            37,
+                            6
+                        ],
+                        "src_page_idx": 37,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the like button of the first comment"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 45,
+            "function_description": "广告关闭按钮",
+            "action_refs": [
+                [
+                    37,
+                    7
+                ]
+            ],
+            "data_in": [
+                "广告"
+            ],
+            "data_out": [
+                "广告被关闭"
+            ],
+            "data_dependencies": [
+                45
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 37,
+                "logic": "The core execution logic is to click the advertisement close button. There are no branches or loops as it's a single action to close the ad.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            37,
+                            7
+                        ],
+                        "src_page_idx": 37,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the advertisement close button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 46,
+            "function_description": "This page prompts the user to agree to the authorization agreement in order to access the 2025 Annual Music Report, with a modal dialog displaying the agreement link and an \"Agree\" button.",
+            "action_refs": [
+                [
+                    24,
+                    0
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 24,
+                "logic": "The user starts on page 24 and clicks the '立即体验' button in the top right. This action leads to a modal dialog (on page 22) prompting agreement to the authorization agreement for the 2025 Annual Music Report. The flow is a straight line as there are no branches or loops shown in the provided action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            24,
+                            0
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 22,
+                        "action": "click",
+                        "summary": "Click the '立即体验' button in the top right corner"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 47,
+            "function_description": "This page functions as an account management interface for Kugou Music, allowing users to select, edit, or add accounts for login, and providing options for one - click login and other login methods.",
+            "action_refs": [
+                [
+                    24,
+                    1
+                ]
+            ],
+            "data_in": [
+                "账号管理入口"
+            ],
+            "data_out": [
+                "账号选择界面"
+            ],
+            "data_dependencies": [
+                48,
+                49,
+                56,
+                57,
+                58
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 24,
+                "logic": "The process starts on page 24. The user clicks the '账号管理' (Account Management) text link, which triggers a transition to page 25, where a dialog for selecting, editing, or adding an account appears. This step initiates the account management interface flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            24,
+                            1
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 25,
+                        "action": "click",
+                        "summary": "Click the '账号管理' text link to open the account management dialog."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 48,
+            "function_description": "This page is the Kugou Music account login interface, allowing users to log in with one click or choose other login methods after agreeing to relevant user agreements and privacy policies.",
+            "action_refs": [
+                [
+                    24,
+                    2
+                ]
+            ],
+            "data_in": [
+                "login session",
+                "user account"
+            ],
+            "data_out": [
+                "login session (initiated)"
+            ],
+            "data_dependencies": [
+                49,
+                50,
+                57,
+                59,
+                60,
+                61,
+                62
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 24,
+                "logic": "On the Kugou Music login page, the user clicks the 'One - click Login' button. Then a dialog box pops up asking for agreement to relevant policies. At this point, the user can choose to either agree and continue with the one - click login process or disagree and stop the login.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            24,
+                            2
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 26,
+                        "action": "click",
+                        "summary": "Click the 'One - click Login' blue button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if - else",
+                        "branches": [
+                            {
+                                "next_step": null,
+                                "condition": "User clicks 'Disagree' in the policy agreement dialog"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "User clicks 'Agree and Continue' in the policy agreement dialog"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 49,
+            "function_description": "This page serves as the login interface for Kugou Music, providing options for users to log in via WeChat, QQ, mobile number, or other login methods, along with a checkbox to agree to relevant policies and a link for login assistance.",
+            "action_refs": [
+                [
+                    24,
+                    3
+                ]
+            ],
+            "data_in": [
+                "login session",
+                "other login methods entry"
+            ],
+            "data_out": [
+                "login options list"
+            ],
+            "data_dependencies": [
+                50,
+                51,
+                57,
+                59,
+                60,
+                61,
+                62
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 24,
+                "logic": "The user starts on the Kugou Music login page (page 24). They click the '其他登录方式' (Other Login Methods) text link, which navigates to a new page (page 27) with options like WeChat, QQ, mobile number, or more login methods. This action is a single step with no branches or loops in the provided flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            24,
+                            3
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 27,
+                        "action": "click",
+                        "summary": "Click the '其他登录方式' text link to navigate to the page with alternative login options."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 50,
+            "function_description": "‘同意协议’复选框",
+            "action_refs": [
+                [
+                    24,
+                    4
+                ]
+            ],
+            "data_in": [
+                "agreement consent setting"
+            ],
+            "data_out": [
+                "agreement consent setting enabled"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 24,
+                "logic": "The user starts on page 24. The core action is clicking the '同意协议' (Agree to Terms) checkbox. This action transitions the app to page 28, likely enabling further steps like login after agreeing to the terms.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            24,
+                            4
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 28,
+                        "action": "click",
+                        "summary": "Click the '同意协议' checkbox to agree to terms and transition to page 28."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 51,
+            "function_description": "This page provides a menu of options for users encountering login issues on the Kugou Music account login interface, including retrieving the original account, resetting the password, handling mobile number issues, other problems, and canceling the action.",
+            "action_refs": [
+                [
+                    24,
+                    5
+                ]
+            ],
+            "data_in": [
+                "login problem support entry"
+            ],
+            "data_out": [
+                "login problem options list"
+            ],
+            "data_dependencies": [
+                63
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 24,
+                "logic": "The user starts on the Kugou Music login page. They click the '登录遇到问题' (Login Issues) link, which opens a menu with options like retrieving the original account, resetting the password, handling mobile number issues, other problems, or canceling. The flow diverges here based on which option the user selects.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            24,
+                            5
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 29,
+                        "action": "click",
+                        "summary": "Click the '登录遇到问题' link to open the login issues menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": null,
+                                "condition": "User selects '找回原账号' (Retrieve Original Account)"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "User selects '忘记密码' (Forgot Password)"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "User selects '手机停用或已更换' (Mobile Disabled/Changed)"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "User selects '其他问题' (Other Issues)"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "User selects '取消' (Cancel)"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 52,
+            "function_description": "默认收藏 playlist checkbox",
+            "action_refs": [
+                [
+                    39,
+                    1
+                ]
+            ],
+            "data_in": [
+                "默认收藏歌单设置",
+                "歌曲添加操作上下文"
+            ],
+            "data_out": [
+                "默认收藏歌单设置已启用",
+                "歌曲添加到默认收藏歌单"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 39,
+                "logic": "The process starts on page 39. The user clicks the checkbox for the '默认收藏' playlist, transitioning to page 42. This action selects the '默认收藏' playlist for adding content, completing the functional point's core logic with a single step and no branches.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            39,
+                            1
+                        ],
+                        "src_page_idx": 39,
+                        "dst_page_idx": 42,
+                        "action": "click",
+                        "summary": "Click the checkbox for '默认收藏' playlist"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 53,
+            "function_description": "This page allows users to create a new music playlist by entering a playlist name, selecting optional tags, and choosing privacy settings, then confirming the creation.",
+            "action_refs": [
+                [
+                    39,
+                    2
+                ],
+                [
+                    43,
+                    0
+                ],
+                [
+                    43,
+                    1
+                ],
+                [
+                    43,
+                    4
+                ]
+            ],
+            "data_in": [
+                "歌单添加操作上下文",
+                "创建歌单功能入口",
+                "歌单名称输入框内容",
+                "创建新歌单操作",
+                "歌单名输入框内容",
+                "智能生成歌单名功能"
+            ],
+            "data_out": [
+                "新建歌单（待创建）",
+                "歌单创建界面",
+                "更新后的歌单名称输入框内容",
+                "创建新歌单操作取消",
+                "更新后的歌单名输入框内容"
+            ],
+            "data_dependencies": [
+                64,
+                65
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 39,
+                "logic": "The user starts by clicking the '创建歌单' button to open the new playlist creation page. On this page, they can either input a playlist name, use the '智能生成歌单名' link (though its flow isn't fully defined here), or cancel to return. The main flow involves entering a name (e.g., '我的歌单2') and proceeding, with a cancel option to exit early.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            39,
+                            2
+                        ],
+                        "src_page_idx": 39,
+                        "dst_page_idx": 43,
+                        "action": "click",
+                        "summary": "Click '创建歌单' to open the playlist creation page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            43,
+                            0
+                        ],
+                        "src_page_idx": 43,
+                        "dst_page_idx": 45,
+                        "action": "input",
+                        "summary": "Input playlist name (e.g., '我的歌单2')"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            43,
+                            1
+                        ],
+                        "src_page_idx": 43,
+                        "dst_page_idx": 39,
+                        "action": "click",
+                        "summary": "Click '取消' to cancel creation and return"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            43,
+                            4
+                        ],
+                        "src_page_idx": 43,
+                        "dst_page_idx": 43,
+                        "action": "click",
+                        "summary": "Click '智能生成歌单名' (flow remains on creation page)"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 54,
+            "function_description": "关闭 button (X)",
+            "action_refs": [
+                [
+                    39,
+                    3
+                ]
+            ],
+            "data_in": [
+                "添加到歌单弹窗"
+            ],
+            "data_out": [
+                "添加到歌单弹窗关闭"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 39,
+                "logic": "The core execution logic is to close the '添加到歌单' (Add to Playlist) dialog. The user clicks the close button (X) located at the top-right corner of the dialog. This action transitions the app from the dialog page (page 39) to the underlying page (page 44), effectively closing the dialog.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            39,
+                            3
+                        ],
+                        "src_page_idx": 39,
+                        "dst_page_idx": 44,
+                        "action": "click",
+                        "summary": "Click the close button (X) at the top-right of the '添加到歌单' dialog"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 55,
+            "function_description": "This page enables users to view the lyrics of the song \"星辰不坠落\" by 蓝心羽, and provides options to copy the lyrics, create a lyrics video, or proceed to the next step in the sharing or related workflow.",
+            "action_refs": [
+                [
+                    40,
+                    1
+                ],
+                [
+                    48,
+                    0
+                ]
+            ],
+            "data_in": [
+                "lyrics card",
+                "song information",
+                "lyrics editing session"
+            ],
+            "data_out": [
+                "lyrics card (for sharing)",
+                "lyrics template switching guidance"
+            ],
+            "data_dependencies": [
+                55,
+                66
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 40,
+                "logic": "The user starts on page 40 and clicks the 'Lyrics Card Share' option (action_ref [40,1]) to navigate to page 48. Then, on page 48, the user clicks the 'Next step button' (action_ref [48,0]) to proceed to page 50, advancing in the lyrics - related workflow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            40,
+                            1
+                        ],
+                        "src_page_idx": 40,
+                        "dst_page_idx": 48,
+                        "action": "click",
+                        "summary": "Click the 'Lyrics Card Share' option to go to page 48."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            48,
+                            0
+                        ],
+                        "src_page_idx": 48,
+                        "dst_page_idx": 50,
+                        "action": "click",
+                        "summary": "Click the 'Next step button' to go to page 50."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 56,
+            "function_description": "编辑账号列表按钮",
+            "action_refs": [
+                [
+                    25,
+                    0
+                ]
+            ],
+            "data_in": [
+                "账号列表"
+            ],
+            "data_out": [
+                "编辑后的账号列表"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 25,
+                "logic": "The flow starts on page 25. The user clicks the '编辑账号列表按钮' (Edit Account List button) at the specified position. This action likely initiates the account list editing functionality, though the destination page is not specified here, indicating the action may trigger a state change or open an editing interface.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            25,
+                            0
+                        ],
+                        "src_page_idx": 25,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '编辑账号列表按钮' (Edit Account List button) to start editing the account list."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 57,
+            "function_description": "可选登录账号项（夏昌炜）",
+            "action_refs": [
+                [
+                    25,
+                    1
+                ]
+            ],
+            "data_in": [
+                "login account (夏昌炜)"
+            ],
+            "data_out": [
+                "login session (夏昌炜)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 25,
+                "logic": "The process starts on page 25. The user clicks on the optional login account item labeled '夏昌炜' to select this account for login. There are no branches or loops as this is a single action to choose the specified account.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            25,
+                            1
+                        ],
+                        "src_page_idx": 25,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the optional login account item (夏昌炜)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 58,
+            "function_description": "添加新账号按钮",
+            "action_refs": [
+                [
+                    25,
+                    2
+                ]
+            ],
+            "data_in": [
+                "账号管理界面",
+                "账号列表"
+            ],
+            "data_out": [
+                "添加账号的操作触发",
+                "账号管理流程启动"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 25,
+                "logic": "The core execution logic for the '添加新账号按钮' (Add New Account Button) functional point involves a single step: clicking the '添加账号' (Add Account) button located at the specified position on the page. This action is intended to initiate the process of adding a new account, and since there are no subsequent steps or branches provided, the flow ends here with this click action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            25,
+                            2
+                        ],
+                        "src_page_idx": 25,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '添加账号' (Add Account) button to start the process of adding a new account."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 59,
+            "function_description": "不同意 button (reject terms)",
+            "action_refs": [
+                [
+                    26,
+                    0
+                ]
+            ],
+            "data_in": [
+                "terms agreement prompt"
+            ],
+            "data_out": [
+                "rejected terms agreement state"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 26,
+                "logic": "The user is on a page with a terms agreement dialog. The core logic is to click the '不同意' (reject terms) button. This action is a single step with no branches or loops, as it directly triggers the rejection of the terms.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            26,
+                            0
+                        ],
+                        "src_page_idx": 26,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '不同意' button to reject the terms."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 60,
+            "function_description": "同意并继续 button (accept terms)",
+            "action_refs": [
+                [
+                    26,
+                    1
+                ]
+            ],
+            "data_in": [
+                "user agreement acceptance request",
+                "privacy policy acceptance request",
+                "children's privacy policy acceptance request",
+                "third - party information sharing list acceptance request"
+            ],
+            "data_out": [
+                "agreement acceptance record",
+                "login process continuation signal"
+            ],
+            "data_dependencies": [
+                59,
+                61,
+                62
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 26,
+                "logic": "The user is on a page (page 26) with a dialog asking to accept terms. The core logic is to click the '同意并继续' (accept and continue) button. This action likely proceeds to the next stage of the app's flow, such as login or main interface, with no branching or looping here as it's a single action to accept terms.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            26,
+                            1
+                        ],
+                        "src_page_idx": 26,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '同意并继续' (accept terms) button to proceed."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 61,
+            "function_description": "微信登录 button",
+            "action_refs": [
+                [
+                    27,
+                    0
+                ]
+            ],
+            "data_in": [
+                "login session",
+                "WeChat account information"
+            ],
+            "data_out": [
+                "initiated WeChat login process"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 27,
+                "logic": "The core execution logic for the WeChat login button starts with the user being on the login page (page 27). The user then clicks the '微信登录' (WeChat Login) button. Since there are no further branches or loops described in the provided actions, this is a simple linear flow focused on initiating the WeChat login process by clicking the button.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            27,
+                            0
+                        ],
+                        "src_page_idx": 27,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '微信登录' button on the login page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 62,
+            "function_description": "手机号码登录 link",
+            "action_refs": [
+                [
+                    27,
+                    1
+                ]
+            ],
+            "data_in": [
+                "login session",
+                "user account (phone number)"
+            ],
+            "data_out": [
+                "initiated phone number login process"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 27,
+                "logic": "The core execution logic starts on page 27 (the login page of Kugou Music). The user clicks the '手机号码登录' (Mobile Number Login) link, which likely navigates to a page for entering a mobile number to proceed with login. There are no branches or loops here as it's a single click action to initiate the mobile login flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            27,
+                            1
+                        ],
+                        "src_page_idx": 27,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the '手机号码登录' link to start the mobile number login process"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 63,
+            "function_description": "Retrieve Original Account option",
+            "action_refs": [
+                [
+                    29,
+                    0
+                ]
+            ],
+            "data_in": [
+                "account recovery option"
+            ],
+            "data_out": [
+                "initiated account recovery process"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 29,
+                "logic": "The core execution logic starts on page 29. The user clicks the 'Retrieve Original Account' option (labeled as '找回原账号' in the UI). This action initiates the process to retrieve the original account, with no subsequent steps or branches as the action is a single click to access the retrieval functionality.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            29,
+                            0
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'Retrieve Original Account' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 64,
+            "function_description": "This page allows users to add the currently playing song to an existing playlist or create a new playlist, with options to cancel the operation.",
+            "action_refs": [
+                [
+                    43,
+                    2
+                ]
+            ],
+            "data_in": [
+                "新建歌单信息",
+                "歌曲"
+            ],
+            "data_out": [
+                "新创建的歌单"
+            ],
+            "data_dependencies": [
+                38,
+                52,
+                53,
+                54,
+                65
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 43,
+                "logic": "The user starts on page 43 (the 'Add to Playlist' dialog). They click the 'Create' button (action_ref [43,2]), which navigates to page 39 (the 'Create New Playlist' dialog) to finalize creating a new playlist for the currently playing song. This step initiates the creation of a new playlist to add the song.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            43,
+                            2
+                        ],
+                        "src_page_idx": 43,
+                        "dst_page_idx": 39,
+                        "action": "click",
+                        "summary": "Click the 'Create' button to proceed to create a new playlist"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 65,
+            "function_description": "私密歌单复选框",
+            "action_refs": [
+                [
+                    43,
+                    3
+                ]
+            ],
+            "data_in": [
+                "私密歌单设置",
+                "新建歌单信息"
+            ],
+            "data_out": [
+                "私密歌单设置（已启用）",
+                "新建歌单（含私密属性）"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 43,
+                "logic": "The user starts on page 43 and clicks the '私密歌单' (Private Playlist) checkbox. This action leads to page 46, completing the interaction with the checkbox.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            43,
+                            3
+                        ],
+                        "src_page_idx": 43,
+                        "dst_page_idx": 46,
+                        "action": "click",
+                        "summary": "Click the '私密歌单' checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 66,
+            "function_description": "Lyric template thumbnail (NEW)",
+            "action_refs": [
+                [
+                    50,
+                    0
+                ]
+            ],
+            "data_in": [
+                "lyric template"
+            ],
+            "data_out": [
+                "selected lyric template"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 50,
+                "logic": "The user interacts with the 'Lyric template thumbnail (NEW)' by performing a click action. This action likely initiates or relates to the lyric template functionality, with no subsequent branching or looping steps identified from the provided action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            50,
+                            0
+                        ],
+                        "src_page_idx": 50,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the Lyric template thumbnail (NEW)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 67,
+            "function_description": "Share to WeChat Friends button",
+            "action_refs": [
+                [
+                    50,
+                    1
+                ]
+            ],
+            "data_in": [
+                "song (天真的橡皮)"
+            ],
+            "data_out": [
+                "shared song to WeChat friend"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 50,
+                "logic": "The core execution logic starts on page 50. The user clicks the 'Share to WeChat Friends' button. Since there are no further actions or branches provided, the flow consists of this single click action to initiate sharing to WeChat Friends.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            50,
+                            1
+                        ],
+                        "src_page_idx": 50,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the Share to WeChat Friends button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        }
+    ]
+}

@@ -1,0 +1,3196 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "Social media feed with post interactions and navigation",
+            "action_refs": [
+                [
+                    0,
+                    10
+                ]
+            ],
+            "data_in": [
+                "home feed content"
+            ],
+            "data_out": [
+                "updated home feed content"
+            ],
+            "data_dependencies": [
+                1,
+                2,
+                3,
+                5
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on page 0. The user clicks the 'Home tab' (action on page 0, edge 10), which navigates to page 8. This action likely loads or refreshes the social media feed for interaction or navigation.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            10
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click Home tab to navigate to the social media feed page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 1,
+            "function_description": "The current page is a social media feed page where users can view posts, interact with them (like, comment, share), and access a dropdown menu for a post to perform actions like following the author, saving as image, copying text, hiding, muting, blocking, or reporting the post/author.",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ]
+            ],
+            "data_in": [
+                "post menu trigger",
+                "post"
+            ],
+            "data_out": [
+                "post menu options"
+            ],
+            "data_dependencies": [
+                3,
+                4,
+                5,
+                6,
+                7,
+                9,
+                16,
+                18,
+                21,
+                32
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "On the social media feed page, the user clicks the menu dropdown toggle (three dots) for a post. This action opens a dropdown menu with options like following the author, saving as image, copying text, hiding, muting, blocking, or reporting. The flow then branches based on which option the user selects from the dropdown.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the menu dropdown toggle (three dots) for a post"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": null,
+                                "condition": "Select 'Follow [Author]' option"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "Select 'Save as image' option"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "Select 'Copy text' option"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "Select 'Hide note' option"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "Select 'Mute author' option"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "Select 'Block' option"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "Select 'Report' option"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "The page displays the \"Reads\" tab of the \"Tech News\" user profile, showing no subscribed publications, along with options to follow the user, view subscribers, and navigate to other profile sections (Activity, Posts, Likes).",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ]
+            ],
+            "data_in": [
+                "user profile icon"
+            ],
+            "data_out": [
+                "user profile page"
+            ],
+            "data_dependencies": [
+                15,
+                26,
+                27
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the entry page (page 0). The user clicks the user profile icon (action_ref [0,1]), navigating to the 'Tech News' profile page (page 2). On this page, the 'Reads' tab is active, showing no subscribed publications, with options to follow the user, view subscribers, and navigate to other profile tabs (Activity, Posts, Likes).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click user profile icon to navigate to 'Tech News' profile page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "Like button for post",
+            "action_refs": [
+                [
+                    0,
+                    2
+                ]
+            ],
+            "data_in": [
+                "post",
+                "like setting of post"
+            ],
+            "data_out": [
+                "post with updated like count",
+                "like setting of post updated"
+            ],
+            "data_dependencies": [
+                4,
+                5,
+                6,
+                7,
+                9,
+                18,
+                21,
+                32
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on page 0 (the feed). The core action is clicking the like button for a post. This click transitions the app to page 3, completing the like action for the post.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click the like button for the post"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "This page functions as a comment section for a social media post, allowing users to view the post details, see that there are no replies yet, and provide an interface to be the first to add a comment.",
+            "action_refs": [
+                [
+                    0,
+                    3
+                ],
+                [
+                    4,
+                    0
+                ],
+                [
+                    4,
+                    1
+                ],
+                [
+                    14,
+                    0
+                ]
+            ],
+            "data_in": [
+                "post",
+                "comment button (for post)",
+                "comment text",
+                "note (post)",
+                "note (JOY's post)"
+            ],
+            "data_out": [
+                "comment interface (for post)",
+                "new comment",
+                "comment text (entered)"
+            ],
+            "data_dependencies": [
+                16
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the post page (page 0) and clicks the comment button to enter the comment section (page 4), where no replies are shown. The user then inputs a comment (page 14) and can optionally input another comment (page 17) or navigate back. The flow includes entering the comment section, inputting comments, and a back navigation option.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click comment button to enter comment section"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            4,
+                            0
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 14,
+                        "action": "input",
+                        "summary": "Input first comment in text field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            14,
+                            0
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 17,
+                        "action": "input",
+                        "summary": "Input second comment in text field"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            4,
+                            1
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click back arrow to return to post page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "The current page is a social media feed page where users can view posts, interact with them (like, comment, share), and access a menu for a specific post to perform actions like following the author, saving as image, copying text, hiding, muting, blocking, or reporting the post/author.",
+            "action_refs": [
+                [
+                    0,
+                    4
+                ]
+            ],
+            "data_in": [
+                "post"
+            ],
+            "data_out": [
+                "reposted post"
+            ],
+            "data_dependencies": [
+                3,
+                4,
+                6,
+                7,
+                9,
+                18,
+                21,
+                32
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the social media feed page (page 0). The user clicks the repost button for a post, which leads to a new page (page 1). There are no branches or loops as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the repost button for a post"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "The current page provides options to share a social media post via methods like copying the link, saving to notes, sending via SMS, email, or exploring more sharing options, along with a search bar to find people to share with.",
+            "action_refs": [
+                [
+                    0,
+                    5
+                ],
+                [
+                    5,
+                    1
+                ],
+                [
+                    5,
+                    2
+                ]
+            ],
+            "data_in": [
+                "post",
+                "contact search input",
+                "contact list (implied)",
+                "sharing options"
+            ],
+            "data_out": [
+                "sharing options for post",
+                "filtered contact list (implied)",
+                "expanded sharing options"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts by clicking the share button for a post (S1). Then, at the sharing interface (S2), the user can choose to either search for a contact (S3) or explore more sharing options (S4).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click the share button for the post"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": null,
+                        "src_page_idx": 5,
+                        "dst_page_idx": null,
+                        "action": null,
+                        "summary": "Reach the sharing interface"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            5,
+                            1
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 19,
+                        "action": "input",
+                        "summary": "Input a contact name in the search field"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            5,
+                            2
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 20,
+                        "action": "click",
+                        "summary": "Click the more sharing options button"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "The current page (a social media feed) allows users to view posts, interact with them (like, comment, share, etc.), and access a menu for a specific post to perform actions like following the author, saving the post as an image, copying text, hiding the note, muting the author, blocking, or reporting.",
+            "action_refs": [
+                [
+                    0,
+                    6
+                ]
+            ],
+            "data_in": [
+                "post",
+                "post options menu"
+            ],
+            "data_out": [
+                "post options menu (opened)"
+            ],
+            "data_dependencies": [
+                3,
+                4,
+                5,
+                6,
+                9,
+                18,
+                21,
+                32
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "On the social media feed page (page 0), the user clicks the 'More options' button for a post. This action opens a menu (page 1) with various post - related actions like following the author, saving as an image, etc. The flow is a straight line from clicking the more options button to the menu appearing, with no branches or loops in this initial step.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            6
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the 'More options for post' button to open the post - action menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "Subscribe button for Polymath Investor",
+            "action_refs": [
+                [
+                    0,
+                    7
+                ]
+            ],
+            "data_in": [
+                "Polymath Investor subscription setting"
+            ],
+            "data_out": [
+                "Polymath Investor subscription setting updated (subscribed)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The core execution logic starts on page 0. The user clicks the 'Subscribe button for Polymath Investor' (action_ref [0,7]). This action leads to page 6, completing the subscription-related interaction.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            7
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click the Subscribe button for Polymath Investor"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "The current page is a social media feed page where users can view posts, interact with them (like, comment, share), and access a menu (via the three - dot icon on posts) to perform actions such as following the author, saving the post as an image, copying text, hiding the note, muting the author, blocking, or reporting the post/author.",
+            "action_refs": [
+                [
+                    0,
+                    8
+                ]
+            ],
+            "data_in": [
+                "Polymath Investor's post"
+            ],
+            "data_out": [
+                "post options menu (displayed)"
+            ],
+            "data_dependencies": [
+                3,
+                4,
+                5,
+                6,
+                7,
+                18,
+                21,
+                32
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "On the social media feed page (page 0), the user clicks the three - dot menu icon for a post (Polymath’s post). This action opens a menu (on page 1) with various options like following the author, saving as an image, etc. The flow is a single step of opening the menu, with no further branching shown in the provided actions.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            8
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the three - dot menu icon for Polymath’s post to open the options menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "The current page, titled \"New note\", provides a blank space for the user to create a new post, with options at the bottom to add content from the Library, Camera, Article, or start a Live session.",
+            "action_refs": [
+                [
+                    0,
+                    9
+                ],
+                [
+                    7,
+                    0
+                ]
+            ],
+            "data_in": [
+                "new note"
+            ],
+            "data_out": [
+                "new note post",
+                "updated new note"
+            ],
+            "data_dependencies": [
+                17
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on page 0, where the user clicks the 'Create post' floating button to navigate to the 'New note' page (page 7). On the 'New note' page, the user inputs text into the provided text field to create a new note. This is a linear flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            9
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click the 'Create post' floating button to navigate to the 'New note' page."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            7,
+                            0
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 21,
+                        "action": "input",
+                        "summary": "Input text into the 'New note' text field."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "The page displays the \"Subscriptions\" section, showing the user is caught up on subscription - related content and providing options to filter subscriptions (e.g., by different categories like All, paid, bookmarked, etc.) and suggestions to find more content via search or Notes.",
+            "action_refs": [
+                [
+                    0,
+                    11
+                ],
+                [
+                    9,
+                    0
+                ]
+            ],
+            "data_in": [
+                "subscriptions feature entry",
+                "paid subscriptions category tab"
+            ],
+            "data_out": [
+                "subscriptions page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts by clicking the Store tab from page 0 to navigate to the Subscriptions page (page 9). On the Subscriptions page, the user can then click the 'Paid subscriptions category tab' to filter subscriptions by the paid category, with the page remaining on page 9 after this action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            11
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click Store tab to navigate to Subscriptions page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            9,
+                            0
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click Paid subscriptions category tab to filter subscriptions"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "The current page functions as a search - enabled exploration hub, presenting a variety of content such as news articles, suggested videos, and categorized sections (like Explore, Traditions & Customs, Video Games) to help users discover and browse different types of media and information.",
+            "action_refs": [
+                [
+                    0,
+                    12
+                ],
+                [
+                    10,
+                    0
+                ],
+                [
+                    10,
+                    1
+                ],
+                [
+                    23,
+                    0
+                ]
+            ],
+            "data_in": [
+                "search feature entry",
+                "search query",
+                "user profiles (search results)",
+                "user profiles"
+            ],
+            "data_out": [
+                "search page loaded",
+                "search results (user profiles)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on page 0 and clicks the Search tab to navigate to page 10. On page 10, they can either input a search query (leading to page 23) or click the Explore category tab (staying on page 10). If they input a query, the flow moves to page 23; if they click Explore, the flow remains on page 10. On page 23, the user can input a search query again, staying on page 23.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            12
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click Search tab to navigate to search page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            10,
+                            0
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 23,
+                        "action": "input",
+                        "summary": "Input search query to navigate to results page"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            10,
+                            1
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click Explore category tab to stay on search page"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            23,
+                            0
+                        ],
+                        "src_page_idx": 23,
+                        "dst_page_idx": 23,
+                        "action": "input",
+                        "summary": "Input search query on results page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S1"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S3",
+                        "type": "loop",
+                        "branches": [
+                            {
+                                "next_step": "S1"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S4",
+                        "type": "loop",
+                        "branches": [
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "The Chat page (specifically the Direct Messages tab) allows users to view their direct message conversations (currently showing no messages) and provides an option to start a new direct message conversation.",
+            "action_refs": [
+                [
+                    0,
+                    13
+                ],
+                [
+                    11,
+                    1
+                ]
+            ],
+            "data_in": [
+                "chat feature entry",
+                "direct messages tab",
+                "chat interface"
+            ],
+            "data_out": [
+                "chat page loaded",
+                "direct messages view (no change)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the main page and clicks the Chat tab to navigate to the Chat page. Then, on the Chat page, the user clicks the Direct Messages tab to view the Direct Messages section, which shows no messages and an option to start a new direct message conversation.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            13
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click the Chat tab to navigate to the Chat page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            11,
+                            1
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click the Direct Messages tab to view direct message conversations (no messages shown) and new message option"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "The current page (Activity/Notifications tab) displays user interaction notifications (likes, comments, replies) and shows a \"No activity yet\" message when there are no such interactions to display.",
+            "action_refs": [
+                [
+                    0,
+                    14
+                ]
+            ],
+            "data_in": [
+                "notifications tab entry"
+            ],
+            "data_out": [
+                "activity page (notifications) loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user clicks on the Notifications tab (from the initial page). After this click, the app navigates to the Activity page, where it either displays user interaction notifications (likes, comments, replies) or shows a 'No activity yet' message if there are no such interactions.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            14
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click on the Notifications tab to navigate to the Activity page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "Subscribe button",
+            "action_refs": [
+                [
+                    2,
+                    0
+                ]
+            ],
+            "data_in": [
+                "Tech News account",
+                "subscription setting"
+            ],
+            "data_out": [
+                "subscription to Tech News account updated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The user starts on page 2 (a profile page) and clicks the Subscribe button (labeled 'Follow' in the screenshot). This action navigates to page 13, completing the subscription process.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            0
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click the Subscribe button (labeled 'Follow')"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "Follow button for user JOY",
+            "action_refs": [
+                [
+                    4,
+                    2
+                ]
+            ],
+            "data_in": [
+                "follow setting for user JOY"
+            ],
+            "data_out": [
+                "follow setting for user JOY updated to followed"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "On the page showing user JOY's note, the user clicks the 'Follow' button for JOY. This action likely transitions to a new state (page 15) where the follow action is completed (e.g., the button updates to reflect following status).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            2
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click the 'Follow' button for user JOY"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "Like button (heart icon)",
+            "action_refs": [
+                [
+                    4,
+                    3
+                ]
+            ],
+            "data_in": [
+                "note post",
+                "like setting of note post"
+            ],
+            "data_out": [
+                "updated like count of note post",
+                "like setting of note post updated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The flow starts on page 4. The user clicks the like button (heart icon) on the note page, which transitions the app to page 16. This action completes the like functionality for the note.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            3
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click the like button (heart icon) on the note page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "Copy link button",
+            "action_refs": [
+                [
+                    5,
+                    0
+                ]
+            ],
+            "data_in": [
+                "post link"
+            ],
+            "data_out": [
+                "copied post link"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The core execution logic for the 'Copy link button' functional point involves a single step: clicking the 'Copy link' button. This action is performed on page 5, and upon clicking, the flow transitions to page 18 (though the specific result of the copy action isn't detailed here, the primary step is the click itself).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            0
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click the 'Copy link' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "This page functions as a social media feed where users can view posts (with options to like, comment, share, or bookmark), access media content, and use a floating button to initiate the creation of a new post.",
+            "action_refs": [
+                [
+                    7,
+                    1
+                ]
+            ],
+            "data_in": [
+                "new note page"
+            ],
+            "data_out": [
+                "navigated to home feed"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The flow starts on the 'New note' page. The user performs a click action to close this page, which navigates them back to the social media feed page (page 0). There are no branches or loops in this single-step flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            1
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click to close the new note page and return to the social media feed"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "The current page functions as an interface for creating a new note, providing options to add content from the device library, take photos, add articles, or start a live session.",
+            "action_refs": [
+                [
+                    7,
+                    2
+                ]
+            ],
+            "data_in": [
+                "new note",
+                "library media"
+            ],
+            "data_out": [
+                "new note with library media"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The flow starts on the 'New note' page (page 7). The user can choose to interact with the 'Library' option (via a click action) to select media from the device library. Since only one action is provided, the flow here focuses on this single interactive step for library media selection.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            2
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click on the 'Library' option to initiate media selection from the device library"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "Like button for Andrea’s post",
+            "action_refs": [
+                [
+                    8,
+                    0
+                ]
+            ],
+            "data_in": [
+                "Andrea's post",
+                "like setting of Andrea's post"
+            ],
+            "data_out": [
+                "updated like setting of Andrea's post",
+                "like count of Andrea's post (incremented)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The user starts on the page containing Andrea’s post (page 8). The core action is clicking the like button associated with Andrea’s post, which transitions the app to a new page (page 22). There are no branches or loops, as the action is a single click to like the post.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            0
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 22,
+                        "action": "click",
+                        "summary": "Click the like button for Andrea’s post"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "The current page functions as a video playback interface for a suggested video, enabling users to watch the video, interact with it via likes, comments, shares, and view details like the video title, creator, and duration, with autoplay for suggested content enabled.",
+            "action_refs": [
+                [
+                    10,
+                    2
+                ],
+                [
+                    24,
+                    0
+                ]
+            ],
+            "data_in": [
+                "suggested video",
+                "video content",
+                "app navigation state"
+            ],
+            "data_out": [
+                "video playback session",
+                "app navigation state updated (back to previous page)"
+            ],
+            "data_dependencies": [
+                28,
+                29
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The flow starts on page 10 (explore page with suggested videos). First, the user clicks a suggested video thumbnail (action from page 10 to 24) to enter the video playback interface. From the playback page (24), the user can click the back arrow (action from 24 to 10) to return to the previous page with suggested videos. There are no branches or loops as the actions are a simple navigation sequence: open video, then optionally go back.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            2
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 24,
+                        "action": "click",
+                        "summary": "Click suggested video thumbnail to open playback page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            24,
+                            0
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click back arrow to return to previous page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "The page displays social media posts and content related to the film \"Marty Supreme,\" allowing users to view, interact with (like, comment, share), and explore posts, profiles, publications, and top content about the film.",
+            "action_refs": [
+                [
+                    10,
+                    3
+                ],
+                [
+                    25,
+                    0
+                ],
+                [
+                    25,
+                    1
+                ],
+                [
+                    28,
+                    0
+                ]
+            ],
+            "data_in": [
+                "featured article card",
+                "search results page state",
+                "navigation history",
+                "film description text",
+                "Marty Supreme film description",
+                "posts related to Marty Supreme film"
+            ],
+            "data_out": [
+                "article detail page (Marty Supreme film)",
+                "explore page state (updated view)",
+                "expanded film description text",
+                "expanded Marty Supreme film description"
+            ],
+            "data_dependencies": [
+                30,
+                57
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The flow starts on page 10, where the user clicks a featured article card about 'Marty Supreme' to navigate to page 25 (S1). On page 25, the user can either click the back arrow to return to page 10 (S2) or click the 'see more' link to expand content (S3). If 'see more' is clicked, another 'see more' link (if present) can be clicked to further expand content (S4).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            3
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 25,
+                        "action": "click",
+                        "summary": "Click featured article card to view 'Marty Supreme' content"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            25,
+                            0
+                        ],
+                        "src_page_idx": 25,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click back arrow to return to previous page"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            25,
+                            1
+                        ],
+                        "src_page_idx": 25,
+                        "dst_page_idx": 28,
+                        "action": "click",
+                        "summary": "Click 'see more' link to expand content"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            28,
+                            0
+                        ],
+                        "src_page_idx": 28,
+                        "dst_page_idx": 30,
+                        "action": "click",
+                        "summary": "Click 'see more' link to further expand content"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S3",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": null
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "The page allows users to search for and select a contact to start a new message, with a search bar, cancel option, and a prompt to search when no suggestions are available.",
+            "action_refs": [
+                [
+                    11,
+                    0
+                ],
+                [
+                    31,
+                    0
+                ],
+                [
+                    31,
+                    1
+                ],
+                [
+                    31,
+                    2
+                ]
+            ],
+            "data_in": [
+                "chat interface",
+                "message creation trigger",
+                "contact search query",
+                "contact list",
+                "new message creation session"
+            ],
+            "data_out": [
+                "new message interface",
+                "message recipient search interface",
+                "filtered contact list",
+                "chat page navigation (back to chat list)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The flow starts by clicking the 'New message' button to enter the contact search page. On this page, the user can either input a contact name in the search field, click the 'Cancel' button to stay on the same page, or click the back arrow to return to the chat page. These actions provide options to search for a contact, cancel the new message attempt, or navigate back.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            0
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 31,
+                        "action": "click",
+                        "summary": "Click 'New message' button to open contact search page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            31,
+                            0
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": 23,
+                        "action": "input",
+                        "summary": "Input contact name in search field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            31,
+                            1
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": 31,
+                        "action": "click",
+                        "summary": "Click 'Cancel' button to stay on contact search page"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            31,
+                            2
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click back arrow to return to chat page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 25,
+            "function_description": "The page allows users to search for and select a contact to initiate a new message, with a search bar and a prompt to search when no suggestions are available.",
+            "action_refs": [
+                [
+                    11,
+                    2
+                ]
+            ],
+            "data_in": [
+                "chat interface"
+            ],
+            "data_out": [
+                "new message interface"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The user starts on the chat page and clicks the orange new chat button. This action navigates to the 'New message' page, where a search bar and a 'No suggestions' prompt (encouraging search) are displayed to help select a contact for messaging.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            2
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 31,
+                        "action": "click",
+                        "summary": "Click the orange new chat button on the chat page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 26,
+            "function_description": "This page displays the user's profile information (including an option to view the full profile and an \"Add friends\" button), a list of the user's associated items (like \"Across the Movie Aisle\"), and navigation/action options (Archive, Settings, and a home icon), likely serving as a user account or profile management interface.",
+            "action_refs": [
+                [
+                    12,
+                    0
+                ]
+            ],
+            "data_in": [
+                "user profile icon"
+            ],
+            "data_out": [
+                "user profile menu (opened)"
+            ],
+            "data_dependencies": [
+                35,
+                39,
+                40
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The flow starts on the Activity page. The user clicks the profile icon (labeled '昌炜') at the top right. This action opens the profile sidebar, which displays the user’s profile info (name, 'View profile' option, 'Add friends' button), associated items (like 'Across the Movie Aisle'), and action options (Archive, Settings, home icon).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            0
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 32,
+                        "action": "click",
+                        "summary": "Click the user profile icon (昌炜) to open the profile sidebar."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 27,
+            "function_description": "The current page displays the profile of the \"Tech News\" author (username @techburner), allowing users to view the author's activity, posts, reads, and likes, follow the author, share the profile, and see that there are no publications subscribed to by this user under the \"Reads\" tab.",
+            "action_refs": [
+                [
+                    23,
+                    1
+                ]
+            ],
+            "data_in": [
+                "author profile (Tech News)"
+            ],
+            "data_out": [
+                "author profile page (Tech News)"
+            ],
+            "data_dependencies": [
+                15
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 23,
+                "logic": "The flow starts on page 23. The user clicks on the 'Tech News' author entry (username @techburner), navigating to the author's profile page (page 2). On this profile page, the user can view the author's activity, posts, reads (which shows no publications), likes, follow the author, or share the profile.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            23,
+                            1
+                        ],
+                        "src_page_idx": 23,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click on Tech News author entry to navigate to their profile"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 28,
+            "function_description": "Like button (heart icon)",
+            "action_refs": [
+                [
+                    24,
+                    1
+                ]
+            ],
+            "data_in": [
+                "video post",
+                "like count setting"
+            ],
+            "data_out": [
+                "video post liked",
+                "like count updated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 24,
+                "logic": "The user starts on page 24. The core logic is a single step: clicking the like button (heart icon) on page 24, which navigates to page 26. There are no branches or loops as it's a direct action to like the content.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            24,
+                            1
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 26,
+                        "action": "click",
+                        "summary": "Click the like button (heart icon) on page 24"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 29,
+            "function_description": "Subscribe button",
+            "action_refs": [
+                [
+                    24,
+                    2
+                ]
+            ],
+            "data_in": [
+                "podcast episode",
+                "subscription setting"
+            ],
+            "data_out": [
+                "subscription setting (subscribed)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 24,
+                "logic": "The user starts on page 24. The core logic is a single step: clicking the Subscribe button, which navigates to page 27. There are no branches or loops as it's a direct action to navigate after the click.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            24,
+                            2
+                        ],
+                        "src_page_idx": 24,
+                        "dst_page_idx": 27,
+                        "action": "click",
+                        "summary": "Click the Subscribe button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 30,
+            "function_description": "The page attempts to display profile - related results for the query \"Marty Supreme film\" but shows a \"No results\" message, while also providing a brief description of the film and having navigation tabs (Top, Profiles, Publications, Posts) for exploring related content.",
+            "action_refs": [
+                [
+                    25,
+                    2
+                ]
+            ],
+            "data_in": [
+                "search query (Marty Supreme film)",
+                "profiles tab content"
+            ],
+            "data_out": [
+                "profiles search results (for Marty Supreme film)"
+            ],
+            "data_dependencies": [
+                31,
+                57
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 25,
+                "logic": "The app starts on a page showing content for 'Marty Supreme film' with a film description and navigation tabs. The user clicks the 'Profiles' tab. After this click, the app navigates to a page where the 'Profiles' tab is active, and it displays a 'No results' message for the query in the Profiles section.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            25,
+                            2
+                        ],
+                        "src_page_idx": 25,
+                        "dst_page_idx": 29,
+                        "action": "click",
+                        "summary": "Click on the 'Profiles' tab"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 31,
+            "function_description": "The page displays content related to the 'Marty Supreme film', including posts from users (like Sonny Bunch) with options to subscribe to those users, interact with their posts (e.g., like, comment, share), and explore different categories (Top, Profiles, Publications, Posts) of related content.",
+            "action_refs": [
+                [
+                    25,
+                    3
+                ]
+            ],
+            "data_in": [
+                "Sonny Bunch's subscription setting"
+            ],
+            "data_out": [
+                "Sonny Bunch's subscription setting (subscribed)"
+            ],
+            "data_dependencies": [
+                32
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 25,
+                "logic": "The flow starts on the 'Marty Supreme film' page. The user can interact with the 'Subscribe' button for Sonny Bunch (or other users) to subscribe to their content. The page also allows exploring different categories (Top, Profiles, Publications, Posts) of related posts, though the provided action focuses on the subscribe interaction for Sonny Bunch.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            25,
+                            3
+                        ],
+                        "src_page_idx": 25,
+                        "dst_page_idx": 25,
+                        "action": "click",
+                        "summary": "Click the 'Subscribe' button for Sonny Bunch"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 32,
+            "function_description": "The current page displays content related to the 'Marty Supreme film', including posts from users (like Sonny Bunch) with options to subscribe to their profiles, interact with posts (like, comment, share, bookmark), and explore different categories (Top, Profiles, Publications, Posts) of related content.",
+            "action_refs": [
+                [
+                    25,
+                    4
+                ]
+            ],
+            "data_in": [
+                "post",
+                "bookmark setting"
+            ],
+            "data_out": [
+                "bookmark setting updated"
+            ],
+            "data_dependencies": [
+                23
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 25,
+                "logic": "The user starts on the 'Marty Supreme film' page (page 25). They can interact with posts, such as clicking the bookmark icon for a post (e.g., Sonny Bunch’s 'Marty Supreme’ Review post) to save it. The flow is a single step for this bookmark action, with no branches or loops shown here.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            25,
+                            4
+                        ],
+                        "src_page_idx": 25,
+                        "dst_page_idx": 25,
+                        "action": "click",
+                        "summary": "Click the bookmark icon (for a post) to save the post"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 33,
+            "function_description": "The current page functions as a user profile page, allowing the user to view and manage their profile details (like sharing or editing), access creator statistics, and browse different sections of their profile activity (Activity, Posts, Reads, Likes), with the \"Reads\" tab currently displaying a subscribed content item.",
+            "action_refs": [
+                [
+                    32,
+                    0
+                ],
+                [
+                    33,
+                    3
+                ]
+            ],
+            "data_in": [
+                "user profile",
+                "reads tab content"
+            ],
+            "data_out": [
+                "user profile (viewed)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 32,
+                "logic": "The flow starts by clicking the 'View profile' text link to navigate to the user profile page. Once on the profile page, the 'Reads (1)' tab is clicked to display the subscribed content item under the Reads section. There are no branching or looping points as the actions form a linear sequence to access and view the Reads tab content.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            32,
+                            0
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": 33,
+                        "action": "click",
+                        "summary": "Click 'View profile' text link to navigate to profile page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            33,
+                            3
+                        ],
+                        "src_page_idx": 33,
+                        "dst_page_idx": 33,
+                        "action": "click",
+                        "summary": "Click 'Reads (1)' tab to view subscribed content"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 34,
+            "function_description": "The page enables users to find people to follow by searching, connecting contacts, inviting friends, and viewing/following suggested accounts.",
+            "action_refs": [
+                [
+                    32,
+                    1
+                ],
+                [
+                    34,
+                    0
+                ],
+                [
+                    34,
+                    4
+                ]
+            ],
+            "data_in": [
+                "user profile",
+                "add friends feature entry",
+                "search input",
+                "people to follow list"
+            ],
+            "data_out": [
+                "friend - finding interface",
+                "suggested users list"
+            ],
+            "data_dependencies": [
+                45
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 32,
+                "logic": "The flow starts by clicking the 'Add friends' button (from page 32) to enter the 'Find people to follow' page (page 34). On this page, the user can either input a name (like 'alice_smith') in the search field or click the back arrow to return. The back arrow action is a branch from the search page, allowing navigation back to the previous page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            32,
+                            1
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": 34,
+                        "action": "click",
+                        "summary": "Click 'Add friends' button to navigate to 'Find people to follow' page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            34,
+                            0
+                        ],
+                        "src_page_idx": 34,
+                        "dst_page_idx": null,
+                        "action": "input",
+                        "summary": "Input 'alice_smith' in the search people field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            34,
+                            4
+                        ],
+                        "src_page_idx": 34,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click back navigation arrow"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 35,
+            "function_description": "The page displays the \"Across the Movie Aisle\" community, providing an overview (elevator pitch), an \"Upgrade\" option, and tabs (Posts, Chat, About, People) to explore posts, chat, learn about the community, or view its members, along with a feed of posts from the community.",
+            "action_refs": [
+                [
+                    32,
+                    2
+                ],
+                [
+                    35,
+                    0
+                ]
+            ],
+            "data_in": [
+                "Across the Movie Aisle list item",
+                "subscribed content",
+                "user profile"
+            ],
+            "data_out": [
+                "Across the Movie Aisle page content"
+            ],
+            "data_dependencies": [
+                39,
+                40,
+                42,
+                48
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 32,
+                "logic": "The flow starts on page 32. First, the user clicks the 'Across the Movie Aisle' list item (navigating to page 35). Then, the user can click the back arrow to return to page 33. There are no decision or loop points in this flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            32,
+                            2
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": 35,
+                        "action": "click",
+                        "summary": "Click 'Across the Movie Aisle' list item to navigate to its community page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            35,
+                            0
+                        ],
+                        "src_page_idx": 35,
+                        "dst_page_idx": 33,
+                        "action": "click",
+                        "summary": "Click back navigation arrow to return to previous page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 36,
+            "function_description": "The Archive page (likely for a social media app) provides a space to view and manage archived content (currently empty), with a back arrow to navigate back and a bottom navigation bar for other app sections.",
+            "action_refs": [
+                [
+                    32,
+                    3
+                ],
+                [
+                    36,
+                    0
+                ]
+            ],
+            "data_in": [
+                "archive feature entry",
+                "archive page state"
+            ],
+            "data_out": [
+                "archive page loaded",
+                "previous page state restored"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 32,
+                "logic": "The flow starts on page 32, where the user clicks the Archive button to navigate to the Archive page (page 36). On the Archive page, the user can then click the back arrow to return (dst_page_idx is null, indicating navigation back to the prior context). There are no branches or loops as the steps are sequential navigation actions.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            32,
+                            3
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": 36,
+                        "action": "click",
+                        "summary": "Click Archive button to open Archive page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            36,
+                            0
+                        ],
+                        "src_page_idx": 36,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click back arrow to navigate back"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 37,
+            "function_description": "The Settings page allows the user to manage various aspects of their account, including profile editing, creator stats, account settings, display preferences, notifications, payments, interests, privacy & safety, and provide feedback.",
+            "action_refs": [
+                [
+                    32,
+                    4
+                ],
+                [
+                    37,
+                    0
+                ]
+            ],
+            "data_in": [
+                "settings feature entry"
+            ],
+            "data_out": [
+                "settings page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 32,
+                "logic": "The user starts on page 32 and clicks the Settings button (with gear icon) to navigate to page 37. From page 37, the user can click the back navigation arrow to return to the previous page (page 32).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            32,
+                            4
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": 37,
+                        "action": "click",
+                        "summary": "Click Settings button to go to Settings page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            37,
+                            0
+                        ],
+                        "src_page_idx": 37,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click back arrow to navigate back"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 38,
+            "function_description": "The page attempts to display profiles related to \"Marty Supreme film\" but shows no results, with options to switch to other tabs (Top, Publications, Posts) for further exploration of related content.",
+            "action_refs": [
+                [
+                    29,
+                    0
+                ]
+            ],
+            "data_in": [
+                "search query (Marty Supreme film)",
+                "publications tab"
+            ],
+            "data_out": [
+                "publications search results"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 29,
+                "logic": "The app first displays the 'Profiles' tab for 'Marty Supreme film', showing no results. Then, the user can choose to click the 'Publications' tab (or other tabs like 'Top'/'Posts') to explore related content, with the flow branching to the selected tab's content view.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            29,
+                            0
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 29,
+                        "action": "click",
+                        "summary": "Click the Publications tab button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": null,
+                                "condition": "User clicks Publications tab (or other tabs like Top/Posts to explore related content)"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "User stays on Profiles tab (though no results here)"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 39,
+            "function_description": "The current page (user profile page) enables users to view and manage their profile information (e.g., share, edit profile), access creator stats, and browse different content categories (Activity, Posts, Reads, Likes) related to their account.",
+            "action_refs": [
+                [
+                    33,
+                    0
+                ]
+            ],
+            "data_in": [
+                "user profile"
+            ],
+            "data_out": [
+                "shared user profile"
+            ],
+            "data_dependencies": [
+                35,
+                40,
+                41
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 33,
+                "logic": "The user starts on the profile page (page 33). The core action is clicking the 'Share profile' button, which likely triggers a sharing-related interaction (e.g., opening a share menu) while remaining on the same profile page (dst_page_idx 33). There are no branches or loops as only one action is defined here.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            33,
+                            0
+                        ],
+                        "src_page_idx": 33,
+                        "dst_page_idx": 33,
+                        "action": "click",
+                        "summary": "Click the 'Share profile' button on the user profile page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 40,
+            "function_description": "The current page functions as a user profile hub, enabling actions like sharing the profile, editing profile details, viewing creator statistics, and browsing categorized content (Activity, Posts, Reads, Likes) related to the user’s account.",
+            "action_refs": [
+                [
+                    33,
+                    1
+                ]
+            ],
+            "data_in": [
+                "user profile"
+            ],
+            "data_out": [
+                "user profile (to be edited)"
+            ],
+            "data_dependencies": [
+                35,
+                39,
+                41
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 33,
+                "logic": "The flow starts on the user profile page. The user can click the 'Edit profile' button, which keeps them on the same profile page (likely opening an edit mode or dialog).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            33,
+                            1
+                        ],
+                        "src_page_idx": 33,
+                        "dst_page_idx": 33,
+                        "action": "click",
+                        "summary": "Click the Edit profile button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 41,
+            "function_description": "The current page (Creator stats) attempts to load and display statistics related to a post but encountered an error, presenting a message to inform the user and an \"OK\" button to dismiss the error dialog.",
+            "action_refs": [
+                [
+                    33,
+                    2
+                ],
+                [
+                    38,
+                    0
+                ]
+            ],
+            "data_in": [
+                "creator stats",
+                "error message popup"
+            ],
+            "data_out": [
+                "error message (stats loading)",
+                "error message popup dismissed"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 33,
+                "logic": "The user starts on page 33 and clicks the 'Creator stats' button (action S1) to attempt loading post statistics. This triggers an error dialog, and then the user clicks the 'OK' button (action S2) to dismiss the error dialog, completing the flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            33,
+                            2
+                        ],
+                        "src_page_idx": 33,
+                        "dst_page_idx": 38,
+                        "action": "click",
+                        "summary": "Click 'Creator stats' button to attempt loading post statistics"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            38,
+                            0
+                        ],
+                        "src_page_idx": 38,
+                        "dst_page_idx": 39,
+                        "action": "click",
+                        "summary": "Click 'OK' button in error message popup to dismiss it"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 42,
+            "function_description": "The page displays the profile of the \"Across the Movie Aisle\" content, providing an overview (elevator pitch), tabs for Posts/Chat/About/People, and a feed of its posts, with an option to upgrade the subscription.",
+            "action_refs": [
+                [
+                    33,
+                    4
+                ]
+            ],
+            "data_in": [
+                "subscribed content item"
+            ],
+            "data_out": [
+                "subscribed content details page"
+            ],
+            "data_dependencies": [
+                48
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 33,
+                "logic": "The flow starts on page 33. The user clicks on the 'Across the Movie Aisle' subscribed content item, which navigates to page 35. On page 35, the profile of 'Across the Movie Aisle' is displayed, showing its elevator pitch, tabs (Posts/Chat/About/People), a post feed, and an Upgrade option.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            33,
+                            4
+                        ],
+                        "src_page_idx": 33,
+                        "dst_page_idx": 35,
+                        "action": "click",
+                        "summary": "Click on 'Across the Movie Aisle' subscribed content item"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 43,
+            "function_description": "Connect contacts button",
+            "action_refs": [
+                [
+                    34,
+                    1
+                ]
+            ],
+            "data_in": [
+                "contacts connection setting",
+                "contacts data"
+            ],
+            "data_out": [
+                "contacts connection setting updated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 34,
+                "logic": "On the 'Find people to follow' page, the user clicks the 'Connect' button next to the 'Contacts' section. This action initiates the process to connect the app with the user's contacts, with no further branching or looping in this single-step flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            34,
+                            1
+                        ],
+                        "src_page_idx": 34,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'Connect' button next to 'Contacts' to start connecting contacts"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 44,
+            "function_description": "Invite friends button",
+            "action_refs": [
+                [
+                    34,
+                    2
+                ]
+            ],
+            "data_in": [
+                "invite friends option"
+            ],
+            "data_out": [
+                "invite friends workflow initiation"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 34,
+                "logic": "The core execution logic starts on the 'Find people to follow' page. The user clicks the 'Invite friends' button, which is the only step here as the destination page is not yet determined (or the action is a leaf in terms of the provided data, so the flow is a single click action on the invite button).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            34,
+                            2
+                        ],
+                        "src_page_idx": 34,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'Invite friends' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 45,
+            "function_description": "Follow button (Shawn Robbins)",
+            "action_refs": [
+                [
+                    34,
+                    3
+                ]
+            ],
+            "data_in": [
+                "Shawn Robbins (user account)"
+            ],
+            "data_out": [
+                "follow relationship (with Shawn Robbins)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 34,
+                "logic": "The flow starts on the 'Find people to follow' page. The user clicks the 'Follow' button next to Shawn Robbins. This action likely initiates the follow process, with no further branches or loops as it's a single action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            34,
+                            3
+                        ],
+                        "src_page_idx": 34,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the Follow button for Shawn Robbins"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 46,
+            "function_description": "The current page (a media content detail page for \"Across the Movie Aisle\") is prompting the user to choose an app (Chrome or WebView Browser Tester) to open content, with options for \"JUST ONCE\" or \"ALWAYS\" to set a default app.",
+            "action_refs": [
+                [
+                    35,
+                    1
+                ]
+            ],
+            "data_in": [
+                "upgrade option"
+            ],
+            "data_out": [
+                "app open request"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 35,
+                "logic": "The user starts on the media detail page for 'Across the Movie Aisle'. A dialog appears prompting the user to choose an app (Chrome or WebView Browser Tester) to open content, with 'JUST ONCE' or 'ALWAYS' options. The user can select an app and a default setting (or a different app) to proceed.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            35,
+                            1
+                        ],
+                        "src_page_idx": 35,
+                        "dst_page_idx": 40,
+                        "action": "click",
+                        "summary": "Click the Upgrade button (though this seems to trigger the app choice dialog)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 47,
+            "function_description": "The current page functions as a chat interface for the \"Across the Movie Aisle\" community, allowing users to view, interact with (like, reply to), and participate in group conversations, while also providing options to invite others or view the associated publication.",
+            "action_refs": [
+                [
+                    35,
+                    2
+                ]
+            ],
+            "data_in": [
+                "chat feature entry"
+            ],
+            "data_out": [
+                "chat page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 35,
+                "logic": "The flow starts on the community page (page 35). The user clicks the 'Chat' tab button, which navigates to the chat interface (page 41) for the 'Across the Movie Aisle' community, where they can view, interact with, or participate in group conversations, and access options to invite others or view the publication.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            35,
+                            2
+                        ],
+                        "src_page_idx": 35,
+                        "dst_page_idx": 41,
+                        "action": "click",
+                        "summary": "Click the 'Chat' tab button to navigate to the chat interface."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 48,
+            "function_description": "The current page functions as a media player interface for a video post titled \"Merry Christmas, Kinda!\" from \"Across the Movie Aisle,\" allowing playback, interaction (likes, comments, shares), and viewing of post details.",
+            "action_refs": [
+                [
+                    35,
+                    3
+                ]
+            ],
+            "data_in": [
+                "post (Merry Christmas, Kinda!)",
+                "video content (post's video)"
+            ],
+            "data_out": [
+                "video playback state (started)",
+                "post interaction (video played)"
+            ],
+            "data_dependencies": [
+                17,
+                18,
+                21,
+                28,
+                29
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 35,
+                "logic": "The flow starts on page 35 (the 'Across the Movie Aisle' profile page). The user clicks on the post titled 'Merry Christmas, Kinda!' (with the video preview), which navigates to page 24 (the media player interface for the post). This is a straight-line flow with no branches or loops, as the action directly opens the post's media player interface for playback and interaction.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            35,
+                            3
+                        ],
+                        "src_page_idx": 35,
+                        "dst_page_idx": 24,
+                        "action": "click",
+                        "summary": "Click on the post 'Merry Christmas, Kinda!' to open its media player interface"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 49,
+            "function_description": "The current page (Subscriptions) in the app displays a list of subscribed media content (e.g., articles) with filtering options (All, $, bookmark, audio, history, download), interaction metrics (likes, comments), and a bottom navigation bar for home, shop, search, chat, and notifications, along with a media player for audio content.",
+            "action_refs": [
+                [
+                    35,
+                    4
+                ]
+            ],
+            "data_in": [
+                "subscriptions feature entry"
+            ],
+            "data_out": [
+                "subscriptions page loaded"
+            ],
+            "data_dependencies": [
+                56,
+                58,
+                59
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 35,
+                "logic": "The user starts on the Subscriptions page (page 35). The core action is clicking the Shop bottom tab, which navigates to the Shop page (page 42). There are no branches or loops as only this single navigation action is defined.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            35,
+                            4
+                        ],
+                        "src_page_idx": 35,
+                        "dst_page_idx": 42,
+                        "action": "click",
+                        "summary": "Click the Shop bottom tab to navigate to the Shop page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 50,
+            "function_description": "Home tab (bottom navigation)",
+            "action_refs": [
+                [
+                    36,
+                    1
+                ]
+            ],
+            "data_in": [
+                "home tab"
+            ],
+            "data_out": [
+                "home page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 36,
+                "logic": "The user initiates an action by clicking the Home tab in the bottom navigation bar. This action is intended to navigate to the Home page, though the destination page index is marked as null in the action data.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            36,
+                            1
+                        ],
+                        "src_page_idx": 36,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the Home tab in bottom navigation"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 51,
+            "function_description": "Edit Profile option",
+            "action_refs": [
+                [
+                    37,
+                    1
+                ]
+            ],
+            "data_in": [
+                "user profile"
+            ],
+            "data_out": [
+                "user profile (to be edited)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 37,
+                "logic": "The core execution logic for the Edit Profile option starts on the Settings page. The user clicks on the 'Edit Profile' option (associated with the profile section at the top of the Settings page). This action likely navigates to the Edit Profile page (though the destination page index is null in the action, the UI suggests this flow).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            37,
+                            1
+                        ],
+                        "src_page_idx": 37,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the 'Edit Profile' option (in the profile section at the top of the Settings page)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 52,
+            "function_description": "Creator stats option",
+            "action_refs": [
+                [
+                    37,
+                    2
+                ]
+            ],
+            "data_in": [
+                "creator stats setting item"
+            ],
+            "data_out": [
+                "creator stats page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 37,
+                "logic": "The user starts on the Settings page (page 37). The core action is clicking the 'Creator stats' option, which likely navigates to a page with creator-related statistics (though the destination page isn't fully resolved here). This is a single-step flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            37,
+                            2
+                        ],
+                        "src_page_idx": 37,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the 'Creator stats' option in the Settings page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 53,
+            "function_description": "Account settings option",
+            "action_refs": [
+                [
+                    37,
+                    3
+                ]
+            ],
+            "data_in": [
+                "account setting"
+            ],
+            "data_out": [
+                "account setting page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 37,
+                "logic": "The user starts on the Settings page (page 37). The core action is clicking the 'Account settings option' (though in the screenshot, the visible 'Account' option is likely the target). This click initiates navigation (dst_page is null here, but the action is to interact with the account - related settings option).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            37,
+                            3
+                        ],
+                        "src_page_idx": 37,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the Account settings - related option (visible as 'Account' in the Settings page)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 54,
+            "function_description": "This page is the home screen of a mobile device, displaying app icons (SHEIN, Substack, Poshmark, DealDash) and a navigation bar, allowing users to access apps or navigate the device.",
+            "action_refs": [
+                [
+                    41,
+                    0
+                ]
+            ],
+            "data_in": [
+                "invite functionality",
+                "chat group (Across the Movie Aisle)"
+            ],
+            "data_out": [
+                "invite action triggered",
+                "app navigation (to home screen)"
+            ],
+            "data_dependencies": [
+                60,
+                61
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 41,
+                "logic": "The flow starts on page 41. The user clicks the 'Invite' button at the top right, which navigates to page 43. There are no branches or loops in this single-step flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            41,
+                            0
+                        ],
+                        "src_page_idx": 41,
+                        "dst_page_idx": 43,
+                        "action": "click",
+                        "summary": "Click the 'Invite' button (top right) to navigate to the next page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 55,
+            "function_description": "User profile icon",
+            "action_refs": [
+                [
+                    42,
+                    0
+                ]
+            ],
+            "data_in": [
+                "user profile"
+            ],
+            "data_out": [
+                "user profile (accessed)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 42,
+                "logic": "The user initiates interaction by clicking the user profile icon located at the top right of the screen. This action is expected to trigger a response, such as opening a menu or navigating to a profile-related page, though the immediate destination isn't fully resolved here.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            42,
+                            0
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the user profile icon at the top right of the screen."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 56,
+            "function_description": "Paid subscriptions filter button",
+            "action_refs": [
+                [
+                    42,
+                    1
+                ]
+            ],
+            "data_in": [
+                "subscriptions list",
+                "paid subscriptions filter"
+            ],
+            "data_out": [
+                "filtered subscriptions list"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 42,
+                "logic": "The user starts on the Subscriptions page (page 42). The core action is clicking the 'Paid subscriptions' filter button, which likely triggers a filter to show only paid subscriptions. Since there are no further branches or loops here, the flow is a single step of clicking the button.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            42,
+                            1
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the Paid subscriptions filter button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 57,
+            "function_description": "Article 'Marty Supreme' Review",
+            "action_refs": [
+                [
+                    42,
+                    2
+                ]
+            ],
+            "data_in": [
+                "'Marty Supreme' Review article"
+            ],
+            "data_out": [
+                "article content (to be loaded)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 42,
+                "logic": "The user starts on the Subscriptions page (page 42) and clicks on the 'Marty Supreme' Review article. This action likely leads to viewing the full article, with no branches or loops in this initial flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            42,
+                            2
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the 'Marty Supreme' Review article"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 58,
+            "function_description": "Audio playback toggle button",
+            "action_refs": [
+                [
+                    42,
+                    3
+                ]
+            ],
+            "data_in": [
+                "audio playback setting",
+                "audio playback state"
+            ],
+            "data_out": [
+                "audio playback state updated"
+            ],
+            "data_dependencies": [
+                59
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 42,
+                "logic": "On the Subscriptions page, the user clicks the audio playback toggle button (located at the bottom, associated with the playing audio 'A very profound joke'). This action toggles the audio playback state (e.g., from play to pause or vice versa).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            42,
+                            3
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the audio playback toggle button (bottom bar, near the playing audio item)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 59,
+            "function_description": "Audio player close button",
+            "action_refs": [
+                [
+                    42,
+                    4
+                ]
+            ],
+            "data_in": [
+                "audio player",
+                "audio playback session"
+            ],
+            "data_out": [
+                "audio player closed",
+                "audio playback session terminated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 42,
+                "logic": "The process starts on the page with the audio player visible. The only step is to click the audio player's close button, which likely closes the audio player interface.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            42,
+                            4
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the audio player close button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 60,
+            "function_description": "SHEIN app icon",
+            "action_refs": [
+                [
+                    43,
+                    0
+                ]
+            ],
+            "data_in": [
+                "SHEIN app entry"
+            ],
+            "data_out": [
+                "SHEIN app launched"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 43,
+                "logic": "The flow starts on the home screen (page 43). The user performs a single action: clicking the SHEIN app icon. This action initiates the app's launch process, with no branching or looping as it's a direct start action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            43,
+                            0
+                        ],
+                        "src_page_idx": 43,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the SHEIN app icon on the home screen"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 61,
+            "function_description": "Upward arrow (app drawer toggle)",
+            "action_refs": [
+                [
+                    43,
+                    1
+                ]
+            ],
+            "data_in": [
+                "app drawer toggle control"
+            ],
+            "data_out": [
+                "app drawer state updated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 43,
+                "logic": "The user interacts with the upward arrow (app drawer toggle) by clicking it. This action is intended to either open or close the app drawer, with the result depending on the current state of the app drawer (open or closed) at the time of the click.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            43,
+                            1
+                        ],
+                        "src_page_idx": 43,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the upward arrow (app drawer toggle)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 62,
+            "function_description": "Messages app icon",
+            "action_refs": [
+                [
+                    43,
+                    2
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 43,
+                "logic": "The flow starts on page 43. The only step is to click the Messages app icon, with no subsequent navigation or branching as the destination page is null.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            43,
+                            2
+                        ],
+                        "src_page_idx": 43,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the Messages app icon"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        }
+    ]
+}

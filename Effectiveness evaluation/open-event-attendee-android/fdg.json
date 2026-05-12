@@ -1,0 +1,1761 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "Location-based discovery and navigation page",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ],
+                [
+                    0,
+                    2
+                ]
+            ],
+            "data_in": [
+                "location input field",
+                "events tab"
+            ],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the location entry page. First, a location (e.g., New York) is input into the location field, leading to a new page. Alternatively, the Events tab icon can be clicked, which keeps the user on the same page (likely to refresh or re-enter event-related location discovery).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "input",
+                        "summary": "Input location (e.g., New York) into the location field"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the Events tab icon (stays on current page)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": null,
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S1"
+                            },
+                            {
+                                "next_step": "S2"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 1,
+            "function_description": "This page functions as a login or sign - up interface where users can enter their email address and then proceed by clicking the \"Get Started\" button to either sign up for a new account or log in to an existing one, with the goal of accessing location - based content to see what's happening nearby.",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    2,
+                    0
+                ],
+                [
+                    2,
+                    1
+                ]
+            ],
+            "data_in": [
+                "notification setting",
+                "user session",
+                "email input field",
+                "login session (potential)"
+            ],
+            "data_out": [
+                "login prompt",
+                "updated session state",
+                "entered email data"
+            ],
+            "data_dependencies": [
+                6
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on page 0 and clicks the notification bell icon (action_ref [0,1]) to navigate to page 2. On page 2, the user can either click the back arrow (action_ref [2,0]) to return to page 0 or click the email input field (action_ref [2,1]) to proceed to page 5 for entering email details to continue with login/signup.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click notification bell icon to go to page 2"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            2,
+                            0
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click back arrow to return to page 0"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            2,
+                            1
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click email input field to go to page 5"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "The page allows users to search for outings by specifying a date (e.g., Friday, Dec 12), a location, and an activity type (e.g., Anything), and then proceed with the search using the provided details.",
+            "action_refs": [
+                [
+                    0,
+                    3
+                ],
+                [
+                    3,
+                    1
+                ],
+                [
+                    3,
+                    2
+                ],
+                [
+                    3,
+                    3
+                ],
+                [
+                    11,
+                    0
+                ],
+                [
+                    11,
+                    2
+                ],
+                [
+                    15,
+                    0
+                ]
+            ],
+            "data_in": [
+                "location input field",
+                "app state",
+                "Eventyay Attendee app",
+                "search criteria",
+                "date",
+                "location",
+                "activity preference",
+                "search results",
+                "search query",
+                "date filter",
+                "date tag (2025-12-13)",
+                "search interface"
+            ],
+            "data_out": [
+                "app restart request",
+                "updated app state",
+                "search results",
+                "filtered search results"
+            ],
+            "data_dependencies": [
+                21,
+                22,
+                23
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts by clicking the Search tab icon (page 0 → 3). Then, they can interact with the location input, activity filter, or submit button. If they click the submit arrow (page 3 → 11), they proceed to results. Alternatively, they can adjust the date (e.g., via 'Today' or date tag) to loop back and refine the search.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Navigate to Search tab"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            3,
+                            1
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Enter location"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            3,
+                            2
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Select activity type"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            3,
+                            3
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Submit search"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            11,
+                            2
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Adjust date (e.g., Today filter)"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            15,
+                            0
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Confirm date tag"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S5",
+                        "to": "S6"
+                    },
+                    {
+                        "from": "S6",
+                        "to": "S1"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S4",
+                        "type": "loop",
+                        "branches": [
+                            {
+                                "next_step": "S5"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "This page functions as a login or sign - up entry point, where users can enter their email address and then tap the \"Get Started\" button to either create a new account or log into an existing one to access location - based content and features.",
+            "action_refs": [
+                [
+                    0,
+                    4
+                ]
+            ],
+            "data_in": [
+                "favorites tab entry"
+            ],
+            "data_out": [
+                "login prompt page (favorites access requires login)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the location - entry page (page 0). They click the profile icon (at page 0, action_ref [0,4]) to navigate to the 'Let's get started' page (page 2). On this page, the user will enter their email address and then tap the 'Get Started' button to either sign up or log in to access location - based content.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click the profile icon on the location - entry page to navigate to the 'Let's get started' page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "This page functions as a login or sign - up interface, prompting users to enter their email address and then click the “Get Started” button to either create a new account or log into an existing one, with the goal of enabling them to view location - based activities or updates.",
+            "action_refs": [
+                [
+                    0,
+                    5
+                ]
+            ],
+            "data_in": [
+                "tickets tab entry"
+            ],
+            "data_out": [
+                "login page (tickets - related)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on page 0 and clicks the Tickets tab icon (action at [0,5]). This action navigates to page 2, which is the 'Let's get started' login/sign - up interface. The flow is a straight - line navigation from the initial page to the login/sign - up page via the click action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click the Tickets tab icon to navigate to the login/sign - up page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "The Profile page provides access to general settings and support options (Settings, Manage Events, Ticket Issues) and a login option, allowing users to manage account-related preferences, event management, ticket support, and authenticate into their account.",
+            "action_refs": [
+                [
+                    0,
+                    6
+                ]
+            ],
+            "data_in": [
+                "profile tab entry"
+            ],
+            "data_out": [
+                "profile page content"
+            ],
+            "data_dependencies": [
+                10,
+                11,
+                12
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the initial page (page 0). The user clicks the Profile tab icon (action_ref [0,6]), which navigates to the Profile page (page 4). This is a straight - line flow with no branches or loops as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            6
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the Profile tab icon to navigate to the Profile page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "This page facilitates user sign - up or login by prompting for an email address and providing a “Get Started” button to proceed with accessing location - based activity information.",
+            "action_refs": [
+                [
+                    2,
+                    2
+                ]
+            ],
+            "data_in": [
+                "email input"
+            ],
+            "data_out": [
+                "login session initiation"
+            ],
+            "data_dependencies": [
+                1
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The user starts on the 'Let’s get started' page. They click the 'Get Started' button to proceed with accessing location - based activity information. There are no branches or loops in this flow as it is a single action to move forward.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            2
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click the 'Get Started' button to proceed with sign - up or login and access location - based activity info"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "The Settings page allows users to configure server settings, manage account-related actions (when logged in), access about, legal, and app version information, and interact with options like visiting the website, rating the app, suggesting improvements, and reviewing legal policies.",
+            "action_refs": [
+                [
+                    2,
+                    3
+                ],
+                [
+                    6,
+                    0
+                ]
+            ],
+            "data_in": [
+                "settings page state"
+            ],
+            "data_out": [
+                "navigation back to login page state"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The flow starts on page 2. First, the user clicks the settings gear icon (action from page 2 to 6). Then, the user can click the back arrow icon (action from page 6 back to 2), creating a navigational loop between the settings page (6) and the starting page (2).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            3
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click settings gear icon to open Settings page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            6,
+                            0
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click back arrow icon to return to previous page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "loop",
+                        "branches": [
+                            {
+                                "next_step": "S1"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "This page allows the user to select a time frame (e.g., Anytime, Today, Tomorrow, etc.) to filter search results or events based on the desired date or period.",
+            "action_refs": [
+                [
+                    3,
+                    0
+                ],
+                [
+                    8,
+                    0
+                ],
+                [
+                    8,
+                    1
+                ],
+                [
+                    8,
+                    2
+                ],
+                [
+                    8,
+                    3
+                ],
+                [
+                    8,
+                    4
+                ],
+                [
+                    8,
+                    5
+                ],
+                [
+                    12,
+                    0
+                ],
+                [
+                    12,
+                    1
+                ],
+                [
+                    12,
+                    2
+                ],
+                [
+                    12,
+                    3
+                ],
+                [
+                    12,
+                    4
+                ]
+            ],
+            "data_in": [
+                "time filter setting",
+                "date selection option",
+                "event planning context",
+                "date selection option (Today)",
+                "time preference option",
+                "time preference context",
+                "date picker (December 2025)",
+                "date picker component",
+                "December 2025 calendar view",
+                "date selection interface",
+                "December 2025 calendar",
+                "date selection dialog",
+                "date picker state",
+                "date selection (calendar)"
+            ],
+            "data_out": [
+                "updated time filter setting (Anytime)",
+                "updated event date setting",
+                "event planning configuration",
+                "updated date preference (Today)",
+                "updated time preference (tomorrow)",
+                "search criteria with date",
+                "selected time preference (this weekend)",
+                "updated date preference",
+                "calendar view (for date picking)",
+                "date selection interface",
+                "date picker (previous month view)",
+                "January 2026 calendar view (if action succeeded, but UI shows no change here; likely a misclick or UI freeze, but intent is to navigate to next month)",
+                "selected date (Dec 1-31 2025)",
+                "dismissed date selection dialog",
+                "original date selection state (unchanged)",
+                "updated date setting (for event planning)"
+            ],
+            "data_dependencies": [
+                2,
+                21,
+                22
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The user starts on page 3 and clicks the Anytime filter text to open the time selection page (page 8). On page 8, the user can choose a preset time option (Anytime, Today, Tomorrow, etc.) to return to page 3, or select 'Pick a date...' to open the calendar (page 12). On the calendar, the user can navigate months or select a date, then either cancel (return to page 8) or confirm (return to page 3) the date selection.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            0
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Open time selection page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            8,
+                            0
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Select Anytime preset"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            8,
+                            1
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Select Today preset"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            8,
+                            2
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Select Tomorrow preset"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            8,
+                            3
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Select This weekend preset"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            8,
+                            4
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Select In the next month preset"
+                    },
+                    {
+                        "id": "S7",
+                        "action_ref": [
+                            8,
+                            5
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Open date picker"
+                    },
+                    {
+                        "id": "S8",
+                        "action_ref": [
+                            12,
+                            0
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Navigate to previous month"
+                    },
+                    {
+                        "id": "S9",
+                        "action_ref": [
+                            12,
+                            1
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Navigate to next month"
+                    },
+                    {
+                        "id": "S10",
+                        "action_ref": [
+                            12,
+                            2
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Select calendar date"
+                    },
+                    {
+                        "id": "S11",
+                        "action_ref": [
+                            12,
+                            3
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Cancel date selection"
+                    },
+                    {
+                        "id": "S12",
+                        "action_ref": [
+                            12,
+                            4
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Confirm date selection"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S6"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S7"
+                    },
+                    {
+                        "from": "S7",
+                        "to": "S8"
+                    },
+                    {
+                        "from": "S7",
+                        "to": "S9"
+                    },
+                    {
+                        "from": "S7",
+                        "to": "S10"
+                    },
+                    {
+                        "from": "S7",
+                        "to": "S11"
+                    },
+                    {
+                        "from": "S7",
+                        "to": "S12"
+                    },
+                    {
+                        "from": "S8",
+                        "to": "S7"
+                    },
+                    {
+                        "from": "S9",
+                        "to": "S7"
+                    },
+                    {
+                        "from": "S10",
+                        "to": "S12"
+                    },
+                    {
+                        "from": "S11",
+                        "to": "S1"
+                    },
+                    {
+                        "from": "S12",
+                        "to": "S1"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            },
+                            {
+                                "next_step": "S6"
+                            },
+                            {
+                                "next_step": "S7"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S7",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S8"
+                            },
+                            {
+                                "next_step": "S9"
+                            },
+                            {
+                                "next_step": "S10"
+                            },
+                            {
+                                "next_step": "S11"
+                            },
+                            {
+                                "next_step": "S12"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "The Settings page allows users to configure server settings, manage account status, access about, legal, and app - specific options (like version info), and perform actions such as visiting the website, rating the app, and suggesting improvements.",
+            "action_refs": [
+                [
+                    4,
+                    0
+                ]
+            ],
+            "data_in": [
+                "settings option"
+            ],
+            "data_out": [
+                "settings page access"
+            ],
+            "data_dependencies": [
+                7
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user starts on the Profile page (page 4) and clicks the 'Settings' option. This action navigates to the Settings page (page 6), where server configuration, account management, and other app - related options (like visiting the website, rating, suggesting improvements) are accessible.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            0
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click the 'Settings' option on the Profile page to navigate to the Settings page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "The current page (triggered by selecting \"Manage Events\" from the Profile page) is a browser selection interface that allows the user to choose an application (e.g., Chrome, WebView Browser Tester) to open the event management functionality, with options to set a default browser for future actions.",
+            "action_refs": [
+                [
+                    4,
+                    1
+                ]
+            ],
+            "data_in": [
+                "manage events option"
+            ],
+            "data_out": [
+                "open with dialog"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "From the Profile page (page 4), the user clicks the 'Manage Events' option. This triggers a browser selection interface (page 7) where the user can choose an app (e.g., Chrome, WebView Browser Tester) to open event management, with options to set a default browser for future actions.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            1
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click 'Manage Events' option on Profile page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "The current page (initiated by selecting \"Manage Events\" from the Profile page) is prompting the user to choose a browser (Chrome or WebView Browser Tester) to open the event management functionality, likely for tasks like viewing, editing, or organizing events associated with the user's profile.",
+            "action_refs": [
+                [
+                    4,
+                    2
+                ]
+            ],
+            "data_in": [
+                "ticket issues option"
+            ],
+            "data_out": [
+                "browser selection prompt"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The flow starts on the Profile page. The user clicks the 'Manage Events' option (though the provided action is 'Ticket Issues', likely a typo or mislabel; assuming it's the trigger for the browser choice). This action opens a browser selection dialog, presenting two options: Chrome or WebView Browser Tester. The flow then branches based on which browser the user selects to proceed with event management.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            2
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click the option (presumed 'Manage Events' or related) to trigger browser selection"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2",
+                                "condition": "User selects Chrome"
+                            },
+                            {
+                                "next_step": "S3",
+                                "condition": "User selects WebView Browser Tester"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "This page allows users to sign up or log in by entering their email address and proceeding with the \"Get Started\" button to access location - based activity information.",
+            "action_refs": [
+                [
+                    4,
+                    3
+                ]
+            ],
+            "data_in": [
+                "login option"
+            ],
+            "data_out": [
+                "login session (initiated)"
+            ],
+            "data_dependencies": [
+                1
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user starts on page 4 (Profile page) and clicks the 'Log In' option. This action navigates to page 2 (the 'Let's get started' page) where they can enter an email and proceed with 'Get Started' to access location-based activity info. The flow is a straight line from clicking 'Log In' to reaching the login/signup input page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            3
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click 'Log In' option on Profile page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "The current page is a settings page that allows users to configure the server URL, manage account settings, access information about the app, view legal documents, and check the app version.",
+            "action_refs": [
+                [
+                    6,
+                    1
+                ]
+            ],
+            "data_in": [
+                "server configuration setting"
+            ],
+            "data_out": [
+                "server configuration setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on the settings page (page 6). The core action is clicking the 'Server configuration' link, which likely leads to a subpage for server URL configuration (though the destination page remains 6 in the action data, suggesting it might refresh or stay on the same page contextually). There are no branches or loops here as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            1
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click the Server configuration link"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "The current page (a browser selection dialog) allows the user to choose a browser (Chrome or WebView Browser Tester) to open a website, likely related to the app's \"Visit Website\" functionality from the settings page.",
+            "action_refs": [
+                [
+                    6,
+                    2
+                ]
+            ],
+            "data_in": [
+                "visit website setting"
+            ],
+            "data_out": [
+                "website visit request"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on the Settings page. They click the 'Visit Website' option, which triggers a browser selection dialog (Open with) to appear, offering Chrome and WebView Browser Tester as options to open the website.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            2
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click 'Visit Website' in Settings"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "The current page is a browser selection dialog that appears after selecting the \"Visit Website\" option from the settings page, allowing the user to choose between Chrome and WebView Browser Tester to open the website.",
+            "action_refs": [
+                [
+                    6,
+                    3
+                ]
+            ],
+            "data_in": [
+                "rate us setting"
+            ],
+            "data_out": [
+                "rate us action trigger"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": null
+        },
+        {
+            "index": 16,
+            "function_description": "The current page is a browser selection interface (triggered by the \"Visit Website\" action from the settings page) that allows the user to choose an application (either Chrome or WebView Browser Tester) to open a website, with options to set the choice as temporary (\"JUST ONCE\") or permanent (\"ALWAYS\").",
+            "action_refs": [
+                [
+                    6,
+                    4
+                ]
+            ],
+            "data_in": [
+                "suggest improvement option"
+            ],
+            "data_out": [
+                "browser selection prompt"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The flow starts on the Settings page (page 6). The user clicks the 'Suggest Improvement' option, which leads to a new page (page 7). This action initiates the process of providing feedback or suggestions for app improvements.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            4
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click 'Suggest Improvement' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "The current page is a browser selection interface that allows the user to choose an application (either Chrome or WebView Browser Tester) to open a website, likely initiated from the \"Visit Website\" option in the app's settings page.",
+            "action_refs": [
+                [
+                    6,
+                    5
+                ]
+            ],
+            "data_in": [
+                "privacy setting item"
+            ],
+            "data_out": [
+                "privacy information (opened)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": null
+        },
+        {
+            "index": 18,
+            "function_description": "The current page is a browser selection interface that appears after selecting the \"Visit Website\" option from the settings page, allowing the user to choose between Chrome and WebView Browser Tester to open the website.",
+            "action_refs": [
+                [
+                    6,
+                    6
+                ]
+            ],
+            "data_in": [
+                "terms of service setting"
+            ],
+            "data_out": [
+                "terms of service content (to be opened)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on the Settings page. They click the 'Visit Website' option, which triggers a browser selection dialog. At this point, the user can choose between Chrome or WebView Browser Tester to open the website, with the flow branching based on this choice.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            6
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click 'Visit Website' to trigger browser selection"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2",
+                                "condition": "Choose Chrome"
+                            },
+                            {
+                                "next_step": "S3",
+                                "condition": "Choose WebView Browser Tester"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "The current page is a browser selection interface (triggered by the \"Visit Website\" action from the settings page) that allows the user to choose a browser (Chrome or WebView Browser Tester) to open an external website, with options to set a default browser preference.",
+            "action_refs": [
+                [
+                    6,
+                    7
+                ]
+            ],
+            "data_in": [
+                "cookie policy setting"
+            ],
+            "data_out": [
+                "opened cookie policy page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The flow starts with clicking the 'Visit Website' option on the settings page, which triggers a browser selection dialog. The user can then choose between Chrome or WebView Browser Tester to open the external website, with options to set a default preference.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            7
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click 'Visit Website' to trigger browser selection"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "The page enables users to enter a location to discover location - based content (such as events, places, etc.) and has a bottom navigation bar with options like Events, Search, Favorites, Tickets, and Profile.",
+            "action_refs": [
+                [
+                    10,
+                    0
+                ]
+            ],
+            "data_in": [
+                "Eventyay Attendee app"
+            ],
+            "data_out": [
+                "restarted Eventyay Attendee app"
+            ],
+            "data_dependencies": [
+                2
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The flow starts with a page where the app has stopped. The user clicks the 'Open app again' button, which navigates to the app's main page (with location entry and bottom navigation). This is a straight-line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            0
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click 'Open app again' to restart the app and navigate to its main page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "The current page allows users to refine search results by adjusting filters for date, location, category, specific search criteria (e.g., free stuff only), and sorting preferences (e.g., by name or date) before applying these filters to update the search results.",
+            "action_refs": [
+                [
+                    11,
+                    1
+                ],
+                [
+                    14,
+                    0
+                ],
+                [
+                    14,
+                    1
+                ],
+                [
+                    14,
+                    2
+                ],
+                [
+                    14,
+                    6
+                ],
+                [
+                    14,
+                    7
+                ],
+                [
+                    14,
+                    8
+                ]
+            ],
+            "data_in": [
+                "search results",
+                "filter options",
+                "date setting",
+                "filter/search configuration",
+                "location input field",
+                "event details (date, category, filters, sort)",
+                "category setting",
+                "filter configuration",
+                "sort by setting",
+                "search filter configuration",
+                "event filter configuration",
+                "filter settings",
+                "location setting",
+                "filter search settings"
+            ],
+            "data_out": [
+                "filtered search results",
+                "updated date setting",
+                "updated location input",
+                "updated category setting",
+                "updated sort by setting",
+                "updated event filter configuration",
+                "applied filter settings",
+                "search results"
+            ],
+            "data_dependencies": [
+                23,
+                24,
+                25,
+                26
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The user starts on page 11 and clicks the filter icon to open the filter page (14). On page 14, the user can choose to adjust date, location, category, search filters, or sorting preferences (each adjustment is a branch). After setting desired filters/sorts, the user clicks the apply filter checkmark to update search results.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            1
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click filter icon to open filter page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            14,
+                            0
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Adjust date filter"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            14,
+                            1
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Adjust location filter"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            14,
+                            2
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Adjust category filter"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            14,
+                            6
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 22,
+                        "action": "click",
+                        "summary": "Set sort by date"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            14,
+                            7
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 23,
+                        "action": "click",
+                        "summary": "Set sort by name"
+                    },
+                    {
+                        "id": "S7",
+                        "action_ref": [
+                            14,
+                            8
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click apply filter checkmark to update results"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S6"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S7"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S7"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S7"
+                    },
+                    {
+                        "from": "S5",
+                        "to": "S7"
+                    },
+                    {
+                        "from": "S6",
+                        "to": "S7"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            },
+                            {
+                                "next_step": "S6"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "Displays search results filtered to show items or events occurring on today's date (2025-12-13), with a search bar at the top and a list of result entries below.",
+            "action_refs": [
+                [
+                    11,
+                    3
+                ]
+            ],
+            "data_in": [
+                "search results",
+                "date filter (2025-12-13)"
+            ],
+            "data_out": [
+                "filtered search results (tomorrow)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The flow starts on page 11. The user clicks the 'Tomorrow filter button' (action_ref [11,3]), which transitions the app to page 15. This action likely adjusts the search results to show items or events for the next day, completing the filtering logic for date-based search results.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            3
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click the 'Tomorrow filter button' to change the search results' date filter"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "Displays search results filtered to show items or events occurring on the current date (2025-12-13), with a search bar for further refinement and a list of result placeholders.",
+            "action_refs": [
+                [
+                    11,
+                    4
+                ]
+            ],
+            "data_in": [
+                "filter settings",
+                "search results"
+            ],
+            "data_out": [
+                "updated filter settings",
+                "filtered search results"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The app starts on page 11, where a click action is performed on the 'This weekend filter button'. This action navigates to page 15, likely to display or refine search results filtered for the current date (2025-12-13), with a search bar and result placeholders.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            4
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click the 'This weekend filter button' to navigate and potentially refine or display search results for the current date."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "Free stuff only checkbox",
+            "action_refs": [
+                [
+                    14,
+                    3
+                ]
+            ],
+            "data_in": [
+                "free stuff only filter setting"
+            ],
+            "data_out": [
+                "updated free stuff only filter setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The user starts on page 14. They perform a click action on the 'Free stuff only' checkbox, which transitions the app to page 19. This action enables the filter to show only free stuff.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            3
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click the 'Free stuff only' checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 25,
+            "function_description": "Sessions and speakers checkbox",
+            "action_refs": [
+                [
+                    14,
+                    4
+                ]
+            ],
+            "data_in": [
+                "Sessions and speakers filter setting"
+            ],
+            "data_out": [
+                "updated Sessions and speakers filter setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The user starts on page 14. They perform a click action on the 'Sessions and speakers' checkbox, which leads to page 20. This is a single-step flow with no branches or loops, focusing on interacting with the specified checkbox.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            4
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 20,
+                        "action": "click",
+                        "summary": "Click the 'Sessions and speakers' checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 26,
+            "function_description": "Call For Speakers checkbox",
+            "action_refs": [
+                [
+                    14,
+                    5
+                ]
+            ],
+            "data_in": [
+                "Call For Speakers filter setting"
+            ],
+            "data_out": [
+                "updated Call For Speakers filter setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The user starts on page 14. They click the 'Call For Speakers' checkbox, which leads to page 21. This is a single-step action with no branching or looping.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            5
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 21,
+                        "action": "click",
+                        "summary": "Click the 'Call For Speakers' checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        }
+    ]
+}

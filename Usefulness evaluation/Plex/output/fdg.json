@@ -1,0 +1,4392 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "Media streaming (TV/shows) browsing & playback",
+            "action_refs": [
+                [
+                    0,
+                    6
+                ],
+                [
+                    0,
+                    12
+                ]
+            ],
+            "data_in": [
+                "live TV program list"
+            ],
+            "data_out": [
+                "expanded live TV program list"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on page 0. First, a click action expands the current live TV (navigating to page 7). Alternatively, a click action navigates back to the Home page (staying on page 0). These are two mutually exclusive branches from the initial page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            6
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click to expand current live TV"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            0,
+                            12
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click to navigate to Home"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": null,
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S1"
+                            },
+                            {
+                                "next_step": "S2"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 1,
+            "function_description": "The page enables users to search for media titles, people, and more, while also displaying recent searches and popular media (movies/shows) for quick access or discovery.",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ],
+                [
+                    1,
+                    0
+                ],
+                [
+                    13,
+                    0
+                ],
+                [
+                    13,
+                    1
+                ],
+                [
+                    16,
+                    0
+                ]
+            ],
+            "data_in": [
+                "media content",
+                "search query",
+                "media search interface",
+                "search input text",
+                "search interface state",
+                "search results",
+                "movies filter",
+                "movies filter setting"
+            ],
+            "data_out": [
+                "search interface (with recent/popular searches)",
+                "search results (media items)",
+                "cleared search input",
+                "updated search interface state (shows recent/popular searches)",
+                "filtered search results (movies)"
+            ],
+            "data_dependencies": [
+                6
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts by clicking to open the search page. Then, input a media title (like 'Interstellar') into the search field. After that, there's a choice: either clear the search input (returning to the search page) or filter results by 'Movies' (leading to a filtered movies page, which can be re-filtered by clicking 'Movies' again).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click to open search page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            1,
+                            0
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 13,
+                        "action": "input",
+                        "summary": "Input media title in search field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            13,
+                            0
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click to clear search input"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            13,
+                            1
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click to filter by Movies"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            16,
+                            0
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Re-click Movies filter (leaf action)"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S5"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "The current page in the Plex app, reached after attempting to cast media, displays a \"No Devices Found\" message with troubleshooting instructions to help the user connect their mobile device to a compatible streaming device (like a smart TV) for media casting, while also showing media browsing sections for TV shows and live TV content.",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    2,
+                    0
+                ]
+            ],
+            "data_in": [
+                "cast device setting",
+                "popup (No Devices Found)"
+            ],
+            "data_out": [
+                "cast device search result",
+                "popup closed"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the Plex home page. First, the user clicks the 'Cast to device' option. This leads to a page showing 'No Devices Found' (and media browsing sections). Then, the user can either close the popup (ending the flow) or interact with the media sections, but here the only action is closing the popup via the X button.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click 'Cast to device' to attempt casting"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            2,
+                            0
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 32,
+                        "action": "click",
+                        "summary": "Click X to close the popup"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "The Watchlist page (under the \"My Watchlist\" tab) enables users to add movies and shows (from the displayed recommendations) to their personal watchlist for later viewing, with items removed once watched or marked as watched.",
+            "action_refs": [
+                [
+                    0,
+                    2
+                ],
+                [
+                    3,
+                    0
+                ],
+                [
+                    3,
+                    1
+                ],
+                [
+                    3,
+                    2
+                ]
+            ],
+            "data_in": [
+                "watchlist feature entry",
+                "watchlist page state",
+                "my watchlist tab",
+                "watchlist content",
+                "watchlist recommended items"
+            ],
+            "data_out": [
+                "watchlist page loaded",
+                "navigation back to home page state"
+            ],
+            "data_dependencies": [
+                18,
+                40,
+                46,
+                67,
+                68,
+                69,
+                78,
+                80
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on page 0, where the user clicks the Bookmark/Collection icon to navigate to the Watchlist page (page 3). On page 3, the user can either click the 'My Watchlist' tab to view their personal watchlist or the 'Recommended' tab to see recommendations for adding to the watchlist. If needed, the user can click the back arrow to return to page 0.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click Bookmark/Collection icon to go to Watchlist page (page 3)"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            3,
+                            0
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click back navigation arrow to return to page 0"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            3,
+                            1
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click 'My Watchlist' tab to view personal watchlist"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            3,
+                            2
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click 'Recommended' tab to view recommendations for watchlist"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2",
+                                "condition": "User wants to go back to page 0"
+                            },
+                            {
+                                "next_step": "S3",
+                                "condition": "User wants to view My Watchlist tab"
+                            },
+                            {
+                                "next_step": "S4",
+                                "condition": "User wants to view Recommended tab"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "The current page is a side menu in the Plex app, providing options to access Profile, Friends, Services, Downloads, Settings, and Switch Profile, along with a close button to exit the menu and return to media streaming browsing/playback.",
+            "action_refs": [
+                [
+                    0,
+                    3
+                ],
+                [
+                    4,
+                    0
+                ]
+            ],
+            "data_in": [
+                "user profile menu trigger"
+            ],
+            "data_out": [
+                "user profile menu displayed"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the media browsing page (page 0). First, a click action (S1) closes the current view, transitioning to the side menu page (page 4). Then, a click on the close side menu button (S2) exits the menu and returns to the media streaming browsing/playback page (page 4, which remains the same for the close action's destination here).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click to close current view and open side menu"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            4,
+                            0
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click close side menu button to exit menu"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "The current page, under the \"On Demand\" section's \"Categories\" tab, allows users to select from various media genres (e.g., Action, Animation, Comedy) to filter and browse relevant TV shows or movies for streaming or playback.",
+            "action_refs": [
+                [
+                    0,
+                    4
+                ]
+            ],
+            "data_in": [
+                "genre list"
+            ],
+            "data_out": [
+                "expanded genre list"
+            ],
+            "data_dependencies": [
+                6,
+                24
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the initial page (page 0) and clicks to expand the genre list, transitioning to page 5 where the full list of media genres is displayed for browsing and filtering content.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click to expand the genre list from the initial page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "Displays a curated list of binge - worthy TV shows (after filtering by the Action genre in the media streaming app) with their posters, titles, and number of seasons, enabling users to browse and potentially select shows for playback or further exploration.",
+            "action_refs": [
+                [
+                    0,
+                    5
+                ]
+            ],
+            "data_in": [
+                "media content list",
+                "Action genre filter"
+            ],
+            "data_out": [
+                "filtered media content list (Action genre)"
+            ],
+            "data_dependencies": [
+                11
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the app's home page (page 0). They click the 'Action' genre filter (action_ref [0,5]), which navigates to page 6. On page 6, the app displays a curated list of binge - worthy TV shows filtered by the Action genre, showing each show's poster, title, and number of seasons. The user can then browse this list and potentially select a show for playback or further exploration.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click the 'Action' genre filter to navigate to the list of Action - genre binge - worthy TV shows"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "The current page (Live TV Guide) functions as a channel guide for live television, allowing users to browse live TV channels, view current and upcoming program schedules, filter by genre (e.g., Comedy), and watch live streaming content, with options to navigate between time slots and categories.",
+            "action_refs": [
+                [
+                    0,
+                    7
+                ]
+            ],
+            "data_in": [
+                "channel guide entry"
+            ],
+            "data_out": [
+                "channel guide page (loaded)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the initial page and clicks to open the channel guide, transitioning to the Live TV Guide page where they can browse channels, view schedules, filter by genre, and watch live content.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            7
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click to open the channel guide"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "The current page (Live TV Guide) enables users to browse, view live TV channel schedules (with program details, timings, and categories like Comedy), watch live TV playback, and navigate through different time slots, channel categories, or favorite channels for media streaming and TV show/channel exploration.",
+            "action_refs": [
+                [
+                    0,
+                    8
+                ]
+            ],
+            "data_in": [
+                "Weekly Game Preview video"
+            ],
+            "data_out": [
+                "Weekly Game Preview video playback started"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the main page (page 0) and clicks to play the 'Weekly Game Preview' content, transitioning to the playback or related page (page 8). This is a straight - line flow with no branches or loops as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            8
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click to play Weekly Game Preview"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "The page displays a grid of popular live TV shows with their thumbnails, live indicators, remaining broadcast times, and allows users to browse or select these shows for streaming playback.",
+            "action_refs": [
+                [
+                    0,
+                    9
+                ]
+            ],
+            "data_in": [
+                "popular live shows list"
+            ],
+            "data_out": [
+                "expanded popular live shows list"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on page 0. They click to expand the popular live shows section, transitioning to page 9 where a grid of live TV shows (with thumbnails, live indicators, and remaining times) is displayed. From there, the user can browse or select a show for streaming, though the current flow ends at the expansion step.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            9
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click to expand popular live shows section"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "The current page functions as a live TV channel guide, allowing users to browse live TV channels, view currently airing and upcoming programs, filter by category (e.g., Comedy), and navigate through different times and days to see scheduled content, with a live playback window for the currently selected channel.",
+            "action_refs": [
+                [
+                    0,
+                    10
+                ]
+            ],
+            "data_in": [
+                "live TV content",
+                "Breaking Bad content (implied)"
+            ],
+            "data_out": [
+                "live TV playback started (or content loaded)"
+            ],
+            "data_dependencies": [
+                27,
+                31,
+                33
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the main page (page 0) and clicks to play the live program 'Breaking Bad', transitioning to the live TV playback page (page 8). This action initiates the live playback of the selected channel's content.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            10
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click to play live Breaking Bad, transitioning to live TV playback page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "Displays a curated list of binge - worthy TV shows, each with its poster, title, and number of seasons, for users to browse and potentially select for playback after filtering by the Action genre.",
+            "action_refs": [
+                [
+                    0,
+                    11
+                ]
+            ],
+            "data_in": [
+                "binge-worthy shows section"
+            ],
+            "data_out": [
+                "binge-worthy shows list"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on page 0 and clicks to expand the binge - worthy shows section. This action leads to page 6, where a curated list of binge - worthy TV shows (each with poster, title, and season count) is displayed for browsing and potential selection, with the intention to filter by the Action genre next (though the filtering step isn't in the provided actions yet).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            11
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click to expand the binge - worthy shows section"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "The Live TV page provides a guide for browsing, viewing, and navigating live television content, including current and upcoming shows, with options to filter by time, category, and favorite channels, and to play or expand the live video stream.",
+            "action_refs": [
+                [
+                    0,
+                    13
+                ],
+                [
+                    10,
+                    2
+                ]
+            ],
+            "data_in": [
+                "Live TV feature entry",
+                "TV guide schedule",
+                "date selection (Today)"
+            ],
+            "data_out": [
+                "Live TV content (channel guide, live programs)",
+                "filtered TV guide schedule (by date)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts by navigating to the Live TV page from the home page. Once on the Live TV page, the user can interact with the Today date dropdown to filter or view content by date. There are no further branches or loops in this initial flow as only two actions are provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            13
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Navigate to Live TV page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            10,
+                            2
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Interact with Today date dropdown"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "The On Demand page in the media streaming app allows users to browse, search, and access a curated selection of movies (organized into sections like \"Plex Picks,\" \"Holiday Merrython,\" \"Ol' Saint Nic\") available for free viewing, rental, or categorized exploration, with options to filter content via \"Free To Watch,\" \"Rentals,\" or \"Categories\" tabs.",
+            "action_refs": [
+                [
+                    0,
+                    14
+                ],
+                [
+                    11,
+                    0
+                ]
+            ],
+            "data_in": [
+                "On Demand feature entry",
+                "Free To Watch tab content",
+                "movie list"
+            ],
+            "data_out": [
+                "On Demand content loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts by navigating to the On Demand page from the home page. Once on On Demand, the user can choose to interact with the Free To Watch tab (or other tabs like Rentals/Categories, though only Free To Watch is shown here) to explore free content. The main flow is a straight line to access On Demand, followed by a potential branch to select a content filter tab.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            14
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Navigate to On Demand page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            11,
+                            0
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Select Free To Watch tab"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "The Discover page in the media streaming app allows users to browse trending TV shows, movies (including curated lists like those starring specific actors), and sports content (like football), with options to explore different categories (Trending, Activity, People) and access search, device, and bookmark features.",
+            "action_refs": [
+                [
+                    0,
+                    15
+                ],
+                [
+                    12,
+                    0
+                ]
+            ],
+            "data_in": [
+                "discover feature entry",
+                "trending content list"
+            ],
+            "data_out": [
+                "discover page content"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the entry page, then navigates to the Discover page. From there, it proceeds to interact with the Trending tab in the top navigation to view trending content. There are no branches or loops as the current actions form a linear sequence.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            15
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Navigate to the Discover page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            12,
+                            0
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the Trending tab in top navigation"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "The current page (Search Settings) allows users to configure which media sources (e.g., media libraries, Plex - based options like \"More Ways to Watch,\" \"Free to Watch on Plex,\" etc.) are included when searching for media content in the Plex app.",
+            "action_refs": [
+                [
+                    1,
+                    1
+                ]
+            ],
+            "data_in": [
+                "search filter setting"
+            ],
+            "data_out": [
+                "search settings configuration"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user starts on the Search page (page 1). They click the search filter toggle button (action_ref [1,1]), which opens the Search Settings page (page 14) to configure media sources for searches. This is a single step to access the settings, with no branches or loops in this initial flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            1
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click the search filter toggle button to open Search Settings"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "The current page provides detailed information about the movie \"Zootopia 2\", including its release year, duration, genre, ratings, a plot summary, and options to manage watchlist status, find where to watch, rate/review, mark as watched, and view more details or cast/crew information.",
+            "action_refs": [
+                [
+                    1,
+                    2
+                ]
+            ],
+            "data_in": [
+                "Zootopia 2 media card"
+            ],
+            "data_out": [
+                "Zootopia 2 details page"
+            ],
+            "data_dependencies": [
+                18,
+                40,
+                42,
+                43,
+                47,
+                70,
+                79,
+                85,
+                86,
+                87
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts on the search page (page 1). The user clicks the 'Zootopia 2' popular media card, which navigates to the movie's detailed information page (page 15). This is a straight-line flow with no branches or loops, as the only action is accessing the movie's details.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            2
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click the 'Zootopia 2' popular media card to open its detailed info page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "The page allows the user to choose an app (either Chrome or WebView Browser Tester) to open content related to resolving Plex device casting issues, with options to set a default app or use a different one.",
+            "action_refs": [
+                [
+                    2,
+                    1
+                ]
+            ],
+            "data_in": [
+                "help center link"
+            ],
+            "data_out": [
+                "help center page request"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The user starts on page 2 and clicks the 'Need Help?' link. This triggers a browser app selection dialog, where the user can choose to open the help content with Chrome (via 'JUST ONCE' or 'ALWAYS') or use a different app like WebView Browser Tester. The flow branches based on the app and option (default or temporary) selected.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            1
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 33,
+                        "action": "click",
+                        "summary": "Click 'Need Help?' link to open help content in a browser app"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": null,
+                                "condition": "Choose Chrome (JUST ONCE or ALWAYS)"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "Choose WebView Browser Tester or 'Use a different app'"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "The page allows users to manage their Watchlist by adding movies and shows (from the displayed media options) to it, with items removed once watched or marked as watched.",
+            "action_refs": [
+                [
+                    3,
+                    3
+                ]
+            ],
+            "data_in": [
+                "Zootopia media card",
+                "watchlist"
+            ],
+            "data_out": [
+                "updated watchlist (Zootopia added)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The user starts on the Watchlist page (page 3). They click on the 'Zootopia' media card (action from [3,3]) to add it to the watchlist. Since this is a single action for adding, the flow is a straight line with no branches or loops here, focusing on selecting a media item to manage (add) in the watchlist.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            3
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click on the Zootopia media card to add it to the watchlist"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "The page displays the user's profile information (username, stats for following/followers/movies/shows/episodes, join date), provides an option to edit the profile, and shows the user's watchlist (with a listed media item), enabling profile management and viewing of personal media-related activity.",
+            "action_refs": [
+                [
+                    4,
+                    1
+                ],
+                [
+                    34,
+                    0
+                ]
+            ],
+            "data_in": [
+                "profile navigation item",
+                "user profile page",
+                "plex home page"
+            ],
+            "data_out": [
+                "user profile page (loaded)",
+                "navigation back to plex home page"
+            ],
+            "data_dependencies": [
+                44,
+                45,
+                65
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The flow starts on page 4, where the user clicks the Profile navigation button to navigate to page 34 (the profile page). From the profile page (page 34), the user can click the Back navigation button to return to page 0. There are no branches or loops as the actions are a simple navigation sequence between these pages.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            1
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 34,
+                        "action": "click",
+                        "summary": "Click Profile navigation button to go to profile page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            34,
+                            0
+                        ],
+                        "src_page_idx": 34,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click Back navigation button to return to previous page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "The page displays and manages the user's media downloads, with tabs to view completed downloads, in - progress downloads, and download - related settings, and currently shows that there is no downloaded content.",
+            "action_refs": [
+                [
+                    4,
+                    2
+                ],
+                [
+                    35,
+                    0
+                ]
+            ],
+            "data_in": [
+                "friends feature entry",
+                "downloads page state"
+            ],
+            "data_out": [
+                "friends page loaded",
+                "navigation back to home page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The flow starts on page 4. First, the user clicks the Friends navigation button (action_ref [4,2]) to navigate to page 35. Then, the user clicks the Back navigation arrow (action_ref [35,0]) to return to page 0. There are no branches or loops as the actions are sequential navigation steps.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            2
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 35,
+                        "action": "click",
+                        "summary": "Click Friends navigation button to go to page 35"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            35,
+                            0
+                        ],
+                        "src_page_idx": 35,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click Back navigation arrow to go to page 0"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "The \"My Services\" page in the Plex app allows users to select their favorite streaming services, with a \"Manage Services\" button to customize which services are prioritized in results and recommendations across the app.",
+            "action_refs": [
+                [
+                    4,
+                    3
+                ],
+                [
+                    36,
+                    0
+                ]
+            ],
+            "data_in": [
+                "services navigation item",
+                "streaming services selection context"
+            ],
+            "data_out": [
+                "my services page content"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The flow starts on page 4, where the user clicks the 'Services' navigation button to navigate to page 36. From page 36, the user can click the back navigation arrow to return to page 0. There are no branches or loops in this simple navigation flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            3
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 36,
+                        "action": "click",
+                        "summary": "Click 'Services' button to navigate to page 36"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            36,
+                            0
+                        ],
+                        "src_page_idx": 36,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click back navigation arrow to return to page 0"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "The page displays the \"Completed\" tab of the Downloads section, showing that there is no currently downloaded content, with additional tabs for \"In Progress\" and \"Settings\" to manage media downloads.",
+            "action_refs": [
+                [
+                    4,
+                    4
+                ]
+            ],
+            "data_in": [
+                "downloads feature entry"
+            ],
+            "data_out": [
+                "downloads page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The flow starts on page 4 (a menu page). The user clicks the 'Downloads' navigation button, transitioning to page 35 (the Downloads page). On page 35, the 'Completed' tab is active, showing no downloaded content, with 'In Progress' and 'Settings' tabs available for managing downloads.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            4
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 35,
+                        "action": "click",
+                        "summary": "Click the 'Downloads' navigation button to navigate to the Downloads page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "The page allows the user to select an existing user profile (e.g., \"x23314\") or add a new user profile within the Plex application.",
+            "action_refs": [
+                [
+                    4,
+                    5
+                ]
+            ],
+            "data_in": [
+                "switch profile option"
+            ],
+            "data_out": [
+                "user selection interface"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user starts on page 4 and clicks the 'Switch Profile' button. This action navigates to the 'Select User' page (page 37), where the user can then choose to select an existing profile (like 'x23314') or add a new user profile.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            5
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 37,
+                        "action": "click",
+                        "summary": "Click 'Switch Profile' button to navigate to Select User page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "The page displays a collection of Action - genre on - demand media (movies) with their posters, titles, and release years, enabling users to browse and potentially select these Action - genre movies for playback or further exploration.",
+            "action_refs": [
+                [
+                    5,
+                    0
+                ]
+            ],
+            "data_in": [
+                "Action genre category"
+            ],
+            "data_out": [
+                "Action genre movies list"
+            ],
+            "data_dependencies": [
+                25,
+                52,
+                53,
+                54,
+                55,
+                56,
+                60,
+                62,
+                63
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user starts on the On Demand categories page. They click the 'Action' genre button, which navigates to the Action genre movies page. Here, the page displays Action - genre on - demand movies with their posters, titles, and release years, allowing the user to browse or select for further exploration.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            0
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 66,
+                        "action": "click",
+                        "summary": "Click the Action genre button to navigate to the Action genre movies page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 25,
+            "function_description": "The page provides detailed information about the movie \"Kick - Ass (2010)\" including its genre, duration, ratings, a \"Watch Now\" option, and additional features like adding to watchlist, rating, marking as watched, and exploring more ways to watch, along with a synopsis and cast & crew details.",
+            "action_refs": [
+                [
+                    6,
+                    0
+                ]
+            ],
+            "data_in": [
+                "Kick-Ass (2010) movie card"
+            ],
+            "data_out": [
+                "Kick-Ass (2010) movie details page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The flow starts on page 6. The user clicks on the 'Kick-Ass (2010)' movie card, navigating to page 67, where detailed movie information (genre, duration, ratings, 'Watch Now', and additional features like watchlist, rating, etc.) is displayed. There are no decision or loop points in this straight-line flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            0
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 67,
+                        "action": "click",
+                        "summary": "Click on Kick-Ass (2010) movie card to view detailed info"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 26,
+            "function_description": "The current page functions as a live TV guide interface, enabling users to watch live TV (with a currently playing comedy - genre program), browse through scheduled programs across different channels, switch between viewing modes like \"Guide\", \"What's On\", and \"Favorite Channels\", and navigate through different days and times of programming.",
+            "action_refs": [
+                [
+                    7,
+                    0
+                ]
+            ],
+            "data_in": [
+                "live TV program card"
+            ],
+            "data_out": [
+                "live TV program details",
+                "live TV playback"
+            ],
+            "data_dependencies": [
+                27,
+                28,
+                29
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The flow starts on page 7 (Today's Live TV for You). The user clicks the 'Weekly Game Previews live TV card' (action from [7,0]), transitioning to page 8 (Live TV interface with a comedy program playing, guide/schedule view). This action enables accessing live TV and the program guide for browsing or switching modes.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            0
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click the 'Weekly Game Previews live TV card' to transition to the Live TV guide page (page 8) with live comedy program and schedule browsing options."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 27,
+            "function_description": "The page functions as a \"What's On\" section within the Live TV interface, displaying currently airing live TV programs, personalized live TV recommendations for today, and popular movies available to tune into, along with navigation tabs and a bottom navigation bar for other app sections.",
+            "action_refs": [
+                [
+                    8,
+                    0
+                ]
+            ],
+            "data_in": [
+                "live TV content list",
+                "What's On tab content"
+            ],
+            "data_out": [
+                "What's On tab content (updated)"
+            ],
+            "data_dependencies": [
+                28,
+                31
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The flow starts on the Live TV page (page 8). The user clicks the 'What's On' tab button, which navigates to the 'What's On' section (page 77) displaying live programs, personalized recommendations, and popular movies. There are no branches or loops as it's a single navigation step.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            0
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 77,
+                        "action": "click",
+                        "summary": "Click the 'What's On' tab button to navigate to the 'What's On' section."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 28,
+            "function_description": "Displays detailed information (title, episode name, rating, episode number, air date, duration, synopsis) for the \"Love Thy Neighbor\" TV program, likely to inform users about the episode or provide options for playback/interaction.",
+            "action_refs": [
+                [
+                    8,
+                    1
+                ],
+                [
+                    78,
+                    0
+                ]
+            ],
+            "data_in": [
+                "program card",
+                "TV guide data",
+                "show details panel",
+                "TV show details"
+            ],
+            "data_out": [
+                "program details page",
+                "program information",
+                "show details panel closed",
+                "TV show details (hidden)"
+            ],
+            "data_dependencies": [
+                28
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The flow starts on page 8. First, the user clicks on the 'Love Thy Neighbor' program card (action_ref [8,1]) to navigate to page 78, where detailed show information is displayed. Then, the user can click the 'Close show details button' (action_ref [78,0]) to exit the details view. There are no branches or loops as the actions form a simple sequence of opening and closing the show details.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            1
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 78,
+                        "action": "click",
+                        "summary": "Click on the 'Love Thy Neighbor' program card to open show details"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            78,
+                            0
+                        ],
+                        "src_page_idx": 78,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'Close show details button' to exit the show details view"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 29,
+            "function_description": "The current page provides fullscreen playback functionality for the live TV channel content, allowing users to toggle between fullscreen and non - fullscreen modes while watching the media stream.",
+            "action_refs": [
+                [
+                    8,
+                    2
+                ],
+                [
+                    79,
+                    0
+                ]
+            ],
+            "data_in": [
+                "video player",
+                "video content"
+            ],
+            "data_out": [
+                "video player in fullscreen state",
+                "video playback state (playing)"
+            ],
+            "data_dependencies": [
+                29,
+                32
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The user starts on the Live TV page (page 8). First, they click the fullscreen toggle button to switch to fullscreen mode (navigating to page 79). Then, on the fullscreen page (page 79), they click the play button to start or resume the media stream. This flow is a straight line with no branches, as the actions are sequential and unidirectional.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            2
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 79,
+                        "action": "click",
+                        "summary": "Click the fullscreen toggle button to enter fullscreen mode"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            79,
+                            0
+                        ],
+                        "src_page_idx": 79,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the play button to play the media stream in fullscreen"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 30,
+            "function_description": "Teen Wolf live show card",
+            "action_refs": [
+                [
+                    9,
+                    0
+                ]
+            ],
+            "data_in": [
+                "Teen Wolf live show card"
+            ],
+            "data_out": [
+                "Teen Wolf live show details or playback initiation"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts on page 9 (Tune In Now: Popular Shows). The core action is clicking the Teen Wolf live show card, which is the only step here with no subsequent flow or branches as the action is a leaf (or the flow ends here).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            0
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the Teen Wolf live show card"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 31,
+            "function_description": "What's On tab",
+            "action_refs": [
+                [
+                    10,
+                    0
+                ]
+            ],
+            "data_in": [
+                "live TV content",
+                "TV schedule"
+            ],
+            "data_out": [
+                "What's On tab content"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The user starts on page 10 (Live TV) and clicks the 'What's On' tab. This action likely navigates to the 'What's On' section, though the destination page isn't specified here. The flow is a single step with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            0
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'What's On' tab"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 32,
+            "function_description": "Fullscreen toggle button",
+            "action_refs": [
+                [
+                    10,
+                    1
+                ]
+            ],
+            "data_in": [
+                "video player state",
+                "video content"
+            ],
+            "data_out": [
+                "video player state (fullscreen)"
+            ],
+            "data_dependencies": [
+                32
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The flow starts on page 10 (Live TV page). The user clicks the fullscreen toggle button (visible on the video player). This action toggles the video's fullscreen state, with no further branching as it's a single toggle action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            1
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the fullscreen toggle button on the video player"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 33,
+            "function_description": "Breaking Bad program card",
+            "action_refs": [
+                [
+                    10,
+                    3
+                ]
+            ],
+            "data_in": [
+                "Breaking Bad program card",
+                "Live TV guide data"
+            ],
+            "data_out": [
+                "Breaking Bad program details (possibly)"
+            ],
+            "data_dependencies": [
+                33
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The user starts on page 10 (Live TV page) and clicks on the Breaking Bad program card. This action likely leads to more details or interaction related to the Breaking Bad program, with no branching or looping in this single-step flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            3
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the Breaking Bad program card"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 34,
+            "function_description": "New in Town movie card",
+            "action_refs": [
+                [
+                    11,
+                    1
+                ]
+            ],
+            "data_in": [
+                "movie card (New in Town)"
+            ],
+            "data_out": [
+                "movie details (New in Town)"
+            ],
+            "data_dependencies": [
+                37
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The user initiates interaction with the 'New in Town' movie card. The flow starts on the 'On Demand' page (page 11), where the user clicks the 'New in Town' movie card. Since this action is marked as non-leaf, the flow likely continues to a subsequent page (though the destination isn't fully defined here, the core step is the click on the movie card).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            1
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the 'New in Town' movie card"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 35,
+            "function_description": "Rogue TV show card",
+            "action_refs": [
+                [
+                    12,
+                    1
+                ]
+            ],
+            "data_in": [
+                "Rogue TV show card"
+            ],
+            "data_out": [
+                "Rogue TV show details (or related content)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The user interacts with the 'Rogue' TV show card on the Discover page. The action is a click on the card, which likely leads to more details or functionality related to the show. There are no branches or loops here as it's a single action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            1
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the Rogue TV show card"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 36,
+            "function_description": "Primetime Crimetime section arrow",
+            "action_refs": [
+                [
+                    12,
+                    2
+                ]
+            ],
+            "data_in": [
+                "Primetime Crimetime section"
+            ],
+            "data_out": [
+                "Expanded Primetime Crimetime section content"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The user interacts with the Primetime Crimetime section arrow. The core logic involves clicking the arrow associated with the Primetime Crimetime section on the Discover page. This action likely navigates or expands the section, though the destination page is not yet determined from the given action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            2
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the Primetime Crimetime section arrow"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 37,
+            "function_description": "The page provides detailed information about the movie \"Interstellar\" (2014), including its genre, runtime, ratings, a rental option, and options to add to watchlist, rate/review, mark as watched, explore more ways to watch, and view additional details like cast, crew, and a synopsis.",
+            "action_refs": [
+                [
+                    13,
+                    2
+                ]
+            ],
+            "data_in": [
+                "movie search result (Interstellar 2014)"
+            ],
+            "data_out": [
+                "movie detail page (Interstellar 2014)"
+            ],
+            "data_dependencies": [
+                37,
+                38,
+                58,
+                59,
+                61,
+                74
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 13,
+                "logic": "The flow starts on the search results page (page 13). The user clicks on the 'Interstellar (2014 Movie)' result, navigating to the movie's detail page (page 17). On this page, the user can access options like renting, adding to watchlist, rating/reviewing, marking as watched, exploring more ways to watch, or viewing additional details (via 'More').",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            13,
+                            2
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click on 'Interstellar (2014 Movie)' result to open its detail page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 38,
+            "function_description": "This page provides a context menu for the movie \"Interstellar (2014)\" with options to watch the movie, add it to a watchlist, watch its trailer, mark it as watched, or share the movie.",
+            "action_refs": [
+                [
+                    13,
+                    3
+                ]
+            ],
+            "data_in": [
+                "Interstellar (2014) movie"
+            ],
+            "data_out": [
+                "movie options menu (for Interstellar)"
+            ],
+            "data_dependencies": [
+                38
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 13,
+                "logic": "The flow starts on the search results page (page 13). The user clicks the three - dot menu for 'Interstellar (2014)' (action_ref [13, 3]). This triggers the display of a context menu on page 18, which offers options like watching the movie, adding it to a watchlist, etc. The core logic is initiating the context menu for the movie via this click action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            13,
+                            3
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click the three - dot menu for 'Interstellar (2014)' to open its context menu."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 39,
+            "function_description": "More Ways to Watch checkbox",
+            "action_refs": [
+                [
+                    14,
+                    0
+                ]
+            ],
+            "data_in": [
+                "More Ways to Watch setting"
+            ],
+            "data_out": [
+                "More Ways to Watch setting updated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The user starts on page 14. They perform a click action on the 'More Ways to Watch' checkbox, which navigates to page 28. This is a single-step flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            0
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 28,
+                        "action": "click",
+                        "summary": "Click the 'More Ways to Watch' checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 40,
+            "function_description": "Add to Watchlist button",
+            "action_refs": [
+                [
+                    15,
+                    0
+                ]
+            ],
+            "data_in": [
+                "Zootopia 2 movie",
+                "watchlist setting"
+            ],
+            "data_out": [
+                "watchlist setting updated (removed from watchlist)"
+            ],
+            "data_dependencies": [
+                40,
+                41
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user starts on page 15 (likely a media detail page) and clicks the 'Add to Watchlist' button. This action navigates to page 29, completing the process of adding the item to the watchlist.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            0
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 29,
+                        "action": "click",
+                        "summary": "Click 'Add to Watchlist' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 41,
+            "function_description": "Mark as Watched button",
+            "action_refs": [
+                [
+                    15,
+                    1
+                ]
+            ],
+            "data_in": [
+                "movie record",
+                "watched status setting"
+            ],
+            "data_out": [
+                "updated movie watched status"
+            ],
+            "data_dependencies": [
+                41
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user starts on page 15 (a media details page) and clicks the 'Mark as Watched' button. This action transitions the app to page 30, completing the 'Mark as Watched' functionality in a single step with no branching.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            1
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 30,
+                        "action": "click",
+                        "summary": "Click the 'Mark as Watched' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 42,
+            "function_description": "The current page (More Actions menu for Zootopia 2) provides options to watch the movie's trailer and share the movie, supplementing the main movie details page with additional interactive actions related to the film.",
+            "action_refs": [
+                [
+                    15,
+                    2
+                ],
+                [
+                    31,
+                    0
+                ]
+            ],
+            "data_in": [
+                "movie details (Zootopia 2)",
+                "movie details"
+            ],
+            "data_out": [
+                "movie actions menu (More Actions)"
+            ],
+            "data_dependencies": [
+                42,
+                43
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The flow starts on the Zootopia 2 movie details page (page 15). First, the 'More' button (action_ref [15,2]) is clicked, which opens the 'More Actions' menu (page 31). From there, the user can choose to either watch the trailer or share the movie, but in the provided actions, after opening the 'More Actions' menu, the next action is clicking 'More On This Title (Plex details link)' (action_ref [31,0]) which stays on the same page (page 31).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            2
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 31,
+                        "action": "click",
+                        "summary": "Click the 'More' button to open the More Actions menu"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            31,
+                            0
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": 31,
+                        "action": "click",
+                        "summary": "Click 'More On This Title (Plex details link)'"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 43,
+            "function_description": "The current page provides a \"More Actions\" menu for the movie \"Zootopia 2\", allowing users to watch the trailer or share the movie.",
+            "action_refs": [
+                [
+                    15,
+                    3
+                ]
+            ],
+            "data_in": [
+                "movie details (Zootopia 2)"
+            ],
+            "data_out": [
+                "more actions menu (for Zootopia 2)"
+            ],
+            "data_dependencies": [
+                43
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "On the 'Zootopia 2' movie page (page 15), the user clicks the 'More' options button. This opens a 'More Actions' menu (page 31) with two options: 'Watch Trailer' and 'Share This Movie'. The flow then branches, allowing the user to choose either action (watch trailer or share the movie).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            3
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 31,
+                        "action": "click",
+                        "summary": "Click 'More' button to open 'More Actions' menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": null,
+                                "condition": "User selects 'Watch Trailer'"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "User selects 'Share This Movie'"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 44,
+            "function_description": "The page provides options to share the user's Plex profile via various apps (Chrome, Gmail, Messages, etc.) or copy the profile link to the clipboard.",
+            "action_refs": [
+                [
+                    34,
+                    1
+                ]
+            ],
+            "data_in": [
+                "user profile"
+            ],
+            "data_out": [
+                "shared profile (via sharing options)"
+            ],
+            "data_dependencies": [
+                44,
+                45,
+                65
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 34,
+                "logic": "The flow starts on the profile page. The user clicks the 'Share profile' button, which opens a sharing menu with options like Chrome, Gmail, Messages, and 'Copy to clipboard'. From here, the user can choose one of these options to share the profile or copy the link.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            34,
+                            1
+                        ],
+                        "src_page_idx": 34,
+                        "dst_page_idx": 38,
+                        "action": "click",
+                        "summary": "Click the 'Share profile' button to open the sharing menu."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 45,
+            "function_description": "The page allows users to edit their profile by changing the profile image and updating public profile information (username, full name, badges, location, bio, link) as well as accessing account and profile privacy management settings.",
+            "action_refs": [
+                [
+                    34,
+                    2
+                ]
+            ],
+            "data_in": [
+                "user profile"
+            ],
+            "data_out": [
+                "user profile (edit mode entered)"
+            ],
+            "data_dependencies": [
+                45
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 34,
+                "logic": "The flow starts on the profile page (page 34). The user clicks the 'Edit Profile' button, which navigates to the 'Edit profile' page (page 39) where options to change the profile image, update public profile info, and access privacy/account settings are available. This is a straight - line flow with no branches or loops shown yet.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            34,
+                            2
+                        ],
+                        "src_page_idx": 34,
+                        "dst_page_idx": 39,
+                        "action": "click",
+                        "summary": "Click the 'Edit Profile' button to navigate to the edit profile page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 46,
+            "function_description": "The page functions as a \"My Watchlist\" interface in a media streaming app, displaying the user’s saved media (e.g., \"Zootopia 2\") with options to filter, sort, or clear the watchlist, and also provides access to a \"Recommended\" section for suggested media.",
+            "action_refs": [
+                [
+                    34,
+                    3
+                ]
+            ],
+            "data_in": [
+                "my watchlist entry"
+            ],
+            "data_out": [
+                "watchlist page content"
+            ],
+            "data_dependencies": [
+                46,
+                47,
+                70
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 34,
+                "logic": "The flow starts on page 34, where the user clicks the 'My Watchlist' navigation arrow. This action navigates to page 40, the 'Watchlist' page, which displays the user’s saved media (like 'Zootopia 2') and provides options to filter, sort, clear the watchlist, or switch to the 'Recommended' section.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            34,
+                            3
+                        ],
+                        "src_page_idx": 34,
+                        "dst_page_idx": 40,
+                        "action": "click",
+                        "summary": "Click 'My Watchlist' navigation arrow to navigate to Watchlist page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 47,
+            "function_description": "The page provides detailed information about the movie \"Zootopia 2\" (including release year, duration, genre, ratings, and a synopsis), along with options to remove it from the watchlist, find where to watch it, rate/review it, mark it as watched, and explore additional actions or details.",
+            "action_refs": [
+                [
+                    34,
+                    4
+                ]
+            ],
+            "data_in": [
+                "Zootopia 2 watchlist item"
+            ],
+            "data_out": [
+                "Zootopia 2 movie details page"
+            ],
+            "data_dependencies": [
+                47
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 34,
+                "logic": "The flow starts on page 34 (watchlist page). The user clicks the 'Zootopia 2' watchlist card, navigating to page 15 (movie details page) where detailed info and action options for 'Zootopia 2' are displayed. No branches or loops are present as it’s a straight navigation to the details page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            34,
+                            4
+                        ],
+                        "src_page_idx": 34,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click 'Zootopia 2' watchlist card to navigate to its details page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 48,
+            "function_description": "The page functions as a hub to view, manage (e.g., reject, rescind, block related to) friend requests (sent or received) within the Plex app, with guidance on request management actions.",
+            "action_refs": [
+                [
+                    35,
+                    1
+                ]
+            ],
+            "data_in": [
+                "friend request tab",
+                "friends page"
+            ],
+            "data_out": [
+                "friend requests view"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 35,
+                "logic": "The flow starts on page 35. The user clicks the 'Requests tab button' (action_ref [35,1]), which navigates to page 59. On page 59, the 'Requests' tab of the Friends page is displayed, showing guidance on managing friend requests (reject, rescind, block) and indicating where sent/received requests appear. No branches or loops are present as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            35,
+                            1
+                        ],
+                        "src_page_idx": 35,
+                        "dst_page_idx": 59,
+                        "action": "click",
+                        "summary": "Click the Requests tab button to navigate to the Requests section of the Friends page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 49,
+            "function_description": "The \"Manage Services\" page allows users to view and select (via checkboxes) from a list of popular streaming services to manage their streaming service preferences.",
+            "action_refs": [
+                [
+                    36,
+                    1
+                ]
+            ],
+            "data_in": [
+                "streaming services preference setup"
+            ],
+            "data_out": [
+                "entered manage services page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 36,
+                "logic": "The user starts on the 'My Services' page (page 36). They click the 'Manage Services' button, which navigates to the 'Manage Services' page (page 60) where a list of popular streaming services with checkboxes is displayed. This is the core flow to access the service management interface.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            36,
+                            1
+                        ],
+                        "src_page_idx": 36,
+                        "dst_page_idx": 60,
+                        "action": "click",
+                        "summary": "Click 'Manage Services' button to navigate to the service management page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 50,
+            "function_description": "The current page in the Plex app (after switching to user profile x23314) functions as the home page for media streaming, allowing users to browse content by genre, view live TV options (including a channel guide and current/live programming), and access on - demand shows, with navigation tabs for Home, Live TV, On Demand, and Discover.",
+            "action_refs": [
+                [
+                    37,
+                    0
+                ]
+            ],
+            "data_in": [
+                "user profile (x23314)"
+            ],
+            "data_out": [
+                "user session (x23314)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 37,
+                "logic": "The flow starts on the 'Select User' page. The user clicks on the user profile x23314, which navigates to the Plex home page for that user. On this home page, the user can browse content by genre, view live TV options (including a channel guide and current/live programming), and access on - demand shows, with navigation tabs for Home, Live TV, On Demand, and Discover.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            37,
+                            0
+                        ],
+                        "src_page_idx": 37,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click on user profile x23314 to navigate to the Plex home page for that user."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 51,
+            "function_description": "This page enables users to create a managed Plex account (often for children) within their Plex home, with options to set media access restrictions and input an account name.",
+            "action_refs": [
+                [
+                    37,
+                    1
+                ],
+                [
+                    62,
+                    0
+                ],
+                [
+                    62,
+                    2
+                ]
+            ],
+            "data_in": [
+                "Plex user management interface",
+                "managed account creation form",
+                "name input field"
+            ],
+            "data_out": [
+                "Create Managed Account form (initiated)",
+                "updated name input in managed account form"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 37,
+                "logic": "To create a managed Plex account, first click the 'Add new Plex user' option. Then, on the account creation page, input a name for the managed account (e.g., 'ChildAccount1'). Finally, click the 'Create managed account button' to complete the process. There are no branching or looping steps in this flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            37,
+                            1
+                        ],
+                        "src_page_idx": 37,
+                        "dst_page_idx": 62,
+                        "action": "click",
+                        "summary": "Click 'Add new Plex user' to navigate to account creation page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            62,
+                            0
+                        ],
+                        "src_page_idx": 62,
+                        "dst_page_idx": 63,
+                        "action": "input",
+                        "summary": "Input name 'ChildAccount1' for the managed account"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            62,
+                            2
+                        ],
+                        "src_page_idx": 62,
+                        "dst_page_idx": 62,
+                        "action": "click",
+                        "summary": "Click 'Create managed account button' to finalize account creation"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 52,
+            "function_description": "The current page provides detailed information about the movie \"Kick - Ass (2010)\" including its runtime, genre, ratings, a \"Watch Now\" option, and additional options like adding to watchlist, rating, marking as watched, and viewing cast & crew, enabling users to access and interact with the movie's content for streaming or further exploration.",
+            "action_refs": [
+                [
+                    66,
+                    0
+                ]
+            ],
+            "data_in": [
+                "Kick-Ass (2010) movie card"
+            ],
+            "data_out": [
+                "Kick-Ass (2010) movie details page"
+            ],
+            "data_dependencies": [
+                25,
+                52,
+                53,
+                54,
+                55,
+                56,
+                60,
+                62,
+                63
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 66,
+                "logic": "The flow starts on the movie list page (page 66). The user clicks on the 'Kick-Ass (2010)' movie card, which navigates to the movie's detailed info page (page 67) displaying runtime, genre, ratings, a 'Watch Now' button, and options like adding to watchlist, rating, marking as watched, and viewing cast & crew. No branches or loops are present as it’s a single navigation step to access the movie’s details.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            66,
+                            0
+                        ],
+                        "src_page_idx": 66,
+                        "dst_page_idx": 67,
+                        "action": "click",
+                        "summary": "Click on Kick-Ass (2010) movie card to open its detailed info page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 53,
+            "function_description": "The current page functions as the playback interface for the movie \"Kick - Ass (2010)\", enabling users to play, pause, rewind, fast - forward, and control other aspects of the movie's playback.",
+            "action_refs": [
+                [
+                    67,
+                    0
+                ],
+                [
+                    68,
+                    0
+                ],
+                [
+                    68,
+                    1
+                ],
+                [
+                    68,
+                    2
+                ],
+                [
+                    73,
+                    0
+                ],
+                [
+                    75,
+                    0
+                ]
+            ],
+            "data_in": [
+                "movie (Kick-Ass)",
+                "video playback state",
+                "video content",
+                "video playback session",
+                "video options menu trigger"
+            ],
+            "data_out": [
+                "movie playback session (Kick-Ass)",
+                "updated video playback state",
+                "video playback session (closed)",
+                "video playback state updated (menu interaction result)",
+                "updated video frame (next scene)"
+            ],
+            "data_dependencies": [
+                53
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 67,
+                "logic": "To start playing the movie 'Kick - Ass (2010)', first click the 'Watch Now' button. Then, on the video player interface, click the 'Play/Pause video button' to control playback. Additionally, there are options to close the video player or access more video options, and interact with the video playback area for further control.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            67,
+                            0
+                        ],
+                        "src_page_idx": 67,
+                        "dst_page_idx": 68,
+                        "action": "click",
+                        "summary": "Click 'Watch Now' to start accessing the movie playback"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            68,
+                            0
+                        ],
+                        "src_page_idx": 68,
+                        "dst_page_idx": 71,
+                        "action": "click",
+                        "summary": "Click 'Play/Pause video button' to control movie playback"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            68,
+                            1
+                        ],
+                        "src_page_idx": 68,
+                        "dst_page_idx": 72,
+                        "action": "click",
+                        "summary": "Click 'Close video player button' to exit the playback"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            68,
+                            2
+                        ],
+                        "src_page_idx": 68,
+                        "dst_page_idx": 73,
+                        "action": "click",
+                        "summary": "Click 'More video options button' to access additional playback options"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            73,
+                            0
+                        ],
+                        "src_page_idx": 73,
+                        "dst_page_idx": 75,
+                        "action": "click",
+                        "summary": "Click on the video playback area for further interaction"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            75,
+                            0
+                        ],
+                        "src_page_idx": 75,
+                        "dst_page_idx": 76,
+                        "action": "click",
+                        "summary": "Click the video playback clickable region"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S5",
+                        "to": "S6"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 54,
+            "function_description": "Add to Watchlist button",
+            "action_refs": [
+                [
+                    67,
+                    1
+                ]
+            ],
+            "data_in": [
+                "movie (Kick-Ass)",
+                "watchlist setting"
+            ],
+            "data_out": [
+                "movie added to watchlist"
+            ],
+            "data_dependencies": [
+                54
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 67,
+                "logic": "The user starts on page 67 (a media details page). They click the 'Add to Watchlist' button, which navigates to page 69. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            67,
+                            1
+                        ],
+                        "src_page_idx": 67,
+                        "dst_page_idx": 69,
+                        "action": "click",
+                        "summary": "Click the Add to Watchlist button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 55,
+            "function_description": "Mark as Watched button",
+            "action_refs": [
+                [
+                    67,
+                    2
+                ]
+            ],
+            "data_in": [
+                "movie (Kick-Ass)",
+                "watched status setting"
+            ],
+            "data_out": [
+                "updated watched status (marked as watched)"
+            ],
+            "data_dependencies": [
+                55
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 67,
+                "logic": "The user starts on page 67 (movie details page). The core action is clicking the 'Mark as Watched' button, which transitions to page 70. There are no branches or loops in this simple flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            67,
+                            2
+                        ],
+                        "src_page_idx": 67,
+                        "dst_page_idx": 70,
+                        "action": "click",
+                        "summary": "Click the 'Mark as Watched' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 56,
+            "function_description": "The current page provides additional action options for the \"Kick - Ass (2010)\" movie, specifically allowing users to watch the trailer or share the movie.",
+            "action_refs": [
+                [
+                    67,
+                    3
+                ]
+            ],
+            "data_in": [
+                "movie details"
+            ],
+            "data_out": [
+                "more actions menu (for movie)"
+            ],
+            "data_dependencies": [
+                56
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 67,
+                "logic": "On the movie details page for 'Kick - Ass (2010)', the user first clicks the 'More' button. This action opens a 'More Actions' menu, presenting two options: 'Watch Trailer' and 'Share This Movie'. The user can then choose either option to perform the corresponding action (watching the trailer or sharing the movie).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            67,
+                            3
+                        ],
+                        "src_page_idx": 67,
+                        "dst_page_idx": 21,
+                        "action": "click",
+                        "summary": "Click the 'More' button to open additional action options for the movie"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": null,
+                                "condition": "User selects 'Watch Trailer'"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "User selects 'Share This Movie'"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 57,
+            "function_description": "The page displays an error message indicating that the Plex app has stopped, with an option to attempt to open the app again.",
+            "action_refs": [
+                [
+                    77,
+                    0
+                ]
+            ],
+            "data_in": [
+                "Weekly Game Previews content card"
+            ],
+            "data_out": [
+                "Plex app crash state (stopped)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 77,
+                "logic": "The flow starts on a page with content cards. A click on the 'Weekly Game Previews' content card is performed. This action leads to a page where a 'Plex has stopped' error message appears, offering an 'Open app again' option. The core logic involves initiating an action (clicking the card) that triggers the error state with a retry option.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            77,
+                            0
+                        ],
+                        "src_page_idx": 77,
+                        "dst_page_idx": 80,
+                        "action": "click",
+                        "summary": "Click on the Weekly Game Previews content card"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 58,
+            "function_description": "This page allows users to confirm the rental of the movie \"Interstellar\" for $3.99, providing rental details and options to proceed to checkout or cancel the rental.",
+            "action_refs": [
+                [
+                    17,
+                    0
+                ],
+                [
+                    19,
+                    0
+                ],
+                [
+                    19,
+                    1
+                ]
+            ],
+            "data_in": [
+                "movie rental option",
+                "movie details",
+                "movie rental details",
+                "rental price",
+                "total price",
+                "rental confirmation (Interstellar)"
+            ],
+            "data_out": [
+                "rental confirmation page",
+                "rental details",
+                "checkout initiation",
+                "rental confirmation canceled",
+                "movie details page (Interstellar)"
+            ],
+            "data_dependencies": [
+                58
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 17,
+                "logic": "The flow starts on the movie details page. First, the user clicks the 'Rent for $3.99' button to open the rental confirmation page. On the confirmation page, the user can either click 'Go to Checkout' to proceed with payment or 'Cancel' to return to the movie details page, creating a branch at the confirmation step.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            17,
+                            0
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click 'Rent for $3.99' to open rental confirmation page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            19,
+                            0
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 22,
+                        "action": "click",
+                        "summary": "Click 'Go to Checkout' to proceed to checkout"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            19,
+                            1
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click 'Cancel' to return to movie details page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 59,
+            "function_description": "Add to Watchlist button",
+            "action_refs": [
+                [
+                    17,
+                    1
+                ]
+            ],
+            "data_in": [
+                "movie (Interstellar)"
+            ],
+            "data_out": [
+                "movie added to watchlist"
+            ],
+            "data_dependencies": [
+                59
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 17,
+                "logic": "The flow starts on page 17 (a media details page). The user clicks the 'Add to Watchlist' button, which navigates to page 20. There are no branches or loops as this is a single action flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            17,
+                            1
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 20,
+                        "action": "click",
+                        "summary": "Click the Add to Watchlist button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 60,
+            "function_description": "The current page (More Actions menu for the movie \"Kick - Ass\") provides additional functionality for the movie, specifically allowing users to watch the trailer and share the movie.",
+            "action_refs": [
+                [
+                    17,
+                    2
+                ]
+            ],
+            "data_in": [
+                "movie details"
+            ],
+            "data_out": [
+                "more actions menu (movie)"
+            ],
+            "data_dependencies": [
+                60
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 17,
+                "logic": "The flow starts on the movie page (page 17). The user clicks the 'More options' button, which opens the 'More Actions' menu (page 21) with options to watch the trailer or share the movie. At this point, the user can choose between these two actions (an if-else branch: either select 'Watch Trailer' or 'Share This Movie').",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            17,
+                            2
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 21,
+                        "action": "click",
+                        "summary": "Click the 'More options' button to open the More Actions menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": null,
+                                "condition": "User selects 'Watch Trailer'"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "User selects 'Share This Movie'"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 61,
+            "function_description": "The page provides options to watch the movie 'Interstellar' (2014) by listing available streaming or rental services (e.g., Plex On Demand, Hoopla, YouTube, Paramount Plus) with their respective access details (rental cost, free, subscription) and a link for more services.",
+            "action_refs": [
+                [
+                    18,
+                    0
+                ],
+                [
+                    26,
+                    0
+                ],
+                [
+                    26,
+                    2
+                ]
+            ],
+            "data_in": [
+                "movie (Interstellar)",
+                "movie rental option (Interstellar)",
+                "movie options modal"
+            ],
+            "data_out": [
+                "watch options for movie (Interstellar)",
+                "rental confirmation request",
+                "movie options modal closed"
+            ],
+            "data_dependencies": [
+                61
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 18,
+                "logic": "The flow starts on page 18, where the 'Watch Now' button is clicked to navigate to page 26 (the 'Watch Now' modal). On page 26, a branch occurs: either the 'Rent $3.99 (Plex On Demand)' button is clicked (leading to page 19) or the back arrow is clicked (returning to page 18).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            18,
+                            0
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 26,
+                        "action": "click",
+                        "summary": "Click 'Watch Now' button to open the modal with streaming/rental options."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            26,
+                            0
+                        ],
+                        "src_page_idx": 26,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click 'Rent $3.99 (Plex On Demand)' button to proceed with renting."
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            26,
+                            2
+                        ],
+                        "src_page_idx": 26,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click back arrow to close the 'Watch Now' modal and return to the previous page."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 62,
+            "function_description": "Plays the trailer for the movie Kick - Ass (2010) after being accessed from the movie's detail page via the \"Watch Trailer\" option in the \"More Actions\" popup.",
+            "action_refs": [
+                [
+                    21,
+                    0
+                ],
+                [
+                    23,
+                    0
+                ]
+            ],
+            "data_in": [
+                "movie (Kick-Ass)",
+                "trailer playback state"
+            ],
+            "data_out": [
+                "movie trailer playback (Kick-Ass)",
+                "updated trailer playback state"
+            ],
+            "data_dependencies": [
+                62
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 21,
+                "logic": "From the movie detail page (page 21), click the 'Watch Trailer' button in the 'More Actions' popup to navigate to the trailer page (page 23). Then, click the 'Play/Pause Trailer Button' on the trailer page (page 23) to start playing the Kick - Ass (2010) trailer.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            21,
+                            0
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": 23,
+                        "action": "click",
+                        "summary": "Click 'Watch Trailer' button in 'More Actions' popup"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            23,
+                            0
+                        ],
+                        "src_page_idx": 23,
+                        "dst_page_idx": 25,
+                        "action": "click",
+                        "summary": "Click Play/Pause Trailer Button to play trailer"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 63,
+            "function_description": "This page allows the user to choose from a list of available widgets (e.g., clocks, app shortcuts, Chrome-related widgets, etc.) to add or configure, likely for a home screen or similar interface customization.",
+            "action_refs": [
+                [
+                    21,
+                    1
+                ]
+            ],
+            "data_in": [
+                "movie (Kick-Ass)"
+            ],
+            "data_out": [
+                "shared movie information"
+            ],
+            "data_dependencies": [
+                63
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 21,
+                "logic": "The user starts on page 21 and clicks the 'Share This Movie' button, which navigates to page 24. This is a single-step flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            21,
+                            1
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": 24,
+                        "action": "click",
+                        "summary": "Click 'Share This Movie' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 64,
+            "function_description": "This page provides options to change the user's profile image, allowing the user to either take a new photo or choose an existing image from their device's library.",
+            "action_refs": [
+                [
+                    39,
+                    0
+                ],
+                [
+                    41,
+                    1
+                ]
+            ],
+            "data_in": [
+                "profile image setting",
+                "photo library"
+            ],
+            "data_out": [
+                "profile image change options (take photo, choose from library)",
+                "photo selection interface loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 39,
+                "logic": "The user starts on the Edit Profile page. First, they click the 'Change Profile Image' button to open the image selection options. Then, they choose between taking a new photo (implied by the flow) or selecting an existing image from the library; in this case, the example shows clicking 'Choose From Library' to access device photos.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            39,
+                            0
+                        ],
+                        "src_page_idx": 39,
+                        "dst_page_idx": 41,
+                        "action": "click",
+                        "summary": "Click 'Change Profile Image' button to open image options"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            41,
+                            1
+                        ],
+                        "src_page_idx": 41,
+                        "dst_page_idx": 45,
+                        "action": "click",
+                        "summary": "Click 'Choose From Library' button to access device photos"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 65,
+            "function_description": "Full Name input field",
+            "action_refs": [
+                [
+                    39,
+                    1
+                ]
+            ],
+            "data_in": [
+                "user profile",
+                "full name setting"
+            ],
+            "data_out": [
+                "updated user profile",
+                "full name setting updated"
+            ],
+            "data_dependencies": [
+                65
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 39,
+                "logic": "The flow starts on the Edit Profile page (page 39). The user inputs 'Jane Doe' into the Full Name input field, which transitions the app to page 42. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            39,
+                            1
+                        ],
+                        "src_page_idx": 39,
+                        "dst_page_idx": 42,
+                        "action": "input",
+                        "summary": "Input 'Jane Doe' into the Full Name input field"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 66,
+            "function_description": "The page functions as the Plex app's settings hub, providing options to configure account, home, experience, notifications, player experience, subtitles, advanced, privacy, and about settings, along with a search bar for quick navigation.",
+            "action_refs": [
+                [
+                    39,
+                    2
+                ]
+            ],
+            "data_in": [
+                "account settings entry"
+            ],
+            "data_out": [
+                "settings page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 39,
+                "logic": "The flow starts on the settings hub page. The user clicks the 'Account settings' button, navigating to the account settings page. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            39,
+                            2
+                        ],
+                        "src_page_idx": 39,
+                        "dst_page_idx": 43,
+                        "action": "click",
+                        "summary": "Click the Account settings button to navigate to account settings page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 67,
+            "function_description": "The page displays recommended media content (including new trailers from the user's watchlist and recently added items) in the \"Recommended\" tab of the watchlist management section, allowing users to view and explore suggested shows/movies.",
+            "action_refs": [
+                [
+                    40,
+                    0
+                ]
+            ],
+            "data_in": [
+                "watchlist tab (recommended)"
+            ],
+            "data_out": [
+                "recommended watchlist content"
+            ],
+            "data_dependencies": [
+                67
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 40,
+                "logic": "The user starts on the Watchlist page (page 40). They click the 'Recommended' tab (action_ref [40,0]), which navigates to the Recommended page (page 50) displaying media recommendations like new trailers from the watchlist and recently added items. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            40,
+                            0
+                        ],
+                        "src_page_idx": 40,
+                        "dst_page_idx": 50,
+                        "action": "click",
+                        "summary": "Click on the 'Recommended' tab in the Watchlist page to navigate to the Recommended page showing media recommendations."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 68,
+            "function_description": "The current page provides a \"Filter by\" menu for the watchlist, allowing users to filter watchlist content by categories such as \"All,\" \"Available on Plex,\" \"Available on Your Services,\" \"Available to Stream,\" and \"Released.\"",
+            "action_refs": [
+                [
+                    40,
+                    1
+                ]
+            ],
+            "data_in": [
+                "watchlist content",
+                "filter settings"
+            ],
+            "data_out": [
+                "filtered watchlist content"
+            ],
+            "data_dependencies": [
+                68
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 40,
+                "logic": "The user starts on the Watchlist page (page 40). They click the 'All' content filter button, which opens the 'Filter by' menu (page 51) with options like 'All', 'Available on Plex', etc. This action initiates the filtering flow for the watchlist content.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            40,
+                            1
+                        ],
+                        "src_page_idx": 40,
+                        "dst_page_idx": 51,
+                        "action": "click",
+                        "summary": "Click the 'All' content filter button to open the 'Filter by' menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 69,
+            "function_description": "The page provides a \"Sort by\" menu for the watchlist, allowing the user to select from sorting options like \"Added At\", \"Title\", \"Release Date\", \"Audience Rating\", \"Critic Rating\", and \"Available At\" to organize the watchlist items.",
+            "action_refs": [
+                [
+                    40,
+                    2
+                ],
+                [
+                    52,
+                    0
+                ]
+            ],
+            "data_in": [
+                "watchlist items",
+                "sort by option (Added At)",
+                "sort by setting"
+            ],
+            "data_out": [
+                "sorted watchlist items (by Added At)",
+                "watchlist items sorted by title"
+            ],
+            "data_dependencies": [
+                69
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 40,
+                "logic": "The flow starts on the Watchlist page (page 40). First, the user clicks the 'Added At' sort button (action [40,2]), navigating to a page (page 52) with sorting options. Then, the user clicks the 'Sort by Title' option (action [52,0]), returning to the Watchlist page (page 40) with the list sorted by title. There are no branches as the actions form a linear sequence of selecting a sort button and then a specific sort option.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            40,
+                            2
+                        ],
+                        "src_page_idx": 40,
+                        "dst_page_idx": 52,
+                        "action": "click",
+                        "summary": "Click 'Added At' sort button to open sorting options page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            52,
+                            0
+                        ],
+                        "src_page_idx": 52,
+                        "dst_page_idx": 40,
+                        "action": "click",
+                        "summary": "Click 'Sort by Title' option to sort watchlist by title and return to Watchlist page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 70,
+            "function_description": "The page provides detailed information about the movie \"Zootopia 2\" (including release year, duration, genre, ratings, plot summary, and cast/crew) and offers actions like removing from the watchlist, finding where to watch, rating/reviewing, marking as watched, and accessing more options.",
+            "action_refs": [
+                [
+                    40,
+                    3
+                ]
+            ],
+            "data_in": [
+                "Zootopia 2 watchlist item"
+            ],
+            "data_out": [
+                "Zootopia 2 movie details page"
+            ],
+            "data_dependencies": [
+                70
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 40,
+                "logic": "The flow starts on the Watchlist page (page 40). The user clicks on the 'Zootopia 2' watchlist item, which navigates to the movie's detailed information page (page 15) where actions like removing from watchlist, finding where to watch, rating/reviewing, marking as watched, and accessing more options are available.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            40,
+                            3
+                        ],
+                        "src_page_idx": 40,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click on Zootopia 2 watchlist item to navigate to its detailed info page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 71,
+            "function_description": "The current page (under the \"Requests\" tab in the \"Friends\" section of Plex) is intended to display and manage friend requests (sent or received), with information on how to handle rejections, blocks, and rescinding sent requests.",
+            "action_refs": [
+                [
+                    59,
+                    0
+                ]
+            ],
+            "data_in": [
+                "friends list"
+            ],
+            "data_out": [
+                "all friends list"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 59,
+                "logic": "The flow starts on the Friends page (Requests tab). The user clicks the 'All Friends' tab button, which keeps the page on the same screen (dst_page_idx matches src_page_idx). This action switches the view from 'Requests' to 'All Friends' within the Friends section.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            59,
+                            0
+                        ],
+                        "src_page_idx": 59,
+                        "dst_page_idx": 59,
+                        "action": "click",
+                        "summary": "Click the 'All Friends' tab button to switch from Requests to All Friends view."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 72,
+            "function_description": "A&E service selection checkbox",
+            "action_refs": [
+                [
+                    60,
+                    0
+                ]
+            ],
+            "data_in": [
+                "A&E service setting"
+            ],
+            "data_out": [
+                "A&E service setting enabled"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 60,
+                "logic": "The user starts on the 'Manage Services' page (page 60). The core action is clicking the checkbox next to the A&E service, which transitions the app to page 61. There are no branches or loops here, as it’s a single click action to select the A&E service.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            60,
+                            0
+                        ],
+                        "src_page_idx": 60,
+                        "dst_page_idx": 61,
+                        "action": "click",
+                        "summary": "Click the checkbox for A&E service"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 73,
+            "function_description": "The current page allows the user to configure content restrictions (e.g., None, Little Kid, Older Kid, Teen) for a newly created managed Plex account, with descriptions of allowed content ratings and notes on advanced restrictions.",
+            "action_refs": [
+                [
+                    62,
+                    1
+                ],
+                [
+                    64,
+                    0
+                ]
+            ],
+            "data_in": [
+                "managed account restrictions setting",
+                "restriction setting"
+            ],
+            "data_out": [
+                "restrictions configuration page loaded",
+                "create managed account form"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 62,
+                "logic": "The user starts on page 62 (Create Managed Account). First, they click the Restrictions settings button (action_ref [62,1]) to navigate to page 64. From page 64, they can click the back arrow (action_ref [64,0]) to return to page 62, allowing navigation between the account creation and restrictions configuration pages.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            62,
+                            1
+                        ],
+                        "src_page_idx": 62,
+                        "dst_page_idx": 64,
+                        "action": "click",
+                        "summary": "Click Restrictions settings button to go to restrictions config page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            64,
+                            0
+                        ],
+                        "src_page_idx": 64,
+                        "dst_page_idx": 62,
+                        "action": "click",
+                        "summary": "Click back arrow to return to account creation page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 74,
+            "function_description": "The page allows the user to choose an app (e.g., Chrome, WebView Browser Tester) to open the free Hoopla streaming option for the movie 'Interstellar' (2014) after selecting the \"Watch Now\" action from its movie action menu.",
+            "action_refs": [
+                [
+                    26,
+                    1
+                ]
+            ],
+            "data_in": [
+                "Hoopla streaming option",
+                "movie (Interstellar)"
+            ],
+            "data_out": [
+                "app selection prompt",
+                "navigation to Hoopla content"
+            ],
+            "data_dependencies": [
+                74
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 26,
+                "logic": "From the 'Watch Now' menu for 'Interstellar' (2014), the user clicks the 'Hoopla (Free)' streaming option. This triggers an app selection dialog to appear, where the user can choose an app (e.g., Chrome, WebView Browser Tester) to open the Hoopla stream.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            26,
+                            1
+                        ],
+                        "src_page_idx": 26,
+                        "dst_page_idx": 27,
+                        "action": "click",
+                        "summary": "Click the 'Hoopla (Free)' streaming option in the 'Watch Now' menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 75,
+            "function_description": "This page functions as a camera interface to take a photo for updating the user's profile image, with a viewfinder displaying the current scene and a camera shutter button to capture the image.",
+            "action_refs": [
+                [
+                    41,
+                    0
+                ]
+            ],
+            "data_in": [
+                "profile image setting"
+            ],
+            "data_out": [
+                "new profile image (from camera)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 41,
+                "logic": "The flow starts on the profile edit page. The user clicks the 'Take Photo' button, which navigates to the camera interface page, where the viewfinder displays the current scene and a shutter button is available to capture the image.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            41,
+                            0
+                        ],
+                        "src_page_idx": 41,
+                        "dst_page_idx": 44,
+                        "action": "click",
+                        "summary": "Click 'Take Photo' button to open camera interface"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 76,
+            "function_description": "The current page functions as a search interface within the settings section, allowing users to search for specific settings (e.g., \"notifications\") and view relevant results.",
+            "action_refs": [
+                [
+                    43,
+                    0
+                ],
+                [
+                    46,
+                    0
+                ]
+            ],
+            "data_in": [
+                "settings search input",
+                "settings items list",
+                "search text",
+                "settings search interface"
+            ],
+            "data_out": [
+                "filtered settings items list",
+                "cleared search text",
+                "reset search interface"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 43,
+                "logic": "The user starts on the settings page. First, they input 'notifications' into the search field to find relevant settings. Then, they can click the clear search text button to remove the input and reset the search interface.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            43,
+                            0
+                        ],
+                        "src_page_idx": 43,
+                        "dst_page_idx": 46,
+                        "action": "input",
+                        "summary": "Input 'notifications' into settings search field"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            46,
+                            0
+                        ],
+                        "src_page_idx": 46,
+                        "dst_page_idx": 48,
+                        "action": "click",
+                        "summary": "Click clear search text button"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 77,
+            "function_description": "The page allows users to manage notification settings for various categories (Plex News, Friends & Followers, Discover, On Demand & Live TV) by toggling options like Feature Updates, My Messages, Watchlisted Item Now Available, etc.",
+            "action_refs": [
+                [
+                    43,
+                    1
+                ]
+            ],
+            "data_in": [
+                "notifications setting item"
+            ],
+            "data_out": [
+                "notifications settings page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 43,
+                "logic": "The user starts on the Settings page (page 43). They click the 'Notifications' settings button, which navigates to the Notifications page (page 47) where various notification categories and toggles are displayed. From there, the user can manage (toggle) individual notification options for categories like Plex News, Friends & Followers, etc.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            43,
+                            1
+                        ],
+                        "src_page_idx": 43,
+                        "dst_page_idx": 47,
+                        "action": "click",
+                        "summary": "Click the Notifications settings button to navigate to the Notifications page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 78,
+            "function_description": "The page displays new trailers for media items from the user's watchlist, allowing users to view and potentially interact with (e.g., play trailers, get details) the listed content (e.g., \"Zootopia 2\" with its release date).",
+            "action_refs": [
+                [
+                    50,
+                    0
+                ]
+            ],
+            "data_in": [
+                "watchlist"
+            ],
+            "data_out": [
+                "new trailers from watchlist"
+            ],
+            "data_dependencies": [
+                78,
+                79,
+                85,
+                86,
+                87
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 50,
+                "logic": "The user starts on the Watchlist page (page 50). They click the 'New Trailers from Your Watchlist' arrow, which navigates to the New Trailers from Your Watchlist page (page 53) to view trailers for watchlist media like 'Zootopia 2'.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            50,
+                            0
+                        ],
+                        "src_page_idx": 50,
+                        "dst_page_idx": 53,
+                        "action": "click",
+                        "summary": "Click 'New Trailers from Your Watchlist' arrow to navigate to trailers page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 79,
+            "function_description": "Plays the trailer for \"Zootopia 2\" as accessed from the recommended watchlist section of the user's watchlist management page.",
+            "action_refs": [
+                [
+                    50,
+                    1
+                ]
+            ],
+            "data_in": [
+                "Zootopia 2 trailer card"
+            ],
+            "data_out": [
+                "Zootopia 2 trailer playback session"
+            ],
+            "data_dependencies": [
+                79
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 50,
+                "logic": "The user starts on the watchlist management page (page 50) in the 'Recommended' section. They click on the 'Zootopia 2' trailer card, which navigates to the trailer playback page (page 23) to play the trailer. There are no branches or loops in this flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            50,
+                            1
+                        ],
+                        "src_page_idx": 50,
+                        "dst_page_idx": 23,
+                        "action": "click",
+                        "summary": "Click on the Zootopia 2 trailer card in the recommended watchlist section"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 80,
+            "function_description": "Filter option 'Available on Plex'",
+            "action_refs": [
+                [
+                    51,
+                    0
+                ]
+            ],
+            "data_in": [
+                "watchlist items",
+                "filter option (Available on Plex)"
+            ],
+            "data_out": [
+                "filtered watchlist items (by Available on Plex)"
+            ],
+            "data_dependencies": [
+                80
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 51,
+                "logic": "The user starts on page 51 and clicks the 'Available on Plex' filter option. This action navigates to page 58, where the filtering based on 'Available on Plex' is applied. There are no branches or loops as this is a single-step action to apply the filter.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            51,
+                            0
+                        ],
+                        "src_page_idx": 51,
+                        "dst_page_idx": 58,
+                        "action": "click",
+                        "summary": "Click the 'Available on Plex' filter option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 81,
+            "function_description": "Little Kid restriction option",
+            "action_refs": [
+                [
+                    64,
+                    1
+                ]
+            ],
+            "data_in": [
+                "restriction setting",
+                "Little Kid restriction option"
+            ],
+            "data_out": [
+                "updated restriction setting (Little Kid)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 64,
+                "logic": "The flow starts on page 64 (Restrictions page). The user clicks on the 'Little Kid' restriction option, which navigates to page 65. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            64,
+                            1
+                        ],
+                        "src_page_idx": 64,
+                        "dst_page_idx": 65,
+                        "action": "click",
+                        "summary": "Click on the Little Kid restriction option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 82,
+            "function_description": "Add to Watchlist button",
+            "action_refs": [
+                [
+                    72,
+                    0
+                ]
+            ],
+            "data_in": [
+                "movie (Out of the Furnace)",
+                "watchlist setting"
+            ],
+            "data_out": [
+                "movie added to watchlist",
+                "updated watchlist setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 72,
+                "logic": "The user starts on page 72. They click the 'Add to Watchlist' button, which navigates to page 74. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            72,
+                            0
+                        ],
+                        "src_page_idx": 72,
+                        "dst_page_idx": 74,
+                        "action": "click",
+                        "summary": "Click the 'Add to Watchlist' button to navigate to the next page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 83,
+            "function_description": "The Notifications settings page allows users to manage notification preferences for Plex News, Friends & Followers, Discover, and On Demand & Live TV categories by toggling or selecting specific notification types.",
+            "action_refs": [
+                [
+                    46,
+                    1
+                ]
+            ],
+            "data_in": [
+                "notifications setting"
+            ],
+            "data_out": [
+                "notifications setting page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 46,
+                "logic": "The flow starts on the Settings page (page 46). The user clicks the 'Notifications' settings option, navigating to the Notifications settings page (page 47) where notification preferences for various categories can be managed.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            46,
+                            1
+                        ],
+                        "src_page_idx": 46,
+                        "dst_page_idx": 47,
+                        "action": "click",
+                        "summary": "Click 'Notifications' settings option to navigate to Notifications settings page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 84,
+            "function_description": "Feature Updates notification toggle",
+            "action_refs": [
+                [
+                    47,
+                    0
+                ]
+            ],
+            "data_in": [
+                "feature updates notification setting"
+            ],
+            "data_out": [
+                "feature updates notification setting (updated state)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 47,
+                "logic": "The user starts on the Notifications page (page 47). They perform a click action on the Feature Updates notification toggle, which leads to a new page (page 49). This action toggles the state of the Feature Updates notification setting.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            47,
+                            0
+                        ],
+                        "src_page_idx": 47,
+                        "dst_page_idx": 49,
+                        "action": "click",
+                        "summary": "Click on the Feature Updates notification toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 85,
+            "function_description": "Plays the trailer for \"Zootopia 2\" as accessed from the \"New Trailers from Your Watchlist\" section in the watchlist management area of the Plex app.",
+            "action_refs": [
+                [
+                    53,
+                    0
+                ]
+            ],
+            "data_in": [
+                "Zootopia 2 trailer"
+            ],
+            "data_out": [
+                "Zootopia 2 trailer playback"
+            ],
+            "data_dependencies": [
+                85
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 53,
+                "logic": "The user navigates to the 'New Trailers from Your Watchlist' page (page 53). Then, the user clicks on the 'Zootopia 2' trailer card, which triggers the trailer to start playing (transition to page 54, which is the video playback page).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            53,
+                            0
+                        ],
+                        "src_page_idx": 53,
+                        "dst_page_idx": 54,
+                        "action": "click",
+                        "summary": "Click on the Zootopia 2 trailer card to play the trailer"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 86,
+            "function_description": "Plays the trailer video for \"Zootopia 2\" after navigating through the Plex app's user profile, watchlist, and recommended trailers sections.",
+            "action_refs": [
+                [
+                    54,
+                    0
+                ]
+            ],
+            "data_in": [
+                "trailer content (Zootopia 2)"
+            ],
+            "data_out": [
+                "updated visual content (Zootopia 2 scene)"
+            ],
+            "data_dependencies": [
+                86
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 54,
+                "logic": "The flow starts on page 54. The user clicks on the 'Zootopia 2' trailer card, which navigates to page 55 (presumably the trailer playback page). There are no branches or loops as it's a single action to play the trailer.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            54,
+                            0
+                        ],
+                        "src_page_idx": 54,
+                        "dst_page_idx": 55,
+                        "action": "click",
+                        "summary": "Click on the Zootopia 2 trailer card"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 87,
+            "function_description": "This page functions to play and display a specific scene from the \"Zootopia 2\" trailer, allowing user interaction with the trailer playback.",
+            "action_refs": [
+                [
+                    55,
+                    0
+                ],
+                [
+                    56,
+                    0
+                ],
+                [
+                    57,
+                    0
+                ]
+            ],
+            "data_in": [
+                "video trailer",
+                "trailer interaction state",
+                "trailer video"
+            ],
+            "data_out": [
+                "updated trailer playback state",
+                "new trailer scene",
+                "advanced video trailer frame",
+                "advanced trailer video frame"
+            ],
+            "data_dependencies": [
+                87
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 55,
+                "logic": "The user starts on page 55 and clicks the trailer interaction button to move to page 56. From page 56, the user clicks the trailer play/advance button to move to page 57. On page 57, the user can repeatedly click the trailer play/advance button (loop) to continue interacting with the trailer playback.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            55,
+                            0
+                        ],
+                        "src_page_idx": 55,
+                        "dst_page_idx": 56,
+                        "action": "click",
+                        "summary": "Click trailer interaction button"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            56,
+                            0
+                        ],
+                        "src_page_idx": 56,
+                        "dst_page_idx": 57,
+                        "action": "click",
+                        "summary": "Click trailer play/advance button"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            57,
+                            0
+                        ],
+                        "src_page_idx": 57,
+                        "dst_page_idx": 57,
+                        "action": "click",
+                        "summary": "Click trailer play/advance button (loop)"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S3",
+                        "type": "loop",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}

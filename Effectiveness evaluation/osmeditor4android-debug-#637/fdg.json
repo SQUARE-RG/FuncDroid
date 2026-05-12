@@ -1,0 +1,3777 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "Map-based navigation or location viewing",
+            "action_refs": [
+                [
+                    0,
+                    7
+                ],
+                [
+                    0,
+                    8
+                ]
+            ],
+            "data_in": [
+                "map view"
+            ],
+            "data_out": [
+                "updated map view (zoomed out)",
+                "zoomed map view"
+            ],
+            "data_dependencies": [
+                1,
+                2,
+                3,
+                4,
+                6,
+                7,
+                10
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the map page. The user can either click the minus (zoom out) button to reduce the map's zoom level or click the plus (zoom in) button to increase it. Both actions keep the user on the same map page, allowing repeated zoom adjustments as needed.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            7
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click minus (zoom out) button to decrease map zoom"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            0,
+                            8
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click plus (zoom in) button to increase map zoom"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": null,
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S1"
+                            },
+                            {
+                                "next_step": "S2"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 1,
+            "function_description": "Red lock icon",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ]
+            ],
+            "data_in": [
+                "map view",
+                "lock setting"
+            ],
+            "data_out": [
+                "updated lock state"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The core execution logic starts on page 0. The user clicks the red lock icon (action_ref [0,0]), which navigates to page 1. There are no branches or loops as this is a single-step flow with a click action leading to a new page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the red lock icon"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "The current page functions as a camera interface (likely for augmented reality or 3D scene capture) where users can take photos, switch camera modes, and exit the camera view, with a live view of a 3D-rendered room scene including a TV with a checkered pattern, a cat, and furniture.",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ]
+            ],
+            "data_in": [
+                "map view",
+                "camera feature entry"
+            ],
+            "data_out": [
+                "camera view",
+                "camera interface"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on a map page (page 0). The user clicks the camera icon (action [0,1]), transitioning to a camera interface (page 2) that displays a 3D-rendered room scene with a TV, cat, and furniture. This is a straight-line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click camera icon to enter camera interface with 3D room scene"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "The current page (accessed via the target icon from a map - based navigation/location viewing page) provides a menu for managing location - related and GPS - track - related functions, including showing the location, following the GPS position, going to the GPS position, starting/pausing/clearing GPS tracks, managing tracks, and going to the start of a track.",
+            "action_refs": [
+                [
+                    0,
+                    2
+                ]
+            ],
+            "data_in": [
+                "map interface",
+                "GPS-related options"
+            ],
+            "data_out": [
+                "GPS options menu (displayed)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the map page (page 0). The user clicks the target icon, which opens a menu (page 3) with location and GPS track - related options. This menu provides access to functions like showing location, following GPS position, going to GPS position, and managing GPS tracks.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click the target icon on the map page to open the location/GPS - track related menu."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "The current page provides a menu with options to download map views (current view, add to download, other location), enable auto download, access file options, and report notes/bugs, likely for offline map management or OpenStreetMap data handling.",
+            "action_refs": [
+                [
+                    0,
+                    3
+                ]
+            ],
+            "data_in": [
+                "map view"
+            ],
+            "data_out": [
+                "download options menu"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the map page (page 0) and clicks the arrow icon (action [0,3]). This action opens a menu (destination page 4) with options for map download, auto download, file management, and reporting notes/bugs, completing the flow to access the offline map management menu.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the arrow icon to open the offline map management menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "The current page (Preferences) allows users to configure user interface settings related to map display (background, overlay, scale, profile), enable/disable features like bugs/notes display, photo layer, node/POI icons, screen power management, node drag area, and access more/advanced settings for the map - based navigation or location viewing application.",
+            "action_refs": [
+                [
+                    0,
+                    4
+                ],
+                [
+                    5,
+                    4
+                ],
+                [
+                    5,
+                    11
+                ],
+                [
+                    31,
+                    0
+                ],
+                [
+                    31,
+                    1
+                ],
+                [
+                    31,
+                    2
+                ],
+                [
+                    31,
+                    3
+                ]
+            ],
+            "data_in": [
+                "map application settings",
+                "map profile setting"
+            ],
+            "data_out": [
+                "preferences page (settings)",
+                "updated map profile setting",
+                "updated map profile setting (Default)",
+                "updated map profile setting (Pen Round Nodes)"
+            ],
+            "data_dependencies": [
+                19
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts by clicking the settings icon on the map page to enter Preferences. Then, the Map profile setting is clicked to open its options. At the Map profile options, the user can choose between Default, Color Round Nodes, Pen Round Nodes, or cancel to return to Preferences. If a profile is selected, the flow updates the setting; if Cancel is clicked, it returns to Preferences. Finally, the MORE SETTINGS... link can be clicked for advanced options.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click settings icon to open Preferences"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            5,
+                            4
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 31,
+                        "action": "click",
+                        "summary": "Click Map profile to open its options"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            31,
+                            0
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": 74,
+                        "action": "click",
+                        "summary": "Select Default map profile"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            31,
+                            1
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": 75,
+                        "action": "click",
+                        "summary": "Select Color Round Nodes map profile"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            31,
+                            2
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": 76,
+                        "action": "click",
+                        "summary": "Select Pen Round Nodes map profile"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            31,
+                            3
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click CANCEL to return to Preferences"
+                    },
+                    {
+                        "id": "S7",
+                        "action_ref": [
+                            5,
+                            11
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click MORE SETTINGS... for advanced options"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S6"
+                    },
+                    {
+                        "from": "S6",
+                        "to": "S7"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            },
+                            {
+                                "next_step": "S6"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S6",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S7"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "The current page, accessed via a target icon from a map - based navigation/location viewing page, provides a menu with options to manage location - related functions such as showing location, following GPS position, navigating to GPS position, starting/pausing/clearing GPS tracks, managing tracks, and going to the start of a track, enabling users to control and interact with their GPS - related location and tracking on the map.",
+            "action_refs": [
+                [
+                    0,
+                    5
+                ]
+            ],
+            "data_in": [
+                "map interface",
+                "GPS-related settings"
+            ],
+            "data_out": [
+                "GPS tool menu (visible)",
+                "map layer (updated with new details)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the map page (page 0) and clicks the wrench (tools) icon. This action opens a menu with location - related options like showing location, following GPS position, navigating to GPS position, and managing GPS tracks. The flow then allows the user to choose from these options to control GPS - related location and tracking functions on the map.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click the wrench (tools) icon on the map page to open the location - related options menu."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "Displays a dialog indicating the Vespucci app has stopped and provides an option to open the app again, likely to restart or resume the map - based navigation or location viewing functionality.",
+            "action_refs": [
+                [
+                    0,
+                    6
+                ],
+                [
+                    6,
+                    1
+                ],
+                [
+                    6,
+                    2
+                ],
+                [
+                    6,
+                    4
+                ]
+            ],
+            "data_in": [
+                "map interface",
+                "three - dot menu",
+                "app restart action",
+                "Vespucci app state"
+            ],
+            "data_out": [
+                "app crash notification",
+                "updated map state (due to app stop)",
+                "restarted Vespucci app",
+                "updated map view"
+            ],
+            "data_dependencies": [
+                35
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": null,
+                "logic": "When the Vespucci app stops, a dialog appears showing 'Vespucci has stopped'. The user can then click the 'Open app again' option to attempt to restart or resume the app's map - based functionality. There are no other branches or loops in this core logic for this functional point as it's a simple dialog interaction to restart the app.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": null,
+                        "src_page_idx": null,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click 'Open app again' in the dialog that appears when Vespucci app stops to try to restart the app's map - related functionality."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "Show location (checked)",
+            "action_refs": [
+                [
+                    3,
+                    0
+                ]
+            ],
+            "data_in": [
+                "show location setting"
+            ],
+            "data_out": [
+                "updated show location setting (enabled)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The functional point starts on page 3. The user clicks the 'Show location (checked)' option, which transitions the app to page 7. This action ensures the location is displayed (as indicated by the checked state), completing the core logic for showing the location.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            0
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click 'Show location (checked)' to transition to page 7 and show the location."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "Follow GPS position (unchecked)",
+            "action_refs": [
+                [
+                    3,
+                    1
+                ]
+            ],
+            "data_in": [
+                "follow GPS position setting"
+            ],
+            "data_out": [
+                "updated follow GPS position setting (enabled)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The process starts on page 3. The user clicks the 'Follow GPS position (unchecked)' option, which transitions the app to page 8. This action likely enables or interacts with the GPS following functionality.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            1
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click 'Follow GPS position (unchecked)' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "The current page displays a detailed map centered on the user's GPS location (indicated by the blue arrow), providing location-based navigation and information about nearby landmarks, roads, and points of interest.",
+            "action_refs": [
+                [
+                    3,
+                    2
+                ],
+                [
+                    9,
+                    0
+                ],
+                [
+                    9,
+                    1
+                ]
+            ],
+            "data_in": [
+                "GPS position",
+                "map view"
+            ],
+            "data_out": [
+                "updated map view (centered on GPS position)",
+                "zoomed map view",
+                "updated map view (zoomed out)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The flow starts by navigating to the GPS position (S1). After that, the user can choose to zoom in (S2) or zoom out (S3) the map to adjust the view of the location and nearby details. These zoom actions are optional and allow refining the map's scale for better navigation or information viewing.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            2
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Goto GPS position to center map on user's location"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            9,
+                            0
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Zoom in the map to view details closer"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            9,
+                            1
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Zoom out the map to view a larger area"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2",
+                                "condition": "User wants to zoom in the map"
+                            },
+                            {
+                                "next_step": "S3",
+                                "condition": "User wants to zoom out the map"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "The current page functions as a map interface for real - time GPS - based location tracking and navigation, showing the user's position (marked by a blue arrow) on a detailed map with options for zooming, centering on the user's location, and likely managing GPS tracking settings.",
+            "action_refs": [
+                [
+                    3,
+                    3
+                ]
+            ],
+            "data_in": [
+                "GPS track setting"
+            ],
+            "data_out": [
+                "started GPS track"
+            ],
+            "data_dependencies": [
+                12,
+                32,
+                33
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The user starts on the map page (page 3) with a menu open. They click the 'Start GPS track' option, which transitions the app to a new page (page 0) where GPS tracking begins, updating the map to reflect real - time location tracking.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            3
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click 'Start GPS track' to initiate GPS tracking"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "The current page provides a map view with a menu for managing GPS tracks, allowing users to upload, export, or import GPS tracks, likely for navigation or location tracking purposes.",
+            "action_refs": [
+                [
+                    3,
+                    4
+                ]
+            ],
+            "data_in": [
+                "GPS track"
+            ],
+            "data_out": [
+                "GPS track (management options)"
+            ],
+            "data_dependencies": [
+                32,
+                33
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The flow starts on the map page (page 3). The user clicks on the 'Track management...' option, which navigates to the track management page (page 10). This step initiates access to GPS track management features like upload, export, or import.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            4
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click 'Track management...' to navigate to track management page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "The current page displays a notification that the \"Vespucci\" app has stopped, with an option to \"Open app again\" to restart the application and presumably return to the map - based navigation or location viewing functionality.",
+            "action_refs": [
+                [
+                    4,
+                    0
+                ]
+            ],
+            "data_in": [
+                "map current view"
+            ],
+            "data_out": [
+                "downloaded map data"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The app shows a 'Vespucci has stopped' notification. The user clicks 'Open app again' to restart the app, likely returning to map navigation functionality.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            0
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click 'Open app again' to restart the Vespucci app."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "The page displays a system error message indicating that the \"Vespucci\" app keeps stopping, with an option to close the app.",
+            "action_refs": [
+                [
+                    4,
+                    1
+                ]
+            ],
+            "data_in": [
+                "current map view"
+            ],
+            "data_out": [
+                "download task (with current view)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The app encounters a system error, displaying a message that 'Vespucci keeps stopping' with a 'Close app' option. The user can then choose to close the app, which is the primary action here. There are no branches or loops as the flow is a simple error display followed by the close option.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            1
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click 'Add current view to download' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "The page allows the user to select a location (last known, current, or from coordinates) and configure parameters (like data source and radius) to download content for that location, with options to load the content or go to a map view.",
+            "action_refs": [
+                [
+                    4,
+                    2
+                ],
+                [
+                    15,
+                    0
+                ],
+                [
+                    15,
+                    2
+                ],
+                [
+                    15,
+                    3
+                ],
+                [
+                    15,
+                    4
+                ],
+                [
+                    15,
+                    5
+                ],
+                [
+                    15,
+                    6
+                ],
+                [
+                    23,
+                    0
+                ],
+                [
+                    23,
+                    1
+                ]
+            ],
+            "data_in": [
+                "map view",
+                "location data",
+                "download location setting",
+                "last known location option",
+                "download location configuration",
+                "coordinates input",
+                "coordinate search input",
+                "location download configuration",
+                "geocoding service selection",
+                "radius setting",
+                "search input",
+                "service (Photon)",
+                "search provider option"
+            ],
+            "data_out": [
+                "download configuration (other location)",
+                "updated download location setting (last known location selected)",
+                "updated download location configuration",
+                "entered coordinate search input",
+                "updated geocoding service selection",
+                "updated radius setting",
+                "updated location download configuration",
+                "loaded location-based content",
+                "updated search provider setting",
+                "selected search provider (Photon)"
+            ],
+            "data_dependencies": [
+                36,
+                37
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user starts by clicking 'Download at other location' to enter the configuration page. On this page, they can select a location source (last known, current, from coordinates), configure the data source (via a dropdown) and radius, then either load content or go to a map view. The data source dropdown allows choosing between Nominatim and Photon, with selections returning to the main config page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            2
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click 'Download at other location' to open the location configuration page."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            15,
+                            0
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Select 'Last known location' radio button (example location selection)."
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            15,
+                            2
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 21,
+                        "action": "click",
+                        "summary": "Select 'From coordinates' radio button (example location selection)."
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            15,
+                            3
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 22,
+                        "action": "click",
+                        "summary": "Click the search input field (for coordinate/search input)."
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            15,
+                            4
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 23,
+                        "action": "click",
+                        "summary": "Open the data source dropdown (Nominatim/Photon selector)."
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            23,
+                            0
+                        ],
+                        "src_page_idx": 23,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Select 'Nominatim' from the data source dropdown, returning to config."
+                    },
+                    {
+                        "id": "S7",
+                        "action_ref": [
+                            23,
+                            1
+                        ],
+                        "src_page_idx": 23,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Select 'Photon' from the data source dropdown, returning to config."
+                    },
+                    {
+                        "id": "S8",
+                        "action_ref": [
+                            15,
+                            5
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 24,
+                        "action": "click",
+                        "summary": "Adjust the radius slider (configure download radius)."
+                    },
+                    {
+                        "id": "S9",
+                        "action_ref": [
+                            15,
+                            6
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click 'LOAD' button (example action to download content, stays on page)."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S8"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S9"
+                    },
+                    {
+                        "from": "S5",
+                        "to": "S6"
+                    },
+                    {
+                        "from": "S5",
+                        "to": "S7"
+                    },
+                    {
+                        "from": "S6",
+                        "to": "S1"
+                    },
+                    {
+                        "from": "S7",
+                        "to": "S1"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            },
+                            {
+                                "next_step": "S8"
+                            },
+                            {
+                                "next_step": "S9"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S5",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S6"
+                            },
+                            {
+                                "next_step": "S7"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "Auto download toggle",
+            "action_refs": [
+                [
+                    4,
+                    3
+                ]
+            ],
+            "data_in": [
+                "auto download setting"
+            ],
+            "data_out": [
+                "updated auto download setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user starts on page 4 and clicks the 'Auto download' toggle. This action leads to page 16, completing the interaction with the toggle.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            3
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click the Auto download toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "The current page provides file - related options (including Export changes, Read from file, Save to file) for the map - based navigation or location viewing context, enabling users to perform operations like exporting, reading from, or saving to a file related to the map or location data.",
+            "action_refs": [
+                [
+                    4,
+                    4
+                ],
+                [
+                    17,
+                    2
+                ]
+            ],
+            "data_in": [
+                "file operation menu",
+                "map data",
+                "file system structure"
+            ],
+            "data_out": [
+                "file operation submenu"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The flow starts by clicking the 'File...' option from the map-related menu (page 4). This leads to a file operations submenu (page 17). From there, the user can choose to click 'Save to file' (or other file-related options like Export or Read, though only Save is shown here) to perform the corresponding file operation for map/location data.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            4
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click 'File...' option to open file operations submenu"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            17,
+                            2
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click 'Save to file' option to initiate saving map/location data to file"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "The current page (Download options menu) provides functionality to download or add the current map view for offline use, manage downloads, upload data to OSM, enable auto download, access file options, and report notes or bugs related to the map.",
+            "action_refs": [
+                [
+                    4,
+                    5
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The flow starts on the Download options menu page (page 4). The user clicks the 'Notes/Bugs...' option, which is a leaf action (no navigation to a new page, as dst_page_idx is 4). This action likely opens a dialog or page for reporting notes or bugs related to the map.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            5
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click 'Notes/Bugs...' option in Download options menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "The page provides map - based navigation and location viewing, enabling users to see their current location (marked by a blue arrow), explore the surrounding area with map controls like zoom and location centering, and access additional features via the bottom - bar icons.",
+            "action_refs": [
+                [
+                    5,
+                    0
+                ]
+            ],
+            "data_in": [
+                "preferences page state"
+            ],
+            "data_out": [
+                "map view (navigated to)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user starts on the Preferences page (page 5). They click the back arrow icon, which navigates them to the map page (page 0) where they can view their current location (blue arrow), explore the area with map controls, and access bottom - bar features. There are no branches or loops as it's a simple navigation flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            0
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the back arrow icon on the Preferences page to navigate to the map page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "The page allows the user to select a preferred map background style from a list of options for the map - based navigation or location viewing feature.",
+            "action_refs": [
+                [
+                    5,
+                    1
+                ],
+                [
+                    28,
+                    0
+                ],
+                [
+                    28,
+                    1
+                ],
+                [
+                    28,
+                    3
+                ],
+                [
+                    28,
+                    4
+                ],
+                [
+                    28,
+                    5
+                ],
+                [
+                    28,
+                    6
+                ],
+                [
+                    28,
+                    7
+                ],
+                [
+                    28,
+                    8
+                ],
+                [
+                    28,
+                    9
+                ],
+                [
+                    28,
+                    10
+                ],
+                [
+                    28,
+                    11
+                ],
+                [
+                    28,
+                    12
+                ],
+                [
+                    28,
+                    13
+                ],
+                [
+                    28,
+                    14
+                ],
+                [
+                    28,
+                    15
+                ]
+            ],
+            "data_in": [
+                "map background setting",
+                "Esri World Imagery option",
+                "OpenStreetMap (Standard) option",
+                "Hike & Bike map background option",
+                "OpenStreetMap (German Style) option",
+                "OpenStreetMap (Standard Black & White) option",
+                "ScanEx IRS option",
+                "ScanEx SPOT option",
+                "Stamen Terrain option",
+                "Thunderforest Landscape option",
+                "Thunderforest OpenCycleMap option",
+                "U.S. Forest Service roads option",
+                "USGS Large Scale Imagery option",
+                "map background setting options"
+            ],
+            "data_out": [
+                "updated map background setting",
+                "updated map background setting (Esri World Imagery selected)",
+                "updated map background setting (Hike & Bike)",
+                "updated map background setting (OpenStreetMap (German Style))",
+                "updated map background setting (OpenStreetMap (Standard))",
+                "updated map background setting (ScanEx IRS selected)",
+                "updated map background setting (ScanEx SPOT selected)",
+                "updated map background setting (skobbler selected)",
+                "updated map background setting (Stamen Terrain)",
+                "updated map background setting (Thunderforest OpenCycleMap selected)",
+                "updated map background setting (U.S. Forest Service roads)",
+                "updated map background setting (USGS Large Scale Imagery selected)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user starts on page 5 and clicks to open the map background settings (navigating to page 28). On page 28, the user can choose one of multiple map background style radio buttons (each leading to a different page) or click CANCEL to return to page 5. The flow branches based on which radio button (or CANCEL) is clicked.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            1
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 28,
+                        "action": "click",
+                        "summary": "Open map background settings"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            28,
+                            0
+                        ],
+                        "src_page_idx": 28,
+                        "dst_page_idx": 39,
+                        "action": "click",
+                        "summary": "Select Esri World Imagery"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            28,
+                            1
+                        ],
+                        "src_page_idx": 28,
+                        "dst_page_idx": 40,
+                        "action": "click",
+                        "summary": "Select Hike & Bike"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            28,
+                            3
+                        ],
+                        "src_page_idx": 28,
+                        "dst_page_idx": 42,
+                        "action": "click",
+                        "summary": "Select OpenStreetMap (German Style)"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            28,
+                            4
+                        ],
+                        "src_page_idx": 28,
+                        "dst_page_idx": 43,
+                        "action": "click",
+                        "summary": "Select OpenStreetMap (Standard Black & White)"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            28,
+                            5
+                        ],
+                        "src_page_idx": 28,
+                        "dst_page_idx": 44,
+                        "action": "click",
+                        "summary": "Select OpenStreetMap (Standard)"
+                    },
+                    {
+                        "id": "S7",
+                        "action_ref": [
+                            28,
+                            6
+                        ],
+                        "src_page_idx": 28,
+                        "dst_page_idx": 45,
+                        "action": "click",
+                        "summary": "Select ScanEx IRS"
+                    },
+                    {
+                        "id": "S8",
+                        "action_ref": [
+                            28,
+                            7
+                        ],
+                        "src_page_idx": 28,
+                        "dst_page_idx": 46,
+                        "action": "click",
+                        "summary": "Select ScanEx SPOT"
+                    },
+                    {
+                        "id": "S9",
+                        "action_ref": [
+                            28,
+                            8
+                        ],
+                        "src_page_idx": 28,
+                        "dst_page_idx": 47,
+                        "action": "click",
+                        "summary": "Select skobbler"
+                    },
+                    {
+                        "id": "S10",
+                        "action_ref": [
+                            28,
+                            9
+                        ],
+                        "src_page_idx": 28,
+                        "dst_page_idx": 48,
+                        "action": "click",
+                        "summary": "Select Stamen Terrain"
+                    },
+                    {
+                        "id": "S11",
+                        "action_ref": [
+                            28,
+                            10
+                        ],
+                        "src_page_idx": 28,
+                        "dst_page_idx": 49,
+                        "action": "click",
+                        "summary": "Select Thunderforest Landscape"
+                    },
+                    {
+                        "id": "S12",
+                        "action_ref": [
+                            28,
+                            11
+                        ],
+                        "src_page_idx": 28,
+                        "dst_page_idx": 50,
+                        "action": "click",
+                        "summary": "Select Thunderforest OpenCycleMap"
+                    },
+                    {
+                        "id": "S13",
+                        "action_ref": [
+                            28,
+                            12
+                        ],
+                        "src_page_idx": 28,
+                        "dst_page_idx": 51,
+                        "action": "click",
+                        "summary": "Select U.S. Forest Service roads"
+                    },
+                    {
+                        "id": "S14",
+                        "action_ref": [
+                            28,
+                            13
+                        ],
+                        "src_page_idx": 28,
+                        "dst_page_idx": 52,
+                        "action": "click",
+                        "summary": "Select USGS Large Scale Imagery"
+                    },
+                    {
+                        "id": "S15",
+                        "action_ref": [
+                            28,
+                            14
+                        ],
+                        "src_page_idx": 28,
+                        "dst_page_idx": 53,
+                        "action": "click",
+                        "summary": "Select USGS Topographic Maps"
+                    },
+                    {
+                        "id": "S16",
+                        "action_ref": [
+                            28,
+                            15
+                        ],
+                        "src_page_idx": 28,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click CANCEL to return"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S6"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S7"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S8"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S9"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S10"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S11"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S12"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S13"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S14"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S15"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S16"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            },
+                            {
+                                "next_step": "S6"
+                            },
+                            {
+                                "next_step": "S7"
+                            },
+                            {
+                                "next_step": "S8"
+                            },
+                            {
+                                "next_step": "S9"
+                            },
+                            {
+                                "next_step": "S10"
+                            },
+                            {
+                                "next_step": "S11"
+                            },
+                            {
+                                "next_step": "S12"
+                            },
+                            {
+                                "next_step": "S13"
+                            },
+                            {
+                                "next_step": "S14"
+                            },
+                            {
+                                "next_step": "S15"
+                            },
+                            {
+                                "next_step": "S16"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "The page allows users to select a map overlay option from a list of available overlays (such as imagery, locator, or OpenStreetMap - related inspectors) to customize the map view, with a \"Cancel\" option to exit without making a selection.",
+            "action_refs": [
+                [
+                    5,
+                    2
+                ],
+                [
+                    29,
+                    0
+                ],
+                [
+                    29,
+                    2
+                ],
+                [
+                    29,
+                    3
+                ],
+                [
+                    29,
+                    4
+                ],
+                [
+                    29,
+                    13
+                ],
+                [
+                    29,
+                    14
+                ],
+                [
+                    29,
+                    15
+                ]
+            ],
+            "data_in": [
+                "map overlay setting",
+                "Locator Overlay option",
+                "OpenPT Map (overlay) option",
+                "QA No Address option",
+                "TIGER Roads 2012 option"
+            ],
+            "data_out": [
+                "updated map overlay setting",
+                "updated map overlay setting (None)",
+                "updated map overlay setting (DigitalGlobe Standard Imagery Vintage)",
+                "updated map overlay setting (Locator Overlay)",
+                "updated map overlay setting (QA No Address selected)",
+                "updated map overlay setting (TIGER Roads 2012 selected)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The flow starts by clicking the Map overlay setting to open the overlay options. Once in the overlay list, the user can either select a specific overlay option (like None, imagery, locator, or OpenPT Map) or click Cancel to exit without selection. The selection of an overlay leads to applying that setting, while Cancel returns to the previous page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            2
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 29,
+                        "action": "click",
+                        "summary": "Open map overlay options"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            29,
+                            15
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Cancel and exit overlay selection"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            29,
+                            0
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 54,
+                        "action": "click",
+                        "summary": "Select 'None' overlay"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            29,
+                            2
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 56,
+                        "action": "click",
+                        "summary": "Select 'DigitalGlobe Standard Imagery Vintage' overlay"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            29,
+                            3
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 57,
+                        "action": "click",
+                        "summary": "Select 'Locator Overlay' overlay"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            29,
+                            4
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 58,
+                        "action": "click",
+                        "summary": "Select 'OpenPT Map (overlay)' overlay"
+                    },
+                    {
+                        "id": "S7",
+                        "action_ref": [
+                            29,
+                            6
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 67,
+                        "action": "click",
+                        "summary": "Select 'QA No Address' overlay"
+                    },
+                    {
+                        "id": "S8",
+                        "action_ref": [
+                            29,
+                            7
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 68,
+                        "action": "click",
+                        "summary": "Select 'TIGER Roads 2012' overlay"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S6"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S7"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S8"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2",
+                                "condition": "User clicks CANCEL"
+                            },
+                            {
+                                "next_step": "S3",
+                                "condition": "User selects 'None' overlay"
+                            },
+                            {
+                                "next_step": "S4",
+                                "condition": "User selects 'DigitalGlobe Standard Imagery Vintage' overlay"
+                            },
+                            {
+                                "next_step": "S5",
+                                "condition": "User selects 'Locator Overlay' overlay"
+                            },
+                            {
+                                "next_step": "S6",
+                                "condition": "User selects 'OpenPT Map (overlay)' overlay"
+                            },
+                            {
+                                "next_step": "S7",
+                                "condition": "User selects 'QA No Address' overlay"
+                            },
+                            {
+                                "next_step": "S8",
+                                "condition": "User selects 'TIGER Roads 2012' overlay"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "The page allows the user to select the type of scale display (e.g., None, Scale (metric), Grid (metric), Scale (imperial), Grid (imperial)) for the map interface within the preferences settings.",
+            "action_refs": [
+                [
+                    5,
+                    3
+                ],
+                [
+                    30,
+                    0
+                ],
+                [
+                    30,
+                    1
+                ],
+                [
+                    30,
+                    2
+                ],
+                [
+                    30,
+                    3
+                ],
+                [
+                    30,
+                    4
+                ],
+                [
+                    30,
+                    5
+                ]
+            ],
+            "data_in": [
+                "scale display setting",
+                "scale display setting options"
+            ],
+            "data_out": [
+                "updated scale display setting",
+                "updated scale display setting (None)",
+                "updated scale display setting (Grid (metric))",
+                "updated scale display setting (Scale (imperial))",
+                "updated scale display setting (Grid (imperial))"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user starts on the Preferences page and clicks the 'Scale display' setting to open the selection dialog. In the dialog, the user can choose one of five options (None, Scale (metric), Grid (metric), Scale (imperial), Grid (imperial)) by clicking the corresponding radio button, or cancel the selection by clicking 'CANCEL' to return to the Preferences page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            3
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 30,
+                        "action": "click",
+                        "summary": "Open Scale display selection dialog"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            30,
+                            0
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 69,
+                        "action": "click",
+                        "summary": "Select None option"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            30,
+                            1
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 70,
+                        "action": "click",
+                        "summary": "Select Scale (metric) option"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            30,
+                            2
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 71,
+                        "action": "click",
+                        "summary": "Select Grid (metric) option"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            30,
+                            3
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 72,
+                        "action": "click",
+                        "summary": "Select Scale (imperial) option"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            30,
+                            4
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 73,
+                        "action": "click",
+                        "summary": "Select Grid (imperial) option"
+                    },
+                    {
+                        "id": "S7",
+                        "action_ref": [
+                            30,
+                            5
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Cancel and return to Preferences"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S6"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S7"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            },
+                            {
+                                "next_step": "S6"
+                            },
+                            {
+                                "next_step": "S7"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "Enable Bugs and Notes display checkbox",
+            "action_refs": [
+                [
+                    5,
+                    5
+                ]
+            ],
+            "data_in": [
+                "Bugs and Notes display setting"
+            ],
+            "data_out": [
+                "updated Bugs and Notes display setting (enabled)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The process starts on the Preferences page. The user clicks the 'Enable Bugs and Notes display' checkbox, which likely toggles its state (enabling or confirming the display of bugs and notes). This action transitions to a new page (or updates the current one) to reflect the change.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            5
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 32,
+                        "action": "click",
+                        "summary": "Click the 'Enable Bugs and Notes display' checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "Enable Photo layer checkbox",
+            "action_refs": [
+                [
+                    5,
+                    6
+                ]
+            ],
+            "data_in": [
+                "photo layer setting"
+            ],
+            "data_out": [
+                "updated photo layer setting (enabled)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The process starts on the Preferences page. The user performs a click action to enable the 'Enable Photo layer' checkbox, which likely navigates to or updates a related page (page 33) to reflect the change. There are no branches or loops as it is a single action to toggle the checkbox.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            6
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 33,
+                        "action": "click",
+                        "summary": "Click the 'Enable Photo layer' checkbox to enable it"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 25,
+            "function_description": "Show node icons checkbox",
+            "action_refs": [
+                [
+                    5,
+                    7
+                ]
+            ],
+            "data_in": [
+                "show node icons setting"
+            ],
+            "data_out": [
+                "updated show node icons setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user starts on the Preferences page (page 5). The core action is clicking the 'Show node icons' checkbox, which transitions to page 34. This is a single-step flow with no branches, as the action directly toggles the checkbox and navigates (or updates state) to the destination page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            7
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 34,
+                        "action": "click",
+                        "summary": "Click the 'Show node icons' checkbox on the Preferences page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 26,
+            "function_description": "Show POI icons on buildings checkbox",
+            "action_refs": [
+                [
+                    5,
+                    8
+                ]
+            ],
+            "data_in": [
+                "Show POI icons on buildings setting"
+            ],
+            "data_out": [
+                "updated Show POI icons on buildings setting state"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user starts on page 5 (Preferences). The core action is clicking the 'Show POI icons on buildings' checkbox, which transitions to page 35. This is a single-step flow with no branches, as the action directly toggles the checkbox and navigates (or updates state) to the destination page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            8
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 35,
+                        "action": "click",
+                        "summary": "Click the 'Show POI icons on buildings' checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 27,
+            "function_description": "Keep screen on checkbox",
+            "action_refs": [
+                [
+                    5,
+                    9
+                ]
+            ],
+            "data_in": [
+                "keep screen on setting"
+            ],
+            "data_out": [
+                "updated keep screen on setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The flow starts on page 5 (Preferences). The user performs a click action on the 'Keep screen on' checkbox, which transitions the app to page 36. This action toggles the checkbox's state (enabling or disabling the 'Keep screen on' setting).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            9
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 36,
+                        "action": "click",
+                        "summary": "Click the 'Keep screen on' checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 28,
+            "function_description": "Large node drag area checkbox",
+            "action_refs": [
+                [
+                    5,
+                    10
+                ]
+            ],
+            "data_in": [
+                "large node drag area setting"
+            ],
+            "data_out": [
+                "updated large node drag area setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The flow starts on the Preferences page (page 5). The user performs a click action on the 'Large node drag area' checkbox. This action likely toggles the checkbox's state (enabling or disabling the large drag area feature) and navigates to page 37 (or completes the interaction, as the step is a leaf action).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            10
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 37,
+                        "action": "click",
+                        "summary": "Click the 'Large node drag area' checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 29,
+            "function_description": "The current page (Vespucci 0.9.10b1324) allows users to configure various user interface settings, such as enabling/disabling features like voice commands, full screen mode, context menu behavior, and theme preferences, to customize the application's interface and functionality.",
+            "action_refs": [
+                [
+                    5,
+                    12
+                ],
+                [
+                    38,
+                    2
+                ],
+                [
+                    38,
+                    4
+                ],
+                [
+                    79,
+                    0
+                ],
+                [
+                    79,
+                    1
+                ],
+                [
+                    79,
+                    2
+                ],
+                [
+                    79,
+                    3
+                ],
+                [
+                    81,
+                    0
+                ],
+                [
+                    81,
+                    1
+                ],
+                [
+                    81,
+                    2
+                ],
+                [
+                    81,
+                    3
+                ],
+                [
+                    81,
+                    4
+                ]
+            ],
+            "data_in": [
+                "advanced preferences setting",
+                "follow GPS button layout setting",
+                "full screen mode setting",
+                "Follow GPS button layout setting"
+            ],
+            "data_out": [
+                "advanced preferences page (loaded)",
+                "follow GPS button layout setting",
+                "updated full screen mode setting",
+                "Follow GPS button layout setting (updated to Left)",
+                "updated Follow GPS button layout setting (Right)",
+                "updated follow GPS button layout setting (None)",
+                "updated full screen mode setting (Never)",
+                "updated full screen mode setting (Force)",
+                "updated full screen mode setting (No statusbar)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": null
+        },
+        {
+            "index": 30,
+            "function_description": "The current page functions as a map - based interface for viewing the user's location, with additional features like zoom controls, a location - centering button, and a menu (accessed via the three - dot icon) for further options, enabling users to navigate and explore the area shown on the map.",
+            "action_refs": [
+                [
+                    6,
+                    0
+                ]
+            ],
+            "data_in": [
+                "app restart request"
+            ],
+            "data_out": [
+                "restarted app session",
+                "map data"
+            ],
+            "data_dependencies": [
+                17,
+                31,
+                38
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on page 6 (map interface with a 'Vespucci has stopped' dialog). They click 'Open app again' (action from [6,0]), which transitions to page 0 (the main map view). The flow is a straight line with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            0
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click 'Open app again' to dismiss the dialog and return to the main map view."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 31,
+            "function_description": "The current page is a map - based interface that enables users to view their location (marked by a blue arrow), navigate around the area (with zoom controls and a location - centering button), and access additional options via the three - dot menu, likely for functions such as finding specific places or getting directions.",
+            "action_refs": [
+                [
+                    6,
+                    3
+                ]
+            ],
+            "data_in": [
+                "app state",
+                "map data"
+            ],
+            "data_out": [
+                "restarted app state",
+                "reloaded map data"
+            ],
+            "data_dependencies": [
+                38
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on the map interface (page 6). They click the three - dot menu (action at [6,3]) to access the 'Share position option'. After this click, the destination page is 0, likely leading to a sharing - related interface or action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            3
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the three - dot menu to access the 'Share position option'"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 32,
+            "function_description": "The current page displays an error message indicating the app \"Vespucci has stopped\" and provides an option to \"Open app again\" to restart the application after it crashed or stopped unexpectedly.",
+            "action_refs": [
+                [
+                    10,
+                    0
+                ]
+            ],
+            "data_in": [
+                "GPS track"
+            ],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The app displays an error message 'Vespucci has stopped'. The user then clicks the 'Open app again' option to attempt restarting the application after its unexpected stop.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            0
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click 'Open app again' to restart the app after it stopped."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 33,
+            "function_description": "The current page is a map - based interface that enables location viewing, and it also provides access to GPS - related features (such as track management and export of GPS tracks) through its menu options.",
+            "action_refs": [
+                [
+                    10,
+                    1
+                ]
+            ],
+            "data_in": [
+                "GPS track"
+            ],
+            "data_out": [
+                "exported GPS track"
+            ],
+            "data_dependencies": [
+                32
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The flow starts on the map interface (page 10). The user clicks the 'Export GPS track' option, which leads to a new page (page 0). This action initiates the GPS track export process from the map - based location - viewing and GPS - feature - enabled interface.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            1
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click 'Export GPS track' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 34,
+            "function_description": "This page functions as a file browser for the \"/storage/emulated/0/Vespucci\" directory, allowing the user to select a GPS track file (e.g., GPX, OSC) for import into the track management system, with a \"CANCEL\" option to exit the file selection process.",
+            "action_refs": [
+                [
+                    10,
+                    2
+                ],
+                [
+                    11,
+                    0
+                ],
+                [
+                    11,
+                    1
+                ],
+                [
+                    11,
+                    2
+                ],
+                [
+                    11,
+                    3
+                ]
+            ],
+            "data_in": [
+                "GPS track file",
+                "parent directory folder",
+                "current directory (Vespucci) content",
+                "Pictures folder",
+                "file system directory",
+                "2025-12-14T071814.gpx file",
+                "file selection context"
+            ],
+            "data_out": [
+                "imported GPS track",
+                "navigated parent directory content"
+            ],
+            "data_dependencies": [
+                32,
+                33
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The process starts with clicking 'Import GPS track' to open the file browser for the '/storage/emulated/0/Vespucci' directory. In the file browser, the user can either navigate folders (like '..' or 'Pictures'), select a GPS track file (e.g., '2025-12-14T071814.gpx'), or click 'CANCEL' to exit the file selection and return to the map page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            2
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click 'Import GPS track' to open the file browser."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            11,
+                            0
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click '..' (parent directory) to navigate up."
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            11,
+                            1
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click 'Pictures' folder to navigate into it."
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            11,
+                            2
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click '2025-12-14T071814.gpx' file to select it."
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            11,
+                            3
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click 'CANCEL' button to exit file selection."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S5"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2",
+                                "condition": "User clicks parent directory (..)"
+                            },
+                            {
+                                "next_step": "S3",
+                                "condition": "User clicks Pictures folder"
+                            },
+                            {
+                                "next_step": "S4",
+                                "condition": "User clicks a GPS track file"
+                            },
+                            {
+                                "next_step": "S5",
+                                "condition": "User clicks CANCEL button"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 35,
+            "function_description": "Close app button",
+            "action_refs": [
+                [
+                    14,
+                    0
+                ]
+            ],
+            "data_in": [
+                "Vespucci app (crashed state)"
+            ],
+            "data_out": [
+                "closed Vespucci app instance"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "On the page where the 'Vespucci keeps stopping' dialog is shown (page 14), the user clicks the 'Close app' button. This action leads to the destination page (page 18), completing the process of closing the app.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            0
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click the Close app button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 36,
+            "function_description": "Current location radio button",
+            "action_refs": [
+                [
+                    15,
+                    1
+                ]
+            ],
+            "data_in": [
+                "download location setting",
+                "current location option"
+            ],
+            "data_out": [
+                "updated download location setting (current location selected)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user starts on page 15 (Download at other location). They click the 'Current location' radio button, which transitions the app to page 20. This action selects the current location option for further operations (like downloading or mapping).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            1
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 20,
+                        "action": "click",
+                        "summary": "Click the 'Current location' radio button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 37,
+            "function_description": "The current page provides a map - based interface for navigation, location viewing, and potentially related actions like downloading map data for other locations (as per the navigation path context), with features such as a compass, zoom controls, and a visible user location marker to assist in orienting and exploring the area shown on the map.",
+            "action_refs": [
+                [
+                    15,
+                    7
+                ]
+            ],
+            "data_in": [
+                "location download configuration"
+            ],
+            "data_out": [
+                "map view (with location context)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user starts on the 'Download at other location' page. They click the 'GO TO MAP' button, which navigates them to the map interface. The map page provides navigation, location viewing, and exploration features like a compass, zoom controls, and a user location marker.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            7
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the 'GO TO MAP' button to navigate to the map interface."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 38,
+            "function_description": "The current page provides a map - based interface for navigation or location viewing, enabling users to see their current location (marked by a blue arrow), zoom in/out, and access additional functionalities through the bottom - bar icons.",
+            "action_refs": [
+                [
+                    17,
+                    0
+                ]
+            ],
+            "data_in": [
+                "map data",
+                "change records"
+            ],
+            "data_out": [
+                "exported file"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 17,
+                "logic": "The user starts on a map page (page 17) with a blue arrow marking their location. They perform a click action on the 'Export changes' option, which transitions the app to a new page (page 0). The flow is a straight line with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            17,
+                            0
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click on 'Export changes' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 39,
+            "function_description": "This page functions as a file browser for the \"/storage/emulated/0/Vespucci\" directory, allowing the user to select a file (e.g., GPX, OSC) or navigate folders, with a \"CANCEL\" option to exit the file selection process.",
+            "action_refs": [
+                [
+                    17,
+                    1
+                ],
+                [
+                    25,
+                    0
+                ],
+                [
+                    25,
+                    3
+                ],
+                [
+                    26,
+                    0
+                ],
+                [
+                    26,
+                    2
+                ]
+            ],
+            "data_in": [
+                "file",
+                "Pictures folder",
+                "file directory",
+                "file selection session"
+            ],
+            "data_out": [
+                "Pictures folder contents",
+                "file directory update",
+                "Vespucci folder (parent directory)",
+                "updated file directory view",
+                "cancelled file selection session"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 17,
+                "logic": "The flow starts with clicking 'Read from file' to open the file browser. In the browser, the user can either navigate into the 'Pictures' folder, go back via the parent folder (..), or cancel the process. If 'Pictures' is clicked, the browser shows its contents, where the user can again go back or cancel. Clicking 'CANCEL' at any point exits the file selection.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            17,
+                            1
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 25,
+                        "action": "click",
+                        "summary": "Click 'Read from file' to open the file browser."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            25,
+                            0
+                        ],
+                        "src_page_idx": 25,
+                        "dst_page_idx": 26,
+                        "action": "click",
+                        "summary": "Click 'Pictures' folder to navigate into it."
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            25,
+                            3
+                        ],
+                        "src_page_idx": 25,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click 'CANCEL' to exit file selection."
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            26,
+                            0
+                        ],
+                        "src_page_idx": 26,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click parent folder (..) to navigate back."
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            26,
+                            2
+                        ],
+                        "src_page_idx": 26,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click 'Cancel' to exit file selection from the Pictures folder view."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S5"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 40,
+            "function_description": "Mapbox Satellite radio",
+            "action_refs": [
+                [
+                    28,
+                    2
+                ]
+            ],
+            "data_in": [
+                "map background setting",
+                "Mapbox Satellite option"
+            ],
+            "data_out": [
+                "updated map background setting (Mapbox Satellite selected)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 28,
+                "logic": "The user starts on page 28 (Map background options). The core action is clicking the 'Mapbox Satellite' radio button, which transitions to page 41. This is a single-step flow with no branches, as the action directly selects the Mapbox Satellite map background.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            28,
+                            2
+                        ],
+                        "src_page_idx": 28,
+                        "dst_page_idx": 41,
+                        "action": "click",
+                        "summary": "Click the 'Mapbox Satellite' radio button to select it as the map background."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 41,
+            "function_description": "DigitalGlobe Premium Imagery Vintage radio button",
+            "action_refs": [
+                [
+                    29,
+                    1
+                ]
+            ],
+            "data_in": [
+                "map overlay setting",
+                "DigitalGlobe Premium Imagery Vintage option"
+            ],
+            "data_out": [
+                "updated map overlay setting (DigitalGlobe Premium Imagery Vintage selected)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 29,
+                "logic": "The flow starts on page 29 (Map overlay menu). The user clicks the 'DigitalGlobe Premium Imagery Vintage' radio button, which likely selects this map overlay option and transitions to page 55. There are no branches or loops in this straight-line execution.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            29,
+                            1
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 55,
+                        "action": "click",
+                        "summary": "Click the 'DigitalGlobe Premium Imagery Vintage' radio button to select this map overlay option."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 42,
+            "function_description": "OpenStreetMap GPS traces radio button",
+            "action_refs": [
+                [
+                    29,
+                    5
+                ]
+            ],
+            "data_in": [
+                "map overlay setting",
+                "OpenStreetMap GPS traces option"
+            ],
+            "data_out": [
+                "updated map overlay setting (OpenStreetMap GPS traces)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 29,
+                "logic": "On the 'Map overlay' page (page 29), the user clicks the 'OpenStreetMap GPS traces' radio button. This action transitions the app to page 59, completing the selection of this map overlay option.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            29,
+                            5
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 59,
+                        "action": "click",
+                        "summary": "Click 'OpenStreetMap GPS traces' radio button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 43,
+            "function_description": "OSM Inspector: Addresses radio button",
+            "action_refs": [
+                [
+                    29,
+                    6
+                ]
+            ],
+            "data_in": [
+                "map overlay setting",
+                "OSM Inspector: Addresses option"
+            ],
+            "data_out": [
+                "updated map overlay setting (OSM Inspector: Addresses)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 29,
+                "logic": "The user starts on page 29 (Map overlay menu). The core action is clicking the 'OSM Inspector: Addresses' radio button, which transitions to page 60. This is a single-step flow with no branches or loops, as the action directly selects the desired map overlay option.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            29,
+                            6
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 60,
+                        "action": "click",
+                        "summary": "Click the 'OSM Inspector: Addresses' radio button in the Map overlay menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 44,
+            "function_description": "OSM Inspector: Area radio button",
+            "action_refs": [
+                [
+                    29,
+                    7
+                ]
+            ],
+            "data_in": [
+                "map overlay setting",
+                "OSM Inspector: Area option"
+            ],
+            "data_out": [
+                "updated map overlay setting (OSM Inspector: Area)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 29,
+                "logic": "The flow starts on page 29 (Map overlay menu). The user clicks the 'OSM Inspector: Area' radio button, which transitions the app to page 61. This action selects the OSM Inspector: Area map overlay option.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            29,
+                            7
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 61,
+                        "action": "click",
+                        "summary": "Click 'OSM Inspector: Area' radio button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 45,
+            "function_description": "OSM Inspector: Geometry radio button",
+            "action_refs": [
+                [
+                    29,
+                    8
+                ]
+            ],
+            "data_in": [
+                "map overlay setting",
+                "OSM Inspector: Geometry option"
+            ],
+            "data_out": [
+                "updated map overlay setting (OSM Inspector: Geometry)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 29,
+                "logic": "The user starts on page 29 (a map overlay selection menu). The core action is clicking the 'OSM Inspector: Geometry' radio button, which navigates to page 62. There are no branches or loops as it's a single click action to select this option.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            29,
+                            8
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 62,
+                        "action": "click",
+                        "summary": "Click the 'OSM Inspector: Geometry' radio button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 46,
+            "function_description": "OSM Inspector: Highways radio button",
+            "action_refs": [
+                [
+                    29,
+                    9
+                ]
+            ],
+            "data_in": [
+                "map overlay setting",
+                "OSM Inspector: Highways option"
+            ],
+            "data_out": [
+                "updated map overlay setting (OSM Inspector: Highways)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 29,
+                "logic": "The user starts on page 29 (Map overlay menu). They perform a single action: clicking the 'OSM Inspector: Highways' radio button, which navigates to page 63. There are no branches or loops in this flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            29,
+                            9
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 63,
+                        "action": "click",
+                        "summary": "Click the 'OSM Inspector: Highways' radio button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 47,
+            "function_description": "OSM Inspector: Places radio button",
+            "action_refs": [
+                [
+                    29,
+                    10
+                ]
+            ],
+            "data_in": [
+                "map overlay setting",
+                "OSM Inspector: Places option"
+            ],
+            "data_out": [
+                "updated map overlay setting (OSM Inspector: Places)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 29,
+                "logic": "The user starts on page 29 (Map overlay menu). The core logic is a single step: clicking the 'OSM Inspector: Places' radio button, which navigates to page 64. There are no branches or loops as it’s a direct action to select this map overlay option.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            29,
+                            10
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 64,
+                        "action": "click",
+                        "summary": "Click the 'OSM Inspector: Places' radio button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 48,
+            "function_description": "OSM Inspector: Routing radio button",
+            "action_refs": [
+                [
+                    29,
+                    11
+                ]
+            ],
+            "data_in": [
+                "map overlay setting",
+                "OSM Inspector: Routing option"
+            ],
+            "data_out": [
+                "updated map overlay setting (OSM Inspector: Routing enabled)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 29,
+                "logic": "The process starts on the 'Map overlay' page (page 29). The user clicks the 'OSM Inspector: Routing' radio button, which navigates to page 65. This is a single-step action with no branches or loops, as the click directly transitions to the target page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            29,
+                            11
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 65,
+                        "action": "click",
+                        "summary": "Click the 'OSM Inspector: Routing' radio button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 49,
+            "function_description": "OSM Inspector: Tagging radio button",
+            "action_refs": [
+                [
+                    29,
+                    12
+                ]
+            ],
+            "data_in": [
+                "map overlay setting",
+                "OSM Inspector: Tagging option"
+            ],
+            "data_out": [
+                "updated map overlay setting (OSM Inspector: Tagging)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 29,
+                "logic": "The user starts on page 29 (a map overlay selection menu). The core action is clicking the 'OSM Inspector: Tagging' radio button, which navigates to page 66. There are no branches or loops in this flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            29,
+                            12
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 66,
+                        "action": "click",
+                        "summary": "Click the 'OSM Inspector: Tagging' radio button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 50,
+            "function_description": "Display tag form checkbox",
+            "action_refs": [
+                [
+                    38,
+                    0
+                ]
+            ],
+            "data_in": [
+                "display tag form setting"
+            ],
+            "data_out": [
+                "updated display tag form setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 38,
+                "logic": "The user starts on page 38 (a settings page) and clicks the 'Display tag form' checkbox. This action leads to page 77, completing the interaction with this checkbox.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            38,
+                            0
+                        ],
+                        "src_page_idx": 38,
+                        "dst_page_idx": 77,
+                        "action": "click",
+                        "summary": "Click the 'Display tag form' checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 51,
+            "function_description": "Show camera action checkbox",
+            "action_refs": [
+                [
+                    38,
+                    1
+                ]
+            ],
+            "data_in": [
+                "show camera action setting"
+            ],
+            "data_out": [
+                "updated show camera action setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 38,
+                "logic": "The flow starts on page 38. The user performs a click action on the 'Show camera action' checkbox. This action likely toggles the checkbox's state (either enabling or disabling the 'Show camera action' setting) and may navigate to page 78 (or reflect the state change on the same page).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            38,
+                            1
+                        ],
+                        "src_page_idx": 38,
+                        "dst_page_idx": 78,
+                        "action": "click",
+                        "summary": "Click the 'Show camera action' checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 52,
+            "function_description": "Always dim non-downloaded area checkbox",
+            "action_refs": [
+                [
+                    38,
+                    3
+                ]
+            ],
+            "data_in": [
+                "always dim non-downloaded area setting"
+            ],
+            "data_out": [
+                "updated always dim non-downloaded area setting (enabled)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 38,
+                "logic": "The user interacts with the 'Always dim non-downloaded area' checkbox. The flow starts on page 38, where the user clicks the checkbox. This action likely toggles the setting, and the flow ends on page 80 after the click.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            38,
+                            3
+                        ],
+                        "src_page_idx": 38,
+                        "dst_page_idx": 80,
+                        "action": "click",
+                        "summary": "Click the 'Always dim non-downloaded area' checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 53,
+            "function_description": "Enable voice commands checkbox",
+            "action_refs": [
+                [
+                    38,
+                    5
+                ]
+            ],
+            "data_in": [
+                "enable voice commands setting"
+            ],
+            "data_out": [
+                "updated enable voice commands setting (enabled)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 38,
+                "logic": "The flow starts on page 38 (settings page). The user clicks the 'Enable voice commands' checkbox, which transitions the app to page 82. This is a straight - line flow with no branches or loops as it's a single action to enable the checkbox.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            38,
+                            5
+                        ],
+                        "src_page_idx": 38,
+                        "dst_page_idx": 82,
+                        "action": "click",
+                        "summary": "Click the 'Enable voice commands' checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 54,
+            "function_description": "Always use context menu checkbox",
+            "action_refs": [
+                [
+                    38,
+                    6
+                ]
+            ],
+            "data_in": [
+                "always use context menu setting"
+            ],
+            "data_out": [
+                "updated always use context menu setting (enabled)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 38,
+                "logic": "The user starts on page 38 (settings page). The core logic is to click the 'Always use context menu' checkbox, which transitions to page 83. This is a single action with no branches or loops, as the action is a direct click on the checkbox to modify its state (likely toggle it, though the exact post-click state isn’t part of the action’s description here).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            38,
+                            6
+                        ],
+                        "src_page_idx": 38,
+                        "dst_page_idx": 83,
+                        "action": "click",
+                        "summary": "Click the 'Always use context menu' checkbox, transitioning to page 83."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 55,
+            "function_description": "Show tolerance checkbox",
+            "action_refs": [
+                [
+                    38,
+                    7
+                ]
+            ],
+            "data_in": [
+                "show tolerance setting"
+            ],
+            "data_out": [
+                "updated show tolerance setting state"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 38,
+                "logic": "The flow starts on page 38. The user performs a click action to show the tolerance checkbox, resulting in navigation to page 84. There are no branches or loops as this is a single action to display the checkbox.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            38,
+                            7
+                        ],
+                        "src_page_idx": 38,
+                        "dst_page_idx": 84,
+                        "action": "click",
+                        "summary": "Click to show tolerance checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 56,
+            "function_description": "Use back key for Undo checkbox",
+            "action_refs": [
+                [
+                    38,
+                    8
+                ]
+            ],
+            "data_in": [
+                "use back key for undo setting"
+            ],
+            "data_out": [
+                "updated use back key for undo setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 38,
+                "logic": "The user starts on page 38 (a settings page). They perform a click action on the 'Use back key for Undo' checkbox, which transitions the app to page 85. This action toggles the checkbox's state (likely enabling or disabling the 'Use back key for Undo' feature).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            38,
+                            8
+                        ],
+                        "src_page_idx": 38,
+                        "dst_page_idx": 85,
+                        "action": "click",
+                        "summary": "Click the 'Use back key for Undo' checkbox to toggle its state and transition to page 85."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 57,
+            "function_description": "Enable light theme checkbox",
+            "action_refs": [
+                [
+                    38,
+                    9
+                ]
+            ],
+            "data_in": [
+                "light theme setting"
+            ],
+            "data_out": [
+                "updated light theme setting (enabled)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 38,
+                "logic": "The process starts on page 38. The user clicks the 'Enable light theme' checkbox, which leads to page 86. This is a straight - line flow with no branches or loops as it's a single action to enable the light theme checkbox.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            38,
+                            9
+                        ],
+                        "src_page_idx": 38,
+                        "dst_page_idx": 86,
+                        "action": "click",
+                        "summary": "Click the Enable light theme checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 58,
+            "function_description": "Enable name suggestions checkbox",
+            "action_refs": [
+                [
+                    38,
+                    10
+                ]
+            ],
+            "data_in": [
+                "enable name suggestions setting"
+            ],
+            "data_out": [
+                "updated enable name suggestions setting (enabled)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 38,
+                "logic": "The process starts on page 38. The user performs a click action to enable the 'Enable name suggestions' checkbox, which leads to page 87. There are no branches or loops as it is a single action flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            38,
+                            10
+                        ],
+                        "src_page_idx": 38,
+                        "dst_page_idx": 87,
+                        "action": "click",
+                        "summary": "Click to enable name suggestions checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 59,
+            "function_description": "Displays a map with a user’s current location (marked by a blue arrow) and surrounding area details, likely after reading location data from the selected GPX file, with options for navigation, zoom, and other map - related actions.",
+            "action_refs": [
+                [
+                    25,
+                    1
+                ]
+            ],
+            "data_in": [
+                "2025-12-14T071814.gpx file"
+            ],
+            "data_out": [
+                "loaded map data"
+            ],
+            "data_dependencies": [
+                38
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 25,
+                "logic": "The app starts on the file selection page. The user clicks on the '2025-12-14T071814.gpx' file, which transitions the app to a map page displaying the user’s current location (marked by a blue arrow) and surrounding area details. No branches or loops are present in this core flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            25,
+                            1
+                        ],
+                        "src_page_idx": 25,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click on the '2025-12-14T071814.gpx' file to load its location data and display the map with current location."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 60,
+            "function_description": "Displays a map with a user’s current location (marked by a blue arrow) and various map controls, likely after reading location data from the selected GPX file, to enable map - based navigation or location viewing.",
+            "action_refs": [
+                [
+                    25,
+                    2
+                ]
+            ],
+            "data_in": [
+                "2025-12-14T072313.osc file"
+            ],
+            "data_out": [
+                "map data (from file)"
+            ],
+            "data_dependencies": [
+                38
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 25,
+                "logic": "The process starts on a file selection page. The user clicks on the '2025-12-14T072313.osc' file, which transitions the app to a map page displaying the user’s current location (marked by a blue arrow) along with map controls, enabling map - based navigation or location viewing.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            25,
+                            2
+                        ],
+                        "src_page_idx": 25,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click on the '2025-12-14T072313.osc' file to transition to the map page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 61,
+            "function_description": "Representative image file entry",
+            "action_refs": [
+                [
+                    26,
+                    1
+                ]
+            ],
+            "data_in": [
+                "image file"
+            ],
+            "data_out": [
+                "selected image file"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 26,
+                "logic": "The process starts on page 26. A click action is performed on the element related to representative image file entry, leading to page 27. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            26,
+                            1
+                        ],
+                        "src_page_idx": 26,
+                        "dst_page_idx": 27,
+                        "action": "click",
+                        "summary": "Click on the representative image file entry element"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        }
+    ]
+}

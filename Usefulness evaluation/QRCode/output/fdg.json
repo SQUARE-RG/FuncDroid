@@ -1,0 +1,1623 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "Image editing or measurement tool interface",
+            "action_refs": [
+                [
+                    0,
+                    3
+                ],
+                [
+                    0,
+                    4
+                ],
+                [
+                    0,
+                    5
+                ],
+                [
+                    0,
+                    6
+                ]
+            ],
+            "data_in": [
+                "image",
+                "rotation setting",
+                "image (for editing)",
+                "zoom level setting",
+                "zoom slider"
+            ],
+            "data_out": [
+                "rotated image",
+                "updated image (after zoom out)",
+                "updated zoom level of image",
+                "zoomed image"
+            ],
+            "data_dependencies": [
+                2,
+                3
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The image editing/measurement tool starts on page 0. The user can perform four actions: rotate the image (via a click), zoom out (click), zoom in (click), or adjust the zoom via a slider input. These actions are parallel options (no sequential flow between them), so the user chooses one action (rotate, zoom out, zoom in, or slider input) to modify the image/measurement view.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click rotate icon to rotate the image/measurement frame"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click zoom out icon to decrease zoom"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click zoom in icon to increase zoom"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            0,
+                            6
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "input",
+                        "summary": "Adjust zoom slider handle to set zoom level (e.g., 0.5)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": null,
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S1"
+                            },
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 1,
+            "function_description": "This page is a side menu (hamburger menu) of an image editing or measurement tool app, providing options for scanning, accessing favorites/history, managing QR codes, adjusting settings, sharing, exploring other apps, and removing ads.",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the main image editing/measurement page. They click the hamburger menu icon, which opens the side menu containing options like Scan, Favorites, QR management, Settings, Share, Our Apps, and Remove ads. This is a single-step flow to access the menu's contents.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the hamburger menu icon to open the side menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "The current page is a system dialog for selecting an app (Photos or Gallery) to complete an image - related action (import/export) from the image editing or measurement tool, with options to set the app as default or use it just once.",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ]
+            ],
+            "data_in": [
+                "image"
+            ],
+            "data_out": [
+                "image import/export operation"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The process starts on the image editing/measurement page. The user clicks the image icon (for import/export), which triggers a system dialog to appear, offering options to complete the action using an app (like Photos or Gallery) with 'Just Once' or 'Always' settings, or to use a different app.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click the image icon to initiate import/export, triggering the app selection dialog."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "The current page functions as an image cropping or measurement interface, allowing users to adjust the crop area (via the blue corner handles), zoom in/out (via the zoom controls), and likely perform related image - editing or measurement - related actions on the displayed image.",
+            "action_refs": [
+                [
+                    0,
+                    2
+                ]
+            ],
+            "data_in": [
+                "image"
+            ],
+            "data_out": [
+                "edited image"
+            ],
+            "data_dependencies": [
+                2
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on page 0 and clicks the crop or edit tool icon (action at [0,2]). This action likely initiates or adjusts the cropping/editing mode for the image, with the page remaining at 0 after the click.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the crop or edit tool icon"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "The page functions as a file selection interface to choose an image (via \"Photos\" or \"Gallery\") for scanning a QR code within the app.",
+            "action_refs": [
+                [
+                    1,
+                    0
+                ]
+            ],
+            "data_in": [
+                "scan image feature entry"
+            ],
+            "data_out": [
+                "app selection prompt for image scanning"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": null
+        },
+        {
+            "index": 5,
+            "function_description": "This page allows users to input text (e.g., \"Sample QR Text\") in a text field to create a QR code, with a \"Create\" option to generate the QR code from the entered text.",
+            "action_refs": [
+                [
+                    1,
+                    1
+                ]
+            ],
+            "data_in": [
+                "favorites feature entry"
+            ],
+            "data_out": [
+                "favorites page loaded"
+            ],
+            "data_dependencies": [
+                14
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user starts on page 1 and clicks the 'Favorites' menu option, which navigates to page 4. This is a straight - line flow with no branches or loops as there's only one action here.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            1
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the 'Favorites' menu option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "This page allows users to input text (e.g., \"Sample QR Text\") to create a QR code, with a \"Create\" option to generate the QR code from the entered text.",
+            "action_refs": [
+                [
+                    1,
+                    2
+                ]
+            ],
+            "data_in": [
+                "history menu option"
+            ],
+            "data_out": [
+                "create QR text input page"
+            ],
+            "data_dependencies": [
+                24
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user starts on page 1 and clicks the 'History' menu option, which navigates to page 4. This action is part of accessing a specific menu item within the app's navigation structure.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            2
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click 'History' menu option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "The page allows users to input contact information (full name, organization, address, phone, email, notes) to create a QR code for sharing their contact details, with the entered data used to generate the QR code for future access.",
+            "action_refs": [
+                [
+                    1,
+                    3
+                ],
+                [
+                    5,
+                    0
+                ],
+                [
+                    5,
+                    1
+                ],
+                [
+                    5,
+                    2
+                ],
+                [
+                    5,
+                    3
+                ],
+                [
+                    5,
+                    4
+                ],
+                [
+                    5,
+                    5
+                ],
+                [
+                    5,
+                    6
+                ]
+            ],
+            "data_in": [
+                "My QR feature entry",
+                "contact info (full name field)",
+                "contact info (organization field)",
+                "contact info (address field)",
+                "contact info (phone)",
+                "contact info (for QR sharing)",
+                "contact info (notes field)",
+                "contact info (for QR)",
+                "calendar event data"
+            ],
+            "data_out": [
+                "My QR contact info form loaded",
+                "updated contact info (full name field)",
+                "updated contact info (organization field)",
+                "updated contact info (address field)",
+                "updated contact info (phone)",
+                "updated contact info (for QR sharing)",
+                "updated contact info (notes field)",
+                "generated QR code",
+                "saved contact QR configuration"
+            ],
+            "data_dependencies": [
+                16
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user starts by clicking the 'My QR' menu option to access the contact info input page. Then, they input contact details (full name, organization, address, phone, email, notes) one by one. After entering all desired info, they click the save/checkmark button to generate and save the QR code for future access.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            3
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click 'My QR' menu option to navigate to contact info input page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            5,
+                            0
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 5,
+                        "action": "input",
+                        "summary": "Input full name (John Doe) into the full name field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            5,
+                            1
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 5,
+                        "action": "input",
+                        "summary": "Input organization (Acme Corp) into the organization field"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            5,
+                            2
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 5,
+                        "action": "input",
+                        "summary": "Input address (123 Main St) into the address field"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            5,
+                            3
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 5,
+                        "action": "input",
+                        "summary": "Input phone (+1-555-123-4567) into the phone field"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            5,
+                            4
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 5,
+                        "action": "input",
+                        "summary": "Input email (john@example.com) into the email field"
+                    },
+                    {
+                        "id": "S7",
+                        "action_ref": [
+                            5,
+                            5
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 5,
+                        "action": "input",
+                        "summary": "Input notes (Team Lead) into the notes field"
+                    },
+                    {
+                        "id": "S8",
+                        "action_ref": [
+                            5,
+                            6
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click save/checkmark button to generate and save the QR code"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S5",
+                        "to": "S6"
+                    },
+                    {
+                        "from": "S6",
+                        "to": "S7"
+                    },
+                    {
+                        "from": "S7",
+                        "to": "S8"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "This page allows users to create QR codes by selecting different types of content sources (e.g., clipboard, URL, text, contact, email, SMS, geo, phone, calendar, WiFi, or their own QR) to generate a corresponding QR code.",
+            "action_refs": [
+                [
+                    1,
+                    4
+                ]
+            ],
+            "data_in": [
+                "Create QR menu option"
+            ],
+            "data_out": [
+                "Create QR feature page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The process starts on the initial page. The user clicks the 'Create QR' menu option, which navigates to the 'Create' page where various QR content source options (like clipboard, URL, text, etc.) are presented. No branches or loops are present in this initial flow as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            4
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click 'Create QR' menu option to navigate to the Create QR page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "The current page is the settings interface for a QR code and scanning app, allowing users to configure options such as color scheme, theme, beep, vibrate, clipboard copying, URL info retrieval, batch scan mode, auto focus, and touch focus.",
+            "action_refs": [
+                [
+                    1,
+                    5
+                ],
+                [
+                    7,
+                    0
+                ]
+            ],
+            "data_in": [
+                "settings menu item",
+                "color scheme setting"
+            ],
+            "data_out": [
+                "settings page loaded",
+                "color scheme setting (red selected)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user starts on the main menu page and clicks the 'Settings' option to navigate to the settings page. From there, the user clicks the 'Red color scheme selection button' to configure the color scheme setting.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            5
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click 'Settings' menu option to open settings page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            7,
+                            0
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click 'Red color scheme selection button' to set color scheme"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "The current page provides a sharing interface for the image editing or measurement tool, allowing users to share the content (likely an image or measurement result) via various apps and services such as Chrome, Gmail, QR & Barcode Scanner, Messages, Copy to clipboard, Drive, and Hangouts.",
+            "action_refs": [
+                [
+                    1,
+                    6
+                ]
+            ],
+            "data_in": [
+                "scan result",
+                "share setting"
+            ],
+            "data_out": [
+                "share options presented"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts on page 1, where the user clicks the 'Share' menu option. This action navigates to page 8, which displays a sharing interface with various apps/services (Chrome, Gmail, etc.) for sharing the content. There are no branches or loops as only one action is provided, leading directly to the sharing options page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            6
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click the 'Share' menu option to open the sharing interface."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "This page (likely part of the \"Our Apps\" section navigation) displays an offline status with options to retry connecting, get notified when online, and play a game (Hot Air Balloon) while waiting.",
+            "action_refs": [
+                [
+                    1,
+                    7
+                ]
+            ],
+            "data_in": [
+                "our apps menu item"
+            ],
+            "data_out": [
+                "navigation to our apps page (offline state)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts by clicking the 'Our Apps' menu option (from page 1 to page 9). On the resulting offline status page, the user can choose to retry connecting, get notified when online, or play the Hot Air Balloon game. The main flow is a straight line to the offline page, with subsequent actions (not yet listed) branching based on user choice.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            7
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click 'Our Apps' menu option to navigate to the offline status page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "The current page (Google Play offline screen) allows the user to attempt re - connecting to the internet (via \"Try again\") or to request a notification when the device is back online (via \"Notify me\") while also providing navigation options for different Google Play content categories at the bottom.",
+            "action_refs": [
+                [
+                    1,
+                    8
+                ]
+            ],
+            "data_in": [
+                "remove ads option"
+            ],
+            "data_out": [
+                "navigation to Google Play (offline state)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "On the Google Play offline screen, the user can choose to either click 'Try again' to attempt re - connecting to the internet or click 'Notify me' to request a notification when the device is back online. Additionally, there are navigation options for different Google Play content categories at the bottom of the screen.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            8
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click 'Remove ads' menu option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "The current page is a side menu (drawer) in a QR code and scanning app, providing options to navigate to different features like scanning, accessing favorites, viewing history, managing personal QR codes, creating QR codes, adjusting settings, sharing the app, exploring other apps by the developer, and removing ads, while also showing a QR scanning interface in the background.",
+            "action_refs": [
+                [
+                    4,
+                    0
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The flow starts on a page (page 4) with a hamburger menu button. The user clicks the hamburger menu button, which opens a side menu (drawer) displaying various navigation options (like Scan, Favorites, History, etc.) while a QR scanning interface remains visible in the background. This action transitions the app from the initial page (page 4) to the side menu - enabled state (page 1).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            0
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the hamburger menu button to open the side menu, with the QR scanning interface in the background."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "The current page displays the QR code favorites list (which is empty) and provides options via the vertical ellipsis menu to delete favorites or export them in CSV or TXT formats.",
+            "action_refs": [
+                [
+                    4,
+                    1
+                ]
+            ],
+            "data_in": [
+                "favorites list"
+            ],
+            "data_out": [
+                "favorites list options menu"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "On the QR code favorites page (which is empty), the user clicks the vertical ellipsis (more options) button. This action opens a menu with options to delete favorites or export them in CSV/TXT formats, allowing the user to choose a subsequent action (e.g., delete, export CSV, export TXT).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            1
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click the vertical ellipsis (more options) button on the favorites page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": null,
+                                "condition": "Choose to delete favorites"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "Choose to export as CSV"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "Choose to export as TXT"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "The current page is a side menu of a QR code and scanning app, providing options to scan, scan images, access favorites, history, manage personal QR codes, create QR codes, adjust settings, share the app, view other apps by the developer, and remove ads.",
+            "action_refs": [
+                [
+                    5,
+                    7
+                ]
+            ],
+            "data_in": [
+                "navigation menu"
+            ],
+            "data_out": [
+                "navigation menu opened"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The flow starts on page 5 (Create QR page). The user clicks the hamburger menu button, which opens the side menu (page 1) with options like Scan, Scan Image, Favorites, History, My QR, Create QR, Settings, Share, Our Apps, and Remove Ads. This is a single step to open the menu, with no branches as it's a direct navigation action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            7
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the hamburger menu button to open the side menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "The page allows users to view, save, or share a generated QR code that encodes calendar event details (e.g., a team meeting), with options to save the QR code or share it, and displays the underlying calendar event data in text format.",
+            "action_refs": [
+                [
+                    5,
+                    8
+                ]
+            ],
+            "data_in": [
+                "QR contact info",
+                "calendar event data"
+            ],
+            "data_out": [
+                "generated QR code",
+                "VCALENDAR data"
+            ],
+            "data_dependencies": [
+                25,
+                27,
+                30
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user starts on page 5 and clicks the Profile icon button (action_ref [5,8]) to navigate to page 12, where the calendar event QR code and its details are displayed. From there, the user can choose to save or share the QR code, though the provided actions only include the initial navigation step here.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            8
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click Profile icon button to navigate to QR code page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "This page allows users to input WiFi network details (SSID, password, security type, and hidden network option) to create a QR code for sharing WiFi access.",
+            "action_refs": [
+                [
+                    6,
+                    0
+                ],
+                [
+                    14,
+                    0
+                ],
+                [
+                    14,
+                    1
+                ]
+            ],
+            "data_in": [
+                "clipboard content",
+                "wifi QR creation option",
+                "QR code content",
+                "wifi network details",
+                "calendar event details"
+            ],
+            "data_out": [
+                "wifi QR configuration page loaded",
+                "updated QR code content",
+                "generated QR code",
+                "QR code display"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on the 'Create' page and clicks the 'Content from clipboard' option. Then, on the next page, the user inputs text into the QR code content field. Finally, the user clicks the checkmark button to confirm and create the QR code.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            0
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click 'Content from clipboard' option"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            14,
+                            0
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 4,
+                        "action": "input",
+                        "summary": "Input text into QR code content field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            14,
+                            1
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click checkmark button to confirm QR creation"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "This page allows users to input WiFi network details (SSID, password, security type, and hidden network option) to create a QR code for sharing WiFi access.",
+            "action_refs": [
+                [
+                    6,
+                    1
+                ]
+            ],
+            "data_in": [
+                "wifi qr creation option"
+            ],
+            "data_out": [
+                "wifi qr creation form"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on the 'Create' page (page 6) and clicks the 'URL' option. This action navigates to a new page (page 14), likely to proceed with entering WiFi details for QR code creation. The flow is a straight line as there are no branches or loops yet.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            1
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click the 'URL' option on the 'Create' page to navigate to the next page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "This page allows users to input WiFi network details (SSID, password, security type, and hidden network option) to create a WiFi - related QR code.",
+            "action_refs": [
+                [
+                    6,
+                    2
+                ]
+            ],
+            "data_in": [
+                "wifi QR creation option"
+            ],
+            "data_out": [
+                "wifi QR creation form"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on the 'Create' page and clicks the 'Text' option. This action leads to the WiFi input page where network details (SSID, password, security type, hidden option) can be entered to generate a WiFi QR code.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            2
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click on the 'Text' option to navigate to the WiFi input page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "This page allows users to input text content that will be encoded into a QR code, with a text field provided for entering the desired text and an option to confirm (via the checkmark) to proceed with generating the QR code based on the entered text.",
+            "action_refs": [
+                [
+                    6,
+                    3
+                ]
+            ],
+            "data_in": [
+                "contact option"
+            ],
+            "data_out": [
+                "text input for QR creation"
+            ],
+            "data_dependencies": [
+                24
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on the 'Create' page (page 6) and clicks the 'Contact' option (action [6,3]). This action navigates to a new page (page 4), likely to proceed with the QR code creation process related to contact information.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            3
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the 'Contact' option to navigate to the next page for QR code creation related to contact."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "This page allows users to input WiFi network details (SSID, password, security type, and hidden network option) to create a QR code for sharing WiFi access.",
+            "action_refs": [
+                [
+                    6,
+                    4
+                ]
+            ],
+            "data_in": [
+                "wifi QR creation option"
+            ],
+            "data_out": [
+                "wifi QR configuration page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on the 'Create' page (page 6) and clicks the 'Email' option, which navigates to page 14. This action likely initiates a process related to sharing or using email functionality within the app's workflow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            4
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click the 'Email' option on the 'Create' page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "This page allows users to input WiFi network details (SSID, password, security type, and hidden network option) to create a QR code for sharing WiFi access.",
+            "action_refs": [
+                [
+                    6,
+                    5
+                ]
+            ],
+            "data_in": [
+                "wifi qr creation option"
+            ],
+            "data_out": [
+                "wifi qr configuration page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on the 'Create' page (page 6) and clicks the 'SMS' option (though this seems misaligned with the WiFi QR creation; likely a typo, but following the action). The flow proceeds to page 14 after the click. No branches or loops are present as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            5
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click the SMS option (note: likely intended for WiFi but action as given)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "This page allows users to input WiFi network details (SSID, password, security type, and hidden network option) to create a QR code for sharing WiFi access.",
+            "action_refs": [
+                [
+                    6,
+                    6
+                ]
+            ],
+            "data_in": [
+                "wifi qr creation option"
+            ],
+            "data_out": [
+                "wifi qr configuration form"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on the 'Create' page and clicks the 'Geo' option. This action leads to a new page (page 14), likely to input or confirm location - related details for the QR code creation process.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            6
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click on the 'Geo' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "This page allows users to input text that will be encoded into a QR code, with the functionality to create the QR code after entering the desired text.",
+            "action_refs": [
+                [
+                    6,
+                    7
+                ]
+            ],
+            "data_in": [
+                "text input for QR"
+            ],
+            "data_out": [
+                "QR text content updated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on the 'Create' page (page 6) and clicks the 'Phone' option, which navigates to page 4. This action initiates the process of creating a QR code for phone-related content, with no branching or looping in this initial flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            7
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the 'Phone' option to navigate to the next page for QR code creation related to phone content."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 25,
+            "function_description": "This page allows users to input calendar event details (event name, start/end time, location, description) to create a calendar event for generating a corresponding QR code.",
+            "action_refs": [
+                [
+                    6,
+                    8
+                ],
+                [
+                    15,
+                    0
+                ],
+                [
+                    15,
+                    2
+                ],
+                [
+                    15,
+                    3
+                ],
+                [
+                    15,
+                    4
+                ]
+            ],
+            "data_in": [
+                "calendar event creation option",
+                "calendar event",
+                "location input field",
+                "description input field",
+                "calendar event details"
+            ],
+            "data_out": [
+                "calendar event form",
+                "updated calendar event",
+                "updated calendar event (location)",
+                "updated calendar event description",
+                "generated calendar event QR code",
+                "generated calendar event VCALENDAR data"
+            ],
+            "data_dependencies": [
+                16,
+                17,
+                27,
+                30,
+                32
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts by clicking the 'Calendar' option to enter the calendar event creation page. Then, they input the event name, location, and description (in sequence). Finally, clicking the confirm checkmark button generates the QR code for the calendar event.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            8
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click 'Calendar' option to navigate to event creation page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            15,
+                            0
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 15,
+                        "action": "input",
+                        "summary": "Input event name 'Team Meeting'"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            15,
+                            2
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 15,
+                        "action": "input",
+                        "summary": "Input location 'Conference Room A'"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            15,
+                            3
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 15,
+                        "action": "input",
+                        "summary": "Input description 'Discuss project timeline'"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            15,
+                            4
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click confirm checkmark button to generate QR code"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S5"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 26,
+            "function_description": "This page allows users to input WiFi network details (SSID, password, security type, and hidden network option) to create a QR code for sharing WiFi access.",
+            "action_refs": [
+                [
+                    6,
+                    9
+                ]
+            ],
+            "data_in": [
+                "wifi qr creation option"
+            ],
+            "data_out": [
+                "wifi qr creation form"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on the 'Create' page and clicks the 'Wifi' option to navigate to the WiFi input page, where they can enter network details (SSID, password, security type, hidden option) to generate a QR code for sharing WiFi access.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            9
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click the 'Wifi' option to proceed to the WiFi input page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 27,
+            "function_description": "Displays a generated QR code (for a calendar event) with options to save, share, and view the underlying calendar event data, likely as part of a feature to manage or access user - specific QR - related content.",
+            "action_refs": [
+                [
+                    6,
+                    10
+                ]
+            ],
+            "data_in": [
+                "My QR option"
+            ],
+            "data_out": [
+                "QR code (My QR)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The flow starts on page 6. The user clicks the 'My QR' option (action_ref [6,10]), which navigates to page 12. On page 12, the generated QR code for the calendar event is displayed, along with 'Save', 'Share', and the underlying calendar event data. There are no branches or loops as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            10
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click 'My QR' option to navigate to the page with the generated QR code and related options/data"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 28,
+            "function_description": "Beep toggle checkbox",
+            "action_refs": [
+                [
+                    7,
+                    1
+                ]
+            ],
+            "data_in": [
+                "beep setting"
+            ],
+            "data_out": [
+                "beep setting enabled"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The flow starts on the Settings page (page 7). The user clicks the Beep toggle checkbox, which likely toggles its state (on/off) and may navigate to another page (page 18) or update the current page. This is a single action step with no branches as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            1
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click the Beep toggle checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 29,
+            "function_description": "Batch scan mode toggle checkbox",
+            "action_refs": [
+                [
+                    7,
+                    2
+                ]
+            ],
+            "data_in": [
+                "batch scan mode setting"
+            ],
+            "data_out": [
+                "batch scan mode setting enabled"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The user starts on the Settings page (page 7). The core action is clicking the 'Batch scan mode' toggle checkbox. This action toggles the checkbox's state (on/off) and navigates to page 19, completing the toggle operation.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            2
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click the Batch scan mode toggle checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 30,
+            "function_description": "This page generates and displays a QR code for a calendar event (with options to save or share the QR code) and shows the corresponding calendar event details in text format.",
+            "action_refs": [
+                [
+                    12,
+                    0
+                ]
+            ],
+            "data_in": [
+                "calendar event QR code",
+                "calendar event data"
+            ],
+            "data_out": [
+                "saved calendar event QR code"
+            ],
+            "data_dependencies": [
+                31
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "The page initially displays the calendar event's QR code and text details. The core action is clicking the 'Save QR code' button, which likely triggers a save operation (e.g., to the device's storage) while remaining on the same page to continue interacting with the QR code or event details.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            0
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click the 'Save QR code' button to save the calendar event's QR code."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 31,
+            "function_description": "This page enables the user to share the generated contact QR code through various apps (e.g., Gmail, QR & Barcode Scanner) after creating/editing the contact QR information.",
+            "action_refs": [
+                [
+                    12,
+                    1
+                ]
+            ],
+            "data_in": [
+                "calendar event QR code"
+            ],
+            "data_out": [
+                "shared calendar event QR code"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "After creating/editing the contact QR information, the user starts on the page with the QR code. The user clicks the 'Share QR code' button, which opens a sharing menu with options like Gmail and QR & Barcode Scanner to proceed with sharing the QR code.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            1
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click the 'Share QR code' button to open the sharing menu."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 32,
+            "function_description": "All day event checkbox",
+            "action_refs": [
+                [
+                    15,
+                    1
+                ]
+            ],
+            "data_in": [
+                "all day event setting",
+                "calendar event"
+            ],
+            "data_out": [
+                "all day event setting (updated)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user starts on page 15 (event creation). They click the 'All day event' checkbox, which transitions the flow to page 16. This action toggles the all-day event setting for the calendar event.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            1
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click the 'All day event' checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        }
+    ]
+}

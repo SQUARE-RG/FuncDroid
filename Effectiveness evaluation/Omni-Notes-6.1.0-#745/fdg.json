@@ -1,0 +1,4166 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "Manage and view notes (empty state)",
+            "action_refs": [
+                [
+                    0,
+                    3
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the Notes page (empty state: 'Nothing here!'). They click the 'More options' icon (three vertical dots) at the top right. Since there's only one action here, the flow is a single step with no branches.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the 'More options' icon (three vertical dots) at the top right of the Notes page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 1,
+            "function_description": "The current page is a side navigation menu in the Omni Notes Alpha app, providing options to navigate to the notes management page or access the app's settings.",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the main notes page. The user clicks the hamburger menu icon, which opens the side navigation menu. From the menu, the user can then choose to navigate to the notes management page or access the app's settings, creating a branch point for these two mutually exclusive options.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the hamburger menu icon to open the side navigation menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": null,
+                                "condition": "User selects 'Notes' to navigate to notes management page"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "User selects 'SETTINGS' to access app settings"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "The current page (search page) allows users to search for existing notes (though none are present in the empty state) within the notes management application.",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ]
+            ],
+            "data_in": [
+                "notes"
+            ],
+            "data_out": [
+                "search interface (for notes)"
+            ],
+            "data_dependencies": [
+                3
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the notes page (empty state). They click the search icon, which likely opens a search input field or initiates a search action (though no notes exist to search).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the search icon on the notes page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "The current page (a Google voice input dialog) allows the user to attempt voice - based input again to search for notes, with the option to tap the microphone icon to speak after a previous attempt, within the context of a note - management app.",
+            "action_refs": [
+                [
+                    0,
+                    2
+                ]
+            ],
+            "data_in": [
+                "notes",
+                "search query"
+            ],
+            "data_out": [
+                "search results",
+                "voice input prompt"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the notes page (page 0). They click the sort icon (action at [0,2]), which leads to page 2. This action likely initiates or relates to the voice input flow for searching notes, with the option to retry voice input by tapping the microphone icon.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click the sort icon on the notes page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "This page allows the user to create a new note by selecting from options like Photo, Checklist, or Text note, while also providing a search bar for notes and an empty state indication when no notes are present.",
+            "action_refs": [
+                [
+                    0,
+                    4
+                ],
+                [
+                    3,
+                    3
+                ]
+            ],
+            "data_in": [
+                "notes list",
+                "note creation menu"
+            ],
+            "data_out": [
+                "note creation options",
+                "closed note creation menu"
+            ],
+            "data_dependencies": [
+                7
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the notes page (with empty state). First, they click the red circular add button to open the note creation menu. Then, they can click the close menu button to return to the main notes page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click red circular add button to open note creation menu"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            3,
+                            3
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click close menu button to return to main notes page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "The current page (side navigation menu) provides options to navigate to the \"Notes\" section (to manage and view notes) or to the \"SETTINGS\" section (to configure app preferences) within the Omni Notes Alpha application.",
+            "action_refs": [
+                [
+                    1,
+                    0
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user starts on the side navigation menu page (page 1). From here, the user can click the 'Notes' option to navigate to the Notes section (though the destination page is still 1 in the action, implying a transition to the Notes - related page). There's also an option to click 'SETTINGS' (not included in the given action but part of the functional point's description, but since only the 'Notes' action is provided, the core logic here is the click on 'Notes' to navigate to the Notes management/viewing area).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            0
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click on the 'Notes' navigation option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "The current page is a side navigation menu in the Omni Notes Alpha app, providing options to navigate to the notes management page or access the app's settings.",
+            "action_refs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    4,
+                    0
+                ],
+                [
+                    4,
+                    1
+                ],
+                [
+                    4,
+                    9
+                ],
+                [
+                    5,
+                    0
+                ],
+                [
+                    5,
+                    3
+                ],
+                [
+                    13,
+                    0
+                ]
+            ],
+            "data_in": [
+                "settings navigation option",
+                "second reminder delay setting",
+                "10 (delay value)"
+            ],
+            "data_out": [
+                "settings page entry",
+                "updated second reminder delay setting"
+            ],
+            "data_dependencies": [
+                13,
+                17
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts on the side navigation menu (page 1). First, the user clicks the 'Settings' option (action [1,1]) to navigate to the settings page (page 4). On the settings page, the user can choose to click 'Preferences' (action [4,0], staying on page 4), 'Data' (action [4,1] to page 5), or 'App tour' (action [4,9] to page 13). If 'Data' is clicked, from page 5, the user can click 'Sync and Backups' (action [5,0] to page 15) or 'Erase all data' (action [5,3] to page 13). From page 13, clicking 'CONFIRM' (action [13,0]) navigates to page 9. The flow branches based on which settings option is selected at page 4 and subsequent pages.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            1
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click 'Settings' to navigate to settings page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            4,
+                            0
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click 'Preferences' (stays on settings page)"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            4,
+                            1
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click 'Data' to navigate to data settings page"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            4,
+                            9
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click 'App tour' to navigate to app tour page"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            5,
+                            0
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click 'Sync and Backups' to navigate to sync/backups page"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            5,
+                            3
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click 'Erase all data' to navigate to app tour page"
+                    },
+                    {
+                        "id": "S7",
+                        "action_ref": [
+                            13,
+                            0
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click 'CONFIRM' to navigate to confirmation target page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S6"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S7"
+                    },
+                    {
+                        "from": "S6",
+                        "to": "S7"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S3",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S5"
+                            },
+                            {
+                                "next_step": "S6"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S4",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S7"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S6",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S7"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "This page functions as a camera interface for creating a photo note, allowing the user to capture an image (via the blue shutter button), switch camera modes (via the rotate icon), adjust settings (via the left icon), or exit the camera (via the 'X' button).",
+            "action_refs": [
+                [
+                    3,
+                    0
+                ]
+            ],
+            "data_in": [
+                "photo note option"
+            ],
+            "data_out": [
+                "camera view (for photo note)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The flow starts on the notes page (page 3). The user clicks the 'Photo' option (action_ref [3,0]), which navigates to the camera interface (page 84) for creating a photo note. Once in the camera interface, the user can then choose to capture an image, switch camera modes, adjust settings, or exit the camera.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            0
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 84,
+                        "action": "click",
+                        "summary": "Click 'Photo' option to enter camera interface"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "This page allows users to create and manage a checklist - style note, including setting a title, adding checklist items, and viewing or modifying the reminder for the note.",
+            "action_refs": [
+                [
+                    3,
+                    1
+                ],
+                [
+                    85,
+                    0
+                ],
+                [
+                    85,
+                    1
+                ],
+                [
+                    85,
+                    2
+                ],
+                [
+                    88,
+                    0
+                ],
+                [
+                    88,
+                    1
+                ],
+                [
+                    88,
+                    2
+                ],
+                [
+                    88,
+                    3
+                ],
+                [
+                    88,
+                    4
+                ],
+                [
+                    88,
+                    5
+                ],
+                [
+                    91,
+                    0
+                ],
+                [
+                    91,
+                    1
+                ],
+                [
+                    91,
+                    2
+                ],
+                [
+                    91,
+                    3
+                ],
+                [
+                    91,
+                    4
+                ],
+                [
+                    91,
+                    5
+                ]
+            ],
+            "data_in": [
+                "task item",
+                "title input",
+                "reminder entry",
+                "reminder setting",
+                "reminder time setting",
+                "analog clock time picker",
+                "AM/PM toggle state",
+                "reminder date setting",
+                "calendar interface",
+                "reminder time setting dialog",
+                "reminder item",
+                "calendar view",
+                "date selection context",
+                "calendar view (December 2025)",
+                "date selection interface",
+                "December 2025 calendar",
+                "date selection dialog",
+                "selected date",
+                "reminder configuration",
+                "date picker interface"
+            ],
+            "data_out": [
+                "checklist note",
+                "updated task item title",
+                "updated task item",
+                "updated reminder entry",
+                "updated reminder setting",
+                "updated reminder time setting",
+                "updated reminder time (AM)",
+                "updated reminder time (PM)",
+                "updated reminder date setting",
+                "dismissed reminder time setting dialog",
+                "updated reminder item",
+                "updated calendar month view",
+                "calendar view (next month, January 2026)",
+                "selected date (December 14, 2025)",
+                "reminder item (updated state)",
+                "updated reminder",
+                "time picker interface"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "To create a checklist note, start by clicking the 'Checklist note option' to open the note editor. Then, you can click the 'Title input field' to set a title, the 'New item checkbox' to add checklist items, or the 'Add reminder button' to set a reminder. For reminders, you can adjust time (via the clock picker, AM/PM toggle) or date (via navigation arrows, date selection, and confirm/cancel buttons), with options to switch between time and date pickers.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            1
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 85,
+                        "action": "click",
+                        "summary": "Open checklist note editor"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            85,
+                            0
+                        ],
+                        "src_page_idx": 85,
+                        "dst_page_idx": 86,
+                        "action": "click",
+                        "summary": "Set note title"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            85,
+                            1
+                        ],
+                        "src_page_idx": 85,
+                        "dst_page_idx": 87,
+                        "action": "click",
+                        "summary": "Add checklist item"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            85,
+                            2
+                        ],
+                        "src_page_idx": 85,
+                        "dst_page_idx": 88,
+                        "action": "click",
+                        "summary": "Open reminder setup"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            88,
+                            0
+                        ],
+                        "src_page_idx": 88,
+                        "dst_page_idx": 88,
+                        "action": "click",
+                        "summary": "Adjust time (clock picker)"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            88,
+                            1
+                        ],
+                        "src_page_idx": 88,
+                        "dst_page_idx": 89,
+                        "action": "click",
+                        "summary": "Set AM for reminder"
+                    },
+                    {
+                        "id": "S7",
+                        "action_ref": [
+                            88,
+                            2
+                        ],
+                        "src_page_idx": 88,
+                        "dst_page_idx": 90,
+                        "action": "click",
+                        "summary": "Set PM for reminder"
+                    },
+                    {
+                        "id": "S8",
+                        "action_ref": [
+                            88,
+                            3
+                        ],
+                        "src_page_idx": 88,
+                        "dst_page_idx": 91,
+                        "action": "click",
+                        "summary": "Open date selection"
+                    },
+                    {
+                        "id": "S9",
+                        "action_ref": [
+                            88,
+                            4
+                        ],
+                        "src_page_idx": 88,
+                        "dst_page_idx": 85,
+                        "action": "click",
+                        "summary": "Cancel reminder setup"
+                    },
+                    {
+                        "id": "S10",
+                        "action_ref": [
+                            88,
+                            5
+                        ],
+                        "src_page_idx": 88,
+                        "dst_page_idx": 85,
+                        "action": "click",
+                        "summary": "Confirm reminder time"
+                    },
+                    {
+                        "id": "S11",
+                        "action_ref": [
+                            91,
+                            0
+                        ],
+                        "src_page_idx": 91,
+                        "dst_page_idx": 91,
+                        "action": "click",
+                        "summary": "Previous month (date picker)"
+                    },
+                    {
+                        "id": "S12",
+                        "action_ref": [
+                            91,
+                            1
+                        ],
+                        "src_page_idx": 91,
+                        "dst_page_idx": 91,
+                        "action": "click",
+                        "summary": "Next month (date picker)"
+                    },
+                    {
+                        "id": "S13",
+                        "action_ref": [
+                            91,
+                            2
+                        ],
+                        "src_page_idx": 91,
+                        "dst_page_idx": 91,
+                        "action": "click",
+                        "summary": "Select reminder date"
+                    },
+                    {
+                        "id": "S14",
+                        "action_ref": [
+                            91,
+                            3
+                        ],
+                        "src_page_idx": 91,
+                        "dst_page_idx": 85,
+                        "action": "click",
+                        "summary": "Cancel date selection"
+                    },
+                    {
+                        "id": "S15",
+                        "action_ref": [
+                            91,
+                            4
+                        ],
+                        "src_page_idx": 91,
+                        "dst_page_idx": 85,
+                        "action": "click",
+                        "summary": "Confirm date selection"
+                    },
+                    {
+                        "id": "S16",
+                        "action_ref": [
+                            91,
+                            5
+                        ],
+                        "src_page_idx": 91,
+                        "dst_page_idx": 88,
+                        "action": "click",
+                        "summary": "Switch to time picker"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S6"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S7"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S8"
+                    },
+                    {
+                        "from": "S8",
+                        "to": "S11"
+                    },
+                    {
+                        "from": "S8",
+                        "to": "S12"
+                    },
+                    {
+                        "from": "S8",
+                        "to": "S13"
+                    },
+                    {
+                        "from": "S8",
+                        "to": "S14"
+                    },
+                    {
+                        "from": "S8",
+                        "to": "S15"
+                    },
+                    {
+                        "from": "S8",
+                        "to": "S16"
+                    },
+                    {
+                        "from": "S16",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S4",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S5"
+                            },
+                            {
+                                "next_step": "S6"
+                            },
+                            {
+                                "next_step": "S7"
+                            },
+                            {
+                                "next_step": "S8"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S8",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S11"
+                            },
+                            {
+                                "next_step": "S12"
+                            },
+                            {
+                                "next_step": "S13"
+                            },
+                            {
+                                "next_step": "S14"
+                            },
+                            {
+                                "next_step": "S15"
+                            },
+                            {
+                                "next_step": "S16"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S16",
+                        "type": "loop",
+                        "branches": [
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "This page allows users to create and manage a checklist - style note, including setting a title, adding checklist items, and viewing or modifying the reminder for the note.",
+            "action_refs": [
+                [
+                    3,
+                    2
+                ]
+            ],
+            "data_in": [],
+            "data_out": [
+                "new text note"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The flow starts on page 3, where the user clicks the 'Text note' option. This action navigates to page 85, which is the checklist - style note creation/management page with a title field, checklist item input, and reminder display. There are no branches or loops in this initial part of the flow as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            2
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 85,
+                        "action": "click",
+                        "summary": "Click the 'Text note' option to navigate to the checklist - style note page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "The Interface settings page allows users to configure various visual and interaction-related preferences for the application, including language, text size, color scheme, and toggle options for features like the floating action button, date/time selection interface, attachment display, and date formatting.",
+            "action_refs": [
+                [
+                    4,
+                    2
+                ]
+            ],
+            "data_in": [
+                "interface setting"
+            ],
+            "data_out": [
+                "updated interface setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user starts on page 4 and clicks the 'Interface option' to navigate to page 6, where interface settings (like language, text size, toggles) are accessible. This is a linear flow to enter the interface configuration screen.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            2
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click 'Interface option' to open interface settings page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "The current page allows users to configure navigation - related settings such as enabling/disabling dynamic menu, note count display, grouping of uncategorized notes, and navigation menu behavior on exit.",
+            "action_refs": [
+                [
+                    4,
+                    3
+                ]
+            ],
+            "data_in": [
+                "navigation settings"
+            ],
+            "data_out": [
+                "navigation settings page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user starts on page 4 and clicks the 'Navigation' option (action_ref [4,3]), which navigates to page 7. On page 7, the user can configure navigation - related settings like dynamic menu, note count, grouping of uncategorized notes, and navigation menu behavior on exit.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            3
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click the 'Navigation' option to navigate to the navigation settings page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "The Behaviors page allows users to configure various functional settings for the note - taking app, including options related to checklists, search, note - swiping actions, location addition to new notes, and video attachment size limits.",
+            "action_refs": [
+                [
+                    4,
+                    4
+                ],
+                [
+                    8,
+                    0
+                ],
+                [
+                    58,
+                    0
+                ],
+                [
+                    58,
+                    1
+                ],
+                [
+                    58,
+                    2
+                ],
+                [
+                    58,
+                    3
+                ]
+            ],
+            "data_in": [
+                "behaviors setting",
+                "checklists setting",
+                "checklist behavior setting (when item is checked)",
+                "checklist behavior setting (checked item action)"
+            ],
+            "data_out": [
+                "behaviors setting page",
+                "checklists setting (configured)",
+                "updated checklist behavior setting (keep position)",
+                "updated checklist behavior setting (checked item action: move to end of list)",
+                "updated checklist behavior setting (when item is checked)"
+            ],
+            "data_dependencies": [
+                35
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The flow starts by navigating to the Behaviors page. Then, the Checklists setting is accessed, leading to a dialog with three radio options (Keep position, Move to end of list, Move to end of unchecked) and a CANCEL button. The user can choose one of the radio options or cancel to return to the Behaviors page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            4
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click Behaviors option to navigate to Behaviors page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            8,
+                            0
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 58,
+                        "action": "click",
+                        "summary": "Click Checklists (Keep position) to open checklist behavior dialog"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            58,
+                            0
+                        ],
+                        "src_page_idx": 58,
+                        "dst_page_idx": 64,
+                        "action": "click",
+                        "summary": "Click Keep position radio option"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            58,
+                            1
+                        ],
+                        "src_page_idx": 58,
+                        "dst_page_idx": 65,
+                        "action": "click",
+                        "summary": "Click Move to end of list radio option"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            58,
+                            2
+                        ],
+                        "src_page_idx": 58,
+                        "dst_page_idx": 66,
+                        "action": "click",
+                        "summary": "Click Move to end of unchecked radio option"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            58,
+                            3
+                        ],
+                        "src_page_idx": 58,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click CANCEL button to return to Behaviors page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S6"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            },
+                            {
+                                "next_step": "S6"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "The Notifications page allows users to configure notification - related settings, including toggling vibration, selecting a ringtone, and setting the second reminder delay.",
+            "action_refs": [
+                [
+                    4,
+                    5
+                ],
+                [
+                    9,
+                    2
+                ]
+            ],
+            "data_in": [
+                "notifications setting",
+                "second reminder delay setting"
+            ],
+            "data_out": [
+                "updated notifications setting",
+                "updated second reminder delay setting"
+            ],
+            "data_dependencies": [
+                6,
+                17,
+                36,
+                37,
+                38
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The flow starts by clicking the Notifications option to enter the Notifications page. Then, it proceeds by clicking the Second reminder delay option, likely to configure its settings. The flow is a straight line with no branches or loops shown in the provided actions.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            5
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click Notifications option to navigate to Notifications page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            9,
+                            2
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click Second reminder delay option to configure its settings"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "The Privacy page allows users to toggle settings for error reporting (sending crash reports to the developer) and sharing anonymous data (sending non - sensitive data to improve the app).",
+            "action_refs": [
+                [
+                    4,
+                    6
+                ]
+            ],
+            "data_in": [
+                "privacy settings"
+            ],
+            "data_out": [
+                "privacy settings page"
+            ],
+            "data_dependencies": [
+                39,
+                40,
+                65,
+                66,
+                67
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user starts on page 4 and clicks the Privacy option (action_ref [4,6]) to navigate to the Privacy page (page 10). On the Privacy page, the user can toggle the Error reporting and Share anonymous data settings, though the provided action only captures the navigation to the Privacy page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            6
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click on the Privacy option to navigate to the Privacy page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "This page is in the process of loading the Google+ beta sign - in or related configuration interface, likely for the purpose of enabling or configuring the Google+ beta feature within the app.",
+            "action_refs": [
+                [
+                    4,
+                    7
+                ]
+            ],
+            "data_in": [
+                "Google+ beta setting"
+            ],
+            "data_out": [
+                "updated Google+ beta setting state"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The process starts on page 4. The user clicks the 'Google+ beta option' (action_ref [4,7]), which navigates to page 11 (likely loading the Google+ beta sign - in or configuration interface). There are no branch points as only this single action is present.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            7
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click the Google+ beta option to navigate to the related interface"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "The current page functions as the user guide for the Omni - Notes application, offering information and instructions related to notes management (such as creation) and categories management, along with options to edit the page, create a new page, and access revision history.",
+            "action_refs": [
+                [
+                    4,
+                    8
+                ]
+            ],
+            "data_in": [
+                "online manual option"
+            ],
+            "data_out": [
+                "loaded online manual page"
+            ],
+            "data_dependencies": [
+                54,
+                55
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The flow starts on page 4. The user clicks the 'Online manual option' (action_ref [4,8]), which navigates to page 12 (the Omni Notes user guide page). On page 12, the guide provides info on notes/categories management and options to edit, create a new page, or view revisions. There are no branches or loops here as it’s a single navigation step to access the guide.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            8
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click 'Online manual option' to navigate to the user guide page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "The current page displays the changelog, providing a detailed list of new features, improvements, and fixes for different versions of the application to inform users about recent updates.",
+            "action_refs": [
+                [
+                    4,
+                    10
+                ],
+                [
+                    14,
+                    0
+                ],
+                [
+                    19,
+                    0
+                ],
+                [
+                    19,
+                    9
+                ],
+                [
+                    19,
+                    11
+                ],
+                [
+                    19,
+                    12
+                ]
+            ],
+            "data_in": [
+                "changelog option",
+                "changelog dialog",
+                "second reminder delay setting"
+            ],
+            "data_out": [
+                "changelog information",
+                "closed changelog dialog",
+                "updated second reminder delay setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user starts on page 4 and clicks the Changelog option to navigate to page 14, where the changelog is displayed. Then, the user clicks the OK button on page 14 to close the changelog and return to page 19.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            10
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click Changelog option to open changelog page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            14,
+                            0
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click OK button to close changelog and return"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "This page allows the user to set, modify, or remove a password for securing notes, along with setting a password recovery question and answer, to ensure notes are not viewed or modified by others.",
+            "action_refs": [
+                [
+                    5,
+                    1
+                ],
+                [
+                    16,
+                    0
+                ],
+                [
+                    16,
+                    1
+                ],
+                [
+                    16,
+                    2
+                ],
+                [
+                    16,
+                    3
+                ],
+                [
+                    16,
+                    4
+                ],
+                [
+                    16,
+                    7
+                ]
+            ],
+            "data_in": [
+                "password setting",
+                "password setting form",
+                "new password",
+                "password confirmation input",
+                "question input field",
+                "password setup form",
+                "answer input field",
+                "answer input",
+                "password setup form data"
+            ],
+            "data_out": [
+                "updated password setting",
+                "new password input (partial)",
+                "password confirmation (updated state)",
+                "updated password setting form (with question input)",
+                "entered answer",
+                "password setup confirmation"
+            ],
+            "data_dependencies": [
+                45,
+                57
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user starts by clicking the Password option to access the password setup page. Then, they can insert a new password, confirm it, input a recovery question, input the answer, confirm the answer, and finally click OK to save the changes. Each input step is sequential, and the OK button finalizes the process.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            1
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click Password option to enter password setup page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            16,
+                            0
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 73,
+                        "action": "click",
+                        "summary": "Click to insert a new password"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            16,
+                            1
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 74,
+                        "action": "click",
+                        "summary": "Click to confirm the new password"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            16,
+                            2
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 75,
+                        "action": "click",
+                        "summary": "Click to input recovery question"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            16,
+                            3
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 76,
+                        "action": "click",
+                        "summary": "Click to input recovery answer"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            16,
+                            4
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 77,
+                        "action": "click",
+                        "summary": "Click to confirm recovery answer"
+                    },
+                    {
+                        "id": "S7",
+                        "action_ref": [
+                            16,
+                            7
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click OK button to save password settings"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S5",
+                        "to": "S6"
+                    },
+                    {
+                        "from": "S6",
+                        "to": "S7"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "Request password on access toggle",
+            "action_refs": [
+                [
+                    5,
+                    2
+                ]
+            ],
+            "data_in": [
+                "settings page",
+                "request password on access setting"
+            ],
+            "data_out": [
+                "updated request password on access setting"
+            ],
+            "data_dependencies": [
+                58
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The flow starts on page 5. The user clicks the 'Request password on access toggle' element, which navigates to page 17. There are no branches or loops in this single-step flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            2
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click 'Request password on access toggle' to navigate to the next page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "The current page is a side navigation menu in the Omni Notes Alpha app, providing options to navigate to the notes management page or the settings page.",
+            "action_refs": [
+                [
+                    6,
+                    0
+                ]
+            ],
+            "data_in": [
+                "language setting"
+            ],
+            "data_out": [
+                "updated language setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The flow starts on the settings page (page 6). A click action is performed on the 'Language setting (English, United States)' option, which navigates to the interface settings page (page 1).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            0
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click on the Language setting (English, United States) option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "The current page (side navigation menu) in the Omni Notes Alpha app provides options to navigate to the main notes page or access the settings page for configuring app preferences.",
+            "action_refs": [
+                [
+                    6,
+                    1
+                ]
+            ],
+            "data_in": [
+                "text size setting"
+            ],
+            "data_out": [
+                "updated text size setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The flow starts on the side navigation menu (page 6). A click action is performed on the 'Text size setting (Default)' option, leading to the destination page 1. This action likely navigates to a relevant settings sub - page or triggers a change related to text size configuration.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            1
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click on the Text size setting (Default) option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "The page allows the user to select the \"Settings\" option from the side navigation menu of the Omni Notes Alpha app to access configuration options.",
+            "action_refs": [
+                [
+                    6,
+                    2
+                ]
+            ],
+            "data_in": [
+                "application color scheme setting"
+            ],
+            "data_out": [
+                "updated application color scheme setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on page 6 (Interface settings) and clicks on the 'Application color scheme (Strip only)' option, which navigates to page 1 (the side navigation menu with Settings). This action is part of accessing configuration options via the Settings path.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            2
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click on 'Application color scheme (Strip only)' to navigate to the side navigation menu page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "Floating action button toggle",
+            "action_refs": [
+                [
+                    6,
+                    3
+                ]
+            ],
+            "data_in": [
+                "floating action button setting"
+            ],
+            "data_out": [
+                "updated floating action button setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "On the Interface settings page (page 6), the user clicks the 'Floating action button' toggle. This action navigates to page 78, completing the toggle interaction for the floating action button option.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            3
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 78,
+                        "action": "click",
+                        "summary": "Click the Floating action button toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "Simple calendar and time toggle",
+            "action_refs": [
+                [
+                    6,
+                    4
+                ]
+            ],
+            "data_in": [
+                "simple calendar and time setting"
+            ],
+            "data_out": [
+                "updated simple calendar and time setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on the Interface settings page (page 6). The core action is clicking the 'Simple calendar and time' toggle, which likely toggles its state (e.g., from off to on or vice versa) and navigates to page 79. There are no branches or loops as it’s a single toggle action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            4
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 79,
+                        "action": "click",
+                        "summary": "Click the 'Simple calendar and time' toggle to toggle its state and navigate to page 79"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 25,
+            "function_description": "Attachments on bottom toggle",
+            "action_refs": [
+                [
+                    6,
+                    5
+                ]
+            ],
+            "data_in": [
+                "attachments on bottom setting"
+            ],
+            "data_out": [
+                "updated attachments on bottom setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on the Interface settings page (page 6). They perform a single action: clicking the 'Attachments on bottom' toggle, which navigates to page 80. This action toggles the setting for showing attachments above or below note content.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            5
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 80,
+                        "action": "click",
+                        "summary": "Click the 'Attachments on bottom' toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 26,
+            "function_description": "Prettified dates toggle",
+            "action_refs": [
+                [
+                    6,
+                    6
+                ]
+            ],
+            "data_in": [
+                "prettified dates setting"
+            ],
+            "data_out": [
+                "updated prettified dates setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on page 6 (Interface settings) and clicks the 'Prettified dates' toggle, transitioning to page 81. This action toggles the setting for displaying dates in a simpler format.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            6
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 81,
+                        "action": "click",
+                        "summary": "Click the Prettified dates toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 27,
+            "function_description": "Dynamic menu toggle",
+            "action_refs": [
+                [
+                    7,
+                    0
+                ]
+            ],
+            "data_in": [
+                "dynamic menu setting"
+            ],
+            "data_out": [
+                "updated dynamic menu setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The user starts on page 7 (Navigation settings) and clicks the 'Dynamic menu toggle' (a switch). This action likely toggles the dynamic menu setting, with the destination page being 54 (presumably reflecting the updated state of the toggle).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            0
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 54,
+                        "action": "click",
+                        "summary": "Click the Dynamic menu toggle switch"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 28,
+            "function_description": "Note count toggle",
+            "action_refs": [
+                [
+                    7,
+                    1
+                ]
+            ],
+            "data_in": [
+                "note count setting"
+            ],
+            "data_out": [
+                "updated note count setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The user starts on page 7 (Navigation settings). The core logic is to click the 'Note count' toggle, which likely toggles its state (on/off) and may navigate to page 55 (or update the current page). This is a single action step with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            1
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 55,
+                        "action": "click",
+                        "summary": "Click the 'Note count' toggle to change its state (e.g., from on to off or vice versa) and navigate to page 55 (or update the UI)."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 29,
+            "function_description": "Group not categorized toggle",
+            "action_refs": [
+                [
+                    7,
+                    2
+                ]
+            ],
+            "data_in": [
+                "group not categorized setting"
+            ],
+            "data_out": [
+                "updated group not categorized setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The user starts on the page with index 7 (Navigation settings). The core action is clicking the 'Group not categorized' toggle, which transitions to page 56. There are no branches or loops as this is a single click action to interact with the toggle.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            2
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 56,
+                        "action": "click",
+                        "summary": "Click the 'Group not categorized' toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 30,
+            "function_description": "Navigation menu on exit toggle",
+            "action_refs": [
+                [
+                    7,
+                    3
+                ]
+            ],
+            "data_in": [
+                "navigation menu on exit setting"
+            ],
+            "data_out": [
+                "updated navigation menu on exit setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The user starts on page 7 (Navigation settings). They click the 'Navigation menu on exit' toggle, which likely toggles its state (e.g., from off to on or vice versa) and navigates to page 57. There are no branches as it's a single action with a defined destination.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            3
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 57,
+                        "action": "click",
+                        "summary": "Click the 'Navigation menu on exit' toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 31,
+            "function_description": "Instant search toggle",
+            "action_refs": [
+                [
+                    8,
+                    1
+                ]
+            ],
+            "data_in": [
+                "instant search setting"
+            ],
+            "data_out": [
+                "updated instant search setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The user starts on page 8 (Behaviors settings). They perform a click action on the 'Instant search' toggle, which likely toggles its state (e.g., from off to on or vice versa) and navigates to page 59. This is a single-step flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            1
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 59,
+                        "action": "click",
+                        "summary": "Click the Instant search toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 32,
+            "function_description": "Swipe notes toggle",
+            "action_refs": [
+                [
+                    8,
+                    2
+                ]
+            ],
+            "data_in": [
+                "swipe notes setting"
+            ],
+            "data_out": [
+                "updated swipe notes setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "On the Behaviors page (page 8), the user clicks the 'Swipe notes' toggle switch. This action toggles the setting and navigates to page 60, completing the toggle operation.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            2
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 60,
+                        "action": "click",
+                        "summary": "Click the 'Swipe notes' toggle switch"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 33,
+            "function_description": "Swipe to trash toggle",
+            "action_refs": [
+                [
+                    8,
+                    3
+                ]
+            ],
+            "data_in": [
+                "swipe to trash setting"
+            ],
+            "data_out": [
+                "updated swipe to trash setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The user starts on page 8 (Behaviors settings). They perform a click action on the 'Swipe to trash' toggle, which likely toggles its state (e.g., from off to on or vice versa) and navigates to page 61. There are no branches or loops as it’s a single action flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            3
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 61,
+                        "action": "click",
+                        "summary": "Click the 'Swipe to trash' toggle to toggle its state and navigate to page 61"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 34,
+            "function_description": "Automatic location toggle",
+            "action_refs": [
+                [
+                    8,
+                    4
+                ]
+            ],
+            "data_in": [
+                "automatic location setting"
+            ],
+            "data_out": [
+                "updated automatic location setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The user starts on the Behaviors page. They perform a click action on the 'Automatic location' toggle, which likely toggles its state (e.g., from off to on or vice versa) to enable or disable automatic location addition for new notes. This is a single-step action with no branching or looping.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            4
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 62,
+                        "action": "click",
+                        "summary": "Click the 'Automatic location' toggle to change its state"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 35,
+            "function_description": "The current page (a dialog box) allows the user to input or set a value for video attachments within the behaviors settings of a note - management application, with options to confirm (OK) or cancel (CANCEL) the input.",
+            "action_refs": [
+                [
+                    8,
+                    5
+                ],
+                [
+                    63,
+                    0
+                ],
+                [
+                    63,
+                    1
+                ],
+                [
+                    63,
+                    2
+                ]
+            ],
+            "data_in": [
+                "video attachments setting",
+                "video attachments setting dialog"
+            ],
+            "data_out": [
+                "updated video attachments setting",
+                "dismissed dialog"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The user starts on the Behaviors page (page 8) and clicks the 'Video attachments' option to open its dialog (page 63). In the dialog, the user can either click the input field to enter a value, or choose to click 'CANCEL' (to discard changes and return to page 8) or 'OK' (to confirm changes and return to page 8).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            5
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 63,
+                        "action": "click",
+                        "summary": "Open Video attachments dialog"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            63,
+                            0
+                        ],
+                        "src_page_idx": 63,
+                        "dst_page_idx": 67,
+                        "action": "click",
+                        "summary": "Click input field (for entering size)"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            63,
+                            1
+                        ],
+                        "src_page_idx": 63,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click CANCEL (discard, return to Behaviors)"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            63,
+                            2
+                        ],
+                        "src_page_idx": 63,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click OK (confirm, return to Behaviors)"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 36,
+            "function_description": "Vibration toggle switch",
+            "action_refs": [
+                [
+                    9,
+                    0
+                ]
+            ],
+            "data_in": [
+                "vibration setting"
+            ],
+            "data_out": [
+                "updated vibration setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts on page 9 (Notifications screen) and clicks the Vibration toggle switch. This action toggles the vibration setting and navigates to page 68, completing the functional point's execution.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            0
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 68,
+                        "action": "click",
+                        "summary": "Click the Vibration toggle switch"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 37,
+            "function_description": "This page allows the user to select a ringtone from a list of available options for notifications, with options to confirm the selection or cancel the action.",
+            "action_refs": [
+                [
+                    9,
+                    1
+                ]
+            ],
+            "data_in": [
+                "ringtone setting"
+            ],
+            "data_out": [
+                "updated ringtone setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts on the Notifications page. They click the Ringtone option, which opens the Ringtones selection dialog. Here, the user can choose a ringtone from the list, then either confirm with OK or cancel the selection.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            1
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 69,
+                        "action": "click",
+                        "summary": "Click the Ringtone option to open the ringtone selection dialog"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 38,
+            "function_description": "The Notifications settings page allows users to configure notification - related preferences such as enabling or disabling vibration, setting a ringtone, and adjusting the second reminder delay.",
+            "action_refs": [
+                [
+                    9,
+                    3
+                ]
+            ],
+            "data_in": [
+                "notifications persistence setting"
+            ],
+            "data_out": [
+                "updated notifications persistence setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts on the Notifications settings page. They perform a click action to enable the notifications persistence option, and the flow ends on the same page after this action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            3
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Enable notifications persistence option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 39,
+            "function_description": "Error reporting toggle switch",
+            "action_refs": [
+                [
+                    10,
+                    0
+                ]
+            ],
+            "data_in": [
+                "error reporting setting"
+            ],
+            "data_out": [
+                "updated error reporting setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The user starts on page 10 and clicks the Error reporting toggle switch, which leads to page 82. This action toggles the switch's state (on/off) to enable or disable error reporting when the app crashes.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            0
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 82,
+                        "action": "click",
+                        "summary": "Click the Error reporting toggle switch"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 40,
+            "function_description": "Share anonymous data toggle switch",
+            "action_refs": [
+                [
+                    10,
+                    1
+                ]
+            ],
+            "data_in": [
+                "share anonymous data setting"
+            ],
+            "data_out": [
+                "updated share anonymous data setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 10,
+                "logic": "The user starts on page 10 (Privacy settings) and clicks the 'Share anonymous data' toggle switch. This action leads to page 83, completing the interaction with the toggle.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            10,
+                            1
+                        ],
+                        "src_page_idx": 10,
+                        "dst_page_idx": 83,
+                        "action": "click",
+                        "summary": "Click the Share anonymous data toggle switch"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 41,
+            "function_description": "The page (within the Sync and Backups settings of Omni Notes FOSS) is currently prompting the user to grant or deny the app permission to access photos, media, and files on the device, with options to backup, restore/delete backups, or import notes from Springpad once permission is handled.",
+            "action_refs": [
+                [
+                    15,
+                    0
+                ]
+            ],
+            "data_in": [
+                "backup setting"
+            ],
+            "data_out": [
+                "backup setting (initiated)"
+            ],
+            "data_dependencies": [
+                42
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The flow starts on the Sync and Backups settings page. The user is prompted to grant or deny file access. After handling the permission (implied by the backup option becoming actionable), the user can click the Backup option to proceed with backup functionality. There are no explicit branches or loops shown in the provided action, so the flow is a straight line after permission is resolved.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            0
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click the Backup option (after permission is handled)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 42,
+            "function_description": "The current page (Restore or delete backups) in the Omni Notes Alpha app allows users to manage their backup data by either restoring backups to retrieve previous note data or deleting backups to remove stored backup files.",
+            "action_refs": [
+                [
+                    15,
+                    1
+                ]
+            ],
+            "data_in": [
+                "backup option"
+            ],
+            "data_out": [
+                "restored or deleted backup"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user starts on page 15 and clicks the 'Restore or delete backups' option, navigating to page 1. This action initiates the process of managing backup data (restoring or deleting backups).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            1
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click 'Restore or delete backups' option to navigate to backup management page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 43,
+            "function_description": "The current page (Settings page) provides a list of configuration categories (Preferences, Beta, Help, About) and specific options (e.g., Data, Interface, Opt - In, Online manual) for customizing the app's settings.",
+            "action_refs": [
+                [
+                    15,
+                    2
+                ]
+            ],
+            "data_in": [
+                "Springpad notes"
+            ],
+            "data_out": [
+                "imported notes"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user starts on the Settings page (page 15). They perform a click action on the 'Import notes from Springpad option' (though the screenshots suggest the main Settings navigation, the action provided is followed). This click leads to a new page (page 19), completing the flow for this action. There are no branches or loops as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            2
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click on Import notes from Springpad option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 44,
+            "function_description": "This page is a side navigation menu in the Omni Notes Alpha app, providing options to navigate to the main notes page or access the app's settings.",
+            "action_refs": [
+                [
+                    16,
+                    5
+                ]
+            ],
+            "data_in": [
+                "password recovery request"
+            ],
+            "data_out": [
+                "navigation to app menu"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 16,
+                "logic": "The flow starts on page 16 (a password-related dialog). The user clicks the 'PASSWORD FORGOTTEN' link, which navigates to page 1 (the main side navigation menu of Omni Notes Alpha, with 'Notes' and 'SETTINGS' options).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            16,
+                            5
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the PASSWORD FORGOTTEN link to navigate to the main side menu page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 45,
+            "function_description": "The current page is a side navigation menu in the Omni Notes Alpha app, providing options to navigate to the main notes page or access the app's settings.",
+            "action_refs": [
+                [
+                    16,
+                    6
+                ]
+            ],
+            "data_in": [
+                "password setting"
+            ],
+            "data_out": [
+                "updated password setting (removed)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 16,
+                "logic": "The flow starts on page 16 (a password - related dialog). The user clicks the 'REMOVE PASSWORD' link. This action leads to page 1, which is the side navigation menu of the Omni Notes Alpha app, offering options to navigate to the main notes page or access the app's settings.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            16,
+                            6
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the REMOVE PASSWORD link"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 46,
+            "function_description": "The Data page allows users to manage app data-related settings, including sync/backup operations, password configuration (editing and access request), and the option to erase all data.",
+            "action_refs": [
+                [
+                    19,
+                    1
+                ]
+            ],
+            "data_in": [
+                "data settings"
+            ],
+            "data_out": [
+                "data settings page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 19,
+                "logic": "The user starts on page 19 (Privacy settings) and clicks the 'Data' option. This action navigates to page 20 (Data settings), where options like Sync/Backups, Password configuration, and Erase all data are available. No branches or loops are present in this initial flow as only the navigation to the Data page is captured.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            19,
+                            1
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 20,
+                        "action": "click",
+                        "summary": "Click on the 'Data' option to navigate to the Data settings page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 47,
+            "function_description": "The Interface settings page allows users to configure application interface preferences, including language, color scheme, floating action button behavior, attachment display location, and date formatting.",
+            "action_refs": [
+                [
+                    19,
+                    2
+                ]
+            ],
+            "data_in": [
+                "interface setting item"
+            ],
+            "data_out": [
+                "interface settings page (loaded)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 19,
+                "logic": "The user starts on a settings page (page 19) and clicks the 'Interface' option. This action navigates to the Interface settings page (page 21), where interface preferences like language, color scheme, and toggles for button behavior, attachment location, and date formatting can be configured.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            19,
+                            2
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 21,
+                        "action": "click",
+                        "summary": "Click 'Interface' option to navigate to Interface settings page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 48,
+            "function_description": "The Navigation settings page allows users to configure options related to the app's navigation menu, such as enabling/disabling dynamic menu item hiding, note count display, grouping of uncategorized notes, and navigation menu behavior on exit.",
+            "action_refs": [
+                [
+                    19,
+                    3
+                ]
+            ],
+            "data_in": [
+                "navigation setting item"
+            ],
+            "data_out": [
+                "navigation setting page (loaded)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 19,
+                "logic": "The user starts on a page (page 19) and clicks the 'Navigation' option. This action navigates them to the Navigation settings page (page 7), where they can configure navigation-related options like dynamic menu hiding, note count display, and more.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            19,
+                            3
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click on the 'Navigation' option to navigate to the Navigation settings page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 49,
+            "function_description": "The Behaviors page allows users to configure various functional settings related to note - taking, such as checklist position, search behavior, note - swiping actions, location addition for new notes, and the maximum size of video attachments.",
+            "action_refs": [
+                [
+                    19,
+                    4
+                ]
+            ],
+            "data_in": [
+                "behaviors setting entry"
+            ],
+            "data_out": [
+                "behaviors settings page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 19,
+                "logic": "The user starts on page 19 and clicks the 'Behaviors' option, navigating to page 8 (the Behaviors settings page) to configure note - taking related functional settings like checklist position, search behavior, etc.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            19,
+                            4
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click on the 'Behaviors' option to navigate to the Behaviors settings page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 50,
+            "function_description": "The Notifications page allows users to configure notification - related settings, including toggling vibration, selecting a ringtone, and setting the second reminder delay.",
+            "action_refs": [
+                [
+                    19,
+                    5
+                ]
+            ],
+            "data_in": [
+                "notifications setting item"
+            ],
+            "data_out": [
+                "notifications setting page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 19,
+                "logic": "The user starts on a settings page and clicks the 'Notifications' option to navigate to the Notifications page, where they can configure vibration, ringtone, and second reminder delay settings.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            19,
+                            5
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click 'Notifications' option to enter Notifications settings page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 51,
+            "function_description": "The Privacy page allows users to configure options related to error reporting, sharing anonymous data, and saving app logs to a file, with toggle switches to enable or disable each feature.",
+            "action_refs": [
+                [
+                    19,
+                    6
+                ]
+            ],
+            "data_in": [
+                "privacy setting item"
+            ],
+            "data_out": [
+                "privacy settings page (updated content)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 19,
+                "logic": "The user starts on page 19 and clicks the 'Privacy' option (action_ref [19,6]) to navigate to page 22, where privacy-related toggles (error reporting, anonymous data sharing, log saving) are available for configuration. No branches or loops are present as only the navigation to the Privacy page is captured here.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            19,
+                            6
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 22,
+                        "action": "click",
+                        "summary": "Click 'Privacy' option to navigate to Privacy settings page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 52,
+            "function_description": "The current page (Privacy section within the settings) allows users to access and configure privacy - related settings, and also provides access to other setting categories like Preferences, Data, Interface, Navigation, Behaviors, Notifications, along with beta program options, help resources, and app - related information such as the changelog.",
+            "action_refs": [
+                [
+                    19,
+                    7
+                ]
+            ],
+            "data_in": [
+                "beta opt-in setting"
+            ],
+            "data_out": [
+                "updated beta opt-in setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 19,
+                "logic": "The user starts on the Privacy settings page. They can click on the 'Beta' category label (or other categories/options like Preferences, Data, etc.). In this case, the action is clicking the Beta label, which likely leads to related beta program settings or info, though the destination page here remains 19 (possibly a UI state or pending navigation).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            19,
+                            7
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click on the Beta category label"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 53,
+            "function_description": "This page appears to be a loading or intermediate page for Google account sign - in or related authentication processes, likely facilitating user authentication or account - related actions.",
+            "action_refs": [
+                [
+                    19,
+                    8
+                ]
+            ],
+            "data_in": [
+                "opt-in setting"
+            ],
+            "data_out": [
+                "updated opt-in setting",
+                "google account sign-in session"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 19,
+                "logic": "The process starts on page 19. The user clicks the 'Opt-In' option, which navigates to page 11 (a Google account sign - in related loading page). There are no branches or loops in this flow as it's a single - step navigation action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            19,
+                            8
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click the Opt - In option to navigate to the Google account sign - in related page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 54,
+            "function_description": "The current page functions as the online manual (user guide) for the Omni - Notes application, providing information on aspects like notes management, creation, and categories management, and is hosted on a GitHub repository page for the Omni - Notes project.",
+            "action_refs": [
+                [
+                    19,
+                    10
+                ]
+            ],
+            "data_in": [
+                "online manual option"
+            ],
+            "data_out": [
+                "user guide page (Omni Notes)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 19,
+                "logic": "The flow starts on page 19. The user clicks the 'Online manual' option, which navigates to page 12 (the GitHub-hosted Omni - Notes user guide page) to access information about notes management, creation, and categories management.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            19,
+                            10
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click the 'Online manual' option to navigate to the user guide page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 55,
+            "function_description": "The current page (changelog popup) displays a list of version - by - version updates for the app, including new features, improvements, and fixes, and has an \"OK\" button to close the popup.",
+            "action_refs": [
+                [
+                    19,
+                    13
+                ]
+            ],
+            "data_in": [
+                "changelog option"
+            ],
+            "data_out": [
+                "changelog content"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 19,
+                "logic": "The user starts on page 19 (Privacy page) and clicks the 'Changelog' option. This action opens the changelog popup, which displays version-by-version updates. The popup has an 'OK' button to close it, but the provided action only covers opening the changelog. The flow is a straight line from clicking 'Changelog' to viewing the popup content.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            19,
+                            13
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click the Changelog option to open the changelog popup"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 56,
+            "function_description": "The current page is a side navigation menu in the Omni Notes Alpha app, providing options to navigate to the notes section or access the settings page.",
+            "action_refs": [
+                [
+                    20,
+                    0
+                ]
+            ],
+            "data_in": [
+                "sync and backups setting"
+            ],
+            "data_out": [
+                "sync and backups setting (entered)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The user starts on the side navigation menu (page 20). They click the 'Sync and Backups' option, which navigates to the Data settings page (page 15). This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            0
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click the 'Sync and Backups' option to navigate to the Data settings page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 57,
+            "function_description": "The current page is a side navigation menu in the Omni Notes Alpha app, providing options to navigate to the main notes page or access the app's settings.",
+            "action_refs": [
+                [
+                    20,
+                    1
+                ]
+            ],
+            "data_in": [
+                "password setting"
+            ],
+            "data_out": [
+                "password setting (entered)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The flow starts on page 20 (a settings page). The user clicks the 'Password' option, which navigates to page 15. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            1
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click the 'Password' option to navigate to the related page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 58,
+            "function_description": "Request password on access toggle",
+            "action_refs": [
+                [
+                    20,
+                    2
+                ]
+            ],
+            "data_in": [
+                "request password on access setting"
+            ],
+            "data_out": [
+                "updated request password on access setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The user starts on page 20 (Data settings). They perform a click action on the 'Request password on access' toggle, which leads to page 23. This action enables (or toggles) the request password on access feature.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            2
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 23,
+                        "action": "click",
+                        "summary": "Click the 'Request password on access' toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 59,
+            "function_description": "The current page (a confirmation dialog) functions to ask the user to confirm the erasure of all the app's data while preserving backups, with a \"CONFIRM\" button to proceed with the data erasure.",
+            "action_refs": [
+                [
+                    20,
+                    3
+                ],
+                [
+                    24,
+                    0
+                ],
+                [
+                    24,
+                    1
+                ],
+                [
+                    24,
+                    2
+                ],
+                [
+                    24,
+                    3
+                ],
+                [
+                    24,
+                    4
+                ],
+                [
+                    24,
+                    5
+                ],
+                [
+                    29,
+                    0
+                ]
+            ],
+            "data_in": [
+                "erase all data option",
+                "app data",
+                "erase all data confirmation dialog",
+                "backup data",
+                "backup restoration confirmation",
+                "app data (notes)"
+            ],
+            "data_out": [
+                "erased app data confirmation request",
+                "erased app data",
+                "preserved backup data",
+                "initiated backup restoration",
+                "app data (notes) replacement"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The user starts on the Data page and clicks the 'Erase all data' option to open a confirmation dialog. Then, the user clicks the 'CONFIRM' button in the dialog to proceed with erasing the app's data while preserving backups.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            3
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 24,
+                        "action": "click",
+                        "summary": "Click 'Erase all data' option"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            29,
+                            0
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click 'CONFIRM' button"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 60,
+            "function_description": "The page functions as a language selection interface where users can choose their preferred language from a list of available options (e.g., English, Finnish, French, etc.) to set the app's display language, with a \"CANCEL\" button to exit without making changes.",
+            "action_refs": [
+                [
+                    21,
+                    0
+                ],
+                [
+                    30,
+                    0
+                ],
+                [
+                    30,
+                    4
+                ],
+                [
+                    30,
+                    8
+                ],
+                [
+                    30,
+                    10
+                ],
+                [
+                    30,
+                    11
+                ],
+                [
+                    30,
+                    12
+                ],
+                [
+                    30,
+                    14
+                ]
+            ],
+            "data_in": [
+                "language setting",
+                "English (English) language option",
+                "Bahasa Indonesia (Indonesian) option",
+                "Japanese language option"
+            ],
+            "data_out": [
+                "updated language setting",
+                "updated language setting (English)",
+                "updated language setting (Deutsch)",
+                "updated language setting (Hindi)",
+                "updated language setting (Bahasa Indonesia)",
+                "updated language setting (Italian)",
+                "updated language setting (Japanese)"
+            ],
+            "data_dependencies": [
+                68,
+                69,
+                70,
+                71,
+                72,
+                73,
+                74,
+                75
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 21,
+                "logic": "The flow starts by clicking the Language setting to open the language selection menu. Once in the menu, the user can either select a language (e.g., English, German, Hindi, etc.) via their respective radio buttons or click the CANCEL button to exit without changing the language. The selection of a language or CANCEL are mutually exclusive choices at the language menu step.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            21,
+                            0
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": 30,
+                        "action": "click",
+                        "summary": "Open language selection menu"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            30,
+                            0
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 35,
+                        "action": "click",
+                        "summary": "Select English language"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            30,
+                            4
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 39,
+                        "action": "click",
+                        "summary": "Select German language"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            30,
+                            8
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 43,
+                        "action": "click",
+                        "summary": "Select Hindi language"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            30,
+                            10
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 45,
+                        "action": "click",
+                        "summary": "Select Indonesian language"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            30,
+                            11
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 46,
+                        "action": "click",
+                        "summary": "Select Italian language"
+                    },
+                    {
+                        "id": "S7",
+                        "action_ref": [
+                            30,
+                            12
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 47,
+                        "action": "click",
+                        "summary": "Select Japanese language"
+                    },
+                    {
+                        "id": "S8",
+                        "action_ref": [
+                            30,
+                            14
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 49,
+                        "action": "click",
+                        "summary": "Cancel language selection"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            },
+                            {
+                                "next_step": "S6"
+                            },
+                            {
+                                "next_step": "S7"
+                            },
+                            {
+                                "next_step": "S8"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 61,
+            "function_description": "The current page (a popup) allows the user to select the application color scheme from options including Disabled, Strip only, Notes list only, or Complete.",
+            "action_refs": [
+                [
+                    21,
+                    1
+                ],
+                [
+                    31,
+                    0
+                ],
+                [
+                    31,
+                    1
+                ],
+                [
+                    31,
+                    2
+                ],
+                [
+                    31,
+                    3
+                ],
+                [
+                    31,
+                    4
+                ]
+            ],
+            "data_in": [
+                "application color scheme setting"
+            ],
+            "data_out": [
+                "updated application color scheme setting",
+                "updated application color scheme setting (Disabled)",
+                "updated application color scheme setting (Notes list only)",
+                "updated application color scheme setting (Complete)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 21,
+                "logic": "The user starts on page 21 and clicks to open the application color scheme popup (step S1). At the popup (step S2), the user can choose one of four color scheme options (Disabled, Strip only, Notes list only, Complete) or cancel. Selecting an option (S3-S6) applies it, while canceling (S7) returns to the previous page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            21,
+                            1
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": 31,
+                        "action": "click",
+                        "summary": "Open application color scheme popup"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": null,
+                        "src_page_idx": 31,
+                        "dst_page_idx": null,
+                        "action": "choose",
+                        "summary": "Choose color scheme option"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            31,
+                            0
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": 50,
+                        "action": "click",
+                        "summary": "Select Disabled color scheme"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            31,
+                            1
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": 51,
+                        "action": "click",
+                        "summary": "Select Strip only color scheme"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            31,
+                            2
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": 52,
+                        "action": "click",
+                        "summary": "Select Notes list only color scheme"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            31,
+                            3
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": 53,
+                        "action": "click",
+                        "summary": "Select Complete color scheme"
+                    },
+                    {
+                        "id": "S7",
+                        "action_ref": [
+                            31,
+                            4
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": 21,
+                        "action": "click",
+                        "summary": "Cancel color scheme selection"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S6"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S7"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3",
+                                "condition": "User selects Disabled"
+                            },
+                            {
+                                "next_step": "S4",
+                                "condition": "User selects Strip only"
+                            },
+                            {
+                                "next_step": "S5",
+                                "condition": "User selects Notes list only"
+                            },
+                            {
+                                "next_step": "S6",
+                                "condition": "User selects Complete"
+                            },
+                            {
+                                "next_step": "S7",
+                                "condition": "User clicks CANCEL"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 62,
+            "function_description": "Floating action button toggle",
+            "action_refs": [
+                [
+                    21,
+                    2
+                ]
+            ],
+            "data_in": [
+                "floating action button setting"
+            ],
+            "data_out": [
+                "updated floating action button setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 21,
+                "logic": "The user starts on page 21 (Interface settings) and clicks the 'Floating action button' toggle. This action likely toggles the state of the floating action button option, with the flow ending after this click (as the action is a leaf node).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            21,
+                            2
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": 32,
+                        "action": "click",
+                        "summary": "Click the Floating action button toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 63,
+            "function_description": "Attachments on bottom toggle",
+            "action_refs": [
+                [
+                    21,
+                    3
+                ]
+            ],
+            "data_in": [
+                "attachments on bottom setting"
+            ],
+            "data_out": [
+                "updated attachments on bottom setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 21,
+                "logic": "The user starts on the Interface settings page (page 21). They perform a click action on the 'Attachments on bottom' toggle, which likely toggles its state (e.g., from off to on or vice versa) and navigates to page 33. This is a single-step flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            21,
+                            3
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": 33,
+                        "action": "click",
+                        "summary": "Click the 'Attachments on bottom' toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 64,
+            "function_description": "Prettified dates toggle",
+            "action_refs": [
+                [
+                    21,
+                    4
+                ]
+            ],
+            "data_in": [
+                "prettified dates setting"
+            ],
+            "data_out": [
+                "updated prettified dates setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 21,
+                "logic": "The user interacts with the 'Prettified dates' toggle. The flow starts on the Interface settings page (page 21), where the user clicks the 'Prettified dates' toggle. This action likely toggles the setting (e.g., from on to off or vice versa) and may navigate to a new page (page 34) or update the current page's state.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            21,
+                            4
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": 34,
+                        "action": "click",
+                        "summary": "Click the 'Prettified dates' toggle on the Interface settings page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 65,
+            "function_description": "Error reporting toggle switch",
+            "action_refs": [
+                [
+                    22,
+                    0
+                ]
+            ],
+            "data_in": [
+                "error reporting setting"
+            ],
+            "data_out": [
+                "updated error reporting setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 22,
+                "logic": "The user starts on page 22 (Privacy settings). The core action is clicking the Error reporting toggle switch, which transitions to page 70. This single step toggles the error reporting setting, with no branches or loops as only one action is involved.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            22,
+                            0
+                        ],
+                        "src_page_idx": 22,
+                        "dst_page_idx": 70,
+                        "action": "click",
+                        "summary": "Click the Error reporting toggle switch"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 66,
+            "function_description": "Share anonymous data toggle switch",
+            "action_refs": [
+                [
+                    22,
+                    1
+                ]
+            ],
+            "data_in": [
+                "share anonymous data setting"
+            ],
+            "data_out": [
+                "updated share anonymous data setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 22,
+                "logic": "The user starts on page 22 (Privacy settings) and clicks the 'Share anonymous data' toggle switch. This action likely toggles the switch's state (on/off) to enable or disable sharing anonymous data, with the flow ending after this click.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            22,
+                            1
+                        ],
+                        "src_page_idx": 22,
+                        "dst_page_idx": 71,
+                        "action": "click",
+                        "summary": "Click the 'Share anonymous data' toggle switch"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 67,
+            "function_description": "Save logs to file toggle switch",
+            "action_refs": [
+                [
+                    22,
+                    2
+                ]
+            ],
+            "data_in": [
+                "save logs to file setting"
+            ],
+            "data_out": [
+                "updated save logs to file setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 22,
+                "logic": "The user interacts with the 'Save logs to file' toggle switch. The flow starts on page 22 (Privacy settings) and, upon clicking the toggle, transitions to page 72. This action toggles the switch to enable or disable saving logs to a file.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            22,
+                            2
+                        ],
+                        "src_page_idx": 22,
+                        "dst_page_idx": 72,
+                        "action": "click",
+                        "summary": "Click the 'Save logs to file' toggle switch"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 68,
+            "function_description": "Suomi (Finnish) radio button",
+            "action_refs": [
+                [
+                    30,
+                    1
+                ]
+            ],
+            "data_in": [
+                "language setting"
+            ],
+            "data_out": [
+                "updated language setting (Suomi)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 30,
+                "logic": "The flow starts on the language selection page (page 30). The user clicks the 'Suomi (Finnish)' radio button, which transitions the app to page 36. This is a straight - line flow with no branches or loops as it involves a single click action to select the Finnish language option.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            30,
+                            1
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 36,
+                        "action": "click",
+                        "summary": "Click the Suomi (Finnish) radio button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 69,
+            "function_description": "Français (French) radio button",
+            "action_refs": [
+                [
+                    30,
+                    2
+                ]
+            ],
+            "data_in": [
+                "language setting"
+            ],
+            "data_out": [
+                "updated language setting (French)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 30,
+                "logic": "The process starts on the language selection page (page 30). The user clicks the 'Français (French)' radio button, which transitions the app to page 37. This is a single-step flow with no branches or loops, as the action directly selects the French language option.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            30,
+                            2
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 37,
+                        "action": "click",
+                        "summary": "Click the 'Français (French)' radio button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 70,
+            "function_description": "ភាសាខ្មែរ (Khmer) radio button",
+            "action_refs": [
+                [
+                    30,
+                    3
+                ]
+            ],
+            "data_in": [
+                "language setting",
+                "Khmer language option"
+            ],
+            "data_out": [
+                "updated language setting (Khmer)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 30,
+                "logic": "The process starts on the language selection page (page 30). The user clicks the 'ភាសាខ្មែរ (Khmer)' radio button, which leads to the next page (page 38). There are no branches or loops in this flow as it is a single action to select the language.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            30,
+                            3
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 38,
+                        "action": "click",
+                        "summary": "Click the 'ភាសាខ្មែរ (Khmer)' radio button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 71,
+            "function_description": "Galego (Galician) radio button",
+            "action_refs": [
+                [
+                    30,
+                    5
+                ]
+            ],
+            "data_in": [
+                "language setting",
+                "Galego (Galician) option"
+            ],
+            "data_out": [
+                "updated language setting (Galego (Galician))"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 30,
+                "logic": "The flow starts on page 30 (Language selection). The user clicks the 'Galego (Galician)' radio button, which transitions the app to page 40. This is a single-step flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            30,
+                            5
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 40,
+                        "action": "click",
+                        "summary": "Click Galego (Galician) radio button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 72,
+            "function_description": "ελληνικά (Greek) radio button",
+            "action_refs": [
+                [
+                    30,
+                    6
+                ]
+            ],
+            "data_in": [
+                "language setting"
+            ],
+            "data_out": [
+                "updated language setting (Greek)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 30,
+                "logic": "The user starts on the language selection page (page 30). The core action is clicking the 'ελληνικά (Greek)' radio button, which transitions the app to page 41. There are no branches or loops as this is a single, direct action to select the Greek language option.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            30,
+                            6
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 41,
+                        "action": "click",
+                        "summary": "Click the 'ελληνικά (Greek)' radio button to select the Greek language option."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 73,
+            "function_description": "(Hebrew) עברית radio button",
+            "action_refs": [
+                [
+                    30,
+                    7
+                ]
+            ],
+            "data_in": [
+                "language setting",
+                "(Hebrew) עברית language option"
+            ],
+            "data_out": [
+                "updated language setting"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 30,
+                "logic": "The user starts on page 30 (the language selection menu). The core action is clicking the (Hebrew) עברית radio button, which transitions the app to page 42. There are no branches or loops in this logic.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            30,
+                            7
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 42,
+                        "action": "click",
+                        "summary": "Click the (Hebrew) עברית radio button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 74,
+            "function_description": "Magyar (Hungarian) radio button",
+            "action_refs": [
+                [
+                    30,
+                    9
+                ]
+            ],
+            "data_in": [
+                "language setting",
+                "Magyar (Hungarian) option"
+            ],
+            "data_out": [
+                "updated language setting (Magyar)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 30,
+                "logic": "The flow starts on page 30 (the Language selection page). The user performs a click action on the 'Magyar (Hungarian)' radio button, which leads to page 44. There are no branches or loops in this simple flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            30,
+                            9
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 44,
+                        "action": "click",
+                        "summary": "Click on the 'Magyar (Hungarian)' radio button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 75,
+            "function_description": "ສາບາລາວ (Lao) radio button",
+            "action_refs": [
+                [
+                    30,
+                    13
+                ]
+            ],
+            "data_in": [
+                "language setting",
+                "Lao language option"
+            ],
+            "data_out": [
+                "updated language setting (Lao)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 30,
+                "logic": "The process starts on the language selection page (page 30). The user clicks the 'ສາບາລາວ (Lao)' radio button, which transitions the app to a new page (page 48). There are no branches or loops as this is a single action to select the Lao language.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            30,
+                            13
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 48,
+                        "action": "click",
+                        "summary": "Click the 'ສາບາລາວ (Lao)' radio button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        }
+    ]
+}

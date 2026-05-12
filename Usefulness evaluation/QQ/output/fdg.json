@@ -1,0 +1,2844 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "QQ main interface: chat, contacts, moments",
+            "action_refs": [
+                [
+                    0,
+                    5
+                ]
+            ],
+            "data_in": [
+                "moments tab",
+                "space dynamics entry"
+            ],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The core execution logic starts on the QQ main interface (page 0). The user clicks the Moments tab (action at [0,5]), which remains on the same page (page 0) to access the Moments section. There are no branches or loops as this is a single action to navigate to the Moments tab.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click on the Moments tab to navigate to the Moments section (staying on page 0)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 1,
+            "function_description": "This page allows the user to set or change their QQ online status (e.g., online, busy, invisible) and view the number of friends who have set a status, with options for custom statuses and account switching.",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ],
+                [
+                    1,
+                    0
+                ]
+            ],
+            "data_in": [
+                "user status setting",
+                "status panel"
+            ],
+            "data_out": [
+                "updated user status setting",
+                "closed status panel"
+            ],
+            "data_dependencies": [
+                6,
+                15
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on page 0 and clicks the user profile & status area (action S1) to open the status panel (page 1). Then, the user can click the 'Close status panel (X)' button (action S2) to return to page 0. There are no branches or loops as the flow is a simple open-and-close cycle for the status panel.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Open status panel by clicking user profile & status area"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            1,
+                            0
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Close status panel by clicking 'Close status panel (X)' button"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "This page is a pop - up menu triggered by the “Add” button on the QQ main interface. It provides functions such as creating a group chat, creating a channel, adding friends or groups, scanning, transferring files, and making payments and collections.",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ]
+            ],
+            "data_in": [
+                "user profile",
+                "navigation state"
+            ],
+            "data_out": [
+                "action menu (create/scan/add/file/payment)"
+            ],
+            "data_dependencies": [
+                17
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts by clicking the 'Add' button (plus icon) on the QQ main interface. This action triggers a pop - up menu that provides various functions such as creating a group chat, creating a channel, adding friends or groups, scanning, transferring files, and making payments and collections. There are no further branches or loops as the main action is to open this menu.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click the 'Add' button (plus icon) to open the pop - up menu with various functions."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "Search contacts/chats input",
+            "action_refs": [
+                [
+                    0,
+                    2
+                ]
+            ],
+            "data_in": [
+                "search input",
+                "contacts/chats data"
+            ],
+            "data_out": [
+                "filtered contacts/chats results"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The process starts on page 0. The user inputs '好友名字' into the search contacts/chats input field, which leads to page 3. There are no branches or loops as this is a single input action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "input",
+                        "summary": "Input '好友名字' into the search field"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "The \"动态\" (Moments) page in QQ allows users to view and interact with \"空间动态\" (Qzone Moments), with a search bar for finding specific content and a bottom navigation to switch between Messages, Contacts, and Moments.",
+            "action_refs": [
+                [
+                    0,
+                    3
+                ]
+            ],
+            "data_in": [
+                "messages tab entry"
+            ],
+            "data_out": [
+                "messages tab navigation"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the '动态' (Moments) page. They can click the 'Messages' tab in the bottom navigation to switch to the Messages page, with the flow remaining on the same page initially before the click action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the Messages tab in bottom navigation"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "The current page (QQ Contacts) enables users to view, search, and manage their QQ friends, check friend online statuses, access new friend requests, group notifications, and different contact categories (groups, friends, group chats, channels, devices).",
+            "action_refs": [
+                [
+                    0,
+                    4
+                ],
+                [
+                    4,
+                    2
+                ]
+            ],
+            "data_in": [
+                "contacts feature entry"
+            ],
+            "data_out": [
+                "contacts page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the '动态' (Dynamic) page. First, they click the '联系人' (Contacts) tab to navigate to the Contacts page. Then, on the Contacts page, they click the '好友' (Friends) tab to view the list of QQ friends, along with their online statuses. The flow is a straight line with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click '联系人' (Contacts) tab to navigate to Contacts page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            4,
+                            2
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click '好友' (Friends) tab to view QQ friends list"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "Status option '忙碌'",
+            "action_refs": [
+                [
+                    1,
+                    1
+                ]
+            ],
+            "data_in": [
+                "user status setting"
+            ],
+            "data_out": [
+                "user status set to 忙碌"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The core execution logic starts on page 1, where the user clicks the '忙碌' (Busy) status option. This action transitions the app to page 5, completing the selection of the '忙碌' status.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            1
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click the '忙碌' (Busy) status option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "This page allows the user to manage their QQ online status by selecting from various predefined status options (e.g., online, busy, invisible) or creating a custom status, and also provides an option to switch QQ accounts.",
+            "action_refs": [
+                [
+                    1,
+                    2
+                ]
+            ],
+            "data_in": [
+                "account switching setting"
+            ],
+            "data_out": [
+                "account switching setting updated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user starts on the QQ status management page. They can choose to click the 'Switch account' option to initiate the account switching process. Since there's only one action here, the flow is a single step with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            2
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the 'Switch account' option to start switching QQ accounts"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "联系人搜索框",
+            "action_refs": [
+                [
+                    4,
+                    0
+                ]
+            ],
+            "data_in": [
+                "联系人列表",
+                "搜索框"
+            ],
+            "data_out": [
+                "搜索结果（联系人）"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The process starts on the contacts page (page 4). The user inputs 'test' into the contact search box, which likely triggers a search and navigates to a new page (page 6) to display relevant results. There are no branching or looping steps here as it's a single input action leading to a result page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            0
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 6,
+                        "action": "input",
+                        "summary": "Input 'test' into the contact search box"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "The \"新朋友\" (New Friends) page in QQ provides options to invite WeChat friends, match with like - minded strangers, explore nearby updates, and share one's QQ QR code, facilitating the process of making new friends.",
+            "action_refs": [
+                [
+                    4,
+                    1
+                ],
+                [
+                    7,
+                    0
+                ],
+                [
+                    7,
+                    3
+                ]
+            ],
+            "data_in": [
+                "新朋友功能入口",
+                "new friend page state"
+            ],
+            "data_out": [
+                "进入新朋友功能页面",
+                "contacts page state"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The flow starts by clicking the '新朋友' (New Friends) entry on the contacts page to enter the New Friends page. From there, the user can either navigate back to the contacts page using the back arrow or close the sync section (though the latter’s purpose in the friend - making context is less clear from the current actions).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            1
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click on the '新朋友' entry to enter the New Friends page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            7,
+                            0
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the back navigation arrow to return to the contacts page"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            7,
+                            3
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click to close the sync section"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "This page displays the detailed profile information of the QQ friend \"test\", including QQ number, online status, various badges, signature, profile completion, and provides options to view/modify profile, send messages, and access QQ space.",
+            "action_refs": [
+                [
+                    4,
+                    3
+                ],
+                [
+                    8,
+                    0
+                ]
+            ],
+            "data_in": [
+                "好友test条目",
+                "user profile page (test)"
+            ],
+            "data_out": [
+                "好友test的个人资料页面",
+                "navigation back to contacts page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The process starts on the contacts page (page 4). First, click on the friend 'test' entry to navigate to the detailed profile page (page 8). From the profile page, clicking the back button returns to the contacts page (page 4), completing the flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            3
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click on the friend 'test' entry to open the detailed profile page."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            8,
+                            0
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the back button to return to the contacts page."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "This page in QQ provides multiple methods (such as searching by QQ number, using mobile contacts, scanning, face - to - face addition, conditional search, etc.) to help users find and add new QQ friends or groups.",
+            "action_refs": [
+                [
+                    4,
+                    4
+                ],
+                [
+                    9,
+                    0
+                ],
+                [
+                    9,
+                    1
+                ],
+                [
+                    12,
+                    0
+                ],
+                [
+                    12,
+                    2
+                ]
+            ],
+            "data_in": [
+                "联系人管理功能入口",
+                "friend search page state",
+                "search input (QQ number/QID/phone number/group)",
+                "search session",
+                "search input (123456789)",
+                "search input text"
+            ],
+            "data_out": [
+                "进入添加联系人功能页面",
+                "new friend page state",
+                "search query (123456789)",
+                "search suggestion (related people, groups, channels)",
+                "search session canceled",
+                "search interface reset",
+                "cleared search input text"
+            ],
+            "data_dependencies": [
+                22,
+                33,
+                34
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The process starts by clicking the '添加联系人图标' to enter the friend-finding page. From there, the user can either input a QQ number in the search box, clear the input, cancel the search, or return to the previous page. The main flow involves navigating to the friend-finding interface and then choosing to search, clear input, cancel, or go back.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            4
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click the '添加联系人图标' to enter the friend-finding page."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            9,
+                            0
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click the '返回按钮' to go back to the previous page."
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            9,
+                            1
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 12,
+                        "action": "input",
+                        "summary": "Input '123456789' in the search input box."
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            12,
+                            0
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click the '取消按钮' to cancel the search and return to the friend-finding page."
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            12,
+                            2
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click the '清除输入内容按钮' to clear the input content."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S5"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S3",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "This page provides multiple methods (search by account/number, phone contacts, scan, face - to - face, conditional search, nearby people, etc.) to help users find and add QQ friends or groups.",
+            "action_refs": [
+                [
+                    7,
+                    1
+                ]
+            ],
+            "data_in": [
+                "add friend feature entry"
+            ],
+            "data_out": [
+                "friend adding options page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The process starts on page 7 (New Friends). The user clicks the 'Add friend' button (action_ref [7,1]), which navigates to page 9. On page 9, multiple friend/group addition methods (search, phone contacts, scan, face - to - face, conditional search, nearby people, etc.) are available for the user to choose from to find and add QQ friends or groups.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            1
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click the 'Add friend' button on the 'New Friends' page to navigate to the page with multiple friend - adding methods."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "This page in QQ's \"New Friends\" section provides options to invite WeChat friends, match with like - minded strangers, explore nearby events, and share one's QQ QR code for the purpose of managing and adding new friends.",
+            "action_refs": [
+                [
+                    7,
+                    2
+                ]
+            ],
+            "data_in": [
+                "contact sync setting"
+            ],
+            "data_out": [
+                "contact sync setting enabled"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The flow starts on the 'New Friends' page (page 7). The user can perform a click action to enable contact sync, which remains on the same page (page 7) after the action. There are no branches or loops as only one action is defined here.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            2
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click to enable contact sync"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "This page allows users to select an existing chat to continue conversations or start a new chat, with options to search for chats and manage multiple chats.",
+            "action_refs": [
+                [
+                    7,
+                    4
+                ]
+            ],
+            "data_in": [
+                "WeChat friend invitation feature",
+                "WeChat chat list"
+            ],
+            "data_out": [
+                "WeChat chat selection interface"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The user starts on page 7. They perform a click action to invite WeChat friends, which navigates to page 11. This is a single-step flow with no branches or loops, focusing on initiating the WeChat friend invitation process.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            4
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click to invite WeChat friends"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "切换在线状态",
+            "action_refs": [
+                [
+                    8,
+                    1
+                ]
+            ],
+            "data_in": [
+                "在线状态设置"
+            ],
+            "data_out": [
+                "在线状态设置更新"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "用户在页面8点击“切换在线状态”按钮，触发状态切换，页面跳转到28。",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            1
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 28,
+                        "action": "click",
+                        "summary": "点击“切换在线状态”按钮"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "点赞按钮",
+            "action_refs": [
+                [
+                    8,
+                    2
+                ]
+            ],
+            "data_in": [
+                "profile like count setting"
+            ],
+            "data_out": [
+                "profile like count updated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The core execution logic for the like button functional point is a single step: click the like button located on the page (page index 8). This action transitions to the destination page (page index 29), completing the like operation.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            2
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 29,
+                        "action": "click",
+                        "summary": "Click the like button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "This page allows users to view and edit their QQ personal profile information, including nickname, cover, signature, gender, age, birthday, location, interest tags, and selected photos, with options to modify each detail.",
+            "action_refs": [
+                [
+                    8,
+                    3
+                ]
+            ],
+            "data_in": [
+                "user profile"
+            ],
+            "data_out": [
+                "user profile (entered edit mode)"
+            ],
+            "data_dependencies": [
+                23
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The user starts on page 8 (QQ profile page) and clicks the '编辑资料' (Edit Profile) button. This action navigates to page 30, where the user can view and edit personal profile details like nickname, cover, signature, and more. The flow is a straight line from clicking the edit button to entering the profile editing page, with no branches or loops in this initial step.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            3
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 30,
+                        "action": "click",
+                        "summary": "Click the '编辑资料' (Edit Profile) button to navigate to the profile editing page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "This page is a QQ chat interface for the friend \"test\", allowing users to send messages, use voice input, send emojis, and access additional chat - related functions.",
+            "action_refs": [
+                [
+                    8,
+                    4
+                ],
+                [
+                    31,
+                    0
+                ],
+                [
+                    31,
+                    4
+                ]
+            ],
+            "data_in": [
+                "test的聊天功能入口",
+                "chat text input box",
+                "chat page",
+                "user profile page"
+            ],
+            "data_out": [
+                "进入test的聊天界面",
+                "chat text input box (with text entered)",
+                "user profile page (navigated back to)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The flow starts by clicking the '发消息' button to enter the chat interface. Then, text is input into the chat text box. Finally, the user can choose to click the back button to return to the previous page, completing the core chat-related actions.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            4
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 31,
+                        "action": "click",
+                        "summary": "Click the '发消息' button to enter the chat interface"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            31,
+                            0
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": 35,
+                        "action": "input",
+                        "summary": "Input 'hello' into the chat text input box"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            31,
+                            4
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click the back button to return to the previous page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "This page is the QQ personal profile settings interface, allowing users to configure display - related options such as super QQ show display, mini nest, super QQ show background customization, profile display settings, and nickname color settings.",
+            "action_refs": [
+                [
+                    8,
+                    5
+                ],
+                [
+                    32,
+                    5
+                ]
+            ],
+            "data_in": [
+                "settings entry",
+                "settings page state"
+            ],
+            "data_out": [
+                "settings page loaded",
+                "user profile page state"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The flow starts on page 8 (personal profile). First, the user clicks the settings icon (action S1) to navigate to page 32 (settings interface). Then, the user can click the back arrow (action S2) to return to the personal profile page (page 8). There are no branches as the actions are a simple navigation to settings and back.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            5
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 32,
+                        "action": "click",
+                        "summary": "Click the settings icon to enter the settings page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            32,
+                            5
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click the back arrow to return to the personal profile page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "This page allows users to search for and browse QQ groups (categorized by topics like games, anime, etc.) to join, with options to search by group ID/name and view group details/status (e.g., joinable, pending verification).",
+            "action_refs": [
+                [
+                    9,
+                    2
+                ],
+                [
+                    13,
+                    0
+                ],
+                [
+                    13,
+                    1
+                ],
+                [
+                    13,
+                    2
+                ],
+                [
+                    17,
+                    0
+                ],
+                [
+                    18,
+                    0
+                ],
+                [
+                    18,
+                    1
+                ],
+                [
+                    18,
+                    4
+                ],
+                [
+                    18,
+                    5
+                ],
+                [
+                    18,
+                    6
+                ]
+            ],
+            "data_in": [
+                "群标签",
+                "群搜索关键词",
+                "群列表",
+                "游戏分类群列表",
+                "和平游戏群",
+                "search query",
+                "group search request",
+                "加群原因输入内容",
+                "进群介绍输入框内容",
+                "进群特效设置",
+                "群申请信息",
+                "加群原因",
+                "进群介绍",
+                "专属介绍卡设置",
+                "入群介绍卡设置",
+                "超级会员介绍卡选项"
+            ],
+            "data_out": [
+                "群列表",
+                "搜索结果（群、人、频道）",
+                "游戏分类群列表",
+                "加群申请",
+                "group search results",
+                "更新后的加群原因输入内容",
+                "更新后的进群介绍输入框内容",
+                "群申请提交成功",
+                "更新的入群介绍卡设置"
+            ],
+            "data_dependencies": [
+                35,
+                46
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The user starts by clicking the '找群' (Find Group) tab. Then, they can either search for a group by name/ID in the search box, browse groups by category (e.g., '游戏' for games), or click to join a specific group. If joining a group, they may enter a reason and introduction, and then send the join request. Some steps like viewing more effects or selecting a membership card are optional and repeatable.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            2
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click '找群' tab to enter group search page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            13,
+                            0
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 17,
+                        "action": "input",
+                        "summary": "Input group name/ID in search box"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            13,
+                            1
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click '游戏' category to browse game-related groups"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            13,
+                            2
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click '加入' button for a specific group"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            17,
+                            0
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click link to search related groups"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            18,
+                            0
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 20,
+                        "action": "input",
+                        "summary": "Input join group reason"
+                    },
+                    {
+                        "id": "S7",
+                        "action_ref": [
+                            18,
+                            1
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 21,
+                        "action": "input",
+                        "summary": "Input group introduction"
+                    },
+                    {
+                        "id": "S8",
+                        "action_ref": [
+                            18,
+                            4
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click to view more effects (repeatable)"
+                    },
+                    {
+                        "id": "S9",
+                        "action_ref": [
+                            18,
+                            5
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 23,
+                        "action": "click",
+                        "summary": "Click '发送申请' to send join request"
+                    },
+                    {
+                        "id": "S10",
+                        "action_ref": [
+                            18,
+                            6
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 24,
+                        "action": "click",
+                        "summary": "Select super membership card option"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S6"
+                    },
+                    {
+                        "from": "S6",
+                        "to": "S7"
+                    },
+                    {
+                        "from": "S7",
+                        "to": "S8"
+                    },
+                    {
+                        "from": "S8",
+                        "to": "S7"
+                    },
+                    {
+                        "from": "S7",
+                        "to": "S10"
+                    },
+                    {
+                        "from": "S10",
+                        "to": "S9"
+                    },
+                    {
+                        "from": "S8",
+                        "to": "S9"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S8",
+                        "type": "loop",
+                        "branches": [
+                            {
+                                "next_step": "S7"
+                            },
+                            {
+                                "next_step": "S9"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "This page in the QQ app displays the mobile phone contact list (labeled \"手机通讯录\") to check for contacts that can be matched (to add as QQ friends), and currently shows a message indicating there are no matching contacts (\"没有可匹配的通讯录\").",
+            "action_refs": [
+                [
+                    9,
+                    3
+                ],
+                [
+                    14,
+                    0
+                ]
+            ],
+            "data_in": [
+                "手机联系人功能入口",
+                "mobile contacts matching result"
+            ],
+            "data_out": [
+                "手机通讯录数据"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 9,
+                "logic": "The process starts on page 9. First, the '手机联系人' (Mobile Contacts) button is clicked, navigating to page 14. On page 14, the UI shows a message indicating no matching contacts. Then, the back arrow button is clicked to return to page 9.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            9,
+                            3
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click the '手机联系人' button to navigate to the mobile contacts page."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            14,
+                            0
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click the back arrow button to return to the previous page."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "This page in QQ displays search results for the query \"123456789\", categorizing results into users and group chats, and provides options to add users or join groups.",
+            "action_refs": [
+                [
+                    12,
+                    1
+                ]
+            ],
+            "data_in": [
+                "search query",
+                "search result entry"
+            ],
+            "data_out": [
+                "displayed search results"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 12,
+                "logic": "On the page with the search query '123456789', the user clicks the button to view search results. This action navigates to a new page that displays search results categorized into users and group chats, with options to add users or join groups.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            12,
+                            1
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click the button to view search results for '123456789'."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "This page enables users to edit their QQ nickname, with a text input field to modify the nickname and a \"完成\" (Complete) button to save the changes, along with a character count indicator (4/36) and a clear (×) option for the input.",
+            "action_refs": [
+                [
+                    30,
+                    0
+                ],
+                [
+                    33,
+                    0
+                ],
+                [
+                    33,
+                    1
+                ]
+            ],
+            "data_in": [
+                "nickname setting",
+                "QQ nickname",
+                "QQ nickname input",
+                "QQ profile"
+            ],
+            "data_out": [
+                "updated nickname setting",
+                "updated QQ nickname",
+                "updated QQ profile"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 30,
+                "logic": "The user starts on page 30 and clicks the nickname edit option to enter the nickname editing page (33). On page 33, the user inputs a new nickname in the text field. Then, the user can choose to click the 'Complete' button to save the changes and return to the previous page (30), or potentially take other actions, but the core flow involves editing and saving the nickname.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            30,
+                            0
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 33,
+                        "action": "click",
+                        "summary": "Click nickname edit option to enter edit page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            33,
+                            0
+                        ],
+                        "src_page_idx": 33,
+                        "dst_page_idx": 34,
+                        "action": "input",
+                        "summary": "Input new nickname in text field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            33,
+                            1
+                        ],
+                        "src_page_idx": 33,
+                        "dst_page_idx": 30,
+                        "action": "click",
+                        "summary": "Click 'Complete' button to save and return"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "语音录制按钮",
+            "action_refs": [
+                [
+                    31,
+                    1
+                ]
+            ],
+            "data_in": [
+                "voice recording function",
+                "current chat context"
+            ],
+            "data_out": [
+                "voice recording started",
+                "voice data"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 31,
+                "logic": "The user starts on page 31. They click the voice recording button (action_ref [31,1]), which navigates to page 36. This is a straight - line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            31,
+                            1
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": 36,
+                        "action": "click",
+                        "summary": "Click the voice recording button to navigate to page 36"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 25,
+            "function_description": "This page functions as the emoji selection interface within the QQ chat window for the contact \"test\", allowing users to browse and select various emojis (including recently used, super emojis, and yellow - faced emojis) to send in the chat, and also provides other input - related function buttons like voice input, text input, and more.",
+            "action_refs": [
+                [
+                    31,
+                    2
+                ],
+                [
+                    37,
+                    0
+                ]
+            ],
+            "data_in": [
+                "chat input area",
+                "emoji selection feature",
+                "chat message input",
+                "recently used emoji"
+            ],
+            "data_out": [
+                "emoji selection interface opened",
+                "chat message with emoji"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 31,
+                "logic": "The process starts on the chat page for contact 'test'. First, the emoji selection button is clicked to open the emoji interface. Then, a recently used big smiley emoji is clicked to select it for sending in the chat.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            31,
+                            2
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": 37,
+                        "action": "click",
+                        "summary": "Click the emoji selection button to open the emoji interface"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            37,
+                            0
+                        ],
+                        "src_page_idx": 37,
+                        "dst_page_idx": 39,
+                        "action": "click",
+                        "summary": "Click the recently used big smiley emoji to select it"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 26,
+            "function_description": "This page is the chat interface with friend \"test\" in QQ, providing options for sending various types of content (photos, location, files, etc.) and additional interactive features (like \"戳一戳\") to enhance the chat experience.",
+            "action_refs": [
+                [
+                    31,
+                    3
+                ]
+            ],
+            "data_in": [
+                "chat interface",
+                "more functions menu trigger"
+            ],
+            "data_out": [
+                "more functions menu displayed"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 31,
+                "logic": "The flow starts on the QQ chat page with friend 'test'. The user clicks the '更多功能' (more features) button, which opens a menu with options like sending photos, location, files, or using '戳一戳' (poke) to enhance the chat experience.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            31,
+                            3
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": 38,
+                        "action": "click",
+                        "summary": "Click the '更多功能' button to open the additional features menu."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 27,
+            "function_description": "This page is the chat interface's more - function section for the friend \"test\", enabling users to send various types of content (like photos, location, files) and use features (such as collection, poke) during the chat.",
+            "action_refs": [
+                [
+                    31,
+                    5
+                ]
+            ],
+            "data_in": [
+                "chat menu button",
+                "chat session"
+            ],
+            "data_out": [
+                "chat menu options displayed"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 31,
+                "logic": "The user starts on the chat page with friend 'test'. They click the chat menu button (the '+' icon at the bottom right, which expands to show more options). This action opens the menu with various chat-related features like sending photos, location, files, or using collection/poke.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            31,
+                            5
+                        ],
+                        "src_page_idx": 31,
+                        "dst_page_idx": 38,
+                        "action": "click",
+                        "summary": "Click the chat menu button (the '+' icon) to open the chat feature menu."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 28,
+            "function_description": "展示超级QQ秀 toggle",
+            "action_refs": [
+                [
+                    32,
+                    0
+                ]
+            ],
+            "data_in": [
+                "展示超级QQ秀设置"
+            ],
+            "data_out": [
+                "展示超级QQ秀设置状态更新"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 32,
+                "logic": "The process starts on page 32 (settings page). The user clicks the '展示超级QQ秀' toggle, which leads to page 41. This action toggles the state of the '展示超级QQ秀' option (e.g., from on to off or vice versa) as part of the app's settings for QQ Show display.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            32,
+                            0
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": 41,
+                        "action": "click",
+                        "summary": "Click the '展示超级QQ秀' toggle to change its state (e.g., on/off) and navigate to page 41."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 29,
+            "function_description": "迷你窝 toggle",
+            "action_refs": [
+                [
+                    32,
+                    1
+                ]
+            ],
+            "data_in": [
+                "迷你窝设置"
+            ],
+            "data_out": [
+                "迷你窝设置已启用"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 32,
+                "logic": "The process starts on page 32 (settings page). The user clicks the '迷你窝' toggle switch, which is initially in the off (gray) state. This action toggles the switch's state, likely enabling or disabling the 迷你窝 feature, and navigates to page 42 (presumably reflecting the updated state).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            32,
+                            1
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": 42,
+                        "action": "click",
+                        "summary": "Click the '迷你窝' toggle switch to change its state and navigate to the updated page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 30,
+            "function_description": "This page enables users to edit the background of their Super QQ Show by selecting from preset background images, taking a photo in the \"小窝\" (mini nest), or uploading an image from the album, and then confirming the selection to apply the background.",
+            "action_refs": [
+                [
+                    32,
+                    2
+                ],
+                [
+                    43,
+                    0
+                ],
+                [
+                    43,
+                    2
+                ],
+                [
+                    43,
+                    3
+                ],
+                [
+                    43,
+                    4
+                ],
+                [
+                    48,
+                    1
+                ]
+            ],
+            "data_in": [
+                "超级QQ秀背景设置",
+                "背景图设置",
+                "粉色星月背景图",
+                "background image setting",
+                "album media files",
+                "选中的背景图",
+                "background edit session",
+                "media source setting"
+            ],
+            "data_out": [
+                "进入背景编辑页面",
+                "选中的粉色星月背景图",
+                "album media file list (loaded)",
+                "更新后的超级QQ秀背景设置",
+                "navigation back to settings page",
+                "media source dropdown options"
+            ],
+            "data_dependencies": [
+                37,
+                38,
+                39,
+                42,
+                49
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 32,
+                "logic": "The user starts on page 32 and clicks to enter the Super QQ Show background customization page. On the background editing page (page 43), the user can choose a preset background (like the pink moon-star design), take a photo in the mini nest, or upload from the album. After selecting a background (e.g., a preset image or via album/upload), the user confirms the selection to apply it, or can return to the previous page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            32,
+                            2
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": 43,
+                        "action": "click",
+                        "summary": "Click to enter Super QQ Show background customization"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            43,
+                            0
+                        ],
+                        "src_page_idx": 43,
+                        "dst_page_idx": 46,
+                        "action": "click",
+                        "summary": "Select preset background (pink moon-star)"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            43,
+                            2
+                        ],
+                        "src_page_idx": 43,
+                        "dst_page_idx": 48,
+                        "action": "click",
+                        "summary": "Click to upload from album"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            48,
+                            1
+                        ],
+                        "src_page_idx": 48,
+                        "dst_page_idx": 49,
+                        "action": "click",
+                        "summary": "Select media source (e.g., recent photos)"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            43,
+                            3
+                        ],
+                        "src_page_idx": 43,
+                        "dst_page_idx": 32,
+                        "action": "click",
+                        "summary": "Confirm background selection to apply"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            43,
+                            4
+                        ],
+                        "src_page_idx": 43,
+                        "dst_page_idx": 32,
+                        "action": "click",
+                        "summary": "Return to previous page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S6"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S6"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S3",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S5"
+                            },
+                            {
+                                "next_step": "S6"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 31,
+            "function_description": "This page, titled \"资料展示设置\" (Profile Display Settings), allows users to configure the visibility (e.g., visible to everyone, not visible to anyone) of various personal profile details (like gender, age, company, etc.) and manage the display of additional content (e.g., QQ level and membership) on their QQ profile card.",
+            "action_refs": [
+                [
+                    32,
+                    3
+                ]
+            ],
+            "data_in": [
+                "资料展示设置"
+            ],
+            "data_out": [
+                "资料展示设置页面内容"
+            ],
+            "data_dependencies": [
+                44
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 32,
+                "logic": "The user starts on the settings page (page 32). They click the '资料展示设置' (Profile Display Settings) button, which navigates to the Profile Display Settings page (page 44) where various profile details and display options can be configured. No branches or loops are present in this initial flow as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            32,
+                            3
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": 44,
+                        "action": "click",
+                        "summary": "Click the '资料展示设置' button to navigate to the profile display settings page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 32,
+            "function_description": "This page provides a温馨提示 (warm reminder) about the current concise mode, informing the user that decorations are not displayed in this mode and offering options to either acknowledge the message or switch to the normal mode, while also being part of the QQ colorful nickname privilege settings where users can learn about and potentially activate the colorful nickname feature (with a note about membership requirements and mode switching for proper display).",
+            "action_refs": [
+                [
+                    32,
+                    4
+                ],
+                [
+                    45,
+                    0
+                ]
+            ],
+            "data_in": [
+                "昵称颜色设置",
+                "温馨提示弹窗"
+            ],
+            "data_out": [
+                "彩色昵称特权页面加载",
+                "温馨提示弹窗关闭"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 32,
+                "logic": "The user starts on page 32 and clicks the '昵称颜色设置' button to navigate to page 45. On page 45, the user can choose to click the '我知道了' button to acknowledge the reminder and proceed, which is the only branch here.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            32,
+                            4
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": 45,
+                        "action": "click",
+                        "summary": "Click '昵称颜色设置' button to go to the next page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            45,
+                            0
+                        ],
+                        "src_page_idx": 45,
+                        "dst_page_idx": 57,
+                        "action": "click",
+                        "summary": "Click '我知道了' button to acknowledge and finish"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 33,
+            "function_description": "“用户”分类标签",
+            "action_refs": [
+                [
+                    15,
+                    0
+                ]
+            ],
+            "data_in": [
+                "search query",
+                "user list"
+            ],
+            "data_out": [
+                "filtered user list"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user initiates the action by clicking on the '用户' (User) category tab. This action is expected to filter or display content related to users, likely updating the view to show user - specific results (though in this case, the destination page index is null, perhaps indicating a refresh or re - rendering of the current view with user - focused content).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            0
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the '用户' category tab to presumably filter or display user - related content."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 34,
+            "function_description": "用户添加好友按钮",
+            "action_refs": [
+                [
+                    15,
+                    1
+                ]
+            ],
+            "data_in": [
+                "用户信息",
+                "添加好友请求"
+            ],
+            "data_out": [
+                "好友关系更新",
+                "添加好友记录"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user starts on page 15 and clicks the '用户添加好友按钮' (user add friend button). This action likely initiates the process of adding a friend, though the exact next step depends on subsequent UI interactions not fully detailed here, but the core step is the click to trigger the add friend flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            1
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the user add friend button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 35,
+            "function_description": "群聊加入按钮",
+            "action_refs": [
+                [
+                    15,
+                    2
+                ]
+            ],
+            "data_in": [
+                "群聊"
+            ],
+            "data_out": [
+                "加入的群聊"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The core execution logic starts on page 15. The user clicks the '群聊加入按钮' (group chat join button) at the specified position. Since there are no further branches or loops indicated by the provided action, this is a single-step flow focused on initiating the group chat join action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            2
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the group chat join button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 36,
+            "function_description": "用户模块更多按钮",
+            "action_refs": [
+                [
+                    15,
+                    3
+                ]
+            ],
+            "data_in": [
+                "用户模块更多操作入口"
+            ],
+            "data_out": [
+                "用户模块更多操作选项"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The core execution logic starts on page 15. The user performs a click action on the '用户模块更多按钮' (user module more button). Since there are no further steps or branches provided, this is a single-step flow with no decision points or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            3
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the user module more button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 37,
+            "function_description": "This page provides a preview of the exclusive introduction card's display effect in the group chat when the user joins the QQ group, showing how the special effect will be presented to group members.",
+            "action_refs": [
+                [
+                    18,
+                    2
+                ],
+                [
+                    22,
+                    0
+                ]
+            ],
+            "data_in": [
+                "入群介绍卡设置",
+                "preview modal"
+            ],
+            "data_out": [
+                "入群介绍卡预览效果",
+                "preview modal closed"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 18,
+                "logic": "The user starts on the group application page. First, they click the '预览效果' (Preview Effect) button to open the preview modal for the exclusive introduction card. Then, they can click the 'Close preview modal button (X)' to exit the preview and return to the previous page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            18,
+                            2
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 22,
+                        "action": "click",
+                        "summary": "Click the '预览效果' button to open the introduction card preview modal"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            22,
+                            0
+                        ],
+                        "src_page_idx": 22,
+                        "dst_page_idx": 26,
+                        "action": "click",
+                        "summary": "Click the 'Close preview modal button (X)' to exit the preview"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 38,
+            "function_description": "This page provides a preview of the exclusive introduction card's display effect in the group chat after joining the QQ group, showing how the special effect will be presented to group members.",
+            "action_refs": [
+                [
+                    18,
+                    3
+                ]
+            ],
+            "data_in": [
+                "进群特效设置"
+            ],
+            "data_out": [
+                "特效预览结果"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 18,
+                "logic": "On the QQ group application page, the user clicks the 'Preview Effect' button for the exclusive introduction card. This action opens a preview window that shows how the special effect of the introduction card will be displayed to group members in the chat, completing the preview process.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            18,
+                            3
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 22,
+                        "action": "click",
+                        "summary": "Click the 'Preview Effect' button to view how the exclusive introduction card's special effect will appear in the group chat."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 39,
+            "function_description": "初音未来进群特效选项",
+            "action_refs": [
+                [
+                    18,
+                    7
+                ]
+            ],
+            "data_in": [
+                "进群特效设置",
+                "初音未来进群特效选项"
+            ],
+            "data_out": [
+                "进群特效设置更新为初音未来特效"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 18,
+                "logic": "The user starts on page 18 and clicks the '初音未来进群特效选项' (Hatsune Miku group entry effect option) to navigate to page 25. This action likely selects or configures the Miku-themed entry effect for group joining.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            18,
+                            7
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 25,
+                        "action": "click",
+                        "summary": "Click the '初音未来进群特效选项' to proceed to the next page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 40,
+            "function_description": "This page functions as a chat attachment panel in QQ, allowing the user to select and send photos, take photos, share location, send files, access favorites, or use the \"poke\" feature during a chat with the contact \"test\".",
+            "action_refs": [
+                [
+                    38,
+                    0
+                ]
+            ],
+            "data_in": [
+                "photo selection feature"
+            ],
+            "data_out": [
+                "photo selection interface opened"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 38,
+                "logic": "The chat attachment panel for contact 'test' is accessed. The user can perform an action by clicking the '照片 (Photo)' button, which is part of the attachment options (photos, camera, location, files, favorites, poke) available in the chat interface.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            38,
+                            0
+                        ],
+                        "src_page_idx": 38,
+                        "dst_page_idx": 38,
+                        "action": "click",
+                        "summary": "Click the '照片 (Photo)' button in the chat attachment panel."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 41,
+            "function_description": "Close (×) button",
+            "action_refs": [
+                [
+                    38,
+                    1
+                ]
+            ],
+            "data_in": [
+                "text input field"
+            ],
+            "data_out": [
+                "cleared text input field"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 38,
+                "logic": "The user starts on page 38. They perform a click action on the Close (×) button, which navigates them to page 40. This is a straightforward flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            38,
+                            1
+                        ],
+                        "src_page_idx": 38,
+                        "dst_page_idx": 40,
+                        "action": "click",
+                        "summary": "Click the Close (×) button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 42,
+            "function_description": "This page enables users to edit the background for Super QQ Show, allowing selection from preset backgrounds, adding from the album, or initiating a \"go to nest shoot\" action to customize the background.",
+            "action_refs": [
+                [
+                    43,
+                    1
+                ]
+            ],
+            "data_in": [
+                "background editing interface",
+                "background image options"
+            ],
+            "data_out": [
+                "triggered small nest shooting feature",
+                "download progress (0%)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 43,
+                "logic": "The user starts on the background editing page. They can choose to click the '去小窝拍' (go to nest shoot) button. When this button is clicked, the app transitions to a new page (page 47) to initiate the nest shooting process for customizing the background.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            43,
+                            1
+                        ],
+                        "src_page_idx": 43,
+                        "dst_page_idx": 47,
+                        "action": "click",
+                        "summary": "Click the '去小窝拍' button to start the nest shooting process for background customization."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 43,
+            "function_description": "This page allows the user to set the visibility (e.g., visible to everyone, only friends, or no one) of the \"gender\" basic information item within QQ's profile display settings.",
+            "action_refs": [
+                [
+                    44,
+                    0
+                ],
+                [
+                    51,
+                    0
+                ],
+                [
+                    51,
+                    1
+                ],
+                [
+                    51,
+                    2
+                ],
+                [
+                    51,
+                    3
+                ]
+            ],
+            "data_in": [
+                "性别资料可见性设置",
+                "资料可见性设置",
+                "profile visibility setting",
+                "privacy setting option"
+            ],
+            "data_out": [
+                "性别资料可见性设置（待更新）",
+                "资料可见性设置（所有人可见）",
+                "资料可见性设置（仅好友可见）",
+                "profile visibility setting (updated to 所有人不可见)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 44,
+                "logic": "The user starts on the profile display settings page (page 44) and clicks the '性别' (gender) visibility setting item to enter the visibility options page (page 51). At this point, a branch point appears: the user can choose to set the visibility to '所有人可见' (visible to everyone), '仅好友可见' (visible to friends only), '所有人不可见' (invisible to everyone), or cancel the operation, each leading to a different page (53, 54, 55, or 56 respectively).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            44,
+                            0
+                        ],
+                        "src_page_idx": 44,
+                        "dst_page_idx": 51,
+                        "action": "click",
+                        "summary": "Click the '性别' (gender) visibility setting item to open the visibility options page."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            51,
+                            0
+                        ],
+                        "src_page_idx": 51,
+                        "dst_page_idx": 53,
+                        "action": "click",
+                        "summary": "Click '所有人可见' (visible to everyone) to set gender visibility to everyone."
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            51,
+                            1
+                        ],
+                        "src_page_idx": 51,
+                        "dst_page_idx": 54,
+                        "action": "click",
+                        "summary": "Click '仅好友可见' (visible to friends only) to set gender visibility to friends only."
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            51,
+                            2
+                        ],
+                        "src_page_idx": 51,
+                        "dst_page_idx": 55,
+                        "action": "click",
+                        "summary": "Click '所有人不可见' (invisible to everyone) to set gender visibility to no one."
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            51,
+                            3
+                        ],
+                        "src_page_idx": 51,
+                        "dst_page_idx": 56,
+                        "action": "click",
+                        "summary": "Click '取消' (cancel) to abort the visibility setting change."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S5"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 44,
+            "function_description": "QQ等级和会员 展示开关",
+            "action_refs": [
+                [
+                    44,
+                    1
+                ]
+            ],
+            "data_in": [
+                "QQ等级和会员展示设置"
+            ],
+            "data_out": [
+                "QQ等级和会员展示设置状态更新"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 44,
+                "logic": "The user starts on page 44 (资料展示设置) and clicks the 'QQ等级和会员 展示开关' toggle. This action likely toggles the visibility of QQ level and membership info in the profile, with the flow ending after the click (as the action is marked as a leaf).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            44,
+                            1
+                        ],
+                        "src_page_idx": 44,
+                        "dst_page_idx": 52,
+                        "action": "click",
+                        "summary": "Click the QQ等级和会员 展示开关 toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 45,
+            "function_description": "立即切换按钮",
+            "action_refs": [
+                [
+                    45,
+                    1
+                ]
+            ],
+            "data_in": [
+                "mode setting (简洁模式)"
+            ],
+            "data_out": [
+                "mode setting updated to 普通模式"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 45,
+                "logic": "The user starts on page 45 (a page with a '温馨提示' dialog). The core logic is to click the '立即切换' button in the dialog, which navigates to page 58. There are no branches or loops as it's a single click action to switch modes.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            45,
+                            1
+                        ],
+                        "src_page_idx": 45,
+                        "dst_page_idx": 58,
+                        "action": "click",
+                        "summary": "Click the '立即切换' button in the '温馨提示' dialog to switch from concise mode to normal mode."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 46,
+            "function_description": "This page allows users to fill in an optional reason for joining a QQ group and an optional introduction message, select a personalized introduction card and entry effect (with some options for VIP/Super VIP members), and then send a group - joining application.",
+            "action_refs": [
+                [
+                    19,
+                    0
+                ]
+            ],
+            "data_in": [
+                "王者荣耀交流群（群聊）"
+            ],
+            "data_out": [
+                "加群申请"
+            ],
+            "data_dependencies": [
+                47
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 19,
+                "logic": "The user starts on the group search results page (page 19) and clicks the 'Join' button for the first group result. This action navigates to the 'Apply to Join Group' page (page 18), where optional details and personalized options can be filled/selected before sending the application. The flow is a straight line from clicking 'Join' to entering the application page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            19,
+                            0
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click 'Join' button for first group result to navigate to apply page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 47,
+            "function_description": "关闭按钮",
+            "action_refs": [
+                [
+                    23,
+                    0
+                ]
+            ],
+            "data_in": [
+                "入群申请页面"
+            ],
+            "data_out": [
+                "入群申请页面关闭"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 23,
+                "logic": "The user starts on page 23 (displaying '入群申请中' with a '关闭' button). The core logic is to click the '关闭' button, which navigates to page 27. There are no branches or loops as it's a single action to close and navigate.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            23,
+                            0
+                        ],
+                        "src_page_idx": 23,
+                        "dst_page_idx": 27,
+                        "action": "click",
+                        "summary": "Click the '关闭' button to navigate from page 23 to 27"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 48,
+            "function_description": "This page is for loading into the QQ \"小窝\" (mini nest) virtual space, allowing users to enter and explore the personalized virtual environment after the loading process completes.",
+            "action_refs": [
+                [
+                    47,
+                    0
+                ]
+            ],
+            "data_in": [
+                "小窝功能入口"
+            ],
+            "data_out": [
+                "小窝加载状态"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 47,
+                "logic": "The user starts on page 47 and clicks the '加载进入按钮' (load entry button) to initiate the loading process for entering the QQ '小窝' (mini nest) virtual space. After this action, the app proceeds with the loading, and once complete, the user can explore the personalized virtual environment.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            47,
+                            0
+                        ],
+                        "src_page_idx": 47,
+                        "dst_page_idx": 47,
+                        "action": "click",
+                        "summary": "Click the load entry button to start loading into the QQ mini nest virtual space"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 49,
+            "function_description": "This page allows users to select and apply a background image for their Super QQ Show, with options to choose from preset backgrounds, take a photo in the virtual room, or add a custom background from their photo album.",
+            "action_refs": [
+                [
+                    48,
+                    0
+                ]
+            ],
+            "data_in": [
+                "media page"
+            ],
+            "data_out": [
+                "closed media page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 48,
+                "logic": "The user starts on the media page (page 48) and clicks the close button to navigate back to the background editing page (page 43), where they can continue managing or selecting a background for their Super QQ Show.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            48,
+                            0
+                        ],
+                        "src_page_idx": 48,
+                        "dst_page_idx": 43,
+                        "action": "click",
+                        "summary": "Click the close media page button to return to the background editing page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 50,
+            "function_description": "本地视频 media source option",
+            "action_refs": [
+                [
+                    49,
+                    0
+                ]
+            ],
+            "data_in": [
+                "media source option"
+            ],
+            "data_out": [
+                "local video media source selected"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 49,
+                "logic": "The flow starts on page 49. The user clicks on the '本地视频' (Local Video) media source option, which navigates to page 50. There are no branches or loops as this is a single action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            49,
+                            0
+                        ],
+                        "src_page_idx": 49,
+                        "dst_page_idx": 50,
+                        "action": "click",
+                        "summary": "Click on '本地视频' media source option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        }
+    ]
+}

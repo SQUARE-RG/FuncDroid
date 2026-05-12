@@ -1,0 +1,974 @@
+
+================= [TaskTest] FDG[0] =================
+[Function] Map-based navigation or location viewing
+
+[Core Logic Task]
+The flow starts on the map page. The user can either click the minus (zoom out) button to reduce the map's zoom level or click the plus (zoom in) button to increase it. Both actions keep the user on the same map page, allowing repeated zoom adjustments as needed.
+
+[Variant Paths] (3)
+ - V1: Tap <Plus (zoom in) button> then <Minus (zoom out) button> (order mutation: swap typical order of zoom in then out)
+ - V2: Tap <Minus (zoom out) button> twice (repeat mutation: repeat zoom out operation)
+ - V3: Tap <Plus (zoom in) button> without any prior zoom action (omit mutation: omit potential initial zoom out step, just zoom in)
+
+================= [TaskTest] FDG[1] =================
+[Function] Red lock icon
+
+[Core Logic Task]
+The core execution logic starts on page 0. The user clicks the red lock icon (action_ref [0,0]), which navigates to page 1. There are no branches or loops as this is a single-step flow with a click action leading to a new page.
+
+[Variant Paths] (3)
+ - V1: Tap <Red lock icon> twice (repeat the click operation)
+ - V2: Omit tapping <Red lock icon> (skip the navigation step)
+ - V3: Tap <Red lock icon> after a short delay (simulate a timing variation in the click)
+
+================= [TaskTest] FDG[2] =================
+[Function] The current page functions as a camera interface (likely for augmented reality or 3D scene capture) where users can take photos, switch camera modes, and exit the camera view, with a live view of a 3D-rendered room scene including a TV with a checkered pattern, a cat, and furniture.
+
+[Core Logic Task]
+The flow starts on a map page (page 0). The user clicks the camera icon (action [0,1]), transitioning to a camera interface (page 2) that displays a 3D-rendered room scene with a TV, cat, and furniture. This is a straight-line flow with no branches or loops.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <Camera icon> (staying on page 0 instead of transitioning to page 2)
+ - V2: Repeat clicking <Camera icon> (click it multiple times instead of once)
+
+================= [TaskTest] FDG[3] =================
+[Function] The current page (accessed via the target icon from a map - based navigation/location viewing page) provides a menu for managing location - related and GPS - track - related functions, including showing the location, following the GPS position, going to the GPS position, starting/pausing/clearing GPS tracks, managing tracks, and going to the start of a track.
+
+[Core Logic Task]
+The flow starts on the map page (page 0). The user clicks the target icon, which opens a menu (page 3) with location and GPS track - related options. This menu provides access to functions like showing location, following GPS position, going to GPS position, and managing GPS tracks.
+
+[Variant Paths] (2)
+ - V1: Tap <Target icon> twice (repeat the tap operation)
+ - V2: Omit tapping <Target icon> (simulate not opening the menu)
+
+================= [TaskTest] FDG[4] =================
+[Function] The current page provides a menu with options to download map views (current view, add to download, other location), enable auto download, access file options, and report notes/bugs, likely for offline map management or OpenStreetMap data handling.
+
+[Core Logic Task]
+The user starts on the map page (page 0) and clicks the arrow icon (action [0,3]). This action opens a menu (destination page 4) with options for map download, auto download, file management, and reporting notes/bugs, completing the flow to access the offline map management menu.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Arrow icon> (test if the menu opens without this action, though likely invalid but for mutation)
+ - V2: Repeat clicking <Arrow icon> multiple times (test repeated action effect on menu opening)
+ - V3: Click <Arrow icon> in a different order (though only one action, simulate as if there were more)
+
+================= [TaskTest] FDG[5] =================
+[Function] The current page (Preferences) allows users to configure user interface settings related to map display (background, overlay, scale, profile), enable/disable features like bugs/notes display, photo layer, node/POI icons, screen power management, node drag area, and access more/advanced settings for the map - based navigation or location viewing application.
+
+[Core Logic Task]
+The flow starts by clicking the settings icon on the map page to enter Preferences. Then, the Map profile setting is clicked to open its options. At the Map profile options, the user can choose between Default, Color Round Nodes, Pen Round Nodes, or cancel to return to Preferences. If a profile is selected, the flow updates the setting; if Cancel is clicked, it returns to Preferences. Finally, the MORE SETTINGS... link can be clicked for advanced options.
+
+[Variant Paths] (3)
+ - V1: Tap <Gear (settings) icon>, then tap <Color Round Nodes radio button> (instead of Default), then check if the setting updates
+ - V2: Tap <Gear (settings) icon>, tap <CANCEL button> (omit selecting a profile), then verify returning to Preferences
+ - V3: Tap <Gear (settings) icon>, tap <Pen Round Nodes radio button>, then tap <MORE SETTINGS... link> (change order of selecting profile and accessing more settings)
+
+================= [TaskTest] FDG[6] =================
+[Function] The current page, accessed via a target icon from a map - based navigation/location viewing page, provides a menu with options to manage location - related functions such as showing location, following GPS position, navigating to GPS position, starting/pausing/clearing GPS tracks, managing tracks, and going to the start of a track, enabling users to control and interact with their GPS - related location and tracking on the map.
+
+[Core Logic Task]
+The user starts on the map page (page 0) and clicks the wrench (tools) icon. This action opens a menu with location - related options like showing location, following GPS position, navigating to GPS position, and managing GPS tracks. The flow then allows the user to choose from these options to control GPS - related location and tracking functions on the map.
+
+[Variant Paths] (3)
+ - V1: Start on the map page (page 0), then long - press <Wrench (tools) icon> (instead of tapping) to open the menu with location - related options
+ - V2: Start on the map page (page 0), repeat tapping <Wrench (tools) icon> twice (instead of once) to open the menu with location - related options
+ - V3: Start on the map page (page 0), omit tapping <Wrench (tools) icon> (try to see if the menu with location - related options appears without this action)
+
+================= [TaskTest] FDG[7] =================
+[Function] Displays a dialog indicating the Vespucci app has stopped and provides an option to open the app again, likely to restart or resume the map - based navigation or location viewing functionality.
+
+[Core Logic Task]
+When the Vespucci app stops, a dialog appears showing 'Vespucci has stopped'. The user can then click the 'Open app again' option to attempt to restart or resume the app's map - based functionality. There are no other branches or loops in this core logic for this functional point as it's a simple dialog interaction to restart the app.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[8] =================
+[Function] Show location (checked)
+
+[Core Logic Task]
+The functional point starts on page 3. The user clicks the 'Show location (checked)' option, which transitions the app to page 7. This action ensures the location is displayed (as indicated by the checked state), completing the core logic for showing the location.
+
+[Variant Paths] (3)
+ - V1: Tap <Show location (checked)> twice (repeat the tap operation)
+ - V2: Omit tapping <Show location (checked)> (skip the core action)
+ - V3: Tap <Show location (checked)> and then immediately tap it again (order doesn't change but repeats)
+
+================= [TaskTest] FDG[9] =================
+[Function] Follow GPS position (unchecked)
+
+[Core Logic Task]
+The process starts on page 3. The user clicks the 'Follow GPS position (unchecked)' option, which transitions the app to page 8. This action likely enables or interacts with the GPS following functionality.
+
+[Variant Paths] (3)
+ - V1: Tap <Follow GPS position (unchecked)> twice
+ - V2: Omit tapping <Follow GPS position (unchecked)> (do nothing)
+ - V3: Tap <Follow GPS position (unchecked)> and then tap it again immediately
+
+================= [TaskTest] FDG[10] =================
+[Function] The current page displays a detailed map centered on the user's GPS location (indicated by the blue arrow), providing location-based navigation and information about nearby landmarks, roads, and points of interest.
+
+[Core Logic Task]
+The flow starts by navigating to the GPS position (S1). After that, the user can choose to zoom in (S2) or zoom out (S3) the map to adjust the view of the location and nearby details. These zoom actions are optional and allow refining the map's scale for better navigation or information viewing.
+
+[Variant Paths] (3)
+ - V1: Tap <Goto GPS position>, then Tap <Zoom in button>, then Tap <Zoom in button> (repeat zoom in)
+ - V2: Tap <Goto GPS position>, then Tap <Zoom out button> (choose zoom out instead of zoom in)
+ - V3: Tap <Zoom in button> (omit going to GPS position first)
+
+================= [TaskTest] FDG[11] =================
+[Function] The current page functions as a map interface for real - time GPS - based location tracking and navigation, showing the user's position (marked by a blue arrow) on a detailed map with options for zooming, centering on the user's location, and likely managing GPS tracking settings.
+
+[Core Logic Task]
+The user starts on the map page (page 3) with a menu open. They click the 'Start GPS track' option, which transitions the app to a new page (page 0) where GPS tracking begins, updating the map to reflect real - time location tracking.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Start GPS track> and stay on the map page (page 3) with the menu open
+ - V2: Click <Start GPS track> twice (repeat the action) to see if there's a different behavior or error
+ - V3: Click <Start GPS track> but then immediately try to go back to page 3 (simulating an order mutation of starting and then reversing)
+
+================= [TaskTest] FDG[12] =================
+[Function] The current page provides a map view with a menu for managing GPS tracks, allowing users to upload, export, or import GPS tracks, likely for navigation or location tracking purposes.
+
+[Core Logic Task]
+The flow starts on the map page (page 3). The user clicks on the 'Track management...' option, which navigates to the track management page (page 10). This step initiates access to GPS track management features like upload, export, or import.
+
+[Variant Paths] (2)
+ - V1: Omit the step: Do not click <Track management...> and stay on the map page.
+ - V2: Repeat the step: Click <Track management...> twice (first click navigates to page 10, second click might re-navigate or have no effect depending on app behavior).
+
+================= [TaskTest] FDG[13] =================
+[Function] The current page displays a notification that the "Vespucci" app has stopped, with an option to "Open app again" to restart the application and presumably return to the map - based navigation or location viewing functionality.
+
+[Core Logic Task]
+The app shows a 'Vespucci has stopped' notification. The user clicks 'Open app again' to restart the app, likely returning to map navigation functionality.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[14] =================
+[Function] The page displays a system error message indicating that the "Vespucci" app keeps stopping, with an option to close the app.
+
+[Core Logic Task]
+The app encounters a system error, displaying a message that 'Vespucci keeps stopping' with a 'Close app' option. The user can then choose to close the app, which is the primary action here. There are no branches or loops as the flow is a simple error display followed by the close option.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[15] =================
+[Function] The page allows the user to select a location (last known, current, or from coordinates) and configure parameters (like data source and radius) to download content for that location, with options to load the content or go to a map view.
+
+[Core Logic Task]
+The user starts by clicking 'Download at other location' to enter the configuration page. On this page, they can select a location source (last known, current, from coordinates), configure the data source (via a dropdown) and radius, then either load content or go to a map view. The data source dropdown allows choosing between Nominatim and Photon, with selections returning to the main config page.
+
+[Variant Paths] (3)
+ - V1: Tap <Download at other location option>, then Tap <From coordinates radio button> (instead of default Last known), then Adjust <Radius adjustment slider> to minimum, then Tap <LOAD button>
+ - V2: Tap <Download at other location option>, omit selecting data source (Nominatim/Photon), then Tap <LOAD button> (test if default data source works)
+ - V3: Tap <Download at other location option>, Tap <Last known location radio button>, then Tap <Photon option> (swap data source selection order), then Adjust <Radius adjustment slider> to maximum, then Tap <LOAD button>
+
+================= [TaskTest] FDG[16] =================
+[Function] Auto download toggle
+
+[Core Logic Task]
+The user starts on page 4 and clicks the 'Auto download' toggle. This action leads to page 16, completing the interaction with the toggle.
+
+[Variant Paths] (3)
+ - V1: Start on page 4, long - press <Auto download toggle> (instead of click)
+ - V2: Start on page 4, click <Auto download toggle> twice (repeat the click operation)
+ - V3: Omit the step of clicking <Auto download toggle> (just stay on page 4)
+
+================= [TaskTest] FDG[17] =================
+[Function] The current page provides file - related options (including Export changes, Read from file, Save to file) for the map - based navigation or location viewing context, enabling users to perform operations like exporting, reading from, or saving to a file related to the map or location data.
+
+[Core Logic Task]
+The flow starts by clicking the 'File...' option from the map-related menu (page 4). This leads to a file operations submenu (page 17). From there, the user can choose to click 'Save to file' (or other file-related options like Export or Read, though only Save is shown here) to perform the corresponding file operation for map/location data.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <File... option> and directly try to click <Save to file option>
+ - V2: Click <File... option> twice and then click <Save to file option>
+ - V3: Click <File... option> and then omit clicking <Save to file option>
+
+================= [TaskTest] FDG[18] =================
+[Function] The current page (Download options menu) provides functionality to download or add the current map view for offline use, manage downloads, upload data to OSM, enable auto download, access file options, and report notes or bugs related to the map.
+
+[Core Logic Task]
+The flow starts on the Download options menu page (page 4). The user clicks the 'Notes/Bugs...' option, which is a leaf action (no navigation to a new page, as dst_page_idx is 4). This action likely opens a dialog or page for reporting notes or bugs related to the map.
+
+[Variant Paths] (3)
+ - V1: Tap <Notes/Bugs... option> twice (repeat the action)
+ - V2: Omit tapping <Notes/Bugs... option> (though this skips the core action, for mutation testing)
+ - V3: Tap <Notes/Bugs... option> (original action, included for completeness in mutation set)
+
+================= [TaskTest] FDG[19] =================
+[Function] The page provides map - based navigation and location viewing, enabling users to see their current location (marked by a blue arrow), explore the surrounding area with map controls like zoom and location centering, and access additional features via the bottom - bar icons.
+
+[Core Logic Task]
+The user starts on the Preferences page (page 5). They click the back arrow icon, which navigates them to the map page (page 0) where they can view their current location (blue arrow), explore the area with map controls, and access bottom - bar features. There are no branches or loops as it's a simple navigation flow.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Back arrow icon> (stay on Preferences page to see if map - related features are still accessible, though this may not be possible as per core logic but is a mutation attempt)
+ - V2: Repeat clicking <Back arrow icon> multiple times (to see if it causes any unexpected behavior like re - navigating or errors)
+ - V3: Click <Back arrow icon> and then immediately try to interact with map controls (even if the core logic says it's a simple flow, check if the order of interaction affects anything)
+
+================= [TaskTest] FDG[20] =================
+[Function] The page allows the user to select a preferred map background style from a list of options for the map - based navigation or location viewing feature.
+
+[Core Logic Task]
+The user starts on page 5 and clicks to open the map background settings (navigating to page 28). On page 28, the user can choose one of multiple map background style radio buttons (each leading to a different page) or click CANCEL to return to page 5. The flow branches based on which radio button (or CANCEL) is clicked.
+
+[Variant Paths] (3)
+ - V1: Start on page 5, tap <Map background setting> to go to page 28, then tap <CANCEL button> to return to page 5 (omitting style selection)
+ - V2: Start on page 5, tap <Map background setting> to go to page 28, then tap <Esri World Imagery radio> (selecting a different style than default, if any)
+ - V3: Start on page 5, tap <Map background setting> to go to page 28, then tap <USGS Topographic Maps radio> (choosing an alternative style from the list)
+
+================= [TaskTest] FDG[21] =================
+[Function] The page allows users to select a map overlay option from a list of available overlays (such as imagery, locator, or OpenStreetMap - related inspectors) to customize the map view, with a "Cancel" option to exit without making a selection.
+
+[Core Logic Task]
+The flow starts by clicking the Map overlay setting to open the overlay options. Once in the overlay list, the user can either select a specific overlay option (like None, imagery, locator, or OpenPT Map) or click Cancel to exit without selection. The selection of an overlay leads to applying that setting, while Cancel returns to the previous page.
+
+[Variant Paths] (3)
+ - V1: Tap <Map overlay setting>, then tap <CANCEL button> (omitting overlay selection)
+ - V2: Tap <Map overlay setting>, then tap <QA No Address radio button> (selecting an uncommonly used overlay instead of a typical one)
+ - V3: Tap <Map overlay setting>, then tap <DigitalGlobe Standard Imagery Vintage radio button>, then tap <CANCEL button> (selecting then canceling)
+
+================= [TaskTest] FDG[22] =================
+[Function] The page allows the user to select the type of scale display (e.g., None, Scale (metric), Grid (metric), Scale (imperial), Grid (imperial)) for the map interface within the preferences settings.
+
+[Core Logic Task]
+The user starts on the Preferences page and clicks the 'Scale display' setting to open the selection dialog. In the dialog, the user can choose one of five options (None, Scale (metric), Grid (metric), Scale (imperial), Grid (imperial)) by clicking the corresponding radio button, or cancel the selection by clicking 'CANCEL' to return to the Preferences page.
+
+[Variant Paths] (3)
+ - V1: Start on Preferences page, tap <Scale display setting> to open dialog, then tap <CANCEL button> (omits selecting a scale option)
+ - V2: Start on Preferences page, tap <Scale display setting> to open dialog, then tap <None radio button> (chooses alternative option instead of default/another)
+ - V3: Start on Preferences page, tap <Scale display setting> to open dialog, tap <Scale (metric) radio button>, then tap <Grid (metric) radio button> (repeats selection with different option)
+
+================= [TaskTest] FDG[23] =================
+[Function] Enable Bugs and Notes display checkbox
+
+[Core Logic Task]
+The process starts on the Preferences page. The user clicks the 'Enable Bugs and Notes display' checkbox, which likely toggles its state (enabling or confirming the display of bugs and notes). This action transitions to a new page (or updates the current one) to reflect the change.
+
+[Variant Paths] (3)
+ - V1: Tap <Enable Bugs and Notes display checkbox> twice (repeat the tap to see if it toggles back as a mutation)
+ - V2: Omit tapping <Enable Bugs and Notes display checkbox> (simulate not enabling it, though the core action is to enable, this is an omit mutation)
+ - V3: Tap <Enable Bugs and Notes display checkbox> (original action as a baseline, but since we need mutations, the first two are variations; note: due to limited widgets, these are the best possible mutations)
+
+================= [TaskTest] FDG[24] =================
+[Function] Enable Photo layer checkbox
+
+[Core Logic Task]
+The process starts on the Preferences page. The user performs a click action to enable the 'Enable Photo layer' checkbox, which likely navigates to or updates a related page (page 33) to reflect the change. There are no branches or loops as it is a single action to toggle the checkbox.
+
+[Variant Paths] (3)
+ - V1: Tap <Enable Photo layer checkbox> twice (repeat to toggle back)
+ - V2: Omit tapping <Enable Photo layer checkbox> (check if default state is handled)
+ - V3: Tap <Enable Photo layer checkbox> (original action as a baseline, but included for completeness with mutation context)
+
+================= [TaskTest] FDG[25] =================
+[Function] Show node icons checkbox
+
+[Core Logic Task]
+The user starts on the Preferences page (page 5). The core action is clicking the 'Show node icons' checkbox, which transitions to page 34. This is a single-step flow with no branches, as the action directly toggles the checkbox and navigates (or updates state) to the destination page.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Show node icons checkbox> and check if the page still transitions to page 34 (repeat the original action of not clicking to see if the transition happens unexpectedly)
+ - V2: Click <Show node icons checkbox> twice (repeat the click operation to see if multiple clicks cause unexpected behavior or repeated transitions)
+ - V3: Long-press <Show node icons checkbox> instead of clicking it to see if the page transitions to page 34 (branch mutation by choosing a different interaction type with the same widget)
+
+================= [TaskTest] FDG[26] =================
+[Function] Show POI icons on buildings checkbox
+
+[Core Logic Task]
+The user starts on page 5 (Preferences). The core action is clicking the 'Show POI icons on buildings' checkbox, which transitions to page 35. This is a single-step flow with no branches, as the action directly toggles the checkbox and navigates (or updates state) to the destination page.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Show POI icons on buildings checkbox> and check if page transitions to 35 (should not)
+ - V2: Click <Show POI icons on buildings checkbox> twice (repeat action to see if state toggles back or has unexpected behavior)
+ - V3: Click <Show POI icons on buildings checkbox> and immediately click it again before page transition (if possible, to test rapid state changes)
+
+================= [TaskTest] FDG[27] =================
+[Function] Keep screen on checkbox
+
+[Core Logic Task]
+The flow starts on page 5 (Preferences). The user performs a click action on the 'Keep screen on' checkbox, which transitions the app to page 36. This action toggles the checkbox's state (enabling or disabling the 'Keep screen on' setting).
+
+[Variant Paths] (3)
+ - V1: Tap <Keep screen on checkbox> twice in a row (repeating the tap to see if it toggles back as expected)
+ - V2: Omit tapping <Keep screen on checkbox> and check if the app still transitions to page 36 (though this might not be valid as per core logic, but testing omission)
+ - V3: Tap <Keep screen on checkbox> and then immediately tap it again (similar to repeat but faster, testing state toggle consistency)
+
+================= [TaskTest] FDG[28] =================
+[Function] Large node drag area checkbox
+
+[Core Logic Task]
+The flow starts on the Preferences page (page 5). The user performs a click action on the 'Large node drag area' checkbox. This action likely toggles the checkbox's state (enabling or disabling the large drag area feature) and navigates to page 37 (or completes the interaction, as the step is a leaf action).
+
+[Variant Paths] (3)
+ - V1: Tap <Large node drag area checkbox> twice (repeat the tap to toggle back)
+ - V2: Omit tapping <Large node drag area checkbox> (simulate not performing the action)
+ - V3: Tap <Large node drag area checkbox> (original action as a reference, but since only one widget, this is a base case with others as mutations)
+
+================= [TaskTest] FDG[30] =================
+[Function] The current page functions as a map - based interface for viewing the user's location, with additional features like zoom controls, a location - centering button, and a menu (accessed via the three - dot icon) for further options, enabling users to navigate and explore the area shown on the map.
+
+[Core Logic Task]
+The user starts on page 6 (map interface with a 'Vespucci has stopped' dialog). They click 'Open app again' (action from [6,0]), which transitions to page 0 (the main map view). The flow is a straight line with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Open app again> and instead try to interact with <Find option> on page 6 (even though the dialog is present)
+ - V2: Click <Open app again> twice (repeat the action) and then interact with <Find option> on page 0
+ - V3: Interact with <Find option> on page 6 without clicking <Open app again> (boundary case of not following the normal flow)
+
+================= [TaskTest] FDG[31] =================
+[Function] The current page is a map - based interface that enables users to view their location (marked by a blue arrow), navigate around the area (with zoom controls and a location - centering button), and access additional options via the three - dot menu, likely for functions such as finding specific places or getting directions.
+
+[Core Logic Task]
+The user starts on the map interface (page 6). They click the three - dot menu (action at [6,3]) to access the 'Share position option'. After this click, the destination page is 0, likely leading to a sharing - related interface or action.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[32] =================
+[Function] The current page displays an error message indicating the app "Vespucci has stopped" and provides an option to "Open app again" to restart the application after it crashed or stopped unexpectedly.
+
+[Core Logic Task]
+The app displays an error message 'Vespucci has stopped'. The user then clicks the 'Open app again' option to attempt restarting the application after its unexpected stop.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[33] =================
+[Function] The current page is a map - based interface that enables location viewing, and it also provides access to GPS - related features (such as track management and export of GPS tracks) through its menu options.
+
+[Core Logic Task]
+The flow starts on the map interface (page 10). The user clicks the 'Export GPS track' option, which leads to a new page (page 0). This action initiates the GPS track export process from the map - based location - viewing and GPS - feature - enabled interface.
+
+[Variant Paths] (3)
+ - V1: Omit the step of clicking <Export GPS track> and check if the GPS track export process still initiates
+ - V2: Repeat clicking <Export GPS track> multiple times to see if it causes any unexpected behavior in the GPS track export process
+ - V3: Try clicking <Export GPS track> after performing no other actions on the map interface (to test the minimal action set for export initiation)
+
+================= [TaskTest] FDG[34] =================
+[Function] This page functions as a file browser for the "/storage/emulated/0/Vespucci" directory, allowing the user to select a GPS track file (e.g., GPX, OSC) for import into the track management system, with a "CANCEL" option to exit the file selection process.
+
+[Core Logic Task]
+The process starts with clicking 'Import GPS track' to open the file browser for the '/storage/emulated/0/Vespucci' directory. In the file browser, the user can either navigate folders (like '..' or 'Pictures'), select a GPS track file (e.g., '2025-12-14T071814.gpx'), or click 'CANCEL' to exit the file selection and return to the map page.
+
+[Variant Paths] (3)
+ - V1: Tap <Import GPS track>, then tap <CANCEL button> (omits file selection)
+ - V2: Tap <Import GPS track>, then tap <Parent directory (..) folder> (alternative navigation instead of file selection)
+ - V3: Tap <Import GPS track>, then tap <Pictures folder> (alternative navigation instead of file selection)
+
+================= [TaskTest] FDG[35] =================
+[Function] Close app button
+
+[Core Logic Task]
+On the page where the 'Vespucci keeps stopping' dialog is shown (page 14), the user clicks the 'Close app' button. This action leads to the destination page (page 18), completing the process of closing the app.
+
+[Variant Paths] (2)
+ - V1: On the page where the 'Vespucci keeps stopping' dialog is shown (page 14), long - press <Close app button> (instead of click) to see if it leads to the destination page (page 18) and closes the app.
+ - V2: On the page where the 'Vespucci keeps stopping' dialog is shown (page 14), tap <Close app button> twice (repeat the operation) to check if it still leads to the destination page (page 18) and closes the app.
+
+================= [TaskTest] FDG[36] =================
+[Function] Current location radio button
+
+[Core Logic Task]
+The user starts on page 15 (Download at other location). They click the 'Current location' radio button, which transitions the app to page 20. This action selects the current location option for further operations (like downloading or mapping).
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Current location radio button> and check if the app still transitions to page 20 (repeat the original action of not tapping to see if the app behaves as expected without the selection)
+ - V2: Tap <Current location radio button> multiple times (e.g., tap it twice) to see if the app still transitions to page 20 and if the selection state is affected
+ - V3: Try to tap <Current location radio button> without being on page 15 (simulate an incorrect starting page to see how the app responds, though this assumes the ability to navigate to a different starting page which is part of the mutation testing context)
+
+================= [TaskTest] FDG[37] =================
+[Function] The current page provides a map - based interface for navigation, location viewing, and potentially related actions like downloading map data for other locations (as per the navigation path context), with features such as a compass, zoom controls, and a visible user location marker to assist in orienting and exploring the area shown on the map.
+
+[Core Logic Task]
+The user starts on the 'Download at other location' page. They click the 'GO TO MAP' button, which navigates them to the map interface. The map page provides navigation, location viewing, and exploration features like a compass, zoom controls, and a user location marker.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <GO TO MAP button> and stay on the 'Download at other location' page
+ - V2: Click <GO TO MAP button> twice (repeat the navigation action)
+ - V3: Click <GO TO MAP button> and then immediately click it again (order and repeat mutation)
+
+================= [TaskTest] FDG[38] =================
+[Function] The current page provides a map - based interface for navigation or location viewing, enabling users to see their current location (marked by a blue arrow), zoom in/out, and access additional functionalities through the bottom - bar icons.
+
+[Core Logic Task]
+The user starts on a map page (page 17) with a blue arrow marking their location. They perform a click action on the 'Export changes' option, which transitions the app to a new page (page 0). The flow is a straight line with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Export changes option> and stay on the map page
+ - V2: Click <Export changes option> twice (repeat the action)
+ - V3: Try to click a non - existent option instead of <Export changes option> (but since only <Export changes option> is available, this is a mutation of choosing an invalid alternative)
+
+================= [TaskTest] FDG[39] =================
+[Function] This page functions as a file browser for the "/storage/emulated/0/Vespucci" directory, allowing the user to select a file (e.g., GPX, OSC) or navigate folders, with a "CANCEL" option to exit the file selection process.
+
+[Core Logic Task]
+The flow starts with clicking 'Read from file' to open the file browser. In the browser, the user can either navigate into the 'Pictures' folder, go back via the parent folder (..), or cancel the process. If 'Pictures' is clicked, the browser shows its contents, where the user can again go back or cancel. Clicking 'CANCEL' at any point exits the file selection.
+
+[Variant Paths] (3)
+ - V1: Tap <Read from file option>, then immediately Tap <CANCEL button> (omit folder navigation)
+ - V2: Tap <Read from file option>, Tap <Parent folder (..) icon> (unexpected navigation instead of Pictures folder)
+ - V3: Tap <Read from file option>, Tap <Pictures folder>, then Tap <Parent folder (..) icon>, then Tap <CANCEL button> (repeat navigation and cancel)
+
+================= [TaskTest] FDG[40] =================
+[Function] Mapbox Satellite radio
+
+[Core Logic Task]
+The user starts on page 28 (Map background options). The core action is clicking the 'Mapbox Satellite' radio button, which transitions to page 41. This is a single-step flow with no branches, as the action directly selects the Mapbox Satellite map background.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Mapbox Satellite radio> (check if the app stays on page 28 or has default behavior)
+ - V2: Tap <Mapbox Satellite radio> twice (check if the app still transitions to page 41 or has unexpected behavior)
+ - V3: Tap <Mapbox Satellite radio> (but simulate a scenario where the tap is interrupted, e.g., system lag, to see if the transition fails)
+
+================= [TaskTest] FDG[41] =================
+[Function] DigitalGlobe Premium Imagery Vintage radio button
+
+[Core Logic Task]
+The flow starts on page 29 (Map overlay menu). The user clicks the 'DigitalGlobe Premium Imagery Vintage' radio button, which likely selects this map overlay option and transitions to page 55. There are no branches or loops in this straight-line execution.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <DigitalGlobe Premium Imagery Vintage radio button> and check if the transition to page 55 still occurs
+ - V2: Tap <DigitalGlobe Premium Imagery Vintage radio button> twice and observe the behavior (e.g., multiple selections or errors)
+ - V3: Tap <DigitalGlobe Premium Imagery Vintage radio button> and then immediately tap it again to see if any unexpected state change happens
+
+================= [TaskTest] FDG[42] =================
+[Function] OpenStreetMap GPS traces radio button
+
+[Core Logic Task]
+On the 'Map overlay' page (page 29), the user clicks the 'OpenStreetMap GPS traces' radio button. This action transitions the app to page 59, completing the selection of this map overlay option.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <OpenStreetMap GPS traces radio button> and check if the app still transitions to page 59
+ - V2: Click <OpenStreetMap GPS traces radio button> twice and check the app's response
+ - V3: Click a non - existent radio button (simulated by not clicking <OpenStreetMap GPS traces radio button>) and see the app's behavior
+
+================= [TaskTest] FDG[43] =================
+[Function] OSM Inspector: Addresses radio button
+
+[Core Logic Task]
+The user starts on page 29 (Map overlay menu). The core action is clicking the 'OSM Inspector: Addresses' radio button, which transitions to page 60. This is a single-step flow with no branches or loops, as the action directly selects the desired map overlay option.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <OSM Inspector: Addresses radio button> and stay on page 29
+ - V2: Repeat clicking <OSM Inspector: Addresses radio button> multiple times
+ - V3: Click <OSM Inspector: Addresses radio button> but assume a different transition (e.g., expect page 59 instead of 60)
+
+================= [TaskTest] FDG[44] =================
+[Function] OSM Inspector: Area radio button
+
+[Core Logic Task]
+The flow starts on page 29 (Map overlay menu). The user clicks the 'OSM Inspector: Area' radio button, which transitions the app to page 61. This action selects the OSM Inspector: Area map overlay option.
+
+[Variant Paths] (3)
+ - V1: Tap <OSM Inspector: Area radio button> twice
+ - V2: Omit tapping <OSM Inspector: Area radio button> (simulate not selecting the option)
+ - V3: Tap <OSM Inspector: Area radio button> after a short delay (testing timing-related mutation)
+
+================= [TaskTest] FDG[45] =================
+[Function] OSM Inspector: Geometry radio button
+
+[Core Logic Task]
+The user starts on page 29 (a map overlay selection menu). The core action is clicking the 'OSM Inspector: Geometry' radio button, which navigates to page 62. There are no branches or loops as it's a single click action to select this option.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <OSM Inspector: Geometry radio button> (to test if navigation to page 62 fails without selection)
+ - V2: Repeat clicking <OSM Inspector: Geometry radio button> (to test if multiple clicks cause unexpected behavior, e.g., repeated navigation or errors)
+
+================= [TaskTest] FDG[46] =================
+[Function] OSM Inspector: Highways radio button
+
+[Core Logic Task]
+The user starts on page 29 (Map overlay menu). They perform a single action: clicking the 'OSM Inspector: Highways' radio button, which navigates to page 63. There are no branches or loops in this flow.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <OSM Inspector: Highways radio button> (check if navigation still occurs or not)
+ - V2: Repeat clicking <OSM Inspector: Highways radio button> multiple times (check if multiple navigations or unexpected behavior occurs)
+
+================= [TaskTest] FDG[47] =================
+[Function] OSM Inspector: Places radio button
+
+[Core Logic Task]
+The user starts on page 29 (Map overlay menu). The core logic is a single step: clicking the 'OSM Inspector: Places' radio button, which navigates to page 64. There are no branches or loops as it’s a direct action to select this map overlay option.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <OSM Inspector: Places radio button> (to test if navigation to page 64 fails without the action)
+ - V2: Repeat clicking <OSM Inspector: Places radio button> (to test if multiple clicks cause unexpected behavior or repeated navigation)
+
+================= [TaskTest] FDG[48] =================
+[Function] OSM Inspector: Routing radio button
+
+[Core Logic Task]
+The process starts on the 'Map overlay' page (page 29). The user clicks the 'OSM Inspector: Routing' radio button, which navigates to page 65. This is a single-step action with no branches or loops, as the click directly transitions to the target page.
+
+[Variant Paths] (3)
+ - V1: Tap <OSM Inspector: Routing radio button> twice
+ - V2: Omit tapping <OSM Inspector: Routing radio button> (simulate not performing the navigation action)
+ - V3: Tap <OSM Inspector: Routing radio button> after a short delay (testing timing-related mutation, though action is same but timing is altered as a mutation aspect)
+
+================= [TaskTest] FDG[49] =================
+[Function] OSM Inspector: Tagging radio button
+
+[Core Logic Task]
+The user starts on page 29 (a map overlay selection menu). The core action is clicking the 'OSM Inspector: Tagging' radio button, which navigates to page 66. There are no branches or loops in this flow.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <OSM Inspector: Tagging radio button> and check if navigation to page 66 still occurs (repeat original flow without the core action)
+ - V2: Click <OSM Inspector: Tagging radio button> twice (repeat the core action) and observe if it still navigates to page 66 or has unexpected behavior
+
+================= [TaskTest] FDG[50] =================
+[Function] Display tag form checkbox
+
+[Core Logic Task]
+The user starts on page 38 (a settings page) and clicks the 'Display tag form' checkbox. This action leads to page 77, completing the interaction with this checkbox.
+
+[Variant Paths] (3)
+ - V1: Start on page 38, long - press <Display tag form checkbox> (instead of click)
+ - V2: Start on page 38, omit clicking <Display tag form checkbox> and check if page 77 is still reached
+ - V3: Start on page 38, click <Display tag form checkbox> twice and observe if it still leads to page 77
+
+================= [TaskTest] FDG[51] =================
+[Function] Show camera action checkbox
+
+[Core Logic Task]
+The flow starts on page 38. The user performs a click action on the 'Show camera action' checkbox. This action likely toggles the checkbox's state (either enabling or disabling the 'Show camera action' setting) and may navigate to page 78 (or reflect the state change on the same page).
+
+[Variant Paths] (3)
+ - V1: Tap <Show camera action checkbox> twice (repeating the tap to see if it toggles back)
+ - V2: Omit tapping <Show camera action checkbox> (check if the default state is as expected without interaction)
+ - V3: Tap <Show camera action checkbox> and then immediately tap it again (simulating a rapid toggle)
+
+================= [TaskTest] FDG[52] =================
+[Function] Always dim non-downloaded area checkbox
+
+[Core Logic Task]
+The user interacts with the 'Always dim non-downloaded area' checkbox. The flow starts on page 38, where the user clicks the checkbox. This action likely toggles the setting, and the flow ends on page 80 after the click.
+
+[Variant Paths] (3)
+ - V1: Tap <Always dim non-downloaded area checkbox> twice (repeating the tap to see if it toggles back)
+ - V2: Omit tapping <Always dim non-downloaded area checkbox> (simulate not changing the setting)
+ - V3: Tap <Always dim non-downloaded area checkbox> and then immediately tap it again (rapid repeated interaction)
+
+================= [TaskTest] FDG[53] =================
+[Function] Enable voice commands checkbox
+
+[Core Logic Task]
+The flow starts on page 38 (settings page). The user clicks the 'Enable voice commands' checkbox, which transitions the app to page 82. This is a straight - line flow with no branches or loops as it's a single action to enable the checkbox.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Enable voice commands checkbox> and check if the app still transitions to page 82 (though it should not, testing the necessity of the action)
+ - V2: Tap <Enable voice commands checkbox> twice (testing if repeated action causes unexpected behavior like multiple transitions or errors)
+ - V3: Tap <Enable voice commands checkbox> and then immediately tap it again before the app can fully transition (testing race condition - like behavior)
+
+================= [TaskTest] FDG[54] =================
+[Function] Always use context menu checkbox
+
+[Core Logic Task]
+The user starts on page 38 (settings page). The core logic is to click the 'Always use context menu' checkbox, which transitions to page 83. This is a single action with no branches or loops, as the action is a direct click on the checkbox to modify its state (likely toggle it, though the exact post-click state isn’t part of the action’s description here).
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Always use context menu checkbox> and see if the page transitions to 83 (expected to not happen, testing omission)
+ - V2: Click <Always use context menu checkbox> twice (testing repeat operation, though the state change might be toggled back, but testing the repeat action)
+ - V3: Try to long - press <Always use context menu checkbox> instead of clicking (branch mutation on interaction type)
+
+================= [TaskTest] FDG[55] =================
+[Function] Show tolerance checkbox
+
+[Core Logic Task]
+The flow starts on page 38. The user performs a click action to show the tolerance checkbox, resulting in navigation to page 84. There are no branches or loops as this is a single action to display the checkbox.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Show tolerance checkbox> (check if checkbox still appears without action)
+ - V2: Tap <Show tolerance checkbox> twice (test repeated action effect)
+ - V3: Tap <Show tolerance checkbox> then immediately tap it again (same as repeat but emphasizes quick repeat)
+
+================= [TaskTest] FDG[56] =================
+[Function] Use back key for Undo checkbox
+
+[Core Logic Task]
+The user starts on page 38 (a settings page). They perform a click action on the 'Use back key for Undo' checkbox, which transitions the app to page 85. This action toggles the checkbox's state (likely enabling or disabling the 'Use back key for Undo' feature).
+
+[Variant Paths] (3)
+ - V1: Tap <Use back key for Undo checkbox> twice (repeating the tap to see if it toggles back and affects the transition)
+ - V2: Omit tapping <Use back key for Undo checkbox> and check if the app still transitions to page 85 (though this may not be expected behavior, testing omission)
+ - V3: Tap <Use back key for Undo checkbox> and then immediately tap it again before the app can fully transition to page 85 (testing rapid repeated interaction)
+
+================= [TaskTest] FDG[57] =================
+[Function] Enable light theme checkbox
+
+[Core Logic Task]
+The process starts on page 38. The user clicks the 'Enable light theme' checkbox, which leads to page 86. This is a straight - line flow with no branches or loops as it's a single action to enable the light theme checkbox.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Enable light theme checkbox> and check if the app still navigates to page 86 (though it should not as per core logic)
+ - V2: Tap <Enable light theme checkbox> twice (repeat the action) and observe the result
+ - V3: Tap <Enable light theme checkbox> and then immediately tap it again to see if any unexpected behavior occurs
+
+================= [TaskTest] FDG[58] =================
+[Function] Enable name suggestions checkbox
+
+[Core Logic Task]
+The process starts on page 38. The user performs a click action to enable the 'Enable name suggestions' checkbox, which leads to page 87. There are no branches or loops as it is a single action flow.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Enable name suggestions checkbox> and check if the app still navigates to page 87
+ - V2: Tap <Enable name suggestions checkbox> twice and observe the result
+ - V3: Tap <Enable name suggestions checkbox> and then immediately tap it again to see if there's any unexpected behavior
+
+================= [TaskTest] FDG[59] =================
+[Function] Displays a map with a user’s current location (marked by a blue arrow) and surrounding area details, likely after reading location data from the selected GPX file, with options for navigation, zoom, and other map - related actions.
+
+[Core Logic Task]
+The app starts on the file selection page. The user clicks on the '2025-12-14T071814.gpx' file, which transitions the app to a map page displaying the user’s current location (marked by a blue arrow) and surrounding area details. No branches or loops are present in this core flow.
+
+[Variant Paths] (2)
+ - V1: Omit tapping <2025-12-14T071814.gpx file> and check if the map page with location details still loads
+ - V2: Tap <2025-12-14T071814.gpx file> twice in a row and observe if the app transitions to the map page (or shows an error/duplicate load)
+
+================= [TaskTest] FDG[60] =================
+[Function] Displays a map with a user’s current location (marked by a blue arrow) and various map controls, likely after reading location data from the selected GPX file, to enable map - based navigation or location viewing.
+
+[Core Logic Task]
+The process starts on a file selection page. The user clicks on the '2025-12-14T072313.osc' file, which transitions the app to a map page displaying the user’s current location (marked by a blue arrow) along with map controls, enabling map - based navigation or location viewing.
+
+[Variant Paths] (2)
+ - V1: Tap <2025-12-14T072313.osc file> twice (repeat the file selection step)
+ - V2: Omit tapping <2025-12-14T072313.osc file> (simulate not selecting the file to see if the map still loads)
+
+================= [TaskTest] FDG[61] =================
+[Function] Representative image file entry
+
+[Core Logic Task]
+The process starts on page 26. A click action is performed on the element related to representative image file entry, leading to page 27. This is a straight - line flow with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Representative image file entry> (check if the flow still progresses or errors)
+ - V2: Tap <Representative image file entry> twice (check if duplicate taps cause unexpected behavior like multiple navigations or errors)
+ - V3: Tap <Representative image file entry> with a long - press (simulate an incorrect interaction type to see if it still navigates or errors)
+
+
+[AppTest] Found 25 dependency pairs to test.
+
+==============================================
+[AppTest] Pair 1/25: 0 -> 1
+Producer: Map-based navigation or location viewing
+Consumer: Red lock icon
+
+[Plan]
+Case 1/1
+Producer task:
+ On the map page, click the minus (zoom out) button to update the map view to a zoomed - out state.
+Consumer task:
+ On page 0, click the red lock icon (which should use the currently zoomed - out map view as part of its context) to navigate to page 1.
+------------------------------
+
+==============================================
+[AppTest] Pair 2/25: 0 -> 2
+Producer: Map-based navigation or location viewing
+Consumer: The current page functions as a camera interface (likely for augmented reality or 3D scene capture) where users can take photos, switch camera modes, and exit the camera view, with a live view of a 3D-rendered room scene including a TV with a checkered pattern, a cat, and furniture.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the map page, click the minus (zoom out) button to update the map view to a zoomed out state.
+Consumer task:
+ From the map page (with the updated zoomed out map view), click the camera icon to enter the camera interface and verify that the camera interface is accessed with the map view having been in the zoomed out state before entry.
+------------------------------
+
+==============================================
+[AppTest] Pair 3/25: 0 -> 3
+Producer: Map-based navigation or location viewing
+Consumer: The current page (accessed via the target icon from a map - based navigation/location viewing page) provides a menu for managing location - related and GPS - track - related functions, including showing the location, following the GPS position, going to the GPS position, starting/pausing/clearing GPS tracks, managing tracks, and going to the start of a track.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the map page, click the minus (zoom out) button to reduce the map's zoom level, resulting in an updated (zoomed out) map view.
+Consumer task:
+ From the updated (zoomed out) map page, click the target icon to open the menu (page 3) and verify that the menu provides GPS - related options (like showing location, following GPS position, etc.) that are now associated with the zoomed out map interface.
+------------------------------
+
+==============================================
+[AppTest] Pair 4/25: 0 -> 4
+Producer: Map-based navigation or location viewing
+Consumer: The current page provides a menu with options to download map views (current view, add to download, other location), enable auto download, access file options, and report notes/bugs, likely for offline map management or OpenStreetMap data handling.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the map page, click the minus (zoom out) button to reduce the map's zoom level, resulting in an updated (zoomed out) map view.
+Consumer task:
+ From the updated (zoomed out) map view page, click the arrow icon (action [0,3]) to open the menu (destination page 4) with options for map download, auto download, file management, and reporting notes/bugs, verifying the map view used in the menu is the zoomed out one produced earlier.
+------------------------------
+
+==============================================
+[AppTest] Pair 5/25: 0 -> 6
+Producer: Map-based navigation or location viewing
+Consumer: The current page, accessed via a target icon from a map - based navigation/location viewing page, provides a menu with options to manage location - related functions such as showing location, following GPS position, navigating to GPS position, starting/pausing/clearing GPS tracks, managing tracks, and going to the start of a track, enabling users to control and interact with their GPS - related location and tracking on the map.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the map page, click the minus (zoom out) button to update the map view to a zoomed - out state.
+Consumer task:
+ From the zoomed - out map page, click the wrench (tools) icon. Then, verify that the opened menu for GPS - related settings reflects the current map interface (the zoomed - out map view) and allows interaction with location - related functions based on this map state.
+------------------------------
+
+==============================================
+[AppTest] Pair 6/25: 0 -> 7
+Producer: Map-based navigation or location viewing
+Consumer: Displays a dialog indicating the Vespucci app has stopped and provides an option to open the app again, likely to restart or resume the map - based navigation or location viewing functionality.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the map page, click the minus (zoom out) button to update the map view to a zoomed out state.
+Consumer task:
+ When the 'Vespucci has stopped' dialog appears, click the 'Open app again' option. Then, verify that the app restarts and displays the map with the previously zoomed out view (data produced by the producer).
+------------------------------
+
+==============================================
+[AppTest] Pair 7/25: 0 -> 10
+Producer: Map-based navigation or location viewing
+Consumer: The current page displays a detailed map centered on the user's GPS location (indicated by the blue arrow), providing location-based navigation and information about nearby landmarks, roads, and points of interest.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the map page, click the minus (zoom out) button to reduce the map's zoom level.
+Consumer task:
+ Navigate to the GPS position (indicated by the blue arrow), then verify that the map view (with the updated zoom level from the producer) is centered on the GPS position and shows nearby landmarks, roads, and points of interest.
+------------------------------
+
+==============================================
+[AppTest] Pair 8/25: 5 -> 19
+Producer: The current page (Preferences) allows users to configure user interface settings related to map display (background, overlay, scale, profile), enable/disable features like bugs/notes display, photo layer, node/POI icons, screen power management, node drag area, and access more/advanced settings for the map - based navigation or location viewing application.
+Consumer: The page provides map - based navigation and location viewing, enabling users to see their current location (marked by a blue arrow), explore the surrounding area with map controls like zoom and location centering, and access additional features via the bottom - bar icons.
+
+[Plan]
+Case 1/1
+Producer task:
+ Click settings icon on map page to enter Preferences. Click Map profile setting, select 'Pen Round Nodes' to update the setting.
+Consumer task:
+ From Preferences page, click back arrow to navigate to map page. Verify that the map's display (e.g., node styling) reflects the 'Pen Round Nodes' profile setting selected in Producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 9/25: 7 -> 35
+Producer: Displays a dialog indicating the Vespucci app has stopped and provides an option to open the app again, likely to restart or resume the map - based navigation or location viewing functionality.
+Consumer: Close app button
+
+[Plan]
+Case 1/1
+Producer task:
+ Wait for the 'Vespucci has stopped' dialog to appear, then click the 'Open app again' option to restart the app.
+Consumer task:
+ On the page showing the 'Vespucci keeps stopping' dialog (page 14), click the 'Close app' button to close the restarted app and navigate to page 18.
+------------------------------
+
+==============================================
+[AppTest] Pair 10/25: 11 -> 12
+Producer: The current page functions as a map interface for real - time GPS - based location tracking and navigation, showing the user's position (marked by a blue arrow) on a detailed map with options for zooming, centering on the user's location, and likely managing GPS tracking settings.
+Consumer: The current page provides a map view with a menu for managing GPS tracks, allowing users to upload, export, or import GPS tracks, likely for navigation or location tracking purposes.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the map page (page 3) with the menu open, click the 'Start GPS track' option to start GPS tracking and transition to page 0 where the map reflects real - time location tracking.
+Consumer task:
+ On the map page (page 3), click the 'Track management...' option to navigate to the track management page (page 10) and verify that the GPS track started by the producer is accessible for management features like upload, export, or import.
+------------------------------
+
+==============================================
+[AppTest] Pair 11/25: 11 -> 32
+Producer: The current page functions as a map interface for real - time GPS - based location tracking and navigation, showing the user's position (marked by a blue arrow) on a detailed map with options for zooming, centering on the user's location, and likely managing GPS tracking settings.
+Consumer: The current page displays an error message indicating the app "Vespucci has stopped" and provides an option to "Open app again" to restart the application after it crashed or stopped unexpectedly.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the map page (page 3) with the menu open, click the 'Start GPS track' option to transition to page 0 and start GPS tracking (updating the map for real - time location tracking).
+Consumer task:
+ After the app shows the 'Vespucci has stopped' error message, click the 'Open app again' option to restart the app and verify that the GPS track (started by the Producer) is either resumed or can be re - initiated as expected.
+------------------------------
+
+==============================================
+[AppTest] Pair 12/25: 11 -> 33
+Producer: The current page functions as a map interface for real - time GPS - based location tracking and navigation, showing the user's position (marked by a blue arrow) on a detailed map with options for zooming, centering on the user's location, and likely managing GPS tracking settings.
+Consumer: The current page is a map - based interface that enables location viewing, and it also provides access to GPS - related features (such as track management and export of GPS tracks) through its menu options.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the map page (page 3) with the menu open, click the 'Start GPS track' option to transition to page 0 and start GPS tracking (updating the map for real - time location tracking).
+Consumer task:
+ On the map interface (page 10), click the 'Export GPS track' option to go to page 0 and initiate the export process of the GPS track that was started by the producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 13/25: 12 -> 32
+Producer: The current page provides a map view with a menu for managing GPS tracks, allowing users to upload, export, or import GPS tracks, likely for navigation or location tracking purposes.
+Consumer: The current page displays an error message indicating the app "Vespucci has stopped" and provides an option to "Open app again" to restart the application after it crashed or stopped unexpectedly.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the map page (page 3), click 'Track management...' to navigate to the track management page (page 10) and access GPS track management features.
+Consumer task:
+ After the app shows 'Vespucci has stopped', click 'Open app again' to restart, then verify if the GPS track management features (from producer) are accessible in the restarted app.
+------------------------------
+
+==============================================
+[AppTest] Pair 14/25: 12 -> 33
+Producer: The current page provides a map view with a menu for managing GPS tracks, allowing users to upload, export, or import GPS tracks, likely for navigation or location tracking purposes.
+Consumer: The current page is a map - based interface that enables location viewing, and it also provides access to GPS - related features (such as track management and export of GPS tracks) through its menu options.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the map page (page 3), click the 'Track management...' option to navigate to the track management page (page 10) and access GPS track management features.
+Consumer task:
+ On the map interface (page 10), click the 'Export GPS track' option to initiate the export process of the GPS track that was accessed via the producer's track management action.
+------------------------------
+
+==============================================
+[AppTest] Pair 15/25: 15 -> 36
+Producer: The page allows the user to select a location (last known, current, or from coordinates) and configure parameters (like data source and radius) to download content for that location, with options to load the content or go to a map view.
+Consumer: Current location radio button
+
+[Plan]
+Case 1/1
+Producer task:
+ Click 'Download at other location' to enter the configuration page. On the configuration page, do not change the location source (leave it as is, e.g., last known or other default). Then, return to the main config page (e.g., by using a back or done button if available).
+Consumer task:
+ On page 15 (Download at other location), click the 'Current location' radio button. Verify that the app transitions to page 20, indicating that the current location option is selected for further operations (like downloading or mapping).
+------------------------------
+
+==============================================
+[AppTest] Pair 16/25: 15 -> 37
+Producer: The page allows the user to select a location (last known, current, or from coordinates) and configure parameters (like data source and radius) to download content for that location, with options to load the content or go to a map view.
+Consumer: The current page provides a map - based interface for navigation, location viewing, and potentially related actions like downloading map data for other locations (as per the navigation path context), with features such as a compass, zoom controls, and a visible user location marker to assist in orienting and exploring the area shown on the map.
+
+[Plan]
+Case 1/1
+Producer task:
+ Click 'Download at other location' to enter the configuration page. Select 'last known' as location source, choose 'Photon' from data source dropdown, set radius to 5km, then click 'GO TO MAP' (to trigger location download configuration setup).
+Consumer task:
+ After being navigated to the map interface (from Producer's 'GO TO MAP' click), verify the map shows the area corresponding to the 'last known' location with the configured radius (5km) and uses the Photon data source (implicitly reflected in map data or related UI cues, e.g., map layer details if available) as per the location download configuration from Producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 17/25: 30 -> 17
+Producer: The current page functions as a map - based interface for viewing the user's location, with additional features like zoom controls, a location - centering button, and a menu (accessed via the three - dot icon) for further options, enabling users to navigate and explore the area shown on the map.
+Consumer: The current page provides file - related options (including Export changes, Read from file, Save to file) for the map - based navigation or location viewing context, enabling users to perform operations like exporting, reading from, or saving to a file related to the map or location data.
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 6 (with 'Vespucci has stopped' dialog), click 'Open app again' to restart the app session and load the main map view (page 0) with map data.
+Consumer task:
+ From the main map view (page 0), access the map - related menu (via three - dot icon, page 4), then click 'File...' to open the file operations submenu (page 17). Now, attempt to perform a file operation (e.g., click 'Save to file') to save the map data produced by the restarted app session and loaded map view.
+------------------------------
+
+==============================================
+[AppTest] Pair 18/25: 30 -> 31
+Producer: The current page functions as a map - based interface for viewing the user's location, with additional features like zoom controls, a location - centering button, and a menu (accessed via the three - dot icon) for further options, enabling users to navigate and explore the area shown on the map.
+Consumer: The current page is a map - based interface that enables users to view their location (marked by a blue arrow), navigate around the area (with zoom controls and a location - centering button), and access additional options via the three - dot menu, likely for functions such as finding specific places or getting directions.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 6 (map interface with 'Vespucci has stopped' dialog). Click 'Open app again' (at [6,0]) to transition to page 0 (main map view) to produce map data and restart app session.
+Consumer task:
+ Start on page 6 (map interface). Click the three - dot menu (at [6,3]) to access the 'Share position' option, using the map data and app state from the producer's action.
+------------------------------
+
+==============================================
+[AppTest] Pair 19/25: 30 -> 38
+Producer: The current page functions as a map - based interface for viewing the user's location, with additional features like zoom controls, a location - centering button, and a menu (accessed via the three - dot icon) for further options, enabling users to navigate and explore the area shown on the map.
+Consumer: The current page provides a map - based interface for navigation or location viewing, enabling users to see their current location (marked by a blue arrow), zoom in/out, and access additional functionalities through the bottom - bar icons.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 6 (map interface with 'Vespucci has stopped' dialog). Click 'Open app again' (action from [6,0]) to transition to page 0 (main map view) to generate map data and restart app session.
+Consumer task:
+ Start on page 17 (map page with blue arrow marking location). Use the map data from the producer's main map view (page 0) to view the map, then click 'Export changes' option to transition to page 0, verifying the map data is used for the export operation.
+------------------------------
+
+==============================================
+[AppTest] Pair 20/25: 31 -> 38
+Producer: The current page is a map - based interface that enables users to view their location (marked by a blue arrow), navigate around the area (with zoom controls and a location - centering button), and access additional options via the three - dot menu, likely for functions such as finding specific places or getting directions.
+Consumer: The current page provides a map - based interface for navigation or location viewing, enabling users to see their current location (marked by a blue arrow), zoom in/out, and access additional functionalities through the bottom - bar icons.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the map interface (page 6), click the three - dot menu at [6,3] to access the 'Share position' option and trigger the app state and map data update.
+Consumer task:
+ On the map page (page 17) with the blue arrow marking the location, click the 'Export changes' option, and verify that the exported changes reflect the data (app state and map data) updated by the Producer's action.
+------------------------------
+
+==============================================
+[AppTest] Pair 21/25: 33 -> 32
+Producer: The current page is a map - based interface that enables location viewing, and it also provides access to GPS - related features (such as track management and export of GPS tracks) through its menu options.
+Consumer: The current page displays an error message indicating the app "Vespucci has stopped" and provides an option to "Open app again" to restart the application after it crashed or stopped unexpectedly.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the map interface (page 10), click the 'Export GPS track' option to start the GPS track export process (leading to page 0).
+Consumer task:
+ After the app shows the 'Vespucci has stopped' error message, click the 'Open app again' option. Then, check if the app restarts and can access or reflect the exported GPS track data.
+------------------------------
+
+==============================================
+[AppTest] Pair 22/25: 34 -> 32
+Producer: This page functions as a file browser for the "/storage/emulated/0/Vespucci" directory, allowing the user to select a GPS track file (e.g., GPX, OSC) for import into the track management system, with a "CANCEL" option to exit the file selection process.
+Consumer: The current page displays an error message indicating the app "Vespucci has stopped" and provides an option to "Open app again" to restart the application after it crashed or stopped unexpectedly.
+
+[Plan]
+Case 1/1
+Producer task:
+ Click 'Import GPS track' to open the file browser for '/storage/emulated/0/Vespucci' directory, then select a GPS track file (e.g., '2025-12-14T071814.gpx') to import.
+Consumer task:
+ After the app shows 'Vespucci has stopped' error, click 'Open app again' to restart and check if the imported GPS track data is accessible (e.g., in track management or map view).
+------------------------------
+
+==============================================
+[AppTest] Pair 23/25: 34 -> 33
+Producer: This page functions as a file browser for the "/storage/emulated/0/Vespucci" directory, allowing the user to select a GPS track file (e.g., GPX, OSC) for import into the track management system, with a "CANCEL" option to exit the file selection process.
+Consumer: The current page is a map - based interface that enables location viewing, and it also provides access to GPS - related features (such as track management and export of GPS tracks) through its menu options.
+
+[Plan]
+Case 1/1
+Producer task:
+ Click 'Import GPS track' to open the file browser for '/storage/emulated/0/Vespucci' directory, then select a GPS track file (e.g., '2025-12-14T071814.gpx') to import it.
+Consumer task:
+ On the map interface, click the 'Export GPS track' option and verify that the exported GPS track is the one imported by the producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 24/25: 59 -> 38
+Producer: Displays a map with a user’s current location (marked by a blue arrow) and surrounding area details, likely after reading location data from the selected GPX file, with options for navigation, zoom, and other map - related actions.
+Consumer: The current page provides a map - based interface for navigation or location viewing, enabling users to see their current location (marked by a blue arrow), zoom in/out, and access additional functionalities through the bottom - bar icons.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the file selection page, click on the '2025-12-14T071814.gpx' file to load the map data and transition to the map page showing the current location (blue arrow) and surrounding details.
+Consumer task:
+ On the map page (with loaded map data from the Producer), click on the 'Export changes' option to transition to the new page (page 0) and verify that the map - based interface (with current location marker) was used as the source for the export action.
+------------------------------
+
+==============================================
+[AppTest] Pair 25/25: 60 -> 38
+Producer: Displays a map with a user’s current location (marked by a blue arrow) and various map controls, likely after reading location data from the selected GPX file, to enable map - based navigation or location viewing.
+Consumer: The current page provides a map - based interface for navigation or location viewing, enabling users to see their current location (marked by a blue arrow), zoom in/out, and access additional functionalities through the bottom - bar icons.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the file selection page, click the '2025-12-14T072313.osc' file to load the map data and transition to the map page showing the current location (blue arrow) with map controls.
+Consumer task:
+ On the map page (with the loaded map data and current location), click the 'Export changes' option to transition to the new page (page 0).
+------------------------------

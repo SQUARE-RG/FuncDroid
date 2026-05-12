@@ -1,0 +1,1775 @@
+
+================= [TaskTest] FDG[0] =================
+[Function] Manage flashcard decks in AnkiDroid
+
+[Core Logic Task]
+The process starts on the AnkiDroid main page. First, the refresh icon is clicked, which opens an export dialog. Then, the CANCEL button is clicked, likely to dismiss the export dialog and return to the main page.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Refresh icon> and directly click <CANCEL button> (though this may not be meaningful in context, it's a mutation of omitting a step)
+ - V2: Click <Refresh icon> twice and then click <CANCEL button> (repeat operation mutation)
+ - V3: Click <CANCEL button> first and then click <Refresh icon> (order mutation, swap the two steps)
+
+================= [TaskTest] FDG[1] =================
+[Function] This page functions as a side navigation menu in AnkiDroid, providing access to features like deck management, card browsing, statistics, night mode toggle, settings, help, and feedback options.
+
+[Core Logic Task]
+The flow starts by clicking the hamburger menu icon on the main page to open the side navigation menu. Once the menu is open, clicking the 'Decks' navigation option (which is a leaf action) completes the interaction with this functional point's core logic for accessing deck management.
+
+[Variant Paths] (3)
+ - V1: Tap <Hamburger menu icon> twice (repeat step)
+ - V2: Omit tapping <Decks navigation option> after opening the menu (omit step)
+ - V3: Tap <Hamburger menu icon> then immediately tap it again before tapping <Decks navigation option> (order + repeat mutation)
+
+================= [TaskTest] FDG[2] =================
+[Function] The current page (via the three - dot menu) in AnkiDroid provides a set of functions including creating a filtered deck, checking the database, checking media, handling empty cards, restoring from backup, managing note types, importing, and exporting the collection, to assist with the management and maintenance of flashcard decks and related data.
+
+[Core Logic Task]
+The user starts on the main AnkiDroid page (page 0) and clicks the three - dot menu icon. This action opens a menu (page 3) that presents various deck - management options like creating a filtered deck, checking the database, etc. The user can then choose one of these options to perform the corresponding deck - related management task.
+
+[Variant Paths] (2)
+ - V1: Tap <Three-dot menu icon> and then immediately tap <Three-dot menu icon> again (repeat the menu opening)
+ - V2: Omit tapping <Three-dot menu icon> (try to access the management options without opening the menu, which should fail)
+
+================= [TaskTest] FDG[3] =================
+[Function] This page in AnkiDroid is for reviewing flashcards in the 'Default' deck, allowing users to view the question and then tap 'SHOW ANSWER' to reveal the answer, with a progress indicator (1 0 1) and options for navigation, bookmarking, and more via the menu icons.
+
+[Core Logic Task]
+The user starts on the deck selection page and clicks the 'Default' deck (labeled with progress 1 0 1) to enter the flashcard review screen. Once in the review screen, the user clicks the 'SHOW ANSWER' button to reveal the answer for the current flashcard. The flow is a straight line with no branches or loops in this captured logic.
+
+[Variant Paths] (3)
+ - V1: Tap <Deck named '123'> instead of the 'Default' deck to enter the flashcard review screen, then tap <SHOW ANSWER button> to reveal the answer
+ - V2: Tap <SHOW ANSWER button> first without entering the flashcard review screen from a deck (invalid but for mutation), then try to tap <Deck named '123'>
+ - V3: Omit tapping <SHOW ANSWER button> after entering the flashcard review screen from <Deck named '123'>
+
+================= [TaskTest] FDG[4] =================
+[Function] This page in AnkiDroid is for reviewing flashcards in the 'Default' deck, allowing the user to view the question and then tap 'SHOW ANSWER' to reveal the answer, with a progress indicator (1 0 1) and options for navigation or marking.
+
+[Core Logic Task]
+The user starts on the deck list page and clicks the 'Default' deck to enter its review mode. Once in the deck, the user can view flashcard questions and use the 'SHOW ANSWER' button (implied by the functional point) to reveal answers, with progress tracking via the '1 0 1' indicator. The flow begins with selecting the deck, and subsequent steps (implied by the functional point's description) involve reviewing cards, though only the deck selection action is provided here.
+
+[Variant Paths] (3)
+ - V1: Tap <Deck named 'Default'> twice (repeat deck selection)
+ - V2: Omit tapping <Deck named 'Default'> (though this would skip entering review mode, testing if the app handles no deck selection)
+ - V3: Tap <Deck named 'Default'>, then immediately tap <Deck named 'Default'> again (order mutation with repeated deck selection)
+
+================= [TaskTest] FDG[5] =================
+[Function] This page in AnkiDroid displays existing flashcard decks (like "123" and "Default") and provides a floating action plus button to initiate the creation of a new flashcard deck, while also showing study statistics (cards studied and time spent today) and options for syncing or accessing more menu actions.
+
+[Core Logic Task]
+The user starts on the AnkiDroid deck list page, which shows existing decks and study stats. To create a new deck, the user clicks the floating action plus button. This action likely initiates the new deck creation process, though the flow here is a single step with no branches or loops yet.
+
+[Variant Paths] (3)
+ - V1: Tap <Floating action plus button> twice (repeat operation)
+ - V2: Omit tapping <Floating action plus button> (skip new deck creation step)
+ - V3: Tap <Floating action plus button> after a very long delay (simulating a delayed interaction)
+
+================= [TaskTest] FDG[6] =================
+[Function] The current page in AnkiDroid's Card browser allows users to view, organize, and potentially edit the flashcards (displayed with "Question" and "Answer" columns) from all decks, with options to add new cards, search, and access additional menu actions.
+
+[Core Logic Task]
+The user starts on page 1 (the menu page) and clicks the 'Card browser' option. This action navigates to page 5 (the Card browser page), where flashcards are displayed with 'Question' and 'Answer' columns, and options for further actions like adding, searching, or menu access are available.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <Card browser option> (staying on page 1 instead of navigating to page 5)
+ - V2: Repeat clicking <Card browser option> multiple times (e.g., click it twice in a row)
+
+================= [TaskTest] FDG[7] =================
+[Function] The current page in AnkiDroid displays statistics for the "Default" flashcard deck, providing an overview of today's study activity, 1 - month forecast, review count, review time, added cards, and interval data, with additional tabs for forecast, review count, and review time details.
+
+[Core Logic Task]
+The user starts on page 1 (menu) and clicks the 'Statistics' option. This action navigates to page 6, which displays the 'Default' deck's statistics, including today’s activity, 1 - month forecast, and other metrics, with tabs for further details. No branches or loops are present as it’s a single navigation step to the statistics page.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Statistics option> (to test if the stats page loads without interaction, though this may be invalid as per app flow but is a mutation)
+ - V2: Click <Statistics option> twice (repeat the action to see if it has any effect, like reloading stats)
+ - V3: Click <Statistics option> after a short delay (simulate a different interaction timing, though the widget is just 'Statistics option' so this is about the action's timing as a mutation)
+
+================= [TaskTest] FDG[8] =================
+[Function] Night mode toggle
+
+[Core Logic Task]
+The user starts on page 1 (the menu with the Night mode toggle). The core logic is a single step: clicking the Night mode toggle, which transitions to page 7 (presumably reflecting the new night mode state). There are no branches or loops as it’s a direct toggle action.
+
+[Variant Paths] (3)
+ - V1: Tap <Night mode toggle> twice (repeat the toggle action)
+ - V2: Omit tapping <Night mode toggle> (check if the app still transitions to page 7 without interaction, though this may not be valid but trying as per repeat/omit mutation)
+ - V3: Tap <Night mode toggle> (original action, included for comparison but mutation here is about variations; however, given the limited widgets, this is the base and others are mutations around it)
+
+================= [TaskTest] FDG[9] =================
+[Function] The current page (Preferences in AnkiDroid) allows users to access and configure different categories of settings including general, reviewing, appearance, gestures, and advanced options for the AnkiDroid application.
+
+[Core Logic Task]
+The user starts on page 1 (the side menu) and clicks the 'Settings' option. This action navigates to the Preferences page (page 8), where different categories of AnkiDroid settings (general, reviewing, appearance, gestures, advanced) become accessible for configuration.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Settings option> (check if navigation to Preferences page still occurs without this action)
+ - V2: Repeat clicking <Settings option> multiple times (check if it causes any unexpected behavior like multiple navigations or errors)
+ - V3: Click <Settings option> and then immediately click it again (simulate rapid repeated action to test stability)
+
+================= [TaskTest] FDG[10] =================
+[Function] This page is the initial setup screen for Google Chrome, prompting the user to accept Chrome's Terms of Service and Privacy Notice, and offering the option to send usage statistics and crash reports to Google before proceeding with the browser setup.
+
+[Core Logic Task]
+The user starts on page 1 and clicks the 'Help' option, which navigates to page 9. This is a single-step flow with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Help option> (simulate not interacting with the only available widget)
+ - V2: Repeat tapping <Help option> (tap it multiple times instead of once)
+ - V3: Since there's only one widget, no branch alternative, but try a boundary-like mutation: Tap <Help option> with an imaginary long-press (even though it's described as 'Help option' without long-press, but to meet mutation goal, simulate long-press <Help option>)
+
+================= [TaskTest] FDG[11] =================
+[Function] This page is the initial setup screen for Google Chrome, where users are prompted to accept Chrome's Terms of Service and Privacy Notice, and have the option to enable sending usage statistics and crash reports to Google before proceeding with the "ACCEPT & CONTINUE" button.
+
+[Core Logic Task]
+The user starts on the initial Chrome setup page. They can choose to enable or disable sending usage statistics and crash reports (via a checkbox). After making that choice (or leaving it default), they click the 'ACCEPT & CONTINUE' button to proceed. If they interact with the 'Send feedback' option (though this is outside the core setup flow shown here), it navigates to a feedback page.
+
+[Variant Paths] (3)
+ - V1: Tap <Send feedback option> before interacting with the 'ACCEPT & CONTINUE' button (order mutation: swapping the order of feedback interaction and setup confirmation)
+ - V2: Tap <Send feedback option> twice (repeat mutation: repeating the feedback interaction)
+ - V3: Omit interacting with the 'Send feedback option' and directly click 'ACCEPT & CONTINUE' (omit mutation: omitting the feedback step)
+
+================= [TaskTest] FDG[12] =================
+[Function] The current page is the AnkiWeb account login interface, allowing users to enter their email address and password to log in to their AnkiWeb account, with additional options to reset the password or sign up for a new account.
+
+[Core Logic Task]
+The user starts on the AnkiWeb account login page. First, they can click the LOG IN button (though this likely requires prior input). Alternatively, they can interact with the Email address input field to enter their email, or the Password input field to enter their password. These input actions are part of the process to log in, with the LOG IN button being the final action to attempt login, and options to reset password or sign up also available.
+
+[Variant Paths] (3)
+ - V1: Tap <LOG IN button> without entering email or password (omit input steps)
+ - V2: Input a very long string (exceeding typical email length) into <Email address input field> then tap <LOG IN button>
+ - V3: Enter email into <Email address input field>, then tap <LOG IN button> without entering password (omit password input step)
+
+================= [TaskTest] FDG[13] =================
+[Function] The current page (a dialog) in AnkiDroid allows the user to export their flashcard collection as an apkg file, with options to include scheduling and media, and confirm or cancel the export action.
+
+[Core Logic Task]
+The user starts on page 3 and clicks the 'Create filtered deck option' (action_ref [3,0]), which navigates to page 2. This action initiates the process related to deck management, likely leading to a filtered deck creation workflow or related functionality.
+
+[Variant Paths] (3)
+ - V1: Tap <Create filtered deck option> twice
+ - V2: Omit tapping <Create filtered deck option> (though this skips the core action, testing if the app handles the absence)
+ - V3: Tap <Create filtered deck option> then tap it again (repeating the action)
+
+================= [TaskTest] FDG[14] =================
+[Function] This page allows the user to export their AnkiDroid collection as an apkg file, with options to include scheduling and media, and confirm or cancel the export action.
+
+[Core Logic Task]
+The user starts on page 3, clicks the 'Check database option' (though this seems misaligned with the export goal; likely a prior step), then transitions to page 2 where the export dialog appears. From there, the user can choose to include scheduling/media, then confirm (OK) or cancel the export. However, with the given action, the first step is clicking the check database option, leading to page 2 (export dialog).
+
+[Variant Paths] (2)
+ - V1: Omit clicking <Check database option> (to test if export dialog appears without this step, though core logic implies it's a prior step)
+ - V2: Repeat clicking <Check database option> multiple times before expecting the export dialog
+
+================= [TaskTest] FDG[15] =================
+[Function] This page (dialog) in AnkiDroid allows the user to export their flashcard collection as an .apkg file, with options to include scheduling and/or media, and confirm or cancel the export action.
+
+[Core Logic Task]
+The user starts on page 3 and clicks to check the media option, transitioning to page 2. This step is part of configuring the export settings for the flashcard collection, specifically enabling the inclusion of media in the export.
+
+[Variant Paths] (2)
+ - V1: Omit checking the media option: Start on page 3 and proceed without interacting with <Check media option>, then see if the export configuration proceeds to page 2 or behaves differently
+ - V2: Repeat checking the media option: Start on page 3, tap <Check media option>, then tap <Check media option> again, and observe the transition to page 2 or any changes in the export configuration state
+
+================= [TaskTest] FDG[16] =================
+[Function] This page allows the user to export their AnkiDroid collection as an apkg file, with options to include scheduling and media, and confirm or cancel the export action.
+
+[Core Logic Task]
+The user starts on page 3 (AnkiDroid main menu) and clicks the 'Empty cards option' (action_ref [3,3]), which navigates to page 2 (the Export dialog). This step initiates the process of accessing the export functionality, leading to the dialog where export options (like scheduling and media) can be configured and confirmed/canceled.
+
+[Variant Paths] (3)
+ - V1: Long-press <Empty cards option> instead of tapping to see if it initiates export
+ - V2: Tap <Empty cards option> twice to check if multiple exports are triggered
+ - V3: Omit tapping <Empty cards option> to see if export process can start another way
+
+================= [TaskTest] FDG[17] =================
+[Function] The current page (Export dialog) allows the user to export their AnkiDroid collection as an apkg file, with options to include scheduling and media, and confirm or cancel the export action.
+
+[Core Logic Task]
+The user starts on the main AnkiDroid page (page 3). They click the 'Restore from backup' option, which navigates them to the Export dialog (page 2).
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Restore from backup option> (test if export dialog still appears without this action)
+ - V2: Repeat clicking <Restore from backup option> twice (test if multiple clicks cause unexpected behavior)
+ - V3: Click <Restore from backup option> and then immediately click it again (swap order of a non - existent second action with itself, testing repeated action)
+
+================= [TaskTest] FDG[18] =================
+[Function] The "Manage note types" page in AnkiDroid allows users to view, organize, and potentially create or modify different note types (e.g., Basic, Cloze) used for creating flashcards, with a summary of the number of notes associated with each type.
+
+[Core Logic Task]
+The user starts on page 3 and clicks the 'Manage note types' option. This action navigates to the 'Manage note types' page (page 141), where note types and their associated note counts are displayed. There are no branches or loops in this initial flow as only one action is provided.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Manage note types option> (to test if the page still navigates without the action, though this is an omit mutation)
+ - V2: Repeat clicking <Manage note types option> (to test if multiple clicks affect navigation or cause issues, a repeat mutation)
+ - V3: Click <Manage note types option> twice in a row (another form of repeat mutation, different from the previous repeat in wording but similar intent)
+
+================= [TaskTest] FDG[19] =================
+[Function] The current page (Export dialog) in AnkiDroid allows the user to export their flashcard collection as an apkg file, with options to include scheduling and media, and buttons to confirm (OK) or cancel (CANCEL) the export.
+
+[Core Logic Task]
+The user starts on page 3 (main menu) and clicks the 'Export collection' option (action_ref [3,6]) to open the Export dialog (page 2). In the Export dialog, the user can choose to include scheduling (default checked) and media (default unchecked), then either confirm (OK) to export as an apkg file or cancel (CANCEL) to abort.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[20] =================
+[Function] The current page (Export dialog) in AnkiDroid allows the user to export their flashcard collection as an apkg file, with options to include scheduling (checked by default) and media (unchecked by default), and provides CANCEL and OK buttons to either abort or confirm the export.
+
+[Core Logic Task]
+The user starts on the main AnkiDroid page (page 3) and clicks the 'Export collection' option from the menu. This action opens the Export dialog (page 2), where the user can then choose to adjust options (like including media) or proceed with the default settings (scheduling included, media excluded) to either cancel or confirm the export.
+
+[Variant Paths] (2)
+ - V1: Start on main AnkiDroid page, Tap <Export collection option> twice (repeat the action)
+ - V2: Start on main AnkiDroid page, Omit tapping <Export collection option> (do nothing related to export)
+
+================= [TaskTest] FDG[21] =================
+[Function] The current page's functionality is to allow the user to select a specific flashcard deck (from options like "All decks", "123", "Default") to view or manage its associated cards within the AnkiDroid card browser interface.
+
+[Core Logic Task]
+The user starts on page 5 (card browser) and clicks the 'All decks' dropdown. This action opens a menu (page 10) with deck options like '123' and 'Default', allowing the user to select a specific deck to view or manage its cards.
+
+[Variant Paths] (3)
+ - V1: Tap <All decks dropdown> and attempt to select a non - existent deck option (branch mutation: choosing an invalid alternative from the expected deck options)
+ - V2: Omit tapping <All decks dropdown> and try to directly view or manage cards (omit step mutation)
+ - V3: Tap <All decks dropdown> multiple times in a row (repeat operation mutation)
+
+================= [TaskTest] FDG[22] =================
+[Function] The page allows users to create a new flashcard note by entering front and back content, selecting a card type and deck, adding tags, and previewing the associated card, with an option to save the note.
+
+[Core Logic Task]
+To create a new flashcard note, start by clicking the Add button to open the note creation page. Then, select a card type from the dropdown (with options like Basic variants or Cloze) and a deck from its dropdown (e.g., '123' or 'Default'). Next, input content into the front, back, and tags fields. Finally, click the Save button to store the note, or repeat steps to adjust type/deck/fields as needed.
+
+[Variant Paths] (3)
+ - V1: Tap <Add button (+)>, select <Cloze option> from <Type dropdown (Basic)>, select <Deck option '123'> from <Deck dropdown (Default)>, leave <Front input field> and <Back input field> empty, tap <Save checkmark button>
+ - V2: Tap <Add button (+)>, select <Basic MQrf97 option> from <Type dropdown (Basic)>, select <Deck option 'Default'> from <Deck dropdown (Default)>, input "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" into <Front input field>, input "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" into <Back input field>, tap <Save checkmark button>
+ - V3: Tap <Add button (+)>, select <Basic (optional reversed card) option> from <Type dropdown (Basic)>, select <Deck option '123'> from <Deck dropdown (Default)>, input "!@#$%^&*()_+" into <Tags input field>, tap <Save checkmark button>
+
+================= [TaskTest] FDG[23] =================
+[Function] This page in AnkiDroid allows users to search through a list of flashcards (displayed with "Question" and "Answer" columns) to find specific cards, with a search bar at the top for inputting search queries.
+
+[Core Logic Task]
+The user starts on the flashcard list page (page 5). First, they click the search button (magnifier) to open the search interface (page 12). Then, from the search interface, they can either click the back arrow to return to the original flashcard list (page 5) or click the search input field to enter a search query (page 22).
+
+[Variant Paths] (3)
+ - V1: Tap <Search button (magnifier)>, then Tap <Back arrow button> (branch mutation: choose back instead of input)
+ - V2: Tap <Search button (magnifier)>, then Tap <Search input field>, then Tap <Search input field> again (repeat input step)
+ - V3: Tap <Search button (magnifier)>, then Tap <Back arrow button>, then Tap <Search button (magnifier)> again (order + repeat mutation: back then search again)
+
+================= [TaskTest] FDG[24] =================
+[Function] The current page provides options to modify the display order of cards and filter cards by marked status, suspended status, or tags within the AnkiDroid card browser.
+
+[Core Logic Task]
+The process starts on the card browser page. First, the user clicks the three - dot (more options) menu. After this click, a menu with options like changing display order, filtering marked, filtering suspended, and filtering by tag appears, and the user can then choose one of these options to modify card display or filtering.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <More options (three-dot)> and assume the menu is already open (though this is an invalid operation in normal flow but a mutation to test boundary of menu interaction)
+ - V2: Repeat clicking <More options (three-dot)> multiple times instead of proceeding to choose an option from the opened menu
+ - V3: Click <More options (three-dot)> but instead of choosing a valid option, click it again (simulating an incorrect interaction flow)
+
+================= [TaskTest] FDG[25] =================
+[Function] The page allows the user to select a specific flashcard deck (from options like "All decks", "123", "Default") to view detailed statistics (including today's study, 1 - month forecast, review count, review time, added cards, and intervals) for that deck.
+
+[Core Logic Task]
+The user starts on page 6 (statistics page for a deck). They click the deck dropdown (labeled 'Default' initially) to open a menu with options like 'All decks', '123', and 'Default'. This action allows selecting a different deck to view its statistics, with the flow focusing on initiating the deck selection process.
+
+[Variant Paths] (3)
+ - V1: Tap <Default deck dropdown> twice in a row
+ - V2: Omit tapping <Default deck dropdown> (stay on the initially loaded deck's statistics)
+ - V3: Tap <Default deck dropdown> and then immediately tap it again without selecting an option from the menu
+
+================= [TaskTest] FDG[26] =================
+[Function] The current page (FORECAST tab in AnkiDroid's Statistics section) displays a graph to forecast the cumulative number of mature, young, and total (cumulative) flashcards over a 30 - day period for the "Default" deck, aiding users in predicting their flashcard review workload.
+
+[Core Logic Task]
+The user starts on the Statistics page (page 6). They click the 'FORECAST' tab, which navigates to the FORECAST section (page 41) displaying a graph that forecasts the cumulative number of mature, young, and total flashcards over a 30 - day period for the 'Default' deck. There are no branches or loops in this flow as it is a simple navigation to view the forecast graph.
+
+[Variant Paths] (2)
+ - V1: Omit tapping <FORECAST tab> and check if the graph still appears (to test if the tab is necessary for the graph to show)
+ - V2: Tap <FORECAST tab> twice (to test if repeated tapping affects the graph display)
+
+================= [TaskTest] FDG[27] =================
+[Function] The current page in AnkiDroid's Statistics section, under the "REVIEW COUNT" tab, displays a graph visualizing the cumulative number of answers (categorized as Mature, Young, Relearn, Learn, Cram) over a period of days, allowing users to analyze their flashcard review activity trends.
+
+[Core Logic Task]
+The user starts on the Statistics page (page 6) and clicks the 'REVIEW COUNT' tab to navigate to the REVIEW COUNT page (page 42). Once on the REVIEW COUNT page, the user can click the 'REVIEW COUNT' tab again (though this is a leaf action, likely confirming or re-rendering the graph). The core flow is navigating to the REVIEW COUNT tab to view the cumulative answers graph, with a possible re-interaction with the tab on the target page.
+
+[Variant Paths] (3)
+ - V1: Start on the Statistics page, omit clicking <REVIEW COUNT tab> (intentionally stay on the initial page to see if the graph still appears, though logically it shouldn't)
+ - V2: Start on the Statistics page, click <REVIEW COUNT tab> to go to the REVIEW COUNT page, then immediately click <REVIEW COUNT tab> again (repeating the interaction to see if it refreshes or has any side effect)
+ - V3: Start on the Statistics page, click <REVIEW COUNT tab> twice in quick succession (combining the two clicks into a rapid sequence, testing if the app handles repeated navigation quickly)
+
+================= [TaskTest] FDG[28] =================
+[Function] The current page in AnkiDroid's Statistics section, under the "REVIEW TIME" tab, displays a graph that visualizes the cumulative review time (in minutes) over a period of days, categorized by different card types (Mature, Young, Relearn, Learn, Cram) to help users analyze their flashcard review time trends.
+
+[Core Logic Task]
+The user starts on the Statistics page (page 6). They click on the 'REVIEW TIME' tab, which navigates to the page (page 43) displaying the graph of cumulative review time by card type over days. This is a straight-line flow with no branches or loops.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[29] =================
+[Function] The AnkiDroid general settings page allows users to configure sync options (AnkiWeb account, media fetch, automatic sync), AnkiDroid-specific settings (deck for new cards, language, error reporting), and notification preferences (notify conditions, vibrate, blink light).
+
+[Core Logic Task]
+The flow starts by navigating to AnkiDroid general settings. Then, it opens the 'Notify when' configuration dialog. At this point, there's a choice: select a notification condition (like 'Never notify', 'Pending messages available', or card - due thresholds) or cancel to return to the general settings. If a condition is selected, it's applied; if cancel is chosen, the dialog closes without changing the setting.
+
+[Variant Paths] (3)
+ - V1: Navigate to <AnkiDroid general settings>, open 'Notify when' dialog, tap <Never notify radio button> (branch mutation: choose 'Never notify' instead of other conditions)
+ - V2: Navigate to <AnkiDroid general settings>, open 'Notify when' dialog, tap <CANCEL button> (branch mutation: cancel instead of selecting a condition)
+ - V3: Navigate to <AnkiDroid general settings>, open 'Notify when' dialog, tap <More than 500 cards due radio button> (boundary input - extreme card due threshold, branch mutation: choose extreme condition)
+
+================= [TaskTest] FDG[30] =================
+[Function] The current page in AnkiDroid's settings allows users to configure various reviewing - related preferences, including behavior settings (like new card position, start of next day, etc.) and display settings (such as app bar buttons, screen - related options, card alignment, etc.) for the flashcard reviewing process.
+
+[Core Logic Task]
+The user starts on the preferences page and clicks to enter the reviewing settings. From there, they click to configure the new card position setting. At the new card position options, the user can either select the 'New cards after reviews' radio button to set that preference or click the CANCEL button to return to the reviewing settings page.
+
+[Variant Paths] (3)
+ - V1: Start on the preferences page, click <Reviewing settings>, then click <New card position setting>, then click <CANCEL button> instead of <New cards after reviews radio>
+ - V2: Start on the preferences page, click <New card position setting> (omit clicking <Reviewing settings> first), then click <New cards after reviews radio>
+ - V3: Start on the preferences page, click <Reviewing settings>, then click <New card position setting>, then click <New cards after reviews radio>, then click <New cards after reviews radio> again (repeat the selection)
+
+================= [TaskTest] FDG[31] =================
+[Function] The Appearance settings page in AnkiDroid allows users to configure visual aspects of the app, including selecting themes (Day/Night) and customizing font settings (default font, font applicability, browser/editor font, and card browser font scaling).
+
+[Core Logic Task]
+The flow starts by navigating to the Appearance settings page. From there, users can choose a theme (Day or Night) or configure font settings (default font, browser/editor font). For font settings, a submenu opens with multiple font options or a cancel option to return to the Appearance page. The flow branches at the Appearance page to handle theme selection, default font, or browser/editor font configuration.
+
+[Variant Paths] (3)
+ - V1: Navigate to <Appearance settings>, then tap <Night theme (Black)> instead of <Day theme (Light)>
+ - V2: Navigate to <Appearance settings>, tap <Browser and editor font>, then select <OpenSans-BoldItalic font option> instead of <OpenSans-Regular font option>
+ - V3: Navigate to <Appearance settings>, tap <Browser and editor font>, then tap <CANCEL button> without selecting any font option
+
+================= [TaskTest] FDG[32] =================
+[Function] The Gestures settings page in AnkiDroid allows users to enable/disable gesture controls and configure actions for various gestures (swipe up/down/left/right, double touch, touch top/bottom/left) related to flashcard interaction, such as answering cards or showing answers.
+
+[Core Logic Task]
+The user starts on the Preferences page and clicks to open the Gestures settings page. Once there, the user can click to configure the Swipe up action, then click to configure the Swipe left action (or other gesture actions in sequence).
+
+[Variant Paths] (3)
+ - V1: Start on Preferences page, click <Gestures settings>, then click <Swipe left action setting>, then click <Swipe up action setting>
+ - V2: Start on Preferences page, click <Gestures settings>, click <Swipe up action setting>, then click <Swipe up action setting> again
+ - V3: Start on Preferences page, click <Gestures settings>, then omit clicking any action setting
+
+================= [TaskTest] FDG[33] =================
+[Function] The current page (AnkiDroid Advanced settings) allows users to configure advanced options such as directory location, sync preferences, backup limits, workarounds, plugin settings, and language reset, enabling fine - tuning of the AnkiDroid app's functionality.
+
+[Core Logic Task]
+The user starts on the Preferences page (page 8). They click the 'Advanced settings' option, which navigates them to the Advanced settings page (page 53) where various advanced configuration options (like directory, sync, backups, workarounds, plugins, language reset) are available for fine - tuning AnkiDroid's functionality.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Advanced settings> and stay on the Preferences page
+ - V2: Click <Advanced settings> twice (repeat the navigation action)
+ - V3: Try to click <Advanced settings> while already on the Advanced settings page (unexpected repeat)
+
+================= [TaskTest] FDG[34] =================
+[Function] This page allows users to log into their AnkiWeb account by entering their email address and password, with options to reset the password or sign up for a new account.
+
+[Core Logic Task]
+The user is on the AnkiWeb account login page. The core action is clicking the 'LOG IN' button, which likely attempts to authenticate the user with the entered email and password. Since there's only one action here, the flow is a single step of clicking the login button.
+
+[Variant Paths] (3)
+ - V1: Tap <LOG IN button> twice (repeat operation)
+ - V2: Omit tapping <LOG IN button> (omit step)
+ - V3: Tap <LOG IN button> without having entered any email/password (though input widgets aren't listed, this is a boundary case of empty input before login attempt)
+
+================= [TaskTest] FDG[35] =================
+[Function] The current page is a browser selection dialog for opening the AnkiWeb account login page, allowing the user to choose between Chrome and WebView Browser Tester to proceed with password reset or login actions.
+
+[Core Logic Task]
+The user starts on the AnkiWeb account page. They click the 'RESET PASSWORD' link, which triggers a browser selection dialog. At this point, the flow branches: the user can choose to open the password reset page with either Chrome or WebView Browser Tester to proceed with the action.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <RESET PASSWORD link> and check if the browser selection dialog still appears (to test if the dialog is triggered only by this link)
+ - V2: Click <RESET PASSWORD link> twice (to test if multiple clicks cause unexpected behavior like multiple dialogs or errors)
+
+================= [TaskTest] FDG[37] =================
+[Function] This page allows users to edit the fields (specifically "Front" and "Back") of the "Basic" note type in AnkiDroid, with an option to add new fields.
+
+[Core Logic Task]
+The user starts by selecting the 'Basic' note type. Then, they can either edit the 'Back' field, or choose to add a new field. If adding a field, they can input a field name, or cancel/confirm the addition (returning to the edit fields page).
+
+[Variant Paths] (3)
+ - V1: Select <Basic note type (3 notes)>, then tap <CANCEL button> without interacting with other fields
+ - V2: Select <Basic note type (3 notes)>, input very long text (e.g., 1000 'a's) into <Text input field>, then tap <OK button>
+ - V3: Select <Basic note type (3 notes)>, tap <Add field button (+)>, then tap <CANCEL button> instead of interacting with the text field
+
+================= [TaskTest] FDG[38] =================
+[Function] This page allows users to edit the fields (specifically "Front" and "Back") of the "Basic" note type in AnkiDroid, with an option to add new fields via the plus icon.
+
+[Core Logic Task]
+The flow starts on the 'Manage note types' page. The user clicks on the 'Basic (and reversed card)' note type, which navigates to the 'Edit fields' page for that note type, where the 'Front' and 'Back' fields are displayed for editing, and a plus icon is available to add new fields.
+
+[Variant Paths] (3)
+ - V1: Tap <Basic (and reversed card) note type> twice in a row
+ - V2: Omit tapping <Basic (and reversed card) note type> (though this would not navigate to the edit fields page, representing an omission mutation)
+ - V3: Tap <Basic (and reversed card) note type> after a very long delay (simulating a timing - related mutation)
+
+================= [TaskTest] FDG[39] =================
+[Function] This page allows users to edit the fields (specifically "Front" and "Back") of the "Basic" note type in AnkiDroid, with an option to add new fields.
+
+[Core Logic Task]
+The user starts on the 'Manage note types' page. They click on the 'Basic (optional reversed card)' note type, which navigates to the 'Edit fields' page where the 'Front' and 'Back' fields of the Basic note type are displayed, allowing further editing or adding new fields.
+
+[Variant Paths] (3)
+ - V1: Tap <Basic (optional reversed card) note type> twice in a row
+ - V2: Omit tapping <Basic (optional reversed card) note type> (though this would not navigate to the edit fields page, testing the omission scenario)
+ - V3: Tap <Basic (optional reversed card) note type> after a long delay (testing timing variation)
+
+================= [TaskTest] FDG[40] =================
+[Function] This page allows users to edit the fields (specifically "Front" and "Back") of the "Basic" note type in AnkiDroid, with an option to add new fields via the plus icon.
+
+[Core Logic Task]
+The user starts on the 'Manage note types' page. They click on the 'Basic MQrf97' note type, which navigates to the 'Edit fields' page for that note type, where fields like 'Front' and 'Back' (and an option to add new fields) are available.
+
+[Variant Paths] (3)
+ - V1: Tap <Basic MQrf97 note type> twice
+ - V2: Omit tapping <Basic MQrf97 note type> (though this would not navigate to edit fields, representing an omission mutation)
+ - V3: Tap <Basic MQrf97 note type> then tap it again (repeat mutation)
+
+================= [TaskTest] FDG[41] =================
+[Function] This page allows users to edit the fields (specifically "Front" and "Back") of the "Basic" note type in AnkiDroid, with an option to add new fields.
+
+[Core Logic Task]
+The user starts on the 'Manage note types' page. They click on the 'Basic N1rKCs' note type, which navigates to the 'Edit fields' page for that note type, where fields like 'Front' and 'Back' can be edited or new fields added.
+
+[Variant Paths] (3)
+ - V1: Tap <Basic N1rKCs note type> twice in a row
+ - V2: Omit tapping <Basic N1rKCs note type> (though this would not navigate to edit fields, representing an omit mutation)
+ - V3: Tap <Basic N1rKCs note type> and then immediately tap it again (repeat mutation)
+
+================= [TaskTest] FDG[42] =================
+[Function] This page allows users to edit the fields (specifically "Front" and "Back") of the "Basic" note type in AnkiDroid, with an option to add new fields via the plus icon.
+
+[Core Logic Task]
+The flow starts on the 'Manage note types' page. The user clicks on the 'Basic kO9TUV' note type, which navigates to the 'Edit fields' page for that note type, where the 'Front' and 'Back' fields are displayed, and a plus icon is available to add new fields.
+
+[Variant Paths] (3)
+ - V1: Tap <Basic kO9TUV note type> twice in a row
+ - V2: Omit tapping <Basic kO9TUV note type> (though this would not navigate to the edit fields page, representing an omission mutation)
+ - V3: Tap <Basic kO9TUV note type> and then immediately tap it again (repeat mutation)
+
+================= [TaskTest] FDG[43] =================
+[Function] This page allows users to edit the fields (specifically "Front" and "Back") of the "Basic" note type in AnkiDroid, with an option to add new fields via the plus icon.
+
+[Core Logic Task]
+The user starts on the 'Manage note types' page. They click on the 'Basic' note type (action not shown in provided actions, but the given action is for Cloze; assuming the flow for Basic would involve selecting it, then entering the 'Edit fields' page for Basic where 'Front' and 'Back' fields are present, with an option to add new fields via the plus icon. However, based on the single provided action, the step is clicking the Cloze note type to navigate to its edit page, but the functional point is about Basic. Adjusting to the given action: The user clicks on the 'Cloze' note type (from page 141) to navigate to its edit fields page (page 142).
+
+[Variant Paths] (2)
+ - V1: Omit clicking <Cloze note type> (to test if the app handles not navigating to the edit page as expected)
+ - V2: Repeat clicking <Cloze note type> (to see if multiple clicks cause unexpected behavior like multiple navigations or errors)
+
+================= [TaskTest] FDG[44] =================
+[Function] This page allows the user to add a new note type to AnkiDroid by selecting a base note type (e.g., "Basic") and confirming the action via the "OK" button, or canceling the addition.
+
+[Core Logic Task]
+The user starts on the 'Manage note types' page and clicks the '+' button to open the 'Add note type' dialog. In the dialog, the user can either select a base note type (e.g., 'Basic') via the dropdown, then choose to confirm by clicking 'OK' (to add the new note type) or cancel by clicking 'CANCEL' (to return to the previous page).
+
+[Variant Paths] (3)
+ - V1: Tap <Add new note type (+ button)>, then tap <CANCEL button> (omit selecting a base note type)
+ - V2: Tap <Add new note type (+ button)>, tap <CANCEL button> then tap <Add: Basic dropdown> (swap cancel and dropdown selection order)
+ - V3: Tap <Add new note type (+ button)>, tap <Add: Basic dropdown> twice (repeat dropdown selection) then tap <OK button>
+
+================= [TaskTest] FDG[45] =================
+[Function] This page in AnkiDroid displays a list of flashcards (with "Question" and "Answer" columns) from all decks, allowing users to view, potentially manage, or interact with the cards, and also provides options to add new cards, search, or access more settings via the top - bar icons.
+
+[Core Logic Task]
+The user starts on page 10 and clicks the 'All decks' option. This action navigates to page 5, where the list of flashcards from all decks (with 'Question' and 'Answer' columns) is displayed, along with top - bar options for adding cards, searching, or accessing more settings.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <All decks option> and check if the flashcard list page (page 5) is still accessible
+ - V2: Click <All decks option> twice and observe the navigation and display of the flashcard list page (page 5)
+ - V3: Click <All decks option> and then immediately click it again to see if there are any changes in the flashcard list display on page 5
+
+================= [TaskTest] FDG[46] =================
+[Function] This page in AnkiDroid displays a list of flashcards (with "Question" and "Answer" columns) from all decks, allowing users to view, potentially search, add, or manage these cards.
+
+[Core Logic Task]
+The user starts on the page showing flashcards from all decks. They then click on the '123 deck option' (from the deck selection dropdown), which navigates to a new page (page 5) related to the '123' deck. This action likely filters or focuses the flashcard view to the '123' deck's cards.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <123 deck option> and stay on the original flashcard list page
+ - V2: Tap <123 deck option> twice (repeat the action)
+ - V3: Tap <123 deck option> but then immediately tap it again to see if there's a different behavior (order and repeat combined, though steps are similar here due to limited widgets)
+
+================= [TaskTest] FDG[47] =================
+[Function] This page in AnkiDroid displays a list of flashcards (with "Question" and "Answer" columns) from all decks, allowing users to view, potentially search, add, or manage these cards.
+
+[Core Logic Task]
+The flow starts on page 10, where a click action is performed on the 'Default deck option'. This action navigates to page 5, likely to display or manage flashcards from the Default deck. There are no branching or looping points here as only one action is provided.
+
+[Variant Paths] (3)
+ - V1: Tap <Default deck option> twice (repeat the tap operation)
+ - V2: Omit tapping <Default deck option> (skip the navigation step)
+ - V3: Tap <Default deck option> with a long-press instead of a regular tap (alternative interaction type)
+
+================= [TaskTest] FDG[48] =================
+[Function] This page allows the user to choose the display order of flashcards in the AnkiDroid card browser by selecting from various sorting options such as no sorting, sort field, created time, edited time, and others.
+
+[Core Logic Task]
+The user starts on the card browser page (page 13) and clicks the 'Change display order' option to open the sorting menu (page 23). From there, the user selects one of multiple sorting options (e.g., No sorting, By sort field, By due time, etc.), each leading to a confirmation (leaf) state. The flow branches at the sorting menu based on which radio button the user clicks.
+
+[Variant Paths] (3)
+ - V1: Start on card browser page, tap <Change display order option> to open sorting menu, then tap <No sorting (faster) radio> (branch mutation: choose this alternative sorting option)
+ - V2: Start on card browser page, tap <Change display order option> to open sorting menu, then tap <By ease radio> (branch mutation: choose this less common sorting option)
+ - V3: Start on card browser page, omit tapping <Change display order option> (repeat/omit mutation: skip opening the sorting menu, check if display order remains unchanged)
+
+================= [TaskTest] FDG[49] =================
+[Function] The current page in AnkiDroid displays a filtered list of flashcards (marked cards) from all decks, showing their question and answer fields, with options to add, search, or access more actions for the cards.
+
+[Core Logic Task]
+The process starts on page 13. The user clicks the 'Filter marked' option, which transitions the app to page 5, where the filtered list of marked flashcards (showing question and answer fields) is displayed, with options to add, search, or access more actions for the cards.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Filter marked option> and check if the filtered list of marked flashcards still appears
+ - V2: Click <Filter marked option> twice and observe the app's response
+ - V3: Try to access the filtered list of marked flashcards without clicking <Filter marked option> (if possible)
+
+================= [TaskTest] FDG[50] =================
+[Function] This page in AnkiDroid displays a filtered list of flashcards (marked cards) from all decks, showing their "Question" and "Answer" fields for review or management.
+
+[Core Logic Task]
+The process starts on the page showing all decks' flashcards. The user clicks the 'Filter suspended' option (from the menu), which likely refines the card list. After this action, the flow transitions to a page (or updates the current view) to display the filtered set of marked cards with their Question and Answer fields for review or management.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Filter suspended option> and check if the marked cards are still displayed (to test if the filter is applied by default or not)
+ - V2: Tap <Filter suspended option> twice (to test if repeated filtering causes unexpected behavior like duplicate or empty lists)
+ - V3: Try to interact with the filtered list without tapping <Filter suspended option> first (to test the default state of the card list)
+
+================= [TaskTest] FDG[51] =================
+[Function] This page in AnkiDroid allows the user to select tags (from a list of available tags) and also choose a card type filter (All cards, New, or Due) to filter the cards in the deck browser, with options to cancel or confirm the selection.
+
+[Core Logic Task]
+The user starts by clicking 'Filter by tag' to open the tag selection page. On this page, they can select tags via checkboxes, choose a card type filter (All cards, New, or Due) via radio buttons, and then either cancel the selection (returning to the deck browser) or confirm it (applying the filter and returning to the deck browser).
+
+[Variant Paths] (3)
+ - V1: Tap <Filter by tag option>, select <Checkbox for DUMMY_NOTE_TO_DELETE_x0-90-fa>, tap <Radio button for New>, then tap <CANCEL button>
+ - V2: Tap <Filter by tag option>, tap <SELECT button> without selecting any tag or radio button
+ - V3: Tap <Filter by tag option>, select <Checkbox for tag 12121212> and <Checkbox for DUMMY_NOTE_TO_DELETE_x0-90-fa>, tap <Radio button for Due>, then tap <SELECT button>
+
+================= [TaskTest] FDG[52] =================
+[Function] This page displays an overview of statistics (including study activity, forecast, review count, review time, added cards, and intervals) for all flashcard decks in AnkiDroid, with tabs for navigating to different statistical categories (Forecast, Review Count, Review Time).
+
+[Core Logic Task]
+The user starts on page 40 and clicks the 'All decks' option. This action navigates to page 6, which displays the statistics overview for the selected deck (or all decks, depending on the option chosen). The flow is a straight line as there are no branches or loops here.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <All decks option> and check if the statistics page still loads (though this may not be valid as per core logic, but for mutation testing)
+ - V2: Click <All decks option> twice (repeat the action to see if it causes any issues like reloading the stats page multiple times)
+ - V3: Try to click <All decks option> after already being on the statistics page (to see if it re - initializes the stats display or has other unexpected behavior)
+
+================= [TaskTest] FDG[53] =================
+[Function] This page displays an overview of statistics (including today's study, 1 - month forecast, review count, review time, added cards, and intervals) for all flashcard decks in AnkiDroid.
+
+[Core Logic Task]
+The user starts on the 'All decks' statistics page. They click on the '123 deck option' (or similar deck selection), which navigates to the statistics page for the selected deck (e.g., 'Default' deck). The new page displays the deck's statistics including today's study, 1 - month forecast, review count, review time, added cards, and intervals.
+
+[Variant Paths] (3)
+ - V1: Omit the step of clicking <123 deck option> and check if the statistics page still updates (though this may not be valid as per core logic, but for mutation testing)
+ - V2: Click <123 deck option> multiple times to see if it affects the statistics page loading
+ - V3: Click <123 deck option> and then immediately try to navigate back without waiting for the statistics page to load (order mutation with an unexpected action)
+
+================= [TaskTest] FDG[54] =================
+[Function] The page displays an overview of statistics (including today's study, 1 - month forecast, review count, review time, added cards, and intervals) for all AnkiDroid flashcard decks, with tabs for navigating to forecast, review count, and review time - specific statistics.
+
+[Core Logic Task]
+The flow starts on the 'All decks' statistics page. The user clicks the 'Default deck option' to navigate to the 'Default' deck's statistics page, where the overview (including today's study, 1 - month forecast, review count, review time, added cards, and intervals) is displayed, and tabs for forecast, review count, and review time are available for navigation.
+
+[Variant Paths] (2)
+ - V1: Omit tapping <Default deck option> and check if the 'Default' deck's statistics page still appears (though this may not be valid as per app logic, but for mutation test)
+ - V2: Tap <Default deck option> twice (unlikely to have effect but for mutation test)
+
+================= [TaskTest] FDG[55] =================
+[Function] The page visualizes the cumulative review count (categorized as Mature, Young, Relearn, Learn, Cram) over a 30 - day period in the AnkiDroid app's statistics section, specifically under the FORECAST and REVIEW COUNT tabs, to help users track their flashcard review progress trends.
+
+[Core Logic Task]
+The user starts on the statistics page (page 41) with the FORECAST tab active. To view the cumulative review count (Mature, Young, Relearn, Learn, Cram) over 30 days, the user clicks the 'REVIEW COUNT' tab (action S1), which navigates to page 42 where the relevant chart is displayed. There are no branches or loops in this flow as it is a single navigation step to access the desired visualization.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <REVIEW COUNT tab> and check if the cumulative review count visualization appears on the FORECAST tab (page 41) (repeat/omit mutation)
+ - V2: Click <REVIEW COUNT tab> multiple times (e.g., 3 times) and observe if the page (page 42) behavior changes (repeat/omit mutation)
+
+================= [TaskTest] FDG[56] =================
+[Function] The current page in AnkiDroid's statistics section, under the FORECAST and REVIEW TIME tabs, visualizes the cumulative review time (in minutes) over a range of days (from -30 to 0) for different card types (Mature, Young, Relearn, Learn, Cram), allowing users to analyze their historical and projected flashcard review time distribution.
+
+[Core Logic Task]
+The user starts on the statistics page (page 41). They click the 'REVIEW TIME' tab, which navigates to page 43. On page 43, the cumulative review time for different card types (Mature, Young, Relearn, Learn, Cram) over the -30 to 0 days range is visualized, completing the task of accessing and viewing this specific statistical breakdown.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <REVIEW TIME tab> and attempt to view the cumulative review time visualization on the initial statistics page (page 41)
+ - V2: Tap <REVIEW TIME tab> multiple times (e.g., 3 times) to see if the cumulative review time visualization on page 43 behaves differently or refreshes
+ - V3: First, attempt to view the cumulative review time without tapping <REVIEW TIME tab> (on page 41), then tap <REVIEW TIME tab> to navigate to page 43 and view the visualization
+
+================= [TaskTest] FDG[57] =================
+[Function] The page visualizes the statistics of flashcard intervals (in days) for the "Default" deck, showing the number of cards and cumulative percentage with given intervals, under the INTERVALS tab of the FORECAST statistics section in AnkiDroid.
+
+[Core Logic Task]
+The user starts on the Default deck's statistics page (FORECAST tab). They click the INTERVALS tab, which navigates to the INTERVALS section, displaying the flashcard interval statistics (cards and cumulative percentage) for the Default deck. No branches or loops are present as it's a single navigation action.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <INTERVALS tab> and check if the INTERVALS section still displays (though it should not, testing the necessity of the tab click)
+ - V2: Click <INTERVALS tab> twice (testing if repeated clicks affect the display, e.g., reloading the stats)
+ - V3: Click <INTERVALS tab> immediately after opening the statistics page (testing the timing of the action, though the original flow is similar, but emphasizing the immediate click as a mutation)
+
+================= [TaskTest] FDG[58] =================
+[Function] The current page in AnkiDroid displays a graph in the "REVIEW TIME" tab of the statistics section, showing the cumulative review time (in minutes) over a range of days (from -30 to 0 days relative to the present), with different card types (Mature, Young, Relearn, Learn, Cram) color - coded for differentiation.
+
+[Core Logic Task]
+The user starts on the statistics page (page 42). They click the 'REVIEW TIME' tab (action from page 42 to 43), which navigates to the page displaying the cumulative review time graph (with card types color - coded) over the -30 to 0 days range. There are no branches or loops as it's a single - step navigation to view the desired graph.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <REVIEW TIME tab> and check if the graph is still visible (though this may not be valid as per core logic, but it's a mutation attempt)
+ - V2: Click <REVIEW TIME tab> twice (repeat the action) and see if there's any change in the graph display
+ - V3: Click <REVIEW TIME tab> and then immediately click it again (order mutation with repetition) to check for any unexpected behavior
+
+================= [TaskTest] FDG[59] =================
+[Function] The current page in AnkiDroid displays a graph under the "INTERVALS" tab of the statistics section, showing the distribution of flashcard review intervals (in days) as well as the cumulative percentage of cards, to help users analyze how their flashcards are spaced over time.
+
+[Core Logic Task]
+To view the flashcard review interval distribution and cumulative percentage, the user starts on the statistics page (page 42) and clicks the 'INTERVALS' tab. This action navigates to the INTERVALS tab page (page 44), where the relevant graph is displayed. There are no branches or loops in this flow as it is a single-step navigation to the target content.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <INTERVALS tab> and check if the graph still appears (though this is likely invalid as per core logic, but for mutation)
+ - V2: Click <INTERVALS tab> twice (repeat operation for mutation)
+
+================= [TaskTest] FDG[60] =================
+[Function] The current page in AnkiDroid displays the HOURLY BREAKDOWN statistics graph under the REVIEW COUNT tab, showing the percentage of correct reviews and the number of reviews over different times of the day for the "Default" deck.
+
+[Core Logic Task]
+The flow starts on the Statistics page for the 'Default' deck. First, click the 'HOURLY BR' tab to navigate to the tab selection page. Then, click the 'HOURLY BREAKDOWN' tab to display the graph showing review counts and correct review percentages over different times of the day for the 'Default' deck.
+
+[Variant Paths] (3)
+ - V1: Start on the Statistics page for the 'Default' deck. Omit clicking <HOURLY BR tab> and directly click <HOURLY BREAKDOWN tab> to see if the graph is displayed.
+ - V2: Start on the Statistics page for the 'Default' deck. Click <HOURLY BREAKDOWN tab> first and then click <HOURLY BR tab> to check the resulting display (order mutation).
+ - V3: Start on the Statistics page for the 'Default' deck. Click <HOURLY BR tab> twice and then click <HOURLY BREAKDOWN tab> to see if the graph is displayed (repeat operation).
+
+================= [TaskTest] FDG[61] =================
+[Function] The current page displays a graph in the "INTERVALS" tab of the AnkiDroid statistics section, showing the distribution of flashcard review intervals (in days) and their cumulative percentage, allowing users to analyze how frequently their flashcards are reviewed over time.
+
+[Core Logic Task]
+The user starts on the statistics page (page 43). They click the 'INTERVALS' tab (action_ref [43,0]), navigating to page 44. This displays the graph showing flashcard review intervals and cumulative percentage, completing the task of accessing the interval analysis view.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <INTERVALS tab> and check if the graph still appears (though this likely fails as per core logic, testing the necessity of the tab click)
+ - V2: Click <INTERVALS tab> twice (testing repeated interaction with the tab)
+ - V3: First click a non-existent tab (simulated error) then click <INTERVALS tab> (testing error recovery flow with the tab)
+
+================= [TaskTest] FDG[62] =================
+[Function] The current page in AnkiDroid displays the HOURLY BREAKDOWN of review statistics, showing a graph with time of day on the x - axis and both percentage correct and number of reviews on the y - axes, to help users analyze their flashcard review performance by hour.
+
+[Core Logic Task]
+The user starts on the Statistics page (page 43). They click the 'HOURLY BREAKDOWN' tab, which navigates to the HOURLY BREAKDOWN page (page 45) displaying the review statistics graph with time of day on the x - axis and percentage correct/number of reviews on the y - axes, completing the flow to view the hourly breakdown of review performance.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <HOURLY BREAKDOWN tab> and check if the HOURLY BREAKDOWN page still displays (intended to fail as the tab click is required to navigate to that page)
+ - V2: Click <HOURLY BREAKDOWN tab> multiple times (e.g., 3 times) and observe if the HOURLY BREAKDOWN page still functions as expected (checking for any issues caused by repeated navigation attempts)
+
+================= [TaskTest] FDG[63] =================
+[Function] The AnkiWeb account page in AnkiDroid allows users to log in to their AnkiWeb account by entering their email address and password, reset their password, or sign up for a new AnkiWeb account.
+
+[Core Logic Task]
+The flow starts on the AnkiDroid settings page. The user clicks the 'AnkiWeb account (Not logged in)' option, which navigates to the AnkiWeb account page. On this page, the user can choose to log in (by entering email/password and clicking 'LOG IN'), reset their password (by clicking 'RESET PASSWORD'), or sign up for a new account (by clicking 'SIGN UP').
+
+[Variant Paths] (2)
+ - V1: Tap <AnkiWeb account (Not logged in)> twice (repeat the navigation step)
+ - V2: Omit tapping <AnkiWeb account (Not logged in)> (skip the navigation step)
+
+================= [TaskTest] FDG[64] =================
+[Function] Fetch media on sync (checked)
+
+[Core Logic Task]
+The process starts on page 49. The user clicks the 'Fetch media on sync (checked)' option, which leads to page 55. This action confirms or interacts with the setting to automatically fetch missing media during syncing.
+
+[Variant Paths] (3)
+ - V1: Tap <Fetch media on sync (checked)> twice
+ - V2: Omit tapping <Fetch media on sync (checked)> (though this might not fully test the functionality but is a mutation of omitting the step)
+ - V3: Tap <Fetch media on sync (checked)> and then immediately tap it again (repeat mutation)
+
+================= [TaskTest] FDG[65] =================
+[Function] Automatic synchronization (unchecked)
+
+[Core Logic Task]
+The process starts on the AnkiDroid settings page. The user performs a click action on the 'Automatic synchronization' option, which is currently unchecked. This action likely leads to a change in the setting's state or navigates to a related page, completing the interaction with this functional point.
+
+[Variant Paths] (3)
+ - V1: Tap <Automatic synchronization (unchecked)> twice (repeat the tap operation)
+ - V2: Omit tapping <Automatic synchronization (unchecked)> (skip the core action)
+ - V3: Tap <Automatic synchronization (unchecked)> and then tap it again immediately (order mutation with repeated tap)
+
+================= [TaskTest] FDG[66] =================
+[Function] This page in AnkiDroid's appearance settings allows users to adjust the "Default font applicability" setting using a slider, currently set to 100%, to control the extent to which the default font is applied within the app.
+
+[Core Logic Task]
+The user starts on the deck selection page (page 57). They can choose to use the current deck (leading to page 65), decide by note type (leading to page 66), or cancel (returning to page 49). The flow branches at the deck selection step based on the user's choice of radio option or cancel button.
+
+[Variant Paths] (3)
+ - V1: Start on page 57, tap <Decide by note type radio option> (instead of Use current deck), then proceed as per the app's flow
+ - V2: Start on page 57, tap <CANCEL button> (instead of choosing a deck option), then observe the app's behavior as it returns to page 49
+ - V3: Start on page 57, tap <Use current deck radio option> twice (repeating the selection), then proceed to page 65
+
+================= [TaskTest] FDG[67] =================
+[Function] This page allows the user to select the language for the AnkiDroid application from a list of available languages, with an option to use the system language.
+
+[Core Logic Task]
+The user starts on the AnkiDroid settings page and clicks the 'Language (System language)' option to open the language selection dialog. In the dialog, the user can choose to set the language to System language, any of the listed languages (like Arabic, Bulgarian, etc.), or cancel the selection to return to the previous page. The flow branches based on which radio button (or CANCEL) the user clicks.
+
+[Variant Paths] (3)
+ - V1: Tap <Language (System language)>, then tap <Arabic radio button> (branch mutation: choose Arabic instead of default/system)
+ - V2: Tap <Language (System language)>, then tap <CANCEL button> (branch mutation: cancel instead of selecting a language)
+ - V3: Tap <Language (System language)>, then tap <System language radio button> twice (repeat mutation: repeat selecting system language)
+
+================= [TaskTest] FDG[68] =================
+[Function] This page in AnkiDroid's appearance settings allows users to adjust the "Card browser font scaling" setting, with a slider currently set to 100% to control the font size scaling in the card browser.
+
+[Core Logic Task]
+The user starts on the AnkiDroid settings page (page 49) and clicks on the 'Error reporting mode (Never report)' option, which navigates to the Appearance settings page (page 57). On the Appearance page, the 'Card browser font scaling' slider is visible, set to 100%, allowing adjustment of the font size scaling for the card browser.
+
+[Variant Paths] (2)
+ - V1: Omit clicking <Error reporting mode (Never report)> and check if the Appearance settings page still loads (though this may not be valid as per core logic, but for mutation testing, trying to see if the page can be accessed without this step)
+ - V2: Click <Error reporting mode (Never report)> twice (repeating the click action to see if it causes any different behavior in navigation to the Appearance settings page)
+
+================= [TaskTest] FDG[69] =================
+[Function] Vibrate (unchecked)
+
+[Core Logic Task]
+The user starts on page 49 (AnkiDroid settings) and clicks the 'Vibrate (unchecked)' toggle. This action likely toggles the vibrate setting, and the flow ends after this click (no further steps shown).
+
+[Variant Paths] (3)
+ - V1: Long-press <Vibrate (unchecked)> (instead of tap)
+ - V2: Tap <Vibrate (unchecked)> twice (repeat the toggle)
+ - V3: Omit tapping <Vibrate (unchecked)> (do nothing, check if state remains)
+
+================= [TaskTest] FDG[70] =================
+[Function] Blink light (unchecked)
+
+[Core Logic Task]
+The flow starts on page 49. The user clicks on the 'Blink light' option (which is unchecked) on page 49, leading to page 61. There are no branches or loops as it's a single click action to interact with the 'Blink light' setting.
+
+[Variant Paths] (3)
+ - V1: Tap <Blink light (unchecked)> twice
+ - V2: Omit tapping <Blink light (unchecked)> (do nothing)
+ - V3: Tap <Blink light (unchecked)> and then immediately tap it again
+
+================= [TaskTest] FDG[71] =================
+[Function] This page allows the user to adjust the "Card zoom" setting (currently at 100%) within the Reviewing settings of AnkiDroid, enabling customization of the card content's zoom level during reviews.
+
+[Core Logic Task]
+The user starts on the Reviewing settings page. They locate and interact with the 'Card zoom' option (though the provided action is for 'Start of next day', assuming the flow involves navigating to adjust Card zoom: first, a click action (e.g., on Card zoom) would open its adjustment interface, then adjust the zoom level. However, with the given action, the step is clicking 'Start of next day' (maybe a misreference, but following the action: click the 'Start of next day' setting to navigate, though the intended Card zoom flow would involve interacting with Card zoom).
+
+[Variant Paths] (3)
+ - V1: Tap <Start of next day setting> twice
+ - V2: Omit any further action after tapping <Start of next day setting>
+ - V3: Tap <Start of next day setting> and then immediately tap it again
+
+================= [TaskTest] FDG[72] =================
+[Function] This page allows the user to set or modify the "Learn ahead limit" (timebox time limit) for reviewing flashcards in AnkiDroid by entering a time value and confirming with "OK" or canceling the action.
+
+[Core Logic Task]
+The user starts on the Reviewing settings page and clicks to open the Learn ahead limit setting. Then, they can either input a time value (though the input step is included here) or choose to cancel or confirm the change. After opening the setting, the user can click CANCEL to discard changes and return, or click OK to save changes and return.
+
+[Variant Paths] (3)
+ - V1: Open <Learn ahead limit setting>, omit input into <Learn ahead limit input field>, tap <OK button>
+ - V2: Open <Learn ahead limit setting>, input "" into <Learn ahead limit input field>, tap <OK button>
+ - V3: Open <Learn ahead limit setting>, input "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" into <Learn ahead limit input field>, tap <OK button>
+
+================= [TaskTest] FDG[73] =================
+[Function] This page allows the user to set or modify the "Learn ahead limit" (timebox time limit) for reviewing flashcards in AnkiDroid by entering a time value and confirming with "OK" or canceling the change.
+
+[Core Logic Task]
+The user starts on the Reviewing settings page. They click the 'Timebox time limit' option, which opens a dialog to set or modify the time limit. After this click, the flow proceeds to the dialog page for further input or confirmation.
+
+[Variant Paths] (3)
+ - V1: Tap <Timebox time limit setting> twice (repeat the tap operation)
+ - V2: Omit tapping <Timebox time limit setting> (skip the step to open the dialog)
+ - V3: Tap <Timebox time limit setting> and then immediately tap it again (swap the order of a non - existent second step with the first, but here it's a forced repeat - like action)
+
+================= [TaskTest] FDG[74] =================
+[Function] This page in AnkiDroid allows users to configure the visibility and availability of various app bar buttons (such as Undo, Mark note, Edit note, etc.) during the reviewing process, with options to reset to default, enable/disable, or set display conditions (e.g., always show, show if room, menu only).
+
+[Core Logic Task]
+The user starts by clicking the 'App bar buttons' setting to access the configuration page. On this page, they can click individual buttons (like Undo or Edit note) to open a submenu. In the submenu, they choose a display option (Always show, Show if room, Menu only, Disabled) or cancel to exit without changes. This process repeats for other buttons they want to configure.
+
+[Variant Paths] (3)
+ - V1: Tap <App bar buttons setting>, then tap <Edit note (Show if room)>, then tap <Disabled radio button> instead of <Show if room radio button>
+ - V2: Tap <App bar buttons setting>, then tap <Undo (Always show)>, then tap <CANCEL button> to omit saving changes
+ - V3: Tap <App bar buttons setting>, then tap <Edit note (Show if room)>, input nothing (but since no input widget, skip input), then tap <Menu only radio button> as a boundary-like choice (using a different option)
+
+================= [TaskTest] FDG[75] =================
+[Function] Keep screen on checkbox
+
+[Core Logic Task]
+The user starts on page 50 (a settings page) and performs a click action on the 'Keep screen on' checkbox. This action likely toggles the checkbox's state (either enabling or disabling the 'keep screen on' functionality) and may navigate to page 94 or update the current page's state.
+
+[Variant Paths] (3)
+ - V1: Tap <Keep screen on checkbox> twice (repeating the tap to see if it toggles back as expected)
+ - V2: Omit tapping <Keep screen on checkbox> and check if the state remains unchanged (simulating a scenario where the user forgets to interact with the checkbox)
+ - V3: Tap <Keep screen on checkbox> and then immediately tap it again (testing rapid toggling of the checkbox state)
+
+================= [TaskTest] FDG[76] =================
+[Function] The current page (a dialog within the Reviewing settings of AnkiDroid) allows the user to configure the fullscreen mode for flashcard reviewing by selecting from options: Off, Hide the system bars, or Hide the system bars and answer buttons.
+
+[Core Logic Task]
+The user starts on the Reviewing settings page and clicks the Fullscreen mode setting to open the configuration dialog. In the dialog, the user can choose to set Fullscreen mode to Off, Hide the system bars, or cancel the change. If a radio option is selected, the setting is applied; clicking CANCEL closes the dialog without changes.
+
+[Variant Paths] (3)
+ - V1: Start on Reviewing settings page, tap <Fullscreen mode setting> to open dialog, then tap <CANCEL button> (omits selecting a radio option)
+ - V2: Start on Reviewing settings page, tap <Fullscreen mode setting> to open dialog, tap <Hide the system bars (radio)>, then tap <Hide the system bars (radio)> again (repeat radio selection)
+ - V3: Start on Reviewing settings page, tap <Fullscreen mode setting> to open dialog, tap <CANCEL button>, then tap <Fullscreen mode: Off (radio)> (swap cancel and selection order, though less logical but valid mutation)
+
+================= [TaskTest] FDG[77] =================
+[Function] Center align checkbox
+
+[Core Logic Task]
+The process starts on page 50. The user clicks the 'Center align' checkbox, which likely toggles its state (checked/unchecked) and navigates to page 96. There are no branches or loops as it's a single action to interact with the checkbox.
+
+[Variant Paths] (3)
+ - V1: On page 50, long - press <Center align checkbox> (instead of click) and check if it navigates to page 96
+ - V2: On page 50, click <Center align checkbox> twice (repeat the click operation) and check the navigation to page 96
+ - V3: On page 50, omit clicking <Center align checkbox> and check if navigation to page 96 still occurs
+
+================= [TaskTest] FDG[78] =================
+[Function] Show button time checkbox
+
+[Core Logic Task]
+The user starts on page 50. They perform a click action on the 'Show button time' checkbox, which leads to page 97. This action likely toggles the checkbox's state (e.g., from checked to unchecked or vice versa) to control whether button time is shown.
+
+[Variant Paths] (3)
+ - V1: Start on page 50, omit tapping <Show button time checkbox> and check if page 97 is still reached
+ - V2: Start on page 50, tap <Show button time checkbox> twice (repeat the action) and observe the result on page 97
+ - V3: Start on page 50, tap <Show button time checkbox> and then immediately tap it again before page 97 loads (if possible) to see the effect
+
+================= [TaskTest] FDG[79] =================
+[Function] This page within AnkiDroid's Reviewing settings allows the user to adjust the "Card zoom" setting (currently at 100%) to modify the size of flashcard content during reviews.
+
+[Core Logic Task]
+The user starts on the Reviewing settings page. They click on the 'Card zoom' setting, which opens a dialog (or input field) to adjust the zoom level. This action initiates the process to modify the flashcard content size during reviews.
+
+[Variant Paths] (3)
+ - V1: Tap <Card zoom setting> twice (repeat the tap operation)
+ - V2: Omit tapping <Card zoom setting> (skip the step to adjust zoom)
+ - V3: Tap <Card zoom setting> and then immediately tap it again (order mutation with repeated tap)
+
+================= [TaskTest] FDG[80] =================
+[Function] This page in AnkiDroid's Appearance settings allows the user to adjust the "Card browser font scaling" setting, as indicated by the 100% scaling slider currently being interacted with.
+
+[Core Logic Task]
+The user starts on the Appearance settings page. They click on the 'Default font applicability' option, which leads to a new page (or a dialog) related to font applicability settings. The flow is a straight line with no branches or loops in this initial interaction.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Default font applicability> (repeat the initial state check instead)
+ - V2: Tap <Default font applicability> twice (repeat the action)
+ - V3: Tap <Default font applicability> then immediately tap it again (swap order of a non - existent second step with itself, but as a mutation of order)
+
+================= [TaskTest] FDG[81] =================
+[Function] The current page in AnkiDroid's Appearance settings allows the user to adjust the "Card browser font scaling" setting, as indicated by the 100% scaling slider dialog, along with other appearance-related options like themes and font settings.
+
+[Core Logic Task]
+The user starts on the Appearance settings page. They click on the 'Card browser font scaling (100%)' option, which opens a slider dialog for adjusting the font scaling. This is the core action to access the font scaling adjustment interface.
+
+[Variant Paths] (3)
+ - V1: Omit the step of clicking <Card browser font scaling (100%)> and check if the font scaling adjustment interface still appears (though likely it won't, testing the necessity of this step)
+ - V2: Repeat clicking <Card browser font scaling (100%)> multiple times to see if there's any unexpected behavior (e.g., multiple dialogs opening or errors)
+ - V3: Try clicking <Card browser font scaling (100%)> in a different order (though there's only one step here, considering if there were other steps, but in this case, just emphasizing the action's repetition or alternative interaction)
+
+================= [TaskTest] FDG[82] =================
+[Function] Enable gestures checkbox
+
+[Core Logic Task]
+The flow starts on page 52 (Gestures settings). The user clicks the 'Enable gestures' checkbox, which likely toggles its state (e.g., from unchecked to checked) and may navigate to page 119 or update the current page's UI to reflect the change. This is a single-step action with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Tap <Enable gestures checkbox> twice (repeat the tap to see if it toggles back)
+ - V2: Omit tapping <Enable gestures checkbox> (check if the app behaves as expected without enabling)
+ - V3: Tap <Enable gestures checkbox> (original action for comparison, but as a mutation variant to check if it's the only way)
+
+================= [TaskTest] FDG[83] =================
+[Function] The current page in AnkiDroid's Gestures settings allows users to configure swipe sensitivity and assign actions (like answering cards, showing answers) to various gestures (swipe up/down/left/right, double touch, touch top/bottom/left).
+
+[Core Logic Task]
+The user interacts with the Gestures settings page. They click on the 'Swipe sensitivity' setting, which likely allows adjusting the sensitivity for swipe gestures. Since there's only one action here, the flow is a single step focused on this interaction.
+
+[Variant Paths] (3)
+ - V1: Tap <Swipe sensitivity setting> twice (repeat operation)
+ - V2: Omit tapping <Swipe sensitivity setting> (omit step)
+ - V3: Tap <Swipe sensitivity setting> (original step, included for reference as a base case if needed)
+
+================= [TaskTest] FDG[84] =================
+[Function] The current page in AnkiDroid's Gestures settings allows users to configure swipe sensitivity and assign actions (like answering cards, showing answers) to various touch gestures (swipe up/down/left/right, double touch, touch top/bottom/left) for interacting with flashcards.
+
+[Core Logic Task]
+The user starts on the Gestures settings page. They perform a click action on the 'Swipe down' action setting, which remains on the same page (likely to configure or view its details).
+
+[Variant Paths] (3)
+ - V1: Tap <Swipe down action setting> twice (repeat the tap operation)
+ - V2: Omit tapping <Swipe down action setting> (skip the intended interaction)
+ - V3: Tap <Swipe down action setting> and then immediately tap it again (order mutation with repeated tap)
+
+================= [TaskTest] FDG[85] =================
+[Function] The page allows users to configure gesture settings for AnkiDroid, including enabling gestures, adjusting swipe sensitivity, and assigning actions to various swipe and touch gestures (e.g., swipe left/right, double touch, touch top/bottom/left) for interacting with flashcards.
+
+[Core Logic Task]
+The user interacts with the AnkiDroid Gestures settings page. The core action is clicking on the 'Swipe right' action setting, which likely allows configuring or viewing details for the swipe right gesture's assigned action. There are no branching or looping steps here as only one action is defined.
+
+[Variant Paths] (3)
+ - V1: Tap <Swipe right action setting> twice (repeat operation)
+ - V2: Omit tapping <Swipe right action setting> (skip the core action)
+ - V3: Tap <Swipe right action setting> (original action as a baseline)
+
+================= [TaskTest] FDG[86] =================
+[Function] The page allows users to configure gesture settings in AnkiDroid, including enabling gestures, adjusting swipe sensitivity, and assigning actions (like answering cards or showing answers) to various swipe and touch gestures.
+
+[Core Logic Task]
+The user interacts with the AnkiDroid Gestures configuration page. The core action is clicking on the 'Double touch' action setting to configure its associated behavior, with the flow remaining on the same page after this interaction.
+
+[Variant Paths] (3)
+ - V1: Tap <Double touch action setting> twice (repeat the tap)
+ - V2: Omit tapping <Double touch action setting> (skip the core interaction)
+ - V3: Tap <Double touch action setting> and then immediately tap it again (swap order of a single repeated tap, though simple repeat here)
+
+================= [TaskTest] FDG[87] =================
+[Function] The current page in AnkiDroid's Gestures settings configuration allows users to enable gestures, adjust swipe sensitivity, and assign specific actions (such as answering cards or showing answers) to various touch and swipe gestures (swipe up/down/left/right, double touch, touch top/bottom/left).
+
+[Core Logic Task]
+On the Gestures settings page, the user performs a click action on the 'Touch top' action setting. Since there are no branches or loops indicated here, this is a single-step interaction focused on modifying or viewing the 'Touch top' gesture configuration.
+
+[Variant Paths] (3)
+ - V1: Tap <Touch top action setting> twice (repeat operation)
+ - V2: Omit tapping <Touch top action setting> (omit step)
+ - V3: Long-press <Touch top action setting> (alternative interaction type)
+
+================= [TaskTest] FDG[88] =================
+[Function] The current page in AnkiDroid's Gestures settings configuration allows users to enable gestures, adjust swipe sensitivity, and assign specific actions (such as answering cards or showing answers) to various touch and swipe gestures (swipe up/down/left/right, double touch, touch top/bottom/left).
+
+[Core Logic Task]
+The user interacts with the Gestures settings page by clicking on the 'Touch bottom' action setting. This action likely allows further configuration or viewing of the action assigned to the touch bottom gesture, with the page remaining on the Gestures settings screen after the click.
+
+[Variant Paths] (3)
+ - V1: Tap <Touch bottom action setting> twice (repeat the tap)
+ - V2: Omit tapping <Touch bottom action setting> (do nothing on this widget)
+ - V3: Long-press <Touch bottom action setting> (use long-press instead of tap)
+
+================= [TaskTest] FDG[89] =================
+[Function] The current page in AnkiDroid's settings allows users to configure gesture-based actions (like swipes, touches) for flashcard interactions, including enabling gestures and adjusting swipe sensitivity.
+
+[Core Logic Task]
+The user starts on the Gestures settings page. They perform a click action on the 'Touch left' action setting, which likely allows configuring or viewing details for the touch left gesture-based action. Since there's only one action here, the flow is a single step with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Long-press <Touch left action setting> (instead of click)
+ - V2: Tap <Touch left action setting> twice (repeat the tap)
+ - V3: Omit tapping <Touch left action setting> (do nothing on this widget)
+
+================= [TaskTest] FDG[90] =================
+[Function] The current page (dialog) allows the user to view or modify the file directory path for AnkiDroid, with options to confirm (OK) or cancel (CANCEL) the changes to the directory path (currently set to /sdcard/AnkiDroid).
+
+[Core Logic Task]
+The user starts on the Advanced settings page and clicks the AnkiDroid directory option to open the directory dialog. In the dialog, the user can either click the input field to modify the path, or choose to cancel (returning to the Advanced page) or confirm (saving changes and returning to the Advanced page).
+
+[Variant Paths] (3)
+ - V1: Start on Advanced settings page, tap <AnkiDroid directory> to open dialog, then tap <CANCEL button> (instead of confirming or modifying)
+ - V2: Start on Advanced settings page, tap <AnkiDroid directory> to open dialog, input empty string into <Directory path input field>, then tap <OK button> (modify with empty path)
+ - V3: Start on Advanced settings page, tap <AnkiDroid directory> to open dialog, tap <Directory path input field>, then tap <CANCEL button> (modify attempt then cancel)
+
+================= [TaskTest] FDG[91] =================
+[Function] The current page (Advanced settings in AnkiDroid) allows users to configure advanced options including directory settings, sync preferences, performance settings, workarounds, plugin configurations, and language reset, with the "Force full sync" option enabling users to force one - way changes during the next sync.
+
+[Core Logic Task]
+The user is on the Advanced settings page of AnkiDroid. The core action is to click the 'Force full sync' option, which enables forcing one - way changes during the next sync. There are no branches or loops as only this single click action is involved for this functional point.
+
+[Variant Paths] (3)
+ - V1: Tap <Force full sync> twice
+ - V2: Omit tapping <Force full sync>
+ - V3: Tap <Force full sync> and then tap it again
+
+================= [TaskTest] FDG[92] =================
+[Function] The Custom sync server page in AnkiDroid allows users to enable and configure a custom server for syncing instead of the default AnkiWeb service, by providing options to toggle the use of a custom sync server and set the URLs for sync and media sync.
+
+[Core Logic Task]
+The user starts on the Advanced page and clicks to open the Custom sync server page. On this page, the user can optionally click the Sync url input field to configure the sync URL or click the Media sync url input field to configure the media sync URL, depending on their needs.
+
+[Variant Paths] (3)
+ - V1: Start on Advanced page, click <Custom sync server>, then omit clicking either <Sync url input field> or <Media sync url input field> (test if the page still functions without inputting URLs)
+ - V2: Start on Advanced page, click <Custom sync server>, then click <Media sync url input field> before <Sync url input field> (swap the order of input field interactions)
+ - V3: Start on Advanced page, click <Custom sync server>, then input an extremely long string (e.g., 1000+ characters) into <Sync url input field> (test boundary input for the sync URL field)
+
+================= [TaskTest] FDG[93] =================
+[Function] This page allows the user to adjust the "Max number of backups" setting in AnkiDroid's advanced settings by using a slider to set the maximum number of backups (currently set to 8).
+
+[Core Logic Task]
+The user starts on the Advanced settings page. First, they click on the 'Max number of backups' option to navigate to its configuration page. Then, they interact with the backup count slider (currently set to 8) to adjust the maximum number of backups. The flow is a straight line with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Start on Advanced settings page, Tap <Max number of backups>, Adjust <Backup count slider (value 8)> to 0 (boundary input: minimum value)
+ - V2: Start on Advanced settings page, Tap <Max number of backups>, Adjust <Backup count slider (value 8)> to a very large number (boundary input: maximum value)
+ - V3: Start on Advanced settings page, Omit adjusting <Backup count slider (value 8)>, just Tap <Max number of backups> and go back (omit step: no slider adjustment)
+
+================= [TaskTest] FDG[94] =================
+[Function] Type answer into the card (checkbox)
+
+[Core Logic Task]
+The user starts on the Advanced settings page. They perform a click action on the 'Type answer into the card' checkbox, which likely toggles its state (enabling or disabling the text input box for card answers).
+
+[Variant Paths] (3)
+ - V1: Tap <Type answer into the card (checkbox)> twice (to toggle it back after first tap)
+ - V2: Omit tapping <Type answer into the card (checkbox)> (simulate not enabling/disabling the text input box)
+ - V3: Tap <Type answer into the card (checkbox)> once (original action, included for comparison as a base but mutation here is about the other variants)
+
+================= [TaskTest] FDG[95] =================
+[Function] Enable AnkiDroid API (checkbox)
+
+[Core Logic Task]
+The process starts on page 53. The user clicks the 'Enable AnkiDroid API' checkbox, which results in navigating to page 124. This action enables the API to allow other apps to connect to AnkiDroid.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Enable AnkiDroid API (checkbox)> and check if navigation to page 124 still occurs
+ - V2: Tap <Enable AnkiDroid API (checkbox)> twice and observe if it still navigates to page 124 both times
+ - V3: Tap <Enable AnkiDroid API (checkbox)> and then immediately tap it again to see if any unexpected behavior occurs regarding the navigation to page 124
+
+================= [TaskTest] FDG[96] =================
+[Function] Text to speech (checkbox)
+
+[Core Logic Task]
+The user interacts with the 'Text to speech' checkbox. The flow starts on the Advanced settings page (page 53) and, upon clicking the checkbox, navigates to the destination page (page 125). There are no branches or loops as this is a single action to toggle the checkbox and navigate.
+
+[Variant Paths] (3)
+ - V1: Tap <Text to speech (checkbox)> twice (repeat the tap operation)
+ - V2: Omit tapping <Text to speech (checkbox)> and check if navigation still occurs (though this may not be valid as per core logic, but for mutation testing)
+ - V3: Tap <Text to speech (checkbox)> and then immediately tap it again (repeat to see if state toggles and navigation behaves)
+
+================= [TaskTest] FDG[97] =================
+[Function] The page allows the user to select a dictionary (from options like None, Aedict, Eijiro (Web), etc.) for lookup functionality within AnkiDroid, with a "CANCEL" option to exit the selection.
+
+[Core Logic Task]
+The user starts on the Advanced settings page and clicks 'Lookup dictionary' to open the selection dialog. In the dialog, the user can either select a dictionary option (like None, Aedict, Eijiro (Web), etc.) or click 'CANCEL' to exit without changing the selection. Selecting a dictionary applies it, while clicking 'CANCEL' returns to the Advanced page.
+
+[Variant Paths] (3)
+ - V1: Start on Advanced settings page, tap <Aedict (radio button)> instead of other dictionary options, then confirm (implied by selection) and check if it applies
+ - V2: Start on Advanced settings page, tap <CANCEL button> immediately after opening the lookup dictionary dialog without selecting any dictionary
+ - V3: Start on Advanced settings page, tap <None (selected radio button)> again (repeating the selection of the already selected option) and check if the selection state remains
+
+================= [TaskTest] FDG[98] =================
+[Function] The current page (a dialog box) functions to prompt the user to confirm or cancel the reset of all language assignments in AnkiDroid's advanced settings.
+
+[Core Logic Task]
+The user starts on the Advanced settings page and clicks 'Reset languages' to open a confirmation dialog. In the dialog, the user can either click 'CANCEL' to dismiss the dialog and stay on the Advanced page, or click 'OK' to confirm the reset and return to the Advanced page.
+
+[Variant Paths] (3)
+ - V1: Start on Advanced settings page, click <Reset languages> to open dialog, then click <OK button> twice (repeat confirmation)
+ - V2: Start on Advanced settings page, click <Reset languages> to open dialog, then omit clicking either <CANCEL button> or <OK button> (leave dialog open)
+ - V3: Start on Advanced settings page, click <CANCEL button> first (instead of <Reset languages>), then click <Reset languages> to open dialog and click <OK button>
+
+================= [TaskTest] FDG[99] =================
+[Function] Front field
+
+[Core Logic Task]
+The user starts on the 'Edit fields' page (page 142). They perform a click action on the 'Front' field, which navigates to page 144. This is a straight - line flow with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Front field> (check if navigation still happens or not)
+ - V2: Tap <Front field> twice (check if navigation behavior changes, e.g., multiple navigations or errors)
+ - V3: Tap <Front field> with a long - press (check if the expected navigation to page 144 occurs or a different behavior is triggered)
+
+================= [TaskTest] FDG[100] =================
+[Function] By created time radio
+
+[Core Logic Task]
+The user starts on page 23 (the 'Choose display order' dialog). The core action is clicking the 'By created time' radio button, which transitions to page 27. There are no branches or loops as this is a single action to select the sorting option.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <By created time radio> and check if the app still transitions to page 27 (though this is likely invalid, but testing omission)
+ - V2: Tap <By created time radio> twice (testing repeat operation)
+ - V3: Tap a non - existent radio button (but since only <By created time radio> is available, this is a boundary case of incorrect widget selection, though not ideal, but to meet mutation goals)
+
+================= [TaskTest] FDG[101] =================
+[Function] By edited time radio
+
+[Core Logic Task]
+The user starts on page 23 (the 'Choose display order' dialog). The core action is clicking the 'By edited time' radio button, which transitions to page 28. This is a straight - line flow with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <By edited time radio> and check if the page transitions to page 28 (shouldn't, but testing the omission)
+ - V2: Click <By edited time radio> twice (testing repeat operation)
+ - V3: Click <By edited time radio> and then immediately click it again (another repeat variation)
+
+================= [TaskTest] FDG[102] =================
+[Function] By changed time radio
+
+[Core Logic Task]
+The user starts on page 23 (the 'Choose display order' dialog). The core action is clicking the 'By changed time' radio button, which transitions to page 29. There are no branches or loops as it's a single click action to select this sorting option.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <By changed time radio> and see if the page transitions to page 29 (shouldn't, but testing omission)
+ - V2: Click <By changed time radio> twice (testing repeat operation)
+ - V3: Try to click <By changed time radio> without being on page 23 (though contextually it's supposed to start there, testing boundary of context)
+
+================= [TaskTest] FDG[103] =================
+[Function] Radio button for Due
+
+[Core Logic Task]
+The flow starts on page 24. The user clicks the 'Due' radio button, which transitions the app to page 39. There are no branches or loops as this is a single action to select the 'Due' option.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Radio button for Due> (check if app stays on page 24 or has error)
+ - V2: Tap <Radio button for Due> twice (check if app still transitions to page 39 or behaves unexpectedly)
+ - V3: Tap <Radio button for Due> (but simulate a delayed or interrupted tap to see if transition fails)
+
+================= [TaskTest] FDG[104] =================
+[Function] The current page in AnkiDroid's statistics section, under the INTERVALS tab's HOURLY BREAKDOWN sub - tab, is used to visually display (in a graph) the percentage of correct flashcard answers and the number of reviews, organized by the time of day, so that users can analyze their flashcard review performance on an hourly basis.
+
+[Core Logic Task]
+The user starts on the INTERVALS tab of the statistics page. They click the HOURLY BREAKDOWN tab, which navigates to the page displaying the hourly breakdown graph for flashcard review performance, showing correct answer percentage and review counts by time of day.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <HOURLY BREAKDOWN tab> and check if the graph still appears (though this may not show the hourly breakdown as intended)
+ - V2: Click <HOURLY BREAKDOWN tab> twice (repeat the action to see if there's any change or effect)
+ - V3: First, imagine not clicking <HOURLY BREAKDOWN tab> (omit step), then later click it (order mutation of omitting and then doing the action)
+
+================= [TaskTest] FDG[105] =================
+[Function] The page displays a weekly breakdown of flashcard review statistics (percentage correct and number of answers) for the "Default" deck in AnkiDroid, using a bar graph to visualize data across each day of the week.
+
+[Core Logic Task]
+The user starts on the statistics page for the 'Default' deck. They click the 'WEEKLY BREAKDOWN' tab, which navigates to the page displaying the weekly flashcard review statistics (percentage correct and number of answers) as a bar graph across each day of the week.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <WEEKLY BREAKDOWN tab> and check if the weekly breakdown page still loads (if possible, though likely not, but testing omission)
+ - V2: Tap <WEEKLY BREAKDOWN tab> twice (testing repeat action, though UI may not change but checking if app handles repeat taps)
+ - V3: Tap <WEEKLY BREAKDOWN tab> and then immediately tap it again (similar to repeat but emphasizing quick successive taps)
+
+================= [TaskTest] FDG[106] =================
+[Function] The current page in AnkiDroid displays the WEEKLY BREAKDOWN statistics, showing a bar graph of the percentage of correct answers (and number of answers) for each day of the week, allowing users to analyze their flashcard review performance on a weekly basis.
+
+[Core Logic Task]
+The user starts on the statistics page (page 45). They click the 'WEEKLY BREAKDOWN' tab, which navigates to the WEEKLY BREAKDOWN page (page 46) displaying the bar graph of weekly flashcard review performance. This is a straight-line flow with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <WEEKLY BREAKDOWN tab> and check if the WEEKLY BREAKDOWN page (page 46) still loads (though this may not be valid as per core logic, but for mutation)
+ - V2: Tap <WEEKLY BREAKDOWN tab> twice (repeat the action)
+ - V3: Tap <WEEKLY BREAKDOWN tab> and then immediately tap it again (order with repeat)
+
+================= [TaskTest] FDG[107] =================
+[Function] The current page in AnkiDroid displays statistics under the "ANSWER BUTTONS" tab, showing a bar graph that breaks down the number of answers (categorized as Learn, Young, or Mature) by different answer types.
+
+[Core Logic Task]
+The user starts on the statistics page (page 45) and clicks the 'ANSWER BUTTONS' tab to navigate to page 47. Once on page 47, the user clicks the 'ANSWER BUTTONS' tab again (likely to confirm or re-render the statistics), which completes the flow of viewing the bar graph with answer breakdowns.
+
+[Variant Paths] (3)
+ - V1: Start on the statistics page (page 45), omit clicking the 'ANSWER BUTTONS tab' and directly check if the bar graph with answer breakdowns is visible
+ - V2: Start on the statistics page (page 45), click <ANSWER BUT... tab> twice in a row and check if the bar graph with answer breakdowns is visible
+ - V3: Start on the statistics page (page 45), click <ANSWER BUTTONS tab> and then click <ANSWER BUT... tab> and check if the bar graph with answer breakdowns is visible
+
+================= [TaskTest] FDG[108] =================
+[Function] Chinese (China) radio button
+
+[Core Logic Task]
+The flow starts on page 58 (the language selection page). The user clicks the 'Chinese (China)' radio button, which transitions to page 71. This is a straight-line flow with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Chinese (China) radio button> and check if page transitions to 71 (should not, validating the button's necessity)
+ - V2: Tap <Chinese (China) radio button> twice (repeating the action to see if it causes any error or unexpected behavior)
+ - V3: Tap <Chinese (China) radio button> and then immediately tap it again (order mutation with repetition, though simple, checks for state handling)
+
+================= [TaskTest] FDG[109] =================
+[Function] Estonian radio button
+
+[Core Logic Task]
+The process starts on page 58 (the language selection menu). The user clicks the 'Estonian' radio button, which transitions the flow to page 76. This is a single-step action with no branching or looping.
+
+[Variant Paths] (2)
+ - V1: Omit tapping <Estonian radio button> (to test if the flow still transitions or stays on page 58)
+ - V2: Tap <Estonian radio button> twice (to test if repeated tapping causes any unexpected behavior like multiple transitions or errors)
+
+================= [TaskTest] FDG[110] =================
+[Function] Mix new cards and reviews radio
+
+[Core Logic Task]
+The user starts on page 91 (Reviewing settings) and clicks the 'Mix new cards and reviews' radio option. This action navigates to page 98, completing the task of selecting this mixing behavior for cards and reviews.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Mix new cards and reviews radio> and check if navigation to page 98 still occurs
+ - V2: Tap <Mix new cards and reviews radio> twice and observe if it affects navigation to page 98
+ - V3: Tap <Mix new cards and reviews radio> and then immediately tap it again before page 98 loads (if possible) to see if behavior changes
+
+================= [TaskTest] FDG[111] =================
+[Function] New cards before reviews radio
+
+[Core Logic Task]
+The user starts on page 91 (Reviewing settings) and clicks the 'New cards before reviews radio' option. This action navigates to page 100, completing the functional point's execution.
+
+[Variant Paths] (3)
+ - V1: Start on page 91 (Reviewing settings), long - press <New cards before reviews radio> (instead of click)
+ - V2: Start on page 91 (Reviewing settings), click <New cards before reviews radio> twice (repeat the click operation)
+ - V3: Start on page 91 (Reviewing settings), omit clicking <New cards before reviews radio> (skip the core action)
+
+================= [TaskTest] FDG[112] =================
+[Function] This page in AnkiDroid allows users to customize the visibility and functionality of app bar buttons, including options to reset to default settings, and configure the display or availability of buttons like Undo, Mark note, Edit note, etc., for the app's interface during reviewing.
+
+[Core Logic Task]
+The user is on the 'App bar buttons' configuration page. The core action is clicking the 'Reset to default' option, which likely resets all app bar button settings (like visibility/functionality) to their original defaults. There are no branches or loops here as only one action is provided.
+
+[Variant Paths] (3)
+ - V1: Tap <Reset to default> twice (repeat operation)
+ - V2: Omit tapping <Reset to default> (skip the reset step)
+ - V3: Tap <Reset to default> (original action, included for completeness as a base case)
+
+================= [TaskTest] FDG[113] =================
+[Function] This page allows the user to configure the display behavior of the "Suspend" button in the app bar, with options to always show, show if room, show only in menu, or disable it.
+
+[Core Logic Task]
+The user starts on the 'App bar buttons' page. They click the 'Suspend' option (initially set to 'Menu only'), which opens a dialog with four display options: 'Always show', 'Show if room', 'Menu only', and 'Disabled'. The flow focuses on accessing the configuration dialog for the 'Suspend' button's display behavior.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[114] =================
+[Function] This page allows the user to configure the display behavior of the "Suspend" button in the app bar within AnkiDroid's app bar buttons customization settings, offering options like "Always show," "Show if room," "Menu only," or "Disabled."
+
+[Core Logic Task]
+The user starts on the App bar buttons configuration page. They click on the 'Suspend' option (initially set to 'Menu only'), which opens a dialog with four radio button options: 'Always show', 'Show if room', 'Menu only', and 'Disabled'. The user can then select one of these options to configure the 'Suspend' button's display behavior, or cancel to leave it unchanged.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[115] =================
+[Function] This page allows the user to configure the display behavior of the "Suspend" app bar button in AnkiDroid, offering options like "Always show," "Show if room," "Menu only," or "Disabled" to customize its visibility.
+
+[Core Logic Task]
+The user starts on the 'App bar buttons' page. They click the 'Suspend' option (initially set to 'Menu only'), opening a dialog with visibility options. The flow then allows selecting one of the four options (Always show, Show if room, Menu only, Disabled) to configure the 'Suspend' button's visibility, with a 'CANCEL' option to exit without changes.
+
+[Variant Paths] (0)
+
+================= [TaskTest] FDG[116] =================
+[Function] This page allows the user to adjust the font scaling percentage for the card browser in the AnkiDroid app's appearance settings.
+
+[Core Logic Task]
+The user starts on page 93 and clicks the 'Set TTS language (Menu only)' option, which navigates to page 57. This action initiates the process of adjusting the TTS language setting, likely leading to further configuration steps on the destination page.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Set TTS language (Menu only)> and stay on page 93
+ - V2: Click <Set TTS language (Menu only)> twice in a row
+ - V3: Click <Set TTS language (Menu only)> and then immediately click it again before the page navigates
+
+================= [TaskTest] FDG[117] =================
+[Function] This page allows the user to adjust the "Card browser font scaling" setting, as indicated by the percentage slider (currently set to 100%) for customizing the font size in the card browser within the AnkiDroid application.
+
+[Core Logic Task]
+The user starts on page 93 and clicks the 'Deck options (Menu only)' element. This action navigates to page 57, where the 'Card browser font scaling' setting (with its percentage slider) is accessible for adjustment. The flow is a straight line as there are no branches or loops in this initial step toward accessing the font scaling setting.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <Deck options (Menu only)> to see if the font scaling setting is accessible without this step
+ - V2: Click <Deck options (Menu only)> twice to check if it leads to the same page or an error
+ - V3: Try to access the font scaling setting without clicking <Deck options (Menu only)> (if possible in the app's UI)
+
+================= [TaskTest] FDG[118] =================
+[Function] This page allows the user to configure the display behavior of the "Suspend" app bar button in AnkiDroid, offering options like "Always show," "Show if room," "Menu only," or "Disabled."
+
+[Core Logic Task]
+The user starts on the 'App bar buttons' page. They click the 'Suspend' option (currently set to 'Menu only'), which opens a dialog with display options. The flow then involves selecting one of the options (Always show, Show if room, Menu only, Disabled) or canceling, but the provided action focuses on opening the dialog to configure the button's display behavior.
+
+[Variant Paths] (3)
+ - V1: Tap <Bury (Menu only)> and immediately tap it again (repeat interaction)
+ - V2: Omit tapping <Bury (Menu only)> (skip opening the dialog)
+ - V3: Tap <Bury (Menu only)> and then try to interact with it again in a different way (e.g., long-press if supported, but since widget is just 'Bury (Menu only)', maybe repeat tap)
+
+================= [TaskTest] FDG[119] =================
+[Function] This page allows the user to configure the display behavior of the "Suspend" button in the app bar within AnkiDroid's app bar buttons customization settings, offering options like "Always show", "Show if room", "Menu only", or "Disabled".
+
+[Core Logic Task]
+The user starts on the App bar buttons configuration page. They click on the 'Suspend' option, which opens a dialog with display behavior options (Always show, Show if room, Menu only, Disabled). The flow focuses on initiating the configuration of the Suspend button's display behavior.
+
+[Variant Paths] (3)
+ - V1: Tap <Suspend (Menu only)> then immediately tap it again (repeat operation)
+ - V2: Omit tapping <Suspend (Menu only)> (omit the step to start configuration)
+ - V3: Tap <Suspend (Menu only)> and then try to configure a non - existent button (invalid operation mutation)
+
+================= [TaskTest] FDG[120] =================
+[Function] Hide system bars and answer buttons (radio)
+
+[Core Logic Task]
+The user starts on page 95. They perform a click action to select the 'Hide the system bars and answer buttons' radio option, which transitions the app to page 109. This action completes the setup of the fullscreen mode with both system bars and answer buttons hidden.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <Hide system bars and answer buttons (radio)> and check if the app still transitions to page 109
+ - V2: Tap <Hide system bars and answer buttons (radio)> twice and observe the app's behavior
+ - V3: Tap <Hide system bars and answer buttons (radio)> and then immediately tap it again to see if there's any unexpected behavior
+
+================= [TaskTest] FDG[121] =================
+[Function] Use custom sync server checkbox
+
+[Core Logic Task]
+The user starts on page 121 and clicks the 'Use custom sync server' checkbox. This action leads to page 129, completing the interaction with this functional point.
+
+[Variant Paths] (3)
+ - V1: Start on page 121, long-press <Use custom sync server checkbox> (instead of tap)
+ - V2: Start on page 121, tap <Use custom sync server checkbox> twice (repeat the tap)
+ - V3: Start on page 121, omit tapping <Use custom sync server checkbox> and check if it still leads to page 129 (though this may not be valid behavior, but for mutation testing)
+
+================= [TaskTest] FDG[122] =================
+[Function] The current page in AnkiDroid's statistics section, under the "ANSWER BUTTONS" tab, displays a bar graph visualizing the number of answers categorized by "Learn," "Young," and "Mature" card states for different answer types, allowing users to analyze their flashcard interaction patterns.
+
+[Core Logic Task]
+The user starts on the statistics page (page 46). They click the 'ANSWER BUTTONS' tab (action S1), which navigates to page 47. On page 47, the bar graph visualizing 'Learn', 'Young', and 'Mature' card state answers for different answer types is displayed, completing the flow.
+
+[Variant Paths] (2)
+ - V1: Omit step: Do not click <ANSWER BUTTONS tab> and check if the bar graph still appears (though likely it won't, but it's a mutation of omitting the step)
+ - V2: Repeat step: Click <ANSWER BUTTONS tab> multiple times (e.g., twice) and observe if the page navigation or graph display changes (branch mutation in terms of repeated action)
+
+================= [TaskTest] FDG[123] =================
+[Function] The current page in AnkiDroid's statistics section, under the "CARD TYPES" tab, displays a pie chart that visualizes the breakdown of different card types (Mature, Young+Learn, Unseen, Suspended+Buried) as a percentage of the total, allowing users to quickly assess the distribution of their flashcard categories.
+
+[Core Logic Task]
+The user starts on the statistics page (page 46). They click the 'CARD TYPES' tab, which navigates to page 48. On page 48, the pie chart visualizing card type breakdown (Mature, Young+Learn, Unseen, Suspended+Buried) is displayed, completing the flow.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <CARD TYPES tab> and check if the pie chart still appears on the initial statistics page (page 46)
+ - V2: Click <CARD TYPES tab> multiple times in quick succession and observe if the page (page 48) or pie chart behavior changes
+ - V3: Attempt to click <CARD TYPES tab> while performing another non - conflicting (but since only this widget is available, just repeat or try to click it in a different 'virtual' order, like click it, then click it again immediately) action and check the result
+
+================= [TaskTest] FDG[124] =================
+[Function] The current page in AnkiDroid displays the WEEKLY BREAKDOWN statistics, showing a bar graph of the percentage of correct answers (dark gray) and the number of answers (light gray) for each day of the week (Sunday to Saturday), with Wednesday having the highest values for both metrics.
+
+[Core Logic Task]
+The user starts on page 47 (Statistics with ANSWER BUTTONS tab active). They click the WEEKLY BREAKDOWN tab (action_ref [47,0]), which navigates to page 46. On page 46, the WEEKLY BREAKDOWN statistics are displayed, showing a bar graph of % correct (dark gray) and number of answers (light gray) per day, with Wednesday having the highest values for both metrics. This is a straight-line flow with no branches or loops.
+
+[Variant Paths] (3)
+ - V1: The user starts on page 47 (Statistics with ANSWER BUTTONS tab active). They long-press <WEEKLY BREAKDOWN tab>, which navigates to page 46. On page 46, the WEEKLY BREAKDOWN statistics are displayed, showing a bar graph of % correct (dark gray) and number of answers (light gray) per day, with Wednesday having the highest values for both metrics.
+ - V2: The user starts on page 47 (Statistics with ANSWER BUTTONS tab active). They omit clicking <WEEKLY BREAKDOWN tab> and stay on page 47, not viewing the WEEKLY BREAKDOWN statistics.
+ - V3: The user starts on page 47 (Statistics with ANSWER BUTTONS tab active). They click <WEEKLY BREAKDOWN tab> twice, which navigates to page 46 both times. On page 46, the WEEKLY BREAKDOWN statistics are displayed, showing a bar graph of % correct (dark gray) and number of answers (light gray) per day, with Wednesday having the highest values for both metrics.
+
+================= [TaskTest] FDG[125] =================
+[Function] Displays a pie chart in the "CARD TYPES" tab of AnkiDroid's statistics page, visualizing the percentage distribution of different card types (Mature, Young+Learn, Unseen, Suspended+Buried) for the "Default" deck.
+
+[Core Logic Task]
+To display the pie chart for card type distribution in the 'Default' deck, first, on the statistics page, click the 'CARD TYPES' tab. This action switches the view to show the pie chart visualizing the percentage breakdown of card types (Mature, Young+Learn, Unseen, Suspended+Buried).
+
+[Variant Paths] (3)
+ - V1: Omit tapping <CARD TYPES tab> (check if pie chart still appears, though core logic says it's needed)
+ - V2: Tap <CARD TYPES tab> twice (repeat the tab selection)
+ - V3: Tap <CARD TYPES tab> then immediately tap it again (order mutation with repetition)
+
+================= [TaskTest] FDG[126] =================
+[Function] The current page in AnkiDroid's statistics section, under the WEEKLY BREAKDOWN tab, visualizes the percentage of correct answers and the number of reviews (answers) per day of the week for the "Default" deck, allowing users to analyze their weekly flashcard review performance.
+
+[Core Logic Task]
+To analyze weekly flashcard review performance for the 'Default' deck, the user starts on the statistics page (page 48). They click the 'WEEKLY BREAKDOWN' tab, which navigates to page 46. On page 46, the weekly breakdown visualization (showing % correct answers and review counts per day) is displayed, completing the task of accessing and viewing the weekly performance data.
+
+[Variant Paths] (3)
+ - V1: Omit clicking <WEEKLY BREAKDOWN tab> and check if the weekly breakdown visualization is still displayed (repeat/omit mutation)
+ - V2: Click <WEEKLY BREAKDOWN tab> multiple times (e.g., twice) to see if there's any change in the visualization (repeat/omit mutation)
+ - V3: Attempt to click <WEEKLY BREAKDOWN tab> in a different order (though there's only one step here, simulate an order mutation by considering if there were other steps, but since only this widget exists, this is a stretch but included as per mutation goals)
+
+================= [TaskTest] FDG[127] =================
+[Function] The page displays a bar graph in the ANSWER BUTTONS tab of the statistics section, visualizing the number of answers (categorized as Learn, Young, Mature) across different answer types for the "Default" flashcard deck.
+
+[Core Logic Task]
+To view the bar graph of answer counts (Learn, Young, Mature) for the 'Default' deck, the user clicks on the 'ANSWER BUTTONS' tab in the statistics section. This action navigates to the tab where the bar graph is displayed, completing the flow.
+
+[Variant Paths] (3)
+ - V1: Omit tapping <ANSWER BUTTONS tab> and check if the bar graph still appears (though this may not be valid as per core logic, but for mutation testing)
+ - V2: Tap <ANSWER BUTTONS tab> twice to see if there's any change in the bar graph display
+ - V3: Tap <ANSWER BUTTONS tab> and then immediately tap it again to check for any unexpected behavior in the bar graph rendering
+
+================= [TaskTest] FDG[128] =================
+[Function] The current page in AnkiDroid's statistics section, under the "CARD TYPES" tab, visualizes the distribution of different card types (Mature, Young+Learn, Unseen, Suspended+Buried) as a pie chart to help users analyze the composition of their flashcard deck's card types.
+
+[Core Logic Task]
+The user starts on the statistics page (page 48). They click the 'CARD TYPES' tab, which remains on the same page (48) and displays the pie chart visualizing the distribution of different card types (Mature, Young+Learn, Unseen, Suspended+Buried).
+
+[Variant Paths] (2)
+ - V1: Omit clicking <CARD TYPES tab> and check if the pie chart still appears (to test if the tab is required for visualization)
+ - V2: Click <CARD TYPES tab> multiple times (to test if repeated interaction affects the visualization)
+
+
+[AppTest] Found 30 dependency pairs to test.
+
+==============================================
+[AppTest] Pair 1/30: 21 -> 22
+Producer: The current page's functionality is to allow the user to select a specific flashcard deck (from options like "All decks", "123", "Default") to view or manage its associated cards within the AnkiDroid card browser interface.
+Consumer: The page allows users to create a new flashcard note by entering front and back content, selecting a card type and deck, adding tags, and previewing the associated card, with an option to save the note.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the card browser page (page 5), click the 'All decks' dropdown to open the deck selection menu (page 10) and select the 'Default' deck.
+Consumer task:
+ Click the Add button to open the note creation page. In the deck dropdown, select the 'Default' deck (from the options produced by the producer). Then input front/back content, select a card type, add tags, and click Save to create the note.
+------------------------------
+
+==============================================
+[AppTest] Pair 2/30: 21 -> 45
+Producer: The current page's functionality is to allow the user to select a specific flashcard deck (from options like "All decks", "123", "Default") to view or manage its associated cards within the AnkiDroid card browser interface.
+Consumer: This page in AnkiDroid displays a list of flashcards (with "Question" and "Answer" columns) from all decks, allowing users to view, potentially manage, or interact with the cards, and also provides options to add new cards, search, or access more settings via the top - bar icons.
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 5 (card browser), click the 'All decks' dropdown to open the deck selection menu (page 10) with options like '123' and 'Default'.
+Consumer task:
+ On page 10 (deck selection menu), click the 'All decks' option to navigate to page 5 and verify that the list of flashcards from all decks (with 'Question' and 'Answer' columns) is displayed, along with top - bar options for adding cards, searching, or accessing more settings.
+------------------------------
+
+==============================================
+[AppTest] Pair 3/30: 21 -> 46
+Producer: The current page's functionality is to allow the user to select a specific flashcard deck (from options like "All decks", "123", "Default") to view or manage its associated cards within the AnkiDroid card browser interface.
+Consumer: This page in AnkiDroid displays a list of flashcards (with "Question" and "Answer" columns) from all decks, allowing users to view, potentially search, add, or manage these cards.
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 5 (card browser), click the 'All decks' dropdown to open the menu (page 10) with deck options like '123' and 'Default', then select the '123' deck from the options.
+Consumer task:
+ On the page showing flashcards from all decks, click on the '123 deck option' from the deck selection dropdown, then verify that the flashcard view is filtered or focused to display only the cards from the '123' deck.
+------------------------------
+
+==============================================
+[AppTest] Pair 4/30: 21 -> 47
+Producer: The current page's functionality is to allow the user to select a specific flashcard deck (from options like "All decks", "123", "Default") to view or manage its associated cards within the AnkiDroid card browser interface.
+Consumer: This page in AnkiDroid displays a list of flashcards (with "Question" and "Answer" columns) from all decks, allowing users to view, potentially search, add, or manage these cards.
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 5 (card browser), click the 'All decks' dropdown to open the deck selection menu (page 10) with options like '123' and 'Default'.
+Consumer task:
+ On page 10 (deck selection menu), click the 'Default deck' option to navigate to page 5 and verify that the flashcards from the Default deck are displayed.
+------------------------------
+
+==============================================
+[AppTest] Pair 5/30: 21 -> 52
+Producer: The current page's functionality is to allow the user to select a specific flashcard deck (from options like "All decks", "123", "Default") to view or manage its associated cards within the AnkiDroid card browser interface.
+Consumer: This page displays an overview of statistics (including study activity, forecast, review count, review time, added cards, and intervals) for all flashcard decks in AnkiDroid, with tabs for navigating to different statistical categories (Forecast, Review Count, Review Time).
+
+[Plan]
+Case 1/2
+Producer task:
+ On page 5 (card browser), click the 'All decks' dropdown to open the deck selection menu (page 10) with options like '123' and 'Default'. Then select the '123' deck from the menu.
+Consumer task:
+ On page 40, click the '123' deck option (from the deck list that was made available via the producer's deck selection menu). Verify that navigation to page 6 occurs and that the statistics overview displayed is for the '123' deck.
+------------------------------
+Case 2/2
+Producer task:
+ On page 5 (card browser), click the 'All decks' dropdown to open the deck selection menu (page 10) with options like '123' and 'Default'. Then select the 'Default' deck from the menu.
+Consumer task:
+ On page 40, click the 'Default' deck option (from the deck list that was made available via the producer's deck selection menu). Verify that navigation to page 6 occurs and that the statistics overview displayed is for the 'Default' deck.
+------------------------------
+
+==============================================
+[AppTest] Pair 6/30: 27 -> 55
+Producer: The current page in AnkiDroid's Statistics section, under the "REVIEW COUNT" tab, displays a graph visualizing the cumulative number of answers (categorized as Mature, Young, Relearn, Learn, Cram) over a period of days, allowing users to analyze their flashcard review activity trends.
+Consumer: The page visualizes the cumulative review count (categorized as Mature, Young, Relearn, Learn, Cram) over a 30 - day period in the AnkiDroid app's statistics section, specifically under the FORECAST and REVIEW COUNT tabs, to help users track their flashcard review progress trends.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on the Statistics page (page 6), click the 'REVIEW COUNT' tab to navigate to page 42 and view the cumulative answers graph (review count chart).
+Consumer task:
+ Start on the statistics page (page 41) with the FORECAST tab active, click the 'REVIEW COUNT' tab (action S1) to navigate to page 42 and verify that the displayed cumulative review count chart (using the review count statistics from the Producer's chart) matches the one produced earlier.
+------------------------------
+
+==============================================
+[AppTest] Pair 7/30: 28 -> 56
+Producer: The current page in AnkiDroid's Statistics section, under the "REVIEW TIME" tab, displays a graph that visualizes the cumulative review time (in minutes) over a period of days, categorized by different card types (Mature, Young, Relearn, Learn, Cram) to help users analyze their flashcard review time trends.
+Consumer: The current page in AnkiDroid's statistics section, under the FORECAST and REVIEW TIME tabs, visualizes the cumulative review time (in minutes) over a range of days (from -30 to 0) for different card types (Mature, Young, Relearn, Learn, Cram), allowing users to analyze their historical and projected flashcard review time distribution.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on AnkiDroid's Statistics page (page 6), then click the 'REVIEW TIME' tab to navigate to page 43 and generate the review time chart data (graph of cumulative review time by card type over days).
+Consumer task:
+ Start on AnkiDroid's statistics page (page 41), click the 'REVIEW TIME' tab to navigate to page 43, and verify that the cumulative review time statistics data (for card types Mature, Young, Relearn, Learn, Cram over -30 to 0 days range) matches the review time chart data produced by the Producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 8/30: 45 -> 21
+Producer: This page in AnkiDroid displays a list of flashcards (with "Question" and "Answer" columns) from all decks, allowing users to view, potentially manage, or interact with the cards, and also provides options to add new cards, search, or access more settings via the top - bar icons.
+Consumer: The current page's functionality is to allow the user to select a specific flashcard deck (from options like "All decks", "123", "Default") to view or manage its associated cards within the AnkiDroid card browser interface.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on page 10, click the 'All decks' option to navigate to page 5 and view the list of flashcards from all decks with 'Question' and 'Answer' columns.
+Consumer task:
+ On page 5 (card browser), click the 'All decks' dropdown to open the menu (page 10) with deck options like '123' and 'Default' and verify the deck list includes the decks whose cards were viewed in the producer step.
+------------------------------
+
+==============================================
+[AppTest] Pair 9/30: 47 -> 54
+Producer: This page in AnkiDroid displays a list of flashcards (with "Question" and "Answer" columns) from all decks, allowing users to view, potentially search, add, or manage these cards.
+Consumer: The page displays an overview of statistics (including today's study, 1 - month forecast, review count, review time, added cards, and intervals) for all AnkiDroid flashcard decks, with tabs for navigating to forecast, review count, and review time - specific statistics.
+
+[Plan]
+Case 1/1
+Producer task:
+ On page 10, click the 'Default deck option' to navigate to page 5 and access the Default deck's flashcards.
+Consumer task:
+ On the 'All decks' statistics page, click the 'Default deck option' to navigate to the Default deck's statistics page and verify the overview (including today's study, 1 - month forecast, review count, review time, added cards, and intervals) reflects the Default deck's data from the Producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 10/30: 54 -> 7
+Producer: The page displays an overview of statistics (including today's study, 1 - month forecast, review count, review time, added cards, and intervals) for all AnkiDroid flashcard decks, with tabs for navigating to forecast, review count, and review time - specific statistics.
+Consumer: The current page in AnkiDroid displays statistics for the "Default" flashcard deck, providing an overview of today's study activity, 1 - month forecast, review count, review time, added cards, and interval data, with additional tabs for forecast, review count, and review time details.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the 'All decks' statistics page, click the 'Default deck option' to navigate to the 'Default' deck's statistics page and view its overview (today's study, 1 - month forecast, review count, review time, added cards, intervals) and tabs.
+Consumer task:
+ From the menu (page 1), click the 'Statistics' option to navigate to the statistics page (page 6) and verify it displays the 'Default' deck's study statistics data (today’s activity, 1 - month forecast, other metrics, and detail tabs) as produced by the Producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 11/30: 54 -> 26
+Producer: The page displays an overview of statistics (including today's study, 1 - month forecast, review count, review time, added cards, and intervals) for all AnkiDroid flashcard decks, with tabs for navigating to forecast, review count, and review time - specific statistics.
+Consumer: The current page (FORECAST tab in AnkiDroid's Statistics section) displays a graph to forecast the cumulative number of mature, young, and total (cumulative) flashcards over a 30 - day period for the "Default" deck, aiding users in predicting their flashcard review workload.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the 'All decks' statistics page, click the 'Default deck option' to navigate to the 'Default' deck's statistics page (to generate its deck statistics).
+Consumer task:
+ From the 'Default' deck's statistics page, click the 'FORECAST' tab to navigate to the FORECAST section and verify the graph forecasts flashcard counts (mature, young, total) over 30 days for the 'Default' deck (using the deck statistics produced by the Producer).
+------------------------------
+
+==============================================
+[AppTest] Pair 12/30: 54 -> 57
+Producer: The page displays an overview of statistics (including today's study, 1 - month forecast, review count, review time, added cards, and intervals) for all AnkiDroid flashcard decks, with tabs for navigating to forecast, review count, and review time - specific statistics.
+Consumer: The page visualizes the statistics of flashcard intervals (in days) for the "Default" deck, showing the number of cards and cumulative percentage with given intervals, under the INTERVALS tab of the FORECAST statistics section in AnkiDroid.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to the 'All decks' statistics page, then click the 'Default deck option' to open the 'Default' deck's statistics page (with forecast, review count, and review time tabs visible).
+Consumer task:
+ From the Default deck's statistics page (FORECAST tab), click the INTERVALS tab to view the flashcard interval statistics (number of cards and cumulative percentage) for the Default deck, ensuring it reflects the statistics of the Default deck produced earlier.
+------------------------------
+
+==============================================
+[AppTest] Pair 13/30: 54 -> 59
+Producer: The page displays an overview of statistics (including today's study, 1 - month forecast, review count, review time, added cards, and intervals) for all AnkiDroid flashcard decks, with tabs for navigating to forecast, review count, and review time - specific statistics.
+Consumer: The current page in AnkiDroid displays a graph under the "INTERVALS" tab of the statistics section, showing the distribution of flashcard review intervals (in days) as well as the cumulative percentage of cards, to help users analyze how their flashcards are spaced over time.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to the 'All decks' statistics page, then click the 'Default deck option' to open the 'Default' deck's statistics page (where deck statistics and tabs are shown).
+Consumer task:
+ From the 'Default' deck's statistics page (with the produced deck statistics), click the 'INTERVALS' tab to view the flashcard review interval distribution and cumulative percentage graph.
+------------------------------
+
+==============================================
+[AppTest] Pair 14/30: 54 -> 60
+Producer: The page displays an overview of statistics (including today's study, 1 - month forecast, review count, review time, added cards, and intervals) for all AnkiDroid flashcard decks, with tabs for navigating to forecast, review count, and review time - specific statistics.
+Consumer: The current page in AnkiDroid displays the HOURLY BREAKDOWN statistics graph under the REVIEW COUNT tab, showing the percentage of correct reviews and the number of reviews over different times of the day for the "Default" deck.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the 'All decks' statistics page, click the 'Default deck option' to navigate to the 'Default' deck's statistics page and view its overview (including today's study, 1 - month forecast, review count, review time, added cards, and intervals) with available tabs.
+Consumer task:
+ On the 'Default' deck's Statistics page, first click the 'HOURLY BR' tab to navigate to the tab selection page, then click the 'HOURLY BREAKDOWN' tab to display the graph showing review counts and correct review percentages over different times of the day for the 'Default' deck (using the statistics data from the Producer's 'Default' deck).
+------------------------------
+
+==============================================
+[AppTest] Pair 15/30: 54 -> 61
+Producer: The page displays an overview of statistics (including today's study, 1 - month forecast, review count, review time, added cards, and intervals) for all AnkiDroid flashcard decks, with tabs for navigating to forecast, review count, and review time - specific statistics.
+Consumer: The current page displays a graph in the "INTERVALS" tab of the AnkiDroid statistics section, showing the distribution of flashcard review intervals (in days) and their cumulative percentage, allowing users to analyze how frequently their flashcards are reviewed over time.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on the 'All decks' statistics page. Click the 'Default deck option' to navigate to the 'Default' deck's statistics page, where the deck's statistics (including today's study, 1 - month forecast, review count, review time, added cards, and intervals) are displayed, and tabs for forecast, review count, and review time are available.
+Consumer task:
+ From the 'Default' deck's statistics page (produced data: deck statistics and interval - related data), click the 'INTERVALS' tab. Verify that the graph showing the distribution of flashcard review intervals (in days) and their cumulative percentage is displayed, using the statistics data and interval statistics configuration from the Producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 16/30: 54 -> 62
+Producer: The page displays an overview of statistics (including today's study, 1 - month forecast, review count, review time, added cards, and intervals) for all AnkiDroid flashcard decks, with tabs for navigating to forecast, review count, and review time - specific statistics.
+Consumer: The current page in AnkiDroid displays the HOURLY BREAKDOWN of review statistics, showing a graph with time of day on the x - axis and both percentage correct and number of reviews on the y - axes, to help users analyze their flashcard review performance by hour.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the 'All decks' statistics page, click the 'Default deck option' to navigate to the 'Default' deck's statistics page and view its overview (including today's study, 1 - month forecast, review count, review time, added cards, and intervals).
+Consumer task:
+ From the 'Default' deck's statistics page, click the 'HOURLY BREAKDOWN' tab to navigate to the HOURLY BREAKDOWN page and verify that the review statistics graph (with time of day on the x - axis and percentage correct/number of reviews on the y - axes) reflects the statistics data of the 'Default' deck produced earlier.
+------------------------------
+
+==============================================
+[AppTest] Pair 17/30: 54 -> 104
+Producer: The page displays an overview of statistics (including today's study, 1 - month forecast, review count, review time, added cards, and intervals) for all AnkiDroid flashcard decks, with tabs for navigating to forecast, review count, and review time - specific statistics.
+Consumer: The current page in AnkiDroid's statistics section, under the INTERVALS tab's HOURLY BREAKDOWN sub - tab, is used to visually display (in a graph) the percentage of correct flashcard answers and the number of reviews, organized by the time of day, so that users can analyze their flashcard review performance on an hourly basis.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to the 'All decks' statistics page, then click the 'Default deck option' to open the 'Default' deck's statistics page (with its overview and navigation tabs).
+Consumer task:
+ From the 'Default' deck's statistics page, navigate to the INTERVALS tab, then click the HOURLY BREAKDOWN sub - tab to view the hourly breakdown graph (using the 'Default' deck's statistics data) showing correct answer percentage and review counts by time of day.
+------------------------------
+
+==============================================
+[AppTest] Pair 18/30: 54 -> 105
+Producer: The page displays an overview of statistics (including today's study, 1 - month forecast, review count, review time, added cards, and intervals) for all AnkiDroid flashcard decks, with tabs for navigating to forecast, review count, and review time - specific statistics.
+Consumer: The page displays a weekly breakdown of flashcard review statistics (percentage correct and number of answers) for the "Default" deck in AnkiDroid, using a bar graph to visualize data across each day of the week.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to the 'All decks' statistics page, then click the 'Default deck option' to open the 'Default' deck's statistics page (with overview stats and tabs).
+Consumer task:
+ From the 'Default' deck's statistics page, click the 'WEEKLY BREAKDOWN' tab to view the weekly review stats (bar graph) using the 'Default' deck's statistics data.
+------------------------------
+
+==============================================
+[AppTest] Pair 19/30: 54 -> 106
+Producer: The page displays an overview of statistics (including today's study, 1 - month forecast, review count, review time, added cards, and intervals) for all AnkiDroid flashcard decks, with tabs for navigating to forecast, review count, and review time - specific statistics.
+Consumer: The current page in AnkiDroid displays the WEEKLY BREAKDOWN statistics, showing a bar graph of the percentage of correct answers (and number of answers) for each day of the week, allowing users to analyze their flashcard review performance on a weekly basis.
+
+[Plan]
+Case 1/1
+Producer task:
+ On the 'All decks' statistics page, click the 'Default deck option' to navigate to the 'Default' deck's statistics page (where deck statistics are displayed).
+Consumer task:
+ From the 'Default' deck's statistics page, click the 'WEEKLY BREAKDOWN' tab to navigate to the WEEKLY BREAKDOWN page and verify the bar graph uses the 'Default' deck's statistics data.
+------------------------------
+
+==============================================
+[AppTest] Pair 20/30: 54 -> 107
+Producer: The page displays an overview of statistics (including today's study, 1 - month forecast, review count, review time, added cards, and intervals) for all AnkiDroid flashcard decks, with tabs for navigating to forecast, review count, and review time - specific statistics.
+Consumer: The current page in AnkiDroid displays statistics under the "ANSWER BUTTONS" tab, showing a bar graph that breaks down the number of answers (categorized as Learn, Young, or Mature) by different answer types.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on the 'All decks' statistics page. Click the 'Default deck option' to navigate to the 'Default' deck's statistics page, where the deck's statistics (including today's study, 1 - month forecast, review count, review time, added cards, and intervals) are displayed, and tabs for forecast, review count, and review time are available.
+Consumer task:
+ From the 'Default' deck's statistics page (produced by the Producer), click the 'ANSWER BUTTONS' tab to navigate to the page displaying the bar graph with answer breakdowns (Learn, Young, or Mature) by different answer types. Then, click the 'ANSWER BUTTONS' tab again to confirm the statistics are displayed as expected.
+------------------------------
+
+==============================================
+[AppTest] Pair 21/30: 54 -> 122
+Producer: The page displays an overview of statistics (including today's study, 1 - month forecast, review count, review time, added cards, and intervals) for all AnkiDroid flashcard decks, with tabs for navigating to forecast, review count, and review time - specific statistics.
+Consumer: The current page in AnkiDroid's statistics section, under the "ANSWER BUTTONS" tab, displays a bar graph visualizing the number of answers categorized by "Learn," "Young," and "Mature" card states for different answer types, allowing users to analyze their flashcard interaction patterns.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to the 'All decks' statistics page, then click the 'Default deck option' to open the 'Default' deck's statistics page and view its overview (including today's study, 1 - month forecast, review count, review time, added cards, and intervals) along with the forecast, review count, and review time tabs.
+Consumer task:
+ From the 'Default' deck's statistics page (where the statistics data was produced), ensure you are on the statistics page (page 46 equivalent), then click the 'ANSWER BUTTONS' tab to navigate to the page displaying the bar graph that visualizes the 'Learn', 'Young', and 'Mature' card state answers for different answer types, using the statistics data from the 'Default' deck.
+------------------------------
+
+==============================================
+[AppTest] Pair 22/30: 54 -> 123
+Producer: The page displays an overview of statistics (including today's study, 1 - month forecast, review count, review time, added cards, and intervals) for all AnkiDroid flashcard decks, with tabs for navigating to forecast, review count, and review time - specific statistics.
+Consumer: The current page in AnkiDroid's statistics section, under the "CARD TYPES" tab, displays a pie chart that visualizes the breakdown of different card types (Mature, Young+Learn, Unseen, Suspended+Buried) as a percentage of the total, allowing users to quickly assess the distribution of their flashcard categories.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to the 'All decks' statistics page, then click the 'Default deck option' to open the 'Default' deck's statistics page (viewing its overview and tabs).
+Consumer task:
+ From the statistics page (after Producer step), click the 'CARD TYPES' tab to navigate to the page with the pie chart, verifying the card type breakdown uses the 'Default' deck's statistics data.
+------------------------------
+
+==============================================
+[AppTest] Pair 23/30: 54 -> 124
+Producer: The page displays an overview of statistics (including today's study, 1 - month forecast, review count, review time, added cards, and intervals) for all AnkiDroid flashcard decks, with tabs for navigating to forecast, review count, and review time - specific statistics.
+Consumer: The current page in AnkiDroid displays the WEEKLY BREAKDOWN statistics, showing a bar graph of the percentage of correct answers (dark gray) and the number of answers (light gray) for each day of the week (Sunday to Saturday), with Wednesday having the highest values for both metrics.
+
+[Plan]
+Case 1/1
+Producer task:
+ Navigate to the 'All decks' statistics page, then click the 'Default deck option' to open the 'Default' deck's statistics page (with its overview and navigation tabs).
+Consumer task:
+ From the 'Default' deck's statistics page (with its overview), click the WEEKLY BREAKDOWN tab to navigate to the page displaying the WEEKLY BREAKDOWN statistics (bar graph of % correct and number of answers per day, with Wednesday having the highest values).
+------------------------------
+
+==============================================
+[AppTest] Pair 24/30: 55 -> 27
+Producer: The page visualizes the cumulative review count (categorized as Mature, Young, Relearn, Learn, Cram) over a 30 - day period in the AnkiDroid app's statistics section, specifically under the FORECAST and REVIEW COUNT tabs, to help users track their flashcard review progress trends.
+Consumer: The current page in AnkiDroid's Statistics section, under the "REVIEW COUNT" tab, displays a graph visualizing the cumulative number of answers (categorized as Mature, Young, Relearn, Learn, Cram) over a period of days, allowing users to analyze their flashcard review activity trends.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on AnkiDroid's statistics page (page 41, FORECAST tab active). Click the 'REVIEW COUNT' tab (action S1) to navigate to page 42 and update the review count statistics visualization.
+Consumer task:
+ Start on AnkiDroid's Statistics page (page 6). Click the 'REVIEW COUNT' tab to navigate to page 42 (the REVIEW COUNT page). Verify that the cumulative review count graph (using the updated review count statistics from the producer) is displayed. Optionally, click the 'REVIEW COUNT' tab again on page 42 and confirm the graph still shows the updated statistics.
+------------------------------
+
+==============================================
+[AppTest] Pair 25/30: 56 -> 28
+Producer: The current page in AnkiDroid's statistics section, under the FORECAST and REVIEW TIME tabs, visualizes the cumulative review time (in minutes) over a range of days (from -30 to 0) for different card types (Mature, Young, Relearn, Learn, Cram), allowing users to analyze their historical and projected flashcard review time distribution.
+Consumer: The current page in AnkiDroid's Statistics section, under the "REVIEW TIME" tab, displays a graph that visualizes the cumulative review time (in minutes) over a period of days, categorized by different card types (Mature, Young, Relearn, Learn, Cram) to help users analyze their flashcard review time trends.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on AnkiDroid's statistics page (page 41), then click the 'REVIEW TIME' tab to navigate to page 43 and view the cumulative review time visualization for card types over -30 to 0 days.
+Consumer task:
+ Start on AnkiDroid's Statistics page (page 6), click the 'REVIEW TIME' tab to navigate to page 43, and verify the graph displays the same cumulative review time statistics (by card type over days) as produced by the Producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 26/30: 56 -> 58
+Producer: The current page in AnkiDroid's statistics section, under the FORECAST and REVIEW TIME tabs, visualizes the cumulative review time (in minutes) over a range of days (from -30 to 0) for different card types (Mature, Young, Relearn, Learn, Cram), allowing users to analyze their historical and projected flashcard review time distribution.
+Consumer: The current page in AnkiDroid displays a graph in the "REVIEW TIME" tab of the statistics section, showing the cumulative review time (in minutes) over a range of days (from -30 to 0 days relative to the present), with different card types (Mature, Young, Relearn, Learn, Cram) color - coded for differentiation.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on AnkiDroid's statistics page (page 41), then click the 'REVIEW TIME' tab to navigate to page 43 and view the cumulative review time visualization for card types over -30 to 0 days.
+Consumer task:
+ Start on AnkiDroid's statistics page (page 42), click the 'REVIEW TIME' tab to navigate to page 43, and verify the graph shows the same cumulative review time data (for Mature, Young, Relearn, Learn, Cram card types over -30 to 0 days) as produced by the Producer.
+------------------------------
+
+==============================================
+[AppTest] Pair 27/30: 105 -> 126
+Producer: The page displays a weekly breakdown of flashcard review statistics (percentage correct and number of answers) for the "Default" deck in AnkiDroid, using a bar graph to visualize data across each day of the week.
+Consumer: The current page in AnkiDroid's statistics section, under the WEEKLY BREAKDOWN tab, visualizes the percentage of correct answers and the number of reviews (answers) per day of the week for the "Default" deck, allowing users to analyze their weekly flashcard review performance.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on the statistics page for the 'Default' deck. Click the 'WEEKLY BREAKDOWN' tab to navigate to the page displaying the weekly flashcard review statistics (percentage correct and number of answers) as a bar graph across each day of the week.
+Consumer task:
+ Start on the statistics page (page 48). Click the 'WEEKLY BREAKDOWN' tab to navigate to page 46. Verify that the weekly breakdown visualization (showing % correct answers and review counts per day) matches the data produced by the Producer's weekly breakdown statistics view.
+------------------------------
+
+==============================================
+[AppTest] Pair 28/30: 107 -> 127
+Producer: The current page in AnkiDroid displays statistics under the "ANSWER BUTTONS" tab, showing a bar graph that breaks down the number of answers (categorized as Learn, Young, or Mature) by different answer types.
+Consumer: The page displays a bar graph in the ANSWER BUTTONS tab of the statistics section, visualizing the number of answers (categorized as Learn, Young, Mature) across different answer types for the "Default" flashcard deck.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on the statistics page (page 45), click the 'ANSWER BUTTONS' tab to go to page 47, then click the 'ANSWER BUTTONS' tab again to render the answer buttons statistics visualization.
+Consumer task:
+ In the statistics section, click the 'ANSWER BUTTONS' tab to view the bar graph that uses the answer buttons statistics (from the producer) to show answer counts (Learn, Young, Mature) for the 'Default' deck.
+------------------------------
+
+==============================================
+[AppTest] Pair 29/30: 123 -> 125
+Producer: The current page in AnkiDroid's statistics section, under the "CARD TYPES" tab, displays a pie chart that visualizes the breakdown of different card types (Mature, Young+Learn, Unseen, Suspended+Buried) as a percentage of the total, allowing users to quickly assess the distribution of their flashcard categories.
+Consumer: Displays a pie chart in the "CARD TYPES" tab of AnkiDroid's statistics page, visualizing the percentage distribution of different card types (Mature, Young+Learn, Unseen, Suspended+Buried) for the "Default" deck.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on AnkiDroid's statistics page (page 46). Click the 'CARD TYPES' tab to navigate to page 48 and generate the card type statistics visualization (pie chart of Mature, Young+Learn, Unseen, Suspended+Buried percentages).
+Consumer task:
+ On AnkiDroid's statistics page, click the 'CARD TYPES' tab. Verify the pie chart displayed uses the card type statistics data (from the producer) to show the percentage breakdown of card types (Mature, Young+Learn, Unseen, Suspended+Buried) for the 'Default' deck.
+------------------------------
+
+==============================================
+[AppTest] Pair 30/30: 123 -> 128
+Producer: The current page in AnkiDroid's statistics section, under the "CARD TYPES" tab, displays a pie chart that visualizes the breakdown of different card types (Mature, Young+Learn, Unseen, Suspended+Buried) as a percentage of the total, allowing users to quickly assess the distribution of their flashcard categories.
+Consumer: The current page in AnkiDroid's statistics section, under the "CARD TYPES" tab, visualizes the distribution of different card types (Mature, Young+Learn, Unseen, Suspended+Buried) as a pie chart to help users analyze the composition of their flashcard deck's card types.
+
+[Plan]
+Case 1/1
+Producer task:
+ Start on statistics page (page 46), click 'CARD TYPES' tab to navigate to page 48 and generate the card type statistics visualization (pie chart).
+Consumer task:
+ Start on page 48, click 'CARD TYPES' tab (remains on page 48), verify the pie chart (data from producer) visualizing card type (Mature, Young+Learn, Unseen, Suspended+Buried) distribution is displayed.
+------------------------------

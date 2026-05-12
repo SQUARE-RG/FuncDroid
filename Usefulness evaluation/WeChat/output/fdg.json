@@ -1,0 +1,3662 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "Weixin main chat/navigation screen",
+            "action_refs": [
+                [
+                    0,
+                    2
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the Weixin main screen. The user clicks the 'Chats' bottom tab, which keeps the app on the same main screen (likely refreshing or confirming the Chats view is active). There are no branches or loops as only one action is defined.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the 'Chats' bottom tab"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 1,
+            "function_description": "This page functions as a search interface within Weixin, allowing users to input search queries, access recent searches, and utilize AI search or other search - related features (like DeepThink - related search and camera - based search).",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ],
+                [
+                    1,
+                    0
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    6,
+                    0
+                ]
+            ],
+            "data_in": [
+                "search query",
+                "recent search record",
+                "search page state",
+                "search input text",
+                "search results"
+            ],
+            "data_out": [
+                "search results",
+                "entered search query",
+                "navigation back to chat page",
+                "cleared search input text",
+                "updated search results (reset)"
+            ],
+            "data_dependencies": [
+                20,
+                24
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the Weixin main page (page 0) and clicks the search button to enter the search interface (page 1). In the search interface, the user can either input search text (e.g., 'smartwatches') to proceed to the search results page (page 6) or click the back button to return to the main page (page 0). If text is input, a clear search input button becomes available on the results page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click search button to enter search interface"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            1,
+                            0
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 6,
+                        "action": "input",
+                        "summary": "Input search text to proceed to results"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            1,
+                            1
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click back button to return to main page"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            6,
+                            0
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click clear search input button (after input)"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "The current page (Weixin's Contacts page with the plus button menu expanded) provides options to start a new chat, add contacts, scan (QR codes), and access money-related features, while also displaying the user's contact list and navigation tabs for Chats, Contacts, Discover, and Me.",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ]
+            ],
+            "data_in": [
+                "plus button options"
+            ],
+            "data_out": [
+                "options menu (New Chat, Add Contacts, Scan, Money)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the Weixin page (Chats tab). The user clicks the plus button (options menu) at the top right, which expands a menu with options like New Chat, Add Contacts, Scan, and Money, while the Contacts page (with contact list and navigation tabs) is visible in the background.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click the plus (options) button at top right to expand the options menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "The Contacts page in Weixin allows users to view, manage, and interact with their contacts, including options for new friends, group chats, tags, and a list of individual contacts organized alphabetically, along with search and add contact functionalities.",
+            "action_refs": [
+                [
+                    0,
+                    3
+                ]
+            ],
+            "data_in": [
+                "contacts feature entry"
+            ],
+            "data_out": [
+                "contacts list loaded"
+            ],
+            "data_dependencies": [
+                12,
+                14
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the Chats page (page 0) and clicks the 'Contacts' bottom tab. This action navigates to the Contacts page (page 3), where contact management options and the contact list are displayed. No branches or loops are present in this initial flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click the 'Contacts' bottom tab to navigate to the Contacts page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "The Discover page in Weixin provides access to the Moments feature (where users can view and share updates) and includes a search function and an add button at the top, with the bottom navigation bar allowing switching to Chats, Contacts, and Me sections.",
+            "action_refs": [
+                [
+                    0,
+                    4
+                ]
+            ],
+            "data_in": [
+                "Discover feature entry"
+            ],
+            "data_out": [
+                "Discover page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the initial page (page 0). The user clicks the 'Discover' bottom tab, which navigates to the Discover page (page 4). This is a straight - line flow with no branches or loops as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the Discover bottom tab to navigate to the Discover page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "The \"Me\" page in Weixin provides access to user profile information, payment and services, favorites, personal posts, sticker gallery, and settings, allowing users to manage their account and related features.",
+            "action_refs": [
+                [
+                    0,
+                    5
+                ]
+            ],
+            "data_in": [
+                "Me tab entry"
+            ],
+            "data_out": [
+                "Me page content"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The core logic starts on the main Weixin page (page 0). The user clicks the 'Me' bottom tab (action [0,5]), which navigates to the 'Me' page (page 5). This page provides access to user profile, payment/services, favorites, personal posts, sticker gallery, and settings, enabling account and feature management.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click 'Me' bottom tab to navigate to the 'Me' page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "DeepThink mode toggle",
+            "action_refs": [
+                [
+                    1,
+                    2
+                ]
+            ],
+            "data_in": [
+                "DeepThink mode setting"
+            ],
+            "data_out": [
+                "DeepThink mode setting toggled"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user starts on page 1 and clicks the DeepThink mode toggle. This action navigates to page 7, completing the toggle operation.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            2
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click DeepThink mode toggle to navigate to page 7"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "The current page is an AI search interface in Weixin that allows users to input questions (via text, camera, microphone, or other options) and submit them to an AI (specifically \"深度思考 T1\") for answers or assistance.",
+            "action_refs": [
+                [
+                    1,
+                    3
+                ],
+                [
+                    8,
+                    0
+                ]
+            ],
+            "data_in": [
+                "search interface",
+                "AI search feature entry",
+                "question input field"
+            ],
+            "data_out": [
+                "AI search interface loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user starts on page 1 and clicks the 'AI Search' button to navigate to the AI search interface (page 8). Then, the user inputs a question (e.g., '如何提高效率') into the question input field on page 8. The flow is a straight line with no branches or loops as described by the provided actions.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            3
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click 'AI Search' button to enter AI search interface"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            8,
+                            0
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 8,
+                        "action": "input",
+                        "summary": "Input question into the question input field"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "The page settings interface allows users to configure which features (such as AI Search, Search by Type, Recent Searches, and enabling search for specific content like Moments, Official Accounts, and Mini Programs) are displayed on the Weixin search page.",
+            "action_refs": [
+                [
+                    1,
+                    4
+                ],
+                [
+                    9,
+                    0
+                ],
+                [
+                    30,
+                    0
+                ]
+            ],
+            "data_in": [
+                "page settings item",
+                "page settings",
+                "page settings modal"
+            ],
+            "data_out": [
+                "page settings panel opened",
+                "closed page settings modal"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts on page 1, where the user clicks the Page Settings button to navigate to page 9. On page 9, another click on the Page Settings button leads to page 30. Finally, clicking the Close page settings modal button returns to page 1, completing the navigation through the page settings interface for configuring search page features.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            4
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click Page Settings button on page 1 to go to page 9"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            9,
+                            0
+                        ],
+                        "src_page_idx": 9,
+                        "dst_page_idx": 30,
+                        "action": "click",
+                        "summary": "Click Page Settings button on page 9 to go to page 30"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            30,
+                            0
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click Close page settings modal on page 30 to return to page 1"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "The \"New Friends\" page in Weixin allows users to manage friend requests and provides an option to link mobile contacts to find more friends, with a secondary \"Add Contacts\" option for further contact addition.",
+            "action_refs": [
+                [
+                    3,
+                    0
+                ],
+                [
+                    34,
+                    0
+                ]
+            ],
+            "data_in": [
+                "new friends feature entry",
+                "new friends page data"
+            ],
+            "data_out": [
+                "new friends page loaded",
+                "contacts page data"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The flow starts on the Contacts page. First, the user clicks the 'New Friends' button to navigate to the New Friends page. Then, the user can click the back arrow to return to the Contacts page. There are no branches or loops as the actions are sequential navigation steps.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            0
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 34,
+                        "action": "click",
+                        "summary": "Click 'New Friends' button to go to New Friends page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            34,
+                            0
+                        ],
+                        "src_page_idx": 34,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click back arrow to return to Contacts page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "The current page (Group Chats) in Weixin (WeChat) displays a list of group chat conversations, allowing users to view, access, or manage their group chat interactions, with a search function available for finding specific group chats.",
+            "action_refs": [
+                [
+                    3,
+                    1
+                ],
+                [
+                    35,
+                    0
+                ]
+            ],
+            "data_in": [
+                "group chats feature entry",
+                "group chats page state"
+            ],
+            "data_out": [
+                "group chats list page loaded",
+                "contacts page state (navigation result)"
+            ],
+            "data_dependencies": [
+                26,
+                27,
+                36
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The flow starts on the Contacts page. First, the user clicks the 'Group Chats' button to navigate to the Group Chats page (displaying group chat conversations). Then, if needed, the user can click the 'Back to previous page' button to return to the Contacts page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            1
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 35,
+                        "action": "click",
+                        "summary": "Click 'Group Chats' button to go to Group Chats page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            35,
+                            0
+                        ],
+                        "src_page_idx": 35,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click 'Back to previous page' to return to Contacts page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "This page displays the profile information of the contact 'test' (including Weixin ID and region) and provides options to view their Moments or send them a message.",
+            "action_refs": [
+                [
+                    3,
+                    2
+                ]
+            ],
+            "data_in": [
+                "contact entry (test)"
+            ],
+            "data_out": [
+                "contact details page (test)"
+            ],
+            "data_dependencies": [
+                21
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The flow starts on the Contacts page (page 3). The user clicks on the contact 'test' (action from page 3 to 11), which navigates to 'test's profile page. On this profile page, the user can view 'test's Weixin ID, region, and choose to either view Moments or send a message, though the current flow ends at reaching the profile page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            2
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click on contact 'test' entry in the Contacts list"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "This page allows users to search for contacts (or related content) within Weixin, displaying a search bar, recent search history, and options like AI Search, along with page settings.",
+            "action_refs": [
+                [
+                    3,
+                    3
+                ]
+            ],
+            "data_in": [
+                "contacts list"
+            ],
+            "data_out": [
+                "search interface (for contacts)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The user starts on the Contacts page (page 3). They click the search contacts icon, which navigates them to the search page (page 1) displaying a search bar, recent searches, AI Search, and page settings. This is a straight-line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            3
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the search contacts icon to navigate to the search page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "This page is the Contacts section of Weixin (WeChat), where users can view their contact list, access options like adding contacts, starting new chats, scanning, and managing money, and navigate to other sections like Chats, Discover, or Me.",
+            "action_refs": [
+                [
+                    3,
+                    4
+                ]
+            ],
+            "data_in": [
+                "add contact option"
+            ],
+            "data_out": [
+                "add contact menu opened"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The flow starts on the Contacts page. The user clicks the 'Add contact icon' (the '+' button at the top right), which opens a menu with options like New Chat, Add Contacts, Scan, and Money. This action is a single step with no branches or loops as it directly triggers the menu display.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            4
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click the '+' (Add contact) icon at the top right of the Contacts page to open a menu with options like New Chat, Add Contacts, Scan, and Money."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "The current page in Weixin (WeChat) displays the contacts list, organized alphabetically with sections for different letter groups, along with options for new friends, group chats, tags, and a search function, allowing users to view, manage, and navigate through their contacts.",
+            "action_refs": [
+                [
+                    3,
+                    5
+                ]
+            ],
+            "data_in": [
+                "contacts list",
+                "alphabetical index A"
+            ],
+            "data_out": [
+                "contacts filtered by index A"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The user starts on the WeChat Contacts page. They can click the alphabetical index 'A' button (or other letter buttons) to navigate to the corresponding contact group. This action keeps the user on the Contacts page, focusing on the 'A'-grouped contacts.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            5
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click the 'A' alphabetical index button to navigate to 'A'-grouped contacts"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "Moments entry",
+            "action_refs": [
+                [
+                    4,
+                    0
+                ]
+            ],
+            "data_in": [
+                "moments feature entry"
+            ],
+            "data_out": [
+                "moments page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "On the Discover page, the user clicks the 'Moments' entry (with an arrow indicator) to navigate into the Moments section. This is a single-step flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            0
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'Moments' entry to access Moments"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "Settings navigation option",
+            "action_refs": [
+                [
+                    5,
+                    0
+                ]
+            ],
+            "data_in": [
+                "settings entry"
+            ],
+            "data_out": [
+                "settings page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user starts on page 5 (the 'Me' page of the app). The core logic is to click the 'Settings' navigation option. This action is a single step with no branches or loops, as it directly initiates navigation to the Settings page (though the destination page index is null here, implying the action triggers navigation to the Settings page).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            0
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the Settings navigation option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "+Status action button",
+            "action_refs": [
+                [
+                    5,
+                    1
+                ]
+            ],
+            "data_in": [
+                "user profile",
+                "status setting"
+            ],
+            "data_out": [
+                "updated status setting"
+            ],
+            "data_dependencies": [
+                22
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "The user interacts with the +Status action button on page 5. The flow starts with clicking this button, and since there are no further branches or loops indicated by the provided action, the core logic is a single step of clicking the +Status button.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            1
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the +Status action button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "Weixin ID detail arrow",
+            "action_refs": [
+                [
+                    5,
+                    2
+                ]
+            ],
+            "data_in": [
+                "Weixin ID detail"
+            ],
+            "data_out": [
+                "Weixin ID detail page"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "On the 'Me' page (page 5), the user clicks the arrow icon next to the Weixin ID to access its detailed view. This is a single-step flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            2
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the Weixin ID detail arrow"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "This page displays the profile information of the Weixin account \"test\", including the Weixin ID, region, and provides options to view the account's Moments and send a message to the account.",
+            "action_refs": [
+                [
+                    6,
+                    1
+                ]
+            ],
+            "data_in": [
+                "search query (smartwatches)",
+                "account search option"
+            ],
+            "data_out": [
+                "user account profile"
+            ],
+            "data_dependencies": [
+                21,
+                22
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The process starts on page 6, where the user clicks the 'Search Account:smartwatches' button. This action navigates to page 11, which displays the profile of the Weixin account 'test', including its Weixin ID, region, and options to view Moments or send a message. There are no branches or loops as the flow is a straight line to the profile page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            1
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click 'Search Account:smartwatches' button to navigate to the account profile page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "Displays search results (including accounts, articles, etc.) for the query \"13800138000\" in Weixin, allowing users to view related content like public accounts, news articles, and warnings associated with the phone number.",
+            "action_refs": [
+                [
+                    6,
+                    2
+                ],
+                [
+                    12,
+                    0
+                ]
+            ],
+            "data_in": [
+                "search query: smartwatches",
+                "search results list",
+                "search query",
+                "search results (previous)"
+            ],
+            "data_out": [
+                "new search results (for 13800138000)",
+                "search results (updated)"
+            ],
+            "data_dependencies": [
+                40,
+                51
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The process starts on page 6. First, the 'smartwatches' search result button is clicked (S1), leading to page 12. Then, the green 'Search' button is clicked (S2) to view the detailed search results on page 29. There are no branches or loops in this flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            2
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click 'smartwatches' search result button"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            12,
+                            0
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 29,
+                        "action": "click",
+                        "summary": "Click green 'Search' button"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "Add to Contacts button",
+            "action_refs": [
+                [
+                    11,
+                    0
+                ]
+            ],
+            "data_in": [
+                "contact information (test)"
+            ],
+            "data_out": [
+                "contact added to contacts list"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "On the initial page (page 11), the user clicks the 'Add to Contacts' button. This action transitions the flow to page 13, completing the core logic of initiating the contact addition process.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            0
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click the Add to Contacts button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "This page allows users to view and edit profile - related details (such as alias, tags, remark, photo) and check additional information (like the source) of the contact 'test' in Weixin.",
+            "action_refs": [
+                [
+                    11,
+                    1
+                ]
+            ],
+            "data_in": [
+                "user profile"
+            ],
+            "data_out": [
+                "user profile (navigated to profile details)"
+            ],
+            "data_dependencies": [
+                23,
+                28,
+                29
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The user starts on page 11 (contact 'test' info). They click the 'Profile navigation row' (action_ref [11,1]), which navigates to page 14 (Profile page) to view/edit details like alias, tags, remark, photo, and check 'From' info. No branches or loops as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            1
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click Profile navigation row to navigate to Profile page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "The page provides friend - related settings, enabling users to edit the friend's profile, block the friend, or report the friend.",
+            "action_refs": [
+                [
+                    11,
+                    2
+                ]
+            ],
+            "data_in": [
+                "friend settings menu"
+            ],
+            "data_out": [
+                "friend settings page loaded"
+            ],
+            "data_dependencies": [
+                31
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 11,
+                "logic": "The flow starts on the friend's profile page (page 11). The user clicks the 'More options menu button' (action from [11,2]), which navigates to the Friend Settings page (page 15). On this page, the user can choose to edit the friend’s profile, block the friend, or report the friend, with the flow diverging based on which option is selected.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            11,
+                            2
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click the 'More options menu button' to open Friend Settings"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": null,
+                                "condition": "Choose 'Edit friend profile'"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "Choose 'Block' or 'Report'"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "The \"Add Contacts\" page in Weixin provides multiple methods (search, scan, mobile contact, radar, WeCom, group, official/service accounts) and a QR code for users to add new contacts or connect with others.",
+            "action_refs": [
+                [
+                    34,
+                    1
+                ],
+                [
+                    36,
+                    0
+                ],
+                [
+                    38,
+                    1
+                ],
+                [
+                    38,
+                    2
+                ]
+            ],
+            "data_in": [
+                "search input (account/mobile number)",
+                "search session",
+                "search input (phone number)",
+                "search input text"
+            ],
+            "data_out": [
+                "search result (contact)",
+                "cancelled search session",
+                "return to add contacts page",
+                "cleared search input text"
+            ],
+            "data_dependencies": [
+                42
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 34,
+                "logic": "To add contacts in Weixin, start by clicking the 'Add Contacts' button. Then, input an account or mobile number (e.g., 13800138000) in the search field. At this point, you can either cancel the search (returning to the Add Contacts page) or clear the input (ending the flow).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            34,
+                            1
+                        ],
+                        "src_page_idx": 34,
+                        "dst_page_idx": 36,
+                        "action": "click",
+                        "summary": "Click 'Add Contacts' button to enter the Add Contacts page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            36,
+                            0
+                        ],
+                        "src_page_idx": 36,
+                        "dst_page_idx": 38,
+                        "action": "input",
+                        "summary": "Input account/mobile number (13800138000) in the search field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            38,
+                            1
+                        ],
+                        "src_page_idx": 38,
+                        "dst_page_idx": 36,
+                        "action": "click",
+                        "summary": "Click 'Cancel search' button to return to Add Contacts page"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            38,
+                            2
+                        ],
+                        "src_page_idx": 38,
+                        "dst_page_idx": 41,
+                        "action": "click",
+                        "summary": "Click 'Clear search input' icon to clear the input"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 25,
+            "function_description": "The \"Mobile Contacts\" page in Weixin (WeChat) allows users to view and potentially connect with their mobile device's contacts who are also using Weixin, with a search function available, and in this instance, it displays \"No results found\" indicating no matching mobile contacts were detected.",
+            "action_refs": [
+                [
+                    34,
+                    2
+                ]
+            ],
+            "data_in": [
+                "mobile contacts entry"
+            ],
+            "data_out": [
+                "mobile contacts list (loaded)"
+            ],
+            "data_dependencies": [
+                35
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 34,
+                "logic": "The user starts on the 'New Friends' page (page 34) and clicks the 'Mobile Contacts' option. This action navigates to the 'Mobile Contacts' page (page 37), where the UI displays 'No results found' indicating no matching mobile contacts are detected. The flow is a straight line with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            34,
+                            2
+                        ],
+                        "src_page_idx": 34,
+                        "dst_page_idx": 37,
+                        "action": "click",
+                        "summary": "Click 'Mobile Contacts' option to navigate to Mobile Contacts page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 26,
+            "function_description": "This page allows users to search for specific group chat conversations within the Weixin group chat management interface by entering a search term, with options to clear the search or cancel the search action.",
+            "action_refs": [
+                [
+                    35,
+                    1
+                ],
+                [
+                    51,
+                    0
+                ],
+                [
+                    51,
+                    1
+                ]
+            ],
+            "data_in": [
+                "group chat list",
+                "search query",
+                "group chats list"
+            ],
+            "data_out": [
+                "filtered group chat list",
+                "group chats list (displayed)"
+            ],
+            "data_dependencies": [
+                27,
+                36
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 35,
+                "logic": "The user starts on the group chat list page (page 35) and clicks the search icon to open the search interface (page 51). On the search page, the user can input a search term (e.g., 'test_group') into the input field. After entering the term, the user can either continue searching (implicitly, as the input updates results) or click the 'Cancel' button to return to the original group chat list page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            35,
+                            1
+                        ],
+                        "src_page_idx": 35,
+                        "dst_page_idx": 51,
+                        "action": "click",
+                        "summary": "Click search icon to open group chat search page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            51,
+                            0
+                        ],
+                        "src_page_idx": 51,
+                        "dst_page_idx": 51,
+                        "action": "input",
+                        "summary": "Input search term into group chat search field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            51,
+                            1
+                        ],
+                        "src_page_idx": 51,
+                        "dst_page_idx": 35,
+                        "action": "click",
+                        "summary": "Click Cancel button to return to group chat list"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 27,
+            "function_description": "This page functions as the chat interface for the \"test(2)\" group chat, allowing users to send messages, use voice input, access emojis, and add content (via the '+' button) while also providing options to navigate back or access group settings (via the '...' button).",
+            "action_refs": [
+                [
+                    35,
+                    2
+                ],
+                [
+                    52,
+                    0
+                ],
+                [
+                    52,
+                    3
+                ]
+            ],
+            "data_in": [
+                "test group chat",
+                "chat message input field",
+                "group chat session",
+                "group chat list"
+            ],
+            "data_out": [
+                "opened test group chat",
+                "chat message (to be sent)",
+                "group chat list (navigated back to)"
+            ],
+            "data_dependencies": [
+                37,
+                47,
+                60
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 35,
+                "logic": "The flow starts by opening the 'test' group chat. Once in the chat, a message can be input. Alternatively, the back arrow can be clicked to return to the group list. These are the main actions available in the group chat interface.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            35,
+                            2
+                        ],
+                        "src_page_idx": 35,
+                        "dst_page_idx": 52,
+                        "action": "click",
+                        "summary": "Open 'test' group chat"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            52,
+                            0
+                        ],
+                        "src_page_idx": 52,
+                        "dst_page_idx": 53,
+                        "action": "input",
+                        "summary": "Input message in chat"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            52,
+                            3
+                        ],
+                        "src_page_idx": 52,
+                        "dst_page_idx": 35,
+                        "action": "click",
+                        "summary": "Click back arrow to return to group list"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 28,
+            "function_description": "This page allows the user to set or edit remarks for a contact, including configuring an alias, adding tags, entering a remark text, and adding a photo.",
+            "action_refs": [
+                [
+                    14,
+                    0
+                ],
+                [
+                    16,
+                    0
+                ],
+                [
+                    16,
+                    1
+                ],
+                [
+                    16,
+                    2
+                ],
+                [
+                    16,
+                    3
+                ],
+                [
+                    16,
+                    5
+                ]
+            ],
+            "data_in": [
+                "alias setting",
+                "profile data",
+                "remark form",
+                "remark settings",
+                "alias input",
+                "tags input",
+                "remark text input",
+                "photo attachment",
+                "remark (alias field)",
+                "alias text",
+                "remark text input field",
+                "remark setting"
+            ],
+            "data_out": [
+                "updated alias setting",
+                "updated profile data",
+                "updated remark record",
+                "updated remark (alias field)",
+                "cleared alias text",
+                "updated remark text"
+            ],
+            "data_dependencies": [
+                38,
+                39
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The user starts by clicking the Alias configuration row to enter the alias editing page. On this page, they can choose to cancel (returning to the same page), done (saving and staying), input a new alias, or clear the alias text. After alias actions, they can also input a remark text, which navigates to a new page for that input.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            0
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click Alias configuration row to enter alias editing"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            16,
+                            0
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click Cancel button (stays on alias page)"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            16,
+                            1
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click Done button (saves alias, stays on page)"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            16,
+                            2
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 17,
+                        "action": "input",
+                        "summary": "Input alias text (navigates to new page)"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            16,
+                            3
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click Clear Alias text button (navigates to new page)"
+                    },
+                    {
+                        "id": "S6",
+                        "action_ref": [
+                            16,
+                            5
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 20,
+                        "action": "input",
+                        "summary": "Input remark text (navigates to new page)"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S6"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            },
+                            {
+                                "next_step": "S6"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 29,
+            "function_description": "This page allows the user to set or edit remarks for a Weixin contact, including modifying the alias, adding tags, entering a text remark, and adding a photo, with options to cancel or save the changes.",
+            "action_refs": [
+                [
+                    15,
+                    0
+                ]
+            ],
+            "data_in": [
+                "friend profile"
+            ],
+            "data_out": [
+                "updated friend profile"
+            ],
+            "data_dependencies": [
+                28,
+                38
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user starts on the Friend Settings page and clicks the 'Edit friend profile' button to navigate to the Set remarks page, where they can modify the alias, add tags, enter a text remark, or add a photo for the Weixin contact.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            0
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click 'Edit friend profile' button to enter the Set remarks page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 30,
+            "function_description": "Block friend toggle switch",
+            "action_refs": [
+                [
+                    15,
+                    1
+                ]
+            ],
+            "data_in": [
+                "block friend setting"
+            ],
+            "data_out": [
+                "block friend setting enabled"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user starts on the Friend Settings page (page 15). They perform a click action on the Block friend toggle switch, which transitions the app to page 27. This action toggles the block status of the friend, completing the functional point's execution.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            1
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 27,
+                        "action": "click",
+                        "summary": "Click the Block friend toggle switch"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 31,
+            "function_description": "This page allows the user to report the contact 'test' to the WeChat Team or block the contact from communicating with them.",
+            "action_refs": [
+                [
+                    15,
+                    2
+                ],
+                [
+                    28,
+                    0
+                ],
+                [
+                    28,
+                    1
+                ]
+            ],
+            "data_in": [
+                "friend report setting",
+                "report page",
+                "report reason setting",
+                "user report request"
+            ],
+            "data_out": [
+                "report options page loaded",
+                "friend settings page (navigated back to)",
+                "updated report reason"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 15,
+                "logic": "The user starts on the Friend Settings page. First, they click the 'Report friend' button to open the report page. On the report page, they can either close the page (via the X button) to return to Friend Settings or select a report reason (e.g., 'Lewd or harassing content') to complete the report.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            15,
+                            2
+                        ],
+                        "src_page_idx": 15,
+                        "dst_page_idx": 28,
+                        "action": "click",
+                        "summary": "Click 'Report friend' button to open report page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            28,
+                            0
+                        ],
+                        "src_page_idx": 28,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click X button to close report page and return to Friend Settings"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            28,
+                            1
+                        ],
+                        "src_page_idx": 28,
+                        "dst_page_idx": 28,
+                        "action": "click",
+                        "summary": "Click 'Lewd or harassing content' as report reason"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 32,
+            "function_description": "AI Search toggle switch",
+            "action_refs": [
+                [
+                    30,
+                    1
+                ]
+            ],
+            "data_in": [
+                "AI Search setting"
+            ],
+            "data_out": [
+                "AI Search setting (updated state)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 30,
+                "logic": "The user starts on page 30 and clicks the AI Search toggle switch, which leads to page 31. This action toggles the AI Search feature's state (on/off) in the page settings.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            30,
+                            1
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 31,
+                        "action": "click",
+                        "summary": "Click the AI Search toggle switch"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 33,
+            "function_description": "This page allows users to enable or disable search functionality for different content categories (Moments, Official Accounts, Mini Programs, etc.) within the Weixin search feature.",
+            "action_refs": [
+                [
+                    30,
+                    2
+                ]
+            ],
+            "data_in": [
+                "search specified content setting"
+            ],
+            "data_out": [
+                "search specified content configuration page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 30,
+                "logic": "The user starts on page 30 and clicks the 'Search specified content settings' option. This action navigates to page 32, where individual content category toggles (like Moments, Official Accounts) for search are displayed, allowing the user to enable/disable search for each category.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            30,
+                            2
+                        ],
+                        "src_page_idx": 30,
+                        "dst_page_idx": 32,
+                        "action": "click",
+                        "summary": "Click 'Search specified content settings' to navigate to the detailed content search settings page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 34,
+            "function_description": "This page functions as a QR code (and other object) scanning interface, allowing users to scan QR codes, plants, animals, or products, with options to access their own QR code, open the gallery, and switch to a translation mode.",
+            "action_refs": [
+                [
+                    36,
+                    1
+                ],
+                [
+                    39,
+                    3
+                ]
+            ],
+            "data_in": [
+                "contact QR code scanning function entry"
+            ],
+            "data_out": [
+                "QR code scanning interface"
+            ],
+            "data_dependencies": [
+                43,
+                53
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 36,
+                "logic": "The flow starts by clicking the 'Scan contact’s QR code' button to enter the scanning interface. Once in the scanning interface, there is an option to click the 'Translate mode tab' to switch to translation mode, altering the interface’s functionality.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            36,
+                            1
+                        ],
+                        "src_page_idx": 36,
+                        "dst_page_idx": 39,
+                        "action": "click",
+                        "summary": "Click 'Scan contact’s QR code' to open the scanning interface."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            39,
+                            3
+                        ],
+                        "src_page_idx": 39,
+                        "dst_page_idx": 39,
+                        "action": "click",
+                        "summary": "Click 'Translate mode tab' to switch to translation mode."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 35,
+            "function_description": "This page allows users to search for contacts within their mobile contacts list (linked to Weixin) and displays a \"No results found\" message when no matching contacts are found for the search query.",
+            "action_refs": [
+                [
+                    37,
+                    0
+                ],
+                [
+                    49,
+                    0
+                ],
+                [
+                    49,
+                    1
+                ]
+            ],
+            "data_in": [
+                "mobile contacts list",
+                "contact list",
+                "search input",
+                "search session",
+                "mobile contacts data"
+            ],
+            "data_out": [
+                "search input field (activated)",
+                "filtered contact list",
+                "search session canceled"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 37,
+                "logic": "The user starts on the Mobile Contacts page (page 37) and clicks the search icon to open the search interface (page 49). Then, the user inputs a contact name (e.g., 'John Doe') into the search field. After input, the app checks for matching contacts: if none are found, it displays 'No results found'; if results exist, they would be shown (though that branch isn’t detailed here). Alternatively, the user can cancel the search to return to the original Mobile Contacts page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            37,
+                            0
+                        ],
+                        "src_page_idx": 37,
+                        "dst_page_idx": 49,
+                        "action": "click",
+                        "summary": "Click search icon to open search interface"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            49,
+                            0
+                        ],
+                        "src_page_idx": 49,
+                        "dst_page_idx": 50,
+                        "action": "input",
+                        "summary": "Input contact name into search field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            49,
+                            1
+                        ],
+                        "src_page_idx": 49,
+                        "dst_page_idx": 37,
+                        "action": "click",
+                        "summary": "Click cancel button to exit search"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 36,
+            "function_description": "This page provides a menu of additional chat - related actions (such as accessing the gallery, using the camera, making voice calls, sharing location, sending red packets, giving gifts, transferring money, and using voice input) for the \"test(2)\" group chat in Weixin.",
+            "action_refs": [
+                [
+                    52,
+                    1
+                ]
+            ],
+            "data_in": [
+                "chat session"
+            ],
+            "data_out": [
+                "chat action menu opened"
+            ],
+            "data_dependencies": [
+                47
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 52,
+                "logic": "The flow starts on the 'test(2)' group chat page (page 52). The user clicks the plus button (chat actions) at the bottom right, which opens the menu of additional chat - related actions (page 54). There are no branches or loops as this is a simple action to open the chat actions menu.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            52,
+                            1
+                        ],
+                        "src_page_idx": 52,
+                        "dst_page_idx": 54,
+                        "action": "click",
+                        "summary": "Click the plus button (chat actions) to open the chat - related actions menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 37,
+            "function_description": "This page (Chat Info for the 'test' group) displays a notification dialog informing users that only group owners and admins can change the group name, along with other group chat settings and information (like group QR code, notice, etc.) when accessing the chat settings from the group chat interface.",
+            "action_refs": [
+                [
+                    52,
+                    2
+                ],
+                [
+                    55,
+                    2
+                ]
+            ],
+            "data_in": [
+                "chat settings",
+                "group chat",
+                "group name setting"
+            ],
+            "data_out": [
+                "chat settings menu opened"
+            ],
+            "data_dependencies": [
+                60
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 52,
+                "logic": "From the group chat page, click the three - dot menu to enter chat settings. Then, click the group name edit option. At this point, a notification dialog appears, informing that only group owners and admins can change the group name.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            52,
+                            2
+                        ],
+                        "src_page_idx": 52,
+                        "dst_page_idx": 55,
+                        "action": "click",
+                        "summary": "Click the three - dot menu (chat settings) on the group chat page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            55,
+                            2
+                        ],
+                        "src_page_idx": 55,
+                        "dst_page_idx": 55,
+                        "action": "click",
+                        "summary": "Click the Group Name edit option in the chat info page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 38,
+            "function_description": "This page allows the user to select an existing tag, create a new tag, or manage tags for the contact 'test' during the contact profile editing process.",
+            "action_refs": [
+                [
+                    16,
+                    4
+                ],
+                [
+                    19,
+                    0
+                ],
+                [
+                    19,
+                    1
+                ],
+                [
+                    19,
+                    4
+                ],
+                [
+                    19,
+                    5
+                ]
+            ],
+            "data_in": [
+                "remark (for tagging)",
+                "tag",
+                "search input",
+                "测试 tag",
+                "remark's tag selection context",
+                "tag selection session",
+                "tag selection",
+                "remarks setting context"
+            ],
+            "data_out": [
+                "selected tag(s) for remark",
+                "filtered tag list",
+                "selected 测试 tag for remark",
+                "tag selection session canceled",
+                "updated tag selection for remarks"
+            ],
+            "data_dependencies": [
+                62
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 16,
+                "logic": "The process starts with clicking the 'Add Tags' button to enter the tag selection page. On this page, the user can either input a tag name in the search field, select an existing tag (like '测试'), cancel the tag selection, or confirm the tag selection. If confirming, the selection is finalized; if canceling, the process exits without changes. The user can also repeat tag selection actions if needed.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            16,
+                            4
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click 'Add Tags' to open tag selection page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            19,
+                            0
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 21,
+                        "action": "input",
+                        "summary": "Input tag name in search field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            19,
+                            1
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 22,
+                        "action": "click",
+                        "summary": "Select existing '测试' tag"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            19,
+                            4
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 24,
+                        "action": "click",
+                        "summary": "Cancel tag selection"
+                    },
+                    {
+                        "id": "S5",
+                        "action_ref": [
+                            19,
+                            5
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Confirm tag selection"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S5"
+                    },
+                    {
+                        "from": "S5",
+                        "to": "S1"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            },
+                            {
+                                "next_step": "S5"
+                            }
+                        ]
+                    },
+                    {
+                        "at_step": "S5",
+                        "type": "loop",
+                        "branches": [
+                            {
+                                "next_step": "S1"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 39,
+            "function_description": "This page allows the user to edit a contact's alias, add tags, enter a remark, and add a photo, with options to cancel or save (done) the changes.",
+            "action_refs": [
+                [
+                    16,
+                    6
+                ]
+            ],
+            "data_in": [
+                "remark record",
+                "photo attachment setting"
+            ],
+            "data_out": [
+                "photo - added to remark record"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 16,
+                "logic": "The user starts on the contact editing page (page 16). The core action is clicking the 'Add Photo' button, which likely initiates a process to add a photo (though the flow here is a single step as only one action is provided).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            16,
+                            6
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click the 'Add Photo' button to start the process of adding a photo to the contact."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 40,
+            "function_description": "The current page in Weixin (WeChat) displays search results for the phone number \"13800138000\", including related accounts, articles, and posts, allowing users to explore information associated with this number.",
+            "action_refs": [
+                [
+                    29,
+                    0
+                ]
+            ],
+            "data_in": [
+                "video (smartwatch unboxing)"
+            ],
+            "data_out": [
+                "video playback started"
+            ],
+            "data_dependencies": [
+                51
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 29,
+                "logic": "The user starts on page 29 and clicks the video play button for a smartwatch unboxing, transitioning to page 12. This action initiates the playback of the selected video content related to smartwatches.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            29,
+                            0
+                        ],
+                        "src_page_idx": 29,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click the video play button for the smartwatch unboxing video"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 41,
+            "function_description": "Moments search toggle",
+            "action_refs": [
+                [
+                    32,
+                    0
+                ]
+            ],
+            "data_in": [
+                "moments search setting"
+            ],
+            "data_out": [
+                "moments search setting enabled"
+            ],
+            "data_dependencies": [
+                42
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 32,
+                "logic": "The user starts on page 32 and clicks the 'Moments search toggle' element, which navigates to page 33. This action toggles the Moments search functionality, completing the task of interacting with the Moments search toggle.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            32,
+                            0
+                        ],
+                        "src_page_idx": 32,
+                        "dst_page_idx": 33,
+                        "action": "click",
+                        "summary": "Click the Moments search toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 42,
+            "function_description": "This page displays the result of searching for a contact by mobile number, indicating if the user is found and providing an option to search the number across other Weixin content (Mini Programs, Official Accounts, etc.).",
+            "action_refs": [
+                [
+                    38,
+                    0
+                ]
+            ],
+            "data_in": [
+                "contact search result item",
+                "phone number"
+            ],
+            "data_out": [
+                "search result (user not found)",
+                "expanded search result"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 38,
+                "logic": "The process starts on page 38. The user clicks the 'Search contact result button' (action from [38,0]), which navigates to page 40. On page 40, the result (user found or not) is displayed, and an option to search the number across other Weixin content appears.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            38,
+                            0
+                        ],
+                        "src_page_idx": 38,
+                        "dst_page_idx": 40,
+                        "action": "click",
+                        "summary": "Click the search contact result button to view the search result and additional search option."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 43,
+            "function_description": "The page provides multiple methods (search, scan, mobile contacts, radar, WeCom, group joining, official/service accounts) to add new contacts or access related services in Weixin.",
+            "action_refs": [
+                [
+                    39,
+                    0
+                ]
+            ],
+            "data_in": [
+                "scan interface"
+            ],
+            "data_out": [
+                "closed scan interface"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 39,
+                "logic": "The flow starts on the scan interface (page 39). The user clicks the close button (action_ref [39,0]), which navigates to the 'Add Contacts' page (page 36). This page offers multiple contact - adding methods like search, scan, mobile contacts, etc., but the core logic here is the transition from the scan interface to the 'Add Contacts' page via the close action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            39,
+                            0
+                        ],
+                        "src_page_idx": 39,
+                        "dst_page_idx": 36,
+                        "action": "click",
+                        "summary": "Click the close scan interface button to navigate to the Add Contacts page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 44,
+            "function_description": "This page displays the user's personal WeChat QR code, along with options to scan other QR codes, change the QR code style, or save the QR code image, allowing others to scan the code to add the user as a WeChat friend.",
+            "action_refs": [
+                [
+                    39,
+                    1
+                ],
+                [
+                    42,
+                    0
+                ]
+            ],
+            "data_in": [
+                "my QR code setting"
+            ],
+            "data_out": [
+                "my QR code display"
+            ],
+            "data_dependencies": [
+                52,
+                53,
+                55
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 39,
+                "logic": "The flow starts by clicking the 'My QR Code' button on page 39, which navigates to page 42 displaying the personal WeChat QR code. From there, the user can choose to click the back arrow to return, or interact with other options (not shown here) like scanning, changing style, or saving the QR code.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            39,
+                            1
+                        ],
+                        "src_page_idx": 39,
+                        "dst_page_idx": 42,
+                        "action": "click",
+                        "summary": "Click 'My QR Code' button to navigate to the personal QR code page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            42,
+                            0
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click back arrow (or choose other actions like scan/style/save)"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": null,
+                                "condition": "Click back arrow to return"
+                            },
+                            {
+                                "next_step": null,
+                                "condition": "Interact with other QR-related options (scan/style/save)"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 45,
+            "function_description": "This page functions as a gallery interface within Weixin (WeChat) to allow the user to select an image (such as a QR code) from their device’s stored images, likely for the purpose of scanning a contact’s QR code to add them as a friend.",
+            "action_refs": [
+                [
+                    39,
+                    2
+                ]
+            ],
+            "data_in": [
+                "gallery access request"
+            ],
+            "data_out": [
+                "gallery images list"
+            ],
+            "data_dependencies": [
+                46,
+                56,
+                57
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 39,
+                "logic": "The user starts on page 39 (WeChat’s scanning interface) and clicks the 'Gallery' button. This action navigates to page 43, which displays the device’s image gallery, allowing the user to select an image (e.g., a QR code) for further use like adding a friend.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            39,
+                            2
+                        ],
+                        "src_page_idx": 39,
+                        "dst_page_idx": 43,
+                        "action": "click",
+                        "summary": "Click the Gallery button to open the device’s image gallery."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 46,
+            "function_description": "This page functions as a media selection interface within WeChat, allowing the user to browse, select, and prepare photos or videos from their device storage for sending to the 'test(2)' group chat, with options for previewing, sending, and toggling full - image mode.",
+            "action_refs": [
+                [
+                    54,
+                    0
+                ],
+                [
+                    56,
+                    0
+                ],
+                [
+                    56,
+                    1
+                ],
+                [
+                    56,
+                    2
+                ]
+            ],
+            "data_in": [
+                "gallery access request",
+                "chat session",
+                "image selection checkbox",
+                "image",
+                "image sending configuration",
+                "selected media (photos/videos)",
+                "selected media files"
+            ],
+            "data_out": [
+                "gallery photos/videos loaded",
+                "image selection interface opened",
+                "selected image",
+                "updated image sending configuration (Full Image option selected)"
+            ],
+            "data_dependencies": [
+                59
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 54,
+                "logic": "The user starts by clicking the Gallery button to access media files. Then, they can either select an image using the checkbox, toggle the Full Image mode, or click the Send button to send the selected media to the group chat. These actions represent the main flow and optional branches for media selection and preparation.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            54,
+                            0
+                        ],
+                        "src_page_idx": 54,
+                        "dst_page_idx": 56,
+                        "action": "click",
+                        "summary": "Click Gallery button to open media selection interface"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            56,
+                            0
+                        ],
+                        "src_page_idx": 56,
+                        "dst_page_idx": 57,
+                        "action": "click",
+                        "summary": "Click image selection checkbox to select a media file"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            56,
+                            1
+                        ],
+                        "src_page_idx": 56,
+                        "dst_page_idx": 58,
+                        "action": "click",
+                        "summary": "Click Full Image radio button to toggle full - image mode"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            56,
+                            2
+                        ],
+                        "src_page_idx": 56,
+                        "dst_page_idx": 56,
+                        "action": "click",
+                        "summary": "Click Send button to send the selected media"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 47,
+            "function_description": "This page allows users to search for specific information or members within the 'test(2)' group chat's details, with a search bar at the top and a list of group-related entries (including the group owner) displayed below.",
+            "action_refs": [
+                [
+                    55,
+                    0
+                ],
+                [
+                    59,
+                    0
+                ],
+                [
+                    59,
+                    1
+                ]
+            ],
+            "data_in": [
+                "chat info",
+                "group member list",
+                "search session",
+                "search results"
+            ],
+            "data_out": [
+                "search results in chat info",
+                "filtered group member list",
+                "search session canceled",
+                "search results cleared"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 55,
+                "logic": "The user starts on the group chat info page (page 55) and clicks the search icon to enter the search interface (page 59). In the search interface, the user can either input a query (e.g., a member name) to search group-related entries or click the 'Cancel' button to exit the search and return to the previous page. The flow branches at the search interface based on whether the user chooses to input a search term or cancel the search.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            55,
+                            0
+                        ],
+                        "src_page_idx": 55,
+                        "dst_page_idx": 59,
+                        "action": "click",
+                        "summary": "Click the search chat info icon to enter the search interface"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            59,
+                            0
+                        ],
+                        "src_page_idx": 59,
+                        "dst_page_idx": null,
+                        "action": "input",
+                        "summary": "Input a search query (e.g., group member name) in the search bar"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            59,
+                            1
+                        ],
+                        "src_page_idx": 59,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'Cancel' button to exit the search interface"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 48,
+            "function_description": "Mute Notifications toggle",
+            "action_refs": [
+                [
+                    55,
+                    1
+                ]
+            ],
+            "data_in": [
+                "mute notifications setting"
+            ],
+            "data_out": [
+                "mute notifications setting updated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 55,
+                "logic": "The process starts on page 55. The user clicks the 'Mute Notifications toggle' element, which leads to page 60. This action likely toggles the mute notifications setting for the group chat.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            55,
+                            1
+                        ],
+                        "src_page_idx": 55,
+                        "dst_page_idx": 60,
+                        "action": "click",
+                        "summary": "Click the Mute Notifications toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 49,
+            "function_description": "This page allows the user to create a new tag for a contact's remarks, with options to search existing tags, manage tags, or use the \"Create Tag\" button to add a new tag.",
+            "action_refs": [
+                [
+                    19,
+                    2
+                ]
+            ],
+            "data_in": [
+                "tag management interface",
+                "existing tags"
+            ],
+            "data_out": [
+                "new tag (to be created)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 19,
+                "logic": "The user starts on the 'Select Tag' page (page 19). To create a new tag for a contact's remarks, the user clicks the 'Create Tag' button. This action likely initiates the process of adding a new tag, with the flow remaining on the same page (page 19) after the click, as indicated by the dst_page_idx.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            19,
+                            2
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click the 'Create Tag' button to start creating a new tag"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 50,
+            "function_description": "This page allows users to manage (search, select, or clear) tags for a Weixin contact, enabling organization and categorization of contact information.",
+            "action_refs": [
+                [
+                    19,
+                    3
+                ],
+                [
+                    23,
+                    0
+                ],
+                [
+                    23,
+                    1
+                ],
+                [
+                    23,
+                    3
+                ]
+            ],
+            "data_in": [
+                "tag management entry",
+                "tag management session",
+                "contact tags",
+                "search input",
+                "contact tag",
+                "tag management interface"
+            ],
+            "data_out": [
+                "tag management page loaded",
+                "tag selection context updated",
+                "filtered contact tags",
+                "updated contact tag"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 19,
+                "logic": "The process starts by clicking the 'Manage tags' link to enter the tag management page. From there, users can either search for contact tags via the input field, edit tags, or navigate back to the previous page. The flow includes options for searching, editing, or returning, with the search and edit actions occurring on the same page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            19,
+                            3
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 23,
+                        "action": "click",
+                        "summary": "Click 'Manage tags' link to enter tag management page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            23,
+                            0
+                        ],
+                        "src_page_idx": 23,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click to go back to previous page"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            23,
+                            1
+                        ],
+                        "src_page_idx": 23,
+                        "dst_page_idx": 25,
+                        "action": "input",
+                        "summary": "Input text to search contacts tags"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            23,
+                            3
+                        ],
+                        "src_page_idx": 23,
+                        "dst_page_idx": 23,
+                        "action": "click",
+                        "summary": "Click to edit contact tags"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 51,
+            "function_description": "This page displays search results related to the mobile number 13800138000, including associated accounts (like a public account), articles mentioning the number, and other related content, allowing users to explore information linked to this number within Weixin.",
+            "action_refs": [
+                [
+                    40,
+                    0
+                ]
+            ],
+            "data_in": [
+                "search query (13800138000)"
+            ],
+            "data_out": [
+                "search results (related to 13800138000)"
+            ],
+            "data_dependencies": [
+                40
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 40,
+                "logic": "The process starts on page 40. The user clicks the 'Search 13800138000 (Mini Programs, etc.)' option, which navigates to page 12. On page 12, the search results for the mobile number 13800138000 are displayed, including associated accounts and articles mentioning the number.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            40,
+                            0
+                        ],
+                        "src_page_idx": 40,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click to search for 13800138000 and view related results"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 52,
+            "function_description": "Three - dot menu",
+            "action_refs": [
+                [
+                    42,
+                    1
+                ]
+            ],
+            "data_in": [
+                "QR code page menu"
+            ],
+            "data_out": [
+                "menu options (e.g., share, edit, etc.)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 42,
+                "logic": "The core execution logic starts on page 42. The user clicks the three - dot menu located at the top - right corner of the page. Since there are no further actions provided, this is the only step in the current flow related to the three - dot menu.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            42,
+                            1
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the three - dot menu at the top - right corner of the page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 53,
+            "function_description": "Scan button",
+            "action_refs": [
+                [
+                    42,
+                    2
+                ]
+            ],
+            "data_in": [
+                "QR code (friend addition)"
+            ],
+            "data_out": [
+                "scan result (friend addition)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 42,
+                "logic": "The core execution logic starts on page 42. The user clicks the 'Scan' button (action_ref [42,2]). Since there are no further steps or branches provided, this is a single-step flow where clicking the button is the primary action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            42,
+                            2
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the Scan button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 54,
+            "function_description": "Change Style button",
+            "action_refs": [
+                [
+                    42,
+                    3
+                ]
+            ],
+            "data_in": [
+                "QR code style setting"
+            ],
+            "data_out": [
+                "updated QR code style"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 42,
+                "logic": "The user starts on page 42 (a QR code screen) and clicks the 'Change Style' button. This action likely initiates a process to modify the QR code's style, though the immediate destination page is not specified here.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            42,
+                            3
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the 'Change Style' button on the QR code page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 55,
+            "function_description": "Save Image button",
+            "action_refs": [
+                [
+                    42,
+                    4
+                ]
+            ],
+            "data_in": [
+                "QR code image"
+            ],
+            "data_out": [
+                "saved QR code image"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 42,
+                "logic": "The core execution logic for the Save Image button involves a single step: clicking the 'Save Image' button. This action is performed on the page displaying the QR code (page index 42), and there are no subsequent steps or branches as the action is a leaf node.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            42,
+                            4
+                        ],
+                        "src_page_idx": 42,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the Save Image button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 56,
+            "function_description": "This page functions as an image gallery interface within Weixin (WeChat), allowing the user to select an image (such as a QR code) from their device’s stored photos for the purpose of scanning (e.g., to add a contact via QR code scanning).",
+            "action_refs": [
+                [
+                    43,
+                    0
+                ]
+            ],
+            "data_in": [
+                "camera feature entry",
+                "image selection context"
+            ],
+            "data_out": [
+                "new photo capture (initiated)"
+            ],
+            "data_dependencies": [
+                57
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 43,
+                "logic": "The user starts on page 43 (the image gallery interface). They perform a click action on the 'Take Photo button' (though in the gallery context, this likely relates to interacting with the gallery to select an image, such as a QR code, for scanning purposes). The flow is a single step here as only one action is provided, with no branching or looping yet.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            43,
+                            0
+                        ],
+                        "src_page_idx": 43,
+                        "dst_page_idx": 43,
+                        "action": "click",
+                        "summary": "Click the Take Photo button (or interact with the gallery element) to proceed with selecting an image (e.g., QR code) for scanning."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 57,
+            "function_description": "This page displays a selected QR code image (from the gallery) to facilitate scanning and adding a contact in Weixin.",
+            "action_refs": [
+                [
+                    43,
+                    1
+                ],
+                [
+                    44,
+                    0
+                ]
+            ],
+            "data_in": [
+                "QR code image",
+                "image thumbnail",
+                "QR code view"
+            ],
+            "data_out": [
+                "enlarged QR code image",
+                "scan interface (returned)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 43,
+                "logic": "The flow starts on the gallery page (page 43). First, the user clicks the QR code image thumbnail to open it (navigating to page 44). Then, the user can click the back button to return to the gallery (page 39). There are no branches or loops, just a linear sequence of opening the QR code and optionally navigating back.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            43,
+                            1
+                        ],
+                        "src_page_idx": 43,
+                        "dst_page_idx": 44,
+                        "action": "click",
+                        "summary": "Click the QR code image thumbnail to open it"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            44,
+                            0
+                        ],
+                        "src_page_idx": 44,
+                        "dst_page_idx": 39,
+                        "action": "click",
+                        "summary": "Click the back navigation button to return to the gallery"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 58,
+            "function_description": "This page functions as a dropdown menu for selecting an image album (e.g., \"All Images\", \"QR & Barcode Scanner\", \"Earth3DMap\") to access photos for QR code scanning or other image - related operations in the Weixin contact - adding workflow.",
+            "action_refs": [
+                [
+                    43,
+                    2
+                ],
+                [
+                    45,
+                    0
+                ]
+            ],
+            "data_in": [
+                "image category filter setting",
+                "image filter option"
+            ],
+            "data_out": [
+                "expanded image category filter menu",
+                "filtered image list"
+            ],
+            "data_dependencies": [
+                63,
+                64
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 43,
+                "logic": "The flow starts on page 43. First, the 'All Images' dropdown is clicked (S1) to navigate to page 45. Then, the 'All Images (4)' filter option is clicked (S2) to proceed to page 46, completing the album selection for image - related operations in the Weixin contact - adding workflow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            43,
+                            2
+                        ],
+                        "src_page_idx": 43,
+                        "dst_page_idx": 45,
+                        "action": "click",
+                        "summary": "Click the 'All Images' dropdown"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            45,
+                            0
+                        ],
+                        "src_page_idx": 45,
+                        "dst_page_idx": 46,
+                        "action": "click",
+                        "summary": "Click the 'All Images (4)' filter option"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 59,
+            "function_description": "This page is the chat interface for the \"test(2)\" group in WeChat, allowing users to send messages, access chat actions (like attaching images, making calls, sharing location, sending red packets/gifts, transferring money, or using voice input), and view group chat updates.",
+            "action_refs": [
+                [
+                    56,
+                    3
+                ]
+            ],
+            "data_in": [
+                "gallery view"
+            ],
+            "data_out": [
+                "chat interface (restored)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 56,
+                "logic": "The user starts on the gallery page (page 56) and clicks the close gallery button. This action navigates them back to the 'test(2)' group chat page (page 54), where they can resume using chat features like sending messages or accessing other chat actions.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            56,
+                            3
+                        ],
+                        "src_page_idx": 56,
+                        "dst_page_idx": 54,
+                        "action": "click",
+                        "summary": "Click the close gallery button to return to the group chat page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 60,
+            "function_description": "Group owner entry (夏昌炜)",
+            "action_refs": [
+                [
+                    59,
+                    2
+                ]
+            ],
+            "data_in": [
+                "group owner entry",
+                "user profile (夏昌炜)"
+            ],
+            "data_out": [
+                "selected group owner entry"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 59,
+                "logic": "The user initiates the group owner entry process by clicking on the entry labeled '夏昌炜' (Xia Changwei) under the 'Group owner' section. This action likely triggers the next step in the group owner entry workflow, though the exact subsequent page or action is not fully defined here as the destination page index is null.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            59,
+                            2
+                        ],
+                        "src_page_idx": 59,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the '夏昌炜' entry under Group owner"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 61,
+            "function_description": "This page allows the user to input and set a name for a new contact tag within the Weixin (WeChat) application.",
+            "action_refs": [
+                [
+                    23,
+                    2
+                ],
+                [
+                    26,
+                    0
+                ],
+                [
+                    26,
+                    1
+                ]
+            ],
+            "data_in": [
+                "contact tag management context",
+                "tag name setting modal",
+                "tag name setting"
+            ],
+            "data_out": [
+                "new contact tag (in creation state)",
+                "closed tag name setting modal",
+                "updated tag name"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 23,
+                "logic": "The user starts on page 23 and clicks to create a new contact tag, leading to page 26 (the tag name modal). At page 26, the user can either close the modal (via the X button) or input a tag name (e.g., 'Friends') into the input field. The flow branches at the modal: one branch closes the modal, the other inputs the tag name.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            23,
+                            2
+                        ],
+                        "src_page_idx": 23,
+                        "dst_page_idx": 26,
+                        "action": "click",
+                        "summary": "Click to create new contact tag, navigating to the tag name modal page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            26,
+                            0
+                        ],
+                        "src_page_idx": 26,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click the X button to close the tag name modal"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            26,
+                            1
+                        ],
+                        "src_page_idx": 26,
+                        "dst_page_idx": null,
+                        "action": "input",
+                        "summary": "Input the tag name (e.g., 'Friends') into the tag name input field"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 62,
+            "function_description": "This page allows users to manage (select, search, or clear) tags for a contact, with a list of available tags and a search bar for tag filtering.",
+            "action_refs": [
+                [
+                    23,
+                    4
+                ]
+            ],
+            "data_in": [
+                "测试 tag",
+                "contacts with 测试 tag"
+            ],
+            "data_out": [
+                "contacts list with 测试 tag"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 23,
+                "logic": "The user starts on the 'Manage Tags' page. They perform a click action to view contacts associated with the '测试' tag. There are no branches or loops here as only one action is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            23,
+                            4
+                        ],
+                        "src_page_idx": 23,
+                        "dst_page_idx": 23,
+                        "action": "click",
+                        "summary": "Click to view contacts with '测试' tag"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 63,
+            "function_description": "QR & Barcode Scanner (1) filter option",
+            "action_refs": [
+                [
+                    45,
+                    1
+                ]
+            ],
+            "data_in": [
+                "image filter option",
+                "QR & Barcode Scanner image group"
+            ],
+            "data_out": [
+                "filtered image group (QR & Barcode Scanner)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 45,
+                "logic": "The flow starts on page 45. The user performs a click action on the 'QR & Barcode Scanner (1)' filter option, which navigates to page 47. There are no branches or loops in this logic as it is a single-step navigation triggered by the click.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            45,
+                            1
+                        ],
+                        "src_page_idx": 45,
+                        "dst_page_idx": 47,
+                        "action": "click",
+                        "summary": "Click on 'QR & Barcode Scanner (1)' filter option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 64,
+            "function_description": "Earth3DMap (3) filter option",
+            "action_refs": [
+                [
+                    45,
+                    2
+                ]
+            ],
+            "data_in": [
+                "image filter option",
+                "Earth3DMap image group"
+            ],
+            "data_out": [
+                "filtered image list (Earth3DMap)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 45,
+                "logic": "The flow starts on page 45. The user clicks on the 'Earth3DMap (3)' filter option, which navigates to page 48. There are no branches or loops as this is a single action flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            45,
+                            2
+                        ],
+                        "src_page_idx": 45,
+                        "dst_page_idx": 48,
+                        "action": "click",
+                        "summary": "Click on Earth3DMap (3) filter option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        }
+    ]
+}

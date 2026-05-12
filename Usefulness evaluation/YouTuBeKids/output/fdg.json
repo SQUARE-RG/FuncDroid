@@ -1,0 +1,1099 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "Browse kids’ videos (YouTube Kids)",
+            "action_refs": [
+                [
+                    0,
+                    3
+                ],
+                [
+                    0,
+                    9
+                ]
+            ],
+            "data_in": [
+                "video category tab (All)"
+            ],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "To browse kids’ videos in YouTube Kids, start on the home page (page 0). You can either click the 'All videos category tab' (action [0,3]) to view all available kids’ videos or click the 'Home tab (bottom navigation)' (action [0,9]) to ensure you’re on the home page with video categories and recommendations. These actions help navigate to or stay on the page to explore kids’ video content.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click 'All videos category tab' to view all kids’ videos"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            0,
+                            9
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click 'Home tab (bottom navigation)' to stay on the home page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 1,
+            "function_description": "The current page in the YouTube Kids app allows users to browse and select kids’ videos (including educational and entertainment content) and provides a button to cast the video playback to another device.",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ]
+            ],
+            "data_in": [
+                "cast device setting"
+            ],
+            "data_out": [
+                "cast device setting updated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the YouTube Kids video browsing page. They click the cast device button, which likely initiates the casting process for video playback to another device. There are no branches or loops as the action is a single click on the cast button.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the cast device button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "The current page displays the YouTube Kids Privacy Notice, which explains to parents the data collected by the app, the reasons for collection, usage of the data, and available privacy controls, including details on device - related and app - usage - based information collection.",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ]
+            ],
+            "data_in": [
+                "safety control setting"
+            ],
+            "data_out": [
+                "privacy notice content"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the YouTube Kids main page. The user clicks the safety control button (shield icon) at the top right. This action opens the YouTube Kids Privacy Notice page, which displays details about data collection, usage, and privacy controls, including device - related and app - usage - based information collection. There are no branches or loops in this flow as it's a simple navigation to view the privacy notice.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the safety control button (shield icon) on the YouTube Kids main page to open the Privacy Notice page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "This page in YouTube Kids requires parents to solve a math problem (8 × 6) via a numeric keypad (or set a custom passcode) to verify parental access, likely for app settings or restricted features.",
+            "action_refs": [
+                [
+                    0,
+                    2
+                ],
+                [
+                    2,
+                    0
+                ],
+                [
+                    2,
+                    1
+                ],
+                [
+                    2,
+                    3
+                ]
+            ],
+            "data_in": [
+                "app settings entry",
+                "parents only modal",
+                "math problem (8×6)",
+                "math problem answer input",
+                "parents only verification process"
+            ],
+            "data_out": [
+                "parental control authentication interface",
+                "parents only modal closed",
+                "entered digit (1)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "To access app settings, the parent first clicks the app settings button. This opens the 'Parents only' modal with a math problem (8×6) and a numeric keypad. The parent can either close the modal (via the X button) or start entering numbers (e.g., '1') using the keypad; the 'Next' button remains disabled until valid input is provided.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click app settings button to open 'Parents only' modal"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            2,
+                            0
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click 'X' button to close the 'Parents only' modal"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            2,
+                            1
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click number '1' on the numeric keypad (starts input)"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            2,
+                            3
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click disabled 'Next' button (no effect, input incomplete)"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "The current page in the YouTube Kids app allows users to browse and select kids’ videos across categories like All, Holidays, and Shows, with options to cast content to a device, access account/profile settings, and navigate to home, search, or saved content sections.",
+            "action_refs": [
+                [
+                    0,
+                    4
+                ]
+            ],
+            "data_in": [
+                "Holidays videos category",
+                "video list"
+            ],
+            "data_out": [
+                "filtered video list (Holidays category)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the YouTube Kids main browsing page. They can click the 'Holidays' category tab (or other category tabs like 'All', 'Shows') to filter and browse kids’ videos. The page remains the same (dst_page_idx 0) after clicking the tab, allowing continued browsing of the selected category’s videos.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the 'Holidays' videos category tab to filter and browse videos in this category."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "The current page in YouTube Kids allows users to browse and select kids’ videos (including educational and entertainment content) and also provides a cast device button to stream the content to a compatible device.",
+            "action_refs": [
+                [
+                    0,
+                    5
+                ]
+            ],
+            "data_in": [
+                "videos category tab",
+                "app content"
+            ],
+            "data_out": [
+                "videos category content loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the YouTube Kids main page (page 0). They click the button to show the videos category tab, which keeps them on the same page (page 0) to browse kids’ videos. There are no branches or loops here as it’s a single action to access the video browsing view.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click to show videos category tab (stays on page 0 for browsing kids’ videos)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "The current page in the YouTube Kids app allows users to browse and select kids’ videos across categories like “All,” “Holidays,” “Shows,” etc., with options to cast content to a device, access account/settings, and navigate via Home, Search, “Your stuff,” or Profile.",
+            "action_refs": [
+                [
+                    0,
+                    6
+                ]
+            ],
+            "data_in": [
+                "music videos category setting",
+                "video list (all category)"
+            ],
+            "data_out": [
+                "video list (music videos category)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the YouTube Kids main browsing page. They can click the 'Music videos' category tab (or other category tabs like All, Holidays, Shows) to filter and browse kids’ videos in that category. The flow is a straight line as the action leads back to the same page (presumably to update the video list shown).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            6
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the 'Music videos' category tab to browse videos in this category"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "The current page functions as a video playback interface within YouTube Kids, displaying a video (with \"Bluey Dance Mode\" branding) that users can watch, likely with additional interactive features typical of YouTube Kids like pausing, seeking, or accessing related kids’ content.",
+            "action_refs": [
+                [
+                    0,
+                    7
+                ],
+                [
+                    3,
+                    0
+                ],
+                [
+                    11,
+                    0
+                ]
+            ],
+            "data_in": [
+                "video",
+                "video content",
+                "video playback state"
+            ],
+            "data_out": [
+                "video playback session",
+                "video playback update",
+                "updated video playback state"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts by clicking a video thumbnail (representative) on the YouTube Kids home page, leading to a video playback preparation page. Next, clicking the video playback area (branded with Dance Mode) initiates or continues video playback. Finally, interacting with the video’s interactive region (like a mode toggle) completes the core playback-related actions, with no branches or loops in this sequence.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            7
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click video thumbnail (representative) to proceed to video playback preparation page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            3,
+                            0
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click video playback area (Dance Mode) to initiate/continue video playback"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            11,
+                            0
+                        ],
+                        "src_page_idx": 11,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click video playback interactive region (mode toggle) for interactive control"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "The current page (a menu accessed via the three - dot video options menu on YouTube Kids) provides the functionality to block the currently selected kids' video.",
+            "action_refs": [
+                [
+                    0,
+                    8
+                ]
+            ],
+            "data_in": [
+                "video"
+            ],
+            "data_out": [
+                "blocked video"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "To block the selected kids' video, first click the three - dot video options menu. Then, from the options that appear, select the 'Block this video' option to complete the blocking process.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            8
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the three - dot video options menu"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "This page in YouTube Kids provides a search interface where users can type or use voice input (via the microphone icon) to find kids’ videos, with a back arrow to return to the previous page and a bottom navigation bar for other sections.",
+            "action_refs": [
+                [
+                    0,
+                    10
+                ],
+                [
+                    5,
+                    0
+                ],
+                [
+                    14,
+                    0
+                ],
+                [
+                    14,
+                    1
+                ]
+            ],
+            "data_in": [
+                "search query",
+                "YouTube Kids search interface",
+                "search input text",
+                "search suggestion"
+            ],
+            "data_out": [
+                "search suggestions",
+                "updated search input field",
+                "cleared search input text",
+                "search results (cartoon songs)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the home page and clicks the Search tab in the bottom navigation to enter the search page. Then, they input 'cartoon songs' into the search field. At this point, a branch occurs: the user can either click the 'X' button to clear the input or select the 'cartoon songs' search suggestion to proceed with viewing related videos.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            10
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click Search tab in bottom navigation"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            5,
+                            0
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 14,
+                        "action": "input",
+                        "summary": "Input 'cartoon songs' into search field"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            14,
+                            0
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click Clear search input (X) button"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            14,
+                            1
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click Search suggestion 'cartoon songs'"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "The \"Your stuff\" page in YouTube Kids (under the \"Shared\" sub - tab) shows whether there are videos shared with the user (currently indicating none are shared) and also provides an option to return to the Home page.",
+            "action_refs": [
+                [
+                    0,
+                    11
+                ]
+            ],
+            "data_in": [
+                "your stuff feature entry"
+            ],
+            "data_out": [
+                "your stuff page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the YouTube Kids home - like page. First, the user clicks the 'Your stuff' tab in the bottom navigation. This takes them to the 'Your stuff' page (under the 'Shared' sub - tab), where it's shown that no videos have been shared. Then, there's an option to click the 'Home' button to return to the Home page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            11
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click the 'Your stuff' tab in bottom navigation to navigate to the 'Your stuff' (Shared) page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "This page in YouTube Kids allows users to select the profile (with an option to edit it) for the current app user and also provides access to parent settings.",
+            "action_refs": [
+                [
+                    0,
+                    12
+                ],
+                [
+                    7,
+                    0
+                ]
+            ],
+            "data_in": [
+                "profile (app user)"
+            ],
+            "data_out": [
+                "profile selection page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the main YouTube Kids page (page 0). First, the user clicks the Profile tab in the bottom navigation (action [0,12]) to navigate to the profile page (page 7). Then, the user can click the back navigation arrow (action [7,0]) to return to the main page (page 0). There are no branches or loops as the actions form a simple navigation cycle between the main and profile pages.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            12
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click Profile tab in bottom navigation to go to profile page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            7,
+                            0
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click back navigation arrow to return to main page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "The current page in the YouTube Kids app functions as a video browsing interface, allowing users to explore and select from a variety of kids’ videos (including educational content, nursery rhymes, and shows) organized under category tabs, with navigation options for home, search, saved content, and profile access.",
+            "action_refs": [
+                [
+                    1,
+                    0
+                ]
+            ],
+            "data_in": [
+                "privacy notice popup"
+            ],
+            "data_out": [
+                "closed privacy notice popup",
+                "app main interface (visible)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts on the page with the Privacy Notice popup (page 1). The user clicks the close button on the Privacy Notice popup, which transitions to the main video browsing interface (page 0) where kids’ videos are organized under category tabs with navigation options.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            0
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Close the Privacy Notice popup by clicking its close button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "Set my own passcode toggle",
+            "action_refs": [
+                [
+                    2,
+                    2
+                ]
+            ],
+            "data_in": [
+                "set own passcode setting"
+            ],
+            "data_out": [
+                "set own passcode setting enabled"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The flow starts on page 2. The user clicks the 'Set my own passcode' toggle, which leads to page 10. There are no branches or loops as this is a single action to toggle the setting.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            2
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click the 'Set my own passcode' toggle"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "Block this video button",
+            "action_refs": [
+                [
+                    4,
+                    0
+                ]
+            ],
+            "data_in": [
+                "video"
+            ],
+            "data_out": [
+                "blocked video"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 4,
+                "logic": "The user starts on page 4. The core action is to click the 'Block this video' button, which transitions to page 13. There are no branches or loops as this is a single-step action to block the video.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            4,
+                            0
+                        ],
+                        "src_page_idx": 4,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click the 'Block this video' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "The current page, accessed via the \"Watch it again\" button from the \"Your stuff\" tab, displays a curated list of kids’ videos (including educational and nursery rhyme content) for users to rewatch previously viewed or shared children’s video content.",
+            "action_refs": [
+                [
+                    6,
+                    0
+                ]
+            ],
+            "data_in": [
+                "watch history setting"
+            ],
+            "data_out": [
+                "watch history page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on page 6 (the 'Shared' tab view) and clicks the 'Watch it again' button. This action navigates to page 0, which displays the curated list of kids’ videos for rewatching. There are no branches or loops as the flow is a direct navigation to the target page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            0
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the 'Watch it again' button to navigate to the kids’ video rewatch list page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "The \"Shared\" page in YouTube Kids displays whether any videos have been shared with the user (showing a message if none have been shared yet) and provides a button to navigate back to the Home page.",
+            "action_refs": [
+                [
+                    6,
+                    1
+                ]
+            ],
+            "data_in": [
+                "shared videos list"
+            ],
+            "data_out": [
+                "shared videos list (loaded)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The user starts on page 6 and clicks the 'Shared' button. This action navigates to page 19, where the 'Shared' page displays a message if no videos have been shared, and provides a 'Home' button to return to the Home page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            1
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click the 'Shared' button to navigate to the Shared page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "The current page in YouTube Kids functions as a video browsing interface where users can explore, select, and play various kids’ videos (including educational content, nursery rhymes, etc.) organized under category tabs (All, Holidays, Shows, etc.), with navigation options for Home, Search, \"Your stuff,\" and Profile.",
+            "action_refs": [
+                [
+                    7,
+                    1
+                ]
+            ],
+            "data_in": [
+                "profile (giraffe)"
+            ],
+            "data_out": [
+                "app session (profile selected)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The flow starts on the profile selection page (page 7). The user clicks the giraffe profile avatar, which navigates to the main YouTube Kids video browsing interface (page 0) where videos are organized under category tabs and navigation options are available.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            1
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the giraffe profile avatar to navigate to the video browsing page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "This page in YouTube Kids allows the user to select or change the profile picture for the profile labeled \"1\" by choosing from a set of available avatar options.",
+            "action_refs": [
+                [
+                    7,
+                    2
+                ],
+                [
+                    20,
+                    0
+                ]
+            ],
+            "data_in": [
+                "user profile",
+                "profile picture option (marshmallow icon)",
+                "current profile picture"
+            ],
+            "data_out": [
+                "user profile (edit mode entered)",
+                "updated profile picture"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "To change the profile picture for profile '1' in YouTube Kids, first click the 'Edit profile' button on the profile selection page. Then, select the desired avatar option (e.g., the marshmallow icon) from the available profile picture choices to update the profile picture.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            2
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 20,
+                        "action": "click",
+                        "summary": "Click the Edit profile button to enter the profile editing page."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            20,
+                            0
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": 21,
+                        "action": "click",
+                        "summary": "Click the marshmallow icon profile picture option to select it as the new profile picture."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "This page in YouTube Kids’ parent settings requires parents to solve a math problem (8 × 6) via a numeric keypad to verify their identity and access parent - only features, with an option to set a custom passcode.",
+            "action_refs": [
+                [
+                    7,
+                    3
+                ]
+            ],
+            "data_in": [
+                "parent settings entry"
+            ],
+            "data_out": [
+                "parent settings access interface"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 7,
+                "logic": "The flow starts on the 'Choose a profile' page. The user clicks the 'Parent settings' gear icon, which opens the 'Parents only' page where a math problem (8×6) and a numeric keypad for input, plus an option to set a custom passcode, are presented. This action initiates the parent identity verification process to access restricted features.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            7,
+                            3
+                        ],
+                        "src_page_idx": 7,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click the 'Parent settings' gear icon on the 'Choose a profile' page to open the 'Parents only' verification page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "The current page (YouTube Kids home) allows users to browse and select various kids’ videos across categories like All, Holidays, Shows, etc., with navigation options to Search, access Your stuff, or view Profile.",
+            "action_refs": [
+                [
+                    19,
+                    0
+                ]
+            ],
+            "data_in": [
+                "home page navigation trigger"
+            ],
+            "data_out": [
+                "home page content loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 19,
+                "logic": "The flow starts on a page (src_page 19) and executes a click action on the Home button (house icon). This action navigates to the YouTube Kids home page (dst_page 0), where users can browse kids’ videos across categories and access other navigation options like Search, Your stuff, or Profile.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            19,
+                            0
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the Home button (house icon) to navigate to the YouTube Kids home page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "The current page functions to play the selected video titled 'Bingo Went Over The Mountain' from the search results of 'cartoon songs' in YouTube Kids, providing an animated visual and audio experience for kids.",
+            "action_refs": [
+                [
+                    16,
+                    0
+                ],
+                [
+                    17,
+                    0
+                ]
+            ],
+            "data_in": [
+                "video (Bingo Went Over The Mountain)",
+                "video"
+            ],
+            "data_out": [
+                "video playback started",
+                "video playback state updated"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 16,
+                "logic": "The flow starts on the search results page for 'cartoon songs'. First, the video card for 'Bingo Went Over The Mountain' is clicked to select it. Then, the video begins playing, providing the animated visual and audio experience for kids.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            16,
+                            0
+                        ],
+                        "src_page_idx": 16,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click the video card for 'Bingo Went Over The Mountain' from search results"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            17,
+                            0
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click to play the selected video"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        }
+    ]
+}

@@ -1,0 +1,2206 @@
+{
+    "FDG": [
+        {
+            "index": 0,
+            "function_description": "Weather info for 故宫博物院 + navigation",
+            "action_refs": [
+                [
+                    0,
+                    6
+                ],
+                [
+                    0,
+                    8
+                ],
+                [
+                    0,
+                    9
+                ]
+            ],
+            "data_in": [
+                "weather information",
+                "home tab state"
+            ],
+            "data_out": [],
+            "data_dependencies": [
+                2,
+                5,
+                13,
+                14,
+                15,
+                16
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the weather page for 故宫博物院. First, the user can click the '墨迹 (Home)' bottom tab (S1). Then, they can choose to click the 'AI雷达 (AI Radar)' bottom tab (S2) or the '服务 (Services)' bottom tab (S3), with these being mutually exclusive branches from S2's step (though S2 here is a placeholder for the branching point after S1, as the actions are all on the same page initially).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            6
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click bottom tab '墨迹 (Home)'"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            0,
+                            8
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click bottom tab 'AI雷达 (AI Radar)'"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            0,
+                            9
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click bottom tab '服务 (Services)'"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 1,
+            "function_description": "This page allows users to manage their city list for weather updates, including immediate location, viewing the weather of 故宫博物院, editing the city list, adding new cities, and synchronizing the city list to an account.",
+            "action_refs": [
+                [
+                    0,
+                    0
+                ],
+                [
+                    1,
+                    0
+                ]
+            ],
+            "data_in": [
+                "location management page entry",
+                "city management page"
+            ],
+            "data_out": [
+                "location management page loaded"
+            ],
+            "data_dependencies": [
+                9
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the weather page (page 0). First, the user clicks the 'Add location button (+ 故宫博物院)' to navigate to the city management page (page 1). On the city management page, the user can then click the 'Close city management page' button to exit, completing the interaction with the city list management functional point.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            0
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the add location button to open the city management page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            1,
+                            0
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 1,
+                        "action": "click",
+                        "summary": "Click the close button to exit the city management page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 2,
+            "function_description": "This page provides options to share the weather information of the Palace Museum (including temperature, weather conditions, wind, humidity, etc.) to different platforms such as generating a poster, WeChat friends, Moments, QQ, and Sina Weibo.",
+            "action_refs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    2,
+                    0
+                ],
+                [
+                    2,
+                    4
+                ]
+            ],
+            "data_in": [
+                "weather information",
+                "share popup",
+                "QQ sharing target list"
+            ],
+            "data_out": [
+                "shared weather information",
+                "share popup closed",
+                "sharing session to QQ"
+            ],
+            "data_dependencies": [
+                14,
+                15
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "To share the Palace Museum's weather info, first click the share icon (S1) to open the sharing popup. Then, at the popup (S2), choose a branch: either close the popup (S3) or share to a platform like QQ (S4).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            1
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 2,
+                        "action": "click",
+                        "summary": "Click share weather info icon to open sharing popup"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": null,
+                        "src_page_idx": 2,
+                        "dst_page_idx": null,
+                        "action": "none",
+                        "summary": "At sharing popup, decide next action"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            2,
+                            0
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 7,
+                        "action": "click",
+                        "summary": "Click close button to dismiss sharing popup"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            2,
+                            4
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click QQ button to share weather info to QQ"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 3,
+            "function_description": "This page provides various weather - related services and features, including weather alerts, different weather - related function entries (such as for travel, fortune - telling, fishing, etc.), travel - essential weather information (like 180 - day forecast, air quality, etc.), and health - related weather reminders (such as skin care index, weather - related pain, etc.), also offering VIP membership services and personal center access.",
+            "action_refs": [
+                [
+                    0,
+                    2
+                ]
+            ],
+            "data_in": [
+                "outfit suggestion feature entry"
+            ],
+            "data_out": [
+                "outfit suggestion page loaded"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The flow starts on the weather page (page 0). The user clicks the 'Outfit suggestion' button, which navigates to a new page (page 3) related to outfit suggestions. There are no branches or loops in this single-step flow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            2
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click the outfit suggestion button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 4,
+            "function_description": "Sound toggle icon",
+            "action_refs": [
+                [
+                    0,
+                    3
+                ]
+            ],
+            "data_in": [
+                "sound setting"
+            ],
+            "data_out": [
+                "sound setting toggled"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on page 0. They click the sound toggle icon, which transitions the app to page 4. This action likely toggles the sound state (on/off) for the app's audio features.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            3
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 4,
+                        "action": "click",
+                        "summary": "Click the sound toggle icon"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 5,
+            "function_description": "Displays detailed weather information (temperature, weather conditions, humidity, UV index, pressure), traffic restriction details, lunar calendar (黄历) recommendations, and sunrise/sunset info for the Palace Museum, with a focus on the weather forecast for January 6th (tomorrow) after navigating from the today’s weather forecast card.",
+            "action_refs": [
+                [
+                    0,
+                    4
+                ],
+                [
+                    5,
+                    0
+                ],
+                [
+                    5,
+                    1
+                ]
+            ],
+            "data_in": [
+                "today's weather forecast card",
+                "weather forecast (故宫博物院)",
+                "tomorrow's weather data"
+            ],
+            "data_out": [
+                "detailed weather forecast page"
+            ],
+            "data_dependencies": [
+                6,
+                18
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "Start on the initial page (page 0) for the Palace Museum’s weather. First, click the today’s weather forecast card (action [0,4]) to navigate to a detailed page (page 5). Then, on page 5, click the tab for tomorrow’s (01/06) weather (action [5,1]) to view the detailed weather forecast and related info (traffic, lunar calendar, sunrise/sunset) for January 6th. The flow is a straight sequence with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            4
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click today’s weather forecast card to navigate to detailed weather page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            5,
+                            1
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click tomorrow’s (01/06) weather tab to view detailed forecast for January 6th"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 6,
+            "function_description": "Displays the weather forecast for the Forbidden City博物院, including temperature, weather conditions, humidity, UV index, air pressure, traffic restrictions, lunar calendar, and sunrise/sunset information for the selected day (tomorrow, 01/06).",
+            "action_refs": [
+                [
+                    0,
+                    5
+                ]
+            ],
+            "data_in": [
+                "tomorrow's weather forecast card"
+            ],
+            "data_out": [
+                "detailed tomorrow's weather information"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The app starts on the main weather page for the Forbidden City. To view tomorrow’s (01/06) detailed forecast, the user clicks on the 'Tomorrow’'s weather forecast card' (showing 9/-5°C, cloudy). This action navigates to the detailed page, where all required info (temp, conditions, humidity, UV, pressure, traffic, lunar calendar, sunrise/sunset) is displayed.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            5
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 5,
+                        "action": "click",
+                        "summary": "Click on the 'Tomorrow’s weather forecast card' to navigate to the detailed forecast page for 01/06."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 7,
+            "function_description": "The \"时景 (Scenes)\" page in the app serves as a discovery hub for weather - related and scenic content, featuring sections like recommended posts, discussions,图文 (graphics and text), landscapes, etc., along with activities, special topics, and user - shared scenic posts, and also provides a function for users to post graphic content.",
+            "action_refs": [
+                [
+                    0,
+                    7
+                ]
+            ],
+            "data_in": [
+                "scenes feature entry"
+            ],
+            "data_out": [
+                "scenes page content"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the weather page (page 0). They click the '时景 (Scenes)' bottom tab, which navigates to the Scenes page (page 6) where weather - related and scenic content like recommended posts, activities, and user - shared posts are available, and there's also a function to post graphic content.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            7
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click the '时景 (Scenes)' bottom tab to navigate to the Scenes page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 8,
+            "function_description": "This page, accessed via the \"墨迹 (Home)\" bottom tab, displays detailed weather information for 故宫博物院, including current temperature, weather conditions, air quality, wind, humidity, hourly/daily forecasts, and a weather - themed avatar with related interactive elements.",
+            "action_refs": [
+                [
+                    0,
+                    10
+                ]
+            ],
+            "data_in": [],
+            "data_out": [],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 0,
+                "logic": "The user starts on the page displaying weather information for 故宫博物院. The core logic involves a single action of clicking the '我 (Profile)' bottom tab, which navigates to the Profile page while the weather page remains accessible as a source.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            0,
+                            10
+                        ],
+                        "src_page_idx": 0,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the '我 (Profile)' bottom tab"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 9,
+            "function_description": "The current page displays detailed weather information (temperature, weather condition, wind, humidity, air quality, forecast) for 故宫博物院, with options to add locations, view 24 - hour forecasts, and access other features like time - lapse scenery, AI radar, services, and personal settings.",
+            "action_refs": [
+                [
+                    1,
+                    1
+                ]
+            ],
+            "data_in": [
+                "city list",
+                "account"
+            ],
+            "data_out": [
+                "synchronized city list to account"
+            ],
+            "data_dependencies": [
+                10,
+                11,
+                12
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts on page 1 (city management) and clicks 'Sync city list to account' to navigate to page 0 (weather details for 故宫博物院). On page 0, the app displays detailed weather info, with options for 24-hour forecast, time-lapse scenery, AI radar, services, and personal settings. No branches or loops are present as it’s a single navigation step to the target page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            1
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click 'Sync city list to account' to navigate to weather details page for 故宫博物院"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 10,
+            "function_description": "This page displays the weather information for the Forbidden City (故宫博物院), including current temperature, weather conditions, wind, humidity, air quality, daily forecasts, and 24 - hour forecasts, and also provides a button to add this location.",
+            "action_refs": [
+                [
+                    1,
+                    2
+                ]
+            ],
+            "data_in": [
+                "current city location setting"
+            ],
+            "data_out": [
+                "updated current city weather data",
+                "current city location setting"
+            ],
+            "data_dependencies": [
+                5,
+                13,
+                16,
+                24,
+                30,
+                35
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The flow starts on page 1. The user clicks to locate the current city (故宫博物院), which navigates to page 0. On page 0, the weather information for 故宫博物院 is displayed, including current temperature, weather conditions, wind, humidity, air quality, daily forecasts, and 24 - hour forecasts. There is also a button to add this location.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            2
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click to locate current city (故宫博物院)"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 11,
+            "function_description": "The current page displays the weather information (temperature, weather condition, wind, humidity, air quality, and forecast) for the Forbidden City (故宫博物院) and provides options to add the location, view 24 - hour forecast, and access other features like time - lapse scenery, AI radar, services, and personal settings.",
+            "action_refs": [
+                [
+                    1,
+                    3
+                ]
+            ],
+            "data_in": [
+                "city list"
+            ],
+            "data_out": [
+                "updated city list"
+            ],
+            "data_dependencies": [
+                9
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user starts on page 1, which shows the Forbidden City's weather and city management options. They click the 'Edit city list' button (action_ref [1,3]), navigating to page 0, likely to manage or add cities. This is a straight-line flow with no branches or loops.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            3
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click 'Edit city list' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 12,
+            "function_description": "Displays the current weather, air quality, and short - term weather forecast (including today and tomorrow) for the Forbidden City Museum, and provides access to other weather - related features through the bottom navigation bar.",
+            "action_refs": [
+                [
+                    1,
+                    4
+                ]
+            ],
+            "data_in": [
+                "city list"
+            ],
+            "data_out": [
+                "new city added to city list"
+            ],
+            "data_dependencies": [
+                9
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 1,
+                "logic": "The user starts on page 1, then clicks the 'Add new city' button (action_ref [1,4]) to navigate to page 0. This action likely initiates the process of adding or viewing the Forbidden City Museum's weather details, which are then displayed on the subsequent page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            1,
+                            4
+                        ],
+                        "src_page_idx": 1,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the 'Add new city' button to navigate to the page showing Forbidden City Museum's weather."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 13,
+            "function_description": "This page generates and displays a weather - themed poster for the Palace Museum, and also provides options to share this poster to Moments, download the image, share it with WeChat friends, or share it via QQ.",
+            "action_refs": [
+                [
+                    2,
+                    1
+                ],
+                [
+                    8,
+                    0
+                ],
+                [
+                    8,
+                    2
+                ]
+            ],
+            "data_in": [
+                "weather data",
+                "location data (故宫博物院)",
+                "weather information",
+                "share content",
+                "shareable content (image with weather info)"
+            ],
+            "data_out": [
+                "weather poster image"
+            ],
+            "data_dependencies": [
+                20
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "First, click the button to generate the weather - themed poster for the Palace Museum. After the poster is generated, there is a branch point where you can choose different operations: either share the poster to WeChat Moments, or perform other actions like downloading the image, sharing with WeChat friends, or sharing via QQ, or go back to the previous page.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            1
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click the button to generate the weather - themed poster for the Palace Museum"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            8,
+                            2
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 8,
+                        "action": "click",
+                        "summary": "Click the option to share the poster to WeChat Moments"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            8,
+                            0
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the button to go back to the previous page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S2",
+                        "type": "if - else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 14,
+            "function_description": "This page functions as a chat selection interface within WeChat, allowing the user to choose a specific chat (from recent forwards or recent chats) to share the Forbidden City's weather information.",
+            "action_refs": [
+                [
+                    2,
+                    2
+                ]
+            ],
+            "data_in": [
+                "weather information",
+                "WeChat friend list"
+            ],
+            "data_out": [
+                "sharing task (to WeChat friend)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The process starts on the weather page (page 2). The user clicks the 'Share to WeChat Friend' button, which navigates to the WeChat chat selection page (page 9) to choose a chat for sharing the Forbidden City's weather information.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            2
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click 'Share to WeChat Friend' button to open chat selection page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 15,
+            "function_description": "This page allows users to create a social media post (specifically for sharing weather - related content to Moments) where they can add thoughts, set location, specify who to remind, and define the visibility of the post before publishing it.",
+            "action_refs": [
+                [
+                    2,
+                    3
+                ]
+            ],
+            "data_in": [
+                "weather information",
+                "share content"
+            ],
+            "data_out": [
+                "shared post draft"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The user starts on page 2 and clicks the 'Share to Moments' button (though in the provided action, it's 'Share to Moments' leading to page 10, likely the post creation page). This action transitions to the post creation page where they can add thoughts, set location, specify reminders, and define visibility before publishing.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            3
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click 'Share to Moments' button to navigate to post creation page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 16,
+            "function_description": "This page displays the weather information for the Palace Museum, including current temperature, weather conditions, wind speed, humidity, air quality, and daily forecasts, and provides a sharing function to share this weather information to Sina Weibo.",
+            "action_refs": [
+                [
+                    2,
+                    5
+                ]
+            ],
+            "data_in": [
+                "weather information"
+            ],
+            "data_out": [
+                "shared weather information to Sina Weibo"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 2,
+                "logic": "The flow starts on the Palace Museum weather page (page 2), where weather details are displayed. Then, the 'Share to Sina Weibo' button is clicked, leading to the sharing interface (page 0) to complete the sharing action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            2,
+                            5
+                        ],
+                        "src_page_idx": 2,
+                        "dst_page_idx": 0,
+                        "action": "click",
+                        "summary": "Click the 'Share to Sina Weibo' button"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 17,
+            "function_description": "This page is for subscribing to Moji Weather's VIP membership, where users can select from different VIP membership packages (such as continuous annual, quarterly, monthly, or one - year packages) and payment methods (WeChat Pay, Alipay) to complete the payment and activate the VIP membership, which comes with 43 exclusive privileges.",
+            "action_refs": [
+                [
+                    3,
+                    0
+                ],
+                [
+                    13,
+                    0
+                ],
+                [
+                    13,
+                    2
+                ],
+                [
+                    13,
+                    5
+                ]
+            ],
+            "data_in": [
+                "VIP membership promotion card",
+                "会员开通页面状态",
+                "连续包季会员套餐选项",
+                "会员套餐选择状态",
+                "会员套餐选择",
+                "支付方式选择",
+                "服务协议确认状态"
+            ],
+            "data_out": [
+                "VIP membership purchase page",
+                "返回到主界面状态",
+                "更新后的会员套餐选择状态",
+                "会员开通请求",
+                "支付交易记录"
+            ],
+            "data_dependencies": [
+                21,
+                22,
+                23,
+                29
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 3,
+                "logic": "The user starts on page 3 and clicks the '立即开通' button to enter the VIP subscription page (page 13). On page 13, the user can choose to click a VIP package (like '连续包季') to select it, then click the '确认支付' button to proceed with payment. Alternatively, the user can click the '返回' button to go back to page 3.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            3,
+                            0
+                        ],
+                        "src_page_idx": 3,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click '立即开通' to enter VIP subscription page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            13,
+                            2
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click '连续包季会员套餐' to select this VIP package"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            13,
+                            5
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click '确认支付按钮' to proceed with payment"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            13,
+                            0
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 3,
+                        "action": "click",
+                        "summary": "Click '返回按钮' to go back to previous page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 18,
+            "function_description": "This page provides detailed traffic restriction (尾号限行) information for the area around 故宫博物院, including the restricted vehicle numbers for today, tomorrow, and the day after, the applicable road sections, and a brief explanation of the traffic restriction policy.",
+            "action_refs": [
+                [
+                    5,
+                    2
+                ],
+                [
+                    19,
+                    0
+                ]
+            ],
+            "data_in": [
+                "限行信息",
+                "明天01/06日期切换标签"
+            ],
+            "data_out": [
+                "详细限行信息"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 5,
+                "logic": "Start on page 5 (故宫博物院). First, click the arrow to view more traffic restriction details, navigating to page 19. Then, on page 19, click the '明天01/06' tab to switch the date and view tomorrow’s restrictions (this action stays on page 19).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            5,
+                            2
+                        ],
+                        "src_page_idx": 5,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click the arrow to expand traffic restriction details"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            19,
+                            0
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click '明天01/06' tab to view tomorrow’s restrictions"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 19,
+            "function_description": "This page displays various ranking lists (official recommendation, official certification, city administrator, public photography) of users who share weather - related scenes and photos, allowing users to browse and follow these content - sharing users.",
+            "action_refs": [
+                [
+                    6,
+                    0
+                ],
+                [
+                    21,
+                    0
+                ],
+                [
+                    21,
+                    1
+                ],
+                [
+                    21,
+                    2
+                ]
+            ],
+            "data_in": [
+                "ranking feature entry",
+                "official ranking page content",
+                "官方榜 dropdown menu",
+                "官方榜页面",
+                "大众摄影榜标签"
+            ],
+            "data_out": [
+                "ranking page content",
+                "discovery page content",
+                "官方榜 dropdown menu expanded"
+            ],
+            "data_dependencies": [
+                25
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 6,
+                "logic": "The flow starts by clicking the '排行榜 (Ranking)' button on page 6 to navigate to the ranking page (page 21). On page 21, users can either interact with the '官方榜 dropdown menu' to explore different official ranking categories or click the '大众摄影榜 tab' to view the public photography ranking list. If needed, users can also navigate back to the previous page using the back arrow.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            6,
+                            0
+                        ],
+                        "src_page_idx": 6,
+                        "dst_page_idx": 21,
+                        "action": "click",
+                        "summary": "Click '排行榜 (Ranking)' button to go to ranking page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            21,
+                            1
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": 22,
+                        "action": "click",
+                        "summary": "Click '官方榜 dropdown menu' to explore official ranking categories"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            21,
+                            2
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": 21,
+                        "action": "click",
+                        "summary": "Click '大众摄影榜 tab' to view public photography ranking"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            21,
+                            0
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": 6,
+                        "action": "click",
+                        "summary": "Click back navigation arrow to return to previous page"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    },
+                    {
+                        "from": "S2",
+                        "to": "S1"
+                    },
+                    {
+                        "from": "S3",
+                        "to": "S1"
+                    },
+                    {
+                        "from": "S4",
+                        "to": "S1"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 20,
+            "function_description": "This page requests storage permission to enable functionalities such as selecting images/videos from the album for posting, saving captured or edited media to the album, and saving screenshots/posters for sharing, with a \"Next\" button to proceed with permission grant.",
+            "action_refs": [
+                [
+                    8,
+                    1
+                ],
+                [
+                    12,
+                    0
+                ]
+            ],
+            "data_in": [
+                "weather poster image",
+                "storage permission request"
+            ],
+            "data_out": [
+                "downloaded weather poster image"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 8,
+                "logic": "The flow starts with clicking the 'Download weather poster image' button on page 8, leading to a permission dialog on page 12. Then, clicking the '下一步' (Next) button in the permission dialog completes the permission grant process, with the page remaining on 12 after this action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            8,
+                            1
+                        ],
+                        "src_page_idx": 8,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click 'Download weather poster image' button"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            12,
+                            0
+                        ],
+                        "src_page_idx": 12,
+                        "dst_page_idx": 12,
+                        "action": "click",
+                        "summary": "Click '下一步' button in permission dialog"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 21,
+            "function_description": "The page displays various Moji Weather membership privileges (including disaster warning - driving danger, health reminder, etc.) and provides a button to activate the membership immediately, also allowing users to view specific privilege details like driving danger forecast with route - related weather and risk info.",
+            "action_refs": [
+                [
+                    13,
+                    1
+                ],
+                [
+                    14,
+                    0
+                ],
+                [
+                    14,
+                    4
+                ]
+            ],
+            "data_in": [
+                "会员特权列表",
+                "会员特权页面",
+                "灾害预警标签页",
+                "雷阵雨预报数据",
+                "驾驶危险预报查询条件（日期时间）"
+            ],
+            "data_out": [
+                "会员特权详情页面",
+                "雷阵雨预报展示内容"
+            ],
+            "data_dependencies": [
+                27,
+                28,
+                29
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 13,
+                "logic": "The flow starts by clicking the '更多特权' button to enter the membership privileges page. Then, there is a choice: either click the '健康提醒' tab to view that privilege or interact with the date/time dropdown (though the dropdown action is a leaf, likely for selecting a time to view a privilege like driving danger forecast with route info).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            13,
+                            1
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click '更多特权' button to navigate to membership privileges page"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            14,
+                            0
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click '健康提醒' tab to view health reminder privilege details"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            14,
+                            4
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 14,
+                        "action": "click",
+                        "summary": "Click date/time dropdown to select time (e.g., for driving danger forecast)"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 22,
+            "function_description": "微信支付单选按钮",
+            "action_refs": [
+                [
+                    13,
+                    3
+                ]
+            ],
+            "data_in": [
+                "会员支付方式设置",
+                "微信支付选项"
+            ],
+            "data_out": [
+                "微信支付选项已选中",
+                "会员支付方式更新"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 13,
+                "logic": "The process starts on the membership purchase page. The user clicks the WeChat Pay radio button, which likely selects WeChat Pay as the payment method and may transition to a related page (like payment confirmation or WeChat's payment interface).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            13,
+                            3
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 15,
+                        "action": "click",
+                        "summary": "Click the WeChat Pay radio button to select it as the payment method"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 23,
+            "function_description": "服务协议复选框",
+            "action_refs": [
+                [
+                    13,
+                    4
+                ]
+            ],
+            "data_in": [
+                "service agreement checkbox setting"
+            ],
+            "data_out": [
+                "service agreement checkbox setting (enabled)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 13,
+                "logic": "The process starts on page 13. The user clicks the '服务协议复选框' (service agreement checkbox) on page 13, which leads to page 16. This is a single-step action with no branching or looping.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            13,
+                            4
+                        ],
+                        "src_page_idx": 13,
+                        "dst_page_idx": 16,
+                        "action": "click",
+                        "summary": "Click the service agreement checkbox"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 24,
+            "function_description": "The current page enables users to share the skincare index information (including weather - related skincare advice and explanations) for the Palace Museum on specified dates (today, tomorrow, the day after tomorrow) to multiple platforms such as WeChat friends, Moments, QQ, and Sina Weibo.",
+            "action_refs": [
+                [
+                    19,
+                    1
+                ],
+                [
+                    20,
+                    0
+                ]
+            ],
+            "data_in": [
+                "护肤指数信息",
+                "sharing popup"
+            ],
+            "data_out": [
+                "分享操作触发的分享选项列表",
+                "closed sharing popup"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 19,
+                "logic": "The flow starts on page 19 (skincare index page). First, the user clicks the share icon (action S1) to open the sharing popup (page 20). Then, the user can either select a sharing platform (not shown in actions) or close the popup by clicking the close button (action S2).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            19,
+                            1
+                        ],
+                        "src_page_idx": 19,
+                        "dst_page_idx": 20,
+                        "action": "click",
+                        "summary": "Click share icon to open sharing popup"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            20,
+                            0
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click to close sharing popup"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 25,
+            "function_description": "This page displays the \"大众摄影榜\" (Public Photography Ranking) tab, showcasing ranked photographers and their weather - related photos/videos, along with options to follow the photographers.",
+            "action_refs": [
+                [
+                    21,
+                    3
+                ]
+            ],
+            "data_in": [
+                "蝶儿海上飞的关注设置"
+            ],
+            "data_out": [
+                "蝶儿海上飞的关注设置（已关注）"
+            ],
+            "data_dependencies": [
+                26
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 21,
+                "logic": "The user interacts with the '大众摄影榜' (Public Photography Ranking) tab. The main action is clicking the '+关注' (Follow) button for the photographer '蝶儿海上飞', which likely toggles the follow status. There are no branches or loops as the provided action is a single click.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            21,
+                            3
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": 21,
+                        "action": "click",
+                        "summary": "Click the '+关注' button for photographer '蝶儿海上飞' to follow (or unfollow) them."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 26,
+            "function_description": "This page allows users to report a photo (with image ID 659732463) by selecting a reason from options like incorrect time, incorrect location, plagiarism, etc., and then confirming or canceling the report.",
+            "action_refs": [
+                [
+                    21,
+                    4
+                ]
+            ],
+            "data_in": [
+                "photo (蝶儿海上飞’s first image)",
+                "report reason options"
+            ],
+            "data_out": [
+                "photo report request (with reason: time incorrect)"
+            ],
+            "data_dependencies": [
+                39
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 21,
+                "logic": "The user starts on page 21 and clicks on the target photo (image ID 659732463) to open the report dialog. In the dialog, the user selects a reason from options like incorrect time, location, plagiarism, etc. Then, the user either confirms the report by clicking '确定' or cancels by clicking '取消'.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            21,
+                            4
+                        ],
+                        "src_page_idx": 21,
+                        "dst_page_idx": 23,
+                        "action": "click",
+                        "summary": "Click on the target photo (蝶儿海上飞’s first image) to open the report dialog."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 27,
+            "function_description": "This page, under the \"健康提醒\" (Health Reminder) tab of the membership privileges section, displays weather - related disaster warning information (such as thunderstorm forecasts) and provides a subscription option for thunderstorm forecasts, along with a button to immediately activate the membership to access these premium services.",
+            "action_refs": [
+                [
+                    14,
+                    1
+                ]
+            ],
+            "data_in": [
+                "雷阵雨预报功能入口"
+            ],
+            "data_out": [
+                "雷阵雨预报信息"
+            ],
+            "data_dependencies": [
+                21
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The flow starts on the '会员特权' (Membership Privileges) page. The user clicks on the '雷阵雨' (Thunderstorm) sub - tab. This action navigates to a page that displays thunderstorm - related disaster warning information, including a forecast map and a subscription option for thunderstorm forecasts, along with a button to activate the membership for premium services.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            1
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 17,
+                        "action": "click",
+                        "summary": "Click on the '雷阵雨' sub - tab to view thunderstorm - related disaster warning information and related options."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 28,
+            "function_description": "This page explains the \"Driving Hazard Forecast\" feature, which analyzes road, visibility, and wind conditions based on route plans to provide alerts, and offers a button to activate membership to access the driving hazard query service.",
+            "action_refs": [
+                [
+                    14,
+                    2
+                ]
+            ],
+            "data_in": [
+                "驾驶危险预报功能入口"
+            ],
+            "data_out": [
+                "驾驶危险预报功能介绍页面"
+            ],
+            "data_dependencies": [
+                36
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The user starts on page 14 (the '会员特权' page with the '驾驶危险' section). They click the '驾驶危险去使用按钮' (the '去使用' button in the '驾驶危险' card), which navigates to page 18 (the '驾驶危险预报' feature explanation page). This page describes the feature and offers a button to activate membership for the driving hazard query service.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            2
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 18,
+                        "action": "click",
+                        "summary": "Click the '去使用' button in the '驾驶危险' card to navigate to the feature explanation page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 29,
+            "function_description": "This page functions as a membership activation interface for Moji Weather, offering various VIP membership packages, payment options (WeChat Pay, Alipay), and requiring users to confirm service agreements before completing the payment to activate the membership.",
+            "action_refs": [
+                [
+                    14,
+                    3
+                ]
+            ],
+            "data_in": [
+                "会员开通入口",
+                "会员特权信息"
+            ],
+            "data_out": [
+                "会员开通页面",
+                "会员套餐信息",
+                "支付方式选项"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 14,
+                "logic": "The user starts on the '会员特权' (Membership Privileges) page. They click the '立即开通' (Activate Now) button, which navigates to the '墨迹会员' (Moji Membership) page where VIP packages, payment options, and service agreements are presented for further actions like selecting a package, choosing a payment method, and confirming agreements to complete membership activation.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            14,
+                            3
+                        ],
+                        "src_page_idx": 14,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click the '立即开通' button to navigate to the membership package selection page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 30,
+            "function_description": "Share to WeChat Friend",
+            "action_refs": [
+                [
+                    20,
+                    1
+                ]
+            ],
+            "data_in": [
+                "护肤指数信息"
+            ],
+            "data_out": [
+                "分享的护肤指数信息（至微信好友）"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 20,
+                "logic": "The process starts on page 20 where the 'Share to WeChat Friend' option is available. The user clicks on the 'Share to WeChat Friend' option. This action likely initiates the sharing process to a WeChat friend, though the destination page is not yet determined from the given action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            20,
+                            1
+                        ],
+                        "src_page_idx": 20,
+                        "dst_page_idx": null,
+                        "action": "click",
+                        "summary": "Click on the 'Share to WeChat Friend' option"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 31,
+            "function_description": "Comment input field",
+            "action_refs": [
+                [
+                    23,
+                    0
+                ]
+            ],
+            "data_in": [
+                "comment input field",
+                "photo post"
+            ],
+            "data_out": [
+                "new comment"
+            ],
+            "data_dependencies": [
+                34
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 23,
+                "logic": "The process starts on page 23. The user inputs the comment '太美了！' into the comment input field, and this action leads to page 24. There are no branches or loops as it's a single input action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            23,
+                            0
+                        ],
+                        "src_page_idx": 23,
+                        "dst_page_idx": 24,
+                        "action": "input",
+                        "summary": "Input comment '太美了！' into the comment input field"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 32,
+            "function_description": "Like button (bottom)",
+            "action_refs": [
+                [
+                    23,
+                    1
+                ]
+            ],
+            "data_in": [
+                "photo post",
+                "like setting"
+            ],
+            "data_out": [
+                "like count updated",
+                "like setting enabled"
+            ],
+            "data_dependencies": [
+                34
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 23,
+                "logic": "The core execution logic for the like button (bottom) involves a single step: clicking the like button located at the bottom of the page. This action transitions the app from the source page (page 23) to the destination page (page 25), completing the like functionality.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            23,
+                            1
+                        ],
+                        "src_page_idx": 23,
+                        "dst_page_idx": 25,
+                        "action": "click",
+                        "summary": "Click the like button at the bottom of the page"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 33,
+            "function_description": "This page enables users to share a weather - related photo post to platforms like WeChat Friends, Moments, QQ, Sina Weibo, or save the image, with additional options to report the post.",
+            "action_refs": [
+                [
+                    23,
+                    2
+                ],
+                [
+                    26,
+                    0
+                ],
+                [
+                    26,
+                    1
+                ],
+                [
+                    26,
+                    3
+                ]
+            ],
+            "data_in": [
+                "photo post",
+                "share popup",
+                "content to share",
+                "WeChat friend list",
+                "shared content",
+                "QQ sharing target list"
+            ],
+            "data_out": [
+                "share options (for photo post)",
+                "share popup closed",
+                "sharing process initiated to WeChat friend",
+                "sharing session (QQ)"
+            ],
+            "data_dependencies": [
+                34,
+                37,
+                38,
+                40
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 23,
+                "logic": "The user starts by clicking the share button on page 23, which opens the share popup on page 26. At this point, the user can choose to close the share popup, share to WeChat Friends, or share to QQ, with each option leading to a different subsequent page or action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            23,
+                            2
+                        ],
+                        "src_page_idx": 23,
+                        "dst_page_idx": 26,
+                        "action": "click",
+                        "summary": "Click the share button to open the share popup"
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            26,
+                            0
+                        ],
+                        "src_page_idx": 26,
+                        "dst_page_idx": 28,
+                        "action": "click",
+                        "summary": "Click to close the share popup"
+                    },
+                    {
+                        "id": "S3",
+                        "action_ref": [
+                            26,
+                            1
+                        ],
+                        "src_page_idx": 26,
+                        "dst_page_idx": 9,
+                        "action": "click",
+                        "summary": "Click to share to WeChat Friends"
+                    },
+                    {
+                        "id": "S4",
+                        "action_ref": [
+                            26,
+                            3
+                        ],
+                        "src_page_idx": 26,
+                        "dst_page_idx": 11,
+                        "action": "click",
+                        "summary": "Click to share to QQ"
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S3"
+                    },
+                    {
+                        "from": "S1",
+                        "to": "S4"
+                    }
+                ],
+                "branch_points": [
+                    {
+                        "at_step": "S1",
+                        "type": "if-else",
+                        "branches": [
+                            {
+                                "next_step": "S2"
+                            },
+                            {
+                                "next_step": "S3"
+                            },
+                            {
+                                "next_step": "S4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "index": 34,
+            "function_description": "This page displays weather - related photo posts (including \"hottest\" and \"latest\" tabs) for the location \"光明大路\" in \"乐亭县\", allowing users to browse, like these posts, and also providing a function to take and upload related photos.",
+            "action_refs": [
+                [
+                    23,
+                    3
+                ],
+                [
+                    27,
+                    0
+                ]
+            ],
+            "data_in": [
+                "location link",
+                "photo post",
+                "content list (最新 tab)"
+            ],
+            "data_out": [
+                "location - related photo list",
+                "updated content list (最新 tab)"
+            ],
+            "data_dependencies": [
+                31,
+                32,
+                33
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 23,
+                "logic": "The user starts on page 23 and clicks the location link to navigate to page 27 (the location's weather photo post page). On page 27, the user can click the '最新' tab to refresh the content and view the latest weather - related photo posts for '光明大路' in '乐亭县'.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            23,
+                            3
+                        ],
+                        "src_page_idx": 23,
+                        "dst_page_idx": 27,
+                        "action": "click",
+                        "summary": "Click the location link to navigate to the location - specific weather photo post page."
+                    },
+                    {
+                        "id": "S2",
+                        "action_ref": [
+                            27,
+                            0
+                        ],
+                        "src_page_idx": 27,
+                        "dst_page_idx": 27,
+                        "action": "click",
+                        "summary": "Click the '最新' tab to switch and view the latest weather - related photo posts."
+                    }
+                ],
+                "flow_edges": [
+                    {
+                        "from": "S1",
+                        "to": "S2"
+                    }
+                ],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 35,
+            "function_description": "Displays the vehicle restriction index (including current day's restricted tail numbers, applicable road sections) and provides related traffic restriction knowledge for the area of 故宫博物院, with options to view restriction info for subsequent days and share the page.",
+            "action_refs": [
+                [
+                    17,
+                    0
+                ]
+            ],
+            "data_in": [
+                "护肤指数卡片"
+            ],
+            "data_out": [
+                "限行指数信息"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 17,
+                "logic": "The user starts on page 17 and clicks the '去看看' button on the skincare index card, which navigates to page 19. On page 19, the vehicle restriction index for 故宫博物院 is displayed, including current day's restricted tail numbers, applicable road sections, and traffic restriction knowledge. The user can then choose to view restriction info for subsequent days (by clicking '明天' or '后天') or share the page (by clicking the share icon).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            17,
+                            0
+                        ],
+                        "src_page_idx": 17,
+                        "dst_page_idx": 19,
+                        "action": "click",
+                        "summary": "Click the '去看看' button on the skincare index card to navigate to the vehicle restriction index page for 故宫博物院."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 36,
+            "function_description": "This page is for subscribing to Moji Weather's VIP membership, offering different membership packages (continuous annual, quarterly, monthly, and one - year), payment options (WeChat Pay, Alipay), and requiring users to confirm the service agreement before making the payment to enjoy the corresponding membership privileges.",
+            "action_refs": [
+                [
+                    18,
+                    0
+                ]
+            ],
+            "data_in": [
+                "驾驶危险查询功能权限",
+                "会员开通相关信息"
+            ],
+            "data_out": [
+                "会员开通页面展示",
+                "会员套餐信息展示"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 18,
+                "logic": "The user starts on page 18 and clicks the '开通会员查询驾驶危险' button. This action navigates to page 13 (the Moji VIP membership page), where membership packages and payment options are presented for selection and payment to access the driving danger query service.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            18,
+                            0
+                        ],
+                        "src_page_idx": 18,
+                        "dst_page_idx": 13,
+                        "action": "click",
+                        "summary": "Click the '开通会员查询驾驶危险' button to navigate to the VIP membership page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 37,
+            "function_description": "This page allows users to create a social media post (e.g., for Moments) by adding a caption, setting location, mentioning specific users, and configuring post visibility, then publishing it.",
+            "action_refs": [
+                [
+                    26,
+                    2
+                ]
+            ],
+            "data_in": [
+                "post",
+                "image"
+            ],
+            "data_out": [
+                "moment post draft"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 26,
+                "logic": "The user starts on page 26 and clicks the 'Share to Moments' option, which navigates to page 10 (the post creation page for Moments). This action initiates the process of creating a social media post with options to add a caption, set location, mention users, and configure visibility.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            26,
+                            2
+                        ],
+                        "src_page_idx": 26,
+                        "dst_page_idx": 10,
+                        "action": "click",
+                        "summary": "Click 'Share to Moments' to navigate to the post creation page."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 38,
+            "function_description": "This page allows users to report a photo post by selecting a reason from predefined options (e.g., time mismatch, location mismatch, plagiarism, etc.) and confirming the report or canceling the action.",
+            "action_refs": [
+                [
+                    26,
+                    4
+                ]
+            ],
+            "data_in": [
+                "photo",
+                "sina weibo sharing target"
+            ],
+            "data_out": [
+                "shared photo on sina weibo"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 26,
+                "logic": "The user starts on page 26 and clicks the '举报' (report) option. This action leads to a dialog where the user selects a reason for reporting the photo (e.g., time mismatch, location mismatch, etc.) and then either confirms the report by clicking '确定' (confirm) or cancels the action by clicking '取消' (cancel).",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            26,
+                            4
+                        ],
+                        "src_page_idx": 26,
+                        "dst_page_idx": 23,
+                        "action": "click",
+                        "summary": "Click the '举报' (report) option to open the report dialog."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 39,
+            "function_description": "This page allows users to report a photo post by selecting a reason from predefined options (e.g., time mismatch, location mismatch, plagiarism, etc.) and confirming the report or canceling the action.",
+            "action_refs": [
+                [
+                    26,
+                    5
+                ]
+            ],
+            "data_in": [
+                "photo content",
+                "report reason options"
+            ],
+            "data_out": [
+                "report request (photo id: 659732463, reason: time incorrect)"
+            ],
+            "data_dependencies": [],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 26,
+                "logic": "The user starts on page 26 and clicks the 'Report content' option. This action opens a dialog (on page 23) where the user can select a reason for reporting the photo (e.g., time mismatch, location mismatch, etc.) and then choose to confirm (via '确定') or cancel (via '取消') the report. The flow begins with the initial click to open the report dialog, after which the user interacts with the dialog's options and confirmation/cancellation buttons.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            26,
+                            5
+                        ],
+                        "src_page_idx": 26,
+                        "dst_page_idx": 23,
+                        "action": "click",
+                        "summary": "Click 'Report content' to open the photo report dialog."
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        },
+        {
+            "index": 40,
+            "function_description": "This page provides options to share the photo post to social platforms (WeChat, Moments, QQ, Sina Weibo), report the post, or save the photo to the device.",
+            "action_refs": [
+                [
+                    26,
+                    6
+                ]
+            ],
+            "data_in": [
+                "image"
+            ],
+            "data_out": [
+                "saved image"
+            ],
+            "data_dependencies": [
+                37
+            ],
+            "to_test": true,
+            "core_logic": {
+                "entry_page": 26,
+                "logic": "The flow starts on page 26 (the photo post page). The user can perform an action to save the image to the device. This action is a click on the 'Save image to device' option, and after clicking, the flow remains on the same page (page 26) as the action is a leaf action.",
+                "steps": [
+                    {
+                        "id": "S1",
+                        "action_ref": [
+                            26,
+                            6
+                        ],
+                        "src_page_idx": 26,
+                        "dst_page_idx": 26,
+                        "action": "click",
+                        "summary": "Click to save the image to the device"
+                    }
+                ],
+                "flow_edges": [],
+                "branch_points": []
+            }
+        }
+    ]
+}
