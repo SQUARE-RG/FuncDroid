@@ -132,6 +132,7 @@ If you use FuncDroid in your research or project, please consider citing:
       booktitle={Proceedings of the 35th ACM SIGSOFT International Symposium on Software Testing and Analysis (ISSTA)},
       year={2026}
 }
+```
 
 ## Maintainers and Contributors
 
