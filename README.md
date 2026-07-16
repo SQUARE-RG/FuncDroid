@@ -111,3 +111,38 @@ python test.py
 
 Artifacts are written to `./output/`.
 
+## Bug Showcase
+
+FuncDroid has discovered a collection of real-world functional bugs in popular mobile applications. We provide a public bug showcase containing reviewed and reproducible evidence, including execution traces, screenshots, bug descriptions, and confirmation status.
+
+[FuncDroid Bug Showcase](https://fim-bugs.sites.veilaxis.com/)
+
+The showcase presents bugs discovered during automated exploration and preserves the corresponding evidence for reproduction and further analysis.
+
+## Citation
+
+If you use FuncDroid in your research or project, please consider citing:
+
+1. Jinlong He, Changwei Xia, Binru Huang, Jiwei Yan, Jun Yan, Jian Zhang. FuncDroid: Towards Inter-Functional Flows for Comprehensive Mobile App GUI Testing. ISSTA 2026. [paper](https://arxiv.org/abs/2602.12834)
+
+```bibtex
+@inproceedings{FuncDroid,
+      title={FuncDroid: Towards Inter-Functional Flows for Comprehensive Mobile App GUI Testing},
+      author={Jinlong He and Changwei Xia and Binru Huang and Jiwei Yan and Jun Yan and Jian Zhang},
+      booktitle={Proceedings of the 35th ACM SIGSOFT International Symposium on Software Testing and Analysis (ISSTA)},
+      year={2026}
+}
+
+## Maintainers and Contributors
+
+FuncDroid is actively developed and maintained by:
+
+- [Jinlong He](https://hanada31.github.io/)([@Jinlong-He](https://github.com/Jinlong-He))
+- [Changwei Xia](https://hanada31.github.io/)([@daxiami233](https://github.com/daxiami233))
+- [Binru Huang](https://hanada31.github.io/)([@ningxiudg](https://github.com/ningxiudg))
+- [Jiwei Yan](https://hanada31.github.io/)([@hanada31](https://github.com/hanada31))
+
+## Contributing
+
+FuncDroid is an open-source research project, and contributions from the community are welcome.
+
