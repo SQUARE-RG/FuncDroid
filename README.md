@@ -136,7 +136,7 @@ If you use FuncDroid in your research or project, please consider citing:
 
 ## Maintainers and Contributors
 
-FuncDroid is actively developed and maintained by:
+FuncDroid is actively developed and maintained by members of [SQUARE Research Group](https://square16.org/)::
 
 - [Jinlong He](https://hanada31.github.io/)([@Jinlong-He](https://github.com/Jinlong-He))
 - [Changwei Xia](https://hanada31.github.io/)([@daxiami233](https://github.com/daxiami233))
