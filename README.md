@@ -11,6 +11,7 @@ FuncDroid addresses this with an inter-functionality, state-aware model and a cl
 ## Approach (IFO: Inter-Functionality Flow Oriented Testing)
 
 ### Overview
+
 ![Overview](overview.png)
 
 ### Functionality Flow Graph (FFG)
@@ -42,50 +43,51 @@ FuncDroid follows an iterative workflow that (1) builds/updates the FFG from exe
 
 ## What This Repository Contains
 
-- `hmbot/`: core implementation (device control, GUI capture, exploration, graph construction, prompts, utilities).
-- `test.py`: minimal entry script that explores the **currently foreground** Android app on a connected device and writes artifacts to `./output/`.
+- `funcdroid/`: core implementation:
+  - `main.py`: CLI entrypoint for the defect-detection workflow
+  - `workflow/`: LangGraph-based exploration loop (scenario planning/execution, FFG update, async bug detection, page audit)
+  - `model/flow_graph.py`: Functionality Flow Graph structures
+  - `automator/`, `connector/`, `device.py`: device automation layer (uiautomator2/HarmonyOS, ADB/HDC)
+  - `scripts/batch_test_apks.py`: batch testing driver for a directory of APKs
+  - `tests/`: unit and integration tests
 - `Effectiveness evaluation/`, `Usefulness evaluation/`: experiment outputs and datasets (large; not required for running the tool).
 
 > Full repository (including large evaluation artifacts and datasets): https://github.com/EdgarRhys/FuncDroid_Full
 
 ## Prerequisites
 
-- Windows/macOS/Linux with **Python 3.9+**
-- Android device with **USB debugging enabled**
+- Windows/macOS/Linux with **Python 3.11-3.13**
+- Android device with **USB debugging enabled** (or an emulator)
 - `adb` available in PATH (Android platform tools)
 - `uiautomator2` environment set up for your device
+- One **OpenAI-compatible multimodal model endpoint** shared by all model roles (planning, scenario execution, FFG update, and defect detection)
 
 ## Installation
 
-Install dependencies from `requirements.txt`:
-
 ```bash
+python -m venv .venv
+source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-Notes:
-- `requirements.txt` includes some heavier, optional dependencies (e.g., `torch`, `pandas`) used by certain modules under `hmbot/explorer/`.
-
 ## API Key / LLM Configuration
 
-FuncDroid loads LLM settings from environment variables (via `python-dotenv`). Use the provided example file:
+All model roles share a single OpenAI-compatible endpoint, configured via environment variables (loaded automatically by `python-dotenv`):
 
-1) Copy `.env.example` to `.env`
-2) Fill in your endpoint/model/key values
-
-```ini
-# Specialized LLM settings 
-SPECIALIZED_BASE_URL="https://ark.cn-beijing.volces.com/api/v3/"
-SPECIALIZED_MODEL="doubao-seed-1-6-vision-250815"
-SPECIALIZED_API_KEY="doubao_api_key"
-
-# General LLM settings 
-BASE_URL="openai_url"
-MODEL="gpt-4o"
-API_KEY=""
+```bash
+cd funcdroid
+cp .env.example .env
 ```
 
-Then run any Python entrypoint; `python-dotenv` loads `.env` automatically.
+Then fill in three values in `.env`:
+
+```ini
+API_KEY="your_api_key"
+BASE_URL="https://your-openai-compatible-endpoint/v1"
+MODEL="your_multimodal_model"
+```
+
+Optional runtime knobs (timeouts, budgets, log rotation, etc.) are documented inline in `.env.example`.
 
 ## Quick Start
 
@@ -93,23 +95,27 @@ Then run any Python entrypoint; `python-dotenv` loads `.env` automatically.
 
 ```bash
 adb devices
+python -m uiautomator2 -s <device-id> init
 ```
 
-2) Choose one of the following:
-
-- **If you have an APK** (FuncDroid will install & launch it for you):
+2) Run FuncDroid from `funcdroid/`:
 
 ```bash
-python test.py --apk "C:\\path\\to\\your.apk"
+cd funcdroid
+
+# Test the app currently in the foreground
+python main.py --device-id emulator-5554
+
+# Or test a specific installed app
+python main.py --device-id emulator-5554 --package-name com.example.app
+
+# Use iteration control instead of wall-clock time
+python main.py --device-id emulator-5554 --max-iterations 20 --total-time 0
 ```
 
-- **If you do not have an APK**: manually open the app you want to test on the device and keep it in the foreground, then run:
+Artifacts (FFG, traces, screenshots, bug reports, LLM usage stats) are written to `output/`.
 
-```bash
-python test.py
-```
-
-Artifacts are written to `./output/`.
+To test a whole directory of APKs, see `scripts/batch_test_apks.py`.
 
 ## Bug Showcase
 
@@ -146,4 +152,3 @@ FuncDroid is actively developed and maintained by members of [SQUARE Research Gr
 ## Contributing
 
 FuncDroid is an open-source research project, and contributions from the community are welcome.
-
