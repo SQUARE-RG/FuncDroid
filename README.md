@@ -48,8 +48,6 @@ FuncDroid follows an iterative workflow that (1) builds/updates the FFG from exe
   - `workflow/`: LangGraph-based exploration loop (scenario planning/execution, FFG update, async bug detection, page audit)
   - `model/flow_graph.py`: Functionality Flow Graph structures
   - `automator/`, `connector/`, `device.py`: device automation layer (uiautomator2/HarmonyOS, ADB/HDC)
-  - `scripts/batch_test_apks.py`: batch testing driver for a directory of APKs
-  - `tests/`: unit and integration tests
 - `Effectiveness evaluation/`, `Usefulness evaluation/`: experiment outputs and datasets (large; not required for running the tool).
 
 > Full repository (including large evaluation artifacts and datasets): https://github.com/EdgarRhys/FuncDroid_Full
@@ -114,8 +112,6 @@ python main.py --device-id emulator-5554 --max-iterations 20 --total-time 0
 ```
 
 Artifacts (FFG, traces, screenshots, bug reports, LLM usage stats) are written to `output/`.
-
-To test a whole directory of APKs, see `scripts/batch_test_apks.py`.
 
 ## Bug Showcase
 
