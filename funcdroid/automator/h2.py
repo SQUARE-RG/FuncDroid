@@ -18,14 +18,14 @@ class H2(Automator):
         super().__init__(device)
         self._serial = device.serial
         self._driver = Driver(self._serial)
-        logger.debug("hmdriver2 已连接: {}", self._serial)
+        logger.debug("hmdriver2 connected: {}", self._serial)
 
     def start_app(self, package_name: str):
-        logger.info("h2 启动应用: {}", package_name)
+        logger.info("h2 start app: {}", package_name)
         return self._driver.start_app(package_name)
 
     def stop_app(self, package_name: str):
-        logger.info("h2 停止应用: {}", package_name)
+        logger.info("h2 stop app: {}", package_name)
         return self._driver.stop_app(package_name)
 
     def click(self, x, y):
@@ -40,9 +40,9 @@ class H2(Automator):
 
     def input(self, text, x=None, y=None):
         if x is not None and y is not None:
-            logger.debug("h2 通过坐标输入: ({}, {})", x, y)
+            logger.debug("h2 input via coordinates: ({}, {})", x, y)
             self.click(x, y)
-        logger.debug("h2 通过焦点控件输入: {}", text)
+        logger.debug("h2 input via focused control: {}", text)
         return self._driver.input_text(text)
 
     def current_activity(self):
@@ -57,7 +57,7 @@ class H2(Automator):
         try:
             current = self._driver.current_app()
         except Exception as exc:
-            logger.warning("h2 获取当前前台应用失败: {}", exc)
+            logger.warning("h2 failed to get current foreground app: {}", exc)
             return "", ""
         if isinstance(current, (tuple, list)) and len(current) >= 2:
             return str(current[0] or "").strip(), str(current[1] or "").strip()
@@ -65,7 +65,7 @@ class H2(Automator):
             package_name = current.get("package_name") or current.get("bundle_name") or current.get("package")
             page_name = current.get("page_name") or current.get("ability_name") or current.get("ability")
             return str(package_name or "").strip(), str(page_name or "").strip()
-        logger.warning("h2 当前前台应用返回格式不可识别: {!r}", current)
+        logger.warning("h2 unrecognized return format for current foreground app: {!r}", current)
         return "", ""
 
     def screenshot(self, path=""):
@@ -75,9 +75,9 @@ class H2(Automator):
             local_path = str(self._driver.screenshot(temp_path) or temp_path)
             image = cv2.imread(local_path)
             if image is None:
-                raise RuntimeError(f"h2 截图文件无法解码: {local_path}")
+                raise RuntimeError(f"h2 screenshot file could not be decoded: {local_path}")
             if path:
-                logger.debug("h2 保存截图: {}", path)
+                logger.debug("h2 save screenshot: {}", path)
                 shutil.copyfile(local_path, path)
             return image
         finally:

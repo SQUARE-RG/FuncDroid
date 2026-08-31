@@ -50,68 +50,121 @@ FuncDroid follows an iterative workflow that (1) builds/updates the FFG from exe
   - `automator/`, `connector/`, `device.py`: device automation layer (uiautomator2/HarmonyOS, ADB/HDC)
 - `Effectiveness evaluation/`, `Usefulness evaluation/`: experiment outputs and datasets (large; not required for running the tool).
 
-> Full repository (including large evaluation artifacts and datasets): https://github.com/EdgarRhys/FuncDroid_Full
-
 ## Prerequisites
 
-- Windows/macOS/Linux with **Python 3.11-3.13**
-- Android device with **USB debugging enabled** (or an emulator)
-- `adb` available in PATH (Android platform tools)
-- `uiautomator2` environment set up for your device
-- One **OpenAI-compatible multimodal model endpoint** shared by all model roles (planning, scenario execution, FFG update, and defect detection)
+- Windows, macOS, or Linux with **Python 3.11, 3.12, or 3.13**
+- An Android device (or emulator) with **USB debugging enabled**
+- [Android Platform Tools](https://developer.android.com/tools/releases/platform-tools), with `adb` available in `PATH`
+- One **OpenAI-compatible multimodal model endpoint**. The selected model must accept image inputs.
 
-## Installation
+Java and Android Studio are not required. FuncDroid uses `adb` and `uiautomator2` to control an already installed app.
+
+## Quick Start
+
+### 1. Install FuncDroid
+
+On macOS or Linux, run the setup script from the repository root:
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate   # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
+chmod +x setup.sh run.sh
+./setup.sh
 ```
 
-## API Key / LLM Configuration
+The script creates `.venv`, installs the pinned dependencies, and creates `funcdroid/.env` if it does not exist. If Python 3.11-3.13 is missing and [`uv`](https://docs.astral.sh/uv/) is installed, the script can install Python 3.13 automatically.
+
+On Windows PowerShell, use:
+
+```powershell
+py -3.13 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+if (-not (Test-Path funcdroid\.env)) { Copy-Item funcdroid\.env.example funcdroid\.env }
+```
+
+### 2. Configure the model
 
 All model roles share a single OpenAI-compatible endpoint, configured via environment variables (loaded automatically by `python-dotenv`):
 
 ```bash
-cd funcdroid
-cp .env.example .env
+# macOS/Linux
+nano funcdroid/.env
+
+# Windows
+notepad funcdroid\.env
 ```
 
-Then fill in three values in `.env`:
+Fill in these three values and leave the optional settings at their defaults:
 
 ```ini
-API_KEY="your_api_key"
-BASE_URL="https://your-openai-compatible-endpoint/v1"
-MODEL="your_multimodal_model"
+API_KEY=your_api_key
+BASE_URL=https://your-openai-compatible-endpoint/v1
+MODEL=your_multimodal_model
 ```
 
-Optional runtime knobs (timeouts, budgets, log rotation, etc.) are documented inline in `.env.example`.
+`funcdroid/.env` is ignored by Git and must never be committed. Runtime knobs such as timeouts and exploration budgets are documented in `.env.example`.
 
-## Quick Start
+### 3. Connect a device and run
 
-1) Connect your Android device and verify it is visible:
+Enable USB debugging, connect the device, approve the authorization prompt, and verify the connection:
 
 ```bash
 adb devices
-python -m uiautomator2 -s <device-id> init
 ```
 
-2) Run FuncDroid from `funcdroid/`:
+Open the app you want to test on the device. For a safe first check, run two iterations with a five-minute limit:
 
 ```bash
-cd funcdroid
+# macOS/Linux: one connected device is selected automatically
+./run.sh --max-iterations 2 --total-time 5
 
-# Test the app currently in the foreground
-python main.py --device-id emulator-5554
-
-# Or test a specific installed app
-python main.py --device-id emulator-5554 --package-name com.example.app
-
-# Use iteration control instead of wall-clock time
-python main.py --device-id emulator-5554 --max-iterations 20 --total-time 0
+# Windows PowerShell
+.\.venv\Scripts\python.exe funcdroid\main.py --max-iterations 2 --total-time 5
 ```
 
-Artifacts (FFG, traces, screenshots, bug reports, LLM usage stats) are written to `output/`.
+The first iteration reads the initial screen and builds the Functionality Flow Graph. Later iterations plan and execute scenarios. When the short check succeeds, start a normal run with the default 90-minute budget:
+
+```bash
+./run.sh
+```
+
+FuncDroid tests the foreground app when `--package-name` is omitted. To launch and test a specific installed app, pass its package name:
+
+```bash
+./run.sh --package-name com.example.app --app-name "Example App"
+```
+
+When multiple devices are connected, select one explicitly:
+
+```bash
+./run.sh --device-id emulator-5554
+```
+
+Results are written under `funcdroid/output/`. Each run includes the FFG, execution traces, screenshots, logs, bug reports, LLM usage, and an artifact manifest.
+
+## Common Commands
+
+```bash
+# Show every CLI option
+./run.sh --help
+
+# Run only intra-functionality scenarios
+./run.sh --phase intra
+
+# Disable the asynchronous bug-review worker
+./run.sh --no-bug-detection
+
+# Continue an interrupted run without discarding its FFG
+./run.sh --resume-output output/<existing-run-directory>
+```
+
+## Troubleshooting
+
+- `adb devices` shows `unauthorized`: unlock the device and approve its USB-debugging prompt.
+- No device is detected: install Android Platform Tools, add `adb` to `PATH`, reconnect the cable, and run `adb devices` again.
+- `uiautomator2` cannot connect: run `.venv/bin/python -m uiautomator2 -s <device-id> init` (Windows: `.venv\Scripts\python.exe ...`) and retry.
+- LLM configuration is missing: confirm that `API_KEY`, `BASE_URL`, and `MODEL` are non-empty in `funcdroid/.env`.
+- More than one device is connected: add `--device-id <serial>`; serials are listed by `adb devices`.
+- A previous output directory is rejected: choose a new `--output-dir`, or use `--resume-output` only when intentionally continuing that run.
 
 ## Bug Showcase
 

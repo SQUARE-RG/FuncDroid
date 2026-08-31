@@ -1,4 +1,4 @@
-"""工作流共享状态定义。"""
+"""Workflow shared state definition."""
 
 from typing import Any, TypedDict
 
@@ -32,34 +32,34 @@ class AgentState(TypedDict, total=False):
     planner_noop_count: int
     planner_feedback: str
     planner_rejected_scenario: str
-    # 循环控制
-    iteration_count: int           # 当前已执行轮次
-    max_iterations: int            # 最大执行轮次
+    # Loop control
+    iteration_count: int           # Current executed iterations
+    max_iterations: int            # Maximum executed iterations
     iteration_started_at: float
     iteration_llm_requests_start: int
     iteration_llm_tokens_start: int
-    # 时间控制（秒）
-    start_time: float              # 工作流开始时间戳
-    total_time_limit: float        # 总时间限制（秒），0 表示不限制
-    workflow_complete: bool        # 统一规划器判断整体测试是否完成
-    long_run_idle_count: int       # 尚有时间预算时完成覆盖复核的轮次
-    # 运行模式: "all" | "intra"
+    # Time control (seconds)
+    start_time: float              # Workflow start timestamp
+    total_time_limit: float        # Total time limit (seconds), 0 means unlimited
+    workflow_complete: bool        # Unified planner judges whether overall testing is complete
+    long_run_idle_count: int       # Iterations of coverage rechecks completed while time budget remains
+    # Run mode: "all" | "intra"
     run_phase: str
-    # 探索模式: "core" 启用探索边界限制（按包名规则拦截第三方服务内容）
+    # Exploration mode: "core" enables exploration boundary limits (intercept third-party service content by package name rules)
     exploration_mode: str
-    # 终止审计只保存轻量运行内状态，不用于断点续跑；不得回退 Function 完成状态
+    # Termination audit only saves lightweight in-run state, not used for resumption; must not roll back Function completion state
     completion_audit_updates: int
     completion_audit_signatures: dict[str, str]
     completion_audit_attempts: dict[str, int]
-    # 动态粒度复核的尝试计数（防止每轮空转复核）
+    # Attempt count for dynamic granularity recheck (prevents idling recheck in every iteration)
     granularity_review_attempts: dict[str, int]
     ffg_granularity_review_function_id: str
     ffg_granularity_review_metrics: dict[str, Any]
-    # 子图运行指标（不参与断点语义）
+    # Subgraph runtime metrics (do not participate in checkpoint semantics)
     ffg_update_step: int
     ffg_update_decision: str
     ffg_update_reason: str
     ffg_update_validation_issues: list[str]
     scenario_exec_subgraph_phase: str
-    # 运行时持续产物；不进入 FFG 结构。
+    # Runtime continuous artifacts; do not enter FFG structure.
     _activity_timeline: dict[str, Any]

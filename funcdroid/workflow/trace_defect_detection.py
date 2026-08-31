@@ -1,4 +1,4 @@
-"""执行轨迹缺陷分析。"""
+"""Execute trace defect analysis."""
 
 import base64
 import json
@@ -40,20 +40,20 @@ ENVIRONMENT_BUG_TERMS = (
     "timeout",
     "timed out",
     "unable to load",
-    "连接错误",
-    "连接失败",
-    "网络连接错误",
-    "网络异常",
-    "网络超时",
-    "请求超时",
-    "无法连接",
+    "\u8fde\u63a5\u9519\u8bef",  # connection error
+    "\u8fde\u63a5\u5931\u8d25",  # connection failed
+    "\u7f51\u7edc\u8fde\u63a5\u9519\u8bef",  # network connection error
+    "\u7f51\u7edc\u5f02\u5e38",  # network anomaly
+    "\u7f51\u7edc\u8d85\u65f6",  # network timeout
+    "\u8bf7\u6c42\u8d85\u65f6",  # request timeout
+    "\u65e0\u6cd5\u8fde\u63a5",  # unable to connect
 )
 PERSISTENCE_ACTION_PATTERNS = (
-    r"保存",
-    r"提交",
-    r"确认",
-    r"完成图标",
-    r"对勾",
+    r"\u4fdd\u5b58",  # save
+    r"\u63d0\u4ea4",  # submit
+    r"\u786e\u8ba4",  # confirm
+    r"\u5b8c\u6210\u56fe\u6807",  # complete icon
+    r"\u5bf9\u52fe",  # checkmark
     r"\bsave\b",
     r"\bsubmit\b",
     r"\bconfirm\b",
@@ -62,29 +62,29 @@ PERSISTENCE_ACTION_PATTERNS = (
     r"\bcheckmark\b",
 )
 SPECULATIVE_NAVIGATION_SCENARIO_PATTERN = re.compile(
-    r"观察[^\n。]{0,80}是否(?:跳转|出现|打开|进入|切换)"
+    r"\u89c2\u5bdf[^\n\u3002]{0,80}\u662f\u5426(?:\u8df3\u8f6c|\u51fa\u73b0|\u6253\u5f00|\u8fdb\u5165|\u5207\u6362)"
 )
 SPECULATIVE_NAVIGATION_BUG_PATTERN = re.compile(
-    r"未[^\n。]{0,40}(?:预期|跳转)|反而|业务语义|应跳转|应进入"
+    r"\u672a[^\n\u3002]{0,40}(?:\u9884\u671f|\u8df3\u8f6c)|\u53cd\u800c|\u4e1a\u52a1\u8bed\u4e49|\u5e94\u8df3\u8f6c|\u5e94\u8fdb\u5165"
 )
 SPATIAL_ASSOCIATION_PATTERN = re.compile(
-    r"旁边|旁的|对应位置|关联到|错误关联|而非目标|无关"
+    r"\u65c1\u8fb9|\u65c1\u7684|\u5bf9\u5e94\u4f4d\u7f6e|\u5173\u8054\u5230|\u9519\u8bef\u5173\u8054|\u800c\u975e\u76ee\u6807|\u65e0\u5173"
 )
 BOUNDARY_INPUT_SCENARIO_PATTERN = re.compile(
-    r"不输入任何|空标题|空值|特殊字符|超长|边界|truncation|!@#",
+    r"\u4e0d\u8f93\u5165\u4efb\u4f55|\u7a7a\u6807\u9898|\u7a7a\u503c|\u7279\u6b8a\u5b57\u7b26|\u8d85\u957f|\u8fb9\u754c|truncation|!@#",
     re.IGNORECASE,
 )
 UNSUPPORTED_INPUT_RULE_PATTERN = re.compile(
-    r"必填|不能为空|应当|不应|校验|合法|业务.*逻辑"
+    r"\u5fc5\u586b|\u4e0d\u80fd\u4e3a\u7a7a|\u5e94\u5f53|\u4e0d\u5e94|\u6821\u9a8c|\u5408\u6cd5|\u4e1a\u52a1.*\u903b\u8f91"
 )
 INPUT_WAS_NOT_APPLIED_PATTERN = re.compile(
-    r"输入框(?:仍|尚未|为)?空|未输入任何|没有输入|输入未生效"
+    r"\u8f93\u5165\u6846(?:\u4ecd|\u5c1a\u672a|\u4e3a)?\u7a7a|\u672a\u8f93\u5165\u4efb\u4f55|\u6ca1\u6709\u8f93\u5165|\u8f93\u5165\u672a\u751f\u6548"
 )
 RESOURCE_MUTATION_PATTERN = re.compile(
-    r"重复|丢失|丢失|删除|新增|新建|创建|生成|关联|写入|覆盖|错位"
+    r"\u91cd\u590d|\u4e22\u5931|\u4e22\u5931|\u5220\u9664|\u65b0\u589e|\u65b0\u5efa|\u521b\u5efa|\u751f\u6210|\u5173\u8054|\u5199\u5165|\u8986\u76d6|\u9519\u4f4d"
 )
 PLACEHOLDER_OR_EMPTY_ITEM_PATTERN = re.compile(
-    r"placeholder|new item|空白项|空项|占位|未输入",
+    r"placeholder|new item|\u7a7a\u767d\u9879|\u7a7a\u9879|\u5360\u4f4d|\u672a\u8f93\u5165",
     re.IGNORECASE,
 )
 BUG_DETECT_IMAGE_MAX_SIDE = max(
@@ -173,7 +173,7 @@ def _compact_screenshot_for_llm(screenshot: str) -> str:
             return screenshot
         return base64.b64encode(buffer.tobytes()).decode("utf-8")
     except Exception as exc:
-        print(f"[缺陷检测] 压缩截图失败，使用原图: {exc}")
+        print(f"[Defect Detection] Failed to compress screenshot, using original image: {exc}")
         return screenshot
 
 
@@ -307,29 +307,29 @@ def _runtime_crash_bug(
         not has_explicit_app_runtime_crash
         and any(pattern in crash_logcat for pattern in ENVIRONMENT_CRASH_LOGCAT_PATTERNS)
     ):
-        print("[缺陷检测] 崩溃由模拟器图形栈/系统服务异常触发，不记录为目标 App 缺陷。")
+        print("[Defect Detection] Crash was triggered by emulator graphics stack/system service anomaly, not recorded as target App defect.")
         return None
     if not _logcat_has_target_process_crash(crash_logcat, package_name):
         if crash_logcat:
-            print("[缺陷检测] 未确认目标进程崩溃堆栈，不记录 crash 缺陷。")
+            print("[Defect Detection] Target process crash stack not confirmed, crash defect will not be recorded.")
         return None
 
-    crash_phase = "导航" if navigation_status == "target_app_crashed" else "测试"
-    error_key = "navigation_error" if crash_phase == "导航" else "scenario_error"
+    crash_phase = "navigation" if navigation_status == "target_app_crashed" else "test"
+    error_key = "navigation_error" if crash_phase == "navigation" else "scenario_error"
     actual = (
         str(execution_result.get(error_key, "")).strip()
-        or f"{crash_phase}场景执行过程中目标应用崩溃。"
+        or f"Target application crashed during {crash_phase} scenario execution."
     )
     if crash_logcat:
-        actual = f"{actual}\n\nlogcat 摘要:\n{crash_logcat[:4000]}"
+        actual = f"{actual}\n\nlogcat summary:\n{crash_logcat[:4000]}"
     recovered = bool(execution_result.get("recovered_to_target_app"))
-    recovery_text = "运行器已重启目标应用" if recovered else "运行器未能恢复目标应用"
+    recovery_text = "runner has restarted the target application" if recovered else "runner failed to recover the target application"
     bug = {
         "type": "crash",
         "severity": "high",
         "confidence": "high",
-        "description": f"目标应用在{crash_phase}场景执行过程中发生崩溃，{recovery_text}并结束当前场景。",
-        "expected": f"目标应用应保持稳定并完成当前{crash_phase}场景。",
+        "description": f"The target application crashed during {crash_phase} scenario execution, {recovery_text}, ending the current scenario.",
+        "expected": f"The target application should remain stable and complete the current {crash_phase} scenario.",
         "actual": actual,
         "scenario": scenario,
         "source": "runtime_monitor",
@@ -354,17 +354,17 @@ def _dedupe_bugs(bugs: list[dict[str, Any]]) -> list[dict[str, Any]]:
             continue
         if str(bug.get("confidence", "")).strip().lower() != "high":
             print(
-                "[缺陷检测] 跳过非 high 置信度缺陷: "
+                "[Defect Detection] Skipping non-high confidence defect: "
                 f"{bug.get('description', '')}"
             )
             continue
         if _is_environment_noise_bug(bug):
-            print(f"[缺陷检测] 跳过外部环境/网络类疑似噪声缺陷: {bug.get('description', '')}")
+            print(f"[Defect Detection] Skipping suspected external environment/network noise defect: {bug.get('description', '')}")
             continue
         filtered.append(bug)
     deduped = dedupe_bugs(filtered)
     if len(deduped) != len(filtered):
-        print(f"[缺陷检测] 已去重重复缺陷: {len(filtered) - len(deduped)} 个")
+        print(f"[Defect Detection] Deduplicated duplicate defects: {len(filtered) - len(deduped)} items")
     return deduped
 
 
@@ -457,7 +457,7 @@ def _bug_uses_speculative_or_automation_expectation(
         and SPECULATIVE_NAVIGATION_BUG_PATTERN.search(bug_text)
     ):
         return True
-    if "旁边" in scenario and SPATIAL_ASSOCIATION_PATTERN.search(bug_text):
+    if "\u65c1\u8fb9" in scenario and SPATIAL_ASSOCIATION_PATTERN.search(bug_text):
         return True
     if (
         BOUNDARY_INPUT_SCENARIO_PATTERN.search(scenario)
@@ -465,7 +465,7 @@ def _bug_uses_speculative_or_automation_expectation(
     ):
         return True
     if (
-        re.search(r"输入(?:文本)?\s*[\"'“‘][^\"'”’]+[\"'”’]", scenario)
+        re.search(r"\u8f93\u5165(?:\u6587\u672c)?\s*[\"'\u201c\u2018][^\"'\u201d\u2019]+[\"'\u201d\u2019]", scenario)
         and INPUT_WAS_NOT_APPLIED_PATTERN.search(bug_text)
     ):
         return True
@@ -618,15 +618,15 @@ def _build_full_trace_messages(
         "existing_bug_summaries": existing_bug_summaries,
     }
     header_text = (
-        "【完整执行轨迹缺陷复核】\n"
-        "以下是本轮 navigation/test 的完整动作序列，每一步都附带该动作执行前的截图；"
-        "请只依据这些截图和步骤信息判断，不要假设未展示的截图内容。\n\n"
-        "【本轮权威上下文】\n"
+        "[Complete Execution Trace Defect Review]\n"
+        "Below is the full action sequence of this round of navigation/test, with each step accompanied by a screenshot before executing the action;"
+        "Please make judgments solely based on these screenshots and step information; do not assume content of unshown screenshots.\n\n"
+        "[Authoritative Context for This Round]\n"
         f"{json.dumps(review_context, ensure_ascii=False, default=str)}\n\n"
-        "- is_interruption/action_failed/external_context/foreground_recovery 步骤默认是自动化或外部环境事件，不得直接当作 App 缺陷。\n"
-        "- 测试场景文本是测试意图，不是产品承诺；expected 仍必须有截图、明确保存/提交结果或同屏矛盾支撑。\n"
-        "- existing_bug_summaries 是此前已确认缺陷的摘要，仅用于按根因和用户可见后果去重，"
-        "不能当作本轮证据；与其中任一缺陷重复时不要再次输出。"
+        "- is_interruption/action_failed/external_context/foreground_recovery steps are automated or external environment events by default and must not be treated directly as App defects.\n"
+        "- Test scenario text represents test intent, not a product promise; expected must still be supported by screenshots, explicit save/submission results, or same-screen contradictions.\n"
+        "- existing_bug_summaries are summaries of previously confirmed defects, used solely for deduplication by root cause and user-visible consequence,"
+        "and cannot be used as evidence for this round; do not output again if duplicated with any defect among them."
     )
     message_content: list[dict[str, Any]] = [{"type": "text", "text": header_text}]
     for index, step in enumerate(trace, start=1):
@@ -645,11 +645,11 @@ def _build_full_trace_messages(
         if direction:
             text += f", direction={direction}"
         text += (
-            f"\n[IMAGE_REF] BEFORE_STEP_{index}: 紧随其后的图片属于 recordable_index={index}，"
-            "表示该动作执行前的页面状态；不要把这张图片误当作该动作执行后的结果。"
+            f"\n[IMAGE_REF] BEFORE_STEP_{index}: The immediately following image belongs to recordable_index={index}, "
+            "representing the page state before executing this action; do not mistake this image as the result after executing the action."
         )
         if index < len(trace):
-            text += f" STEP {index} 的动作结果通常体现在 BEFORE_STEP_{index + 1}。"
+            text += f" The action result of STEP {index} is typically reflected in BEFORE_STEP_{index + 1}."
         message_content.append({"type": "text", "text": text})
         screenshot = _compact_screenshot_for_llm(_page_screenshot(page))
         if screenshot:
@@ -701,7 +701,7 @@ def analyze_execution_for_bugs(
     ]
 
     print(
-        "[缺陷检测] 输入状态: "
+        "[Defect Detection] Input status: "
         f"scenario_status={execution_result.get('scenario_status', '')}, "
         f"navigation_steps={len(navigation_trace)}, test_steps={len(scenario_trace)}, "
         f"recordable_steps={len(trace)}, "
@@ -711,16 +711,16 @@ def analyze_execution_for_bugs(
     scenario_status = str(execution_result.get("scenario_status", "")).strip()
     skip_reason = ""
     if not full_trace:
-        skip_reason = "执行 trace 为空"
+        skip_reason = "Execution trace is empty"
     elif not trace:
-        skip_reason = "过滤无效步骤后执行 trace 为空"
+        skip_reason = "Execution trace is empty after filtering invalid steps"
     elif scenario_status not in SEMANTIC_ANALYSIS_STATUSES:
-        skip_reason = f"执行状态 {scenario_status or '未知'} 缺少可靠的最终观测"
+        skip_reason = f"Execution status {scenario_status or 'unknown'} lacks reliable final observation"
     elif current_plan.get("audit_exploration") is True:
-        skip_reason = "入口探索场景只建立页面/功能证据，跳过无业务结果的 LLM 缺陷复核"
+        skip_reason = "Entry exploration scenario only establishes page/function evidence, skipping LLM defect review without business results"
 
     if skip_reason:
-        print(f"[缺陷检测] {skip_reason}，跳过 LLM 缺陷检测。")
+        print(f"[Defect Detection] {skip_reason}, skipping LLM defect detection.")
         detected_bugs = _ensure_bug_ids(_dedupe_bugs(existing_bugs + runtime_bugs))
         bug_trace_records = _update_bug_trace_records(
             state,
@@ -734,15 +734,15 @@ def analyze_execution_for_bugs(
         }
 
     print(
-        "[缺陷检测] 使用完整轨迹独立复核: "
-        f"recordable_steps={len(trace)}（每步均附带执行前截图，不复用执行模型对话上下文）"
+        "[Defect Detection] Using complete trace independent review: "
+        f"recordable_steps={len(trace)} (each step includes a pre-execution screenshot, without reusing execution model conversation context)"
     )
     detection_messages = _build_full_trace_messages(state, trace)
 
     result = invoke_llm_json_with_retry(
         llm,
         detection_messages,
-        log_prefix="[缺陷检测]",
+        log_prefix="[Defect Detection]",
         json_block_pattern=JSON_BLOCK_PATTERN,
     )
 
@@ -762,7 +762,7 @@ def analyze_execution_for_bugs(
     ]
     if len(new_bugs) != len(bugs_patch):
         print(
-            "[缺陷检测] 已过滤非法缺陷候选: "
+            "[Defect Detection] Filtered invalid defect candidates: "
             f"accepted={len(new_bugs)}, candidates={len(bugs_patch)}"
         )
 
@@ -775,7 +775,7 @@ def analyze_execution_for_bugs(
         _current_bug_trace(state),
     )
     print(
-        "[缺陷检测] 本轮结果: "
+        "[Defect Detection] Round results: "
         f"runtime={len(runtime_bugs)}, llm={len(new_bugs)}, total={len(detected_bugs)}"
     )
     return {

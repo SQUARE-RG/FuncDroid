@@ -1,13 +1,13 @@
-"""纯缺陷检测工作流入口。
+"""Pure defect detection workflow entrypoint.
 
-用法：
-  # 测试当前设备前台打开的 App
+Usage:
+  # Test the App currently open in the foreground on the device
   python main.py --device-id emulator-5554
 
-  # 测试设备上已安装的指定 App
+  # Test a specified App installed on the device
   python main.py --device-id emulator-5554 --package-name com.example.app
 
-  # 使用轮次控制而非时间控制
+  # Use iteration control instead of time control
   python main.py --device-id emulator-5554 --max-iterations 20 --total-time 0
 """
 
@@ -31,10 +31,14 @@ import cv2
 import numpy as np
 from dotenv import load_dotenv
 
-# Load local configuration before module-level and CLI defaults are evaluated.
-load_dotenv()
+# Load repository-local configuration before module-level and CLI defaults are
+# evaluated. Explicit paths make startup independent of the caller's cwd.
+PROJECT_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(Path(__file__).with_name(".env"))
+load_dotenv(PROJECT_DIR / ".env")
 
 from device import Driver  # noqa: E402
+from connector import ADB, HDC  # noqa: E402
 from model.flow_graph import FlowGraph, Page  # noqa: E402
 from workflow.bug_detection_worker import bug_detection_worker  # noqa: E402
 from workflow.exploration_boundary import enabled_packages  # noqa: E402
@@ -54,22 +58,22 @@ from workflow.trace_artifacts import (  # noqa: E402
 )
 
 DEFAULT_TOTAL_TIME_MINUTES = 90
-DEFAULT_MAX_ITERATIONS = 0  # 0 表示关闭轮次上限，默认以总运行时间为准
+DEFAULT_MAX_ITERATIONS = 0  # 0 disables the iteration limit; total runtime is used by default
 DEFAULT_EXPLORATION_MODE = "core"
 DEFAULT_OUTPUT_ROOT = "output"
 ACTIVITY_TIMELINE_HEARTBEAT_SECONDS = max(
     1.0,
     float(os.getenv("ACTIVITY_TIMELINE_HEARTBEAT_SECONDS", "300")),
 )
-# 缺陷检测在独立后台线程里跑（见 workflow/bug_detection_worker.py），只读已拍好的
-# 截图，不占用设备；工作流结束/异常退出前需要等待队列排空，避免最后几轮的检测结果
-# 来不及落盘。设置超时是为了防止某次 LLM 调用异常挂起导致进程无法退出。
+# Defect detection runs in an independent background thread (see workflow/bug_detection_worker.py), reading only already captured
+# screenshots without occupying the device; before workflow completion/abnormal exit, wait for the queue to drain to prevent missing results from the last few rounds
+# from being persisted to disk. A timeout is set to prevent an abnormal LLM call hang from blocking process exit.
 BUG_DETECTION_FLUSH_TIMEOUT_SECONDS = max(
     0.0,
     float(os.getenv("BUG_DETECTION_FLUSH_TIMEOUT_SECONDS", "180")),
 )
-# 保护 bugs.json / bugs/ 目录的读-合并-写：缺陷检测线程完成一批检测后会异步落盘，
-# 可能与主线程的运行快照落盘重叠，需要用锁避免并发写坏文件。
+# Protect read-merge-write of bugs.json / bugs/ directory: defect detection threads persist asynchronously after finishing a batch,
+# which may overlap with snapshot persistence on the main thread; a lock is required to avoid concurrent write corruption.
 _BUGS_SAVE_LOCK = threading.Lock()
 _CHECKPOINT_FAILURE_LOG_INTERVAL_SECONDS = max(
     1.0,
@@ -77,11 +81,11 @@ _CHECKPOINT_FAILURE_LOG_INTERVAL_SECONDS = max(
 )
 _CHECKPOINT_FAILURES: dict[str, dict[str, float | int]] = {}
 PHASE_LABELS = {
-    "all": "自动选择功能内/跨功能",
-    "intra": "仅功能内测试",
+    "all": "Automatically select intra-function/cross-function",
+    "intra": "Intra-function testing only",
 }
 EXPLORATION_MODE_LABELS = {
-    "core": "核心测试",
+    "core": "Core testing",
 }
 RECENT_TASK_ID_PATTERNS = (
     re.compile(r"\btaskId=(\d+)\b"),
@@ -112,7 +116,7 @@ def _normalize_device_id(value: str | None) -> str:
     if not text:
         raise argparse.ArgumentTypeError("device id must not be empty")
     if text.lower() in {"all", "auto", "multi"}:
-        raise argparse.ArgumentTypeError("请传入具体设备编号；多设备请分别开多个终端运行")
+        raise argparse.ArgumentTypeError("Please pass a specific device ID; for multiple devices, run in separate terminals")
     return text
 
 
@@ -120,9 +124,9 @@ def _nonnegative_int(value: object) -> int:
     try:
         normalized = int(value)
     except (TypeError, ValueError) as exc:
-        raise argparse.ArgumentTypeError("必须是大于等于 0 的整数") from exc
+        raise argparse.ArgumentTypeError("Must be an integer greater than or equal to 0") from exc
     if normalized < 0:
-        raise argparse.ArgumentTypeError("必须是大于等于 0 的整数")
+        raise argparse.ArgumentTypeError("Must be an integer greater than or equal to 0")
     return normalized
 
 
@@ -130,18 +134,18 @@ def _nonnegative_float(value: object) -> float:
     try:
         normalized = float(value)
     except (TypeError, ValueError) as exc:
-        raise argparse.ArgumentTypeError("必须是大于等于 0 的数字") from exc
+        raise argparse.ArgumentTypeError("Must be a number greater than or equal to 0") from exc
     if normalized < 0:
-        raise argparse.ArgumentTypeError("必须是大于等于 0 的数字")
+        raise argparse.ArgumentTypeError("Must be a number greater than or equal to 0")
     return normalized
 
 
 def _build_initial_state(args, start_time: float) -> AgentState:
-    """构建初始状态。"""
+    """Build initial state."""
     total_time_limit = args.total_time * 60 if args.total_time > 0 else 0
 
     return AgentState(
-        app_name=args.app_name or args.package_name or "当前前台应用",
+        app_name=args.app_name or args.package_name or "Current foreground app",
         package_name=args.package_name or "",
         current_navigation_scenario="",
         current_test_scenario="",
@@ -189,7 +193,7 @@ def _load_resume_state(args, output_dir: str, started_at: float) -> AgentState:
     root = Path(output_dir)
     ffg_path = root / "ffg.json"
     if not ffg_path.is_file():
-        raise FileNotFoundError(f"续跑目录缺少 ffg.json: {ffg_path}")
+        raise FileNotFoundError(f"Resume directory missing ffg.json: {ffg_path}")
     state["ffg"] = FlowGraph.load(output_dir)
 
     result_path = root / "run_result.json"
@@ -222,8 +226,8 @@ def _load_resume_state(args, output_dir: str, started_at: float) -> AgentState:
     # determines what remains; the new process must always re-enter planning.
     state["workflow_complete"] = False
     print(
-        "[断点续跑] 已恢复累计状态: "
-        f"elapsed={previous_elapsed / 60:.1f} 分钟, "
+        "[Resume] Restored cumulative state: "
+        f"elapsed={previous_elapsed / 60:.1f} minutes, "
         f"iterations={state['iteration_count']}, "
         f"functions={len(state['ffg'].functions)}, pages={len(state['ffg'].pages)}, "
         f"activities={len((state.get('_activity_timeline') or {}).get('activities', []))}, "
@@ -233,7 +237,7 @@ def _load_resume_state(args, output_dir: str, started_at: float) -> AgentState:
 
 
 def _atomic_write_json(path: Path | str, data: Any) -> None:
-    """原子写 JSON：先写临时文件再 os.replace，避免运行中被 kill 留下截断文件。"""
+    """Atomically write JSON: write to temporary file first then os.replace to avoid leaving truncated files if killed during execution."""
     target = Path(path)
     target.parent.mkdir(parents=True, exist_ok=True)
     tmp_path = target.with_name(f"{target.name}.tmp")
@@ -468,7 +472,7 @@ def _save_activity_timeline(
 
 
 def _sync_bug_state(state: dict) -> None:
-    """用后台缺陷检测线程的权威数据刷新 state 里的镜像字段。"""
+    """Refresh mirror fields in state with authoritative data from the background defect detection thread."""
     if not bool(state.get("bug_detection_enabled", True)):
         return
     detected_bugs, bug_trace_records = bug_detection_worker.snapshot()
@@ -477,24 +481,24 @@ def _sync_bug_state(state: dict) -> None:
 
 
 def _flush_bug_detection(reason: str) -> None:
-    """等待后台缺陷检测队列排空，超时则继续（避免异常挂起导致无法退出）。"""
+    """Wait for background defect detection queue to drain, continue on timeout (avoids abnormal hangs blocking exit)."""
     pending = bug_detection_worker.pending_count()
     if pending <= 0:
         return
-    print(f"[缺陷检测线程] {reason}前等待 {pending} 个未完成的异步检测任务...")
+    print(f"[Defect Detection Thread] Waiting for {pending} pending asynchronous detection tasks before {reason}...")
     completed = bug_detection_worker.flush(timeout=BUG_DETECTION_FLUSH_TIMEOUT_SECONDS or None)
     if not completed:
         print(
-            "[缺陷检测线程] 等待超时，仍有检测任务在后台运行；"
-            "本次产物可能缺少这些任务的缺陷发现，可稍后从 bugs.json 校验。"
+            "[Defect Detection Thread] Wait timed out, detection tasks are still running in the background; "
+            "artifacts from this run may lack bug findings from these tasks; check bugs.json later."
         )
 
 
 def _flush_page_audit(final_state: dict) -> None:
-    """等待页面审计队列排空，并把剩余审计结果合并进图（落盘前调用）。
+    """Wait for page audit queue to drain, and merge remaining audit results into graph (called before disk save).
 
-    后台审计结果平时由下一轮 ffg_update 节点入口合并；运行结束时没有
-    "下一轮"，必须在此处直接合并，否则最后一批结果会丢失。
+    Background audit results are normally merged at the next round ffg_update node entry; at the end of run there is no
+    "next round", so they must be merged directly here, otherwise the last batch of results will be lost.
     """
     graph = final_state.get("ffg")
     if isinstance(graph, FlowGraph):
@@ -504,9 +508,9 @@ def _flush_page_audit(final_state: dict) -> None:
                 _submit_page_audit_batch,
             )
 
-            # ffg_update 在应用本轮 trace 前提交审计，因此最后新增或刚增加
-            # 截图的 Page 尚未入队。结尾补交当前未审计指纹；worker 的
-            # 指纹和饱和状态会阻止重复空转。
+            # ffg_update submits audits before applying current trace, so newly added Pages or those
+            # with newly added screenshots are not yet enqueued. Resubmit un-audited fingerprints at the end; worker's
+            # fingerprints and saturation state will prevent redundant idle processing.
             # A failed worker call deliberately leaves its fingerprint
             # unaudited so a later workflow iteration may retry it. During
             # final output there is no later iteration, so remember what this
@@ -517,8 +521,8 @@ def _flush_page_audit(final_state: dict) -> None:
                 pending = page_audit_worker.pending_count()
                 if pending > 0:
                     print(
-                        f"[页面审计线程] 保存最终输出前等待 {pending} "
-                        "个未完成的审计任务..."
+                        f"[Page Audit Thread] Waiting for {pending} "
+                        "pending audit tasks before saving final outputs..."
                     )
                     page_audit_worker.flush(
                         timeout=BUG_DETECTION_FLUSH_TIMEOUT_SECONDS or None
@@ -531,33 +535,33 @@ def _flush_page_audit(final_state: dict) -> None:
                 if submitted <= 0:
                     break
                 print(
-                    f"[页面审计线程] 最终补交 {submitted} 个尚未审计的页面指纹。"
+                    f"[Page Audit Thread] Resubmitted {submitted} un-audited page fingerprints at the end."
                 )
-        except Exception as exc:  # noqa: BLE001 - 落盘前兜底，失败不阻塞退出
-            print(f"[页面审计线程] 最终合并审计结果失败: {exc}")
+        except Exception as exc:  # noqa: BLE001 - Fallback before disk save, failure does not block exit
+            print(f"[Page Audit Thread] Failed to merge audit results at the end: {exc}")
 
 
 def _print_summary(state: dict, output_dir: str, elapsed_seconds: float):
-    """打印运行结束的摘要。"""
+    """Print execution summary at the end of run."""
     _sync_bug_state(state)
     elapsed_min = elapsed_seconds / 60
     ffg = state.get("ffg")
 
     print(f"\n{'='*60}")
-    print("  FuncDroid 运行结束摘要")
+    print("  FuncDroid Execution Summary")
     print(f"{'='*60}")
-    print(f"  总用时: {elapsed_min:.1f} 分钟")
+    print(f"  Total time: {elapsed_min:.1f} minutes")
     exploration_mode = str(state.get("exploration_mode") or DEFAULT_EXPLORATION_MODE)
-    print(f"  探索范围: {EXPLORATION_MODE_LABELS.get(exploration_mode, exploration_mode)}")
+    print(f"  Exploration scope: {EXPLORATION_MODE_LABELS.get(exploration_mode, exploration_mode)}")
 
     if isinstance(ffg, FlowGraph):
-        print(f"  FFG 功能节点数: {len(ffg.functions)}")
-        print(f"  FFG 页面数: {len(ffg.pages)}")
-        print(f"  页面跳转数: {len(ffg.page_transitions)}")
-        print(f"  功能依赖数: {len(ffg.function_dependencies)}")
+        print(f"  FFG Function nodes: {len(ffg.functions)}")
+        print(f"  FFG Pages: {len(ffg.pages)}")
+        print(f"  Page transitions: {len(ffg.page_transitions)}")
+        print(f"  Function dependencies: {len(ffg.function_dependencies)}")
         status_counts = ffg.test_status_counts()
         print(
-            "  FFG 状态分布: "
+            "  FFG status distribution: "
             f"completed={status_counts.get('completed', 0)}, "
             f"in_progress={status_counts.get('in_progress', 0)}, "
             f"not_started={status_counts.get('not_started', 0)}, "
@@ -570,7 +574,7 @@ def _print_summary(state: dict, output_dir: str, elapsed_seconds: float):
     activities = timeline.get("activities", []) if isinstance(timeline, dict) else []
     if not activities:
         activities = sorted(_observed_activities(state))
-    print(f"  已发现 Android Activity: {len(activities)} 个")
+    print(f"  Discovered Android Activities: {len(activities)}")
 
     bugs = state.get("detected_bugs", [])
     if not isinstance(bugs, list):
@@ -578,14 +582,14 @@ def _print_summary(state: dict, output_dir: str, elapsed_seconds: float):
     if bugs:
         crash_bugs = [b for b in bugs if isinstance(b, dict) and b.get("type") == "crash"]
         non_crash_bugs = [b for b in bugs if isinstance(b, dict) and b.get("type") != "crash"]
-        print(f"  检测到的缺陷: {len(bugs)} 个")
-        print(f"    - 崩溃类: {len(crash_bugs)} 个")
-        print(f"    - 非崩溃类: {len(non_crash_bugs)} 个")
+        print(f"  Detected bugs: {len(bugs)}")
+        print(f"    - Crash: {len(crash_bugs)}")
+        print(f"    - Non-crash: {len(non_crash_bugs)}")
     else:
-        print("  检测到的缺陷: 0 个")
+        print("  Detected bugs: 0")
 
-    print(f"  执行轮次: {state.get('iteration_count', 0)}")
-    print(f"  原始轨迹截图: {trace_screenshot_count()} 张 (trace_screenshots/)")
+    print(f"  Execution iterations: {state.get('iteration_count', 0)}")
+    print(f"  Raw trace screenshots: {trace_screenshot_count()} (trace_screenshots/)")
     usage_summary = get_llm_usage_summary()
     usage_totals = usage_summary.get("totals", {}) if isinstance(usage_summary, dict) else {}
     if usage_totals:
@@ -597,14 +601,14 @@ def _print_summary(state: dict, output_dir: str, elapsed_seconds: float):
             f"requests={usage_totals.get('requests', 0)}, "
             f"failures={usage_totals.get('failures', 0)}"
         )
-    print(f"  输出目录: {output_dir}")
-    print("  Activity 时间序列: activity_timeline.json / activity_timeline.png")
+    print(f"  Output directory: {output_dir}")
+    print("  Activity timeline: activity_timeline.json / activity_timeline.png")
     print(f"{'='*60}\n")
 
 
 def _save_final_outputs(state: dict, output_dir: str):
-    """保存最终输出，不保存可恢复的工作流状态。"""
-    _save_outputs(state, output_dir, prefix="[输出]")
+    """Save final outputs, without saving recoverable workflow state."""
+    _save_outputs(state, output_dir, prefix="[Output]")
 
 
 def _save_outputs(state: dict, output_dir: str, prefix: str):
@@ -614,7 +618,7 @@ def _save_outputs(state: dict, output_dir: str, prefix: str):
         try:
             ffg.save(output_dir)
         except Exception as exc:
-            print(f"{prefix} FFG 保存失败: {exc}")
+            print(f"{prefix} Failed to save FFG: {exc}")
     _save_bugs(state, output_dir, prefix=prefix)
 
 
@@ -636,9 +640,9 @@ def _save_bugs(state: dict, output_dir: str, prefix: str):
             existing_bugs = _filter_high_confidence_bugs(existing_bugs, prefix=prefix)
             merged_bugs = _merge_bugs_by_id(existing_bugs, detected_bugs)
             _atomic_write_json(bugs_path, merged_bugs)
-            print(f"{prefix} bugs.json 已保存: {bugs_path}")
+            print(f"{prefix} bugs.json saved: {bugs_path}")
         except Exception as exc:
-            print(f"{prefix} bugs.json 保存失败: {exc}")
+            print(f"{prefix} Failed to save bugs.json: {exc}")
         _save_bug_folders(state, output_dir, detected_bugs, prefix)
 
 
@@ -654,7 +658,7 @@ def _filter_high_confidence_bugs(bugs: list[dict[str, Any]], prefix: str) -> lis
     ]
     skipped_count = len([bug for bug in bugs if isinstance(bug, dict)]) - len(high_confidence)
     if skipped_count:
-        print(f"{prefix} 已过滤非 high 置信度缺陷: {skipped_count} 个")
+        print(f"{prefix} Filtered non-high confidence bugs: {skipped_count}")
     return high_confidence
 
 
@@ -970,11 +974,11 @@ def _save_bug_folders(
             )
             updated_count += 1
         print(
-            f"{prefix} bug 详情目录已增量保存: {bugs_dir} "
-            f"(更新={updated_count}, 未变化={unchanged_count})"
+            f"{prefix} Bug details directory saved incrementally: {bugs_dir} "
+            f"(updated={updated_count}, unchanged={unchanged_count})"
         )
     except Exception as exc:
-        print(f"{prefix} bug 详情目录保存失败: {exc}")
+        print(f"{prefix} Failed to save bug details directory: {exc}")
 
 
 def _load_json_artifact(path: Path, errors: list[str]) -> Any:
@@ -982,7 +986,7 @@ def _load_json_artifact(path: Path, errors: list[str]) -> Any:
         with path.open("r", encoding="utf-8") as f:
             return json.load(f)
     except Exception as exc:
-        errors.append(f"{path.name} 无法读取: {exc}")
+        errors.append(f"Cannot read {path.name}: {exc}")
         return None
 
 
@@ -1052,7 +1056,7 @@ def _save_run_result(
 
 
 def _validate_final_artifacts(state: dict, output_dir: str, exit_code: int) -> dict[str, Any]:
-    """校验最终目录的结构、JSON 可读性和所有被引用文件。"""
+    """Validate the structure of the final directory, JSON readability, and all referenced files."""
     root = Path(output_dir)
     errors: list[str] = []
     warnings: list[str] = []
@@ -1069,9 +1073,9 @@ def _validate_final_artifacts(state: dict, output_dir: str, exit_code: int) -> d
     for relative in required_files:
         path = root / relative
         if not path.is_file():
-            errors.append(f"缺少必需产物: {relative}")
+            errors.append(f"Missing required artifact: {relative}")
         elif path.stat().st_size <= 0:
-            errors.append(f"必需产物为空: {relative}")
+            errors.append(f"Required artifact is empty: {relative}")
 
     activity_path = root / "activity_timeline.json"
     activity_data = _load_json_artifact(activity_path, errors) if activity_path.is_file() else None
@@ -1079,18 +1083,18 @@ def _validate_final_artifacts(state: dict, output_dir: str, exit_code: int) -> d
         activities = activity_data.get("activities")
         points = activity_data.get("points")
         if not isinstance(activities, list) or any(not isinstance(item, str) for item in activities):
-            errors.append("activity_timeline.json 的 activities 不是字符串列表")
+            errors.append("activities in activity_timeline.json is not a list of strings")
         if not isinstance(points, list) or not points:
-            errors.append("activity_timeline.json 缺少时间采样点")
+            errors.append("activity_timeline.json is missing time sample points")
         elif isinstance(activities, list):
             last = points[-1]
             if not isinstance(last, dict) or int(last.get("activity_count", -1)) != len(activities):
-                errors.append("activity_timeline.json 最后采样点与 Activity 总数不一致")
+                errors.append("The last sample point in activity_timeline.json is inconsistent with total Activity count")
     elif activity_data is not None:
-        errors.append("activity_timeline.json 不是对象")
+        errors.append("activity_timeline.json is not an object")
     activity_image_path = root / "activity_timeline.png"
     if activity_image_path.is_file() and cv2.imread(str(activity_image_path)) is None:
-        errors.append("activity_timeline.png 无法解码")
+        errors.append("activity_timeline.png cannot be decoded")
 
     ffg_path = root / "ffg.json"
     if ffg_path.is_file():
@@ -1105,25 +1109,25 @@ def _validate_final_artifacts(state: dict, output_dir: str, exit_code: int) -> d
                 screenshots = page.get("evidence_screenshots")
                 controls = page.get("controls")
                 if not isinstance(screenshots, list):
-                    errors.append(f"页面 {page_id} 的 evidence_screenshots 不是列表")
+                    errors.append(f"evidence_screenshots of page {page_id} is not a list")
                     screenshots = []
                 if not isinstance(controls, list) or any(not isinstance(value, str) for value in controls):
-                    errors.append(f"页面 {page_id} 的 controls 不是自然语言字符串列表")
+                    errors.append(f"controls of page {page_id} is not a list of natural language strings")
                 for screenshot_ref in [representative, *screenshots]:
                     if not screenshot_ref:
                         continue
                     screenshot_path = root / "screenshots" / str(screenshot_ref)
                     if not screenshot_path.is_file() or screenshot_path.stat().st_size <= 0:
-                        errors.append(f"页面 {page_id} 缺少截图文件: screenshots/{screenshot_ref}")
+                        errors.append(f"Page {page_id} is missing screenshot file: screenshots/{screenshot_ref}")
             for function in functions:
                 function_id = str(function.get("id", "") or "")
                 page_refs = function.get("page_ids", [])
                 if not isinstance(page_refs, list):
-                    errors.append(f"功能 {function_id} 的 page_ids 不是列表")
+                    errors.append(f"page_ids of function {function_id} is not a list")
                     continue
                 for page_id in page_refs:
                     if str(page_id) not in page_ids:
-                        errors.append(f"功能 {function_id} 引用了不存在的页面 {page_id}")
+                        errors.append(f"Function {function_id} references non-existent page {page_id}")
                 coverage_percent = function.get("coverage_percent", 0)
                 if (
                     not isinstance(coverage_percent, int)
@@ -1131,13 +1135,13 @@ def _validate_final_artifacts(state: dict, output_dir: str, exit_code: int) -> d
                     or not 0 <= coverage_percent <= 100
                 ):
                     errors.append(
-                        f"功能 {function_id} 的 coverage_percent 必须是 0-100 的整数"
+                        f"coverage_percent of function {function_id} must be an integer between 0-100"
                     )
 
     bugs_path = root / "bugs.json"
     bugs_data = _load_json_artifact(bugs_path, errors) if bugs_path.is_file() else None
     if bugs_data is not None and not isinstance(bugs_data, list):
-        errors.append("bugs.json 不是数组")
+        errors.append("bugs.json is not an array")
         bugs_data = []
     bug_detail_dirs: dict[str, Path] = {}
     bugs_root = root / "bugs"
@@ -1150,23 +1154,23 @@ def _validate_final_artifacts(state: dict, output_dir: str, exit_code: int) -> d
                     bug_detail_dirs[bug_id] = bug_file.parent
     for bug in bugs_data or []:
         if not isinstance(bug, dict):
-            errors.append("bugs.json 含非对象条目")
+            errors.append("bugs.json contains non-object entries")
             continue
         bug_id = str(bug.get("bug_id", "") or "")
         detail_dir = bug_detail_dirs.get(bug_id)
         if detail_dir is None:
-            errors.append(f"缺陷 {bug_id or '<无 ID>'} 缺少详情目录")
+            errors.append(f"Bug {bug_id or '<No ID>'} is missing details directory")
             continue
         trace_path = detail_dir / "trace.json"
         trace_data = _load_json_artifact(trace_path, errors) if trace_path.is_file() else None
         if trace_data is None:
-            errors.append(f"缺陷 {bug_id} 缺少 trace.json")
+            errors.append(f"Bug {bug_id} is missing trace.json")
             continue
         if not isinstance(trace_data, list):
-            errors.append(f"缺陷 {bug_id} 的 trace.json 不是数组")
+            errors.append(f"trace.json of bug {bug_id} is not an array")
             continue
         if not trace_data:
-            warnings.append(f"缺陷 {bug_id} 的 trace 为空")
+            warnings.append(f"trace of bug {bug_id} is empty")
         for step in trace_data:
             if not isinstance(step, dict):
                 continue
@@ -1174,7 +1178,7 @@ def _validate_final_artifacts(state: dict, output_dir: str, exit_code: int) -> d
             if screenshot_ref:
                 screenshot_path = detail_dir / screenshot_ref
                 if not screenshot_path.is_file() or screenshot_path.stat().st_size <= 0:
-                    errors.append(f"缺陷 {bug_id} 缺少轨迹截图: {screenshot_ref}")
+                    errors.append(f"Bug {bug_id} is missing trace screenshot: {screenshot_ref}")
 
     trace_index_path = root / "trace_screenshots" / "index.jsonl"
     trace_screenshot_records = 0
@@ -1188,12 +1192,12 @@ def _validate_final_artifacts(state: dict, output_dir: str, exit_code: int) -> d
                         record = json.loads(line)
                     except json.JSONDecodeError as exc:
                         errors.append(
-                            f"trace_screenshots/index.jsonl 第 {line_number} 行无法解析: {exc}"
+                            f"trace_screenshots/index.jsonl line {line_number} cannot be parsed: {exc}"
                         )
                         continue
                     if not isinstance(record, dict):
                         errors.append(
-                            f"trace_screenshots/index.jsonl 第 {line_number} 行不是对象"
+                            f"trace_screenshots/index.jsonl line {line_number} is not an object"
                         )
                         continue
                     trace_screenshot_records += 1
@@ -1205,14 +1209,14 @@ def _validate_final_artifacts(state: dict, output_dir: str, exit_code: int) -> d
                         or screenshot_path.stat().st_size <= 0
                     ):
                         errors.append(
-                            f"原始轨迹截图索引第 {line_number} 行缺少文件: "
-                            f"{screenshot_ref or '<空>'}"
+                            f"Raw trace screenshot index line {line_number} is missing file: "
+                            f"{screenshot_ref or '<empty>'}"
                         )
         except OSError as exc:
-            errors.append(f"无法读取原始轨迹截图索引: {exc}")
+            errors.append(f"Cannot read raw trace screenshot index: {exc}")
 
     if exit_code != 0:
-        warnings.append("本次运行异常退出；产物是异常发生前的最后一致快照")
+        warnings.append("This run exited abnormally; artifacts represent the last consistent snapshot before the exception")
 
     files: list[dict[str, Any]] = []
     for path in sorted(
@@ -1261,23 +1265,23 @@ def _should_save_run_snapshot(node_name: str, state: dict) -> bool:
 
 
 def _save_run_snapshot(state: dict, output_dir: str):
-    """保存运行中间产物：FFG、页面截图和 bugs，不保存断点续跑状态。"""
-    _save_outputs(state, output_dir, prefix="[运行快照]")
+    """Save intermediate run artifacts: FFG, page screenshots, and bugs, without saving checkpoint resume state."""
+    _save_outputs(state, output_dir, prefix="[Run Snapshot]")
 
 
 def _resolve_foreground_package(device) -> str:
-    print("[启动] 正在获取当前前台包名...")
+    print("[Startup] Getting current foreground package name...")
     started_at = time.time()
     try:
         package_name = str(device.current_package() or "").strip()
         elapsed = time.time() - started_at
         if package_name:
-            print(f"[启动] 当前前台包名: {package_name} ({elapsed:.2f}s)")
+            print(f"[Startup] Current foreground package name: {package_name} ({elapsed:.2f}s)")
         else:
-            print(f"[启动] 未获取到当前前台包名 ({elapsed:.2f}s)")
+            print(f"[Startup] Failed to get current foreground package name ({elapsed:.2f}s)")
         return package_name
     except Exception as exc:
-        print(f"[启动] 获取当前前台包名失败: {exc}")
+        print(f"[Startup] Failed to get current foreground package name: {exc}")
         return ""
 
 
@@ -1309,11 +1313,11 @@ def _graph_recursion_limit(state: dict) -> int:
 
 
 def _safe_run_dir_name(app_name: str) -> str:
-    name = str(app_name or "").strip() or "当前前台应用"
+    name = str(app_name or "").strip() or "Current foreground app"
     for separator in {os.sep, os.altsep}:
         if separator:
             name = name.replace(separator, "_")
-    return name or "当前前台应用"
+    return name or "Current foreground app"
 
 
 def _allocate_default_output_dir(app_name: str) -> str:
@@ -1334,7 +1338,7 @@ def _run_android_shell_best_effort(device, command: str, label: str) -> tuple[st
     try:
         return str(device.connector.shell(command) or ""), True
     except Exception as exc:
-        print(f"[启动前清理] {label}失败，继续执行: {exc}")
+        print(f"[Pre-startup Cleanup] {label} failed, continuing execution: {exc}")
         return "", False
 
 
@@ -1360,36 +1364,36 @@ def _clear_android_background_tasks(device, package_name: str) -> None:
     if getattr(device, "operating_system", "") not in {"adb", "android"}:
         return
 
-    print("[启动前清理] 清空后台任务并准备干净启动目标应用。")
-    _run_android_shell_best_effort(device, "input keyevent KEYCODE_HOME", "回到桌面")
+    print("[Pre-startup Cleanup] Clearing background tasks and preparing clean launch of target app.")
+    _run_android_shell_best_effort(device, "input keyevent KEYCODE_HOME", "Return to home screen")
     dumpsys_output, _ = _run_android_shell_best_effort(
         device,
         "dumpsys activity recents",
-        "读取最近任务",
+        "Read recent tasks",
     )
     task_ids = _extract_recent_task_ids(dumpsys_output)
     removed = 0
     activity_help, _ = _run_android_shell_best_effort(
         device,
         "cmd activity help",
-        "读取 activity 命令能力",
+        "Read activity command capability",
     )
     if task_ids and "remove-task" not in activity_help:
-        print("[启动前清理] 当前 Android 版本不支持 remove-task，跳过最近任务逐项移除。")
+        print("[Pre-startup Cleanup] Current Android version does not support remove-task, skipping itemized removal of recent tasks.")
     else:
         for task_id in task_ids[:50]:
             _, succeeded = _run_android_shell_best_effort(
                 device,
                 f"cmd activity remove-task {task_id}",
-                f"移除最近任务 {task_id}",
+                f"Remove recent task {task_id}",
             )
             if succeeded:
                 removed += 1
-    _run_android_shell_best_effort(device, "am kill-all", "清理后台进程")
+    _run_android_shell_best_effort(device, "am kill-all", "Clean up background processes")
     if package_name:
-        _run_android_shell_best_effort(device, f"am force-stop {package_name}", f"停止目标应用 {package_name}")
+        _run_android_shell_best_effort(device, f"am force-stop {package_name}", f"Stop target app {package_name}")
     print(
-        "[启动前清理] 后台清理完成: "
+        "[Pre-startup Cleanup] Background cleanup finished: "
         f"removed_recent_tasks={removed}/{min(len(task_ids), 50)}"
     )
 
@@ -1399,7 +1403,7 @@ def _start_app_after_background_cleanup(
     package_name: str,
 ) -> None:
     _clear_android_background_tasks(device, package_name)
-    print(f"[启动] 启动目标应用: {package_name}")
+    print(f"[Startup] Launching target app: {package_name}")
     device.start_app(package_name)
     time.sleep(float(os.getenv("APP_RESTART_DELAY", "2.0")))
 
@@ -1411,28 +1415,52 @@ def _llm_timeout_value() -> str:
 def _ensure_device_id(args) -> None:
     if args.device_id:
         return
-    raise ValueError("必须通过 --device-id 显式指定要运行的设备编号，例如: --device-id emulator-5554")
+
+    detected: list[tuple[str, str]] = []
+    errors: list[str] = []
+    for backend, connector in (("adb", ADB), ("hdc", HDC)):
+        try:
+            detected.extend((backend, serial) for serial in connector.devices())
+        except Exception as exc:
+            errors.append(f"{backend}: {exc}")
+
+    unique_serials = sorted({serial for _backend, serial in detected if serial})
+    if len(unique_serials) == 1:
+        args.device_id = unique_serials[0]
+        backend = next(name for name, serial in detected if serial == args.device_id)
+        print(f"[Startup] Automatically selected the only {backend} device: {args.device_id}")
+        return
+    if not unique_serials:
+        detail = f" (detection errors: {'; '.join(errors)})" if errors else ""
+        raise ValueError(
+            "No available devices detected. Please enable USB debugging and verify devices via adb devices or hdc list targets"
+            + detail
+        )
+    raise ValueError(
+        "Multiple devices detected, please specify one via --device-id: "
+        + ", ".join(unique_serials)
+    )
 
 
 def _init_runtime(args):
-    print("[启动] 初始化规划/更新 LLM...")
+    print("[Startup] Initializing planning/update LLM...")
     planning_llm = create_llm()
-    print("[启动] 初始化场景执行 LLM...")
+    print("[Startup] Initializing scenario execution LLM...")
     execution_llm = create_llm()
-    # FFG 更新保留所有尚未匹配的轨迹图；本地多模态模型处理完整证据通常
-    # 比规划慢，使用独立长超时并由总运行预算限制重试次数。
+    # FFG update retains all unmatched trace graphs; local multimodal models processing full evidence are usually
+    # slower than planning, so use an independent long timeout and limit retries by total runtime budget.
     ffg_update_timeout = float(os.getenv("FFG_UPDATE_LLM_TIMEOUT", "300") or 300)
-    print(f"[启动] 初始化 FFG 更新 LLM（超时 {ffg_update_timeout:g}s）...")
+    print(f"[Startup] Initializing FFG update LLM (timeout {ffg_update_timeout:g}s)...")
     ffg_update_llm = create_llm(timeout_seconds=ffg_update_timeout)
     if bool(getattr(args, "bug_detection", True)):
-        print("[启动] 初始化缺陷检测 LLM...")
+        print("[Startup] Initializing bug detection LLM...")
         bug_detection_llm = create_llm()
     else:
-        print("[启动] 缺陷检测已关闭，跳过专用检测 LLM 初始化")
+        print("[Startup] Bug detection is disabled, skipping dedicated detection LLM initialization")
         bug_detection_llm = None
-    print(f"[启动] 初始化设备驱动: {args.device_id}")
+    print(f"[Startup] Initializing device driver: {args.device_id}")
     device = Driver(args.device_id)
-    print("[启动] 设备驱动初始化完成")
+    print("[Startup] Device driver initialization completed")
     return planning_llm, execution_llm, ffg_update_llm, bug_detection_llm, device
 
 
@@ -1446,11 +1474,11 @@ def _close_logcat_capture(
         return
     try:
         if announce:
-            print(f"[logcat] 停止完整 logcat 采集: {resources.logcat_capture.path}")
+            print(f"[logcat] Stopping full logcat capture: {resources.logcat_capture.path}")
         resources.logcat_capture.close()
     except Exception as exc:
         if announce:
-            print(f"[logcat] 停止完整 logcat 采集失败: {exc}")
+            print(f"[logcat] Failed to stop full logcat capture: {exc}")
         if not suppress_errors:
             raise
     finally:
@@ -1470,10 +1498,10 @@ def _resolve_target_app(args, device) -> bool:
         args.package_name = _resolve_foreground_package(device)
         if not args.package_name:
             raise RuntimeError(
-                "未指定 --package-name，且无法识别当前前台 App；"
-                "请先在设备上打开目标 App"
+                "--package-name not specified and cannot identify current foreground App; "
+                "please open the target App on the device first"
             )
-        print(f"[启动] 使用当前前台 App: {args.package_name}")
+        print(f"[Startup] Using current foreground App: {args.package_name}")
     if not args.app_name:
         args.app_name = args.package_name
     return explicit_package
@@ -1511,62 +1539,62 @@ def _prepare_run_logging(args, device, resources: RunResources) -> None:
 
 
 def _print_startup_banner(args, state: dict, resources: RunResources) -> None:
-    time_label = f"{args.total_time} 分钟" if args.total_time > 0 else "无限制"
+    time_label = f"{args.total_time} minutes" if args.total_time > 0 else "unlimited"
     llm_model = os.getenv("MODEL", "").strip()
     llm_timeout = _llm_timeout_value()
     ffg_update_timeout = os.getenv("FFG_UPDATE_LLM_TIMEOUT", "300").strip() or "300"
 
     print(f"\n{'='*60}")
-    print("  FuncDroid 工作流启动")
+    print("  FuncDroid Workflow Started")
     print(f"{'='*60}")
-    print(f"  应用: {state.get('app_name')} ({state.get('package_name')})")
-    print(f"  应用选择: {'指定包名' if args.package_name_explicit else '当前前台 App'}")
-    print(f"  设备: {args.device_id}")
-    print(f"  规划模式: {PHASE_LABELS[args.phase]}")
+    print(f"  App: {state.get('app_name')} ({state.get('package_name')})")
+    print(f"  App selection: {'Specified package name' if args.package_name_explicit else 'Current foreground App'}")
+    print(f"  Device: {args.device_id}")
+    print(f"  Planning mode: {PHASE_LABELS[args.phase]}")
     exploration_mode = str(state.get("exploration_mode") or DEFAULT_EXPLORATION_MODE)
     print(
-        f"  探索范围: {EXPLORATION_MODE_LABELS.get(exploration_mode, exploration_mode)}"
-        f"（{exploration_mode}）"
+        f"  Exploration scope: {EXPLORATION_MODE_LABELS.get(exploration_mode, exploration_mode)}"
+        f" ({exploration_mode})"
     )
     boundary_packages = enabled_packages()
     if exploration_mode == "core":
         print(
-            "  探索边界: "
+            "  Exploration boundary: "
             + (
-                "已启用: " + ", ".join(boundary_packages)
+                "Enabled: " + ", ".join(boundary_packages)
                 if boundary_packages
-                else "未启用（boundary_rules.json 无启用规则）"
+                else "Disabled (no active rules in boundary_rules.json)"
             )
         )
-    print(f"  总时间: {time_label}")
-    iteration_label = str(args.max_iterations) if args.max_iterations > 0 else "无限制"
-    print(f"  最大轮次: {iteration_label}")
-    print(f"  LangGraph 递归预算: {_graph_recursion_limit(state)}")
-    print(f"  规划/更新模型: {llm_model}")
-    print(f"  场景执行模型: {llm_model}")
+    print(f"  Total time: {time_label}")
+    iteration_label = str(args.max_iterations) if args.max_iterations > 0 else "unlimited"
+    print(f"  Max iterations: {iteration_label}")
+    print(f"  LangGraph recursion budget: {_graph_recursion_limit(state)}")
+    print(f"  Planning/update model: {llm_model}")
+    print(f"  Scenario execution model: {llm_model}")
     bug_detection_enabled = bool(state.get("bug_detection_enabled", True))
     print(
-        "  缺陷检测: "
-        + (f"开启（{llm_model}）" if bug_detection_enabled else "关闭")
+        "  Bug detection: "
+        + (f"Enabled ({llm_model})" if bug_detection_enabled else "Disabled")
     )
     print(
-        "  LLM 超时: "
-        f"常规={llm_timeout}s, "
-        f"FFG更新={ffg_update_timeout}s"
+        "  LLM timeout: "
+        f"regular={llm_timeout}s, "
+        f"ffg_update={ffg_update_timeout}s"
     )
-    print(f"  输出目录: {resources.output_dir}")
-    print(f"  断点续跑: {'是' if bool(getattr(args, 'resume_existing', False)) else '否'}")
-    print(f"  运行日志: {resources.run_log.path}")
+    print(f"  Output directory: {resources.output_dir}")
+    print(f"  Resume run: {'Yes' if bool(getattr(args, 'resume_existing', False)) else 'No'}")
+    print(f"  Run log: {resources.run_log.path}")
     if resources.logcat_capture is not None:
-        print(f"  完整 logcat: {resources.logcat_capture.path}")
+        print(f"  Full logcat: {resources.logcat_capture.path}")
     print(
-        "  探索参数: "
+        "  Exploration params: "
         f"max_scenarios_per_function={_env_value('PLAN_MAX_SCENARIOS_PER_FUNCTION', '6')}, "
         f"function_coverage_target={_env_value('PLAN_FUNCTION_COVERAGE_TARGET', '80')}%, "
         f"max_audit_images_per_function={_env_value('PLAN_MAX_AUDIT_IMAGES_PER_FUNCTION', '4')}"
     )
     print(
-        "  时间参数: "
+        "  Timing params: "
         f"action_delay={_env_value('ACTION_DELAY', '0.7')}s, "
         f"fast_action_delay={_env_value('FAST_ACTION_DELAY', '0.15')}s, "
         f"app_restart_delay={_env_value('APP_RESTART_DELAY', '2.0')}s, "
@@ -1574,9 +1602,9 @@ def _print_startup_banner(args, state: dict, resources: RunResources) -> None:
         f"max_navigation_steps={_effective_max_navigation_steps()}"
     )
     print(
-        "  检测参数: "
-        "ffg_update=执行轨迹增量建图, "
-        f"trace_defect_detection={'后台异步线程(全量轨迹+全部截图)' if bug_detection_enabled else 'off'}, "
+        "  Detection params: "
+        "ffg_update=incremental graph building from execution trace, "
+        f"trace_defect_detection={'background async thread (full trace + all screenshots)' if bug_detection_enabled else 'off'}, "
         "crash_logcat=on, "
         f"full_logcat={'on' if resources.logcat_capture is not None else 'off'}"
     )
@@ -1593,7 +1621,7 @@ def _merge_graph_step(final_state: dict, step: dict) -> str:
 
 def _compact_log_text(value: object, limit: int = 240) -> str:
     text = " ".join(str(value or "").split())
-    return text if len(text) <= limit else text[:limit - 1] + "…"
+    return text if len(text) <= limit else text[:limit - 3] + "..."
 
 
 def _print_graph_step_status(node_name: str, final_state: dict) -> None:
@@ -1602,20 +1630,20 @@ def _print_graph_step_status(node_name: str, final_state: dict) -> None:
         scenario_type = str(current_plan.get("scenario_type", "") or "none")
         if scenario_type == "cross_test":
             scope = (
-                f"{current_plan.get('src_function_id', '') or 'unknown'}→"
+                f"{current_plan.get('src_function_id', '') or 'unknown'}->"
                 f"{current_plan.get('dst_function_id', '') or 'unknown'}"
             )
         else:
             scope = str(current_plan.get("target_function_id", "") or "none")
-        print(f"[状态] scenario_plan | type={scenario_type} | scope={scope}")
+        print(f"[State] scenario_plan | type={scenario_type} | scope={scope}")
         navigation_scenario = _compact_log_text(
             final_state.get("current_navigation_scenario")
         )
         test_scenario = _compact_log_text(final_state.get("current_test_scenario"))
         if navigation_scenario:
-            print(f"[计划] 导航: {navigation_scenario}")
+            print(f"[Plan] Navigation: {navigation_scenario}")
         if test_scenario:
-            print(f"[计划] 场景: {test_scenario}")
+            print(f"[Plan] Scenario: {test_scenario}")
         return
 
     if node_name == "scenario_exec":
@@ -1623,11 +1651,11 @@ def _print_graph_step_status(node_name: str, final_state: dict) -> None:
         current_page = final_state.get("current_page")
         page_id = str(getattr(current_page, "id", "") or "unknown")
         print(
-            "[状态] scenario_exec | "
+            "[State] scenario_exec | "
             f"navigation={execution_result.get('navigation_status', 'unknown')}"
-            f"({int(execution_result.get('navigation_trace_length', 0) or 0)}步) | "
+            f"({int(execution_result.get('navigation_trace_length', 0) or 0)} steps) | "
             f"scenario={execution_result.get('scenario_status', 'unknown')}"
-            f"({int(execution_result.get('scenario_trace_length', 0) or 0)}步) | "
+            f"({int(execution_result.get('scenario_trace_length', 0) or 0)} steps) | "
             f"page={page_id}"
         )
         error = _compact_log_text(
@@ -1635,7 +1663,7 @@ def _print_graph_step_status(node_name: str, final_state: dict) -> None:
             or execution_result.get("navigation_error")
         )
         if error:
-            print(f"[状态] scenario_exec | error={error}")
+            print(f"[State] scenario_exec | error={error}")
         return
 
     if node_name == "ffg_update":
@@ -1649,17 +1677,17 @@ def _print_graph_step_status(node_name: str, final_state: dict) -> None:
             final_state.get("current_testing_function_status", "") or "not_started"
         )
         print(
-            "[状态] ffg_update | "
+            "[State] ffg_update | "
             f"decision={final_state.get('ffg_update_decision', 'finish')} | "
             f"graph={function_count}F/{page_count}P | "
             f"current_function={current_function_id}({current_function_status})"
         )
         issues = list(final_state.get("ffg_update_validation_issues", []) or [])
         if issues:
-            print(f"[状态] ffg_update | validation={'; '.join(map(str, issues[:3]))}")
+            print(f"[State] ffg_update | validation={'; '.join(map(str, issues[:3]))}")
         return
 
-    print(f"[状态] node={node_name}")
+    print(f"[State] node={node_name}")
 
 
 def _save_progress_best_effort(label: str, callback, fallback=None):
@@ -1677,8 +1705,8 @@ def _save_progress_best_effort(label: str, callback, fallback=None):
         if last_log == 0 or now - last_log >= _CHECKPOINT_FAILURE_LOG_INTERVAL_SECONDS:
             failure["last_log_monotonic"] = now
             print(
-                f"[运行快照] {label} 保存失败，主测试循环继续，后续节点会重试: "
-                f"{exc} (累计失败={failure['count']})"
+                f"[Run Snapshot] Failed to save {label}, main test loop continues, subsequent nodes will retry: "
+                f"{exc} (cumulative failures={failure['count']})"
             )
         return fallback
     _CHECKPOINT_FAILURES.pop(label, None)
@@ -1703,12 +1731,12 @@ def _run_graph(
     # Materialize a useful artifact set before the first LLM/device step, then
     # refresh lightweight metadata after every graph node.
     _save_progress_best_effort(
-        "FFG/缺陷快照",
+        "FFG/Bug snapshot",
         lambda: _save_run_snapshot(final_state, resources.output_dir),
     )
-    _save_progress_best_effort("LLM 用量", save_llm_usage_summary)
+    _save_progress_best_effort("LLM usage", save_llm_usage_summary)
     timeline = _save_progress_best_effort(
-        "Activity 时间线",
+        "Activity timeline",
         lambda: _save_activity_timeline(
             final_state,
             resources.output_dir,
@@ -1719,7 +1747,7 @@ def _run_graph(
     )
     final_state["_activity_timeline"] = timeline
     _save_progress_best_effort(
-        "运行状态",
+        "Run state",
         lambda: _save_run_result(
             final_state,
             resources.output_dir,
@@ -1734,14 +1762,14 @@ def _run_graph(
     for step in graph.stream(state, config=stream_config):
         node_name = _merge_graph_step(final_state, step)
         _print_graph_step_status(node_name, final_state)
-        _save_progress_best_effort("LLM 用量", save_llm_usage_summary)
+        _save_progress_best_effort("LLM usage", save_llm_usage_summary)
         if _should_save_run_snapshot(node_name, final_state):
             _save_progress_best_effort(
-                "FFG/缺陷快照",
+                "FFG/Bug snapshot",
                 lambda: _save_run_snapshot(final_state, resources.output_dir),
             )
         timeline = _save_progress_best_effort(
-            "Activity 时间线",
+            "Activity timeline",
             lambda: _save_activity_timeline(
                 final_state,
                 resources.output_dir,
@@ -1751,7 +1779,7 @@ def _run_graph(
         )
         final_state["_activity_timeline"] = timeline
         _save_progress_best_effort(
-            "运行状态",
+            "Run state",
             lambda: _save_run_result(
                 final_state,
                 resources.output_dir,
@@ -1766,7 +1794,7 @@ def _run_graph(
 
 
 def _save_and_summarize(final_state: dict, output_dir: str, elapsed: float) -> None:
-    _flush_bug_detection("保存最终输出")
+    _flush_bug_detection("save final outputs")
     _flush_page_audit(final_state)
     save_llm_usage_summary()
     _save_final_outputs(final_state, output_dir)
@@ -1785,40 +1813,40 @@ def _cleanup_run_resources(resources: RunResources) -> None:
 
 
 def _build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="FuncDroid 纯缺陷检测工作流")
-    parser.add_argument("--device-id", type=_normalize_device_id, required=True,
-                        help="设备 ID；必须显式指定，例如 emulator-5554。多设备请分别开多个终端运行")
+    parser = argparse.ArgumentParser(description="FuncDroid Pure Defect Detection Workflow")
+    parser.add_argument("--device-id", type=_normalize_device_id, default=None,
+                        help="Device ID; auto-selected when only one device is connected, must be specified for multiple devices")
     parser.add_argument("--app-name", default=None,
-                        help="应用显示名称；默认使用目标包名")
+                        help="App display name; defaults to target package name")
     parser.add_argument("--package-name", default=None,
-                        help="设备上已安装的应用包名；不传则测试当前前台打开的 App")
+                        help="Package name of installed app on device; tests current foreground App if omitted")
     parser.add_argument("--max-iterations", type=_nonnegative_int,
                         default=_nonnegative_int(os.getenv("MAX_ITERATIONS", str(DEFAULT_MAX_ITERATIONS))),
-                        help="最大执行轮次（默认 0，表示不限制）")
+                        help="Maximum execution iterations (default 0, unlimited)")
     parser.add_argument("--total-time", type=_nonnegative_float,
                         default=_nonnegative_float(os.getenv("TOTAL_TIME", str(DEFAULT_TOTAL_TIME_MINUTES))),
-                        help=f"总运行时间限制（分钟，默认 {DEFAULT_TOTAL_TIME_MINUTES}，0 表示不限制）")
+                        help=f"Total run time limit (minutes, default {DEFAULT_TOTAL_TIME_MINUTES}, 0 for unlimited)")
     parser.add_argument("--output-dir", default=None,
-                        help="新运行的输出目录；必须为空，默认在 output/ 下按应用名创建独立目录")
+                        help="Output directory for new run; must be empty, defaults to creating a separate directory under output/ by app name")
     parser.add_argument(
         "--resume-output",
         default=None,
-        help="从已有输出目录恢复同一张 FFG、Activity 时间线、缺陷和执行历史并继续累计运行",
+        help="Resume cumulative run from an existing output directory with the same FFG, Activity timeline, bugs, and execution history",
     )
     parser.add_argument("--phase", choices=["all", "intra"], default="all",
-                        help="规划模式: all=自动选择, intra=仅功能内")
+                        help="Planning mode: all=automatic selection, intra=intra-function only")
     parser.add_argument(
         "--exploration-mode",
         choices=["core"],
         default=os.getenv("EXPLORATION_MODE", DEFAULT_EXPLORATION_MODE).strip() or DEFAULT_EXPLORATION_MODE,
-        help="探索模式: core=仅探索目标应用核心功能，"
-        "按 boundary_rules.json 拦截小程序等第三方服务内容（默认 core）",
+        help="Exploration mode: core=explore target app core functions only, "
+        "blocking third-party content like mini-programs if boundary_rules.json is configured (default core)",
     )
     parser.add_argument(
         "--bug-detection",
         action=argparse.BooleanOptionalAction,
         default=True,
-        help="是否开启异步缺陷检测；默认开启，使用 --no-bug-detection 关闭",
+        help="Whether to enable asynchronous bug detection; enabled by default, use --no-bug-detection to disable",
     )
     return parser
 
@@ -1826,12 +1854,12 @@ def _build_parser() -> argparse.ArgumentParser:
 def _run_single(args) -> int:
     _ensure_device_id(args)
     if args.output_dir and args.resume_output:
-        raise ValueError("--output-dir 与 --resume-output 不能同时使用")
+        raise ValueError("--output-dir and --resume-output cannot be used together")
     resources = RunResources(output_dir=args.resume_output or args.output_dir or "")
     requested_root = Path(resources.output_dir) if resources.output_dir else None
     existing_ffg = bool(requested_root and (requested_root / "ffg.json").is_file())
     if args.resume_output and not existing_ffg:
-        raise FileNotFoundError(f"--resume-output 指定的目录缺少 ffg.json: {requested_root}")
+        raise FileNotFoundError(f"Directory specified by --resume-output is missing ffg.json: {requested_root}")
     if (
         args.output_dir
         and requested_root
@@ -1839,12 +1867,12 @@ def _run_single(args) -> int:
         and any(requested_root.iterdir())
     ):
         raise FileExistsError(
-            f"新运行不允许覆盖已有非空目录: {requested_root}；"
-            "请换一个新目录，或仅在灾难恢复时使用 --resume-output"
+            f"New runs are not allowed to overwrite existing non-empty directory: {requested_root}; "
+            "please use a new directory, or use --resume-output only for disaster recovery"
         )
     args.resume_existing = bool(args.resume_output)
     if args.resume_existing:
-        print(f"[断点续跑] 显式恢复同一张 FFG: {requested_root}")
+        print(f"[Resume] Explicitly resuming the same FFG: {requested_root}")
     final_state: dict = {}
     start_time = time.time()
     device = None
@@ -1864,12 +1892,12 @@ def _run_single(args) -> int:
         if state.get("bug_detection_enabled", True):
             bug_detection_worker.configure(
                 bug_detection_llm,
-                on_batch_done=lambda: _save_bugs(final_state, resources.output_dir, prefix="[缺陷检测线程]"),
+                on_batch_done=lambda: _save_bugs(final_state, resources.output_dir, prefix="[Defect Detection Thread]"),
                 initial_bugs=state.get("detected_bugs"),
                 initial_records=state.get("bug_trace_records"),
             )
-        # 页面控件后台审计使用与 FFG 更新相同的规划 LLM；队列与饱和
-        # 状态见 workflow/page_audit_worker.py。
+        # Background audit of page controls uses the same planning LLM as FFG update; queue and saturation
+        # state can be seen in workflow/page_audit_worker.py.
         page_audit_worker.configure(planning_llm)
         graph = build_graph(
             planning_llm,
@@ -1882,16 +1910,16 @@ def _run_single(args) -> int:
         elapsed = time.time() - float(final_state.get("start_time", start_time) or start_time)
         _save_and_summarize(final_state, resources.output_dir, elapsed)
         outputs_saved = True
-        print(f"[完成] 工作流执行结束，输出保存在: {resources.output_dir}")
+        print(f"[Done] Workflow execution finished, output saved in: {resources.output_dir}")
     except (KeyboardInterrupt, RunTerminationSignal) as exc:
         exit_code = 130 if isinstance(exc, KeyboardInterrupt) else 128 + exc.signum
         elapsed = time.time() - float(final_state.get("start_time", start_time) or start_time)
         final_state["fatal_error"] = {
             "type": type(exc).__name__,
-            "message": "用户中断" if isinstance(exc, KeyboardInterrupt) else str(exc),
+            "message": "User interrupted" if isinstance(exc, KeyboardInterrupt) else str(exc),
             "traceback": "",
         }
-        print(f"[运行中断] 收到停止请求，正在保存当前 FFG、缺陷和用量数据（exit={exit_code}）。")
+        print(f"[Run Interrupted] Received stop request, saving current FFG, bugs, and usage data (exit={exit_code}).")
     except Exception as exc:
         exit_code = 1
         elapsed = time.time() - float(final_state.get("start_time", start_time) or start_time)
@@ -1900,14 +1928,14 @@ def _run_single(args) -> int:
             "message": str(exc),
             "traceback": traceback.format_exc(),
         }
-        print(f"[运行异常] 工作流遇到未捕获异常，已安全退出: {exc}")
+        print(f"[Run Exception] Workflow encountered an uncaught exception and exited safely: {exc}")
         print(traceback.format_exc())
         if final_state:
             _save_and_summarize(final_state, resources.output_dir, elapsed)
             outputs_saved = True
     finally:
         signal.signal(signal.SIGTERM, previous_sigterm_handler)
-        _flush_bug_detection("生成最终运行结果")
+        _flush_bug_detection("generate final run results")
         elapsed = elapsed or (
             time.time() - float(final_state.get("start_time", start_time) or start_time)
         )
@@ -1916,7 +1944,7 @@ def _run_single(args) -> int:
                 _save_and_summarize(final_state, resources.output_dir, elapsed)
             except Exception as exc:
                 exit_code = 1
-                print(f"[输出] 异常快照保存失败: {exc}")
+                print(f"[Output] Failed to save exception snapshot: {exc}")
         _cleanup_run_resources(resources)
         if resources.output_dir:
             try:
@@ -1928,7 +1956,7 @@ def _run_single(args) -> int:
                     and not (artifact_root / "ffg.json").is_file()
                 )
                 if ffg_missing or not (artifact_root / "bugs.json").is_file():
-                    _save_outputs(final_state, resources.output_dir, prefix="[输出修复]")
+                    _save_outputs(final_state, resources.output_dir, prefix="[Output Recovery]")
                 final_state["_activity_timeline"] = _save_activity_timeline(
                     final_state,
                     resources.output_dir,
@@ -1960,15 +1988,15 @@ def _run_single(args) -> int:
                         exit_code,
                     )
                 print(
-                    "[产物校验] "
+                    "[Artifact Validation] "
                     f"status={manifest['status']}, files={len(manifest['files'])}, "
                     f"errors={len(manifest['errors'])}, warnings={len(manifest['warnings'])}"
                 )
                 for error in manifest["errors"]:
-                    print(f"[产物校验] 错误: {error}")
+                    print(f"[Artifact Validation] Error: {error}")
             except Exception as exc:
                 exit_code = 1
-                print(f"[产物校验] 生成 manifest 失败: {exc}")
+                print(f"[Artifact Validation] Failed to generate manifest: {exc}")
     return exit_code
 
 

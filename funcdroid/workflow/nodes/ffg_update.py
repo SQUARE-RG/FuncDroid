@@ -33,20 +33,20 @@ from workflow.nodes.prompt import FFG_UPDATE_SYSTEM_PROMPT, PAGE_AUDIT_SYSTEM_PR
 from workflow.page_audit_worker import DEFAULT_BATCH_SIZE, page_audit_worker
 from workflow.state import AgentState
 
-TEXT_NORMALIZE_PATTERN = re.compile(r"[\"'“”‘’（）()【】\[\]{}<>《》、，,。.：:；;!！?？\-_/\s]+")
+TEXT_NORMALIZE_PATTERN = re.compile(r"[\"'\u201c\u201d\u2018\u2019\uff08\uff09()\u3010\u3011\[\]{}<>\u300a\u300b\u3001\uff0c,\u3002.\uff1a:\uff1b;!\uff01?\uff1f\-_/\s]+")
 FUNCTION_FAILURE_BLOCK_THRESHOLD = max(1, int(os.getenv("FUNCTION_FAILURE_BLOCK_THRESHOLD", "3")))
 CROSS_FAILURE_BLOCK_THRESHOLD = max(1, int(os.getenv("CROSS_FAILURE_BLOCK_THRESHOLD", "1")))
-# 是否把“执行成功但零结构产出”计入功能无进展次数。关掉可退回旧行为。
+# Whether to count "successful execution but zero structural yield" into function non-progress count. Disabling reverts to old behavior.
 ZERO_YIELD_COUNTS_AS_NO_PROGRESS = os.getenv(
     "FFG_ZERO_YIELD_COUNTS_AS_NO_PROGRESS", "1"
 ).strip().lower() in {"1", "true", "yes", "on"}
-# 覆盖率过半后才把零产出计入无进展：探索初期本就需要几轮铺垫。
+# Only count zero yield as no progress after coverage exceeds 50%: initial exploration requires setup rounds.
 ZERO_YIELD_MIN_COVERAGE = max(
     0,
     min(int(os.getenv("FFG_ZERO_YIELD_MIN_COVERAGE", "50")), 100),
 )
-# 同 activity 且控件族集合重合度达到该比例时，判定为同一逻辑页面并复用，
-# 避免同一页被拆成多个 page_N 后无法合并、覆盖率分母持续膨胀。
+# When the same Activity and control family set overlap reaches this ratio, determine as the same logical page and reuse it,
+# avoiding the same page being split into multiple page_N that cannot be merged, causing coverage denominator inflation.
 PAGE_SIGNATURE_MATCH_RATIO = max(
     0.5,
     min(float(os.getenv("FFG_UPDATE_PAGE_SIGNATURE_MATCH_RATIO", "0.85")), 1.0),
@@ -75,8 +75,8 @@ FFG_UPDATE_MAX_REFERENCE_IMAGES = max(
     0,
     int(os.getenv("FFG_UPDATE_MAX_REFERENCE_IMAGES", "12")),
 )
-# 只限制附加的已存 Page 参考图；本轮尚未匹配的轨迹截图属于一手证据，
-# 即使超过该值也必须完整发送，不能因为请求预算隐藏潜在新页面。
+# Only limits attached reference screenshots of existing Pages; unmatched trace screenshots for this round are primary evidence,
+# and must be sent in full even if exceeding this value, rather than hiding potential new pages due to request budget.
 FFG_UPDATE_MAX_TOTAL_IMAGES = max(
     1,
     int(os.getenv("FFG_UPDATE_MAX_TOTAL_IMAGES", "6")),
@@ -149,9 +149,9 @@ EXECUTION_FAILURE_STATUSES = {
     "skipped_due_target_app_recovery_failed",
 }
 CONFIRMED_STALL_BLOCK_PATTERN = re.compile(
-    r"相同点击意图.{0,20}页面(?:持续|始终)无明显变化|"
-    r"(?:连续|重复)(?:点击|操作|尝试).{0,24}页面(?:持续|始终)无明显变化|"
-    r"页面(?:持续|始终)无变化.{0,20}(?:卡死|无法继续)"
+    r"\u76f8\u540c\u70b9\u51fb\u610f\u56fe.{0,20}\u9875\u9762(?:\u6301\u7eed|\u59cb\u7ec8)\u65e0\u660e\u663e\u53d8\u5316|"
+    r"(?:\u8fde\u7eed|\u91cd\u590d)(?:\u70b9\u51fb|\u64cd\u4f5c|\u5c1d\u8bd5).{0,24}\u9875\u9762(?:\u6301\u7eed|\u59cb\u7ec8)\u65e0\u660e\u663e\u53d8\u5316|"
+    r"\u9875\u9762(?:\u6301\u7eed|\u59cb\u7ec8)\u65e0\u53d8\u5316.{0,20}(?:\u5361\u6b7b|\u65e0\u6cd5\u7ee7\u7eed)"
 )
 
 
@@ -163,10 +163,10 @@ def _trace_has_device_action(trace: list[dict[str, Any]]) -> bool:
         not in {"", "finished", "capture_screenshot", "wait"}
         for step in trace
     )
-BLACK_SCREEN_PAGE_NAME = "黑屏或页面不可用"
+BLACK_SCREEN_PAGE_NAME = "Black screen or page unavailable"
 BLACK_SCREEN_PAGE_DESCRIPTION = (
-    "执行动作后无法获取有效界面；表示黑屏、空白屏或连续截图不可用的异常终点。"
-    "规划时应避开通向该页面的已记录操作和场景。"
+    "Unable to obtain a valid interface after executing action; indicates an abnormal endpoint with black screen, blank screen, or consecutive unavailable screenshots."
+    "Recorded operations and scenarios leading to this page should be avoided during planning."
 )
 
 
@@ -224,8 +224,8 @@ def _unrepresented_trace_activities(
         mapped_page_id = str(trace_page_map.get(raw_step, "") or "").strip()
         if mapped_page_id and graph.get_page(mapped_page_id) is not None:
             continue
-        # 外部应用页面（桌面/其他 App）与自动恢复步骤不参与目标应用 Page 建模，
-        # 其 Activity 不应要求 LLM 新增 Page，否则与 ignore 对齐规则互相矛盾。
+        # External app pages (home screen/other apps) and auto-recovery steps do not participate in target app Page modeling,
+        # and their Activities should not require LLM to add Pages, which would otherwise contradict ignore alignment rules.
         if _is_ignorable_observation_step(step):
             continue
         activity = str(_page_activity(_extract_page(step)) or "").strip()
@@ -235,13 +235,13 @@ def _unrepresented_trace_activities(
 
 
 class _ScreenshotThumbnailCache:
-    """缓存截图的灰度缩略图，避免对同一张已持久化页面截图重复解码。
+    """Cache grayscale thumbnails of screenshots to avoid repeated decoding of the same persisted page screenshot.
 
-    FFG 更新中 `_retrieve_page_candidates` 与 `_reference_pages_for_update` 会对
-    每个 trace step 与每张已存页面截图两两计算相似度；若不缓存，同一张 stored
-    截图会在 N 个 step 的循环里被反复 base64 解码 + cv2.imdecode，随页面数增长
-    接近 O(steps × pages × 每页截图数) 次完整解码。这里只缓存 64×64 缩略图，
-    把解码次数降到每张截图一次。
+    In FFG updates, `_retrieve_page_candidates` and `_reference_pages_for_update` calculate
+    pairwise similarity between each trace step and each stored page screenshot; without caching, the same stored
+    screenshot would be repeatedly base64 decoded + cv2.imdecoded across N steps, scaling with page count
+    towards O(steps x pages x screenshots_per_page) full decodings. Only 64x64 thumbnails are cached here,
+    reducing decoding count to once per screenshot.
     """
 
     def __init__(self, size: int = 64):
@@ -300,12 +300,12 @@ def _compact_screenshot_for_llm(screenshot: str) -> str:
             return screenshot
         return base64.b64encode(buffer.tobytes()).decode("utf-8")
     except Exception as exc:
-        print(f"[FFG 更新] 压缩截图失败，使用原图: {exc}")
+        print(f"[FFG Update] Failed to compress screenshot, using original image: {exc}")
         return screenshot
 
 
 def _natural_language_controls(page: Page | dict[str, Any] | None) -> list[str]:
-    """读取模型或持久化页面已经给出的自然语言控件描述。"""
+    """Read natural language control descriptions already provided by model or persisted pages."""
     if isinstance(page, Page) and page.controls:
         existing = list(page.controls)
     elif isinstance(page, dict) and isinstance(page.get("controls"), list):
@@ -316,24 +316,24 @@ def _natural_language_controls(page: Page | dict[str, Any] | None) -> list[str]:
 
 
 # ---------------------------------------------------------------------------
-# 页面控件后台审计：合并结果 + 投喂新任务
+# Page control background audit: merge results + feed new tasks
 # ---------------------------------------------------------------------------
 PAGE_AUDIT_ENABLED = os.getenv("PAGE_AUDIT_ENABLED", "1").strip().lower() in {
     "1", "true", "yes", "on",
 }
-# 全局导航类控件族（返回/关闭可由系统返回键完成），审计不补充：
-# 与执行器 press_back 不记入页面操作的口径一致。
-PAGE_AUDIT_EXCLUDED_FAMILIES = {"返回", "关闭", "返回键"}
-# 单页单次审计最多删除的操作数：防误删清空清单；transitions 保留。
+# Global navigation control families (back/close can be done via system back key), audit does not replenish:
+# Consistent with executor press_back not being recorded into page operations.
+PAGE_AUDIT_EXCLUDED_FAMILIES = {"\u8fd4\u56de", "\u5173\u95ed", "\u8fd4\u56de\u952e"}
+# Maximum number of operations deleted per single-page audit: prevent accidental clearing of list; transitions are preserved.
 PAGE_AUDIT_MAX_REMOVALS = 5
 PAGE_AUDIT_MAX_CONTROL_MERGES = 3
 
 
 def _page_audit_fingerprint(page: Page) -> str:
-    """页面截图与操作清单的组合指纹。
+    """Combined fingerprint of page screenshots and operation list.
 
-    注意：不含 operation_bindings——绑定变化不产生新的审计价值，纳入
-    会让升级后存量页面全部判定为“未审计”触发审计风暴。
+    Note: excludes operation_bindings - binding changes do not produce new audit value, including it
+    would cause all existing pages to be judged as \"unaudited\" after upgrade, triggering an audit storm.
     """
     import hashlib
 
@@ -346,10 +346,10 @@ def _page_audit_fingerprint(page: Page) -> str:
 
 
 def _page_audit_semantically_duplicate(candidate: str, existing: list[str]) -> bool:
-    """新增项与已有控件语义重复时丢弃。
+    """Discard new items when semantically duplicate with existing controls.
 
-    复用项目统一的 control_family_key 控件族归一化（去除位置限定词与
-    控件后缀），同族即视为重复，语义口径与 FFG 覆盖统计保持一致。
+    Reuses project-wide control_family_key control family normalization (removing location qualifiers and
+    control suffixes); same family is treated as duplicate, keeping semantic criteria aligned with FFG coverage statistics.
     """
     normalized = TEXT_NORMALIZE_PATTERN.sub("", str(candidate or ""))
     if not normalized:
@@ -364,16 +364,16 @@ def _page_audit_semantically_duplicate(candidate: str, existing: list[str]) -> b
 
 
 def _merge_page_audit_results(graph: FlowGraph) -> int:
-    """主线程合并后台审计结果：校验通过才 add_control。
+    """Main thread merges background audit results: add_control only after validation passes.
 
-    校验防线：与既有控件语义重复的丢弃（同功能即重复）；全局导航类
-    （返回/关闭）丢弃；每页单次新增上限由 worker 解析侧限制。合并后
-    回报实际新增数，驱动 worker 的饱和退出判定。
+    Validation defenses: discard semantically duplicate controls (same function means duplicate); global navigation types
+    (back/close) are discarded; single-page addition limit is enforced on worker parsing side. After merging,
+    reports actual added count to drive worker's saturation exit determination.
 
-    注意：不再要求控件名带位置限定词——实测该过滤把“从相册中选择”
-    “拍一张”这类真实控件挡在清单外，导致后续操作绑定无处可挂、
-    覆盖率无法增长；防“为增加而增加”由 prompt 的“宁缺毋滥”规则
-    和语义去重承担。
+    Note: no longer requires control names to carry location qualifiers - empirical testing showed this filter blocked
+    real controls like \"Select from album\" and \"Take photo\" from the list, causing subsequent operation bindings nowhere to attach
+    and coverage unable to grow; preventing \"adding for the sake of adding\" is handled by prompt's \"prefer quality over quantity\" rule
+    and semantic deduplication.
     """
     if not PAGE_AUDIT_ENABLED:
         return 0
@@ -383,7 +383,7 @@ def _merge_page_audit_results(graph: FlowGraph) -> int:
         page_id = str(result.get("page_id", "") or "")
         page = graph.get_page(page_id) if page_id else None
         if page is None:
-            # 页面已被合并/拆分移除：零新增回报，避免状态残留。
+            # Page already removed by merge/split: return zero additions to avoid leftover state.
             page_audit_worker.record_result(page_id, 0)
             continue
         existing = list(page.controls)
@@ -393,10 +393,10 @@ def _merge_page_audit_results(graph: FlowGraph) -> int:
             if not text:
                 continue
             if control_family_key(text) in PAGE_AUDIT_EXCLUDED_FAMILIES:
-                print(f"[页面审计] 丢弃全局导航类候选控件（返回键可完成）: {text!r}")
+                print(f"[Page Audit] Discard candidate global navigation control (achievable via back key): {text!r}")
                 continue
             if _page_audit_semantically_duplicate(text, existing + added):
-                print(f"[页面审计] 丢弃与既有控件语义重复的候选: {text!r}")
+                print(f"[Page Audit] Discard candidate semantically duplicate with existing controls: {text!r}")
                 continue
             added.append(text)
         for control in added:
@@ -416,20 +416,20 @@ def _merge_page_audit_results(graph: FlowGraph) -> int:
         total_changes += len(added) + len(merged_controls) + len(removed)
         if added:
             print(
-                f"[页面审计] 补充页面控件: page={page_id} "
-                f"({page.name or '未命名'}), 新增 {len(added)} 项: "
+                f"[Page Audit] Replenish page controls: page={page_id} "
+                f"({page.name or 'unnamed'}), added {len(added)} items: "
                 + "; ".join(added[:5])
             )
         if removed:
             print(
-                f"[页面审计] 清理页面问题操作: page={page_id} "
-                f"({page.name or '未命名'}), 删除 {len(removed)} 条: "
+                f"[Page Audit] Clean problematic page operations: page={page_id} "
+                f"({page.name or 'unnamed'}), deleted {len(removed)} items: "
                 + "; ".join(removed[:5])
             )
         if merged_controls:
             print(
-                f"[页面审计] 合并重复资源控件: page={page_id} "
-                f"({page.name or '未命名'}), 合并 {len(merged_controls)} 组: "
+                f"[Page Audit] Merge duplicate resource controls: page={page_id} "
+                f"({page.name or 'unnamed'}), merged {len(merged_controls)} groups: "
                 + "; ".join(merged_controls[:3])
             )
     return total_changes
@@ -453,14 +453,14 @@ def _apply_page_audit_control_merges(
         ))
         target = str(item.get("target", "") or "").strip()
         if len(sources) < 3 or not target or any(source not in page.controls for source in sources):
-            print(f"[页面审计] 丢弃来源不完整的控件合并: sources={sources!r}, target={target!r}")
+            print(f"[Page Audit] Discard control merge with incomplete sources: sources={sources!r}, target={target!r}")
             continue
         normalized_sources = [TEXT_NORMALIZE_PATTERN.sub("", source) for source in sources]
         common_prefix = os.path.commonprefix(normalized_sources)
         normalized_target = TEXT_NORMALIZE_PATTERN.sub("", target)
         if len(common_prefix) < 2 or common_prefix not in normalized_target:
             print(
-                "[页面审计] 丢弃缺少共同业务前缀的控件合并: "
+                "[Page Audit] Discard control merge lacking common business prefix: "
                 f"prefix={common_prefix!r}, target={target!r}"
             )
             continue
@@ -473,24 +473,24 @@ def _apply_page_audit_operation_removals(
     page: Page,
     invalid_operations: list[str],
 ) -> list[str]:
-    """点名式删除：与 page.operations 原文完全一致才删，其余丢弃。
+    """Targeted deletion: delete only if exactly matching page.operations verbatim text, discard others.
 
-    LLM 只能复制清单原文，不能改写或新增，结构上杜绝幻觉清空；
-    每页单次删除上限 PAGE_AUDIT_MAX_REMOVALS；page_transitions 中的
-    操作记录不受影响（沿用 press_back 先例：清单删、边保留）。
+    LLM can only copy list verbatim text without rewriting or adding, structurally preventing hallucinated clearing;
+    per-page single deletion limit PAGE_AUDIT_MAX_REMOVALS; operation records in page_transitions
+    are unaffected (following press_back precedent: delete from list, retain edges).
 
-    已声明操作-控件绑定（operation_bindings）的操作一律不删：绑定
-    意味着该操作已被验证为作用于真实控件的有效业务动作，删除会连带
-    丢失绑定并直接损失该控件的覆盖率（实测 page_8 的“点击语音输入
-    按钮”被误删导致 func_7 覆盖率受损）。若确属无效，应先解除绑定。
+    Operations with declared operation-control bindings (operation_bindings) are never deleted: binding
+    means the operation has been verified as a valid business action acting on real controls; deletion would
+    lose bindings and directly impair coverage of that control (empirically tested: page_8's \"click voice input
+    button\" was mistakenly deleted causing func_7 coverage loss). If indeed invalid, unbind first.
     """
     bound_operations = page.bound_operation_texts()
     removed: list[str] = []
     seen: set[str] = set()
     for item in invalid_operations:
         text = str(item or "").strip()
-        if text.endswith("（未绑定控件）"):
-            text = text[: -len("（未绑定控件）")].rstrip()
+        if text.endswith("\uff08\u672a\u7ef1\u5b9a\u63a7\u4ef6\uff09"):
+            text = text[: -len("\uff08\u672a\u7ef1\u5b9a\u63a7\u4ef6\uff09")].rstrip()
         if not text or text in seen:
             continue
         seen.add(text)
@@ -498,13 +498,13 @@ def _apply_page_audit_operation_removals(
             break
         if text in bound_operations:
             print(
-                f"[页面审计] 拒绝删除已绑定控件的操作（有效业务动作）: {text!r}"
+                f"[Page Audit] Refuse to delete bound control operation (valid business action): {text!r}"
             )
             continue
         if page.remove_operation(text):
             removed.append(text)
         else:
-            print(f"[页面审计] 丢弃与操作清单原文不一致的待删项: {text!r}")
+            print(f"[Page Audit] Discard deletion candidate inconsistent with verbatim operation list: {text!r}")
     return removed
 
 
@@ -514,10 +514,10 @@ def _submit_page_audit_batch(
     *,
     exclude_fingerprints: set[tuple[str, str]] | None = None,
 ) -> int:
-    """按优先级投喂一批页面审计任务到后台线程。
+    """Feed a batch of page audit tasks to background thread by priority.
 
-    优先级：已完成功能的页面（主循环不再踏入、自愈机会最少）
-    > 控件数量少的页面。截图指纹未变或已饱和的页面由 worker 过滤。
+    Priority: pages of completed functions (main loop no longer visits, fewest self-healing chances)
+    > pages with fewer controls. Pages with unchanged screenshot fingerprints or saturated are filtered by worker.
     """
     if not PAGE_AUDIT_ENABLED or (llm is None and not page_audit_worker.is_configured()):
         return 0
@@ -561,27 +561,27 @@ def _submit_page_audit_batch(
             {
                 "type": "text",
                 "text": (
-                    f"页面名称：{page.name or '未命名'}\n"
-                    f"页面描述：{page.description or '无'}\n"
-                    "已记录控件清单：\n"
-                    + ("\n".join(f"- {c}" for c in page.controls) if page.controls else "（空）")
-                    + "\n已记录操作清单（带【未绑定控件】标注的操作尚未声明作用控件，优先复核）：\n"
+                    f"Page name: {page.name or 'unnamed'}\n"
+                    f"Page description: {page.description or 'None'}\n"
+                    "Recorded control list:\n"
+                    + ("\n".join(f"- {c}" for c in page.controls) if page.controls else "(Empty)")
+                    + "\nRecorded operation list (operations labeled [\uff08\u672a\u7ef1\u5b9a\u63a7\u4ef6\uff09] have not yet declared acting controls, review with priority):\n"
                     + (
                         "\n".join(
-                            f"- {o}" if o in bound_operations else f"- {o}（未绑定控件）"
+                            f"- {o}" if o in bound_operations else f"- {o}\uff08\u672a\u7ef1\u5b9a\u63a7\u4ef6\uff09"
                             for o in page.operations
                         )
                         if page.operations
-                        else "（空）"
+                        else "(Empty)"
                     )
-                    + "\n请审计截图：补充清单遗漏的真实可交互控件，并清理无锚定或重复变体的问题操作。"
+                    + "\nPlease audit screenshots: replenish genuine interactive controls missed by the list, and clean problematic operations with no anchors or duplicate variants."
                 ),
             },
         ]
-        # 一个 Page 可以包含稳定态、键盘、弹层、展开面板等多个可见状态。
-        # 审计必须看完该 Page 已持久化的全部截图；在这里截断会使后出现
-        # 的面板控件永久无法进入控件全集。Page 自身已对截图去重并限定
-        # 持久化规模，因此这里不再设第二道 2/3 张的隐式上限。
+        # A Page can contain multiple visible states such as stable state, keyboard, dialogs, expanded panels, etc.
+        # Audit must review all persisted screenshots of this Page; truncating here would cause controls
+        # on subsequently appearing panels to never enter the full control set. Page itself already deduplicates screenshots
+        # and bounds persistence scale, so no secondary implicit cap of 2/3 images is placed here.
         screenshots = list(dict.fromkeys([
             page.representative_screenshot,
             *page.evidence_screenshots,
@@ -616,9 +616,9 @@ def _submit_page_audit_batch(
             if exclude_fingerprints is not None:
                 exclude_fingerprints.add((page.id, candidate["fingerprint"]))
             print(
-                f"[页面审计] 已提交页面清单复核任务: page={page.id} "
-                f"({page.name or '未命名'}), 已记录控件={len(page.controls)}, "
-                f"已记录操作={len(page.operations)}, 携带截图={used}"
+                f"[Page Audit] Submitted page list review task: page={page.id} "
+                f"({page.name or 'unnamed'}), recorded controls={len(page.controls)}, "
+                f"recorded operations={len(page.operations)}, screenshots included={used}"
             )
     return submitted
 
@@ -639,7 +639,7 @@ def _is_recordable_step(step: dict[str, Any]) -> bool:
 
 
 def _filter_trace(trace: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    """保留所有带页面观测的执行轨迹，由 FFG 更新节点统一判断如何落图。"""
+    """Preserve all execution traces with page observations, leaving graph integration logic to FFG update node."""
     filtered: list[dict[str, Any]] = []
     for raw_index, step in enumerate(trace, start=1):
         if not _is_recordable_step(step):
@@ -664,10 +664,10 @@ def _find_matched_existing_page(
 ) -> str:
     """Find a persisted Page that visually matches this step's screenshot.
 
-    双条件判定：image_similarity 达到极高阈值 且 activity 完全一致。
-    命中说明该 step 的页面与已存页面视觉一致，可用其文本摘要替代截图，
-    从而避免把 test 阶段重复访问已知页面的截图全部上传。
-    返回匹配 page_id；无匹配返回空串。
+    Dual condition check: image_similarity reaches very high threshold and activity matches exactly.
+    A hit indicates this step's page is visually consistent with existing page, allowing text summary to replace screenshot,
+    thereby avoiding uploading all screenshots when repeatedly visiting known pages during test stage.
+    Returns matched page_id; returns empty string if no match.
     """
     resolved_threshold = (
         FFG_UPDATE_MATCHED_IMAGE_THRESHOLD
@@ -754,7 +754,7 @@ def _ffg_no_change_fast_path(
 
 
 def _combined_execution_trace(state: AgentState) -> list[dict[str, Any]]:
-    """导航与测试动作都属于本轮真实执行证据，按执行先后合并建图。"""
+    """Both navigation and test actions are real execution evidence of this round, merged in order of execution for graph building."""
     combined: list[dict[str, Any]] = []
     for phase, key in (
         ("navigation", "navigation_execution_trace"),
@@ -869,10 +869,10 @@ def _resolve_observed_page_id(
 
 def _black_screen_operation(step: dict[str, Any] | None) -> str:
     if not isinstance(step, dict):
-        return "执行场景后出现黑屏或页面不可用"
+        return "Black screen or page unavailable after executing scenario"
     action = str(step.get("action_description", "") or "").strip()
     if not action:
-        action_name = str(step.get("action_name", "") or "未知动作").strip()
+        action_name = str(step.get("action_name", "") or "Unknown action").strip()
         if step.get("x") is not None and step.get("y") is not None:
             action = f"{action_name}({step.get('x')},{step.get('y')})"
         elif str(step.get("content", "") or "").strip():
@@ -881,7 +881,7 @@ def _black_screen_operation(step: dict[str, Any] | None) -> str:
             action = f"{action_name}({str(step.get('direction')).strip()})"
         else:
             action = action_name
-    return f"{action}；结果：黑屏或页面不可用（截图健康检查失败）"
+    return f"{action}; Result: Black screen or page unavailable (screenshot health check failed)"
 
 
 def _record_screenshot_unavailable_page(
@@ -922,7 +922,7 @@ def _record_screenshot_unavailable_page(
     for key in ("target_function_id", "src_function_id", "dst_function_id"):
         add_owner(current_plan.get(key))
     if not owner_ids:
-        print("[FFG 更新] 黑屏没有可关联的功能节点，仅保留执行结果。")
+        print("[FFG Update] Black screen has no associable function node, retaining execution result only.")
         return []
 
     black_page = next(
@@ -938,7 +938,7 @@ def _record_screenshot_unavailable_page(
             description=BLACK_SCREEN_PAGE_DESCRIPTION,
         )
         graph.pages[page_id] = black_page
-        print(f"[FFG 更新] 新增统一黑屏异常页面: {page_id}")
+        print(f"[FFG Update] Added unified black screen anomaly page: {page_id}")
     else:
         black_page.description = BLACK_SCREEN_PAGE_DESCRIPTION
 
@@ -958,11 +958,11 @@ def _record_screenshot_unavailable_page(
             operation=operation,
         ))
         print(
-            "[FFG 更新] 已记录黑屏异常路径: "
+            "[FFG Update] Recorded black screen anomaly path: "
             f"{source_page_id} --[{operation}]--> {black_page_id}"
         )
     else:
-        print("[FFG 更新] 已记录黑屏异常页面；本轮没有可解析的最后有效源页面。")
+        print("[FFG Update] Recorded black screen anomaly page; no resolvable last valid source page for this round.")
     return owner_ids
 
 
@@ -988,7 +988,7 @@ def _map_current_page_after_update(
     state: AgentState,
     trace_page_map: dict[int, str] | None = None,
 ) -> Page | None:
-    """把设备最后实际界面绑定到本轮更新后的稳定 FFG Page。"""
+    """Bind device's final actual interface to the stable FFG Page updated in this round."""
     trace_page_map = trace_page_map or {}
     raw_trace = _combined_execution_trace(state)
     runtime_page = state.get("current_page")
@@ -1046,7 +1046,7 @@ def _endpoint_function_state(
     previous_function_id: str,
     touched_function_ids: list[str] | None = None,
 ) -> tuple[str, str]:
-    """以执行终点页面的真实 owner 作为下一轮当前功能。"""
+    """Use the real owner of the execution endpoint page as the current function for next round."""
     if not isinstance(current_page, Page):
         status = graph.get_node_test_status(previous_function_id) if previous_function_id else "not_started"
         return previous_function_id, status
@@ -1106,23 +1106,23 @@ def _trace_step_page_id(
 
 
 def _trace_step_operation_text(step: dict[str, Any]) -> tuple[str, bool]:
-    """返回 (操作文本, 是否记入清单)；与 trace 落图口径完全一致。
+    """Return (operation text, whether to record in list); fully consistent with trace graph integration criteria.
 
-    operation_bindings 的 source_step 绑定依赖同一口径推导操作原文，
-    保证“声明绑定的步骤”与“实际记录的操作”是同一条文本。
+    source_step binding of operation_bindings relies on the same criteria to derive verbatim operation text,
+    ensuring \"steps declaring bindings\" and \"actually recorded operations\" share the exact same text.
     """
     action_name = str(step.get("action_name", "")).strip()
     operation = str(step.get("action_description", "") or "").strip() or action_name
-    # 系统返回键是全局导航手段，不是页面自身支持的业务操作：
-    # 不记入 page.operations，但保留页面跳转边（回退路径是导航图的一部分）。
+    # System back key is a global navigation mechanism, not a business operation supported by page itself:
+    # Do not record into page.operations, but retain page transition edge (back path is part of navigation graph).
     record_operation = action_name != "press_back"
     if action_name == "press_back":
-        operation = "返回"
+        operation = "Back"
     if step.get("action_failed"):
-        error = str(step.get("action_error", "") or "").strip() or "动作执行失败"
-        operation = f"尝试{operation}失败：{error}"
+        error = str(step.get("action_error", "") or "").strip() or "Action execution failed"
+        operation = f"Attempt {operation} failed: {error}"
     elif step.get("foreground_recovery") or step.get("is_interruption"):
-        operation = f"自动恢复：{operation}"
+        operation = f"Auto-recovery: {operation}"
     return operation, record_operation
 
 
@@ -1131,7 +1131,7 @@ def _apply_trace_operations_and_transitions(
     trace: list[dict[str, Any]],
     trace_page_map: dict[int, str] | None = None,
 ) -> list[str]:
-    """用当前最小 FFG 结构确定性保存已执行操作和直接观测到的页面结果。"""
+    """Deterministically save executed operations and directly observed page results using current minimal FFG structure."""
     trace_page_map = trace_page_map or {}
     touched_function_ids: list[str] = []
 
@@ -1175,9 +1175,9 @@ def _apply_trace_operations_and_transitions(
             if src_page is not None and dst_page is not None:
                 operation = (
                     str(step.get("action_description", "") or "").strip()
-                    or "恢复目标 App"
+                    or "Recover target app"
                 )
-                operation = f"自动恢复：{operation}"
+                operation = f"Auto-recovery: {operation}"
                 src_page.add_operation(operation)
                 graph.add_page_transition(PageTransition(
                     src_page_id=src_page_id,
@@ -1208,7 +1208,7 @@ def _apply_trace_operations_and_transitions(
             and next_observation is not None
             and str(next_observation[1].get("screenshot_health_error", "")).strip()
         ):
-            # 导致黑屏的操作和失败结果由专用异常边统一记录。
+            # Operations leading to black screen and failure results are unified and recorded by dedicated anomaly edges.
             continue
 
         operation, record_operation = _trace_step_operation_text(step)
@@ -1236,7 +1236,7 @@ def _apply_trace_operations_and_transitions(
         if dst_page is None:
             continue
         if dst_page.name == BLACK_SCREEN_PAGE_NAME:
-            # 黑屏入边需要带明确失败结果，由专用逻辑统一维护。
+            # Black screen incoming edges require explicit failure results, maintained uniformly by dedicated logic.
             continue
         graph.add_page_transition(PageTransition(
             src_page_id=src_page_id,
@@ -1253,16 +1253,16 @@ def _apply_operation_bindings(
     trace: list[dict[str, Any]],
     trace_page_map: dict[int, str],
 ) -> int:
-    """应用 patch 声明的“操作→控件”显式绑定；必须在 trace 操作落图之后调用。
+    """Apply explicit \"operation -> control\" bindings declared in patch; must be called after trace operations are graphed.
 
-    绑定是覆盖率计算的权威来源（见 FlowGraph.function_handled_controls）：
-    - source_step 指向 [STEP] 步骤号时，操作原文由程序按 trace 落图口径
-      推导，杜绝模型改写文本造成“绑定了不存在的操作”；
-    - 也可直接给 operation（必须与页面操作清单原文一致）；
-    - control 必须与所在页面控件清单原文一致（逐字或归一化一致）；
-    校验失败的绑定丢弃并告警，不阻塞本轮图增量。即使本轮 patch 结构
-    校验失败被回滚，绑定指向的页面/控件若仍然存在也可安全应用：它
-    描述的是 trace 中的事实，而非结构性变更。
+    Bindings are authoritative sources for coverage calculation (see FlowGraph.function_handled_controls):
+    - When source_step points to [STEP] index, operation text is programmatically derived per trace graphing criteria,
+      preventing model text rewriting from creating \"bindings to nonexistent operations\";
+    - Can also directly provide operation (must match page operation list verbatim);
+    - control must match current page control list verbatim (character-by-character or normalized match);
+    Failed validation bindings are discarded with warnings without blocking this round's graph delta. Even if current round patch
+    structural validation fails and rolls back, bindings can still be applied safely if referenced pages/controls exist:
+    they describe facts in trace rather than structural changes.
     """
     items = patch.get("operation_bindings")
     if not isinstance(items, list):
@@ -1292,7 +1292,7 @@ def _apply_operation_bindings(
             if step is not None:
                 operation_text, recordable = _trace_step_operation_text(step)
                 if not recordable:
-                    # press_back 等不记入清单的操作没有可绑定的操作记录。
+                    # Operations not recorded into list like press_back have no bindable operation records.
                     operation_text = ""
                 if page is None:
                     src_page_id = _trace_step_page_id(
@@ -1306,7 +1306,7 @@ def _apply_operation_bindings(
             operation_text = str(item.get("operation", "") or "").strip()
         if page is None or not operation_text:
             print(
-                "[FFG 更新] 丢弃无法定位步骤或页面的操作绑定: "
+                "[FFG Update] Discard operation binding unable to locate step or page: "
                 f"source_step={source_step}, control={control!r}"
             )
             continue
@@ -1323,15 +1323,15 @@ def _apply_operation_bindings(
         if page.add_operation_binding(operation_text, control):
             applied += 1
         elif page.has_operation_binding(operation_text, control):
-            # 前一次尝试（或同轮 patch 结构回滚前的应用）已记录同一绑定：
-            # refinement 重复声明属正常现象，不是校验失败。
+            # Previous attempt (or application before rollback in same round patch) already recorded identical binding:
+            # repeated declarations during refinement are normal, not validation failures.
             print(
-                f"[FFG 更新] 跳过重复声明的操作绑定（已存在）: "
+                f"[FFG Update] Skip repeatedly declared operation binding (already exists): "
                 f"page={page.id}, control={control!r}"
             )
         else:
             print(
-                "[FFG 更新] 丢弃校验失败的操作绑定（操作或控件不在本页清单）: "
+                "[FFG Update] Discard invalid operation binding (operation or control not in current page list): "
                 f"page={page.id}, operation={operation_text!r}, control={control!r}"
             )
     return applied
@@ -1392,7 +1392,7 @@ def _auto_bind_unambiguous_trace_operations(
         if page.add_operation_binding(stored_operation, candidates[0]):
             applied += 1
             print(
-                "[FFG 更新] 已自动补齐唯一无歧义操作绑定: "
+                "[FFG Update] Automatically completed unique unambiguous operation binding: "
                 f"page={page.id}, operation={stored_operation!r}, control={candidates[0]!r}"
             )
     return applied
@@ -1403,7 +1403,7 @@ def _format_abnormal_step_summary(trace: list[dict[str, Any]]) -> str:
     for index, step in enumerate(trace, start=1):
         if _is_recordable_step(step):
             continue
-        action = str(step.get("action_name", "")).strip() or "未知动作"
+        action = str(step.get("action_name", "")).strip() or "Unknown action"
         thought = str(step.get("thought", "")).strip()
         error = str(step.get("action_error", "")).strip()
         parts = [f"raw_step={index}", f"action={action}"]
@@ -1441,7 +1441,7 @@ def _clip_context_text(value: object, limit: int = FFG_CONTEXT_FIELD_MAX_CHARS) 
     text = str(value or "").strip()
     if len(text) <= limit:
         return text
-    marker = "…[已截断]"
+    marker = "...[truncated]"
     return text[: max(1, limit - len(marker))] + marker
 
 
@@ -1928,9 +1928,9 @@ def _build_ffg_summary(
         ],
     }
     serialized = json.dumps(facts, ensure_ascii=False, separators=(",", ":"))
-    # 裁减顺序：优先裁对模型决策帮助最小、噪声最大的字段（观察候选
-    # 页、全局索引、跨功能依赖），最后才裁边界信息——页面归属边界
-    # 是 Function 拆分/合并判断的核心证据，必须尽量保留。
+    # Pruning order: prioritize fields offering least help and highest noise to model decisions (observed candidates,
+    # global index, cross-functional dependencies), pruning boundary info last - page ownership boundaries
+    # are core evidence for Function split/merge judgments and must be preserved as much as possible.
     shrink_order = (
         "observation_page_candidates",
         "global_function_index",
@@ -1962,7 +1962,7 @@ def _build_ffg_summary(
         if not changed:
             break
         serialized = json.dumps(facts, ensure_ascii=False, separators=(",", ":"))
-    # 裁剪完成后再统计省略数量，保证与模型实际看到的内容一致。
+    # Count omitted quantities after pruning completes, ensuring consistency with what model actually sees.
     facts["context_scope"]["omitted_functions"] = max(
         0, len(graph.functions) - len(facts["functions"])
     )
@@ -1970,7 +1970,7 @@ def _build_ffg_summary(
         0, len(graph.active_pages()) - len(facts["pages"])
     )
     serialized = json.dumps(facts, ensure_ascii=False, separators=(",", ":"))
-    return "【当前 FFG 聚焦事实快照】\n" + serialized
+    return "[Current FFG Focused Fact Snapshot]\n" + serialized
 
 
 def _function_context(graph: FlowGraph, function_id: object) -> dict[str, Any]:
@@ -2001,13 +2001,13 @@ def _build_plan_context(graph: FlowGraph, current_plan: dict[str, Any]) -> str:
         ),
     }
     return (
-        "【本轮权威规划作用域】\n"
+        "[Authoritative Planning Scope for Current Round]\n"
         + json.dumps(facts, ensure_ascii=False, indent=2)
-        + "\n- 上述 func_x 来自已校验的规划器输出，优先级高于测试场景自然语言。"
-        + "\n- scenario_type 只限定本轮测试目标，不决定新页面的永久 Function owner。"
-        + "\n- intra_test 进入独立业务能力时可以创建新 Function；中间页可归入目标 Function，稳定入口/结果页可被多个 Function 共享。"
-        + "\n- cross_test 只在直接证据支持时连接 src_function 与 dst_function。"
-        + "\n- 不得因为名称相似而把本轮证据归到其他 func_x。"
+        + "\n- The above func_x comes from validated planner output, with higher priority than test scenario natural language."
+        + "\n- scenario_type only restricts current round test target, not determining new pages' permanent Function owner."
+        + "\n- intra_test can create new Function when entering independent business capabilities; intermediate pages belong to target Function, while stable entry/result pages can be shared across multiple Functions."
+        + "\n- cross_test connects src_function with dst_function only when supported by direct evidence."
+        + "\n- Do not assign current round evidence to other func_x merely due to name similarity."
     )
 
 
@@ -2052,12 +2052,12 @@ def _build_function_boundary_context(
         "granularity_review_metrics": granularity_review_metrics or {},
     }
     return (
-        "【Function 边界审查】\n"
+        "[Function Boundary Review]\n"
         + json.dumps(facts, ensure_ascii=False, indent=2)
-        + "\n- 对本轮每个新 Page 判断它是当前能力的中间状态、共享页面，还是具有独立目标和闭环的新 Function。"
-        + "\n- mandatory_boundary_review=true 时，禁止不加说明地把全部新 Page 继续归入 target_function。"
-        + "\n- granularity_review_function_id 非空时，还要复核该已有 Function 的全部持久化页面；大功能下的子功能都应拆分为单独的功能节点：共享同一入口（如设置、我的、管理页）但各自承载独立配置域或独立业务流程的页面，应使用 function_restructures 拆分（优先 retire_source=false 的部分拆分，先把最明显的独立子域拆出，不必一次性全拆），而不是只处理本轮新页面。若决定不拆分，必须在 update_control.reason 中说明这些页面为何属于同一用户目标；无理由的拒绝视为复核失败。"
-        + "\n- Activity 变化只是审查信号，不可单独作为创建 Function 的充分条件。"
+        + "\n- For each new Page this round, judge whether it is an intermediate state of current capability, a shared page, or a new Function with independent goals and closed loop."
+        + "\n- When mandatory_boundary_review=true, assigning all new Pages to target_function without explanation is prohibited."
+        + "\n- When granularity_review_function_id is non-empty, also review all persisted pages of that existing Function; sub-functions under large functions should be split into individual function nodes: pages sharing the same entry (e.g. Settings, Profile, Management) but each carrying independent configuration domains or independent workflows should be split using function_restructures (prefer partial splits with retire_source=false, splitting out the most obvious independent subdomains first without needing to split everything at once), rather than only processing new pages of this round. If deciding not to split, update_control.reason must explain why these pages belong to the same user goal; unreasoned refusals are treated as review failures."
+        + "\n- Activity changes are only review signals and cannot serve alone as sufficient conditions for creating Functions."
     )
 
 
@@ -2366,9 +2366,9 @@ def _normalize_observation_alignment(
             item["page_decision"] = "create"
             continue
         if decision == "create":
-            # 模型常把“复用已有页面”写成 create + 已存在的 page_id。此时既没有
-            # 对应的 pages patch（无新页面可建），意图只可能是 reuse，属于纯格式
-            # 错误：由代码归一化即可，不必再花一次多模态 refinement 调用。
+            # The model often writes \"reuse existing page\" as create + existing page_id. In this case there is neither
+            # corresponding pages patch (no new page to create) and intent can only be reuse, which is purely a formatting
+            # error: normalize via code directly, avoiding an extra multimodal refinement call.
             if page_ref.startswith("new_page_"):
                 if page_ref in page_patch_by_ref:
                     continue
@@ -2385,8 +2385,8 @@ def _normalize_observation_alignment(
                 str(candidate.get("page_id", ""))
                 for candidate in candidate_map.get(raw_step, [])
             }
-            # 必须由检索候选独立佐证“这一步确实落在该已有页面上”，才敢改判 reuse；
-            # 否则可能把一个真正的新页面并进错误的已有页面，反而丢掉页面覆盖。
+            # Must have independent corroboration from retrieval candidates that \"this step indeed lands on this existing page\" before reclassifying as reuse;
+            # otherwise a genuinely new page might be merged into a wrong existing page, thereby losing page coverage.
             if page_ref not in candidate_ids:
                 continue
             item["page_decision"] = "reuse"
@@ -2446,30 +2446,30 @@ def _normalize_observation_alignment(
     return alignments
 
 
-# 仅描述“patch 与检索候选集偏差”的告警：页面本身已确认存在于图中，图结构
-# 依然自洽，因此不值得为它整轮回滚（会连同本轮所有新页面/操作/跳转一起丢弃）。
-# 其余对齐问题（缺失/重复/无锚点的 create）仍属硬错误，必须回滚以防幻觉页面。
+# Warnings describing only "discrepancy between patch and retrieval candidate set": the page itself is confirmed to exist in graph, and graph structure
+# remains self-consistent, so it is not worth rolling back the entire round (which would discard all new pages/operations/transitions this round).
+# Other alignment issues (missing/duplicate/unanchored create) are still hard errors and must be rolled back to prevent hallucinated pages.
 ALIGNMENT_ADVISORY_MARKERS = (
     "is outside retrieved candidates",
-    # 功能拆分时把非法页面引用（如本 patch 新建的 new_page_x）塞进
-    # replacement.page_refs：剔除该引用后图结构仍自洽，拆分结果只是
-    # 页面归属不完整，不值得为它整轮回滚。
+    # When splitting functions, invalid page references (such as new_page_x created in this patch) inserted into
+    # replacement.page_refs: graph structure remains self-consistent after eliminating this reference, and the split result is merely
+    # incomplete page ownership, not worth rolling back the entire round.
     "cannot move non-coverage page",
     "has no valid coverage pages",
 )
 
 
 def _is_ignorable_observation_step(step: dict[str, Any]) -> bool:
-    """程序可判定为"可忽略观测"的轨迹步骤。
+    """Trace steps programmatically determined as "ignorable observations".
 
-    包括：截图健康错误、运行器自动恢复/干扰步骤（is_interruption、
-    foreground_recovery、observation_after_recovery）、以及页面观测本身
-    位于目标应用之外（external_context，如桌面、其他 App）。这些步骤
-    不参与目标应用的 Page 建模，模型标 ignore 是唯一正确答案。
+    Includes: screenshot health errors, runner auto-recovery/interruption steps (is_interruption,
+    foreground_recovery, observation_after_recovery), and page observations themselves
+    located outside target application (external_context, e.g. home screen, other apps). These steps
+    do not participate in target app Page modeling, and model tagging ignore is the only correct answer.
 
-    旧校验只认 (is_interruption 且 external_context) 同时成立，而自动
-    恢复步骤只带 is_interruption、受控外部页面只带 external_context，
-    导致模型无论标 ignore 还是漏掉都必然报错，形成 refinement 死循环。
+    Old validation only recognized (is_interruption and external_context) holding simultaneously, whereas auto-recovery
+    steps only carried is_interruption, and controlled external pages only carried external_context,
+    causing errors regardless of whether model tagged ignore or missed it, forming a refinement infinite loop.
     """
     return bool(
         str(step.get("screenshot_health_error", "") or "").strip()
@@ -2484,11 +2484,11 @@ def _ensure_ignorable_alignments(
     patch: dict[str, Any],
     trace: list[dict[str, Any]],
 ) -> int:
-    """为程序判定"可忽略"的轨迹步骤程序化补齐/矫正 ignore 对齐项。
+    """Programmatically fill/correct ignore alignment items for trace steps determined "ignorable".
 
-    小参数模型在长轨迹上容易整段遗漏 observation_alignment，或对外部/
-    恢复步骤给出错误 decision；这些步骤的正确处理方式由程序即可判定
-    （ignore），无需依赖模型。返回程序补齐或矫正的对齐项数量。
+    Small-parameter models tend to miss entire segments of observation_alignment on long traces, or provide incorrect
+    decisions for external/recovery steps; correct handling for these steps can be programmatically determined
+    (ignore) without relying on the model. Returns count of programmatically completed or corrected alignment items.
     """
     alignments = patch.get("observation_alignment")
     if alignments is None or not isinstance(alignments, list):
@@ -2731,9 +2731,9 @@ def _merge_page_observation(
 
     screenshot = _page_screenshot(source_page)
     if screenshot:
-        # 已有代表图通常是首次确认的稳定页面。后续观测可能是键盘、弹窗、
-        # 表情面板或全屏媒体等临时状态，只作为证据保留，避免最后一次观测
-        # 覆盖稳定代表图并污染后续页面识别。
+        # Existing representative images are usually confirmed stable pages on first encounter. Subsequent observations might be keyboard, popups,
+        # emoji panels, or fullscreen media temporary states, preserved only as evidence to avoid the last observation
+        # overwriting the stable representative image and polluting subsequent page identification.
         if page.representative_screenshot:
             page.add_evidence_screenshot(screenshot)
         else:
@@ -2937,14 +2937,14 @@ def _apply_functions(
             }
             if identity_fields and require_direct_evidence and not has_direct_evidence:
                 print(
-                    "[FFG 更新] 跳过缺少本轮直接证据的功能名称/描述更新: "
+                    "[FFG Update] Skip function name/description update lacking direct evidence from this round: "
                     f"{existing_function_id}"
                 )
             elif identity_fields:
                 graph.update_function(existing_function_id, identity_fields)
             if resources and require_direct_evidence and not has_direct_evidence:
                 print(
-                    "[FFG 更新] 跳过缺少本轮直接证据的功能资源变量更新: "
+                    "[FFG Update] Skip function resource variable update lacking direct evidence from this round: "
                     f"{existing_function_id} | {resources}"
                 )
             elif resources:
@@ -2957,7 +2957,7 @@ def _apply_functions(
             continue
         if require_direct_evidence and not has_direct_evidence:
             print(
-                "[FFG 更新] 跳过缺少本轮直接证据的新功能: "
+                "[FFG Update] Skip new function lacking direct evidence from this round: "
                 f"{str(item.get('name') or item.get('description') or ref).strip()}"
             )
             continue
@@ -2976,7 +2976,7 @@ def _apply_functions(
                         resources,
                     )
             print(
-                "[FFG 更新] 跳过空内容或精确重复功能节点: "
+                "[FFG Update] Skip empty content or exact duplicate function node: "
                 f"{str(item.get('name') or item.get('description') or ref).strip()}"
                 f"{f' -> {duplicate_function_id}' if duplicate_function_id != '__skip__' else ''}"
             )
@@ -3032,7 +3032,7 @@ def _apply_pages(
                 int(step.get("raw_step_index", 0) or 0) for step in trace
             ]
             print(
-                "[FFG 更新] 跳过缺少原始步骤证据的页面: "
+                "[FFG Update] Skip page lacking original step evidence: "
                 f"page_ref={ref}, source_step={source_step}, "
                 f"available_raw_steps={available_raw_steps}"
             )
@@ -3071,7 +3071,7 @@ def _apply_pages(
             if raw_step and generalized_page.id:
                 trace_page_map[raw_step] = str(generalized_page.id)
             print(
-                "[FFG 更新] 复用实体泛化后的同类页面: "
+                "[FFG Update] Reuse similar page after entity generalization: "
                 f"{item.get('name', ref)} -> {generalized_page.id}"
             )
             continue
@@ -3092,7 +3092,7 @@ def _apply_pages(
             if raw_step and signature_page.id:
                 trace_page_map[raw_step] = str(signature_page.id)
             print(
-                "[FFG 更新] 同 activity 控件签名一致，复用已有页面而不新建: "
+                "[FFG Update] Control signature matches for same activity, reusing existing page instead of creating new: "
                 f"{item.get('name', ref)} -> {signature_page.id}"
             )
             continue
@@ -3131,7 +3131,7 @@ def _apply_page_ownership(
             source_step = int(source_step.strip())
         if source_step not in available_steps:
             print(
-                "[FFG 更新] 跳过缺少本轮直接证据的页面归属调整: "
+                "[FFG Update] Skip page ownership adjustment lacking direct evidence from this round: "
                 f"page_ref={item.get('page_ref')}, source_step={source_step}"
             )
             continue
@@ -3690,12 +3690,12 @@ def _record_completed_intra_scenario(
 ) -> str:
     """Attach a completed scenario to the function it was planned for.
 
-    场景学分归属规划时的目标功能（target_function_id）：执行终点落在
-    共享页面（如聊天详情页）时，终点功能往往是共享该页面的旧功能，
-    按“实际到达功能”归属会系统性偷走目标功能的自身场景计数，导致
-    覆盖率已达标的功能因 自身场景=0 永远无法收尾。目标功能无法解析
-    时才退回终点功能兜底；下一轮“顺着实际所在功能继续”由
-    endpoint_function 的独立逻辑负责，与本归属无关。
+    Scenario credit belongs to planned target function (target_function_id): when execution endpoint lands
+    on a shared page (such as chat details page), endpoint function is often the old function sharing that page,
+    and attributing by \"actually reached function\" systematically steals target function's own scenario count, leading to
+    functions with target coverage never completing because own_scenarios=0. Only when target function cannot be resolved
+    does it fall back to endpoint function as safeguard; next round's \"continue along actually located function\" is
+    handled by independent endpoint_function logic, unrelated to this attribution.
     """
     target_function_id = _resolve_plan_target_function_id(graph, current_plan)
     owner_id = target_function_id or graph.resolve_function_id(endpoint_function_id)
@@ -3715,7 +3715,7 @@ def _execution_failure_reason(execution_result: dict[str, Any]) -> str:
     if scenario_status in EXECUTION_FAILURE_STATUSES:
         return scenario_error or navigation_error or scenario_status
     if navigation_status and navigation_status not in {"completed", "skipped"}:
-        return navigation_error or f"导航状态异常: {navigation_status}"
+        return navigation_error or f"Navigation status abnormal: {navigation_status}"
     return ""
 
 
@@ -3745,8 +3745,8 @@ def _is_target_app_restarted_execution(execution_result: dict[str, Any]) -> bool
         or "skipped_due_target_app_crashed" in combined_text
         or "target_app_restarted" in combined_text
         or "skipped_due_target_app_restarted" in combined_text
-        or "目标应用离开前台且无法通过返回恢复" in combined_text
-        or "检测到目标应用崩溃" in combined_text
+        or "\u76ee\u6807\u5e94\u7528\u79bb\u5f00\u524d\u53f0\u4e14\u65e0\u6cd5\u901a\u8fc7\u8fd4\u56de\u6062\u590d" in combined_text
+        or "\u68c0\u6d4b\u5230\u76ee\u6807\u5e94\u7528\u5d29\u6e83" in combined_text
     )
 
 
@@ -3789,23 +3789,23 @@ def _update_cross_test_execution_progress(
         test_scenario = (
             str(state.get("current_test_scenario", "")).strip()
             or str(execution_result.get("current_scenario", "")).strip()
-            or "跨功能场景执行失败"
+            or "Cross-function scenario execution failed"
         )
         graph.add_cross_scenario(
             src_function_id,
             dst_function_id,
-            f"自动化无法完成，已停止重复尝试: {test_scenario} | 失败原因: {failure_reason}",
+            f"Automation cannot complete, stopped repeated attempts: {test_scenario} | Failure reason: {failure_reason}",
         )
         failure_counts.pop(key, None)
         print(
-            "[FFG 更新] 跨功能组合执行失败，标记为已尝试以避免重复规划: "
+            "[FFG Update] Cross-function combination execution failed, marked as attempted to avoid re-planning: "
             f"{src_function_id} -> {dst_function_id} "
             f"({failure_count}/{CROSS_FAILURE_BLOCK_THRESHOLD})"
         )
     else:
         failure_counts[key] = failure_count
         print(
-            "[FFG 更新] 记录跨功能组合执行失败: "
+            "[FFG Update] Record cross-function combination execution failure: "
             f"{src_function_id} -> {dst_function_id} "
             f"({failure_count}/{CROSS_FAILURE_BLOCK_THRESHOLD})"
         )
@@ -3832,12 +3832,12 @@ def _close_crashed_cross_test_scope(
     test_scenario = (
         str(state.get("current_test_scenario", "")).strip()
         or str(execution_result.get("current_scenario", "")).strip()
-        or "跨功能场景因目标应用崩溃结束"
+        or "Cross-function scenario ended due to target app crash"
     )
     if src_function_id and dst_function_id:
         graph.add_cross_scenario(src_function_id, dst_function_id, test_scenario)
         print(
-            "[FFG 更新] 崩溃后结束当前跨功能组合，后续切换其它功能: "
+            "[FFG Update] End current cross-function combination after crash, switch to other functions next: "
             f"{src_function_id} -> {dst_function_id}"
         )
 
@@ -3888,18 +3888,18 @@ def _update_function_execution_progress(
         if target_function_id and graph.get_node(target_function_id) is not None:
             current_status = graph.get_node_test_status(target_function_id)
             if current_status in TERMINAL_FUNCTION_STATUSES:
-                # 覆盖审计轮中已完成的 Function 不因执行失败翻转终端状态：
-                # 状态翻转会改变审计签名，导致同一功能被反复全量重审并烧掉轮次。
+                # Functions completed during coverage audit rounds do not flip terminal state due to execution failure:
+                # state flips change audit fingerprint, causing the same function to be repeatedly re-audited in full and burning rounds.
                 print(
-                    "[FFG 更新] 功能已处于终端状态，保留原状态并让出调度: "
+                    "[FFG Update] Function is already in terminal state, retain original state and yield scheduling: "
                     f"{target_function_id}({current_status}) | "
                     f"{failure_reason or scenario_status}"
                 )
             else:
                 graph.set_node_test_status(target_function_id, "unavailable")
                 print(
-                    "[FFG 更新] 当前功能遇到无法继续的验证或确认页面持续无变化，"
-                    "标记为 unavailable 并切换其它功能: "
+                    "[FFG Update] Current function encountered unresolvable verification or confirmed page with no persistent change, "
+                    "marking as unavailable and switching to other functions: "
                     f"{target_function_id} | {failure_reason or scenario_status}"
                 )
             failure_counts.pop(target_function_id, None)
@@ -3909,7 +3909,7 @@ def _update_function_execution_progress(
             current_status = graph.get_node_test_status(target_function_id)
             if current_status in TERMINAL_FUNCTION_STATUSES:
                 print(
-                    "[FFG 更新] 功能已处于终端状态，崩溃恢复不改变其持久化状态: "
+                    "[FFG Update] Function is already in terminal state, crash recovery does not alter its persisted state: "
                     f"{target_function_id}({current_status})"
                 )
             else:
@@ -3919,7 +3919,7 @@ def _update_function_execution_progress(
                     int(failure_counts.get(target_function_id, 0) or 0),
                 )
                 print(
-                    "[FFG 更新] 崩溃不直接关闭整个功能，保留为 in_progress 并切换其它功能: "
+                    "[FFG Update] Crash does not directly close the entire function, retain as in_progress and switch to other functions: "
                     f"{target_function_id}"
                 )
         return failure_counts, "", "not_started"
@@ -3932,7 +3932,7 @@ def _update_function_execution_progress(
                 current_testing_function_id = target_function_id
                 current_testing_function_status = "in_progress"
                 print(
-                    "[FFG 更新] 当前功能因截图不可用/黑屏保留为 in_progress: "
+                    "[FFG Update] Current function retained as in_progress due to unavailable screenshot/black screen: "
                     f"{target_function_id}"
                 )
             failure_counts.pop(target_function_id, None)
@@ -3943,7 +3943,7 @@ def _update_function_execution_progress(
             current_status = graph.get_node_test_status(target_function_id)
             if current_status in TERMINAL_FUNCTION_STATUSES:
                 print(
-                    "[FFG 更新] 功能已处于终端状态，执行停滞不改变其持久化状态: "
+                    "[FFG Update] Function is already in terminal state, execution stagnation does not alter its persisted state: "
                     f"{target_function_id}({current_status}) | {failure_reason}"
                 )
             else:
@@ -3953,8 +3953,8 @@ def _update_function_execution_progress(
                     FUNCTION_FAILURE_BLOCK_THRESHOLD,
                 )
                 print(
-                    "[FFG 更新] 页面循环或执行停滞未达到 unavailable 条件，"
-                    "保留为 in_progress 并让出当前调度: "
+                    "[FFG Update] Page loop or execution stagnation did not meet unavailable criteria, "
+                    "retaining as in_progress and yielding current scheduling: "
                     f"{target_function_id} | {failure_reason}"
                 )
         return failure_counts, "", "not_started"
@@ -3974,8 +3974,8 @@ def _update_function_execution_progress(
                 current_testing_function_id = ""
                 current_testing_function_status = "not_started"
                 print(
-                    "[FFG 更新] 功能连续执行失败但未确认页面卡死，"
-                    "保持 in_progress 并让出当前调度: "
+                    "[FFG Update] Function suffered consecutive execution failures without confirmed page freeze, "
+                    "maintaining in_progress and yielding current scheduling: "
                     f"{target_function_id} ({failure_count}/{FUNCTION_FAILURE_BLOCK_THRESHOLD})"
                 )
             else:
@@ -3983,15 +3983,15 @@ def _update_function_execution_progress(
                 current_testing_function_id = target_function_id
                 current_testing_function_status = "in_progress"
                 print(
-                    "[FFG 更新] 记录功能执行失败，保留为 in_progress: "
+                    "[FFG Update] Recorded function execution failure, retained as in_progress: "
                     f"{target_function_id} ({failure_count}/{FUNCTION_FAILURE_BLOCK_THRESHOLD})"
                 )
         return failure_counts, current_testing_function_id, current_testing_function_status
 
     if execution_result.get("scenario_status") == "completed":
-        # 只清掉“本轮确有结构产出”的功能。target_function_id 的清零交给
-        # _record_zero_structural_yield：它在本函数之后执行，若在这里无条件
-        # pop，零产出计数会被每一轮成功执行清零，永远累积不到释放阈值。
+        # Only clear functions that \"indeed had structural yield this round\". Clearing target_function_id is delegated to
+        # _record_zero_structural_yield: executed after this function; if unconditionally popped
+        # here, zero-yield count would be cleared by every successful execution round, never accumulating to release threshold.
         reset_candidates = [current_testing_function_id, *(reset_function_ids or [])]
         for function_id in reset_candidates:
             if function_id and function_id != target_function_id:
@@ -4009,15 +4009,15 @@ def _record_zero_structural_yield(
     current_testing_function_id: str,
     current_testing_function_status: str,
 ) -> tuple[dict[str, int], str, str]:
-    """把“执行成功但没有任何结构产出”计入无进展次数。
+    """Count \"successful execution without any structural yield\" into non-progress count.
 
-    `_update_function_execution_progress` 只统计执行失败，成功一轮就清零计数，
-    因此“每轮都成功、但既不产生新页面也不产生新功能”的无底洞页面（典型是
-    WebView 长文）永远不会被降优先级：它的未覆盖控件近乎无穷，规划器一直能
-    产出新场景，可以连续十几轮把时间耗在同一 Activity 上。
+    `_update_function_execution_progress` only tracks execution failures and resets count on success,
+    so bottomless pages that \"succeed every round but produce neither new pages nor new functions\" (typically
+    WebView long articles) would never be deprioritized: its uncovered controls are nearly infinite, planner keeps
+    generating new scenarios, and can spend dozens of consecutive rounds on the same Activity.
 
-    只看功能数与页面数增量。操作数和页面跳转几乎每轮都会增长，纳入判据会让
-    检测永不触发。
+    Only checks function and page count deltas. Operations and transitions grow almost every round, so including them
+    would prevent detection from ever triggering.
     """
     if not ZERO_YIELD_COUNTS_AS_NO_PROGRESS:
         return failure_counts, current_testing_function_id, current_testing_function_status
@@ -4027,12 +4027,12 @@ def _record_zero_structural_yield(
         return failure_counts, current_testing_function_id, current_testing_function_status
 
     execution_result = state.get("execution_result", {}) or {}
-    # 执行失败已由 _update_function_execution_progress 计数，避免同一轮双重累加。
+    # Execution failure is already counted by _update_function_execution_progress, avoiding double counting in same round.
     if _execution_failure_reason(execution_result):
         return failure_counts, current_testing_function_id, current_testing_function_status
 
     if after["functions"] > before["functions"] or after["pages"] > before["pages"]:
-        # 本轮确有结构产出：清零该功能的连续无进展计数，只有“连续”零产出才释放。
+        # Structural yield present this round: reset function's consecutive non-progress count, releasing only on \"consecutive\" zero yields.
         target_function_id = _resolve_plan_target_function_id(graph, current_plan)
         if target_function_id:
             failure_counts.pop(target_function_id, None)
@@ -4043,7 +4043,7 @@ def _record_zero_structural_yield(
     if node is None or (node.test_status or "not_started") in TERMINAL_FUNCTION_STATUSES:
         return failure_counts, current_testing_function_id, current_testing_function_status
 
-    # 刚开始探索的功能本就需要几轮铺垫才会产出新页面，不能一上来就降优先级。
+    # Newly explored functions require several preparation rounds before yielding new pages, and should not be deprioritized immediately.
     coverage = int(graph.function_coverage_details(node.id)["coverage_percent"])
     if coverage < ZERO_YIELD_MIN_COVERAGE:
         return failure_counts, current_testing_function_id, current_testing_function_status
@@ -4051,17 +4051,17 @@ def _record_zero_structural_yield(
     no_progress_count = int(failure_counts.get(node.id, 0) or 0) + 1
     failure_counts[node.id] = min(no_progress_count, FUNCTION_FAILURE_BLOCK_THRESHOLD)
     if no_progress_count >= FUNCTION_FAILURE_BLOCK_THRESHOLD:
-        # 让出当前调度目标。_select_intra_target 会硬优先返回 preferred_id，
-        # 只加计数而不清空的话，同一功能仍会被连续选中。
+        # Yield current scheduling target. _select_intra_target strictly prioritizes returning preferred_id;
+        # if only incrementing count without clearing, the same function would still be consecutively selected.
         print(
-            "[FFG 更新] 功能连续多轮无新增页面或功能，让出当前调度: "
+            "[FFG Update] Function had multiple consecutive rounds without new pages or functions, yielding current scheduling: "
             f"{node.id} | coverage={coverage}% "
             f"({no_progress_count}/{FUNCTION_FAILURE_BLOCK_THRESHOLD})"
         )
         return failure_counts, "", "not_started"
 
     print(
-        "[FFG 更新] 记录功能本轮无结构产出: "
+        "[FFG Update] Record function had zero structural yield this round: "
         f"{node.id} | coverage={coverage}% "
         f"({no_progress_count}/{FUNCTION_FAILURE_BLOCK_THRESHOLD})"
     )
@@ -4092,7 +4092,7 @@ def _apply_non_recordable_execution_outcome(
         if target_function_id and graph.get_node(target_function_id) is not None:
             graph.add_scenario(target_function_id, test_scenario)
             print(
-                "[FFG 更新] 已记忆无有效 trace 的失败场景，后续不再重复规划: "
+                "[FFG Update] Memorized failed scenario without valid trace to avoid redundant planning later: "
                 f"{target_function_id} | {scenario_status}"
             )
     failure_counts, current_testing_function_id, current_testing_function_status = _update_function_execution_progress(
@@ -4207,7 +4207,7 @@ def apply_ffg_patch(
     trace: list[dict[str, Any]],
     current_plan: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """在工作副本上原子应用 patch；失败时保留输入图。"""
+    """Atomically apply patch on working copy; retain input graph on failure."""
     working_graph = FlowGraph.from_dict(graph.to_dict())
     functions_patch = _list_patch(patch.get("functions"))
     pages_patch = _list_patch(patch.get("pages"))
@@ -4300,7 +4300,7 @@ def apply_ffg_patch(
     validation_issues = list(dict.fromkeys(validation_issues))
     applied_graph = graph
     if validation_issues:
-        print("[FFG 更新] patch 校验失败，已回滚工作副本: " + "; ".join(validation_issues[:8]))
+        print("[FFG Update] patch validation failed, rolled back working copy: " + "; ".join(validation_issues[:8]))
         persisted_trace_images = 0
         trace_page_map = {
             raw_step: page_id
@@ -4368,8 +4368,8 @@ def create_ffg_update_node(llm, device=None):
             thumbnail_cache.clear()
             compact_cache.clear()
 
-        # 页面控件后台审计：先合并已完成的结果（在 before 快照前完成，
-        # 使本轮 stats 只反映 LLM patch），再投喂新一批待审页面。
+        # Page control background audit: first merge completed results (done before `before` snapshot,
+        # so this round's stats only reflect LLM patch), then feed a new batch of pages to audit.
         audit_base_graph: FlowGraph | None = None
         if not is_refinement:
             audit_changes = _merge_page_audit_results(graph)
@@ -4418,7 +4418,7 @@ def create_ffg_update_node(llm, device=None):
                     granularity_review_metrics.get("review_attempt", 1) or 1
                 )
                 print(
-                    "[FFG 更新] 触发 Function 粒度复核: "
+                    "[FFG Update] Triggered Function granularity review: "
                     f"{granularity_review_function_id} | "
                     f"pages={granularity_review_metrics.get('coverage_page_count', 0)}, "
                     f"activities={granularity_review_metrics.get('activity_count', 0)}, "
@@ -4427,21 +4427,21 @@ def create_ffg_update_node(llm, device=None):
                 )
 
         print(
-            "[FFG 更新] 输入状态: "
+            "[FFG Update] Input state: "
             f"scenario_status={execution_result.get('scenario_status', '')}, "
             f"navigation_trace_steps={len(state.get('navigation_execution_trace', []) or [])}, "
             f"scenario_trace_steps={len(state.get('scenario_execution_trace', []) or [])}, "
             f"combined_steps={len(raw_trace)}, processed_steps={len(trace)}"
         )
         if not raw_trace:
-            print("[FFG 更新] 场景 trace 为空，改为记录本轮执行结果并更新功能状态。")
+            print("[FFG Update] Scenario trace is empty, recording execution results and updating function state instead.")
             return _apply_non_recordable_execution_outcome(
                 graph,
                 state,
                 execution_result,
             )
         if not trace:
-            print("[FFG 更新] 没有可处理的轨迹步骤，改为记录本轮执行结果并更新功能状态。")
+            print("[FFG Update] No processable trace steps, recording execution results and updating function state instead.")
             return _apply_non_recordable_execution_outcome(
                 graph,
                 state,
@@ -4478,8 +4478,8 @@ def create_ffg_update_node(llm, device=None):
             {
                 "type": "text",
                 "text": (
-                    f"【目标应用】name={state.get('app_name', '') or '未知'}，"
-                    f"package={state.get('package_name', '') or '未知'}"
+                    f"[Target App] name={state.get('app_name', '') or 'unknown'}, "
+                    f"package={state.get('package_name', '') or 'unknown'}"
                 ),
             },
             {"type": "text", "text": ffg_summary},
@@ -4497,16 +4497,16 @@ def create_ffg_update_node(llm, device=None):
             {
                 "type": "text",
                 "text": (
-                    f"执行场景: {test_scenario}\n"
-                    f"执行结果: {_execution_result_for_llm(execution_result)}\n"
-                    "下面的步骤按实际顺序包含完整导航 trace 和测试 trace；"
-                    "动作失败、干扰、外部页面、自动恢复和纯观察步骤都必须逐步检查，"
-                    "再依据直接证据决定更新 Page、operation 或 PageTransition。\n"
-                    "下方 [STEP] 的 index 是本轮合并轨迹步骤号；"
-                    "pages.source_step 必须使用这个步骤号。\n"
-                    "每张图片都是紧邻 STEP 的动作执行前状态 BEFORE_STEP_index。"
-                    "动作 index=i 的结果只能从后续 STEP 的动作前截图确认；"
-                    "新结果页应引用实际显示它的后续 source_step，不能引用触发动作所在的 source_step。"
+                    f"Execution scenario: {test_scenario}\n"
+                    f"Execution result: {_execution_result_for_llm(execution_result)}\n"
+                    "The steps below contain the complete navigation trace and test trace in actual order;"
+                    "action failures, interruptions, external pages, auto-recovery, and pure observation steps must all be checked step by step,"
+                    "before deciding whether to update Page, operation, or PageTransition based on direct evidence.\n"
+                    "The [STEP] index below is the merged trace step number for this round;"
+                    "pages.source_step must use this step index.\n"
+                    "Each image is the pre-action state BEFORE_STEP_index immediately preceding that STEP."
+                    "The result of action index=i can only be confirmed from pre-action screenshots of subsequent STEPs;"
+                    "new result pages should reference the subsequent source_step where it actually appears, not the source_step of triggering action."
                 ),
             },
         ]
@@ -4515,17 +4515,17 @@ def create_ffg_update_node(llm, device=None):
             message_content.append({
                 "type": "text",
                 "text": (
-                    f"【FFG Agent 第 {refinement_step} 步】上一版已应用到工作副本。"
-                    "请检查当前聚焦 FFG 并修正尚未完成的结构或细节；"
-                    "如果已经完整，返回 update_control.decision=finish。\n"
-                    f"上一轮校验问题: {json.dumps(previous_issues, ensure_ascii=False)}\n"
-                    "常见校验错误的修复方法：\n"
-                    "- ignore alignment 类错误：ignore 只能对齐执行 trace 中明确的"
-                    "外部/系统原因观察（验证阻塞、系统弹窗等）；步骤是正常执行结果时"
-                    "改用 move/extract/complete，不要继续用 ignore。\n"
-                    "- cannot move non-coverage page：非 coverage 页面不能移动，"
-                    "改用新增页面或修正目标页面引用。\n"
-                    "- 引用不存在的编号：func_x/page_x 只能引用输入上下文中列出的编号。\n"
+                    f"[FFG Agent Step {refinement_step}] Previous version has been applied to the working copy."
+                    "Please check the currently focused FFG and fix incomplete structures or details;"
+                    "if already complete, return update_control.decision=finish.\n"
+                    f"Previous validation issues: {json.dumps(previous_issues, ensure_ascii=False)}\n"
+                    "Fixes for common validation errors:\n"
+                    "- ignore alignment errors: ignore can only align clear external/system-caused"
+                    "observations in execution trace (verification blocks, system popups, etc.); when step is a normal execution result,"
+                    "use move/extract/complete instead of continuing to use ignore.\n"
+                    "- cannot move non-coverage page: non-coverage pages cannot be moved,"
+                    "use newly created pages or correct target page references instead.\n"
+                    "- Referencing non-existent IDs: func_x/page_x can only reference IDs listed in the input context.\n"
                 ),
             })
         refinement_focus_steps = (
@@ -4618,10 +4618,10 @@ def create_ffg_update_node(llm, device=None):
             message_content.append({
                 "type": "text",
                 "text": (
-                    "【已存 FFG 页面视觉参考】以下图片来自 FFG 中已持久化页面，"
-                    "请结合它们与现有页面文字自行判断本轮页面是否应复用已有 page_x。"
-                    "它们不是实时轨迹观测，"
-                    "不能作为 pages.source_step，也不能证明本轮执行结果。"
+                    "[Existing FFG Page Visual References] The following images are from persisted pages in FFG,"
+                    "please combine them with existing page text to determine whether current round pages should reuse existing page_x."
+                    "They are not real-time trace observations,"
+                    "cannot serve as pages.source_step, and cannot prove execution results of this round."
                 ),
             })
             for page in image_reference_pages:
@@ -4648,7 +4648,7 @@ def create_ffg_update_node(llm, device=None):
         if abnormal_summary:
             message_content.append({
                 "type": "text",
-                "text": f"被过滤的异常步骤摘要:\n{abnormal_summary}",
+                "text": f"Filtered abnormal steps summary:\n{abnormal_summary}",
             })
         uploaded_trace_screenshots: dict[str, int] = {}
         for index, step in enumerate(trace, start=1):
@@ -4661,9 +4661,9 @@ def create_ffg_update_node(llm, device=None):
                     _format_trace_step(step, raw_index, index)
                     + f"\n[OBSERVATION] BEFORE_STEP_{raw_index}: "
                     + (
-                        f"下方截图是 action={action_name or 'unknown'} 尚未执行时的页面。"
+                        f"The screenshot below is the page before action={action_name or 'unknown'} was executed."
                         if _page_screenshot(page)
-                        else "本步骤没有可用截图。"
+                        else "No available screenshot for this step."
                     )
                 ),
             })
@@ -4679,8 +4679,8 @@ def create_ffg_update_node(llm, device=None):
                 message_content.append({
                     "type": "text",
                     "text": (
-                        f"[OBSERVATION_IMAGE_REUSE] BEFORE_STEP_{raw_index} 与 "
-                        f"BEFORE_STEP_{reused_step} 使用同一截图，不重复上传图片。"
+                        f"[OBSERVATION_IMAGE_REUSE] BEFORE_STEP_{raw_index} and "
+                        f"BEFORE_STEP_{reused_step} share the same screenshot, omitting duplicate upload."
                     ),
                 })
             elif raw_index in matched_step_pages:
@@ -4689,7 +4689,7 @@ def create_ffg_update_node(llm, device=None):
                 matched_summary = (
                     f"name={matched_page.name or matched_page_id}, "
                     f"activity={matched_page.activity or 'unknown'}, "
-                    f"description={_clip_context_text(matched_page.description, 240) or '无'}, "
+                    f"description={_clip_context_text(matched_page.description, 240) or 'None'}, "
                     "controls="
                     f"{[_clip_context_text(control, 80) for control in matched_page.controls[:8]]}"
                     if matched_page is not None
@@ -4698,17 +4698,17 @@ def create_ffg_update_node(llm, device=None):
                 message_content.append({
                     "type": "text",
                     "text": (
-                        f"[OBSERVATION_IMAGE_MATCHED] BEFORE_STEP_{raw_index} 与已存页面 "
-                        f"{matched_page_id}（{matched_summary}）Activity 一致且视觉高度匹配，"
-                        "使用其文本摘要替代截图，不重复上传图片。"
+                        f"[OBSERVATION_IMAGE_MATCHED] BEFORE_STEP_{raw_index} matches existing page "
+                        f"{matched_page_id} ({matched_summary}) with identical Activity and high visual match,"
+                        "using its text summary to replace screenshot, omitting duplicate upload."
                     ),
                 })
             elif _page_screenshot(page) and not _needs_trace_screenshot(graph, step):
                 message_content.append({
                     "type": "text",
                     "text": (
-                        f"[OBSERVATION_IMAGE_OMITTED] BEFORE_STEP_{raw_index} 是 FFG 已知导航页面；"
-                        "保留页面、Activity 与动作文本，不重复上传其截图。"
+                        f"[OBSERVATION_IMAGE_OMITTED] BEFORE_STEP_{raw_index} is a known FFG navigation page;"
+                        "retaining page, Activity, and action text without re-uploading its screenshot."
                     ),
                 })
             elif _page_screenshot(page):
@@ -4716,24 +4716,24 @@ def create_ffg_update_node(llm, device=None):
                     "type": "text",
                     "text": (
                         f"[OBSERVATION_IMAGE_BUDGET_OMITTED] BEFORE_STEP_{raw_index} "
-                        "不属于本轮 refinement 校验问题及相邻步骤；上一轮已提供截图，"
-                        "本轮保留完整页面、Activity、动作和时序文本。"
+                        "is not part of current round refinement validation issues or adjacent steps; screenshot was provided in previous round,"
+                        "retaining complete page, Activity, action, and temporal text in this round."
                     ),
                 })
 
         message_content.append({
             "type": "text",
             "text": (
-                "【轨迹时序校验】\n"
-                "- STEP i 的截图是动作 i 之前的源页面；动作结果应从下一张可用 BEFORE_STEP 截图判断。\n"
-                "- 创建新页面时，source_step 必须指向该页面实际可见的截图步骤；"
-                "例如 STEP 2 点击后页面首次出现在 BEFORE_STEP_3，则 source_step=3。\n"
-                "- finished 只是一张最终状态观测，不是页面操作，也不能作为跳转触发动作。\n"
-                "- executor_target_hint/executor_reasoning_hint 只是执行器解释；"
-                "坐标和截图是更高优先级证据，冲突时以截图中的实际目标为准。\n"
-                "- coordinate 使用 original_screenshot_size 的原始像素坐标；"
-                "上传图片可能等比例缩小，定位时按宽高比例映射。\n"
-                "- 最后一个有副作用的动作若没有后续观测，不得据此新增结果页、结果操作或跳转。"
+                "[Trace Temporal Validation]\n"
+                "- The screenshot for STEP i is the source page prior to action i; action results should be judged from the next available BEFORE_STEP screenshot.\n"
+                "- When creating a new page, source_step must point to the screenshot step where the page is actually visible;\n"
+                "- e.g. if page first appears in BEFORE_STEP_3 after clicking at STEP 2, then source_step=3.\n"
+                "- finished is only a final state observation, not a page operation, and cannot serve as a transition trigger action.\n"
+                "- executor_target_hint/executor_reasoning_hint are only executor explanations;\n"
+                "coordinates and screenshots are higher priority evidence; in case of conflict, the actual target in screenshot takes precedence.\n"
+                "- coordinate uses raw pixel coordinates of original_screenshot_size;\n"
+                "uploaded images may be scaled proportionally; map according to width/height aspect ratio when locating.\n"
+                "- If the last side-effecting action has no subsequent observation, no new result page, result operation, or transition may be added based on it."
             ),
         })
 
@@ -4750,7 +4750,7 @@ def create_ffg_update_node(llm, device=None):
             for block in image_blocks
         )
         print(
-            "[FFG 更新] 上下文规模: "
+            "[FFG Update] Context scale: "
             f"ffg_chars={len(ffg_summary)}, text_chars={text_chars}, "
             f"images={len(image_blocks)}, image_payload_chars={image_payload_chars}, "
             f"trace_steps={len(trace)}, reference_images={len(image_reference_pages)}, "
@@ -4763,8 +4763,8 @@ def create_ffg_update_node(llm, device=None):
 
         if fast_path_page_map is not None:
             print(
-                "[FFG 更新] 已知页面快速路径: Activity 与页面视觉高度匹配，"
-                "操作和跳转由程序更新，跳过多模态模型。"
+                "[FFG Update] Known page fast path: Activity and page visually match highly, "
+                "operations and transitions are programmatically updated, skipping multimodal model."
             )
             patch = {
                 "update_control": {
@@ -4795,8 +4795,8 @@ def create_ffg_update_node(llm, device=None):
             )
             if available_llm_seconds is not None and available_llm_seconds <= 0:
                 print(
-                    "[FFG 更新] 总运行时限已到，跳过多模态调用；"
-                    "原始轨迹已落盘，本轮按执行结果收尾，不再触发无意义的对齐重试。"
+                    "[FFG Update] Total runtime limit reached, skipping multimodal call; "
+                    "raw trace persisted to disk, concluding this round by execution result without triggering meaningless alignment retries."
                 )
                 deadline_result = _apply_non_recordable_execution_outcome(
                     graph,
@@ -4828,15 +4828,15 @@ def create_ffg_update_node(llm, device=None):
                         SystemMessage(content=FFG_UPDATE_SYSTEM_PROMPT),
                         HumanMessage(content=message_content),
                     ],
-                    log_prefix="[FFG 更新]",
+                    log_prefix="[FFG Update]",
                     json_block_pattern=JSON_BLOCK_PATTERN,
                     max_attempts=max_attempts,
                     deadline_monotonic=deadline_monotonic,
                 )
         if llm_json_result_failed(patch):
             print(
-                "[FFG 更新] 底层多模态调用已耗尽重试，跳过对齐校验与 refinement；"
-                "完整原始轨迹和截图已落盘，页面审计结果保持独立生效。"
+                "[FFG Update] Underlying multimodal calls exhausted retries, skipping alignment validation and refinement; "
+                "complete raw trace and screenshots persisted to disk, page audit results remain independently effective."
             )
             failed_result = _apply_non_recordable_execution_outcome(
                 graph,
@@ -4849,8 +4849,8 @@ def create_ffg_update_node(llm, device=None):
             return failed_result
         if not patch:
             print(
-                "[FFG 更新] LLM 未返回有效 patch，跳过图增量；"
-                "仍继续记录本轮执行结果、执行场景和失败进度。"
+                "[FFG Update] LLM did not return a valid patch, skipping graph delta; "
+                "continuing to record this round's execution result, execution scenario, and failure progress."
             )
             patch = {}
 
@@ -4863,8 +4863,8 @@ def create_ffg_update_node(llm, device=None):
         auto_fixed = _ensure_ignorable_alignments(patch, trace)
         if auto_fixed:
             print(
-                "[FFG 更新] 程序自动补齐外部/恢复步骤 ignore 对齐: "
-                f"{auto_fixed} 项"
+                "[FFG Update] Programmatically completed external/recovery step ignore alignment: "
+                f"{auto_fixed} items"
             )
         alignment_issues = validate_observation_alignment(
             graph,
@@ -4882,8 +4882,8 @@ def create_ffg_update_node(llm, device=None):
         graph = patch_result["graph"]
         if patch_result.get("persisted_trace_images"):
             print(
-                "[FFG 更新] 已将对齐到已有 Page 的轨迹截图持久化为状态证据: "
-                f"{patch_result['persisted_trace_images']} 张"
+                "[FFG Update] Persisted trace screenshots aligned to existing Pages as state evidence: "
+                f"{patch_result['persisted_trace_images']} images"
             )
         functions_patch = patch_result["functions_patch"]
         pages_patch = patch_result["pages_patch"]
@@ -4926,12 +4926,12 @@ def create_ffg_update_node(llm, device=None):
         )
         if bound_operations:
             print(
-                f"[FFG 更新] 已记录操作-控件显式绑定 {bound_operations} 条"
-                "（覆盖命中率以绑定为权威来源）"
+                f"[FFG Update] Recorded {bound_operations} explicit operation-control bindings "
+                "(coverage hit rate uses bindings as authoritative source)"
             )
         graph.recompute_all_coverages()
         print(
-            "[FFG 更新] LLM patch: "
+            "[FFG Update] LLM patch: "
             f"functions={len(functions_patch)}, pages={len(pages_patch)}, "
             f"page_ownership={len(page_ownership_patch)}, "
             f"function_restructures={len(function_restructures_patch)}, "
@@ -4939,8 +4939,8 @@ def create_ffg_update_node(llm, device=None):
             f"dependencies={len(dependencies_patch)}"
         )
         print(
-            "[FFG 更新] LLM 决策: "
-            f"decision={update_decision}, reason={update_reason or '（未提供）'}"
+            "[FFG Update] LLM decision: "
+            f"decision={update_decision}, reason={update_reason or '(not provided)'}"
         )
 
         current_testing_function_id = str(state.get("current_testing_function_id", "")).strip()
@@ -4998,7 +4998,7 @@ def create_ffg_update_node(llm, device=None):
         if current_testing_function_id and graph.get_node(current_testing_function_id) is None:
             replacements = graph.resolve_function_ids(current_testing_function_id)
             print(
-                "[FFG 更新] 当前功能已被结构调整替代，释放旧测试目标: "
+                "[FFG Update] Current function has been replaced by structural adjustment, releasing old test target: "
                 f"{current_testing_function_id} -> {','.join(replacements) or 'none'}"
             )
             current_testing_function_id = ""
@@ -5018,7 +5018,7 @@ def create_ffg_update_node(llm, device=None):
         )
         if endpoint_function_id and endpoint_function_id != current_testing_function_id:
             print(
-                "[FFG 更新] 执行终点进入其它功能，下一轮顺着实际所在功能继续: "
+                "[FFG Update] Execution endpoint entered another function, continuing along the actually located function next round: "
                 f"{current_testing_function_id or 'none'} -> {endpoint_function_id}"
             )
         if endpoint_function_id:
@@ -5033,7 +5033,7 @@ def create_ffg_update_node(llm, device=None):
             )
             if scenario_owner_id and scenario_owner_id != str(current_plan.get("target_function_id", "")).strip():
                 print(
-                    "[FFG 更新] 目标功能无法解析，场景归入实际到达功能: "
+                    "[FFG Update] Target function cannot be resolved, scenario attributed to actually reached function: "
                     f"{scenario_owner_id}"
                 )
             if scenario_owner_id == current_testing_function_id:
@@ -5056,22 +5056,22 @@ def create_ffg_update_node(llm, device=None):
         )
         if missing_activities:
             invariant_issues.append(
-                "执行轨迹出现尚未被任何 Page 表示的新 Activity，请复核并新增或正确复用页面: "
+                "A new Activity not represented by any Page appeared in execution trace, please review and add or correctly reuse pages: "
                 + ", ".join(missing_activities)
             )
         if invariant_issues:
             update_decision = "continue"
             update_reason = "; ".join(invariant_issues[:8])
-            print(f"[FFG 更新] 图一致性校验待修正: {update_reason}")
+            print(f"[FFG Update] Graph consistency validation pending fix: {update_reason}")
 
         after = _snapshot_graph(graph)
         print(
-            "[FFG 更新] 增量: "
-            f"功能={after['functions'] - before['functions']}, "
-            f"页面={after['pages'] - before['pages']}, "
-            f"操作={after['operations'] - before['operations']}, "
-            f"页面跳转={after['page_transitions'] - before['page_transitions']}, "
-            f"功能依赖={after['function_dependencies'] - before['function_dependencies']}"
+            "[FFG Update] Delta: "
+            f"functions={after['functions'] - before['functions']}, "
+            f"pages={after['pages'] - before['pages']}, "
+            f"operations={after['operations'] - before['operations']}, "
+            f"page_transitions={after['page_transitions'] - before['page_transitions']}, "
+            f"function_dependencies={after['function_dependencies'] - before['function_dependencies']}"
         )
 
         if not is_refinement:

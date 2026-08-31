@@ -16,9 +16,9 @@ _USAGE_PATH = ""
 _LLM_REGISTRY: dict[int, dict[str, str]] = {}
 _USAGE: dict[str, Any] = {}
 
-# 写盘节流：一次工作流有几十上百次 LLM 调用，每次调用会触发 2-3 次计数更新。
-# 若每次都全量序列化落盘，累计几百次磁盘写入。改为累积到阈值或超时才落盘，
-# 关键节点（configure/save_summary）仍强制 flush 保证不丢数据。
+# Disk write throttling: a workflow has dozens to hundreds of LLM calls, and each call triggers 2-3 count updates.
+# If full serialization writes to disk every time, it accumulates hundreds of disk writes. Changed to accumulate until threshold or timeout before writing to disk,
+# critical checkpoints (configure/save_summary) still force flush to guarantee no data loss.
 _DIRTY_WRITES = 0
 _LAST_SAVE_MONOTONIC = 0.0
 _LAST_SAVE_ERROR_LOG_MONOTONIC = 0.0
@@ -84,7 +84,7 @@ def configure_llm_usage(output_dir: str, filename: str = "llm_usage.json", reset
         else:
             _USAGE = _empty_usage(normalized_dir)
         _save_locked()
-    print(f"[LLM统计] token 用量将保存到: {_USAGE_PATH}")
+    print(f"[LLM Statistics] Token usage will be saved to: {_USAGE_PATH}")
 
 
 def register_llm(llm, *, model: str):
@@ -251,7 +251,7 @@ def _int_first(mapping: dict[str, Any], *keys: str) -> int:
 
 
 def _save_locked_throttled():
-    """按写入次数或时间间隔节流落盘，减少高频全量序列化。"""
+    """Throttle disk writes by write count or time interval to reduce high-frequency full serialization."""
     global _DIRTY_WRITES
     _DIRTY_WRITES += 1
     now = _time.monotonic()
@@ -273,7 +273,7 @@ def _log_save_error_locked(exc: BaseException) -> None:
     _LAST_SAVE_ERROR_LOG_MONOTONIC = now
     try:
         print(
-            "[LLM统计] 用量文件保存失败，内存计数已保留，后续检查点会重试: "
+            "[LLM Statistics] Failed to save usage file; in-memory counts preserved, will retry at subsequent checkpoint: "
             f"{exc}"
         )
     except Exception:

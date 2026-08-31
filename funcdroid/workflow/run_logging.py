@@ -12,12 +12,12 @@ from typing import BinaryIO, TextIO
 
 
 RUNTIME_LOG_TERM_REPLACEMENTS = (
-    ("基线", "起点"),
-    ("批测", "应用队列"),
-    ("验收", "运行"),
-    ("试跑", "运行"),
-    ("实验", "运行"),
-    ("测试", "执行"),
+    ("\u57fa\u7ebf", "\u8d77\u70b9"),
+    ("\u6279\u6d4b", "\u5e94\u7528\u961f\u5217"),
+    ("\u9a8c\u6536", "\u8fd0\u884c"),
+    ("\u8bd5\u8dd1", "\u8fd0\u884c"),
+    ("\u5b9e\u9a8c", "\u8fd0\u884c"),
+    ("\u6d4b\u8bd5", "\u6267\u884c"),
 )
 
 
@@ -59,8 +59,8 @@ class _TeeStream:
             self._secondary_error_reported = True
         try:
             self.primary.write(
-                "[日志] run.log 写入失败，已停用本次文件镜像；"
-                f"控制台输出和测试流程将继续: {exc}\n"
+                "[Log] Failed to write to run.log, file mirroring disabled for this run; "
+                f"console output and test execution will continue: {exc}\n"
             )
             self.primary.flush()
         except Exception:
@@ -176,14 +176,14 @@ class RunLogHandle:
             self._log_file.flush()
         except Exception as exc:
             try:
-                self._stderr.write(f"[日志] run.log 刷盘失败，关闭流程继续: {exc}\n")
+                self._stderr.write(f"[Log] Failed to flush run.log, close process continuing: {exc}\n")
             except Exception:
                 pass
         try:
             self._log_file.close()
         except Exception as exc:
             try:
-                self._stderr.write(f"[日志] run.log 关闭失败，退出流程继续: {exc}\n")
+                self._stderr.write(f"[Log] Failed to close run.log, exit process continuing: {exc}\n")
             except Exception:
                 pass
 
@@ -212,14 +212,14 @@ def setup_run_logging(output_dir: str, filename: str = "run.log") -> RunLogHandl
     sys.stdout = _TeeStream(original_stdout, log_file, stream_lock)
     sys.stderr = _TeeStream(original_stderr, log_file, stream_lock)
 
-    print(f"[日志] 命令行输出同步保存到: {log_path}")
+    print(f"[Log] Command line output synchronized to: {log_path}")
     rotation_label = (
-        f"单文件 {rotate_bytes} bytes，保留 {backup_count} 个历史文件"
+        f"single file {rotate_bytes} bytes, keep {backup_count} historical files"
         if rotate_bytes > 0
-        else "不滚动"
+        else "no rotation"
     )
-    print(f"[日志] run.log 滚动策略: {rotation_label}")
-    print(f"[日志] 会话开始: {datetime.now().isoformat()}")
+    print(f"[Log] run.log rotation policy: {rotation_label}")
+    print(f"[Log] Session started: {datetime.now().isoformat()}")
     atexit.register(handle.close)
     return handle
 
@@ -344,17 +344,17 @@ def setup_logcat_capture(
 ) -> LogcatCaptureHandle | None:
     """Continuously save Android logcat output for the whole run."""
     if os.getenv("LOGCAT_CAPTURE", "1").strip().lower() in {"0", "false", "off", "no"}:
-        print("[logcat] LOGCAT_CAPTURE 已关闭，跳过完整 logcat 采集。")
+        print("[logcat] LOGCAT_CAPTURE is disabled, skipping full logcat collection.")
         return None
 
     operating_system = str(getattr(device, "operating_system", "") or "").strip().lower()
     if operating_system not in {"adb", "android"}:
-        print("[logcat] 非 Android/ADB 设备，跳过完整 logcat 采集。")
+        print("[logcat] Non-Android/ADB device, skipping full logcat collection.")
         return None
 
     device_serial = str(getattr(device, "serial", "") or "").strip()
     if not device_serial:
-        print("[logcat] 未获取到设备序列号，跳过完整 logcat 采集。")
+        print("[logcat] Device serial number not obtained, skipping full logcat collection.")
         return None
 
     os.makedirs(output_dir, exist_ok=True)
@@ -367,9 +367,9 @@ def setup_logcat_capture(
                 timeout=5,
                 capture_output=True,
             )
-            print(f"[logcat] 已清空历史 logcat: device={device_serial}")
+            print(f"[logcat] Cleared historical logcat: device={device_serial}")
         except Exception as exc:
-            print(f"[logcat] 清空历史 logcat 失败，继续采集: {exc}")
+            print(f"[logcat] Failed to clear historical logcat, continuing collection: {exc}")
 
     rotate_bytes = max(0, int(os.getenv("LOGCAT_ROTATE_BYTES", str(256 * 1024 * 1024))))
     backup_count = max(1, int(os.getenv("LOGCAT_BACKUP_COUNT", "3")))
@@ -389,15 +389,15 @@ def setup_logcat_capture(
         )
     except Exception as exc:
         sink.close()
-        print(f"[logcat] 启动完整 logcat 采集失败: {exc}")
+        print(f"[logcat] Failed to start full logcat collection: {exc}")
         return None
 
     handle = LogcatCaptureHandle(process, sink, logcat_path)
     rotation_label = (
-        f"每卷 {rotate_bytes} bytes，保留 {backup_count} 个历史卷"
+        f"per volume {rotate_bytes} bytes, keep {backup_count} historical volumes"
         if rotate_bytes > 0
-        else "不滚动"
+        else "no rotation"
     )
-    print(f"[logcat] 完整 logcat 正在保存到: {logcat_path}（{rotation_label}）")
+    print(f"[logcat] Full logcat is being saved to: {logcat_path} ({rotation_label})")
     atexit.register(handle.close)
     return handle

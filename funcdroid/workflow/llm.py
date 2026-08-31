@@ -1,4 +1,4 @@
-"""LLM 初始化。"""
+"""LLM initialization."""
 
 import json
 import os
@@ -36,13 +36,13 @@ def llm_json_result_failed(result: object) -> bool:
     """Whether the retry helper exhausted before producing valid JSON."""
     return isinstance(result, _FailedJsonResult)
 
-# 已知的高频 JSON 笔误修复模式：本地小模型常把坐标写成
-# "x": 226, 190（丢失 "y": 键名）。仅在严格解析失败后作为兜底尝试，
-# 且要求两个数字都落在 0–1000 的坐标范围内，避免误修普通数组。
+# Known frequent JSON typo fix pattern: small local models often write coordinates as
+# "x": 226, 190 (missing "y": key). Attempt only as a fallback after strict parsing fails,
+# and require both numbers to fall within the 0-1000 coordinate range to avoid incorrectly modifying regular arrays.
 MISSING_COORD_KEY_PATTERN = re.compile(
     r'"x"\s*:\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*(?=[,}\]\n])'
 )
-# 部分模型把坐标写成数组：\"x\": [682, 954]（缺独立 y 键）。
+# Some models write coordinates as arrays: \"x\": [682, 954] (missing a standalone y key).
 ARRAY_COORD_PATTERN = re.compile(
     r'"x"\s*:\s*\[\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*\]'
 )
@@ -60,7 +60,7 @@ def _repair_common_json_typos(text: str) -> str:
         text,
     )
     if repaired != text:
-        print("[LLM] 已修复缺失坐标键名的 JSON 笔误（\"x\": a, b → \"x\": a, \"y\": b）")
+        print("[LLM] Fixed JSON typo with missing coordinate key (\"x\": a, b -> \"x\": a, \"y\": b)")
     array_repaired = ARRAY_COORD_PATTERN.sub(
         lambda match: (
             f'"x": {match.group(1)}, "y": {match.group(2)}'
@@ -71,7 +71,7 @@ def _repair_common_json_typos(text: str) -> str:
         repaired,
     )
     if array_repaired != repaired:
-        print("[LLM] 已修复数组坐标的 JSON 笔误（\"x\": [a, b] → \"x\": a, \"y\": b）")
+        print("[LLM] Fixed JSON typo with array coordinates (\"x\": [a, b] -> \"x\": a, \"y\": b)")
     return array_repaired
 
 
@@ -98,7 +98,7 @@ def _parse_json_response(text: str):
             if isinstance(value, dict):
                 parsed_objects.append(value)
         if parsed_objects:
-            print("[LLM] 已从附带解释文字的响应中提取最后一个完整 JSON object。")
+            print("[LLM] Extracted the last complete JSON object from response containing explanatory text.")
             return parsed_objects[-1]
         raise exact_error
 
@@ -115,7 +115,7 @@ def _load_env_once():
 
 
 def _normalize_response_text(content) -> str:
-    """把 LLM 响应内容归一化为文本，兼容 list-of-blocks 返回。"""
+    """Normalize LLM response content to text, supporting list-of-blocks returns."""
     if content is None:
         return ""
     if isinstance(content, str):
@@ -134,7 +134,7 @@ def _normalize_response_text(content) -> str:
 
 
 def create_llm(timeout_seconds: float | None = None):
-    """根据环境变量创建聊天模型；所有角色共用同一个端点。"""
+    """Create a chat model based on environment variables; all roles share the same endpoint."""
     _load_env_once()
 
     api_key = os.getenv("API_KEY", "").strip()
@@ -147,7 +147,7 @@ def create_llm(timeout_seconds: float | None = None):
 
     if not api_key or not base_url or not model:
         raise ValueError(
-            "缺少 LLM 配置，请检查 .env 中的 API_KEY、BASE_URL、MODEL"
+            "Missing LLM configuration, please check API_KEY, BASE_URL, MODEL in .env"
         )
 
     kwargs = {
@@ -175,7 +175,7 @@ def compute_retry_delay_seconds(
     backoff_multiplier: float | None = None,
     max_delay_seconds: float | None = None,
 ) -> float:
-    """根据重试次数计算指数退避时长。attempt 从 1 开始。"""
+    """Calculate exponential backoff duration based on retry count. attempt starts from 1."""
     _load_env_once()
     normalized_attempt = max(1, int(attempt))
     base_delay = float(os.getenv("LLM_RETRY_DELAY", "2.0")) if base_delay_seconds is None else float(base_delay_seconds)
@@ -195,7 +195,7 @@ def invoke_llm_json_with_retry(
     retry_delay_seconds: float | None = None,
     deadline_monotonic: float | None = None,
 ):
-    """调用 LLM 并解析 JSON，失败时按统一策略重试。"""
+    """Call LLM and parse JSON, retrying with a unified strategy upon failure."""
     _load_env_once()
     pattern = json_block_pattern or DEFAULT_JSON_BLOCK_PATTERN
     attempts = max(1, int(max_attempts or os.getenv("LLM_RETRY_ATTEMPTS", "3")))
@@ -205,7 +205,7 @@ def invoke_llm_json_with_retry(
 
     for attempt in range(1, attempts + 1):
         if deadline_monotonic is not None and time.monotonic() >= deadline_monotonic:
-            print(f"{log_prefix} 已到调用截止时间，停止后续重试。")
+            print(f"{log_prefix} Call deadline reached, stopping subsequent retries.")
             break
         parse_failed = False
         try:
@@ -218,8 +218,8 @@ def invoke_llm_json_with_retry(
                 try:
                     parsed = _parse_json_response(cleaned)
                 except json.JSONDecodeError:
-                    # 已知笔误（如 "x": 226, 190 缺 "y": 键）先修复再试一次，
-                    # 避免为可机器修复的输出浪费整轮重试。
+                    # Known typos (e.g. "x": 226, 190 missing "y": key) are fixed first before retrying,
+                    # avoiding wasting an entire retry round on machine-repairable output.
                     repaired = _repair_common_json_typos(cleaned)
                     if repaired != cleaned:
                         parsed = _parse_json_response(repaired)
@@ -227,8 +227,8 @@ def invoke_llm_json_with_retry(
                         raise
                 if not isinstance(parsed, dict):
                     raise ValueError(
-                        "LLM JSON 顶层必须是 object，"
-                        f"实际为 {type(parsed).__name__}"
+                        "LLM JSON top-level must be an object, "
+                        f"got {type(parsed).__name__}"
                     )
                 return parsed
             except (json.JSONDecodeError, ValueError) as parse_exc:
@@ -236,13 +236,13 @@ def invoke_llm_json_with_retry(
                 raise parse_exc
         except Exception as exc:
             record_llm_failure(llm, operation=log_prefix)
-            kind = "解析" if parse_failed else "调用"
-            failure_reason = f"{kind}失败: {type(exc).__name__}"
-            print(f"{log_prefix} LLM {kind}失败（第 {attempt}/{attempts} 次）: {exc}\n[原始内容]: {raw_content}")
+            kind = "parse" if parse_failed else "call"
+            failure_reason = f"{kind} failed: {type(exc).__name__}"
+            print(f"{log_prefix} LLM {kind} failed (attempt {attempt}/{attempts}): {exc}\n[Raw content]: {raw_content}")
             if attempt >= attempts:
                 break
-            # 解析失败重试同样的 prompt 意义不大，用较短固定间隔快速重试；
-            # 网络/调用失败走指数退避。
+            # Retrying the same prompt on parse failure is rarely helpful, so retry quickly with a shorter fixed interval;
+            # network/call failures use exponential backoff.
             if parse_failed:
                 sleep_seconds = min(delay_seconds, 1.0)
             else:
@@ -253,7 +253,7 @@ def invoke_llm_json_with_retry(
             if deadline_monotonic is not None:
                 remaining = deadline_monotonic - time.monotonic()
                 if remaining <= 0:
-                    print(f"{log_prefix} 已到调用截止时间，停止后续重试。")
+                    print(f"{log_prefix} Call deadline reached, stopping subsequent retries.")
                     break
                 sleep_seconds = min(sleep_seconds, remaining)
             time.sleep(sleep_seconds)

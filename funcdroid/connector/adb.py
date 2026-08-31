@@ -50,8 +50,12 @@ class ADB(Connector):
             line = line.strip()
             if not line or line.startswith("List of devices attached"):
                 continue
-            serial = line.split()[0]
-            devices.append(serial)
+            fields = line.split()
+            # Do not pass offline/unauthorized transports to uiautomator2. The
+            # user can resolve their device state and rerun without a late,
+            # misleading connection failure.
+            if len(fields) >= 2 and fields[1] == "device":
+                devices.append(fields[0])
         logger.debug("adb devices: {}", devices)
         return devices
 

@@ -1,7 +1,7 @@
-"""LangGraph 图组装入口。
+"""LangGraph graph assembly entry point.
 
-统一规划工作流：
-  scenario_plan → scenario_exec（含缺陷检测）→ ffg_update → (循环)
+Unified planning workflow:
+  scenario_plan -> scenario_exec (including defect detection) -> ffg_update -> (loop)
 """
 
 import os
@@ -51,12 +51,12 @@ def _safe_node(node_name: str, node_func: Callable, fallback: Callable[[AgentSta
                 result[counter_key] = 0
             return result
         except Exception as exc:
-            print(f"[节点异常] {node_name} 执行失败: {exc}")
+            print(f"[Node Exception] {node_name} execution failed: {exc}")
             print(traceback.format_exc())
             try:
                 return fallback(state, exc)
             except Exception as fallback_exc:
-                print(f"[节点异常] {node_name} fallback 也失败: {fallback_exc}")
+                print(f"[Node Exception] {node_name} fallback also failed: {fallback_exc}")
                 print(traceback.format_exc())
                 return {}
 
@@ -71,7 +71,7 @@ def _fallback_scenario_plan(state: AgentState, exc: Exception) -> dict:
     )
     if workflow_complete:
         print(
-            "[节点异常] scenario_plan 连续异常达到阈值，提前结束工作流: "
+            "[Node Exception] scenario_plan consecutive exceptions reached threshold, terminating workflow early: "
             f"{error_count}/{MAX_CONSECUTIVE_NODE_ERRORS}"
         )
     return {
@@ -96,7 +96,7 @@ def _fallback_scenario_exec(state: AgentState, exc: Exception) -> dict:
     )
     if workflow_complete:
         print(
-            "[节点异常] scenario_exec 连续异常达到阈值，提前结束工作流: "
+            "[Node Exception] scenario_exec consecutive exceptions reached threshold, terminating workflow early: "
             f"{error_count}/{MAX_SCENARIO_EXEC_NODE_ERRORS}"
         )
     return {
@@ -110,7 +110,7 @@ def _fallback_scenario_exec(state: AgentState, exc: Exception) -> dict:
             "navigation_error": "",
             "navigation_trace_length": 0,
             "scenario_status": "error",
-            "scenario_error": f"场景执行节点异常: {exc}",
+            "scenario_error": f"Scenario execution node exception: {exc}",
             "scenario_trace_length": 0,
             "current_scenario": state.get("current_test_scenario", ""),
             "scenario_type": state.get("current_plan", {}).get("scenario_type", ""),
@@ -127,10 +127,10 @@ def _fallback_ffg_update(state: AgentState, exc: Exception) -> dict:
     graph = state.get("ffg")
     if not isinstance(graph, FlowGraph):
         graph = FlowGraph()
-    print(f"[FFG 更新] 已跳过本轮更新，保留原 FFG: {exc}")
+    print(f"[FFG Update] Skipped this update round, retaining original FFG: {exc}")
     if workflow_complete:
         print(
-            "[节点异常] ffg_update 连续异常达到阈值，提前结束工作流: "
+            "[Node Exception] ffg_update consecutive exceptions reached threshold, terminating workflow early: "
             f"{error_count}/{MAX_CONSECUTIVE_NODE_ERRORS}"
         )
     return {
@@ -141,7 +141,7 @@ def _fallback_ffg_update(state: AgentState, exc: Exception) -> dict:
 
 
 def _create_scenario_plan_node_with_iteration(planning_node: Callable):
-    """把轮次/收尾控制收进规划节点，保持工作流只有三个业务节点。"""
+    """Incorporate round/finalization control into the planning node, keeping the workflow to only three business nodes."""
 
     def scenario_plan_with_iteration(state: AgentState) -> dict:
         iteration_started_at = _time.time()
@@ -151,8 +151,8 @@ def _create_scenario_plan_node_with_iteration(planning_node: Callable):
         max_iterations = int(state.get("max_iterations", DEFAULT_MAX_ITERATIONS) or 0)
         if max_iterations > 0 and previous_count >= max_iterations:
             print(
-                f"[轮次信息] 已完成最大轮次 {max_iterations}，"
-                "不再为断点恢复或异常重入额外调用规划模型。"
+                f"[Round Info] Maximum iterations {max_iterations} reached, "
+                "will not make additional planning model calls for checkpoint recovery or exception reentry."
             )
             return {
                 "iteration_count": previous_count,
@@ -175,18 +175,18 @@ def _create_scenario_plan_node_with_iteration(planning_node: Callable):
         count = previous_count + 1
         run_phase = state.get("run_phase", "all")
         run_phase_label = {
-            "all": "统一规划",
-            "intra": "仅功能内测试",
-        }.get(run_phase, "统一规划")
+            "all": "Unified Planning",
+            "intra": "Intra-function Only Testing",
+        }.get(run_phase, "Unified Planning")
         print(f"\n{'='*60}")
-        print(f"  第 {count} 轮 — 模式: {run_phase_label} | 探索范围: 核心功能")
+        print(f"  Round {count} - Mode: {run_phase_label} | Exploration Scope: Core Functions")
         print(f"{'='*60}\n")
         navigation_failure_count = int(state.get("navigation_failure_count", 0) or 0)
         if navigation_failure_count:
-            print(f"[轮次] 连续导航失败: {navigation_failure_count}")
+            print(f"[Round] Consecutive navigation failures: {navigation_failure_count}")
         time_limit_reason = _time_limit_reason(state)
         if time_limit_reason:
-            print(f"[轮次信息] {time_limit_reason}，不再启动新的规划或场景。")
+            print(f"[Round Info] {time_limit_reason}, not starting new planning or scenarios.")
             return {
                 "iteration_count": count,
                 "iteration_started_at": iteration_started_at,
@@ -239,8 +239,8 @@ def _create_scenario_plan_node_with_iteration(planning_node: Callable):
             if _time_limit_reason(projected_state):
                 break
             print(
-                "[调度器] 状态切换已在当前轮内完成，"
-                "继续选择可执行场景，不单独产生纯状态轮。"
+                "[Scheduler] State transition completed within current round, "
+                "continuing to select executable scenario, no separate pure state round produced."
             )
             next_updates = planning_node(projected_state)
             accumulated_planning_updates.update(next_updates)
@@ -252,8 +252,8 @@ def _create_scenario_plan_node_with_iteration(planning_node: Callable):
             if has_time_budget and not _time_limit_reason(projected_state):
                 idle_count = int(state.get("long_run_idle_count", 0) or 0) + 1
                 print(
-                    "[长时运行] 当前 FFG 暂无新遗漏，但指定时长尚未到达；"
-                    "保留同一张图并继续覆盖复核。"
+                    "[Long Run] Current FFG has no new omissions, but specified duration not yet reached; "
+                    "retaining the same graph and continuing coverage review."
                 )
                 if LONG_RUN_IDLE_SECONDS > 0:
                     remaining = max(
@@ -269,7 +269,7 @@ def _create_scenario_plan_node_with_iteration(planning_node: Callable):
                 # Keep completion_audit_signatures so the coverage-gap audit
                 # stays incremental across idle rounds. Clearing them here forced
                 # every completed function to be re-audited from scratch each
-                # idle cycle, which is exactly the "反复重审已完成功能" waste.
+                # idle cycle, which is exactly the "repeatedly reviewing completed functions" waste.
                 planning_updates.update({
                     "workflow_complete": False,
                     "current_navigation_scenario": "",
@@ -308,16 +308,16 @@ def _create_scenario_plan_node_with_iteration(planning_node: Callable):
 
 
 def _route_after_plan(state: AgentState) -> str:
-    """场景规划之后，决定是否需要执行设备动作。"""
+    """Decide whether device actions need to be executed after scenario planning."""
     if state.get("workflow_complete", False):
         _print_iteration_metrics(state, "plan_end")
-        print("\n[路由] 程序判断整体探索已完成，跳过执行。")
+        print("\n[Routing] Program determined overall exploration is complete, skipping execution.")
         return "end"
     scenario_type = (state.get("current_plan", {}) or {}).get("scenario_type")
     time_limit_reason = _time_limit_reason(state)
     if time_limit_reason:
         _print_iteration_metrics(state, "plan_hard_limit")
-        print(f"\n[路由] {time_limit_reason}，不再启动新的场景执行。")
+        print(f"\n[Routing] {time_limit_reason}, not starting new scenario execution.")
         return "end"
     iteration_count = int(state.get("iteration_count", 0) or 0)
     max_iterations = int(state.get("max_iterations", DEFAULT_MAX_ITERATIONS) or 0)
@@ -329,19 +329,19 @@ def _route_after_plan(state: AgentState) -> str:
     )
     if past_iteration_limit or at_iteration_limit_without_action:
         _print_iteration_metrics(state, "plan_hard_limit")
-        print(f"\n[路由] 已达到最大轮次 {max_iterations}，不再进入无动作规划循环。")
+        print(f"\n[Routing] Maximum iterations {max_iterations} reached, not entering actionless planning loop.")
         return "end"
     if scenario_type == "bootstrap":
         _print_iteration_metrics(state, "bootstrap")
-        print("\n[路由] 冷启动建图完成，本轮跳过执行，进入下一轮摘要驱动规划。")
+        print("\n[Routing] Cold start graph building completed, skipping execution this round, entering next round of summary-driven planning.")
         return "continue"
     if scenario_type == "ffg_audit_update":
         _print_iteration_metrics(state, "ffg_audit_update")
-        print("\n[路由] 终止审计已更新 FFG，本轮跳过执行，进入下一轮摘要驱动规划。")
+        print("\n[Routing] Termination audit updated FFG, skipping execution this round, entering next round of summary-driven planning.")
         return "continue"
     if scenario_type == "status_update":
         _print_iteration_metrics(state, "status_update")
-        print("\n[路由] 规划器仅更新功能状态，本轮跳过执行，进入下一轮规划。")
+        print("\n[Routing] Planner only updated function state, skipping execution this round, entering next round of planning.")
         return "continue"
     return "scenario_exec"
 
@@ -351,7 +351,7 @@ def _hard_limit_reason(state: AgentState) -> str:
     iteration_count = int(state.get("iteration_count", 0) or 0)
     max_iterations = int(state.get("max_iterations", DEFAULT_MAX_ITERATIONS) or 0)
     if max_iterations > 0 and iteration_count >= max_iterations:
-        return f"已达到最大轮次 {max_iterations}"
+        return f"Maximum iterations {max_iterations} reached"
 
     return _time_limit_reason(state)
 
@@ -362,31 +362,31 @@ def _time_limit_reason(state: AgentState) -> str:
     if total_time_limit > 0 and start_time > 0:
         elapsed = _time.time() - start_time
         if elapsed >= total_time_limit:
-            return f"已用时 {elapsed / 60:.1f} 分钟，达到设定最长时间"
+            return f"Elapsed time {elapsed / 60:.1f} minutes, reached configured maximum time"
     return ""
 
 
 def _route_after_update(state: AgentState) -> str:
-    """FFG 更新之后，决定下一步。
+    """Decide next step after FFG update.
 
-    检查顺序：
-    1. 是否达到最大轮次 → 结束
-    2. 是否达到设定最长时间 → 结束
-    3. 是否整体测试完成 → 结束
-    4. 否则 → 继续下一轮
+    Check order:
+    1. Whether maximum iterations reached -> End
+    2. Whether configured maximum time reached -> End
+    3. Whether overall testing completed -> End
+    4. Otherwise -> Continue to next round
     """
     iteration_count = int(state.get("iteration_count", 0) or 0)
     _print_iteration_metrics(state, "executed")
     hard_limit_reason = _hard_limit_reason(state)
     if hard_limit_reason:
-        print(f"\n[路由] {hard_limit_reason}，结束工作流。")
+        print(f"\n[Routing] {hard_limit_reason}, terminating workflow.")
         return "end"
 
     if state.get("workflow_complete", False):
-        print("\n[路由] 整体探索已完成，工作流结束。")
+        print("\n[Routing] Overall exploration completed, workflow ended.")
         return "end"
 
-    print(f"\n[路由] 第 {iteration_count} 轮完成，继续统一规划。")
+    print(f"\n[Routing] Round {iteration_count} completed, continuing unified planning.")
     return "continue"
 
 
@@ -440,7 +440,7 @@ def _print_iteration_metrics(state: AgentState, outcome: str) -> None:
     page_id = str(getattr(current_page, "id", "") or "none")
     page_activity = str(getattr(current_page, "activity", "") or "none").replace(",", ";")
     print(
-        "[轮次指标] "
+        "[Round Metrics] "
         f"iteration={int(state.get('iteration_count', 0) or 0)}, outcome={outcome}, "
         f"scenario_type={scenario_type}, scope={scope}, page={page_id}, "
         f"activity={page_activity}, planner_noop_count={int(state.get('planner_noop_count', 0) or 0)}, "
@@ -459,21 +459,21 @@ def build_graph(
     device,
     ffg_update_llm=None,
 ):
-    """构建场景规划、场景执行（含缺陷检测）、FFG 更新三节点循环工作流。
+    """Build a three-node cyclic workflow of scenario planning, scenario execution (including defect detection), and FFG update.
 
     Args:
-        planning_llm: 规划使用的 LLM 客户端
-        execution_llm: 场景执行和执行后缺陷复核使用的 LLM 客户端
-        device: 设备驱动
-        ffg_update_llm: FFG 更新专用 LLM 客户端；None 时沿用 planning_llm。
-            FFG 更新单请求携带大量轨迹截图（mandatory 强制图不受
-            image_budget 约束），响应时间显著长于规划，需要独立超时。
+        planning_llm: LLM client used for planning
+        execution_llm: LLM client used for scenario execution and post-execution defect review
+        device: Device driver
+        ffg_update_llm: Dedicated LLM client for FFG update; falls back to planning_llm when None.
+            FFG update single requests carry a large number of trace screenshots (mandatory forced images are not
+            constrained by image_budget), response times are significantly longer than planning, requiring independent timeouts.
     """
     if ffg_update_llm is None:
         ffg_update_llm = planning_llm
     graph = StateGraph(AgentState)
 
-    # ─── 注册节点 ───
+    # Register nodes.
     planning_node = create_scenario_plan_node(planning_llm, device)
     graph.add_node(
         "scenario_plan",
@@ -499,11 +499,11 @@ def build_graph(
             _fallback_ffg_update,
         ),
     )
-    # ─── 定义边 ───
+    # Define edges.
 
     graph.add_edge(START, "scenario_plan")
 
-    # 统一规划节点 → 执行节点，或直接结束
+    # Unified planning node -> execution node, or end directly.
     graph.add_conditional_edges(
         "scenario_plan",
         _route_after_plan,
@@ -514,16 +514,16 @@ def build_graph(
         },
     )
 
-    # 场景执行节点内部已完成缺陷检测，随后更新 FFG。
+    # Defect detection is completed internally within the scenario execution node, followed by FFG update.
     graph.add_edge("scenario_exec", "ffg_update")
 
-    # FFG 更新后 → 路由决策
+    # After FFG update -> routing decision.
     graph.add_conditional_edges(
         "ffg_update",
         _route_after_update,
         {
-            "continue": "scenario_plan",            # 继续当前阶段
-            "end": END,                              # 结束
+            "continue": "scenario_plan",            # Continue current phase
+            "end": END,                              # End
         },
     )
 

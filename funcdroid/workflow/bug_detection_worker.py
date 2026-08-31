@@ -1,23 +1,23 @@
-"""异步执行轨迹缺陷检测。
+"""Asynchronous trace defect detection execution.
 
-设计动机：
-- `trace_defect_detection.analyze_execution_for_bugs` 只读取已经拍好的截图和执行结果，
-  不触碰设备；而下一轮 `scenario_plan`/`scenario_exec` 需要立即用设备继续探索。
-  把缺陷检测放到独立的后台线程，可以让"设备操作"和"LLM 视觉复核"两件事的耗时重叠，
-  从而缩短整体运行时间，同时不改变缺陷检测本身的语义。
-- 缺陷检测结果（detected_bugs/bug_trace_records）不参与 scenario_plan/ffg_update 的决策，
-  只用于落盘报告，因此异步化不会影响主循环的正确性。
-- 使用单一后台 worker 线程顺序消费队列，而不是线程池并发：detected_bugs 的去重依赖
-  "上一轮已确认的缺陷列表"，多个检测请求并发写会产生合并竞态；单线程顺序处理可以
-  天然避免这个问题，且实现简单。
+Design motivation:
+- `trace_defect_detection.analyze_execution_for_bugs` only reads already-captured screenshots and execution results,
+  without touching the device; meanwhile, the next round of `scenario_plan`/`scenario_exec` needs to immediately use the device to continue exploration.
+  Moving defect detection to an independent background thread allows overlapping the time spent on "device operations" and "LLM visual review",
+  thereby reducing overall execution time without altering the defect detection semantics themselves.
+- Defect detection results (detected_bugs/bug_trace_records) do not participate in scenario_plan/ffg_update decisions,
+  and are only used for persisted reports; thus, async execution does not affect the correctness of the main loop.
+- A single background worker thread sequentially consumes the queue instead of thread pool concurrency: deduplication of detected_bugs relies
+  on the "confirmed defect list from the previous round". Concurrent writes across multiple detection requests would cause merge race conditions; sequential processing by a single thread naturally
+  avoids this problem and keeps the implementation simple.
 
-用法：
+Usage:
     from workflow.bug_detection_worker import bug_detection_worker
 
     bug_detection_worker.configure(bug_detection_llm, on_batch_done=save_callback)
-    bug_detection_worker.submit(job_state)   # 立即返回，不阻塞主循环
+    bug_detection_worker.submit(job_state)   # Returns immediately without blocking the main loop
     ...
-    bug_detection_worker.flush()             # 工作流结束前等待队列排空
+    bug_detection_worker.flush()             # Wait for the queue to drain before workflow completion
     detected_bugs, bug_trace_records = bug_detection_worker.snapshot()
 """
 
@@ -41,7 +41,7 @@ DEFAULT_SUBMIT_WAIT_SECONDS = float(
 
 
 class BugDetectionWorker:
-    """单一后台线程 + 队列，顺序执行 `analyze_execution_for_bugs`。"""
+    """Single background thread + queue, sequentially executing `analyze_execution_for_bugs`."""
 
     def __init__(self, max_pending: int = DEFAULT_MAX_PENDING) -> None:
         self._lock = threading.Lock()
@@ -52,13 +52,13 @@ class BugDetectionWorker:
         self._on_job_failed: Callable[[BaseException], None] | None = None
         self._detected_bugs: list[dict[str, Any]] = []
         self._bug_trace_records: dict[str, list[dict[str, Any]]] = {}
-        # 未处理完的任务数，配合 Condition 实现可超时的 flush()。
+        # Number of pending tasks, combined with Condition to implement flush() with timeout.
         self._pending = 0
         self._idle_cond = threading.Condition(self._lock)
         self._max_pending = max(1, int(max_pending))
 
     # ------------------------------------------------------------------
-    # 配置 / 生命周期
+    # Configuration / Lifecycle
     # ------------------------------------------------------------------
     def configure(
         self,
@@ -70,7 +70,7 @@ class BugDetectionWorker:
         initial_records: dict[str, list[dict[str, Any]]] | None = None,
         max_pending: int | None = None,
     ) -> None:
-        """配置本次运行使用的 LLM、落盘回调，并（重新）播种已有缺陷（断点续跑场景）。"""
+        """Configure the LLM and persistence callback for this run, and (re)seed existing defects (for resume-from-breakpoint scenarios)."""
         with self._lock:
             self._llm = llm
             self._on_batch_done = on_batch_done
@@ -94,7 +94,7 @@ class BugDetectionWorker:
         thread.start()
 
     # ------------------------------------------------------------------
-    # 提交任务
+    # Submit task
     # ------------------------------------------------------------------
     def submit(self, job_state: dict[str, Any]) -> bool:
         """Submit without dropping evidence; apply backpressure at the memory cap.
@@ -111,7 +111,7 @@ class BugDetectionWorker:
             while self._pending >= self._max_pending:
                 if not announced:
                     print(
-                        "[缺陷检测线程] 待处理任务已达内存上限，等待空位以保留本轮复核: "
+                        "[Bug Detection Thread] Pending tasks reached memory limit, waiting for available slot to preserve this review: "
                         f"pending={self._pending}, max_pending={self._max_pending}"
                     )
                     announced = True
@@ -122,35 +122,35 @@ class BugDetectionWorker:
                     continue
                 remaining = deadline - time.monotonic()
                 if remaining <= 0:
-                    print("[缺陷检测线程] 等待空位超时，本轮复核未入队。")
+                    print("[Bug Detection Thread] Timed out waiting for available slot; this review was not enqueued.")
                     return False
                 self._idle_cond.wait(remaining)
             self._pending += 1
             pending = self._pending
         self._queue.put(job_state)
         print(
-            "[缺陷检测线程] 已提交异步检测任务: "
+            "[Bug Detection Thread] Submitted asynchronous detection task: "
             f"pending={pending}, queue_size={self._queue.qsize()}"
         )
         return True
 
     # ------------------------------------------------------------------
-    # 后台线程主循环
+    # Background thread main loop
     # ------------------------------------------------------------------
     def _worker_loop(self) -> None:
         while True:
             job_state = self._queue.get()
             try:
                 self._process_job(job_state)
-            except Exception as exc:  # noqa: BLE001 - 后台线程需要吞掉异常继续消费
-                print(f"[缺陷检测线程] 处理任务失败，保留已有缺陷结果: {exc}")
+            except Exception as exc:  # noqa: BLE001 - The background thread needs to swallow exceptions and continue consuming
+                print(f"[Bug Detection Thread] Failed to process task, retaining existing defect results: {exc}")
                 print(traceback.format_exc())
                 callback = self._on_job_failed
                 if callback is not None:
                     try:
                         callback(exc)
                     except Exception as callback_exc:  # noqa: BLE001
-                        print(f"[缺陷检测线程] 失败回调本身也失败: {callback_exc}")
+                        print(f"[Bug Detection Thread] Failure callback itself failed: {callback_exc}")
             finally:
                 with self._idle_cond:
                     self._pending = max(0, self._pending - 1)
@@ -161,7 +161,7 @@ class BugDetectionWorker:
     def _process_job(self, job_state: dict[str, Any]) -> None:
         with self._lock:
             llm = self._llm
-            # 用当前权威缺陷列表覆盖任务快照里的旧值，保证顺序合并不丢更新。
+            # Overwrite old values in the task snapshot with the current authoritative defect list to ensure sequential merging without losing updates.
             job_state["detected_bugs"] = list(self._detected_bugs)
             job_state["bug_trace_records"] = dict(self._bug_trace_records)
         updates = analyze_execution_for_bugs(llm, job_state)  # type: ignore[arg-type]
@@ -176,13 +176,13 @@ class BugDetectionWorker:
             try:
                 callback()
             except Exception as exc:  # noqa: BLE001
-                print(f"[缺陷检测线程] 落盘回调失败: {exc}")
+                print(f"[Bug Detection Thread] Persistence callback failed: {exc}")
 
     # ------------------------------------------------------------------
-    # 读取 / 等待
+    # Read / Wait
     # ------------------------------------------------------------------
     def snapshot(self) -> tuple[list[dict[str, Any]], dict[str, list[dict[str, Any]]]]:
-        """线程安全地读取当前权威缺陷列表和轨迹记录快照。"""
+        """Thread-safely read a snapshot of the current authoritative defect list and trace records."""
         with self._lock:
             return list(self._detected_bugs), dict(self._bug_trace_records)
 
@@ -191,10 +191,10 @@ class BugDetectionWorker:
             return self._pending
 
     def flush(self, timeout: float | None = None) -> bool:
-        """等待队列中所有已提交任务处理完成。
+        """Wait until all submitted tasks in the queue are processed.
 
         Returns:
-            True 表示在超时前完成；timeout=None 时会一直阻塞直到完成。
+            True indicates completion before timeout; when timeout=None, it blocks until completion.
         """
         with self._idle_cond:
             if timeout is None:
@@ -210,7 +210,7 @@ class BugDetectionWorker:
             return True
 
     def reset(self) -> None:
-        """恢复到未配置的初始状态；仅供测试隔离使用，不面向生产调用。"""
+        """Reset to the unconfigured initial state; for test isolation only, not intended for production calls."""
         with self._lock:
             self._llm = None
             self._on_batch_done = None
@@ -221,11 +221,11 @@ class BugDetectionWorker:
 
 
 def build_defect_detection_job(state: AgentState) -> dict[str, Any]:
-    """从工作流状态中抽取一份缺陷检测所需的只读快照，避免共享可变引用。
+    """Extract a read-only snapshot required for defect detection from workflow state to avoid sharing mutable references.
 
-    只复制 `analyze_execution_for_bugs` 会读取的字段；trace 中的元素（dict/Page）
-    在生成后不会被工作流其它节点原地修改，浅拷贝列表/字典足以避免后续状态更新
-    影响已提交的任务。
+    Only copies fields that `analyze_execution_for_bugs` reads; elements in trace (dict/Page)
+    are not modified in-place by other workflow nodes once generated, so shallow copying lists/dicts is sufficient to prevent subsequent state updates
+    from affecting submitted tasks.
     """
     navigation_trace = state.get("navigation_execution_trace", [])
     scenario_trace = state.get("scenario_execution_trace", [])
@@ -241,5 +241,5 @@ def build_defect_detection_job(state: AgentState) -> dict[str, Any]:
     }
 
 
-# 进程内单例，语义上与 `workflow/llm_usage.py` 的全局用量登记表一致。
+# In-process singleton, semantically consistent with the global usage registry in `workflow/llm_usage.py`.
 bug_detection_worker = BugDetectionWorker()

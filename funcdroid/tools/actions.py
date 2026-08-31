@@ -1,4 +1,4 @@
-"""操作执行工具。"""
+"""Action execution tools."""
 
 import os
 import time
@@ -33,13 +33,13 @@ class ScreenshotUnavailableError(RuntimeError):
 
 def _screenshot_health_error(image) -> str:
     if image is None:
-        return "截图为空"
+        return "Screenshot is empty"
     shape = getattr(image, "shape", None)
     if not shape or len(shape) < 2:
-        return "截图格式无效"
+        return "Invalid screenshot format"
     height, width = int(shape[0] or 0), int(shape[1] or 0)
     if height <= 1 or width <= 1:
-        return f"截图尺寸异常: {width}x{height}"
+        return f"Abnormal screenshot dimensions: {width}x{height}"
 
     try:
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) if len(shape) >= 3 else image
@@ -47,15 +47,15 @@ def _screenshot_health_error(image) -> str:
         mean_value = float(mean[0][0])
         std_value = float(stddev[0][0])
     except Exception as exc:
-        return f"截图像素检查失败: {exc}"
+        return f"Screenshot pixel check failed: {exc}"
 
     if mean_value <= SCREENSHOT_BLACK_MEAN_THRESHOLD and std_value <= SCREENSHOT_BLACK_STD_THRESHOLD:
-        return f"截图疑似黑屏: mean={mean_value:.2f}, std={std_value:.2f}"
+        return f"Screenshot appears to be a black screen: mean={mean_value:.2f}, std={std_value:.2f}"
     return ""
 
 
 def create_device_tool(device):
-    """创建一个统一的设备工具，支持动作执行和截图。"""
+    """Create a unified device tool that supports action execution and screenshot capture."""
 
     @tool
     def execute_device_action(
@@ -66,7 +66,7 @@ def create_device_tool(device):
         direction: Literal["up", "down", "left", "right"] | None = None,
         app_name: str | None = None,
     ) -> dict:
-        """执行一次移动端动作，或直接获取当前页面截图。"""
+        """Execute a mobile action, or directly capture the current page screenshot."""
         if action_name != "capture_screenshot":
             _perform_action(
                 device=device,
@@ -117,26 +117,26 @@ def _perform_action(
 
     if action_name == "type":
         if not content:
-            raise ValueError("type 操作必须提供 content")
+            raise ValueError("The type action must provide content")
         device.input(content)
         return
 
     if action_name == "scroll":
         if not direction:
-            raise ValueError("scroll 操作必须提供 direction")
+            raise ValueError("The scroll action must provide direction")
         device.swipe_ext(direction)
         return
 
     if action_name == "open_app":
         package_to_open = (package_name or app_name or "").strip()
         if not package_to_open:
-            raise ValueError("open_app 操作必须提供 package_name 或 app_name")
+            raise ValueError("The open_app action must provide package_name or app_name")
         # Scenario execution supplies ``package_name`` when this is a recovery
         # action for the target app. Restart only when the app IS foreground
         # but stuck in a deep Activity (restart reliably returns to the
         # launcher entry). When it is NOT foreground (desktop / another app /
         # still cold-starting), merely start it: a force-stop restart here
-        # used to feed back into itself — the model saw the launcher during
+        # used to feed back into itself - the model saw the launcher during
         # the slow cold start, re-issued open_app, and each retry force-killed
         # the app again. Generic tool calls that only provide app_name keep
         # the ordinary non-destructive start behavior.
@@ -160,14 +160,14 @@ def _perform_action(
     if action_name in {"finished", "wait"}:
         return
 
-    raise ValueError(f"不支持的操作类型: {action_name}")
+    raise ValueError(f"Unsupported action type: {action_name}")
 
 
 def capture_current_page(
     device,
     page_id: str | None = None,
 ) -> Page:
-    """严格截取当前页面；启动和重启恢复时拒绝黑屏或不可用截图。"""
+    """Strictly capture the current page; reject black screens or unavailable screenshots during startup and restart recovery."""
     page, health_error = capture_page_observation(device, page_id=page_id)
     if health_error:
         raise ScreenshotUnavailableError(health_error)
@@ -178,7 +178,7 @@ def capture_runtime_page(
     device,
     page_id: str | None = None,
 ) -> tuple[Page, str]:
-    """运行时截取页面，同时保留可见黑屏供执行器和下一轮规划判断。"""
+    """Capture the page at runtime while retaining visible black screens for executor and next-round planning evaluation."""
     return capture_page_observation(device, page_id=page_id)
 
 
@@ -186,11 +186,11 @@ def capture_page_observation(
     device,
     page_id: str | None = None,
 ) -> tuple[Page, str]:
-    """返回最后一次实际截图和健康错误；完全无法取得图片时才抛异常。
+    """Return the last actual screenshot and health error; raise an exception only when an image cannot be captured at all.
 
     Args:
-        device: 设备驱动
-        page_id: 页面 ID（可选）
+        device: Device driver
+        page_id: Page ID (optional)
     """
     last_error = ""
     image = None
@@ -198,17 +198,17 @@ def capture_page_observation(
         try:
             image = device.screenshot()
         except Exception as exc:
-            last_error = f"截图采集异常: {exc}"
-            print(f"[截图健康检查] {last_error} ({attempt}/{SCREENSHOT_CAPTURE_ATTEMPTS})")
+            last_error = f"Screenshot capture exception: {exc}"
+            print(f"[Screenshot Health Check] {last_error} ({attempt}/{SCREENSHOT_CAPTURE_ATTEMPTS})")
         else:
             last_error = _screenshot_health_error(image)
             if not last_error:
                 break
-            print(f"[截图健康检查] {last_error} ({attempt}/{SCREENSHOT_CAPTURE_ATTEMPTS})")
+            print(f"[Screenshot Health Check] {last_error} ({attempt}/{SCREENSHOT_CAPTURE_ATTEMPTS})")
         if attempt < SCREENSHOT_CAPTURE_ATTEMPTS:
             time.sleep(SCREENSHOT_CAPTURE_RETRY_DELAY)
     if image is None:
-        raise ScreenshotUnavailableError(last_error or "连续截图不可用")
+        raise ScreenshotUnavailableError(last_error or "Consecutive screenshots are unavailable")
 
     page = Page(
         id=page_id,
@@ -248,4 +248,4 @@ def _build_trace_entry(
 
 def _require_xy(x: int | None, y: int | None, action_name: str):
     if x is None or y is None:
-        raise ValueError(f"{action_name} 操作必须提供 x 和 y")
+        raise ValueError(f"The {action_name} action must provide x and y")

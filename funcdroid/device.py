@@ -13,12 +13,12 @@ class Driver:
     def __init__(self, device_serial: str, operating_system: str | None = None):
         self.serial = device_serial
         self.operating_system = self._resolve_operating_system(device_serial, operating_system)
-        logger.info("初始化驱动: serial={}, backend={}", self.serial, self.operating_system)
+        logger.info("Initializing driver: serial={}, backend={}", self.serial, self.operating_system)
         try:
             connector_cls, automator_cls = self.BACKENDS[self.operating_system]
         except KeyError as exc:
-            logger.error("不支持的系统类型: {}", self.operating_system)
-            raise ValueError(f"不支持的系统类型: {self.operating_system}") from exc
+            logger.error("Unsupported OS type: {}", self.operating_system)
+            raise ValueError(f"Unsupported OS type: {self.operating_system}") from exc
         self.connector = connector_cls(self)
         self.automator = automator_cls(self)
 
@@ -33,12 +33,12 @@ class Driver:
 
     def click(self, x, y=None):
         if y is None:
-            raise ValueError("当点击目标为坐标时，必须提供 y")
+            raise ValueError("y must be provided when the click target is coordinates")
         return self.automator.click(x, y)
 
     def long_click(self, x, y=None):
         if y is None:
-            raise ValueError("当长按目标为坐标时，必须提供 y")
+            raise ValueError("y must be provided when the long press target is coordinates")
         return self.automator.long_click(x, y)
 
     def swipe(self, x1, y1, x2, y2, duration=0.5):
@@ -48,13 +48,13 @@ class Driver:
         return self.automator.swipe_ext(direction, scale)
 
     def input(self, value, arg2=None, arg3=None):
-        # 支持 input(text) 和 input(x, y, text)。
+        # Supports input(text) and input(x, y, text).
         if isinstance(value, (int, float)) and isinstance(arg2, (int, float)):
             if arg3 is None:
-                raise ValueError("当输入目标为坐标时，必须提供 text")
+                raise ValueError("text must be provided when the input target is coordinates")
             return self.automator.input(arg3, x=value, y=arg2)
         if value is None:
-            raise ValueError("必须提供 text")
+            raise ValueError("text must be provided")
         return self.automator.input(value)
 
     def current_activity(self):
@@ -96,7 +96,7 @@ class Driver:
     @classmethod
     def _resolve_operating_system(cls, device_serial: str, operating_system: str | None):
         if operating_system:
-            logger.debug("为 {} 使用显式指定的后端 {}", device_serial, operating_system)
+            logger.debug("Using explicitly specified backend {} for {}", operating_system, device_serial)
             return operating_system.lower()
 
         try:
@@ -112,18 +112,18 @@ class Driver:
         in_adb = device_serial in adb_devices
         in_hdc = device_serial in hdc_devices
         logger.debug(
-            "解析 {} 的后端: in_adb={}, in_hdc={}",
+            "Resolving backend for {}: in_adb={}, in_hdc={}",
             device_serial,
             in_adb,
             in_hdc,
         )
 
         if in_adb and in_hdc:
-            logger.error("设备 {} 同时存在于 adb 和 hdc 设备列表中", device_serial)
-            raise ValueError(f"device_serial 同时存在于 adb 和 hdc 列表中: {device_serial}")
+            logger.error("Device {} exists in both adb and hdc device lists", device_serial)
+            raise ValueError(f"device_serial exists in both adb and hdc lists: {device_serial}")
         if in_adb:
             return "adb"
         if in_hdc:
             return "hdc"
-        logger.error("无法根据 device_serial={} 推断后端类型", device_serial)
-        raise ValueError(f"无法根据 device_serial 推断系统类型: {device_serial}")
+        logger.error("Unable to infer backend type from device_serial={}", device_serial)
+        raise ValueError(f"Unable to infer OS type from device_serial: {device_serial}")

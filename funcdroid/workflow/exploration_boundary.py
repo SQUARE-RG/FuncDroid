@@ -1,14 +1,14 @@
-"""探索边界规则引擎（通用）。
+"""Exploration boundary rule engine (generic).
 
-允许为不同目标应用配置"探索边界限制"：当运行中进入目标应用内的
-第三方服务内容（如小程序、内嵌网页、游戏中心等）时，自动退出并结束
-当前场景，使探索聚焦在目标应用自身的核心功能上。
+Allows configuring "exploration boundary restrictions" for different target apps: when entering
+third-party service content within the target app during runtime (such as mini-programs, embedded web pages, game centers, etc.),
+automatically exits and ends the current scenario, keeping exploration focused on the target app's own core functionality.
 
-设计约束：
-- 本模块不包含任何应用专属逻辑，规则全部来自外部 JSON 配置文件；
-- 未配置规则的应用行为与未引入本模块时完全一致（默认零影响）；
-- 规则文件路径由环境变量 ``BOUNDARY_RULES_FILE`` 指定，默认项目根目录
-  下的 ``boundary_rules.json``；文件不存在时优雅降级为"全部关闭"。
+Design constraints:
+- This module contains no app-specific logic; rules come entirely from external JSON config files;
+- Apps without configured rules behave identically to when this module is not introduced (default zero impact);
+- The rule file path is specified by the environment variable ``BOUNDARY_RULES_FILE``, defaulting to
+  ``boundary_rules.json`` under the project root; gracefully degrades to "all disabled" if the file does not exist.
 """
 
 from __future__ import annotations
@@ -24,34 +24,34 @@ _EMPTY_RULES: dict[str, Any] = {}
 
 @dataclass(frozen=True)
 class BoundaryRule:
-    """单个应用的边界规则。"""
+    """Boundary rules for a single app."""
 
     package_name: str
     enabled: bool = False
-    label: str = "第三方服务内容"
+    label: str = "third-party service content"
     activity_markers: tuple[str, ...] = ()
     process_markers: tuple[str, ...] = ()
     exit_action: str = "press_back"
 
     def to_prompt_hint(self) -> str:
-        """生成可注入规划提示词的通用约束文案。"""
+        """Generate generic constraint text injectable into planning prompts."""
         if not self.enabled:
             return ""
         return (
-            f"本应用边界限制：不得规划进入{self.label}"
-            "（如小程序、内嵌网页等第三方服务内容）；"
-            "应用内入口可打开此类内容，但进入即视为离开目标应用边界。"
+            f"Boundary restriction for this app: Do not plan navigation into {self.label}"
+            " (such as mini-programs, embedded web pages, and other third-party service content);"
+            " In-app entry points may open such content, but entering is considered leaving the target app boundary."
         )
 
 
 @dataclass(frozen=True)
 class BoundaryHit:
-    """一次边界命中结果。"""
+    """A boundary hit result."""
 
     rule: BoundaryRule
     via: str          # "activity" | "process"
-    matched: str      # 命中的特征串
-    evidence: str = ""  # 原始观测值（Activity 名或进程快照片段）
+    matched: str      # Matched feature string
+    evidence: str = ""  # Raw observation value (Activity name or process snapshot fragment)
 
 
 def _rules_file() -> str:
@@ -62,7 +62,7 @@ def _rules_file() -> str:
 
 
 def _load_rules() -> tuple[str | None, dict[str, Any]]:
-    """加载规则文件；带模块级缓存，文件缺失/损坏时降级为空规则。"""
+    """Load the rule file; includes module-level caching, degrades to empty rules when file is missing/corrupted."""
     global _RULES_CACHE
     path = _rules_file()
     if _RULES_CACHE is not None and _RULES_CACHE[0] == path:
@@ -74,7 +74,7 @@ def _load_rules() -> tuple[str | None, dict[str, Any]]:
     except FileNotFoundError:
         rules = _EMPTY_RULES
     except (json.JSONDecodeError, OSError) as exc:
-        print(f"[探索边界] 规则文件读取失败，已降级为不启用边界限制: {exc}")
+        print(f"[Exploration Boundary] Failed to read rule file, degraded to disabling boundary restrictions: {exc}")
         rules = _EMPTY_RULES
     _RULES_CACHE = (path, rules)
     return _RULES_CACHE
@@ -87,7 +87,7 @@ def _lower_markers(value: Any) -> tuple[str, ...]:
 
 
 def rule_for(package_name: str) -> BoundaryRule:
-    """返回指定应用的边界规则；未配置时返回 disabled 规则。"""
+    """Return boundary rules for the specified app; returns disabled rule if unconfigured."""
     package_name = (package_name or "").strip()
     if not package_name:
         return BoundaryRule(package_name=package_name)
@@ -101,7 +101,7 @@ def rule_for(package_name: str) -> BoundaryRule:
     return BoundaryRule(
         package_name=package_name,
         enabled=True,
-        label=str(entry.get("label") or "第三方服务内容").strip(),
+        label=str(entry.get("label") or "third-party service content").strip(),
         activity_markers=_lower_markers(entry.get("activity_markers")),
         process_markers=_lower_markers(entry.get("process_markers")),
         exit_action=str(entry.get("exit_action") or "press_back").strip(),
@@ -113,16 +113,16 @@ def check_boundary(
     activity: str | None = None,
     process_snapshot: str | None = None,
 ) -> BoundaryHit | None:
-    """检测当前是否越过目标应用探索边界。
+    """Check if the target app exploration boundary has currently been crossed.
 
     Args:
-        package_name: 目标应用包名。
-        activity: 当前前台 Activity 名（手段 1：Activity 名特征匹配）。
-        process_snapshot: 可选进程快照（如 ``ps -A`` 输出），仅当
-            activity 判定无法给出结论时才用于兜底判定。
+        package_name: Target app package name.
+        activity: Current foreground Activity name (Method 1: Activity name feature matching).
+        process_snapshot: Optional process snapshot (e.g. ``ps -A`` output), used for fallback determination
+            only when Activity evaluation cannot reach a conclusion.
 
     Returns:
-        命中时返回 :class:`BoundaryHit`，否则返回 None。
+        Returns :class:`BoundaryHit` on hit, otherwise returns None.
     """
     rule = rule_for(package_name)
     if not rule.enabled:
@@ -145,7 +145,7 @@ def check_boundary(
 
 
 def enabled_packages() -> list[str]:
-    """返回已启用边界规则的所有包名（供测试/诊断使用）。"""
+    """Return all package names with enabled boundary rules (for testing/diagnostics)."""
     _, rules = _load_rules()
     return sorted(
         name for name, entry in rules.items()
@@ -154,6 +154,6 @@ def enabled_packages() -> list[str]:
 
 
 def reset_cache() -> None:
-    """清空规则缓存（测试用）。"""
+    """Clear rule cache (for testing)."""
     global _RULES_CACHE
     _RULES_CACHE = None

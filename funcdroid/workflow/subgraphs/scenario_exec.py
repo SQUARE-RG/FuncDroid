@@ -34,7 +34,7 @@ def create_scenario_exec_subgraph(execution_llm, device):
             else "off"
         )
         print(
-            "[场景执行] 本轮准备 | "
+            "[Scenario Execution] Round preparation | "
             f"navigation={'yes' if state.get('current_navigation_scenario') else 'no'} | "
             f"scenario={'yes' if state.get('current_test_scenario') else 'no'} | "
             f"defect_review={review_status}"
@@ -54,13 +54,13 @@ def create_scenario_exec_subgraph(execution_llm, device):
 
     def submit_defect_review(state: ScenarioExecSubgraphState) -> dict[str, Any]:
         if not bool(state.get("bug_detection_enabled", True)):
-            print("[缺陷检测] 已通过运行参数关闭，本轮不提交检测任务。")
+            print("[Defect Detection] Disabled via runtime parameters; no detection task submitted for this round.")
             return {"scenario_exec_subgraph_phase": "review_disabled"}
         try:
             job_state = build_defect_detection_job(state)
             accepted = bug_detection_worker.submit(job_state)
         except Exception as exc:
-            print(f"[缺陷检测] 提交异步检测任务失败，本轮缺陷复核已跳过: {exc}")
+            print(f"[Defect Detection] Failed to submit async detection task, defect review skipped for this round: {exc}")
             accepted = False
         return {
             "scenario_exec_subgraph_phase": (

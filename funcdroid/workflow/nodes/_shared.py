@@ -1,4 +1,4 @@
-"""节点间共享的常量与轻量 helper。"""
+"""Constants and lightweight helpers shared between nodes."""
 
 from __future__ import annotations
 
@@ -12,23 +12,23 @@ import numpy as np
 JSON_BLOCK_PATTERN = re.compile(r"^```(?:json)?\s*|\s*```$")
 
 EXHAUSTIVE_CONTROL_FAMILY_PATTERN = re.compile(
-    r"(?:所有|全部|每个|逐个|逐一|遍历)"
-    r"[^→，,.\u3002；;]{0,28}?"
-    r"(?:表情|选项|条目|按钮|控件|标签|分类|菜单项|导航项|列表项|图标|项目|结果)"
+    r"(?:\u6240\u6709|\u5168\u90e8|\u6bcf\u4e2a|\u9010\u4e2a|\u9010\u4e00|\u904d\u5386)"
+    r"[^\u2192\uff0c,.\u3002\uff1b;]{0,28}?"
+    r"(?:\u8868\u60c5|\u9009\u9879|\u6761\u76ee|\u6309\u94ae|\u63a7\u4ef6|\u6807\u7b7e|\u5206\u7c7b|\u83dc\u5355\u9879|\u5bfc\u822a\u9879|\u5217\u8868\u9879|\u56fe\u6807|\u9879\u76ee|\u7ed3\u679c)"
     r"|\b(?:all|every|each)\b.{0,28}\b"
     r"(?:items?|options?|buttons?|tabs?|emojis?|entries?|results?)\b",
     re.IGNORECASE,
 )
 
 EXPLICIT_BULK_OPERATION_PATTERN = re.compile(
-    r"全选按钮|点击全选|选择全部(?:内容|文本|文件)|删除全部|全部删除|"
-    r"清空全部|全部清除|一键(?:清空|删除)|\bselect all\b|\bdelete all\b|\bclear all\b",
+    r"\u5168\u9009\u6309\u94ae|\u70b9\u51fb\u5168\u9009|\u9009\u62e9\u5168\u90e8(?:\u5185\u5bb9|\u6587\u672c|\u6587\u4ef6)|\u5220\u9664\u5168\u90e8|\u5168\u90e8\u5220\u9664|"
+    r"\u6e05\u7a7a\u5168\u90e8|\u5168\u90e8\u6e05\u9664|\u4e00\u952e(?:\u6e05\u7a7a|\u5220\u9664)|\bselect all\b|\bdelete all\b|\bclear all\b",
     re.IGNORECASE,
 )
 
 
 def has_exhaustive_control_family_intent(value: object) -> bool:
-    """识别要求穷尽同功能重复控件的场景，但保留真正的单次批量操作。"""
+    """Identify scenarios requiring exhaustive interaction with duplicate controls of the same function, while preserving genuine single batch operations."""
     text = str(value or "").strip()
     if not text:
         return False
@@ -37,24 +37,24 @@ def has_exhaustive_control_family_intent(value: object) -> bool:
 
 
 def representative_control_family_scenario(value: object) -> str:
-    """将漏过规划校验的穷尽式场景收缩为一个代表项。"""
+    """Shrink exhaustive scenarios that bypassed planning validation to a single representative item."""
     text = str(value or "").strip()
     if not has_exhaustive_control_family_intent(text):
         return text
 
-    normalized = re.sub(r"逐个|逐一|遍历", "", text)
-    normalized = re.sub(r"依次(?=点击|选择|打开|勾选)", "", normalized)
-    normalized = re.sub(r"所有|全部|每个", "一个代表性的", normalized)
+    normalized = re.sub(r"\u9010\u4e2a|\u9010\u4e00|\u904d\u5386", "", text)
+    normalized = re.sub(r"\u4f9d\u6b21(?=\u70b9\u51fb|\u9009\u62e9|\u6253\u5f00|\u52fe\u9009)", "", normalized)
+    normalized = re.sub(r"\u6240\u6709|\u5168\u90e8|\u6bcf\u4e2a", "\u4e00\u4e2a\u4ee3\u8868\u6027\u7684", normalized)
     normalized = re.sub(r"\b(?:all|every|each)\b", "one representative", normalized, flags=re.IGNORECASE)
     normalized = re.sub(r"\s+", " ", normalized).strip()
-    return f"同类控件只操作一个代表项，首次结果出现后立即结束；{normalized}"
+    return f"Operate on only one representative item for similar controls, and finish immediately after the first result appears; {normalized}"
 
 
 def screenshot_thumbnail(screenshot: str, size: int = 64) -> np.ndarray | None:
-    """把截图字符串解码为灰度缩略图；无法解码时返回 None。
+    """Decode a screenshot string into a grayscale thumbnail; return None if decoding fails.
 
-    独立成公共函数是为了让调用方（如 FFG 更新节点）能把同一张已持久化
-    页面截图的缩略图缓存起来，避免在多重循环里反复 base64 解码 + imdecode。
+    Extracted as a public function so callers (such as FFG update nodes) can cache
+    the thumbnail of the same persisted page screenshot, avoiding repeated base64 decoding + imdecode in nested loops.
     """
     if not screenshot:
         return None
@@ -84,11 +84,11 @@ def screenshot_similarity(left: str, right: str, size: int = 64) -> float | None
 
 
 def normalize_llm_text(content: Any) -> str:
-    """把 LLM 响应的 content 归一化为纯文本。
+    """Normalize LLM response content to plain text.
 
-    多数模型返回 str，但部分模型返回 list-of-blocks（如 [{"type":"text","text":...}]）。
-    直接对 list 调 .strip() 会抛异常，被上层的宽泛 except 吞掉后误判为解析失败，
-    导致一次结构合法的响应被丢弃。这里统一先抽取文本。
+    Most models return str, but some models return list-of-blocks (e.g. [{"type":"text","text":...}]).
+    Calling .strip() directly on a list raises an exception, which gets swallowed by upper-level broad except and misjudged as parsing failure,
+    causing a structurally valid response to be discarded. Text is extracted first uniformly here.
     """
     if content is None:
         return ""

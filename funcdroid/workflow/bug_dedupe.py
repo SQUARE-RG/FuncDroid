@@ -6,7 +6,7 @@ import re
 from typing import Any
 
 
-TEXT_NORMALIZE_PATTERN = re.compile(r"[\"'“”‘’（）()【】\[\]{}<>《》、，,。.：:；;!！?？\-_/\s]+")
+TEXT_NORMALIZE_PATTERN = re.compile(r"[\"'\u201c\u201d\u2018\u2019\uff08\uff09()\u3010\u3011\[\]{}<>\u300a\u300b\u3001\uff0c,\u3002.\uff1a:\uff1b;!\uff01?\uff1f\-_/\s]+")
 
 
 def normalize_bug_text(value: Any) -> str:

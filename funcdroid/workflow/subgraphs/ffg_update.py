@@ -56,7 +56,7 @@ def create_ffg_update_subgraph(llm, device=None):
 
     def run_agent_step(state: FFGUpdateSubgraphState) -> dict[str, Any]:
         print(
-            "[FFG 更新] 更新尝试: "
+            "[FFG Update] Update attempt: "
             f"{int(state.get('ffg_update_step', 1) or 1)}/"
             f"{int(state.get('ffg_update_max_steps', FFG_UPDATE_MAX_STEPS) or FFG_UPDATE_MAX_STEPS)}"
         )
@@ -67,15 +67,15 @@ def create_ffg_update_subgraph(llm, device=None):
         max_steps = int(state.get("ffg_update_max_steps", FFG_UPDATE_MAX_STEPS) or FFG_UPDATE_MAX_STEPS)
         issues = list(state.get("ffg_update_validation_issues", []) or [])
         prev_issues = list(state.get("ffg_update_prev_issues", []) or [])
-        # 只有结构校验真的报出问题才继续 refinement。模型自报的 "continue"
-        # 不足以触发新一轮多模态调用：它在结构已合法时也会持续返回 continue，
-        # 是重复 refinement 与图片开销的主要来源。
+        # Only continue refinement if structural validation actually reports issues. The model's self-reported "continue"
+        # is not sufficient to trigger a new round of multimodal calls: it keeps returning continue even when the structure is already valid,
+        # which is the main source of redundant refinement and image overhead.
         wants_more = bool(issues)
-        # 同一组校验错误连续两轮原样出现，说明模型没有能力修复该类问题；
-        # 继续重试只会重复消耗完整截图 payload，提前进入 finalize。
+        # If the same set of validation errors appears identically across two consecutive rounds, the model cannot fix this type of issue;
+        # continuing retries will only repeatedly consume full screenshot payloads, so enter finalize early.
         if wants_more and prev_issues and issues == prev_issues:
             print(
-                "[FFG 更新] 校验错误与上一轮完全相同，提前停止重试并进入收尾: "
+                "[FFG Update] Validation errors are identical to the previous round; stopping retries early and entering finalization: "
                 + "; ".join(issues[:3])
             )
             return "finish"
@@ -106,7 +106,7 @@ def create_ffg_update_subgraph(llm, device=None):
         )
         if blocking_issues:
             print(
-                "[FFG 更新] 结构校验未通过，回滚本轮更新: "
+                "[FFG Update] Structural validation failed; rolling back this update round: "
                 + "; ".join(blocking_issues[:8])
             )
             return {
@@ -119,14 +119,14 @@ def create_ffg_update_subgraph(llm, device=None):
                 "ffg_update_reason": "invalid graph rolled back",
             }
         if advisory_issues:
-            # 页面确实存在且图自洽，只是复用对象落在检索候选集之外。保留本轮观测，
-            # 否则会为一条可能归属不准的对齐丢掉整轮的新页面、操作与跳转。
+            # The Page indeed exists and the graph is self-consistent, but the reused object falls outside the retrieval candidate set. Retain this round's observation,
+            # otherwise an entire round of new Pages, operations, and transitions would be lost due to a potentially inaccurate alignment.
             print(
-                "[FFG 更新] 图结构自洽，保留更新并记录对齐告警: "
+                "[FFG Update] Graph structure is self-consistent; keeping update and recording alignment warning: "
                 + "; ".join(advisory_issues[:8])
             )
         print(
-            "[FFG 更新] 更新完成: "
+            "[FFG Update] Update completed: "
             f"attempts={int(state.get('ffg_update_step', 1) or 1)}, "
             f"decision={state.get('ffg_update_decision', 'finish')}"
         )
