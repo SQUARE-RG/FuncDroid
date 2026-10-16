@@ -4,29 +4,85 @@ from __future__ import annotations
 
 import atexit
 import os
+import re
 import subprocess
 import sys
 import threading
 from datetime import datetime
-from typing import BinaryIO, TextIO
+from typing import BinaryIO, Callable, TextIO
 
 
 RUNTIME_LOG_TERM_REPLACEMENTS = (
-    ("\u57fa\u7ebf", "\u8d77\u70b9"),
-    ("\u6279\u6d4b", "\u5e94\u7528\u961f\u5217"),
-    ("\u9a8c\u6536", "\u8fd0\u884c"),
-    ("\u8bd5\u8dd1", "\u8fd0\u884c"),
-    ("\u5b9e\u9a8c", "\u8fd0\u884c"),
-    ("\u6d4b\u8bd5", "\u6267\u884c"),
+    ("基线", "起点"),
+    ("批测", "应用队列"),
+    ("验收", "运行"),
+    ("试跑", "运行"),
+    ("实验", "运行"),
+    ("测试", "执行"),
 )
 
 
-def normalize_runtime_log_text(text: str) -> str:
-    """Keep user-visible runtime output in product terminology."""
-    normalized = str(text)
+# 术语替换只作用于框架自身输出的固定日志行：以下列 [标签] 开头的行由框架
+# 代码生成、内容可控。其它行（LLM 原始响应 [原始内容]、规划场景 [计划]、
+# 执行/判定详情、异常堆栈等）可能逐字包含模型输出或场景文本，全局改写会
+# 篡改证据，使日志与实际发送给模型/设备的内容对不上，因此一律原样保留。
+RUNTIME_LOG_NORMALIZED_TAGS = frozenset({
+    "日志",
+    "启动",
+    "启动前清理",
+    "启动前重置",
+    "启动前授权",
+    "运行快照",
+    "输出",
+    "输出修复",
+    "产物校验",
+    "完成",
+    "运行中断",
+    "运行异常",
+    "路由",
+    "轮次",
+    "轮次信息",
+    "长时运行",
+    "持久化",
+    "LLM统计",
+    "logcat",
+})
+_RUNTIME_LOG_TAG_PATTERN = re.compile(r"^\s*\[([^\[\]\n]{1,32})\]")
+# 启动横幅/轮次横幅/结束摘要中无标签的固定行（框架常量拼接，不含模型输出）。
+RUNTIME_LOG_NORMALIZED_PREFIXES = (
+    "  第 ",
+    "  规划模式:",
+    "  探索范围:",
+    "  执行轮次:",
+)
+
+
+def _normalize_runtime_log_line(line: str) -> str:
+    match = _RUNTIME_LOG_TAG_PATTERN.match(line)
+    framework_line = (
+        match.group(1) in RUNTIME_LOG_NORMALIZED_TAGS
+        if match is not None
+        else line.startswith(RUNTIME_LOG_NORMALIZED_PREFIXES)
+    )
+    if not framework_line:
+        return line
     for source, target in RUNTIME_LOG_TERM_REPLACEMENTS:
-        normalized = normalized.replace(source, target)
-    return normalized
+        line = line.replace(source, target)
+    return line
+
+
+def normalize_runtime_log_text(text: str) -> str:
+    """Keep framework runtime messages in product terminology.
+
+    逐行处理，只改写以框架标签开头的行；模型输出、场景文本等动态内容不变。
+    """
+    text = str(text)
+    if not any(source in text for source, _target in RUNTIME_LOG_TERM_REPLACEMENTS):
+        return text
+    return "".join(
+        _normalize_runtime_log_line(line)
+        for line in text.splitlines(keepends=True)
+    )
 
 
 class _TeeStream:
@@ -59,8 +115,8 @@ class _TeeStream:
             self._secondary_error_reported = True
         try:
             self.primary.write(
-                "[Log] Failed to write to run.log, file mirroring disabled for this run; "
-                f"console output and test execution will continue: {exc}\n"
+                "[日志] run.log 写入失败，已停用本次文件镜像；"
+                f"控制台输出和测试流程将继续: {exc}\n"
             )
             self.primary.flush()
         except Exception:
@@ -78,10 +134,10 @@ class _TeeStream:
         return result
 
     def write(self, text: str):
-        normalized = normalize_runtime_log_text(text)
+        # 先按行缓冲再规范化：标签与正文可能分多次 write 到达，按完整行判断标签。
         thread_id = threading.get_ident()
         with self._lock:
-            buffered = self._pending_by_thread.get(thread_id, "") + normalized
+            buffered = self._pending_by_thread.get(thread_id, "") + str(text)
             last_newline = buffered.rfind("\n")
             if last_newline < 0:
                 self._pending_by_thread[thread_id] = buffered
@@ -92,7 +148,7 @@ class _TeeStream:
                 self._pending_by_thread[thread_id] = remainder
             else:
                 self._pending_by_thread.pop(thread_id, None)
-            self._write_complete_text(complete_text)
+            self._write_complete_text(normalize_runtime_log_text(complete_text))
         return len(str(text))
 
     def flush(self):
@@ -100,7 +156,7 @@ class _TeeStream:
             pending = "".join(self._pending_by_thread.values())
             self._pending_by_thread.clear()
             if pending:
-                self._write_complete_text(pending)
+                self._write_complete_text(normalize_runtime_log_text(pending))
             self.primary.flush()
             secondary_enabled = self._secondary_enabled
         if secondary_enabled:
@@ -127,7 +183,8 @@ class _RotatingTextSink:
             max_bytes,
             backup_count,
             append=append,
-            continuation_header=(
+            # 续写头的时间戳在每次滚动时生成，而不是固定为 sink 创建时刻。
+            continuation_header=lambda: (
                 "===== FuncDroid run log continued: "
                 f"{datetime.now().isoformat()} =====\n"
             ).encode("utf-8"),
@@ -176,14 +233,14 @@ class RunLogHandle:
             self._log_file.flush()
         except Exception as exc:
             try:
-                self._stderr.write(f"[Log] Failed to flush run.log, close process continuing: {exc}\n")
+                self._stderr.write(f"[日志] run.log 刷盘失败，关闭流程继续: {exc}\n")
             except Exception:
                 pass
         try:
             self._log_file.close()
         except Exception as exc:
             try:
-                self._stderr.write(f"[Log] Failed to close run.log, exit process continuing: {exc}\n")
+                self._stderr.write(f"[日志] run.log 关闭失败，退出流程继续: {exc}\n")
             except Exception:
                 pass
 
@@ -212,14 +269,14 @@ def setup_run_logging(output_dir: str, filename: str = "run.log") -> RunLogHandl
     sys.stdout = _TeeStream(original_stdout, log_file, stream_lock)
     sys.stderr = _TeeStream(original_stderr, log_file, stream_lock)
 
-    print(f"[Log] Command line output synchronized to: {log_path}")
+    print(f"[日志] 命令行输出同步保存到: {log_path}")
     rotation_label = (
-        f"single file {rotate_bytes} bytes, keep {backup_count} historical files"
+        f"单文件 {rotate_bytes} bytes，保留 {backup_count} 个历史文件"
         if rotate_bytes > 0
-        else "no rotation"
+        else "不滚动"
     )
-    print(f"[Log] run.log rotation policy: {rotation_label}")
-    print(f"[Log] Session started: {datetime.now().isoformat()}")
+    print(f"[日志] run.log 滚动策略: {rotation_label}")
+    print(f"[日志] 会话开始: {datetime.now().isoformat()}")
     atexit.register(handle.close)
     return handle
 
@@ -232,13 +289,17 @@ class _RotatingBinarySink:
         backup_count: int,
         *,
         append: bool = False,
-        continuation_header: bytes | None = None,
+        continuation_header: bytes | Callable[[], bytes] | None = None,
     ):
         self.path = path
         self.max_bytes = max(0, max_bytes)
         self.backup_count = max(1, backup_count)
+        # 可传固定字节串或生成函数；默认在每次滚动时生成带当前时间的续写头。
         self.continuation_header = continuation_header or (
-            f"===== FuncDroid logcat capture continued: {datetime.now().isoformat()} =====\n".encode()
+            lambda: (
+                "===== FuncDroid logcat capture continued: "
+                f"{datetime.now().isoformat()} =====\n"
+            ).encode()
         )
         self._lock = threading.RLock()
         self._file: BinaryIO = open(path, "ab" if append else "wb", buffering=0)
@@ -268,7 +329,8 @@ class _RotatingBinarySink:
         if os.path.exists(self.path):
             os.replace(self.path, f"{self.path}.1")
         self._file = open(self.path, "wb", buffering=0)
-        self._file.write(self.continuation_header)
+        header = self.continuation_header
+        self._file.write(header() if callable(header) else header)
 
     def flush(self) -> None:
         with self._lock:
@@ -344,17 +406,17 @@ def setup_logcat_capture(
 ) -> LogcatCaptureHandle | None:
     """Continuously save Android logcat output for the whole run."""
     if os.getenv("LOGCAT_CAPTURE", "1").strip().lower() in {"0", "false", "off", "no"}:
-        print("[logcat] LOGCAT_CAPTURE is disabled, skipping full logcat collection.")
+        print("[logcat] LOGCAT_CAPTURE 已关闭，跳过完整 logcat 采集。")
         return None
 
     operating_system = str(getattr(device, "operating_system", "") or "").strip().lower()
     if operating_system not in {"adb", "android"}:
-        print("[logcat] Non-Android/ADB device, skipping full logcat collection.")
+        print("[logcat] 非 Android/ADB 设备，跳过完整 logcat 采集。")
         return None
 
     device_serial = str(getattr(device, "serial", "") or "").strip()
     if not device_serial:
-        print("[logcat] Device serial number not obtained, skipping full logcat collection.")
+        print("[logcat] 未获取到设备序列号，跳过完整 logcat 采集。")
         return None
 
     os.makedirs(output_dir, exist_ok=True)
@@ -367,9 +429,9 @@ def setup_logcat_capture(
                 timeout=5,
                 capture_output=True,
             )
-            print(f"[logcat] Cleared historical logcat: device={device_serial}")
+            print(f"[logcat] 已清空历史 logcat: device={device_serial}")
         except Exception as exc:
-            print(f"[logcat] Failed to clear historical logcat, continuing collection: {exc}")
+            print(f"[logcat] 清空历史 logcat 失败，继续采集: {exc}")
 
     rotate_bytes = max(0, int(os.getenv("LOGCAT_ROTATE_BYTES", str(256 * 1024 * 1024))))
     backup_count = max(1, int(os.getenv("LOGCAT_BACKUP_COUNT", "3")))
@@ -389,15 +451,15 @@ def setup_logcat_capture(
         )
     except Exception as exc:
         sink.close()
-        print(f"[logcat] Failed to start full logcat collection: {exc}")
+        print(f"[logcat] 启动完整 logcat 采集失败: {exc}")
         return None
 
     handle = LogcatCaptureHandle(process, sink, logcat_path)
     rotation_label = (
-        f"per volume {rotate_bytes} bytes, keep {backup_count} historical volumes"
+        f"每卷 {rotate_bytes} bytes，保留 {backup_count} 个历史卷"
         if rotate_bytes > 0
-        else "no rotation"
+        else "不滚动"
     )
-    print(f"[logcat] Full logcat is being saved to: {logcat_path} ({rotation_label})")
+    print(f"[logcat] 完整 logcat 正在保存到: {logcat_path}（{rotation_label}）")
     atexit.register(handle.close)
     return handle

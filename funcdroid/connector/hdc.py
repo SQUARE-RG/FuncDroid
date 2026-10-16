@@ -8,6 +8,15 @@ from .base import (
 )
 
 
+def parse_hdc_targets(output: str) -> list[str]:
+    """解析 `hdc list targets` 输出；无设备时 hdc 打印 [Empty]，不能当成序列号。"""
+    return [
+        line.strip()
+        for line in str(output or "").splitlines()
+        if line.strip() and line.strip() != "[Empty]"
+    ]
+
+
 class HDC(Connector):
     def __init__(self, device=None):
         if device is None:
@@ -16,14 +25,12 @@ class HDC(Connector):
         self.serial = device.serial
         self.cmd_prefix = ["hdc", "-t", self.serial]
 
-    def run_cmd(self, extra_args):
+    def run_cmd(self, extra_args, timeout=None):
         args = self._normalize_args(extra_args)
-        return self._check_output(self.cmd_prefix + args)
+        return self._check_output(self.cmd_prefix + args, timeout=timeout)
 
-    def shell(self, extra_args):
-        if not isinstance(extra_args, str):
-            raise TypeError("shell args must be str")
-        return self.run_cmd(f"shell {extra_args}")
+    def shell(self, extra_args, timeout=None):
+        return self.run_cmd(self._shell_args(extra_args), timeout=timeout)
 
     @classmethod
     def devices(cls):
@@ -38,7 +45,7 @@ class HDC(Connector):
             ) from exc
         if not isinstance(result, str):
             result = result.decode()
-        devices = result.splitlines()
+        devices = parse_hdc_targets(result)
         logger.debug("hdc devices: {}", devices)
         return devices
 
@@ -46,6 +53,6 @@ class HDC(Connector):
     def _normalize_args(extra_args):
         if isinstance(extra_args, str):
             return extra_args.split()
-        if isinstance(extra_args, list):
-            return extra_args
+        if isinstance(extra_args, (list, tuple)):
+            return [str(arg) for arg in extra_args]
         raise TypeError("command args must be str or list")

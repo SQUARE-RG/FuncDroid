@@ -16,17 +16,25 @@ _USAGE_PATH = ""
 _LLM_REGISTRY: dict[int, dict[str, str]] = {}
 _USAGE: dict[str, Any] = {}
 
-# Disk write throttling: a workflow has dozens to hundreds of LLM calls, and each call triggers 2-3 count updates.
-# If full serialization writes to disk every time, it accumulates hundreds of disk writes. Changed to accumulate until threshold or timeout before writing to disk,
-# critical checkpoints (configure/save_summary) still force flush to guarantee no data loss.
+# 写盘节流：一次工作流有几十上百次 LLM 调用，每次调用会触发 2-3 次计数更新。
+# 若每次都全量序列化落盘，累计几百次磁盘写入。改为累积到阈值或超时才落盘，
+# 关键节点（configure/save_summary）仍强制 flush 保证不丢数据。
+# 单次 LLM 调用本身常需数秒，5s 的间隔几乎让每次请求/响应都触发一次全量
+# 落盘；默认间隔放宽到 30s。高频路径只做原子替换不 fsync，fsync 留给
+# 显式/最终保存（save_llm_usage_summary 默认 durable=True）。
 _DIRTY_WRITES = 0
 _LAST_SAVE_MONOTONIC = 0.0
 _LAST_SAVE_ERROR_LOG_MONOTONIC = 0.0
 _SAVE_EVERY_N = max(1, int(os.getenv("LLM_USAGE_SAVE_EVERY_N", "20")))
-_SAVE_MIN_INTERVAL = max(0.0, float(os.getenv("LLM_USAGE_SAVE_MIN_INTERVAL", "5.0")))
+_SAVE_MIN_INTERVAL = max(0.0, float(os.getenv("LLM_USAGE_SAVE_MIN_INTERVAL", "30.0")))
 _SAVE_ERROR_LOG_INTERVAL = max(
     1.0,
     float(os.getenv("LLM_USAGE_SAVE_ERROR_LOG_INTERVAL", "60")),
+)
+# llm_responses.jsonl 中保留的推理文本上限（字符）。落盘用于复盘判定结论的来历。
+LLM_DIAGNOSTIC_REASONING_MAX_CHARS = max(
+    0,
+    int(os.getenv("LLM_DIAGNOSTIC_REASONING_MAX_CHARS", "4000")),
 )
 
 
@@ -40,6 +48,7 @@ def _empty_counter() -> dict[str, Any]:
         "responses": 0,
         "failures": 0,
         "prompt_tokens": 0,
+        "cached_tokens": 0,
         "completion_tokens": 0,
         "total_tokens": 0,
     }
@@ -84,7 +93,7 @@ def configure_llm_usage(output_dir: str, filename: str = "llm_usage.json", reset
         else:
             _USAGE = _empty_usage(normalized_dir)
         _save_locked()
-    print(f"[LLM Statistics] Token usage will be saved to: {_USAGE_PATH}")
+    print(f"[LLM统计] token 用量将保存到: {_USAGE_PATH}")
 
 
 def register_llm(llm, *, model: str):
@@ -117,6 +126,7 @@ def record_llm_response(llm, response, *, operation: str = ""):
             operation,
             responses=1,
             prompt_tokens=usage["prompt_tokens"],
+            cached_tokens=usage["cached_tokens"],
             completion_tokens=usage["completion_tokens"],
             total_tokens=usage["total_tokens"],
         )
@@ -139,11 +149,28 @@ def get_llm_usage_summary() -> dict[str, Any]:
         return json.loads(json.dumps(_USAGE, ensure_ascii=False)) if _USAGE else {}
 
 
-def save_llm_usage_summary():
+def get_llm_usage_totals() -> dict[str, Any]:
+    """只读取总计计数（浅拷贝）。
+
+    轮次指标/运行状态每轮只需要 totals；get_llm_usage_summary 会经 JSON
+    往返深拷贝整个 by_model/by_operation 结构，长时运行下没有必要。
+    """
     with _LOCK:
-        if _USAGE:
+        totals = _USAGE.get("totals") if _USAGE else None
+        return dict(totals) if isinstance(totals, dict) else {}
+
+
+def save_llm_usage_summary(*, durable: bool = True):
+    """显式落盘。durable=False 时只做节流保存（有脏数据且满足阈值才写、不 fsync），
+    供高频检查点使用；最终/显式保存保持 fsync。"""
+    with _LOCK:
+        if not _USAGE:
+            return
+        if durable:
             _USAGE["updated_at"] = _now_iso()
             _save_locked()
+        elif _DIRTY_WRITES > 0 and _save_due_locked():
+            _save_locked(fsync=False)
 
 
 def _llm_key(llm) -> tuple[str, str]:
@@ -168,6 +195,7 @@ def _increment_counters(
     responses: int = 0,
     failures: int = 0,
     prompt_tokens: int = 0,
+    cached_tokens: int = 0,
     completion_tokens: int = 0,
     total_tokens: int = 0,
 ):
@@ -178,6 +206,7 @@ def _increment_counters(
         "responses": responses,
         "failures": failures,
         "prompt_tokens": prompt_tokens,
+        "cached_tokens": cached_tokens,
         "completion_tokens": completion_tokens,
         "total_tokens": total_tokens,
     }
@@ -231,8 +260,22 @@ def _extract_usage(response) -> dict[str, int]:
 
     if not total_tokens and (prompt_tokens or completion_tokens):
         total_tokens = prompt_tokens + completion_tokens
+    # 缓存命中量（DeepSeek/GLM 的自动前缀缓存）：命中部分按缓存价计费。
+    cached_tokens = 0
+    for usage in candidates:
+        if cached_tokens:
+            break
+        input_details = usage.get("input_token_details")
+        if isinstance(input_details, dict):
+            cached_tokens = _int_first(input_details, "cache_read", "cached_tokens")
+        if not cached_tokens:
+            prompt_details = usage.get("prompt_tokens_details")
+            if isinstance(prompt_details, dict):
+                cached_tokens = _int_first(prompt_details, "cached_tokens")
+    cached_tokens = max(0, min(cached_tokens, prompt_tokens))
     return {
         "prompt_tokens": prompt_tokens,
+        "cached_tokens": cached_tokens,
         "completion_tokens": completion_tokens,
         "total_tokens": total_tokens,
     }
@@ -250,16 +293,24 @@ def _int_first(mapping: dict[str, Any], *keys: str) -> int:
     return 0
 
 
+def _save_due_locked() -> bool:
+    """脏计数达到阈值，或距上次落盘已超过最小间隔。"""
+    return (
+        _DIRTY_WRITES >= _SAVE_EVERY_N
+        or (_time.monotonic() - _LAST_SAVE_MONOTONIC) >= _SAVE_MIN_INTERVAL
+    )
+
+
 def _save_locked_throttled():
-    """Throttle disk writes by write count or time interval to reduce high-frequency full serialization."""
+    """按写入次数或时间间隔节流落盘，减少高频全量序列化。
+
+    每次请求/响应都会走到这里：只累计脏计数，满足阈值时才写盘，且高频
+    路径不做 fsync（只用原子替换保证文件完整），fsync 留给显式/最终保存。
+    """
     global _DIRTY_WRITES
     _DIRTY_WRITES += 1
-    now = _time.monotonic()
-    if (
-        _DIRTY_WRITES >= _SAVE_EVERY_N
-        or (now - _LAST_SAVE_MONOTONIC) >= _SAVE_MIN_INTERVAL
-    ):
-        _save_locked()
+    if _save_due_locked():
+        _save_locked(fsync=False)
 
 
 def _log_save_error_locked(exc: BaseException) -> None:
@@ -273,14 +324,14 @@ def _log_save_error_locked(exc: BaseException) -> None:
     _LAST_SAVE_ERROR_LOG_MONOTONIC = now
     try:
         print(
-            "[LLM Statistics] Failed to save usage file; in-memory counts preserved, will retry at subsequent checkpoint: "
+            "[LLM统计] 用量文件保存失败，内存计数已保留，后续检查点会重试: "
             f"{exc}"
         )
     except Exception:
         pass
 
 
-def _save_locked() -> bool:
+def _save_locked(*, fsync: bool = True) -> bool:
     """Best-effort persistence; usage accounting must never break an LLM call."""
     global _DIRTY_WRITES, _LAST_SAVE_MONOTONIC
     if not _USAGE_PATH:
@@ -292,7 +343,8 @@ def _save_locked() -> bool:
         with open(tmp_path, "w", encoding="utf-8") as f:
             json.dump(_USAGE, f, ensure_ascii=False, indent=2)
             f.flush()
-            os.fsync(f.fileno())
+            if fsync:
+                os.fsync(f.fileno())
         os.replace(tmp_path, _USAGE_PATH)
     except Exception as exc:  # noqa: BLE001 - telemetry must not affect workflow
         # Dirty data remains in `_USAGE`; reset only the throttle counter so a
@@ -310,3 +362,33 @@ def _save_locked() -> bool:
     _DIRTY_WRITES = 0
     _LAST_SAVE_MONOTONIC = _time.monotonic()
     return True
+
+
+def record_llm_diagnostic(response=None, *, operation="", error="", elapsed_seconds=0.0):
+    """Persist an allowlisted response record without prompts or credentials."""
+    if not _OUTPUT_DIR:
+        return
+    metadata = getattr(response, "response_metadata", {}) or {}
+    additional = getattr(response, "additional_kwargs", {}) or {}
+    # 推理模型的最终结论常常只有几个 token，真正的判断过程在 reasoning_content 里。
+    # 不落盘就没法复盘“为什么这条判定给空了”，因此显式保留（截断，避免单条记录过大）。
+    reasoning = additional.get("reasoning_content") or additional.get("reasoning")
+    if not isinstance(reasoning, str):
+        reasoning = ""
+    reasoning = reasoning.strip()[:LLM_DIAGNOSTIC_REASONING_MAX_CHARS]
+    record = {
+        "timestamp": _now_iso(), "operation": operation,
+        "content": getattr(response, "content", None),
+        "finish_reason": metadata.get("finish_reason"),
+        "request_id": metadata.get("request_id") or metadata.get("id"),
+        "usage": _extract_usage(response), "elapsed_seconds": elapsed_seconds,
+        "has_reasoning": bool(reasoning),
+        "reasoning": reasoning,
+        "error": error,
+    }
+    try:
+        with _LOCK:
+            with open(os.path.join(_OUTPUT_DIR, "llm_responses.jsonl"), "a", encoding="utf-8") as stream:
+                stream.write(json.dumps(record, ensure_ascii=False, default=str) + "\n")
+    except OSError as exc:
+        print(f"[LLM诊断] 写盘失败: {type(exc).__name__}")

@@ -100,7 +100,7 @@ def configure_trace_artifacts(output_dir: str, *, reset: bool = True) -> None:
             _INDEX_PATH.unlink()
         _SEQUENCE = _existing_max_sequence(_INDEX_PATH)
     print(
-        "[Trace Screenshot] Step-by-step raw screenshot saving enabled: "
+        "[轨迹截图] 已启用逐步原始截图落盘: "
         f"{_SCREENSHOTS_DIR} (mode={'reset' if reset else 'append'})"
     )
 
@@ -177,18 +177,18 @@ def save_trace_screenshot(
                 os.fsync(handle.fileno())
         except Exception as exc:
             print(
-                "[Trace Screenshot] Failed to save (main flow uninterrupted): "
-                f"phase={phase or 'unknown'}, step={step_index}, "
-                f"moment={moment or 'observation'}, error={exc}"
+                "[轨迹截图] 落盘失败（不中断主流程）: "
+                f"phase={phase or '未知'}, step={step_index}, "
+                f"moment={moment or '观测'}, error={exc}"
             )
             return ""
     print(
-        "[Trace Screenshot] Saved: "
-        f"seq={sequence}, phase={phase or 'unknown'}, step={step_index}, "
-        f"moment={moment or 'observation'}, page={record['page_id'] or 'unknown'}, "
-        f"activity={record['activity'] or 'unknown'}, "
+        "[轨迹截图] 已保存: "
+        f"seq={sequence}, phase={phase or '未知'}, step={step_index}, "
+        f"moment={moment or '观测'}, page={record['page_id'] or '未知'}, "
+        f"activity={record['activity'] or '未知'}, "
         f"observes_previous_action="
-        f"{record['metadata'].get('previous_action_name') or 'none'}, "
+        f"{record['metadata'].get('previous_action_name') or '无'}, "
         f"file={relative}, bytes={len(payload)}, sha256={record['sha256'][:12]}"
     )
     return relative

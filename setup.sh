@@ -66,5 +66,5 @@ fi
 echo ""
 echo "Setup complete."
 echo "1. Fill API_KEY, BASE_URL, and MODEL in funcdroid/.env."
-echo "2. Enable USB debugging, connect one device, and open the app to test."
-echo "3. Run: ./run.sh"
+echo "2. Enable USB debugging, connect a device, and find its ID with adb devices."
+echo "3. Run: ./run.sh --device-id <device-id>"

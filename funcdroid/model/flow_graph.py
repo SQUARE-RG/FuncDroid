@@ -1,28 +1,31 @@
 from __future__ import annotations
 
 import base64
+import hashlib
 import json
 import os
 import re
 from dataclasses import dataclass, field
 
-TEXT_NORMALIZE_PATTERN = re.compile(r"[\"'\u201c\u201d\u2018\u2019\uff08\uff09()\u3010\u3011\[\]{}<>\u300a\u300b\u3001\uff0c,\u3002.\uff1a:\uff1b;!\uff01?\uff1f\-_/\s]+")
+TEXT_NORMALIZE_PATTERN = re.compile(r"[\"'“”‘’（）()【】\[\]{}<>《》、，,。.：:；;!！?？\-_/\s]+")
+# 旧快照中验证型场景的标记；加载时去掉并计入深度场景数。
+LEGACY_DEPTH_MARKER_PATTERN = re.compile(r"^\[(?:verify|mismatch):[^\]]*\]\s*")
 MAX_EVIDENCE_SCREENSHOTS_PER_PAGE = max(
     0,
     int(os.getenv("FFG_MAX_SCREENSHOTS_PER_PAGE", "12")) - 1,
 )
-# The authoritative source of coverage is Page.operation_bindings explicit bindings (operation -> control is
-# declared by FFG update patches and validated against inventory verbatim text). Legacy text family matching strips different named
-# list items into the same generic family, causing false positives where unexecuted controls are covered; it also causes
-# systematic missing matches due to wording differences between control inventory and actions. Therefore, text fallback is disabled by default; to temporarily
-# restore it, set FFG_COVERAGE_LEGACY_MATCHING=1.
+# 覆盖率的权威来源是 Page.operation_bindings 显式绑定（操作→控件由
+# FFG 更新 patch 声明并做清单原文校验）。旧文本家族匹配会把不同命名
+# 列表项剥成同一个通用家族，产生未执行控件被覆盖的假阳性；也会因控件
+# 清单与动作措辞不同产生系统性漏配。因此文本兜底默认关闭；如需临时
+# 恢复可设 FFG_COVERAGE_LEGACY_MATCHING=1。
 COVERAGE_LEGACY_TEXT_MATCHING = (
     os.getenv("FFG_COVERAGE_LEGACY_MATCHING", "0").strip().lower()
     in {"1", "true", "yes", "on"}
 )
 
-# FunctionNode test_status state machine. completed only means "has successful scenarios and adequate coverage";
-# blocked/deferred/unavailable are terminal but non-successful closed states, and cannot be treated as coverage completed.
+# FunctionNode test_status 状态机。completed 只表示“有成功场景且覆盖充分”；
+# blocked/deferred/unavailable 是终端但非成功的关闭状态，不能再被当作覆盖完成。
 FUNCTION_STATUSES = {
     "not_started",
     "in_progress",
@@ -31,9 +34,9 @@ FUNCTION_STATUSES = {
     "deferred",
     "unavailable",
 }
-# Terminal states: scheduler no longer plans new scenarios for them, and completion audit is only for completed.
+# 终端状态：调度器不再为其规划新场景，完成审计也只针对 completed。
 TERMINAL_FUNCTION_STATUSES = {"completed", "blocked", "deferred", "unavailable"}
-# States still in the queue to be tested.
+# 仍在待测队列中的状态。
 ACTIVE_FUNCTION_STATUSES = {"not_started", "in_progress"}
 
 
@@ -92,7 +95,7 @@ def _merge_exact_texts(values: list[str]) -> list[str]:
 
 
 def _resolve_list_text(text: object, values: list[str]) -> str:
-    """Return the verbatim text in inventory corresponding to text (exact verbatim match first, then normalized match)."""
+    """返回清单中与 text 对应的原文（先逐字一致，再归一化一致）。"""
     text = str(text or "").strip()
     if not text:
         return ""
@@ -109,7 +112,7 @@ def _normalize_operation_bindings(
     operations: list[str],
     controls: list[str],
 ) -> list[dict]:
-    """Keep only bindings matching inventory verbatim text, and deduplicate by (operation, control)."""
+    """只保留能对上清单原文的绑定，并按 (操作, 控件) 去重。"""
     normalized: list[dict] = []
     seen: set[tuple[str, str]] = set()
     bound_operations: set[str] = set()
@@ -129,90 +132,109 @@ def _normalize_operation_bindings(
     return normalized
 
 
-OPERATION_FAILURE_PATTERN = re.compile(r"^(?:\u5c1d\u8bd5)?(.+?)\u5931\u8d25(?:[\uff1a:].*)?$")
-OPERATION_RECOVERY_PATTERN = re.compile(r"\u81ea\u52a8\u6062\u590d|\u6062\u590d\u76ee\u6807app|\u6253\u5f00.+\u5e94\u7528|\u6253\u5f00.+\u4e3b\u9875\u9762", re.IGNORECASE)
+# 失败结果常被写成「动作；结果：xxx（截图健康检查失败）」这种收尾带括号的
+# 形式，所以「失败」之后允许跟一个收尾括号。否则黑屏/截图不可用的失败记录
+# 会被判成成功操作：既计入控件覆盖，又让功能获得「有成功业务操作」。
+OPERATION_FAILURE_PATTERN = re.compile(r"^(?:尝试)?(.+?)失败(?:[：:].*)?[）)]?$")
+OPERATION_RECOVERY_PATTERN = re.compile(r"自动恢复|恢复目标app|打开.+应用|打开.+主页面", re.IGNORECASE)
 CONTROL_INSTANCE_PATTERN = re.compile(
-    r"\u4f1a\u8bdd\u6761\u76ee|\u8054\u7cfb\u4eba\u6761\u76ee|\u8054\u7cfb\u4eba\u5217\u8868|\u6587\u7ae0\u5361\u7247|\u5185\u5bb9\u5361\u7247|\u5546\u54c1\u5361\u7247|\u52a8\u6001\u5217\u8868\u6761\u76ee|\u5217\u8868\u9879"
+    r"会话条目|联系人条目|联系人列表|文章卡片|内容卡片|商品卡片|动态列表条目|列表项"
 )
 CONTROL_NOISE_PATTERN = re.compile(
-    r"\u4e00\u76f4\u53ef\u89c1\u7684?|\u5f53\u524d\u53ef\u89c1\u7684?|\u53ef\u70b9\u51fb\u7684?|\u9875\u9762\u4e2d\u7684?|\u9875\u9762\u4e0a|\u9876\u90e8\u5de5\u5177\u680f\u4e2d\u7684?|"
-    r"\u9876\u90e8|\u5e95\u90e8\u5bfc\u822a\u680f\u7684?|\u5e95\u90e8|\u5de6\u4e0a\u89d2|\u53f3\u4e0a\u89d2|\u5de6\u4e0b\u89d2|\u53f3\u4e0b\u89d2|\u4e2d\u7684?|\u4e0a\u7684?"
+    r"一直可见的?|当前可见的?|可点击的?|页面中的?|页面上|顶部工具栏中的?|"
+    r"顶部|底部导航栏的?|底部|左上角|右上角|左下角|右下角|中的?|上的?"
 )
 CONTROL_WIDGET_PATTERN = re.compile(
-    r"\u6309\u94ae|\u56fe\u6807|\u5165\u53e3\u6761\u76ee|\u5165\u53e3\u6309\u94ae|\u5165\u53e3|\u9009\u9879|\u63a7\u4ef6|\u533a\u57df|\u6807\u7b7e\uff08\u9009\u4e2d\u72b6\u6001\uff09|\u6807\u7b7e\(\u9009\u4e2d\u72b6\u6001\)|\u6807\u7b7e"
+    r"按钮|图标|入口条目|入口按钮|入口|选项|控件|区域|标签（选中状态）|标签\(选中状态\)|标签"
 )
 NON_INTERACTIVE_STATE_PATTERN = re.compile(
-    r"\u52a0\u8f7d\u6307\u793a\u5668|\u53d1\u5e03\u65f6\u95f4|\u65f6\u95f4\u5206\u9694|\u672a\u8bfb\u7ea2\u70b9\u72b6\u6001|\u72b6\u6001\u63d0\u793a|\u63d0\u793a\u6587\u672c|\u7cfb\u7edf\u8f6f\u952e\u76d8"
+    r"加载指示器|发布时间|时间分隔|未读红点状态|状态提示|提示文本|系统软键盘"
 )
+# “返回首页/返回桌面”等带目的地的按钮与左上角通用返回是页面上两个不同控件，
+# 不能并成同一“返回”族，否则只有其中一个能被绑定和覆盖。只看第一个“返回”
+# 紧跟的目的地，“点击返回按钮返回首页”仍是通用返回。
+BACK_DESTINATION_PATTERN = re.compile(r"返回(?:到)?(首页|主页|主界面|桌面|顶部)")
+
+
+def _back_destination(text: str) -> str:
+    index = text.find("返回")
+    if index < 0:
+        return ""
+    match = BACK_DESTINATION_PATTERN.match(text, index)
+    return match.group(1) if match else ""
+
+
 def control_family_key(value: object) -> str:
     """Return a relaxed semantic family key for one visible control."""
     text = str(value or "").strip().lower()
     if not text:
         return ""
-    text = re.sub(r"\uff08\u4ee3\u8868[\uff1a:].*?\uff09|\(\u4ee3\u8868[\uff1a:].*?\)", "", text)
-    text = re.sub(r"[\u201c\u201d\u2018\u2019\"']", "", text)
-    text = re.sub(r"\d+\s*\u6761", "", text)
+    text = re.sub(r"（代表[：:].*?）|\(代表[：:].*?\)", "", text)
+    text = re.sub(r"[“”‘’\"']", "", text)
+    text = re.sub(r"\d+\s*条", "", text)
+    # 去噪会删掉“顶部”，先取返回目的地。
+    back_destination = _back_destination(text)
     text = CONTROL_NOISE_PATTERN.sub("", text)
 
     # Visual state, item names and category choices do not create new
     # semantic families. One representative selection is sufficient.
-    if "\u8868\u60c5" in text:
+    if "表情" in text:
         # Search, delete/backspace and the panel toggle are separate fixed
-        # semantic controls even though they share the word "emoji".
-        if "\u641c\u7d22" in text:
-            return "\u8868\u60c5\u641c\u7d22"
-        if any(token in text for token in ("\u5220\u9664", "\u9000\u683c")):
-            return "\u8868\u60c5\u5220\u9664"
-        if "\u6d88\u606f" in text:
-            return "\u8868\u60c5\u6d88\u606f"
-        if any(token in text for token in ("\u5206\u7c7b", "\u8868\u60c5\u9879", "\u9009\u62e9\u9762\u677f", "\u9009\u62e9\u9879")) or re.search(
-            r"(?:\u7b2c\u4e00\u4e2a|\u9996\u4e2a|\u4efb\u610f\u4e00\u4e2a|\u540d\u4e3a.+\u7684)\u8868\u60c5",
+        # semantic controls even though they share the word "表情".
+        if "搜索" in text:
+            return "表情搜索"
+        if any(token in text for token in ("删除", "退格")):
+            return "表情删除"
+        if "消息" in text:
+            return "表情消息"
+        if any(token in text for token in ("分类", "表情项", "选择面板", "选择项")) or re.search(
+            r"(?:第一个|首个|任意一个|名为.+的)表情",
             text,
         ):
-            return "\u8868\u60c5\u9009\u62e9\u9879"
-        if any(token in text for token in ("\u6309\u94ae", "\u56fe\u6807", "\u5165\u53e3")):
-            return "\u8868\u60c5"
-    if "\u53d1\u9001" in text and any(token in text for token in ("\u6309\u94ae", "\u56fe\u6807", "\u64cd\u4f5c")):
-        return "\u53d1\u9001"
+            return "表情选择项"
+        if any(token in text for token in ("按钮", "图标", "入口")):
+            return "表情"
+    if "发送" in text and any(token in text for token in ("按钮", "图标", "操作")):
+        return "发送"
 
     if (
-        any(token in text for token in ("\u6587\u672c\u8f93\u5165\u6846", "\u6587\u5b57\u8f93\u5165\u6846", "\u6d88\u606f\u8f93\u5165\u6846"))
-        and "\u641c\u7d22" not in text
+        any(token in text for token in ("文本输入框", "文字输入框", "消息输入框"))
+        and "搜索" not in text
     ):
-        return "\u6587\u672c\u8f93\u5165\u6846"
+        return "文本输入框"
 
-    if "\u5217\u8868\u9879" in text:
+    if "列表项" in text:
         # Named list categories are distinct evidence. Do not strip concrete
         # labels with an App-specific dictionary: that silently turns different
-        # business rows into one generic "\u5217\u8868\u9879" family.
-        label = text.replace("\u5217\u8868\u9879", "")
+        # business rows into one generic "列表项" family.
+        label = text.replace("列表项", "")
         label = CONTROL_NOISE_PATTERN.sub("", label)
         label = TEXT_NORMALIZE_PATTERN.sub("", label)
-        return f"\u5217\u8868\u9879:{label}" if label else "\u5217\u8868\u9879"
-    if "\u4f1a\u8bdd" in text and (
-        "\u6761\u76ee" in text
-        or "\u5217\u8868" in text
-        or re.search(r"(?:\u7684|\u4e2a|\u4efb\u4e00|\u4efb\u610f)\u4f1a\u8bdd$", text)
+        return f"列表项:{label}" if label else "列表项"
+    if "会话" in text and (
+        "条目" in text
+        or "列表" in text
+        or re.search(r"(?:的|个|任一|任意)会话$", text)
     ):
-        # Instance-level expressions ("Zhang San's conversation", "a conversation") belong to the same family as "conversation entry": hit
-        # the same control, and duplicate instance operations are merged into one by _merge_operation_families.
-        return "\u4f1a\u8bdd\u6761\u76ee"
-    if "\u8054\u7cfb\u4eba" in text and ("\u6761\u76ee" in text or "\u5217\u8868" in text):
-        return "\u8054\u7cfb\u4eba\u6761\u76ee"
-    if "\u6587\u7ae0" in text and ("\u5361\u7247" in text or "\u6807\u9898" in text or "\u5c01\u9762" in text):
-        return "\u6587\u7ae0\u5361\u7247"
-    if "\u5185\u5bb9" in text and any(token in text for token in ("\u5361\u7247", "\u6807\u9898", "\u56fe\u7247", "\u7f29\u7565\u56fe")):
-        return "\u5185\u5bb9\u5361\u7247"
-    if "\u5206\u7c7b\u6807\u7b7e" in text:
-        return "\u5206\u7c7b\u6807\u7b7e"
-    if text.endswith("\u5206\u533a") or "\u5206\u533a\u6807\u9898" in text:
-        return "\u5185\u5bb9\u5206\u533a"
-    if "\u641c\u7d22" in text and any(token in text for token in ("\u653e\u5927\u955c", "\u6309\u94ae", "\u56fe\u6807", "\u8f93\u5165\u6846")):
-        return "\u641c\u7d22\u8f93\u5165\u6846" if "\u8f93\u5165\u6846" in text else "\u641c\u7d22"
-    if "\u8fd4\u56de" in text and any(token in text for token in ("\u7bad\u5934", "\u6309\u94ae", "\u64cd\u4f5c")):
-        return "\u8fd4\u56de"
-    if "\u66f4\u591a" in text and any(token in text for token in ("\u83dc\u5355", "\u6309\u94ae", "\u56fe\u6807")):
-        return "\u66f4\u591a\u83dc\u5355"
+        # 实例级表述（"张三的会话""某个会话"）与"会话条目"同属一族：命中
+        # 同一控件，重复实例操作由 _merge_operation_families 归并为一条。
+        return "会话条目"
+    if "联系人" in text and ("条目" in text or "列表" in text):
+        return "联系人条目"
+    if "文章" in text and ("卡片" in text or "标题" in text or "封面" in text):
+        return "文章卡片"
+    if "内容" in text and any(token in text for token in ("卡片", "标题", "图片", "缩略图")):
+        return "内容卡片"
+    if "分类标签" in text:
+        return "分类标签"
+    if text.endswith("分区") or "分区标题" in text:
+        return "内容分区"
+    if "搜索" in text and any(token in text for token in ("放大镜", "按钮", "图标", "输入框")):
+        return "搜索输入框" if "输入框" in text else "搜索"
+    if "返回" in text and any(token in text for token in ("箭头", "按钮", "操作")):
+        return f"返回{back_destination}" if back_destination else "返回"
+    if "更多" in text and any(token in text for token in ("菜单", "按钮", "图标")):
+        return "更多菜单"
 
     text = CONTROL_WIDGET_PATTERN.sub("", text)
     text = TEXT_NORMALIZE_PATTERN.sub("", text)
@@ -228,26 +250,27 @@ def _operation_action_and_target(value: object) -> tuple[str, str]:
     text = str(value or "").strip()
     if not text:
         return "", ""
-    text = re.sub(r"^\u81ea\u52a8\u6062\u590d[\uff1a:]?", "", text)
+    text = re.sub(r"^自动恢复[：:]?", "", text)
     failure_match = OPERATION_FAILURE_PATTERN.match(text)
     if failure_match:
         text = failure_match.group(1).strip()
-    text = re.sub(r"^\u5c1d\u8bd5", "", text)
-    if re.search(r"\u8fd4\u56de|press_back", text, re.IGNORECASE):
-        return "back", "\u8fd4\u56de"
-    if re.match(r"^\u53d1\u9001", text):
-        return "click", "\u53d1\u9001"
+    text = re.sub(r"^尝试", "", text)
+    if re.search(r"返回|press_back", text, re.IGNORECASE):
+        destination = _back_destination(text)
+        return "back", f"返回{destination}"
+    if re.match(r"^发送", text):
+        return "click", "发送"
     action_patterns = (
-        ("long_press", r"^(?:\u957f\u6309)"),
-        ("type", r"^(?:\u5728.+?\u4e2d)?\u8f93\u5165|^\u8f93\u5165"),
-        ("scroll", r"^(?:\u6ed1\u52a8|\u6eda\u52a8|\u4e0a\u6ed1|\u4e0b\u6ed1|\u5de6\u6ed1|\u53f3\u6ed1)"),
-        ("open", r"^(?:\u6253\u5f00|\u542f\u52a8)"),
-        ("click", r"^(?:\u70b9\u51fb|\u9009\u62e9|\u5207\u6362\u5230|\u52fe\u9009)"),
+        ("long_press", r"^(?:长按)"),
+        ("type", r"^(?:在.+?中)?输入|^输入"),
+        ("scroll", r"^(?:滑动|滚动|上滑|下滑|左滑|右滑|拖动|拖拽)"),
+        ("open", r"^(?:打开|启动)"),
+        ("click", r"^(?:点击|选择|切换到|勾选)"),
     )
     for action, pattern in action_patterns:
         if re.search(pattern, text, re.IGNORECASE):
             target = re.sub(pattern, "", text, count=1, flags=re.IGNORECASE).strip()
-            target = re.split(r"(?:\u5e76|\u540e|\uff0c|,|\uff1b|;|\u2192|->)", target, maxsplit=1)[0]
+            target = re.split(r"(?:并|后|，|,|；|;|→|->)", target, maxsplit=1)[0]
             return action, target
     return "action", text
 
@@ -263,7 +286,7 @@ def operation_family_key(value: object) -> str:
 
 def operation_is_failure(value: object) -> bool:
     text = str(value or "").strip()
-    return bool(OPERATION_FAILURE_PATTERN.match(text) or "\u52a8\u4f5c\u6267\u884c\u5931\u8d25" in text)
+    return bool(OPERATION_FAILURE_PATTERN.match(text) or "动作执行失败" in text)
 
 
 def operation_is_recovery(value: object) -> bool:
@@ -327,7 +350,7 @@ def _coverage_keys_refer_to_same_control(control_key: str, target_key: str) -> b
     """Decide whether an operation target names the same control.
 
     Containment is kept because operation phrasing often adds qualifiers, but a
-    numeric-suffix extension (``\u63a7\u4ef61`` vs ``\u63a7\u4ef612``) is rejected: treating those
+    numeric-suffix extension (``控件1`` vs ``控件12``) is rejected: treating those
     as the same control silently marks never-operated controls as covered.
     """
     if not control_key or not target_key:
@@ -343,7 +366,7 @@ def _coverage_keys_refer_to_same_control(control_key: str, target_key: str) -> b
 
 
 def _control_has_binding(page: Page, control: str) -> bool:
-    """Whether the control is hit by any explicit binding of a non-recovery/non-failure operation."""
+    """控件是否被任一非恢复/非失败操作的显式绑定命中。"""
     for binding in page.operation_bindings:
         operation = str(binding.get("operation", "") or "")
         if operation_is_failure(operation) or operation_is_recovery(operation):
@@ -354,7 +377,7 @@ def _control_has_binding(page: Page, control: str) -> bool:
 
 
 def _control_text_matched(page: Page, control: str) -> bool:
-    """Legacy text family matching fallback (see function_handled_controls doc for details)."""
+    """旧文本家族匹配兜底（详见 function_handled_controls 文档）。"""
     control_match_key = _coverage_match_key(control)
     control_family = control_family_key(control)
     for operation in page.operations:
@@ -388,7 +411,28 @@ def _read_screenshot(value: object, screenshots_dir: str | None) -> str:
         if os.path.exists(path):
             with open(path, "rb") as f:
                 return base64.b64encode(f.read()).decode("ascii")
+        # M5: screenshots_dir 已指定但引用的文件缺失，说明这是一个悬空的
+        # 文件名引用，不能等同于"未走 file-ref 模式、value 本身就是原始
+        # 内容"的情形（那种情形 screenshots_dir 为空才会走到下面的
+        # return ref）。此前这里会直接 fall through 把文件名当截图内容
+        # 返回；下次落盘时 _write_screenshot 对它做 base64.b64decode 会
+        # 直接抛 binascii.Error，导致此后每一次 FFG 保存都失败——比"静默
+        # 写坏一张图"更严重，而且发生在与本次加载毫不相关的某次检查点。
+        # load_seed_graph 已经对 --seed-ffg 路径做了这个校验（fail fast，
+        # 拒绝在设备操作前使用残缺种子）；--resume-output 路径此前完全没
+        # 有对应校验。这里直接在读取处失败，两条路径统一在 FlowGraph.load()
+        # 阶段就能发现问题，而不是等到某次无关的落盘才崩溃。
+        raise ValueError(f"截图文件缺失，无法加载 FFG：{path}")
     return ref
+
+
+# 截图落盘跳过缓存：文件路径 → 最后一次写入的内容哈希。save() 每轮对全部
+# 页面截图做 b64decode + 读回逐字节比较，而截图内容在轮间几乎不变；只有
+# “该路径最后写入的就是这份内容”且文件仍存在时才跳过。按路径只记最后一次
+# 写入，A→B→A 轮换（证据截图按下标命名会发生）不会命中过期记录。
+# 缓存有界，超过上限整表清空（重新走一次比较即可恢复）。
+_SCREENSHOT_LAST_WRITTEN: dict[str, str] = {}
+_SCREENSHOT_LAST_WRITTEN_MAX = 4096
 
 
 def _write_screenshot(
@@ -399,18 +443,30 @@ def _write_screenshot(
     screenshot = str(screenshot or "").strip()
     if not screenshot:
         return ""
-    if screenshots_dir:
-        _write_bytes_if_changed(
-            os.path.join(screenshots_dir, filename),
-            base64.b64decode(screenshot),
-        )
+    if not screenshots_dir:
+        return screenshot
+    path = os.path.join(screenshots_dir, filename)
+    content_key = ""
+    try:
+        # base64 串是 ASCII；直接哈希原串（O(字节) 但远快于解码 + 读回比较）。
+        content_key = hashlib.sha256(screenshot.encode("ascii")).hexdigest()
+    except (AttributeError, UnicodeEncodeError):
+        content_key = ""
+    if content_key and _SCREENSHOT_LAST_WRITTEN.get(path) == content_key and os.path.exists(path):
         return filename
-    return screenshot
+    _write_bytes_if_changed(path, base64.b64decode(screenshot))
+    if content_key:
+        if len(_SCREENSHOT_LAST_WRITTEN) >= _SCREENSHOT_LAST_WRITTEN_MAX:
+            _SCREENSHOT_LAST_WRITTEN.clear()
+        _SCREENSHOT_LAST_WRITTEN[path] = content_key
+    else:
+        _SCREENSHOT_LAST_WRITTEN.pop(path, None)
+    return filename
 
 
 @dataclass(slots=True, init=False)
 class Page:
-    """Stable logical page, containing one representative screenshot and bounded historical state screenshots."""
+    """稳定逻辑页面，包含一张代表截图和有界的历史状态截图。"""
 
     id: str | None = None
     name: str = ""
@@ -469,7 +525,7 @@ class Page:
         )
 
     def _remerge_operations(self) -> None:
-        """Merge operation inventory by family; migrate bindings to preserved text when merging and replacing original text."""
+        """家族归并操作清单；归并替换原文时把绑定迁移到保留文本上。"""
         merged = _merge_operation_families(self.operations)
         if merged == self.operations:
             return
@@ -556,14 +612,18 @@ class Page:
     def add_operation(self, operation: str):
         operation = str(operation or "").strip()
         if operation:
-            self.operations = _merge_operation_families([*self.operations, operation])
+            # 必须走 _remerge_operations：家族归并若替换了保留文本，绑定要同步
+            # 迁移。否则绑定悬空，会在下一次 from_dict 归一化时被静默丢弃，
+            # 覆盖率随每次落盘/续跑无故下跌（实测 100% → 0%）。
+            self.operations = [*self.operations, operation]
+            self._remerge_operations()
 
     def remove_operation(self, operation: str) -> bool:
         """Remove one operation by exact text; returns whether it existed.
 
-        Dedicated for page audit specific deletion: accepts only text that is completely identical to inventory original text, preventing
-        rewritten or hallucinated operation names from clearing the inventory. page_transitions is unaffected; explicit bindings
-        associated with this operation are removed together.
+        页面审计点名删除专用：只接受与清单原文完全一致的文本，杜绝
+        改写或幻觉操作名清空清单。page_transitions 不受影响；与该操作
+        关联的显式绑定一并移除。
         """
         operation = str(operation or "").strip()
         if operation and operation in self.operations:
@@ -577,11 +637,11 @@ class Page:
         return False
 
     def add_operation_binding(self, operation: str, control: str) -> bool:
-        """Record the "operation -> control" explicit binding; both sides must match this page's inventory original text.
+        """记录"操作→控件"显式绑定；两侧必须能对上本页清单原文。
 
-        Bindings are the authoritative source for coverage calculation (see function_handled_controls):
-        operation must be an operation already recorded on this page, and control must be this page's control inventory
-        original text, preventing hallucinated bindings; if not satisfied, returns False, discarded with warning by caller.
+        绑定是覆盖率计算的权威来源（见 function_handled_controls）：
+        operation 必须是本页已记录操作、control 必须是本页控件清单
+        原文，杜绝幻觉绑定；不满足时返回 False，由调用方丢弃并告警。
         """
         operation = _resolve_list_text(operation, self.operations)
         control = _resolve_list_text(control, self.controls)
@@ -602,7 +662,7 @@ class Page:
         return True
 
     def has_operation_binding(self, operation: str, control: str) -> bool:
-        """Whether this (operation, control) binding already exists (compared by normalized text)."""
+        """是否已存在该 (操作, 控件) 绑定（按归一化文本比较）。"""
         key = (
             _text_key(_resolve_list_text(operation, self.operations) or operation),
             _text_key(_resolve_list_text(control, self.controls) or control),
@@ -617,7 +677,7 @@ class Page:
         return False
 
     def bound_operation_texts(self) -> set[str]:
-        """Set of original operation texts that declared target controls (used by page audit to mark unbound operations)."""
+        """已声明作用控件的操作原文集合（页面审计标注未绑定操作用）。"""
         return {
             str(binding.get("operation", "") or "")
             for binding in self.operation_bindings
@@ -761,6 +821,15 @@ class FunctionNode:
     scenarios: list[str] = field(default_factory=list)
     test_status: str = "not_started"
     coverage_percent: int = 0
+    intra_attempt_count: int = 0
+    # 深度尝试用于预算；失败尝试不能证明深度测试完成。
+    depth_scenario_count: int = 0
+    successful_depth_scenario_count: int = 0
+    # 连续导航失败次数（测试阶段真正开始后清零），达到上限时延后该功能。
+    navigation_failure_count: int = 0
+    # 最近一次状态迁移的原因（如 navigation_failed / exploratory_navigation_failed / blocked），
+    # 供重开判定与报告追溯；为空表示由完成判定等常规规则迁移。
+    status_reason: str = ""
 
     def __post_init__(self):
         self.id = str(self.id or "").strip()
@@ -776,8 +845,25 @@ class FunctionNode:
         ))
         self.resource_variables = _merge_exact_texts(self.resource_variables)
         self.scenarios = _merge_exact_texts(self.scenarios)
+        try:
+            self.intra_attempt_count = max(0, int(self.intra_attempt_count or 0))
+        except (TypeError, ValueError):
+            self.intra_attempt_count = 0
+        try:
+            self.depth_scenario_count = max(0, int(self.depth_scenario_count or 0))
+        except (TypeError, ValueError):
+            self.depth_scenario_count = 0
+        try:
+            self.successful_depth_scenario_count = max(0, int(self.successful_depth_scenario_count or 0))
+        except (TypeError, ValueError):
+            self.successful_depth_scenario_count = 0
+        try:
+            self.navigation_failure_count = max(0, int(self.navigation_failure_count or 0))
+        except (TypeError, ValueError):
+            self.navigation_failure_count = 0
         status = str(self.test_status or "not_started").strip().lower()
         self.test_status = status if status in FUNCTION_STATUSES else "not_started"
+        self.status_reason = str(self.status_reason or "").strip()
         try:
             self.coverage_percent = max(0, min(100, int(self.coverage_percent or 0)))
         except (TypeError, ValueError):
@@ -805,6 +891,13 @@ class FunctionNode:
         if scenario:
             self.scenarios = _merge_exact_texts([*self.scenarios, scenario])
 
+    def intra_attempts(self) -> int:
+        # Old snapshots have only distinct scenario text; retain it as a lower bound.
+        return max(self.intra_attempt_count, sum(not s.startswith("[cross:") for s in self.scenarios))
+
+    def record_intra_attempt(self) -> None:
+        self.intra_attempt_count = self.intra_attempts() + 1
+
     def add_resource_variable(self, resource_variable: str):
         resource_variable = str(resource_variable or "").strip()
         if resource_variable:
@@ -824,6 +917,11 @@ class FunctionNode:
             "scenarios": list(self.scenarios),
             "test_status": self.test_status,
             "coverage_percent": self.coverage_percent,
+            "intra_attempt_count": self.intra_attempt_count,
+            "depth_scenario_count": self.depth_scenario_count,
+            "successful_depth_scenario_count": self.successful_depth_scenario_count,
+            "navigation_failure_count": self.navigation_failure_count,
+            "status_reason": self.status_reason,
         }
 
     @classmethod
@@ -833,11 +931,16 @@ class FunctionNode:
             for value in data.get("page_ids", [])
             if str(value).strip()
         ]
-        scenarios = [
-            str(value).strip()
-            for value in data.get("scenarios", [])
-            if isinstance(value, str) and str(value).strip()
-        ]
+        scenarios: list[str] = []
+        legacy_depth = 0
+        for value in data.get("scenarios", []):
+            if not isinstance(value, str) or not value.strip():
+                continue
+            # 旧快照的验证型场景带 [verify:]/[mismatch:] 前缀：去掉前缀，按深度场景计数。
+            text, marked = LEGACY_DEPTH_MARKER_PATTERN.subn("", value.strip(), count=1)
+            legacy_depth += marked
+            if text.strip():
+                scenarios.append(text.strip())
         return cls(
             id=str(data.get("id", "")).strip(),
             name=str(data.get("name", "")).strip(),
@@ -856,19 +959,31 @@ class FunctionNode:
             scenarios=scenarios,
             test_status=str(data.get("test_status", "not_started")).strip() or "not_started",
             coverage_percent=data.get("coverage_percent", 0),
+            intra_attempt_count=data.get("intra_attempt_count", 0),
+            depth_scenario_count=data.get("depth_scenario_count", legacy_depth),
+            successful_depth_scenario_count=data.get("successful_depth_scenario_count", 0),
+            navigation_failure_count=data.get("navigation_failure_count", 0),
+            status_reason=str(data.get("status_reason", "") or ""),
         )
 
 
 class FlowGraph:
-    """Minimal FFG: functions, pages, global page edges, and function data dependencies."""
+    """最小 FFG：功能、页面、全局页面边和功能数据依赖。"""
 
     def __init__(self):
         self.functions: dict[str, FunctionNode] = {}
         self.pages: dict[str, Page] = {}
         self.page_transitions: list[PageTransition] = []
         self._page_transition_set: set[PageTransition] = set()
+        self._transition_index: dict[tuple[str, str], list[PageTransition]] | None = None
         self.function_dependencies: list[FunctionDependency] = []
         self._function_dependency_set: set[FunctionDependency] = set()
+        # Legacy [cross:...] strings remain attempt history, never a cross outcome.
+        self.cross_test_results: list[dict] = []
+        self.cross_test_history: list[dict] = []
+        # 测试数据登记：执行轨迹中实际输入的 FuncDroid_ 自建数据及其产出功能，
+        # 供跨功能场景显式引用“源功能已产出的数据”，而不是让执行器临场猜测。
+        self.test_data_records: list[dict] = []
 
     @property
     def page_owners(self) -> dict[str, list[str]]:
@@ -897,10 +1012,6 @@ class FlowGraph:
         node_id = str(node_id or "").strip()
         return node_id if node_id in self.functions else ""
 
-    def resolve_function_ids(self, node_id: str) -> list[str]:
-        resolved = self.resolve_function_id(node_id)
-        return [resolved] if resolved else []
-
     def resolve_page_id(self, page_id: str) -> str:
         page_id = str(page_id or "").strip()
         return page_id if page_id in self.pages else ""
@@ -912,19 +1023,19 @@ class FlowGraph:
 
     def add_page(self, page: Page, node_id: str):
         if page.id is None:
-            raise ValueError("Page added to FlowGraph must have an id first")
+            raise ValueError("加入 FlowGraph 的 Page 必须先有 id")
         node = self.functions.get(node_id)
         if node is None:
-            raise ValueError(f"Unknown node: {node_id}")
+            raise ValueError(f"未知节点: {node_id}")
         self.pages[page.id] = page
         node.add_page_id(page.id)
 
     def add_entry_page(self, page: Page, node_id: str):
         if page.id is None:
-            raise ValueError("Page added to FlowGraph must have an id first")
+            raise ValueError("加入 FlowGraph 的 Page 必须先有 id")
         node = self.functions.get(node_id)
         if node is None:
-            raise ValueError(f"Unknown node: {node_id}")
+            raise ValueError(f"未知节点: {node_id}")
         self.pages[page.id] = page
         node.add_page_id(page.id, entry_only=True)
 
@@ -937,16 +1048,33 @@ class FlowGraph:
         node.page_ids = [value for value in node.page_ids if value != page_id]
         node.entry_page_ids = [value for value in node.entry_page_ids if value != page_id]
 
+    def _transition_bucket(self, src_page_id: str, dst_page_id: str) -> list[PageTransition]:
+        """按 (src, dst) 索引已有跳转边，避免每次新增都线性扫描全部边。
+
+        索引按需重建：page_transitions 被整体替换或长度与索引不一致时
+        （例如外部代码直接赋值），下一次访问自动重建，保持与列表一致。
+        """
+        index = getattr(self, "_transition_index", None)
+        if (
+            index is None
+            or getattr(self, "_transition_index_source", None) is not self.page_transitions
+            or getattr(self, "_transition_index_size", -1) != len(self.page_transitions)
+        ):
+            index = {}
+            for existing in self.page_transitions:
+                index.setdefault((existing.src_page_id, existing.dst_page_id), []).append(existing)
+            self._transition_index = index
+            self._transition_index_source = self.page_transitions
+            self._transition_index_size = len(self.page_transitions)
+        return index.setdefault((src_page_id, dst_page_id), [])
+
     def add_page_transition(self, transition: PageTransition):
         if not transition.src_page_id or not transition.dst_page_id or not transition.operation:
             return
-        for existing in list(self.page_transitions):
-            if (
-                existing.src_page_id == transition.src_page_id
-                and existing.dst_page_id == transition.dst_page_id
-                and operation_family_key(existing.operation)
-                == operation_family_key(transition.operation)
-            ):
+        bucket = self._transition_bucket(transition.src_page_id, transition.dst_page_id)
+        family = operation_family_key(transition.operation)
+        for existing in list(bucket):
+            if operation_family_key(existing.operation) == family:
                 preferred = _merge_operation_families([
                     existing.operation,
                     transition.operation,
@@ -954,6 +1082,7 @@ class FlowGraph:
                 if preferred != existing.operation:
                     self._page_transition_set.discard(existing)
                     self.page_transitions.remove(existing)
+                    bucket.remove(existing)
                     replacement = PageTransition(
                         src_page_id=existing.src_page_id,
                         dst_page_id=existing.dst_page_id,
@@ -961,10 +1090,13 @@ class FlowGraph:
                     )
                     self._page_transition_set.add(replacement)
                     self.page_transitions.append(replacement)
+                    bucket.append(replacement)
                 return
         if transition not in self._page_transition_set:
             self._page_transition_set.add(transition)
             self.page_transitions.append(transition)
+            bucket.append(transition)
+            self._transition_index_size = len(self.page_transitions)
 
     def get_transitions_from(self, src_page_id: str) -> list[PageTransition]:
         return [
@@ -1018,20 +1150,86 @@ class FlowGraph:
         self.add_scenario(src_function_id, marker)
         self.add_scenario(dst_function_id, marker)
 
-    def has_cross_scenario(self, src_function_id: str, dst_function_id: str) -> bool:
-        prefixes = (
-            f"[cross:{src_function_id}->{dst_function_id}] ",
-            f"[cross:{dst_function_id}->{src_function_id}] ",
-        )
-        node = self.get_node(src_function_id)
-        return bool(node and any(scenario.startswith(prefixes) for scenario in node.scenarios))
+    @staticmethod
+    def cross_test_key(src_function_id: str, dst_function_id: str, resource: str) -> tuple[str, str, str]:
+        return (str(src_function_id).strip(), str(dst_function_id).strip(), _text_key(resource))
 
-    def set_node_test_status(self, node_id: str, status: str):
+    def record_cross_test(
+        self, src_function_id: str, dst_function_id: str, resource: str,
+        scenario: str, status: str, *, reason: str = "",
+        retryable: bool = False, attempts: int | None = None,
+    ) -> None:
+        """Persist the outcome of one directed resource flow separately from attempts.
+
+        done 表示测试阶段已跑完（与功能内场景同口径，不再区分结果是否一致）；
+        failed 表示没有跑完。同一 key 的结果按最新一次覆盖，但尝试次数累加：
+        规划器据此对导航类失败做有限次重试，而不是一次失败就永久放弃。
+        """
+        if status not in {"done", "failed"}:
+            raise ValueError(f"未知跨功能结果: {status}")
+        key = self.cross_test_key(src_function_id, dst_function_id, resource)
+        previous = next((
+            item for item in self.cross_test_results
+            if self.cross_test_key(item["src_function_id"], item["dst_function_id"], item["resource_variable"]) == key
+        ), None)
+        if attempts is None:
+            attempts = int((previous or {}).get("attempts", 0) or 0) + 1
+        self.cross_test_results = [item for item in self.cross_test_results if item is not previous]
+        self.cross_test_results.append({
+            "src_function_id": src_function_id, "dst_function_id": dst_function_id,
+            "resource_variable": str(resource or "").strip(), "scenario": scenario,
+            "status": status, "reason": reason,
+            "retryable": bool(retryable) and status != "done",
+            "attempts": max(1, int(attempts or 1)),
+        })
+
+    def record_test_data(self, function_id: str, values: list[str], *, iteration: int = 0, scenario: str = "") -> int:
+        """登记某功能在执行中实际输入的自建测试数据；同一功能同一取值只记一次。"""
+        if self.get_node(function_id) is None:
+            return 0
+        existing = {(item["function_id"], item["value"]) for item in self.test_data_records}
+        added = 0
+        for value in values:
+            value = str(value or "").strip()
+            if not value or (function_id, value) in existing:
+                continue
+            existing.add((function_id, value))
+            self.test_data_records.append({
+                "function_id": function_id, "value": value,
+                "iteration": int(iteration or 0), "scenario": str(scenario or "").strip(),
+            })
+            added += 1
+        return added
+
+    def function_test_data(self, function_id: str) -> list[dict]:
+        return [dict(item) for item in self.test_data_records if item["function_id"] == function_id]
+
+    def invalidate_cross_tests(self, function_ids: set[str], reason: str) -> None:
+        """Preserve evidence whose function boundary changed, without granting new coverage."""
+        retained = []
+        for item in self.cross_test_results:
+            if {item["src_function_id"], item["dst_function_id"]} & function_ids:
+                self.cross_test_history.append({**item, "invalidation_reason": reason})
+            else:
+                retained.append(item)
+        self.cross_test_results = retained
+
+    def cross_test_status_counts(self) -> dict[str, int]:
+        return {
+            status: sum(item["status"] == status for item in self.cross_test_results)
+            for status in ("done", "failed")
+        }
+
+    def set_node_test_status(self, node_id: str, status: str, reason: str = ""):
+        """功能状态迁移的唯一入口：未知状态直接报错，不再静默映射。"""
+        normalized = str(status or "").strip().lower()
+        if normalized not in FUNCTION_STATUSES:
+            raise ValueError(f"未知功能状态: {status}")
         node = self.get_node(node_id)
         if node is None:
             return
-        normalized = str(status or "").strip().lower()
-        node.test_status = normalized if normalized in FUNCTION_STATUSES else "in_progress"
+        node.test_status = normalized
+        node.status_reason = str(reason or "").strip()
 
     def get_node_test_status(self, node_id: str) -> str:
         node = self.get_node(node_id)
@@ -1044,13 +1242,6 @@ class FlowGraph:
     def get_node_coverage_percent(self, node_id: str) -> int:
         node = self.get_node(node_id)
         return node.coverage_percent if node is not None else 0
-
-    def iter_unfinished_nodes(self) -> list[FunctionNode]:
-        return [
-            node
-            for node in self.functions.values()
-            if node.test_status in ACTIVE_FUNCTION_STATUSES
-        ]
 
     def get_page(self, page_id: str) -> Page | None:
         return self.pages.get(self.resolve_page_id(page_id))
@@ -1088,12 +1279,12 @@ class FlowGraph:
     def function_handled_controls(self, node_id: str) -> set[tuple[str, str]]:
         """Controls actually hit by recorded business operations.
 
-        The primary source is explicit Page.operation_bindings (operation -> control is declared by FFG update
-        patch and validated against inventory original text); legacy text family matching is retained as fallback
-        (COVERAGE_LEGACY_TEXT_MATCHING can be disabled): hit if family on both sides matches;
-        when family on both sides is non-empty and different (semantic divergence, e.g. "emoji message" control vs target
-        "emoji button"), substring containment fallback is no longer used, preventing clicking one control from erroneously
-        marking other controls with the same prefix as covered.
+        第一来源是 Page.operation_bindings 显式绑定（操作→控件由 FFG 更新
+        patch 声明并做清单原文校验）；旧文本家族匹配保留为兜底
+        （COVERAGE_LEGACY_TEXT_MATCHING 可关）：两侧 family 一致即命中；
+        两侧 family 均非空且不同（语义分歧，如"表情消息"控件 vs 目标
+        "表情按钮"）时不再用子串包含兜底，防止点击一个控件把同前缀的
+        其它控件误标为覆盖。
         """
         controls = self.function_controls(node_id)
         handled: set[tuple[str, str]] = set()
@@ -1136,9 +1327,9 @@ class FlowGraph:
     def function_coverage_details(self, node_id: str) -> dict[str, object]:
         """Coverage is anchored to hit controls, not raw operation count.
 
-        Substituting hit count with operation count would allow a Function where "a single control is repeatedly clicked while other controls are never touched"
-        to meet the completion threshold prematurely; handled only counts controls hit by business operations
-        (see function_handled_controls for family matching rules).
+        用操作数量顶替命中数会让"单控件反复点、其余控件从未碰"的
+        Function 提前满足完成门槛；handled 只统计被业务 operation 命中
+        的控件数（family 匹配规则见 function_handled_controls）。
         """
         controls = self.function_controls(node_id)
         total = len(controls)
@@ -1262,12 +1453,50 @@ class FlowGraph:
             changed = changed or before != page.controls
         return changed
 
-    def find_function_id_by_description(self, description: str) -> str:
-        description = str(description or "").strip()
+    def clone(self) -> FlowGraph:
+        """结构副本：节点、页面列表字段独立复制，截图字符串共享（不可变）。
+
+        比 ``from_dict(to_dict())`` 便宜得多：不重新归并文本、不重建全部跳转边，
+        也不对截图做任何编解码。返回的图可以独立修改而不影响原图。
+        """
+        graph = FlowGraph()
         for node_id, node in self.functions.items():
-            if node.description == description or node.name == description:
-                return node_id
-        return ""
+            graph.functions[node_id] = FunctionNode(
+                id=node.id,
+                name=node.name,
+                description=node.description,
+                page_ids=list(node.page_ids),
+                entry_page_ids=list(node.entry_page_ids),
+                resource_variables=list(node.resource_variables),
+                scenarios=list(node.scenarios),
+                test_status=node.test_status,
+                coverage_percent=node.coverage_percent,
+                intra_attempt_count=node.intra_attempt_count,
+                depth_scenario_count=node.depth_scenario_count,
+                successful_depth_scenario_count=node.successful_depth_scenario_count,
+                navigation_failure_count=node.navigation_failure_count,
+                status_reason=node.status_reason,
+            )
+        for page_id, page in self.pages.items():
+            copied = Page.__new__(Page)
+            copied.id = page.id
+            copied.name = page.name
+            copied.description = page.description
+            copied.representative_screenshot = page.representative_screenshot
+            copied.evidence_screenshots = list(page.evidence_screenshots)
+            copied.controls = list(page.controls)
+            copied.operations = list(page.operations)
+            copied.operation_bindings = [dict(binding) for binding in page.operation_bindings]
+            copied.activity = page.activity
+            graph.pages[page_id] = copied
+        graph.page_transitions = list(self.page_transitions)
+        graph._page_transition_set = set(self._page_transition_set)
+        graph.function_dependencies = list(self.function_dependencies)
+        graph._function_dependency_set = set(self._function_dependency_set)
+        graph.cross_test_results = [dict(item) for item in self.cross_test_results]
+        graph.cross_test_history = [dict(item) for item in self.cross_test_history]
+        graph.test_data_records = [dict(item) for item in self.test_data_records]
+        return graph
 
     def to_dict(self, screenshots_dir: str | None = None) -> dict:
         return {
@@ -1278,6 +1507,9 @@ class FlowGraph:
             ],
             "page_transitions": [edge.to_dict() for edge in self.page_transitions],
             "function_dependencies": [edge.to_dict() for edge in self.function_dependencies],
+            "cross_test_results": [dict(item) for item in self.cross_test_results],
+            "cross_test_history": [dict(item) for item in self.cross_test_history],
+            "test_data_records": [dict(item) for item in self.test_data_records],
         }
 
     @classmethod
@@ -1311,6 +1543,29 @@ class FlowGraph:
             if isinstance(item, dict):
                 graph.add_function_dependency(FunctionDependency.from_dict(item))
         graph.reconcile_page_membership()
+        graph.cross_test_history = [dict(item) for item in data.get("cross_test_history", []) or [] if isinstance(item, dict)]
+        for item in data.get("cross_test_results", []) or []:
+            if not isinstance(item, dict):
+                continue
+            src, dst = item.get("src_function_id"), item.get("dst_function_id")
+            if src not in graph.functions or dst not in graph.functions or src == dst:
+                graph.cross_test_history.append({**item, "invalidation_reason": "inactive function reference on load"})
+                continue
+            # 旧快照的 verified/unverified 都表示测试阶段已跑完。
+            status = {"verified": "done", "unverified": "done"}.get(item.get("status"), item.get("status"))
+            if status not in {"done", "failed"}:
+                continue
+            graph.record_cross_test(src, dst, item.get("resource_variable", ""),
+                                    item.get("scenario", ""), status,
+                                    reason=item.get("reason", ""),
+                                    retryable=bool(item.get("retryable", False)),
+                                    attempts=int(item.get("attempts", 1) or 1))
+        for item in data.get("test_data_records", []) or []:
+            if isinstance(item, dict):
+                graph.record_test_data(
+                    str(item.get("function_id", "") or ""), [item.get("value", "")],
+                    iteration=int(item.get("iteration", 0) or 0), scenario=item.get("scenario", ""),
+                )
         return graph
 
     def save(self, output_dir: str):
@@ -1324,10 +1579,10 @@ class FlowGraph:
             indent=2,
         ).encode("utf-8")
         _write_bytes_if_changed(os.path.join(output_dir, "ffg.json"), serialized)
-        print(f"[Persistence] FFG saved to {output_dir}")
+        print(f"[持久化] FFG 已保存到 {output_dir}")
         print(
-            f"  Function nodes: {len(self.functions)}, pages: {len(self.pages)}, "
-            f"page transitions: {len(self.page_transitions)}, function dependencies: {len(self.function_dependencies)}"
+            f"  功能节点: {len(self.functions)}, 页面: {len(self.pages)}, "
+            f"页面跳转: {len(self.page_transitions)}, 功能依赖: {len(self.function_dependencies)}"
         )
 
     @classmethod
@@ -1338,14 +1593,14 @@ class FlowGraph:
         with open(os.path.join(output_dir, "ffg.json"), "r", encoding="utf-8") as f:
             data = json.load(f)
         if not isinstance(data, dict):
-            raise ValueError("ffg.json root node must be an object")
+            raise ValueError("ffg.json 根节点必须是对象")
         for key in ("functions", "pages", "page_transitions", "function_dependencies"):
             if not isinstance(data.get(key), list):
-                raise ValueError(f"ffg.json missing current structure field or has wrong type: {key}")
+                raise ValueError(f"ffg.json 缺少当前结构字段或类型错误: {key}")
         graph = cls.from_dict(data, screenshots_dir=screenshots_dir)
-        print(f"[Persistence] FFG loaded from {output_dir}")
+        print(f"[持久化] FFG 已从 {output_dir} 加载")
         print(
-            f"  Function nodes: {len(graph.functions)}, pages: {len(graph.pages)}, "
-            f"page transitions: {len(graph.page_transitions)}, function dependencies: {len(graph.function_dependencies)}"
+            f"  功能节点: {len(graph.functions)}, 页面: {len(graph.pages)}, "
+            f"页面跳转: {len(graph.page_transitions)}, 功能依赖: {len(graph.function_dependencies)}"
         )
         return graph

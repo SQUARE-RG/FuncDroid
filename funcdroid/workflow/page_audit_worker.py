@@ -1,133 +1,127 @@
-"""Background page control audit worker.
+"""后台页面控件审计 worker。
 
-Design motivation:
-- Replenishing Page.controls currently relies on the FFG update LLM voluntarily declaring them when reusing pages; small-parameter
-  models almost never proactively replenish them, causing a deadlock cycle of "initial recognition omission -> never replenished".
-  This worker uses an independent background thread to periodically review the control inventory against page screenshots, turning "replenishing
-  controls" into a programmatically triggered deterministic mechanism.
-- The audit only mines existing evidence (saved page screenshots) without generating new execution; input is the screenshots and
-  existing inventory, output is "interactive controls truly visible in screenshots but missing from the inventory".
-- Isomorphic with bug_detection_worker: the background thread only performs LLM calls (compute) without directly writing to
-  the FFG; merge actions are completed by the main thread at the ffg_update node entry (write), maintaining a single writer.
-- Exit condition: page screenshot set fingerprint unchanged, or consecutively PAGE_AUDIT_ZERO_ADD_LIMIT
-  audits with zero additions, then marked saturated to stop auditing; state is stored in-process only, reset on restart.
+设计动机：
+- Page.controls 的补充目前依赖 FFG 更新 LLM 在复用页面时自觉声明，小参数
+  模型几乎不会主动补充，形成"首次识别遗漏 → 永远没人补"的自锁循环。
+  本 worker 用独立后台线程定期对页面截图做一次控件清单复核，把"补充
+  controls"变成程序主动触发的确定性机制。
+- 审计只挖掘已有证据（页面已保存截图），不产生新执行；输入是截图与
+  现有清单，输出是"截图中真实可见但清单遗漏的可交互控件"。
+- 与 bug_detection_worker 同构：后台线程只做 LLM 调用（算），不直接写
+  FFG；合并动作由主线程在 ffg_update 节点入口完成（写），保持单写者。
+- 退出条件：页面截图集合指纹未变化，或连续 DEFAULT_ZERO_ADD_LIMIT
+  次审计零新增（且该页全部截图都已审计过），则标记 saturated 不再审计；
+  连续 DEFAULT_FAILURE_LIMIT 次调用失败同样停止重试，直到页面指纹变化。
+  已提交未完成的任务按 (page_id, fingerprint) 登记在途，不会被重复提交。
+  状态仅存进程内，重启清零。
 
-Usage:
+用法：
     from workflow.page_audit_worker import page_audit_worker
 
     page_audit_worker.configure(llm)
-    page_audit_worker.submit(job)      # job contains page_id and pre-built messages
-    ...                                # ffg_update node entry:
+    page_audit_worker.submit(job)      # job 含 page_id 与已构建好的消息
+    ...                                # ffg_update 节点入口：
     for job in page_audit_worker.collect_results(): ...
     page_audit_worker.record_result(page_id, added_count)
-    page_audit_worker.flush(timeout)   # Wait to drain before run completion
+    page_audit_worker.flush(timeout)   # 运行结束前等待排空
 """
 
 from __future__ import annotations
 
 import json
 import os
-import queue
-import threading
-import time
-import traceback
 from typing import Any
 
-from workflow.llm_usage import record_llm_failure, record_llm_request, record_llm_response
+from workflow.llm import invoke_llm_json_with_retry, llm_json_result_failed
+from workflow.worker_utils import SerialWorker
 
 
-DEFAULT_MAX_PENDING = max(1, int(os.getenv("PAGE_AUDIT_MAX_PENDING", "4")))
-DEFAULT_BATCH_SIZE = max(1, int(os.getenv("PAGE_AUDIT_BATCH_SIZE", "3")))
-DEFAULT_ZERO_ADD_LIMIT = max(1, int(os.getenv("PAGE_AUDIT_ZERO_ADD_LIMIT", "2")))
-DEFAULT_PER_PAGE_LIMIT = max(1, int(os.getenv("PAGE_AUDIT_PER_PAGE_LIMIT", "5")))
-RESULT_PATTERN = json.JSONDecoder()
+DEFAULT_BATCH_SIZE = 3
+DEFAULT_ZERO_ADD_LIMIT = 2
+DEFAULT_PER_PAGE_LIMIT = 5
+# 同一指纹连续失败达到该次数后不再重试（请求过大、模型持续输出非 JSON 等）；
+# 页面截图或操作变化（指纹变化）后自动解除。
+DEFAULT_FAILURE_LIMIT = max(1, int(os.getenv("PAGE_AUDIT_FAILURE_LIMIT", "2")))
+# 审计在后台线程里执行，失败由 worker 自己的失败计数兜底，单次调用不重试。
+PAGE_AUDIT_LLM_ATTEMPTS = max(1, int(os.getenv("PAGE_AUDIT_LLM_ATTEMPTS", "1")))
 
 
-class PageAuditWorker:
-    """Single background thread + queue, sequentially executing page control audit LLM calls."""
+class PageAuditWorker(SerialWorker):
+    """顺序执行页面控件审计 LLM 调用；队列满时丢弃（页面下轮会被重新挑选）。"""
 
-    def __init__(self, max_pending: int = DEFAULT_MAX_PENDING) -> None:
-        self._lock = threading.Lock()
-        self._queue: "queue.Queue[dict[str, Any]]" = queue.Queue()
-        self._thread: threading.Thread | None = None
-        self._llm = None
-        self._pending = 0
-        self._idle_cond = threading.Condition(self._lock)
-        self._max_pending = max(1, int(max_pending))
+    log_prefix = "[页面审计线程]"
+    thread_name = "page-audit-worker"
+    default_max_pending = 4
+    drop_when_full = True
+
+    def __init__(self) -> None:
+        super().__init__()
         self._results: list[dict[str, Any]] = []
-        # page_id -> {"fingerprint": str, "zero_streak": int, "saturated": bool}
+        # page_id -> {"fingerprint": str, "zero_streak": int, "saturated": bool,
+        #             "inflight": str, "failed_fingerprint": str, "fail_streak": int,
+        #             "audited_screenshots": set[str], "pending_screenshots": int}
         self._audit_state: dict[str, dict[str, Any]] = {}
 
-    # ------------------------------------------------------------------
-    # Configuration / Lifecycle
-    # ------------------------------------------------------------------
     def configure(self, llm) -> None:
-        with self._lock:
-            self._llm = llm
-        self._ensure_worker_started()
-
-    def _ensure_worker_started(self) -> None:
-        with self._lock:
-            if self._thread is not None and self._thread.is_alive():
-                return
-            thread = threading.Thread(
-                target=self._worker_loop,
-                name="page-audit-worker",
-                daemon=True,
-            )
-            self._thread = thread
-        thread.start()
+        self._configure_base(llm)
 
     # ------------------------------------------------------------------
-    # Task submission (called by main thread)
+    # 提交任务（主线程调用）
     # ------------------------------------------------------------------
     def filter_candidates(self, candidates: list[dict[str, Any]]) -> list[dict[str, Any]]:
-        """Filter candidate pages by saturation/fingerprint state, returning the subset allowed for submission.
+        """按饱和/指纹状态过滤候选页面，返回允许提交的子集。
 
-        Each candidate: {"page_id": str, "fingerprint": str, ...}.
-        Candidates with the same fingerprint as the last audit (screenshot set unchanged) or already saturated are skipped.
+        每个 candidate: {"page_id": str, "fingerprint": str, ...}。
+        跳过：已 saturated；指纹与上次成功审计相同（截图集合未变化）；同一指纹
+        仍在队列或执行中；同一指纹连续失败已达上限。
         """
         allowed: list[dict[str, Any]] = []
         with self._lock:
             for candidate in candidates:
                 page_id = str(candidate.get("page_id", "") or "")
+                fingerprint = str(candidate.get("fingerprint", ""))
                 state = self._audit_state.get(page_id)
                 if state is None:
                     allowed.append(candidate)
                     continue
                 if state.get("saturated"):
                     continue
-                if state.get("fingerprint") == str(candidate.get("fingerprint", "")):
+                if state.get("inflight") == fingerprint:
+                    continue
+                if state.get("fingerprint") == fingerprint and not state.get("pending_screenshots"):
+                    continue
+                if (
+                    state.get("failed_fingerprint") == fingerprint
+                    and int(state.get("fail_streak", 0) or 0) >= DEFAULT_FAILURE_LIMIT
+                ):
                     continue
                 allowed.append(candidate)
         return allowed
 
-    def submit(self, job: dict[str, Any]) -> bool:
-        """Non-blocking submission of a single audit task; dropped and returns False when queue is saturated."""
-        self._ensure_worker_started()
+    def submit(self, job: dict[str, Any], timeout: float | None = None) -> bool:
+        # 入队前登记在途：后台线程可能在 super().submit 返回前就处理完任务，
+        # 事后登记会留下永不清除的 inflight，使该页面再也不会被审计。
+        page_id = str(job.get("page_id", "") or "")
+        fingerprint = str(job.get("fingerprint", "") or "")
         with self._lock:
-            if self._pending >= self._max_pending:
-                return False
-            self._pending += 1
-        self._queue.put(job)
-        return True
+            state = self._audit_state.setdefault(page_id, {})
+            previous = state.get("inflight")
+            state["inflight"] = fingerprint
+        ok = super().submit(job, timeout=timeout)
+        if not ok:
+            with self._lock:
+                state = self._audit_state.setdefault(page_id, {})
+                if state.get("inflight") == fingerprint:
+                    if previous:
+                        state["inflight"] = previous
+                    else:
+                        state.pop("inflight", None)
+        return ok
 
-    # ------------------------------------------------------------------
-    # Background thread main loop
-    # ------------------------------------------------------------------
-    def _worker_loop(self) -> None:
-        while True:
-            job = self._queue.get()
-            try:
-                self._process_job(job)
-            except Exception as exc:  # noqa: BLE001 - Background thread needs to swallow exceptions and continue consuming
-                print(f"[PageAuditThread] Failed to process task: {exc}")
-                print(traceback.format_exc())
-            finally:
-                with self._idle_cond:
-                    self._pending = max(0, self._pending - 1)
-                    if self._pending == 0:
-                        self._idle_cond.notify_all()
+    def audited_screenshot_digests(self, page_id: str) -> set[str]:
+        with self._lock:
+            state = self._audit_state.get(str(page_id or ""), {})
+            return set(state.get("audited_screenshots", set()))
 
     def _process_job(self, job: dict[str, Any]) -> None:
         page_id = str(job.get("page_id", "") or "")
@@ -136,23 +130,19 @@ class PageAuditWorker:
         with self._lock:
             llm = self._llm
         if llm is None or not messages:
-            self._record_failure(page_id)
+            self._record_failure(page_id, fingerprint)
             return
-        record_llm_request(llm, operation="[PageAudit]")
-        try:
-            response = llm.invoke(messages)
-        except Exception as exc:  # noqa: BLE001
-            record_llm_failure(llm, operation="[PageAudit]")
-            print(f"[PageAuditThread] LLM call failed (page={page_id}): {exc}")
-            self._record_failure(page_id)
+        payload = invoke_llm_json_with_retry(
+            llm,
+            messages,
+            log_prefix="[页面审计]",
+            max_attempts=PAGE_AUDIT_LLM_ATTEMPTS,
+        )
+        if llm_json_result_failed(payload):
+            print(f"[页面审计线程] LLM 调用或解析失败（page={page_id}），稍后按失败计数重试")
+            self._record_failure(page_id, fingerprint)
             return
-        content = str(getattr(response, "content", "") or "")
-        record_llm_response(llm, response, operation="[PageAudit]")
-        missing, control_merges, invalid_operations, parse_ok = self._parse_audit_payload_with_status(content)
-        if not parse_ok:
-            print(f"[PageAuditThread] Invalid LLM response format (page={page_id}), keeping task for retry")
-            self._record_failure(page_id)
-            return
+        missing, control_merges, invalid_operations = self._clean_audit_payload(payload)
         with self._lock:
             self._results.append({
                 "page_id": page_id,
@@ -161,36 +151,27 @@ class PageAuditWorker:
                 "control_merges": control_merges,
                 "invalid_operations": invalid_operations,
             })
-            # Fingerprint accounting is placed in the result, waiting for main thread merge before record_result determines saturation.
+            # 指纹记账放在结果里，等主线程合并后 record_result 决定饱和。
             state = self._audit_state.setdefault(page_id, {})
             state["fingerprint"] = fingerprint
+            if state.get("inflight") == fingerprint:
+                state.pop("inflight", None)
+            state["fail_streak"] = 0
+            state.pop("failed_fingerprint", None)
+            audited = set(state.get("audited_screenshots", set()))
+            audited.update(str(item) for item in job.get("screenshot_digests", []) or [])
+            state["audited_screenshots"] = audited
+            state["pending_screenshots"] = int(job.get("pending_screenshots", 0) or 0)
         print(
-            f"[PageAuditThread] Page inventory review completed: page={page_id}, "
-            f"candidate missing controls={len(missing)}, candidate operations to delete={len(invalid_operations)}"
-            f", candidate control merges={len(control_merges)}"
+            f"[页面审计线程] 页面清单复核完成: page={page_id}, "
+            f"候选遗漏控件={len(missing)}, 候选待删操作={len(invalid_operations)}"
+            f", 候选控件合并={len(control_merges)}"
         )
 
-    def _parse_audit_payload(self, content: str) -> tuple[list[str], list[str]]:
-        missing, _control_merges, invalid_operations, _parse_ok = self._parse_audit_payload_with_status(content)
-        return missing, invalid_operations
-
-    def _parse_audit_payload_with_status(
+    def _clean_audit_payload(
         self,
-        content: str,
-    ) -> tuple[list[str], list[dict[str, Any]], list[str], bool]:
-        text = str(content or "").strip()
-        if not text:
-            return [], [], [], False
-        start = text.find("{")
-        end = text.rfind("}")
-        if start < 0 or end <= start:
-            return [], [], [], False
-        try:
-            payload = RESULT_PATTERN.decode(text[start:end + 1])
-        except json.JSONDecodeError:
-            return [], [], [], False
-        if not isinstance(payload, dict):
-            return [], [], [], False
+        payload: dict[str, Any],
+    ) -> tuple[list[str], list[dict[str, Any]], list[str]]:
         missing = self._clean_text_list(payload.get("missing_controls"))
         control_merges = self._clean_control_merges(payload.get("control_merges"))
         invalid_operations = self._clean_text_list(payload.get("invalid_operations"))
@@ -198,8 +179,25 @@ class PageAuditWorker:
             missing[:DEFAULT_PER_PAGE_LIMIT],
             control_merges[:DEFAULT_PER_PAGE_LIMIT],
             invalid_operations[:DEFAULT_PER_PAGE_LIMIT],
-            True,
         )
+
+    def _parse_audit_payload_with_status(
+        self,
+        content: str,
+    ) -> tuple[list[str], list[dict[str, Any]], list[str], bool]:
+        """从文本解析审计结果（兼容入口；后台线程走 invoke_llm_json_with_retry）。"""
+        text = str(content or "").strip()
+        start = text.find("{")
+        end = text.rfind("}")
+        if start < 0 or end <= start:
+            return [], [], [], False
+        try:
+            payload = json.loads(text[start:end + 1])
+        except json.JSONDecodeError:
+            return [], [], [], False
+        if not isinstance(payload, dict):
+            return [], [], [], False
+        return (*self._clean_audit_payload(payload), True)
 
     @staticmethod
     def _clean_control_merges(raw: object) -> list[dict[str, Any]]:
@@ -226,80 +224,70 @@ class PageAuditWorker:
                 cleaned.append(value)
         return cleaned
 
-    def _record_state(self, page_id: str, fingerprint: str, added: int) -> None:
-        with self._lock:
-            state = self._audit_state.setdefault(page_id, {})
-            state["fingerprint"] = fingerprint
-            streak = int(state.get("zero_streak", 0) or 0)
-            streak = 0 if added > 0 else streak + 1
-            state["zero_streak"] = streak
-            if streak >= DEFAULT_ZERO_ADD_LIMIT:
-                state["saturated"] = True
+    def _record_failure(self, page_id: str, fingerprint: str = "") -> None:
+        """失败审计保持可重试，但同一指纹连续失败达到上限后暂停重试。
 
-    def _record_failure(self, page_id: str) -> None:
-        """Leave failed audits retryable without changing zero-result streaks."""
+        不改变零新增计数；成功审计过的旧指纹作废，避免页面看起来已审计。
+        """
         with self._lock:
             state = self._audit_state.setdefault(str(page_id or ""), {})
-            # Invalidate the prior fingerprint so a transient failure does not
-            # make the unchanged page look successfully audited.
             state["fingerprint"] = ""
+            if fingerprint and state.get("inflight") == fingerprint:
+                state.pop("inflight", None)
+            if fingerprint and state.get("failed_fingerprint") == fingerprint:
+                state["fail_streak"] = int(state.get("fail_streak", 0) or 0) + 1
+            else:
+                state["failed_fingerprint"] = fingerprint
+                state["fail_streak"] = 1
+            if fingerprint and state["fail_streak"] >= DEFAULT_FAILURE_LIMIT:
+                print(
+                    f"[页面审计线程] 页面同一状态连续 {state['fail_streak']} 次审计失败，"
+                    f"暂停重试直到页面变化: page={page_id}"
+                )
 
     # ------------------------------------------------------------------
-    # Result reading / Status reporting (called by main thread)
+    # 结果读取 / 状态回报（主线程调用）
     # ------------------------------------------------------------------
     def collect_results(self) -> list[dict[str, Any]]:
-        """Retrieve completed audit results (does not change saturation state, wait for record_result)."""
+        """取走已完成的审计结果（不改变饱和状态，等 record_result）。"""
         with self._lock:
             results = list(self._results)
             self._results = []
         return results
 
     def record_result(self, page_id: str, added: int) -> None:
-        """Report actual added count after main thread merge completes, driving saturation determination."""
+        """主线程合并完成后回报实际新增数，驱动饱和判定。"""
         with self._lock:
             state = self._audit_state.setdefault(str(page_id or ""), {})
             streak = int(state.get("zero_streak", 0) or 0)
             streak = 0 if added > 0 else streak + 1
             state["zero_streak"] = streak
-            if streak >= DEFAULT_ZERO_ADD_LIMIT:
+            # 还有截图没审计过时不判饱和：否则被单次上限省略的状态永远补不进来。
+            if streak >= DEFAULT_ZERO_ADD_LIMIT and not state.get("pending_screenshots"):
                 state["saturated"] = True
                 print(
-                    f"[PageAuditThread] Page had no additions for {DEFAULT_ZERO_ADD_LIMIT} consecutive audits, "
-                    f"marking saturated to stop auditing: page={page_id}"
+                    f"[页面审计线程] 页面连续 {DEFAULT_ZERO_ADD_LIMIT} 次审计无新增，"
+                    f"标记饱和不再审计: page={page_id}"
                 )
-
-    def pending_count(self) -> int:
-        with self._lock:
-            return self._pending
 
     def is_configured(self) -> bool:
         """Return whether final-output code may submit additional audits."""
         with self._lock:
             return self._llm is not None
 
-    def flush(self, timeout: float | None = None) -> bool:
-        """Wait for all submitted tasks in the queue to finish processing."""
-        with self._idle_cond:
-            if timeout is None:
-                while self._pending > 0:
-                    self._idle_cond.wait()
-                return True
-            deadline = time.monotonic() + timeout
-            while self._pending > 0:
-                remaining = deadline - time.monotonic()
-                if remaining <= 0:
-                    return False
-                self._idle_cond.wait(remaining)
-            return True
+    def record_failure(self, job: dict[str, Any], exc: BaseException) -> None:
+        job = job or {}
+        self._record_failure(
+            str(job.get("page_id", "") or ""),
+            str(job.get("fingerprint", "") or ""),
+        )
 
     def reset(self) -> None:
-        """Restore to unconfigured initial state; for test isolation only."""
+        super().reset()
         with self._lock:
-            self._llm = None
             self._results = []
             self._audit_state = {}
-            self._max_pending = DEFAULT_MAX_PENDING
 
 
-# In-process singleton, semantics aligned with workflow/bug_detection_worker.py.
+# 进程内单例，语义与 workflow/bug_detection_worker.py 一致。
 page_audit_worker = PageAuditWorker()

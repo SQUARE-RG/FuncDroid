@@ -1,7 +1,8 @@
+import contextlib
+import io
 import subprocess
 import sys
 import unittest
-from argparse import Namespace
 from pathlib import Path
 from unittest.mock import patch
 
@@ -10,41 +11,56 @@ sys.path.insert(0, str(FUNCDROID_DIR))
 
 import main
 from connector.adb import ADB
-from workflow.account_safety import account_destructive_intent
-from workflow.nodes.scenario_exec import _finished_declares_failure
-from workflow.nodes.prompt import (
-    BOOTSTRAP_FFG_SYSTEM_PROMPT,
-    BUG_DETECT_SYSTEM_PROMPT,
-    FFG_AUDIT_SYSTEM_PROMPT,
-    FFG_UPDATE_SYSTEM_PROMPT,
-    PAGE_AUDIT_SYSTEM_PROMPT,
-    SCENARIO_EXEC_SYSTEM_PROMPT_TEMPLATE,
-    UNIFIED_SCENARIO_PLAN_SYSTEM_PROMPT,
-)
+from model.flow_graph import FlowGraph, FunctionDependency, FunctionNode, Page
+from workflow.account_safety import account_session_action_violation
 from workflow.nodes.scenario_plan import (
-    _audit_scenario_is_executable,
-    _parameterized_scenario_family,
-    _quoted_action_control,
-    _unquoted_audit_control,
+    PLAN_BREADTH_MAX_SCENARIOS,
+    _candidate_cross_pairs,
+    _function_phase,
+    _required_depth_count,
 )
 
 
 class DeviceSelectionTests(unittest.TestCase):
-    def test_single_device_is_selected_automatically(self):
-        args = Namespace(device_id=None)
-        with patch.object(main.ADB, "devices", return_value=["android-1"]), patch.object(
-            main.HDC, "devices", return_value=[]
-        ):
-            main._ensure_device_id(args)
-        self.assertEqual(args.device_id, "android-1")
+    def test_missing_device_id_is_rejected_before_runtime(self):
+        with contextlib.redirect_stderr(io.StringIO()):
+            with self.assertRaises(SystemExit) as raised:
+                main._build_parser().parse_args([])
+        self.assertEqual(raised.exception.code, 2)
 
-    def test_multiple_devices_require_an_explicit_id(self):
-        args = Namespace(device_id=None)
-        with patch.object(main.ADB, "devices", return_value=["android-1", "android-2"]), patch.object(
-            main.HDC, "devices", return_value=[]
-        ):
-            with self.assertRaisesRegex(ValueError, "Multiple devices detected"):
-                main._ensure_device_id(args)
+    def test_explicit_device_preserves_defect_app_data(self):
+        args = main._build_parser().parse_args(["--device-id", "android-1"])
+        self.assertEqual(args.device_id, "android-1")
+        self.assertEqual(args.mode, "defect")
+        self.assertFalse(args.reset_app_data)
+        self.assertTrue(args.bug_detection)
+        self.assertFalse(args.compliance)
+
+    def test_compliance_requires_package_before_resetting_data(self):
+        with contextlib.redirect_stderr(io.StringIO()):
+            with self.assertRaises(SystemExit) as raised:
+                main._build_parser().parse_args([
+                    "--device-id", "android-1", "--mode", "compliance",
+                ])
+        self.assertEqual(raised.exception.code, 2)
+
+    def test_explicit_preservation_allows_foreground_compliance(self):
+        args = main._build_parser().parse_args([
+            "--device-id", "android-1", "--mode", "compliance", "--no-reset-app-data",
+        ])
+        self.assertFalse(args.reset_app_data)
+        self.assertFalse(args.grant_permissions)
+        self.assertFalse(args.bug_detection)
+        self.assertTrue(args.compliance)
+
+    def test_resume_cannot_clear_app_data(self):
+        with contextlib.redirect_stderr(io.StringIO()):
+            with self.assertRaises(SystemExit) as raised:
+                main._build_parser().parse_args([
+                    "--device-id", "android-1", "--package-name", "com.example.app",
+                    "--resume-output", "previous-run", "--reset-app-data",
+                ])
+        self.assertEqual(raised.exception.code, 2)
 
 
 class AdbDeviceParsingTests(unittest.TestCase):
@@ -59,47 +75,39 @@ class AdbDeviceParsingTests(unittest.TestCase):
             self.assertEqual(ADB.devices(), ["ready-1"])
 
 
-class EnglishScenarioCompatibilityTests(unittest.TestCase):
-    def test_every_model_role_requires_english_output(self):
-        prompts = (
-            UNIFIED_SCENARIO_PLAN_SYSTEM_PROMPT,
-            BOOTSTRAP_FFG_SYSTEM_PROMPT,
-            FFG_AUDIT_SYSTEM_PROMPT,
-            SCENARIO_EXEC_SYSTEM_PROMPT_TEMPLATE,
-            FFG_UPDATE_SYSTEM_PROMPT,
-            BUG_DETECT_SYSTEM_PROMPT,
-            PAGE_AUDIT_SYSTEM_PROMPT,
-        )
-        for prompt in prompts:
-            self.assertIn("[Mandatory Output Language]", prompt)
-            self.assertIn("Preserve visible UI labels", prompt)
+class SchedulingTests(unittest.TestCase):
+    def test_failed_depth_attempt_does_not_satisfy_depth_target(self):
+        graph = FlowGraph()
+        node = FunctionNode(id="func_1", page_ids=["page_1"])
+        graph.functions[node.id] = node
+        graph.pages["page_1"] = Page(id="page_1", controls=["Save"])
+        self.assertEqual(_function_phase(graph, node), "breadth")
+        node.intra_attempt_count = PLAN_BREADTH_MAX_SCENARIOS
+        self.assertEqual(_function_phase(graph, node), "depth")
+        node.depth_scenario_count = _required_depth_count(graph, node)
+        node.intra_attempt_count += node.depth_scenario_count
+        self.assertEqual(_function_phase(graph, node), "depth")
+        node.successful_depth_scenario_count = node.depth_scenario_count
+        self.assertEqual(_function_phase(graph, node), "breadth")
 
-    def test_english_audit_scenario_is_executable(self):
-        self.assertTrue(_audit_scenario_is_executable('Click the "Settings" button'))
+    def test_shared_resources_keep_both_directions_without_explicit_dependency(self):
+        graph = FlowGraph()
+        for node_id in ("func_1", "func_2"):
+            graph.functions[node_id] = FunctionNode(id=node_id, resource_variables=["record"])
+        pairs = {(src, dst) for src, dst, _ in _candidate_cross_pairs(graph)}
+        self.assertEqual(pairs, {("func_1", "func_2"), ("func_2", "func_1")})
+        graph.function_dependencies.append(FunctionDependency("func_1", "func_2", "record"))
+        pairs = {(src, dst) for src, dst, _ in _candidate_cross_pairs(graph)}
+        self.assertEqual(pairs, {("func_1", "func_2")})
 
-    def test_quoted_action_control_is_extracted(self):
-        self.assertEqual(_quoted_action_control('Click the "Settings" button'), "settings")
 
-    def test_unquoted_action_control_is_extracted(self):
-        self.assertEqual(
-            _unquoted_audit_control("Open the Settings menu item and observe the result"),
-            "settings",
-        )
-
-    def test_parameterized_english_control_is_normalized(self):
-        self.assertEqual(
-            _parameterized_scenario_family('On the "Home" page, select "Recent" tab'),
-            ("home", "select", "tab"),
-        )
-
-    def test_finished_status_distinguishes_success_and_failure(self):
-        self.assertTrue(_finished_declares_failure("Goal unreachable: Settings not found"))
-        self.assertFalse(_finished_declares_failure("Goal achieved"))
-
-    def test_account_guard_is_package_independent(self):
-        self.assertTrue(account_destructive_intent("\u9000\u51fa\u767b\u5f55"))
-        self.assertTrue(account_destructive_intent("Delete the account"))
-        self.assertFalse(account_destructive_intent("Open account settings"))
+class AccountSessionTests(unittest.TestCase):
+    def test_session_guard_blocks_logout_but_not_observation(self):
+        with patch.dict("os.environ", {"ACCOUNT_SESSION_GUARD": "1"}):
+            self.assertTrue(account_session_action_violation("click", "点击退出登录"))
+            self.assertTrue(account_session_action_violation("click", "Click Log out"))
+            self.assertFalse(account_session_action_violation("click", "Open account settings"))
+            self.assertFalse(account_session_action_violation("wait", "Log out button is visible"))
 
 
 if __name__ == "__main__":

@@ -1,0 +1,848 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "rule_id": "R013",
+      "regulation": "《中华人民共和国个人信息保护法》",
+      "clause": "第六条：收集个人信息应限于最小范围，不得过度收集",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "registration_form",
+        "objective": "进入注册/登录/资料完善页面，枚举表单的必填字段与可选项，记录每个必填字段收集的个人信息类型，判断是否超出应用基本功能所需的最小必要范围。",
+        "verdict_hints": [
+          "表单必填项与权限申请是否超出最小必要范围",
+          "是否存在与业务功能无关的收集项"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R014",
+      "regulation": "《中华人民共和国个人信息保护法》",
+      "clause": "第十四条：个人同意应为知情、自愿、明确",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "first_launch_flow",
+        "objective": "清除应用数据后冷启动应用（由运行器自动完成），完整观察首次启动流程：隐私政策/用户协议弹窗是否出现、是否说明收集目的方式范围、同意是否默认勾选、是否可以拒绝、开屏广告是否有明显关闭按钮。逐屏截图取证，不跳过任何弹窗。",
+        "verdict_hints": [
+          "首启隐私弹窗是否在收集行为前出现",
+          "同意是否自愿（可拒绝/可仅必要）",
+          "是否默认勾选同意"
+        ],
+        "cold_start": true
+      }
+    },
+    {
+      "rule_id": "R015",
+      "regulation": "《中华人民共和国个人信息保护法》",
+      "clause": "第十七条：处理前需告知收集目的、方式、种类、期限",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "first_launch_flow",
+        "objective": "清除应用数据后冷启动应用（由运行器自动完成），完整观察首次启动流程：隐私政策/用户协议弹窗是否出现、是否说明收集目的方式范围、同意是否默认勾选、是否可以拒绝、开屏广告是否有明显关闭按钮。逐屏截图取证，不跳过任何弹窗。",
+        "verdict_hints": [
+          "弹窗或政策摘要是否说明收集目的",
+          "是否说明收集方式与信息种类",
+          "是否说明保存期限"
+        ],
+        "cold_start": true
+      }
+    },
+    {
+      "rule_id": "R018",
+      "regulation": "《中华人民共和国个人信息保护法》",
+      "clause": "第二十九条 & 第三十一条：处理敏感信息、未成年人信息需单独/监护人同意",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "consent_observation",
+        "objective": "触发一个涉及敏感个人信息的功能（人脸、位置、通讯录、健康、支付订阅等），观察是否在通用同意之外出现单独的二次告知/确认弹窗；订阅或会员页面观察自动续费是否默认勾选、是否有明确的续费提醒。截图记录弹窗原文与按钮布局。",
+        "verdict_hints": [
+          "触发敏感功能时是否有单独同意弹窗",
+          "未成年人信息是否有监护人同意或青少年模式入口"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R019",
+      "regulation": "《中华人民共和国个人信息保护法》",
+      "clause": "第二十四条：自动化决策需提供拒绝选项",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "settings_search",
+        "objective": "在应用设置中检索以下公示与开关：个性化推荐/定向推送关闭选项、“已收集个人信息清单”与“与第三方共享个人信息清单”入口、权限调用记录、自启动/关联启动开关、设备识别码重置、资费与附加条件显著提示。逐项记录是否存在并截图。",
+        "verdict_hints": [
+          "设置中是否存在个性化推荐/自动化决策关闭选项"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R023",
+      "regulation": "《App违法违规收集使用个人信息自评估指南》",
+      "clause": "评估点1-4：隐私政策应独立、易访问、易阅读",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "first_launch_flow",
+        "objective": "清除应用数据后冷启动应用（由运行器自动完成），完整观察首次启动流程：隐私政策/用户协议弹窗是否出现、是否说明收集目的方式范围、同意是否默认勾选、是否可以拒绝、开屏广告是否有明显关闭按钮。逐屏截图取证，不跳过任何弹窗。",
+        "verdict_hints": [
+          "首次运行是否提示隐私政策",
+          "设置中是否 4 次点击内可访问隐私政策",
+          "隐私政策是否独立成文、可正常阅读"
+        ],
+        "cold_start": true
+      }
+    },
+    {
+      "rule_id": "R024",
+      "regulation": "《App违法违规收集使用个人信息自评估指南》",
+      "clause": "评估点5-8：隐私政策需明示各业务功能对应的个人信息类型，并标注敏感信息",
+      "detectability": "gui_collect_llm",
+      "checkpoint": {
+        "group": "policy_text_review",
+        "objective": "从首启、登录或设置等入口进入隐私政策，按本组条款定位相关章节，必要时滚动并逐屏留存正文截图。核对具体信息种类、用途、存储与共享规则、用户权利及敏感信息标注；不要把页面可打开等同于内容符合。加载失败或预算内未读到对应内容时明确记录证据缺口。",
+        "verdict_hints": [
+          "业务功能与收集的信息种类是否逐项对应",
+          "敏感信息是否明确标注"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R025",
+      "regulation": "《App违法违规收集使用个人信息自评估指南》",
+      "clause": "评估点9-18：隐私政策需说明存储、使用规则、出境、共享、用户权利、更新等",
+      "detectability": "gui_collect_llm",
+      "checkpoint": {
+        "group": "policy_text_review",
+        "objective": "从首启、登录或设置等入口进入隐私政策，按本组条款定位相关章节，必要时滚动并逐屏留存正文截图。核对具体信息种类、用途、存储与共享规则、用户权利及敏感信息标注；不要把页面可打开等同于内容符合。加载失败或预算内未读到对应内容时明确记录证据缺口。",
+        "verdict_hints": [
+          "是否说明存储期限、使用与共享规则、出境情况",
+          "是否说明用户权利行使和政策更新方式"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R026",
+      "regulation": "《App违法违规收集使用个人信息自评估指南》",
+      "clause": "评估点19：隐私政策不得包含免责或不合理条款",
+      "detectability": "gui_collect_llm",
+      "checkpoint": {
+        "group": "policy_text_review",
+        "objective": "从首启、登录或设置等入口进入隐私政策，按本组条款定位相关章节，必要时滚动并逐屏留存正文截图。核对具体信息种类、用途、存储与共享规则、用户权利及敏感信息标注；不要把页面可打开等同于内容符合。加载失败或预算内未读到对应内容时明确记录证据缺口。",
+        "verdict_hints": [
+          "已阅读内容是否存在免责或不合理限制用户权利的条款",
+          "没有覆盖相关正文时保留证据不足"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R027",
+      "regulation": "《App违法违规收集使用个人信息自评估指南》",
+      "clause": "评估点20-22：收集个人信息时必须明示收集目的、方式、范围（含权限、Cookie、第三方SDK）",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "first_launch_flow",
+        "objective": "清除应用数据后冷启动应用（由运行器自动完成），完整观察首次启动流程：隐私政策/用户协议弹窗是否出现、是否说明收集目的方式范围、同意是否默认勾选、是否可以拒绝、开屏广告是否有明显关闭按钮。逐屏截图取证，不跳过任何弹窗。",
+        "verdict_hints": [
+          "权限申请时是否明示目的",
+          "弹窗/政策是否明示收集范围（含权限、Cookie、第三方 SDK）"
+        ],
+        "cold_start": true
+      }
+    },
+    {
+      "rule_id": "R028",
+      "regulation": "《App违法违规收集使用个人信息自评估指南》",
+      "clause": "评估点23-24：用户必须自主选择同意，不能强制捆绑授权",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "first_launch_flow",
+        "objective": "清除应用数据后冷启动应用（由运行器自动完成），完整观察首次启动流程：隐私政策/用户协议弹窗是否出现、是否说明收集目的方式范围、同意是否默认勾选、是否可以拒绝、开屏广告是否有明显关闭按钮。逐屏截图取证，不跳过任何弹窗。",
+        "verdict_hints": [
+          "同意是否可自主选择",
+          "是否强制捆绑授权（不同意则完全无法使用）"
+        ],
+        "cold_start": true
+      }
+    },
+    {
+      "rule_id": "R029",
+      "regulation": "《App违法违规收集使用个人信息自评估指南》",
+      "clause": "评估点25-27：不得收集超出必要范围或与业务功能无关的信息",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "registration_form",
+        "objective": "进入注册/登录/资料完善页面，枚举表单的必填字段与可选项，记录每个必填字段收集的个人信息类型，判断是否超出应用基本功能所需的最小必要范围。",
+        "verdict_hints": [
+          "必填信息是否与业务功能直接相关",
+          "是否存在超出必要范围的强制填写项"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R030",
+      "regulation": "《App违法违规收集使用个人信息自评估指南》",
+      "clause": "评估点28-29：不得在用户拒绝后反复索要权限；更新后不得改变权限",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "permission_denial_flow",
+        "objective": "在应用中触发一项敏感权限申请（定位/相机/存储/通讯录等），在系统权限弹窗中选择“拒绝”或“仅使用时允许”后继续使用应用：观察对应功能是否仍可使用（基本功能不得因拒绝非必要权限而被限制）、应用是否在短时间内再次弹出同一权限申请、是否存在一次性批量申请多个不相关权限。每次弹窗出现时先截图取证再操作。",
+        "verdict_hints": [
+          "拒绝权限后同一权限是否再次弹出",
+          "频繁重复索权即判违规"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R031",
+      "regulation": "《App违法违规收集使用个人信息自评估指南》",
+      "clause": "评估点30-31：应支持用户账号注销、查询、更正、删除个人信息",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "rights_entry_search",
+        "objective": "在应用的“设置/我的/关于/帮助与反馈”等页面中检索用户权利相关入口：账号注销、个人信息查询/更正/删除、撤回同意、投诉申诉渠道、客服电话公示。只验证入口的存在性与可达性并截图，不执行注销、删除等不可逆操作。",
+        "verdict_hints": [
+          "账号注销入口是否存在",
+          "个人信息查询/更正/删除入口是否存在"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R032",
+      "regulation": "《App违法违规收集使用个人信息自评估指南》",
+      "clause": "评估点32：应及时反馈用户申诉（15天内）",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "rights_entry_search",
+        "objective": "在应用的“设置/我的/关于/帮助与反馈”等页面中检索用户权利相关入口：账号注销、个人信息查询/更正/删除、撤回同意、投诉申诉渠道、客服电话公示。只验证入口的存在性与可达性并截图，不执行注销、删除等不可逆操作。",
+        "verdict_hints": [
+          "投诉/申诉渠道（电话、邮箱、表单）是否提供",
+          "是否说明反馈时限"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R033",
+      "regulation": "《App违法违规收集使用个人信息行为认定方法》",
+      "clause": "一-1~4：未公开收集使用规则（无隐私政策、首次运行未提示、难以访问/阅读）",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "first_launch_flow",
+        "objective": "清除应用数据后冷启动应用（由运行器自动完成），完整观察首次启动流程：隐私政策/用户协议弹窗是否出现、是否说明收集目的方式范围、同意是否默认勾选、是否可以拒绝、开屏广告是否有明显关闭按钮。逐屏截图取证，不跳过任何弹窗。",
+        "verdict_hints": [
+          "无隐私政策或首次运行未提示即判违规",
+          "隐私政策是否难以访问或阅读"
+        ],
+        "cold_start": true
+      }
+    },
+    {
+      "rule_id": "R034",
+      "regulation": "《App违法违规收集使用个人信息行为认定方法》",
+      "clause": "二-1~4：未明示收集目的、方式和范围",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "first_launch_flow",
+        "objective": "清除应用数据后冷启动应用（由运行器自动完成），完整观察首次启动流程：隐私政策/用户协议弹窗是否出现、是否说明收集目的方式范围、同意是否默认勾选、是否可以拒绝、开屏广告是否有明显关闭按钮。逐屏截图取证，不跳过任何弹窗。",
+        "verdict_hints": [
+          "收集目的、方式、范围是否在同意前明示",
+          "说明是否清晰不含糊"
+        ],
+        "cold_start": true
+      }
+    },
+    {
+      "rule_id": "R035",
+      "regulation": "《App违法违规收集使用个人信息行为认定方法》",
+      "clause": "三-1~9：未经用户同意收集使用个人信息（包括默认同意、超范围收集、诱导欺骗、未提供撤回途径等）",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "first_launch_flow",
+        "objective": "清除应用数据后冷启动应用（由运行器自动完成），完整观察首次启动流程：隐私政策/用户协议弹窗是否出现、是否说明收集目的方式范围、同意是否默认勾选、是否可以拒绝、开屏广告是否有明显关闭按钮。逐屏截图取证，不跳过任何弹窗。",
+        "verdict_hints": [
+          "是否存在默认同意",
+          "是否诱导欺骗用户同意",
+          "是否提供撤回同意途径"
+        ],
+        "cold_start": true
+      }
+    },
+    {
+      "rule_id": "R036",
+      "regulation": "《App违法违规收集使用个人信息行为认定方法》",
+      "clause": "四-1~6：违反必要原则（收集与功能无关数据、强制捆绑授权、频度超标等）",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "permission_denial_flow",
+        "objective": "在应用中触发一项敏感权限申请（定位/相机/存储/通讯录等），在系统权限弹窗中选择“拒绝”或“仅使用时允许”后继续使用应用：观察对应功能是否仍可使用（基本功能不得因拒绝非必要权限而被限制）、应用是否在短时间内再次弹出同一权限申请、是否存在一次性批量申请多个不相关权限。每次弹窗出现时先截图取证再操作。",
+        "verdict_hints": [
+          "是否强制捆绑授权",
+          "是否收集与功能无关信息",
+          "索权频度是否超标"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R038",
+      "regulation": "《App违法违规收集使用个人信息行为认定方法》",
+      "clause": "六-1~5：未提供删除、更正、注销功能或投诉渠道",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "rights_entry_search",
+        "objective": "在应用的“设置/我的/关于/帮助与反馈”等页面中检索用户权利相关入口：账号注销、个人信息查询/更正/删除、撤回同意、投诉申诉渠道、客服电话公示。只验证入口的存在性与可达性并截图，不执行注销、删除等不可逆操作。",
+        "verdict_hints": [
+          "删除/更正/注销功能入口是否存在",
+          "投诉渠道是否存在"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R039",
+      "regulation": "《常见类型移动互联网应用程序必要个人信息范围规定》",
+      "clause": "第三条、第四条：仅能收集基本功能所需的必要信息；拒绝非必要信息不得拒绝基本功能",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "requires_functionality_evidence": true,
+        "group": "permission_denial_flow",
+        "objective": "在应用中触发一项敏感权限申请（定位/相机/存储/通讯录等），在系统权限弹窗中选择“拒绝”或“仅使用时允许”后继续使用应用：观察对应功能是否仍可使用（基本功能不得因拒绝非必要权限而被限制）、应用是否在短时间内再次弹出同一权限申请、是否存在一次性批量申请多个不相关权限。每次弹窗出现时先截图取证再操作。",
+        "verdict_hints": [
+          "拒绝提供非必要信息后基本功能是否仍可用",
+          "因拒绝而限制基本功能即判违规"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R040",
+      "regulation": "《常见类型移动互联网应用程序必要个人信息范围规定》",
+      "clause": "第五条-1：地图导航类仅需位置信息、出发地、到达地",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "registration_form",
+        "objective": "进入注册/登录/资料完善页面，枚举表单的必填字段与可选项，记录每个必填字段收集的个人信息类型，判断是否超出应用基本功能所需的最小必要范围。",
+        "verdict_hints": [
+          "必填信息是否超出地图导航类必要范围（位置、出发地、到达地）"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R041",
+      "regulation": "《常见类型移动互联网应用程序必要个人信息范围规定》",
+      "clause": "第五条-2：网约车类需手机号、行程信息、支付信息",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "registration_form",
+        "objective": "进入注册/登录/资料完善页面，枚举表单的必填字段与可选项，记录每个必填字段收集的个人信息类型，判断是否超出应用基本功能所需的最小必要范围。",
+        "verdict_hints": [
+          "必填信息是否超出网约车类必要范围（手机号、行程、支付）"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R042",
+      "regulation": "《常见类型移动互联网应用程序必要个人信息范围规定》",
+      "clause": "第五条-3：即时通信类需手机号、账号、联系人账号列表",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "registration_form",
+        "objective": "进入注册/登录/资料完善页面，枚举表单的必填字段与可选项，记录每个必填字段收集的个人信息类型，判断是否超出应用基本功能所需的最小必要范围。",
+        "verdict_hints": [
+          "必填信息是否超出即时通信类必要范围（手机号、账号、联系人账号列表）"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R043",
+      "regulation": "《常见类型移动互联网应用程序必要个人信息范围规定》",
+      "clause": "第五条-4：网络社区类仅需手机号",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "registration_form",
+        "objective": "进入注册/登录/资料完善页面，枚举表单的必填字段与可选项，记录每个必填字段收集的个人信息类型，判断是否超出应用基本功能所需的最小必要范围。",
+        "verdict_hints": [
+          "必填信息是否超出网络社区类必要范围（仅手机号）"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R044",
+      "regulation": "《常见类型移动互联网应用程序必要个人信息范围规定》",
+      "clause": "第五条-5：网络支付类需手机号、实名、银行卡信息",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "registration_form",
+        "objective": "进入注册/登录/资料完善页面，枚举表单的必填字段与可选项，记录每个必填字段收集的个人信息类型，判断是否超出应用基本功能所需的最小必要范围。",
+        "verdict_hints": [
+          "必填信息是否超出网络支付类必要范围（手机号、实名、银行卡）"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R045",
+      "regulation": "《常见类型移动互联网应用程序必要个人信息范围规定》",
+      "clause": "第五条-6~7：购物/外卖类需手机号、收货信息、支付信息",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "registration_form",
+        "objective": "进入注册/登录/资料完善页面，枚举表单的必填字段与可选项，记录每个必填字段收集的个人信息类型，判断是否超出应用基本功能所需的最小必要范围。",
+        "verdict_hints": [
+          "必填信息是否超出购物/外卖类必要范围（手机号、收货信息、支付）"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R046",
+      "regulation": "《常见类型移动互联网应用程序必要个人信息范围规定》",
+      "clause": "第五条-8：邮件快件寄递类需寄件人身份、地址、电话，收件人姓名、地址、电话及寄递物品信息",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "registration_form",
+        "objective": "进入注册/登录/资料完善页面，枚举表单的必填字段与可选项，记录每个必填字段收集的个人信息类型，判断是否超出应用基本功能所需的最小必要范围。",
+        "verdict_hints": [
+          "必填信息是否超出邮件快件寄递类必要范围（寄件人身份/地址/电话、收件人姓名/地址/电话、物品信息）"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R047",
+      "regulation": "《常见类型移动互联网应用程序必要个人信息范围规定》",
+      "clause": "第五条-9：交通票务类需手机号、旅客实名、行程、支付信息",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "registration_form",
+        "objective": "进入注册/登录/资料完善页面，枚举表单的必填字段与可选项，记录每个必填字段收集的个人信息类型，判断是否超出应用基本功能所需的最小必要范围。",
+        "verdict_hints": [
+          "必填信息是否超出交通票务类必要范围（手机号、实名、行程、支付）"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R048",
+      "regulation": "《常见类型移动互联网应用程序必要个人信息范围规定》",
+      "clause": "第五条-10~24：婚恋、招聘、借贷、房屋、二手车、医疗、旅游、酒店、游戏、教育、本地生活、用车、投资理财、银行等类 App 的必要个人信息按类别限定；女性健康类无需个人信息即可使用基本功能",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "registration_form",
+        "objective": "进入注册/登录/资料完善页面，枚举表单的必填字段与可选项，记录每个必填字段收集的个人信息类型，判断是否超出应用基本功能所需的最小必要范围。",
+        "verdict_hints": [
+          "先识别 App 类别，再核对必填信息是否超出该类别法定必要范围；女性健康类基本功能不应强制收集个人信息"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R049",
+      "regulation": "《常见类型移动互联网应用程序必要个人信息范围规定》",
+      "clause": "第五条-25~38：邮箱云盘、远程会议类的必要个人信息仅为注册手机号；直播、影音、短视频、新闻、健身、浏览器、输入法、安全、电子书、拍摄美化、应用商店、实用工具类无需个人信息即可使用基本功能",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "registration_form",
+        "objective": "进入注册/登录/资料完善页面，枚举表单的必填字段与可选项，记录每个必填字段收集的个人信息类型，判断是否超出应用基本功能所需的最小必要范围。",
+        "verdict_hints": [
+          "邮箱云盘、远程会议类可要求注册手机号但不应超出；第 27~38 类基本功能不应强制收集个人信息"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R050",
+      "regulation": "《常见类型移动互联网应用程序必要个人信息范围规定》",
+      "clause": "第五条-39：演出票务类需手机号、场次、座位、支付信息",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "registration_form",
+        "objective": "进入注册/登录/资料完善页面，枚举表单的必填字段与可选项，记录每个必填字段收集的个人信息类型，判断是否超出应用基本功能所需的最小必要范围。",
+        "verdict_hints": [
+          "必填信息是否超出演出票务类必要范围（手机号、场次、座位、支付）"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R054",
+      "regulation": "《工业和信息化部关于开展纵深推进App侵害用户权益专项整治行动的通知》",
+      "clause": "三-4：强制定向推送功能（未告知、未提供关闭选项）",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "settings_search",
+        "objective": "在应用设置中检索以下公示与开关：个性化推荐/定向推送关闭选项、“已收集个人信息清单”与“与第三方共享个人信息清单”入口、权限调用记录、自启动/关联启动开关、设备识别码重置、资费与附加条件显著提示。逐项记录是否存在并截图。",
+        "verdict_hints": [
+          "定向推送/个性化广告是否提供关闭选项",
+          "推送开启前是否告知"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R055",
+      "regulation": "《工业和信息化部关于开展纵深推进App侵害用户权益专项整治行动的通知》",
+      "clause": "三-5：强制/频繁索取权限（短时高频、拒绝后仍反复申请）",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "permission_denial_flow",
+        "objective": "在应用中触发一项敏感权限申请（定位/相机/存储/通讯录等），在系统权限弹窗中选择“拒绝”或“仅使用时允许”后继续使用应用：观察对应功能是否仍可使用（基本功能不得因拒绝非必要权限而被限制）、应用是否在短时间内再次弹出同一权限申请、是否存在一次性批量申请多个不相关权限。每次弹窗出现时先截图取证再操作。",
+        "verdict_hints": [
+          "拒绝后是否仍反复申请同一权限",
+          "是否短时高频索权"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R058",
+      "regulation": "《工业和信息化部关于开展纵深推进App侵害用户权益专项整治行动的通知》",
+      "clause": "三-8：欺骗误导用户提供个人信息（积分、奖励诱导采集敏感数据）",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "consent_observation",
+        "objective": "触发一个涉及敏感个人信息的功能（人脸、位置、通讯录、健康、支付订阅等），观察是否在通用同意之外出现单独的二次告知/确认弹窗；订阅或会员页面观察自动续费是否默认勾选、是否有明确的续费提醒。截图记录弹窗原文与按钮布局。",
+        "verdict_hints": [
+          "是否存在积分/奖励诱导用户提供个人信息",
+          "诱导文案与敏感信息采集是否关联"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R061",
+      "regulation": "《工业和信息化部关于开展信息通信服务感知提升行动的通知》",
+      "clause": "优化隐私政策和权限调用展示方式。APP需以简洁、清晰、易懂的方式展示隐私政策摘要；调用敏感权限时应明确告知目的",
+      "detectability": "gui_collect_llm",
+      "checkpoint": {
+        "group": "policy_text_review",
+        "objective": "从首启、登录或设置等入口进入隐私政策，按本组条款定位相关章节，必要时滚动并逐屏留存正文截图。核对具体信息种类、用途、存储与共享规则、用户权利及敏感信息标注；不要把页面可打开等同于内容符合。加载失败或预算内未读到对应内容时明确记录证据缺口。",
+        "verdict_hints": [
+          "是否展示清晰易懂的政策摘要",
+          "实际敏感权限请求是否明确告知目的"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R062",
+      "regulation": "《工业和信息化部关于开展信息通信服务感知提升行动的通知》",
+      "clause": "优化APP开屏弹窗信息展示方式：需提供明显关闭按钮，禁止整屏图片/视频作为跳转链接诱导点击",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "first_launch_flow",
+        "objective": "清除应用数据后冷启动应用（由运行器自动完成），完整观察首次启动流程：隐私政策/用户协议弹窗是否出现、是否说明收集目的方式范围、同意是否默认勾选、是否可以拒绝、开屏广告是否有明显关闭按钮。逐屏截图取证，不跳过任何弹窗。",
+        "verdict_hints": [
+          "开屏广告是否有明显关闭按钮",
+          "是否整屏图片/视频作为跳转链接诱导点击"
+        ],
+        "cold_start": true
+      }
+    },
+    {
+      "rule_id": "R063",
+      "regulation": "《工业和信息化部关于开展信息通信服务感知提升行动的通知》",
+      "clause": "建立个人信息保护“双清单”：APP需展示“已收集个人信息清单”和“与第三方共享个人信息清单”",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "settings_search",
+        "objective": "在应用设置中检索以下公示与开关：个性化推荐/定向推送关闭选项、“已收集个人信息清单”与“与第三方共享个人信息清单”入口、权限调用记录、自启动/关联启动开关、设备识别码重置、资费与附加条件显著提示。逐项记录是否存在并截图。",
+        "verdict_hints": [
+          "“已收集个人信息清单”入口是否存在",
+          "“与第三方共享个人信息清单”入口是否存在"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R065",
+      "regulation": "《工业和信息化部关于开展信息通信服务感知提升行动的通知》",
+      "clause": "提升客服热线响应能力：互联网企业需在APP显著位置公示客服电话",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "rights_entry_search",
+        "objective": "在应用的“设置/我的/关于/帮助与反馈”等页面中检索用户权利相关入口：账号注销、个人信息查询/更正/删除、撤回同意、投诉申诉渠道、客服电话公示。只验证入口的存在性与可达性并截图，不执行注销、删除等不可逆操作。",
+        "verdict_hints": [
+          "显著位置是否公示客服电话"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R070",
+      "regulation": "《工业和信息化部关于进一步提升移动互联网应用服务能力的通知》",
+      "clause": "开屏/弹窗应有清晰关闭按钮，不得频繁干扰或误触诱导",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "first_launch_flow",
+        "objective": "清除应用数据后冷启动应用（由运行器自动完成），完整观察首次启动流程：隐私政策/用户协议弹窗是否出现、是否说明收集目的方式范围、同意是否默认勾选、是否可以拒绝、开屏广告是否有明显关闭按钮。逐屏截图取证，不跳过任何弹窗。",
+        "verdict_hints": [
+          "弹窗是否有清晰关闭按钮",
+          "是否频繁弹窗干扰或误触诱导"
+        ],
+        "cold_start": true
+      }
+    },
+    {
+      "rule_id": "R071",
+      "regulation": "《工业和信息化部关于进一步提升移动互联网应用服务能力的通知》",
+      "clause": "服务资费、附加条件需显著提示，不得暗中添加限制",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "settings_search",
+        "objective": "在应用设置中检索以下公示与开关：个性化推荐/定向推送关闭选项、“已收集个人信息清单”与“与第三方共享个人信息清单”入口、权限调用记录、自启动/关联启动开关、设备识别码重置、资费与附加条件显著提示。逐项记录是否存在并截图。",
+        "verdict_hints": [
+          "服务资费与附加条件是否显著提示",
+          "是否暗中添加限制"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R073",
+      "regulation": "《工业和信息化部关于进一步提升移动互联网应用服务能力的通知》",
+      "clause": "自动续订/续费需提醒用户，禁止默认勾选",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "consent_observation",
+        "objective": "触发一个涉及敏感个人信息的功能（人脸、位置、通讯录、健康、支付订阅等），观察是否在通用同意之外出现单独的二次告知/确认弹窗；订阅或会员页面观察自动续费是否默认勾选、是否有明确的续费提醒。截图记录弹窗原文与按钮布局。",
+        "verdict_hints": [
+          "自动续费是否默认勾选",
+          "续订前是否有明确提醒"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R074",
+      "regulation": "《工业和信息化部关于进一步提升移动互联网应用服务能力的通知》",
+      "clause": "不得强制要求超范围个人信息，不得因拒绝而限制基本功能",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "requires_functionality_evidence": true,
+        "group": "permission_denial_flow",
+        "objective": "在应用中触发一项敏感权限申请（定位/相机/存储/通讯录等），在系统权限弹窗中选择“拒绝”或“仅使用时允许”后继续使用应用：观察对应功能是否仍可使用（基本功能不得因拒绝非必要权限而被限制）、应用是否在短时间内再次弹出同一权限申请、是否存在一次性批量申请多个不相关权限。每次弹窗出现时先截图取证再操作。",
+        "verdict_hints": [
+          "是否强制要求超范围个人信息",
+          "拒绝后基本功能是否被限制"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R075",
+      "regulation": "《工业和信息化部关于进一步提升移动互联网应用服务能力的通知》",
+      "clause": "明示个人信息处理规则，敏感信息需突出显示",
+      "detectability": "gui_collect_llm",
+      "checkpoint": {
+        "group": "policy_text_review",
+        "objective": "从首启、登录或设置等入口进入隐私政策，按本组条款定位相关章节，必要时滚动并逐屏留存正文截图。核对具体信息种类、用途、存储与共享规则、用户权利及敏感信息标注；不要把页面可打开等同于内容符合。加载失败或预算内未读到对应内容时明确记录证据缺口。",
+        "verdict_hints": [
+          "个人信息处理规则是否明示",
+          "敏感信息是否突出显示"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R076",
+      "regulation": "《工业和信息化部关于进一步提升移动互联网应用服务能力的通知》",
+      "clause": "权限应动态申请，禁止“一揽子”申请",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "permission_denial_flow",
+        "objective": "在应用中触发一项敏感权限申请（定位/相机/存储/通讯录等），在系统权限弹窗中选择“拒绝”或“仅使用时允许”后继续使用应用：观察对应功能是否仍可使用（基本功能不得因拒绝非必要权限而被限制）、应用是否在短时间内再次弹出同一权限申请、是否存在一次性批量申请多个不相关权限。每次弹窗出现时先截图取证再操作。",
+        "verdict_hints": [
+          "权限是否在使用场景中动态申请",
+          "是否一揽子批量申请不相关权限"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R077",
+      "regulation": "《工业和信息化部关于进一步提升移动互联网应用服务能力的通知》",
+      "clause": "建立客服热线并在显著位置公示",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "rights_entry_search",
+        "objective": "在应用的“设置/我的/关于/帮助与反馈”等页面中检索用户权利相关入口：账号注销、个人信息查询/更正/删除、撤回同意、投诉申诉渠道、客服电话公示。只验证入口的存在性与可达性并截图，不执行注销、删除等不可逆操作。",
+        "verdict_hints": [
+          "客服热线是否在显著位置公示"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R080",
+      "regulation": "《工业和信息化部关于进一步提升移动互联网应用服务能力的通知》",
+      "clause": "APP需提供权限调用记录和提示机制",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "settings_search",
+        "objective": "在应用设置中检索以下公示与开关：个性化推荐/定向推送关闭选项、“已收集个人信息清单”与“与第三方共享个人信息清单”入口、权限调用记录、自启动/关联启动开关、设备识别码重置、资费与附加条件显著提示。逐项记录是否存在并截图。",
+        "verdict_hints": [
+          "是否提供权限调用记录或提示机制"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R081",
+      "regulation": "《工业和信息化部关于进一步提升移动互联网应用服务能力的通知》",
+      "clause": "APP需支持用户关闭自启动/关联启动、重置设备识别码",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "settings_search",
+        "objective": "在应用设置中检索以下公示与开关：个性化推荐/定向推送关闭选项、“已收集个人信息清单”与“与第三方共享个人信息清单”入口、权限调用记录、自启动/关联启动开关、设备识别码重置、资费与附加条件显著提示。逐项记录是否存在并截图。",
+        "verdict_hints": [
+          "自启动/关联启动关闭开关是否存在",
+          "设备识别码重置入口是否存在"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R082",
+      "regulation": "《信息安全技术 个人信息安全规范》",
+      "clause": "收集敏感个人信息需单独明示并征得用户明确同意",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "consent_observation",
+        "objective": "触发一个涉及敏感个人信息的功能（人脸、位置、通讯录、健康、支付订阅等），观察是否在通用同意之外出现单独的二次告知/确认弹窗；订阅或会员页面观察自动续费是否默认勾选、是否有明确的续费提醒。截图记录弹窗原文与按钮布局。",
+        "verdict_hints": [
+          "敏感个人信息收集前是否单独明示",
+          "是否征得单独的明确同意"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R083",
+      "regulation": "《信息安全技术 个人信息安全规范》",
+      "clause": "应最小化收集个人信息，遵循必要性原则",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "registration_form",
+        "objective": "进入注册/登录/资料完善页面，枚举表单的必填字段与可选项，记录每个必填字段收集的个人信息类型，判断是否超出应用基本功能所需的最小必要范围。",
+        "verdict_hints": [
+          "是否批量申请多个权限",
+          "是否一次性收集不必要数据"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R084",
+      "regulation": "《信息安全技术 个人信息安全规范》",
+      "clause": "应提供撤回同意、删除、更正、注销个人信息的渠道",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "rights_entry_search",
+        "objective": "在应用的“设置/我的/关于/帮助与反馈”等页面中检索用户权利相关入口：账号注销、个人信息查询/更正/删除、撤回同意、投诉申诉渠道、客服电话公示。只验证入口的存在性与可达性并截图，不执行注销、删除等不可逆操作。",
+        "verdict_hints": [
+          "撤回同意渠道是否存在",
+          "删除/更正/注销渠道是否存在"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R091",
+      "regulation": "《信息安全技术 移动互联网应用程序（App）收集个人信息基本要求》",
+      "clause": "应在收集前以显著方式告知用户并征得同意",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "first_launch_flow",
+        "objective": "清除应用数据后冷启动应用（由运行器自动完成），完整观察首次启动流程：隐私政策/用户协议弹窗是否出现、是否说明收集目的方式范围、同意是否默认勾选、是否可以拒绝、开屏广告是否有明显关闭按钮。逐屏截图取证，不跳过任何弹窗。",
+        "verdict_hints": [
+          "收集前是否有显著方式告知",
+          "是否征得用户同意后才开始收集"
+        ],
+        "cold_start": true
+      }
+    },
+    {
+      "rule_id": "R092",
+      "regulation": "《信息安全技术 移动互联网应用程序（App）收集个人信息基本要求》",
+      "clause": "应逐项列明收集的个人信息及用途",
+      "detectability": "gui_collect_llm",
+      "checkpoint": {
+        "group": "policy_text_review",
+        "objective": "从首启、登录或设置等入口进入隐私政策，按本组条款定位相关章节，必要时滚动并逐屏留存正文截图。核对具体信息种类、用途、存储与共享规则、用户权利及敏感信息标注；不要把页面可打开等同于内容符合。加载失败或预算内未读到对应内容时明确记录证据缺口。",
+        "verdict_hints": [
+          "收集的各项个人信息及对应用途是否逐项列明"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R093",
+      "regulation": "《信息安全技术 移动互联网应用程序（App）收集个人信息基本要求》",
+      "clause": "不得因用户不同意提供非必要信息而拒绝基本功能",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "requires_functionality_evidence": true,
+        "group": "permission_denial_flow",
+        "objective": "在应用中触发一项敏感权限申请（定位/相机/存储/通讯录等），在系统权限弹窗中选择“拒绝”或“仅使用时允许”后继续使用应用：观察对应功能是否仍可使用（基本功能不得因拒绝非必要权限而被限制）、应用是否在短时间内再次弹出同一权限申请、是否存在一次性批量申请多个不相关权限。每次弹窗出现时先截图取证再操作。",
+        "verdict_hints": [
+          "不同意提供非必要信息时是否仍提供基本功能"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R094",
+      "regulation": "《信息安全技术 移动互联网应用程序（App）收集个人信息基本要求》",
+      "clause": "应遵循最小必要原则，不得超范围收集",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "registration_form",
+        "objective": "进入注册/登录/资料完善页面，枚举表单的必填字段与可选项，记录每个必填字段收集的个人信息类型，判断是否超出应用基本功能所需的最小必要范围。",
+        "verdict_hints": [
+          "是否超范围收集与功能无关信息"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R095",
+      "regulation": "《信息安全技术 移动互联网应用程序（App）收集个人信息基本要求》",
+      "clause": "收集敏感个人信息应单独征得明确同意",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "consent_observation",
+        "objective": "触发一个涉及敏感个人信息的功能（人脸、位置、通讯录、健康、支付订阅等），观察是否在通用同意之外出现单独的二次告知/确认弹窗；订阅或会员页面观察自动续费是否默认勾选、是否有明确的续费提醒。截图记录弹窗原文与按钮布局。",
+        "verdict_hints": [
+          "敏感信息收集是否单独征得明确同意"
+        ],
+        "cold_start": false
+      }
+    },
+    {
+      "rule_id": "R096",
+      "regulation": "《信息安全技术 移动互联网应用程序（App）收集个人信息基本要求》",
+      "clause": "应提供撤回同意、删除、更正、注销个人信息的方式",
+      "detectability": "gui_direct",
+      "checkpoint": {
+        "group": "rights_entry_search",
+        "objective": "在应用的“设置/我的/关于/帮助与反馈”等页面中检索用户权利相关入口：账号注销、个人信息查询/更正/删除、撤回同意、投诉申诉渠道、客服电话公示。只验证入口的存在性与可达性并截图，不执行注销、删除等不可逆操作。",
+        "verdict_hints": [
+          "撤回同意、删除、更正、注销的方式是否提供"
+        ],
+        "cold_start": false
+      }
+    }
+  ]
+}

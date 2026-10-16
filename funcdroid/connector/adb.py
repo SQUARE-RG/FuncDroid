@@ -15,6 +15,23 @@ ADB_COMMAND_TIMEOUT = max(
 )
 
 
+def parse_adb_devices(output: str) -> list[str]:
+    """解析 `adb devices` 输出，只保留状态为 device（已授权且在线）的序列号。
+
+    offline / unauthorized / recovery 等状态的设备无法执行命令，若计入列表会让
+    后端推断把不可用设备当成可用设备。
+    """
+    devices = []
+    for line in str(output or "").splitlines():
+        line = line.strip()
+        if not line or line.startswith("List of devices attached") or line.startswith("*"):
+            continue
+        parts = line.split()
+        if len(parts) >= 2 and parts[1] == "device":
+            devices.append(parts[0])
+    return devices
+
+
 class ADB(Connector):
     def __init__(self, device=None):
         if device is None:
@@ -23,14 +40,12 @@ class ADB(Connector):
         self.serial = device.serial
         self.cmd_prefix = ["adb", "-s", self.serial]
 
-    def run_cmd(self, extra_args):
+    def run_cmd(self, extra_args, timeout=None):
         args = self._normalize_args(extra_args)
-        return self._check_output(self.cmd_prefix + args)
+        return self._check_output(self.cmd_prefix + args, timeout=timeout)
 
-    def shell(self, extra_args):
-        if not isinstance(extra_args, str):
-            raise TypeError("shell args must be str")
-        return self.run_cmd(f"shell {extra_args}")
+    def shell(self, extra_args, timeout=None):
+        return self.run_cmd(self._shell_args(extra_args), timeout=timeout)
 
     @classmethod
     def devices(cls):
@@ -45,17 +60,7 @@ class ADB(Connector):
             ) from exc
         if not isinstance(result, str):
             result = result.decode()
-        devices = []
-        for line in result.splitlines():
-            line = line.strip()
-            if not line or line.startswith("List of devices attached"):
-                continue
-            fields = line.split()
-            # Do not pass offline/unauthorized transports to uiautomator2. The
-            # user can resolve their device state and rerun without a late,
-            # misleading connection failure.
-            if len(fields) >= 2 and fields[1] == "device":
-                devices.append(fields[0])
+        devices = parse_adb_devices(result)
         logger.debug("adb devices: {}", devices)
         return devices
 
@@ -63,6 +68,6 @@ class ADB(Connector):
     def _normalize_args(extra_args):
         if isinstance(extra_args, str):
             return extra_args.split()
-        if isinstance(extra_args, list):
-            return extra_args
+        if isinstance(extra_args, (list, tuple)):
+            return [str(arg) for arg in extra_args]
         raise TypeError("command args must be str or list")

@@ -7,80 +7,53 @@ from typing import Any
 from langgraph.graph import END, START, StateGraph
 
 from workflow.bug_detection_worker import bug_detection_worker, build_defect_detection_job
+from workflow.compliance_worker import (
+    build_compliance_detection_job,
+    compliance_worker,
+    plan_check_ids,
+)
 from workflow.nodes.scenario_exec import create_scenario_execution_pass
 from workflow.state import AgentState
 
 
-class ScenarioExecSubgraphState(AgentState, total=False):
-    scenario_execution_context: dict[str, Any] | None
-    scenario_exec_subgraph_phase: str
-
-
 def create_scenario_exec_subgraph(execution_llm, device):
-    """Compile prepare -> action agent -> submit async defect review -> finalize.
+    """Compile action agent -> submit async reviews.
 
-    Defect detection no longer blocks this subgraph: it only reads the
-    completed navigation/test trace (no device access), so it is handed off
-    to a background worker (`workflow.bug_detection_worker`) while the outer
-    workflow moves straight on to `ffg_update` / the next planned scenario,
-    which do need the device.
+    判定不阻塞本子图：只读取已完成的 navigation/test trace（不触碰设备），
+    交给后台线程，外层工作流直接进入 `ffg_update`。每次运行只启用所选模式
+    的判定器；缺陷模式提交缺陷轨迹，合规模式提交条款取证（普通探索场景
+    没有关联检测点，跳过合规判定）。
     """
     execution_pass = create_scenario_execution_pass(execution_llm, device)
 
-    def prepare(state: ScenarioExecSubgraphState) -> dict[str, Any]:
-        review_status = (
-            "async"
-            if bool(state.get("bug_detection_enabled", True))
-            else "off"
-        )
-        print(
-            "[Scenario Execution] Round preparation | "
-            f"navigation={'yes' if state.get('current_navigation_scenario') else 'no'} | "
-            f"scenario={'yes' if state.get('current_test_scenario') else 'no'} | "
-            f"defect_review={review_status}"
-        )
-        return {
-            "scenario_execution_context": None,
-            "scenario_exec_subgraph_phase": "prepared",
-        }
+    def submit_reviews(state: AgentState) -> dict[str, Any]:
+        if bool(state.get("compliance_detection_enabled", False)):
+            check_ids = plan_check_ids(state.get("current_plan"))
+            if not check_ids:
+                print("[合规检测] 本轮为普通探索场景，无关联合规检测点，跳过判定。")
+            else:
+                accepted = False
+                try:
+                    accepted = compliance_worker.submit(build_compliance_detection_job(state))
+                except Exception as exc:
+                    print(f"[合规检测] 提交异步判定任务失败，本轮判定已跳过: {exc}")
+                if not accepted:
+                    compliance_worker.defer_checks(check_ids, "执行轨迹未成功进入合规判定队列，等待补测")
 
-    def run_action_agent(state: ScenarioExecSubgraphState) -> dict[str, Any]:
-        updates, context = execution_pass(state)
-        return {
-            **updates,
-            "scenario_execution_context": context,
-            "scenario_exec_subgraph_phase": "executed",
-        }
+        if bool(state.get("bug_detection_enabled", True)):
+            try:
+                bug_detection_worker.submit(build_defect_detection_job(state))
+            except Exception as exc:
+                bug_detection_worker.record_failure(state, exc)
+                print(f"[缺陷检测] 提交异步检测任务失败，本轮缺陷复核已跳过: {exc}")
+        return {}
 
-    def submit_defect_review(state: ScenarioExecSubgraphState) -> dict[str, Any]:
-        if not bool(state.get("bug_detection_enabled", True)):
-            print("[Defect Detection] Disabled via runtime parameters; no detection task submitted for this round.")
-            return {"scenario_exec_subgraph_phase": "review_disabled"}
-        try:
-            job_state = build_defect_detection_job(state)
-            accepted = bug_detection_worker.submit(job_state)
-        except Exception as exc:
-            print(f"[Defect Detection] Failed to submit async detection task, defect review skipped for this round: {exc}")
-            accepted = False
-        return {
-            "scenario_exec_subgraph_phase": (
-                "review_submitted" if accepted else "review_skipped_backpressure"
-            )
-        }
-
-    def finalize(state: ScenarioExecSubgraphState) -> dict[str, Any]:
-        return {"scenario_exec_subgraph_phase": "finished"}
-
-    graph = StateGraph(ScenarioExecSubgraphState)
-    graph.add_node("prepare_execution", prepare)
-    graph.add_node("action_agent", run_action_agent)
-    graph.add_node("defect_review", submit_defect_review)
-    graph.add_node("finalize_execution", finalize)
-    graph.add_edge(START, "prepare_execution")
-    graph.add_edge("prepare_execution", "action_agent")
-    graph.add_edge("action_agent", "defect_review")
-    graph.add_edge("defect_review", "finalize_execution")
-    graph.add_edge("finalize_execution", END)
+    graph = StateGraph(AgentState)
+    graph.add_node("action_agent", execution_pass)
+    graph.add_node("async_reviews", submit_reviews)
+    graph.add_edge(START, "action_agent")
+    graph.add_edge("action_agent", "async_reviews")
+    graph.add_edge("async_reviews", END)
     return graph.compile()
 
 
@@ -89,12 +62,7 @@ def create_scenario_exec_subgraph_node(execution_llm, device):
     subgraph = create_scenario_exec_subgraph(execution_llm, device)
 
     def invoke(state: AgentState) -> dict[str, Any]:
-        result = subgraph.invoke(dict(state))
-        return {
-            key: value
-            for key, value in result.items()
-            if key not in {"scenario_execution_context"}
-        }
+        return subgraph.invoke(dict(state))
 
     invoke.subgraph = subgraph  # type: ignore[attr-defined]
     return invoke

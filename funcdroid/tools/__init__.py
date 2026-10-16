@@ -1,1 +1,1 @@
-"""Workflow tool adapter layer."""
+"""工作流工具适配层。"""

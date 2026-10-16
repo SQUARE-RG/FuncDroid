@@ -1,13 +1,13 @@
-"""Pure defect detection workflow entrypoint.
+"""FuncDroid 独立缺陷检测与 GUI 合规检测的统一入口。
 
-Usage:
-  # Test the App currently open in the foreground on the device
+用法：
+  # 测试当前设备前台打开的 App
   python main.py --device-id emulator-5554
 
-  # Test a specified App installed on the device
+  # 测试设备上已安装的指定 App
   python main.py --device-id emulator-5554 --package-name com.example.app
 
-  # Use iteration control instead of time control
+  # 使用轮次控制而非时间控制
   python main.py --device-id emulator-5554 --max-iterations 20 --total-time 0
 """
 
@@ -16,7 +16,6 @@ import base64
 import hashlib
 import json
 import os
-import re
 import signal
 import sys
 import threading
@@ -31,26 +30,27 @@ import cv2
 import numpy as np
 from dotenv import load_dotenv
 
-# Load repository-local configuration before module-level and CLI defaults are
-# evaluated. Explicit paths make startup independent of the caller's cwd.
-PROJECT_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(Path(__file__).with_name(".env"))
-load_dotenv(PROJECT_DIR / ".env")
+# Load local configuration before module-level and CLI defaults are evaluated.
+load_dotenv()
 
 from device import Driver  # noqa: E402
-from connector import ADB, HDC  # noqa: E402
 from model.flow_graph import FlowGraph, Page  # noqa: E402
 from workflow.bug_detection_worker import bug_detection_worker  # noqa: E402
+from workflow.compliance_worker import compliance_worker  # noqa: E402
+from compliance.checkpoints import ComplianceChecklist  # noqa: E402
+from compliance.report import save_compliance_report  # noqa: E402
 from workflow.exploration_boundary import enabled_packages  # noqa: E402
 from workflow.graph import build_graph  # noqa: E402
 from workflow.page_audit_worker import page_audit_worker  # noqa: E402
-from workflow.llm import create_llm  # noqa: E402
+from workflow.llm import _resolve_request_timeout, create_llm  # noqa: E402
 from workflow.llm_usage import (  # noqa: E402
     configure_llm_usage,
-    get_llm_usage_summary,
+    get_llm_usage_totals,
     save_llm_usage_summary,
 )
 from workflow.run_logging import setup_logcat_capture, setup_run_logging  # noqa: E402
+from workflow.run_options import RunArgumentParser, resolve_run_options, validate_resume_options  # noqa: E402
+from workflow.seed_graph import load_seed_graph  # noqa: E402
 from workflow.state import AgentState  # noqa: E402
 from workflow.trace_artifacts import (  # noqa: E402
     configure_trace_artifacts,
@@ -58,40 +58,42 @@ from workflow.trace_artifacts import (  # noqa: E402
 )
 
 DEFAULT_TOTAL_TIME_MINUTES = 90
-DEFAULT_MAX_ITERATIONS = 0  # 0 disables the iteration limit; total runtime is used by default
+DEFAULT_MAX_ITERATIONS = 0  # 0 表示关闭轮次上限，默认以总运行时间为准
 DEFAULT_EXPLORATION_MODE = "core"
-DEFAULT_OUTPUT_ROOT = "output"
+DEFAULT_OUTPUT_ROOT = "experiments/output"
 ACTIVITY_TIMELINE_HEARTBEAT_SECONDS = max(
     1.0,
     float(os.getenv("ACTIVITY_TIMELINE_HEARTBEAT_SECONDS", "300")),
 )
-# Defect detection runs in an independent background thread (see workflow/bug_detection_worker.py), reading only already captured
-# screenshots without occupying the device; before workflow completion/abnormal exit, wait for the queue to drain to prevent missing results from the last few rounds
-# from being persisted to disk. A timeout is set to prevent an abnormal LLM call hang from blocking process exit.
+# 缺陷检测在独立后台线程里跑（见 workflow/bug_detection_worker.py），只读已拍好的
+# 截图，不占用设备；工作流结束/异常退出前需要等待队列排空，避免最后几轮的检测结果
+# 来不及落盘。设置超时是为了防止某次 LLM 调用异常挂起导致进程无法退出。
 BUG_DETECTION_FLUSH_TIMEOUT_SECONDS = max(
     0.0,
     float(os.getenv("BUG_DETECTION_FLUSH_TIMEOUT_SECONDS", "180")),
 )
-# Protect read-merge-write of bugs.json / bugs/ directory: defect detection threads persist asynchronously after finishing a batch,
-# which may overlap with snapshot persistence on the main thread; a lock is required to avoid concurrent write corruption.
+# 正常收尾时页面审计补交（等待在途审计 + 补交未审页面）的总时长上限（秒）。
+# 补交本身会产生新的 LLM 调用；不设上限时，大图上的逐批补交能让收尾拖很久。
+FINALIZE_DEADLINE_SECONDS = max(
+    0.0,
+    float(os.getenv("FINALIZE_DEADLINE_SECONDS", "300")),
+)
+# 保护 bugs.json / bugs/ 目录的读-合并-写：缺陷检测线程完成一批检测后会异步落盘，
+# 可能与主线程的运行快照落盘重叠，需要用锁避免并发写坏文件。
 _BUGS_SAVE_LOCK = threading.Lock()
+_COMPLIANCE_SAVE_LOCK = threading.Lock()
 _CHECKPOINT_FAILURE_LOG_INTERVAL_SECONDS = max(
     1.0,
     float(os.getenv("CHECKPOINT_FAILURE_LOG_INTERVAL_SECONDS", "60")),
 )
 _CHECKPOINT_FAILURES: dict[str, dict[str, float | int]] = {}
 PHASE_LABELS = {
-    "all": "Automatically select intra-function/cross-function",
-    "intra": "Intra-function testing only",
+    "all": "自动选择功能内/跨功能",
+    "intra": "仅功能内测试",
 }
 EXPLORATION_MODE_LABELS = {
-    "core": "Core testing",
+    "core": "核心测试",
 }
-RECENT_TASK_ID_PATTERNS = (
-    re.compile(r"\btaskId=(\d+)\b"),
-    re.compile(r"\bid=(\d+)\b"),
-    re.compile(r"TaskRecord\{[^}]*\s#(\d+)\s"),
-)
 
 
 @dataclass
@@ -99,9 +101,11 @@ class RunResources:
     output_dir: str = ""
     run_log: Any = None
     logcat_capture: Any = None
+    device: Any = None
 
 
-class RunTerminationSignal(Exception):
+class RunTerminationSignal(BaseException):
+    """Control flow: must bypass model retries and ordinary node recovery."""
     def __init__(self, signum: int):
         self.signum = signum
         super().__init__(f"received signal {signum}")
@@ -116,7 +120,7 @@ def _normalize_device_id(value: str | None) -> str:
     if not text:
         raise argparse.ArgumentTypeError("device id must not be empty")
     if text.lower() in {"all", "auto", "multi"}:
-        raise argparse.ArgumentTypeError("Please pass a specific device ID; for multiple devices, run in separate terminals")
+        raise argparse.ArgumentTypeError("请传入具体设备编号；多设备请分别开多个终端运行")
     return text
 
 
@@ -124,9 +128,9 @@ def _nonnegative_int(value: object) -> int:
     try:
         normalized = int(value)
     except (TypeError, ValueError) as exc:
-        raise argparse.ArgumentTypeError("Must be an integer greater than or equal to 0") from exc
+        raise argparse.ArgumentTypeError("必须是大于等于 0 的整数") from exc
     if normalized < 0:
-        raise argparse.ArgumentTypeError("Must be an integer greater than or equal to 0")
+        raise argparse.ArgumentTypeError("必须是大于等于 0 的整数")
     return normalized
 
 
@@ -134,18 +138,23 @@ def _nonnegative_float(value: object) -> float:
     try:
         normalized = float(value)
     except (TypeError, ValueError) as exc:
-        raise argparse.ArgumentTypeError("Must be a number greater than or equal to 0") from exc
+        raise argparse.ArgumentTypeError("必须是大于等于 0 的数字") from exc
     if normalized < 0:
-        raise argparse.ArgumentTypeError("Must be a number greater than or equal to 0")
+        raise argparse.ArgumentTypeError("必须是大于等于 0 的数字")
     return normalized
 
 
 def _build_initial_state(args, start_time: float) -> AgentState:
-    """Build initial state."""
+    """构建初始状态。"""
     total_time_limit = args.total_time * 60 if args.total_time > 0 else 0
 
+    # args 已由 RunArgumentParser.parse_args / _run_single 统一归一化，这里不再重复解析。
     return AgentState(
-        app_name=args.app_name or args.package_name or "Current foreground app",
+        run_mode=args.mode,
+        reset_app_data=args.reset_app_data,
+        grant_permissions=bool(args.grant_permissions),
+        permission_grant_report=None,
+        app_name=args.app_name or args.package_name or "当前前台应用",
         package_name=args.package_name or "",
         current_navigation_scenario="",
         current_test_scenario="",
@@ -157,7 +166,17 @@ def _build_initial_state(args, start_time: float) -> AgentState:
         scenario_execution_trace=[],
         detected_bugs=[],
         bug_trace_records={},
-        bug_detection_enabled=bool(getattr(args, "bug_detection", True)),
+        bug_detection_enabled=bool(args.bug_detection),
+        compliance_detection_enabled=bool(args.compliance),
+        compliance_targeted=bool(getattr(args, "compliance_targeted", False)),
+        compliance_checklist={
+            "status": {},
+            "findings": [],
+            "attempts": {},
+            "evidence_signatures": {},
+            "discovery_baselines": {},
+        },
+        compliance_rules_path=str(getattr(args, "rules", "") or ""),
         ffg=FlowGraph(),
         navigation_failure_count=0,
         scenario_exec_error_count=0,
@@ -166,10 +185,6 @@ def _build_initial_state(args, start_time: float) -> AgentState:
         screenshot_unavailable_count=0,
         target_app_unavailable_count=0,
         function_execution_failure_counts={},
-        cross_execution_failure_counts={},
-        planner_noop_count=0,
-        planner_feedback="",
-        planner_rejected_scenario="",
         iteration_count=0,
         max_iterations=args.max_iterations,
         iteration_started_at=0,
@@ -181,9 +196,10 @@ def _build_initial_state(args, start_time: float) -> AgentState:
         long_run_idle_count=0,
         run_phase=args.phase,
         exploration_mode=args.exploration_mode,
-        completion_audit_updates=0,
         completion_audit_signatures={},
         completion_audit_attempts={},
+        deferred_retry_ids=[],
+        unplannable_counts={},
     )
 
 
@@ -193,7 +209,7 @@ def _load_resume_state(args, output_dir: str, started_at: float) -> AgentState:
     root = Path(output_dir)
     ffg_path = root / "ffg.json"
     if not ffg_path.is_file():
-        raise FileNotFoundError(f"Resume directory missing ffg.json: {ffg_path}")
+        raise FileNotFoundError(f"续跑目录缺少 ffg.json: {ffg_path}")
     state["ffg"] = FlowGraph.load(output_dir)
 
     result_path = root / "run_result.json"
@@ -206,6 +222,10 @@ def _load_resume_state(args, output_dir: str, started_at: float) -> AgentState:
             0,
             int(previous_result.get("iteration_count", 0) or 0),
         )
+        state["defect_review_failures"] = list(previous_result.get("defect_review_failures", []) or [])
+        state["compliance_review_failures"] = list(previous_result.get("compliance_review_failures", []) or [])
+        if previous_result.get("seed_provenance"):
+            state["seed_provenance"] = previous_result["seed_provenance"]
     state["start_time"] = started_at - previous_elapsed
 
     bugs_path = root / "bugs.json"
@@ -214,6 +234,35 @@ def _load_resume_state(args, output_dir: str, started_at: float) -> AgentState:
             bugs = json.load(f)
         if isinstance(bugs, list):
             state["detected_bugs"] = bugs
+            state["bug_trace_records"] = _load_bug_trace_records(root, bugs)
+
+    failures_path = root / "defect_review_failures.json"
+    if failures_path.is_file():
+        failures = json.loads(failures_path.read_text(encoding="utf-8"))
+        if not isinstance(failures, list):
+            raise ValueError("defect_review_failures.json 必须是数组")
+        state["defect_review_failures"] = failures
+
+    compliance_failures_path = root / "compliance_review_failures.json"
+    if compliance_failures_path.is_file():
+        compliance_failures = json.loads(compliance_failures_path.read_text(encoding="utf-8"))
+        if not isinstance(compliance_failures, list):
+            raise ValueError("compliance_review_failures.json 必须是数组")
+        state["compliance_review_failures"] = compliance_failures
+
+    compliance_path = root / "compliance_checklist.json"
+    if compliance_path.is_file():
+        with compliance_path.open("r", encoding="utf-8") as f:
+            compliance_state = json.load(f)
+        if isinstance(compliance_state, dict):
+            checklist = ComplianceChecklist.from_state(compliance_state)
+            recovered_checks = checklist.recover_interrupted()
+            if recovered_checks:
+                print(
+                    "[断点续跑] 恢复中断的合规检测点为待执行: "
+                    + ", ".join(recovered_checks)
+                )
+            state["compliance_checklist"] = checklist.to_state()
 
     timeline_path = root / "activity_timeline.json"
     if timeline_path.is_file():
@@ -226,8 +275,8 @@ def _load_resume_state(args, output_dir: str, started_at: float) -> AgentState:
     # determines what remains; the new process must always re-enter planning.
     state["workflow_complete"] = False
     print(
-        "[Resume] Restored cumulative state: "
-        f"elapsed={previous_elapsed / 60:.1f} minutes, "
+        "[断点续跑] 已恢复累计状态: "
+        f"elapsed={previous_elapsed / 60:.1f} 分钟, "
         f"iterations={state['iteration_count']}, "
         f"functions={len(state['ffg'].functions)}, pages={len(state['ffg'].pages)}, "
         f"activities={len((state.get('_activity_timeline') or {}).get('activities', []))}, "
@@ -236,8 +285,49 @@ def _load_resume_state(args, output_dir: str, started_at: float) -> AgentState:
     return state
 
 
+def _load_bug_trace_records(root: Path, bugs: list[dict]) -> dict[str, list[dict]]:
+    """Restore each bug's own persisted actions and images, never the latest scene."""
+    records = {}
+    bug_ids = {str(bug.get("bug_id", "")) for bug in bugs if isinstance(bug, dict)}
+    for metadata_path in (root / "bugs").glob("*/bug.json"):
+        metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+        bug_id = str(metadata.get("bug_id", ""))
+        trace_path = metadata_path.with_name("trace.json")
+        if bug_id not in bug_ids or not trace_path.is_file():
+            continue
+        serialized = json.loads(trace_path.read_text(encoding="utf-8"))
+        if not isinstance(serialized, list):
+            raise ValueError(f"缺陷轨迹必须是数组: {trace_path}")
+        trace = []
+        for saved in serialized:
+            if not isinstance(saved, dict):
+                raise ValueError(f"缺陷轨迹含无效步骤: {trace_path}")
+            step = dict(saved)
+            step.pop("step_index", None)
+            operation = step.pop("operation", {})
+            parameters = operation.get("parameters", {})
+            # The serialized top-level flags include defaults even when the
+            # original action had no such parameters. Avoid inventing them.
+            for field in ("foreground_recovery", "external_context"):
+                if field not in parameters and step.get(field) is False:
+                    step.pop(field)
+            step.update(parameters)
+            step["action_name"] = operation.get("action_name", "")
+            page = dict(step.pop("page", {}) or {})
+            reference = page.get("screenshot")
+            if reference:
+                image_path = (trace_path.parent / reference).resolve()
+                if not image_path.is_relative_to(root.resolve()):
+                    raise ValueError(f"缺陷截图引用超出运行目录: {trace_path}")
+                page["screenshot"] = base64.b64encode(image_path.read_bytes()).decode("ascii")
+            step["current_page"] = page
+            trace.append(step)
+        records[bug_id] = trace
+    return records
+
+
 def _atomic_write_json(path: Path | str, data: Any) -> None:
-    """Atomically write JSON: write to temporary file first then os.replace to avoid leaving truncated files if killed during execution."""
+    """原子写 JSON：先写临时文件再 os.replace，避免运行中被 kill 留下截断文件。"""
     target = Path(path)
     target.parent.mkdir(parents=True, exist_ok=True)
     tmp_path = target.with_name(f"{target.name}.tmp")
@@ -434,7 +524,14 @@ def _save_activity_timeline(
     elapsed_seconds = max(0.0, time.time() - start_time)
     points = timeline.setdefault("points", [])
     last = points[-1] if points and isinstance(points[-1], dict) else {}
-    count_changed = int(last.get("activity_count", -1) or -1) != len(activities)
+    # 注意 0 是合法计数：不能写成 `or -1`，否则零 Activity 时每次都判定为
+    # “数量变化”，每个节点都重绘 PNG 并无界追加采样点。
+    last_count = last.get("activity_count")
+    try:
+        last_count = int(last_count) if last_count is not None else -1
+    except (TypeError, ValueError):
+        last_count = -1
+    count_changed = last_count != len(activities)
     heartbeat_due = (
         elapsed_seconds - float(last.get("elapsed_seconds", 0) or 0)
         >= ACTIVITY_TIMELINE_HEARTBEAT_SECONDS
@@ -460,7 +557,7 @@ def _save_activity_timeline(
         if (
             force
             and last
-            and int(last.get("activity_count", -1)) == len(activities)
+            and last_count == len(activities)
             and abs(float(last.get("elapsed_seconds", 0) or 0) - elapsed_seconds) < 1.0
         ):
             points[-1] = point
@@ -472,33 +569,93 @@ def _save_activity_timeline(
 
 
 def _sync_bug_state(state: dict) -> None:
-    """Refresh mirror fields in state with authoritative data from the background defect detection thread."""
+    """用后台缺陷检测线程的权威数据刷新 state 里的镜像字段。"""
     if not bool(state.get("bug_detection_enabled", True)):
         return
     detected_bugs, bug_trace_records = bug_detection_worker.snapshot()
     state["detected_bugs"] = detected_bugs
     state["bug_trace_records"] = bug_trace_records
+    state["defect_review_failures"] = bug_detection_worker.failures_snapshot()
 
 
-def _flush_bug_detection(reason: str) -> None:
-    """Wait for background defect detection queue to drain, continue on timeout (avoids abnormal hangs blocking exit)."""
-    pending = bug_detection_worker.pending_count()
+def _flush_worker(worker, reason: str) -> None:
+    """等待后台检测队列排空，超时则继续（避免异常挂起导致无法退出）。"""
+    pending = worker.pending_count()
     if pending <= 0:
         return
-    print(f"[Defect Detection Thread] Waiting for {pending} pending asynchronous detection tasks before {reason}...")
-    completed = bug_detection_worker.flush(timeout=BUG_DETECTION_FLUSH_TIMEOUT_SECONDS or None)
-    if not completed:
+    print(f"{worker.log_prefix} {reason}前等待 {pending} 个未完成的异步任务...")
+    # 0 表示不等待（直接把未完成任务记为判定未完成），不能写成 `or None` 变成无限等待。
+    if not worker.flush(timeout=BUG_DETECTION_FLUSH_TIMEOUT_SECONDS):
+        recorded = worker.record_unfinished(f"{reason}前等待后台判定超时，判定未完成")
         print(
-            "[Defect Detection Thread] Wait timed out, detection tasks are still running in the background; "
-            "artifacts from this run may lack bug findings from these tasks; check bugs.json later."
+            f"{worker.log_prefix} 等待超时，仍有任务在后台运行；"
+            f"已将 {recorded} 个未完成任务记入判定失败（判定未完成）。"
         )
 
 
-def _flush_page_audit(final_state: dict) -> None:
-    """Wait for page audit queue to drain, and merge remaining audit results into graph (called before disk save).
+def _sync_compliance_state(state: dict) -> None:
+    """用后台合规检测线程的权威数据刷新 state 里的检测点清单。"""
+    if not bool(state.get("compliance_detection_enabled", False)):
+        return
+    state["compliance_checklist"] = compliance_worker.snapshot()
+    state["compliance_review_failures"] = compliance_worker.failures_snapshot()
 
-    Background audit results are normally merged at the next round ffg_update node entry; at the end of run there is no
-    "next round", so they must be merged directly here, otherwise the last batch of results will be lost.
+
+def _save_compliance_outputs(state: dict, output_dir: str, prefix: str):
+    """落盘合规检测点清单与最终报告（json + markdown）。"""
+    if not bool(state.get("compliance_detection_enabled", False)):
+        return
+    with _COMPLIANCE_SAVE_LOCK:
+        _save_compliance_outputs_locked(state, output_dir, prefix)
+
+
+def _save_compliance_outputs_locked(state: dict, output_dir: str, prefix: str):
+    _sync_compliance_state(state)
+    _atomic_write_json(
+        Path(output_dir) / "compliance_review_failures.json",
+        state.get("compliance_review_failures", []),
+    )
+    try:
+        checklist = ComplianceChecklist.from_state(state.get("compliance_checklist"))
+        _atomic_write_json(
+            os.path.join(output_dir, "compliance_checklist.json"),
+            checklist.to_state(),
+        )
+        report = save_compliance_report(
+            checklist,
+            output_dir,
+            app_name=str(state.get("app_name", "") or ""),
+            package_name=str(state.get("package_name", "") or ""),
+            rules_path=str(state.get("compliance_rules_path", "") or "").strip() or None,
+        )
+        summary = report.get("summary", {})
+        print(
+            f"{prefix} compliance_report 已保存: "
+            f"processed={summary.get('processed', summary.get('executed', 0))}/"
+            f"{summary.get('gui_total', 0)}, "
+            f"resolved={summary.get('resolved', 0)}, "
+            f"unresolved={summary.get('unresolved', summary.get('deferred', 0))}, "
+            f"violation={summary.get('violation', 0)}, "
+            f"compliant={summary.get('compliant', 0)}"
+        )
+    except Exception as exc:
+        print(f"{prefix} compliance_report 保存失败: {exc}")
+
+
+def _flush_page_audit(
+    final_state: dict,
+    *,
+    interrupted: bool = False,
+    deadline: float | None = None,
+) -> None:
+    """等待页面审计队列排空，并把剩余审计结果合并进图（落盘前调用）。
+
+    后台审计结果平时由下一轮 ffg_update 节点入口合并；运行结束时没有
+    "下一轮"，必须在此处直接合并，否则最后一批结果会丢失。
+
+    interrupted=True（用户中断/终止信号）时只合并已完成的结果，不等待在途
+    任务、也不补交新审计；正常收尾时等待与补交受 deadline（time.monotonic()
+    时间点）约束，到点即停止补交。
     """
     graph = final_state.get("ffg")
     if isinstance(graph, FlowGraph):
@@ -508,9 +665,19 @@ def _flush_page_audit(final_state: dict) -> None:
                 _submit_page_audit_batch,
             )
 
-            # ffg_update submits audits before applying current trace, so newly added Pages or those
-            # with newly added screenshots are not yet enqueued. Resubmit un-audited fingerprints at the end; worker's
-            # fingerprints and saturation state will prevent redundant idle processing.
+            if interrupted:
+                _merge_page_audit_results(graph)
+                pending = page_audit_worker.pending_count()
+                if pending > 0:
+                    print(
+                        f"[页面审计线程] 运行被中断：只合并已完成的审计结果，"
+                        f"不再等待 {pending} 个在途任务、不补交新审计。"
+                    )
+                return
+
+            # ffg_update 在应用本轮 trace 前提交审计，因此最后新增或刚增加
+            # 截图的 Page 尚未入队。结尾补交当前未审计指纹；worker 的
+            # 指纹和饱和状态会阻止重复空转。
             # A failed worker call deliberately leaves its fingerprint
             # unaudited so a later workflow iteration may retry it. During
             # final output there is no later iteration, so remember what this
@@ -520,14 +687,22 @@ def _flush_page_audit(final_state: dict) -> None:
             while True:
                 pending = page_audit_worker.pending_count()
                 if pending > 0:
+                    timeout = BUG_DETECTION_FLUSH_TIMEOUT_SECONDS
+                    if deadline is not None:
+                        timeout = min(timeout, max(0.0, deadline - time.monotonic()))
                     print(
-                        f"[Page Audit Thread] Waiting for {pending} "
-                        "pending audit tasks before saving final outputs..."
+                        f"[页面审计线程] 保存最终输出前等待 {pending} "
+                        "个未完成的审计任务..."
                     )
-                    page_audit_worker.flush(
-                        timeout=BUG_DETECTION_FLUSH_TIMEOUT_SECONDS or None
-                    )
+                    page_audit_worker.flush(timeout=timeout)
                 _merge_page_audit_results(graph)
+                if deadline is not None and time.monotonic() >= deadline:
+                    print(
+                        "[页面审计线程] 已到收尾时限 "
+                        f"FINALIZE_DEADLINE_SECONDS={FINALIZE_DEADLINE_SECONDS:g}s，"
+                        "停止补交剩余未审计页面。"
+                    )
+                    break
                 submitted = _submit_page_audit_batch(
                     graph,
                     exclude_fingerprints=final_submitted_fingerprints,
@@ -535,33 +710,33 @@ def _flush_page_audit(final_state: dict) -> None:
                 if submitted <= 0:
                     break
                 print(
-                    f"[Page Audit Thread] Resubmitted {submitted} un-audited page fingerprints at the end."
+                    f"[页面审计线程] 最终补交 {submitted} 个尚未审计的页面指纹。"
                 )
-        except Exception as exc:  # noqa: BLE001 - Fallback before disk save, failure does not block exit
-            print(f"[Page Audit Thread] Failed to merge audit results at the end: {exc}")
+        except Exception as exc:  # noqa: BLE001 - 落盘前兜底，失败不阻塞退出
+            print(f"[页面审计线程] 最终合并审计结果失败: {exc}")
 
 
 def _print_summary(state: dict, output_dir: str, elapsed_seconds: float):
-    """Print execution summary at the end of run."""
+    """打印运行结束的摘要。"""
     _sync_bug_state(state)
     elapsed_min = elapsed_seconds / 60
     ffg = state.get("ffg")
 
     print(f"\n{'='*60}")
-    print("  FuncDroid Execution Summary")
+    print("  FuncDroid 运行结束摘要")
     print(f"{'='*60}")
-    print(f"  Total time: {elapsed_min:.1f} minutes")
+    print(f"  总用时: {elapsed_min:.1f} 分钟")
     exploration_mode = str(state.get("exploration_mode") or DEFAULT_EXPLORATION_MODE)
-    print(f"  Exploration scope: {EXPLORATION_MODE_LABELS.get(exploration_mode, exploration_mode)}")
+    print(f"  探索范围: {EXPLORATION_MODE_LABELS.get(exploration_mode, exploration_mode)}")
 
     if isinstance(ffg, FlowGraph):
-        print(f"  FFG Function nodes: {len(ffg.functions)}")
-        print(f"  FFG Pages: {len(ffg.pages)}")
-        print(f"  Page transitions: {len(ffg.page_transitions)}")
-        print(f"  Function dependencies: {len(ffg.function_dependencies)}")
+        print(f"  FFG 功能节点数: {len(ffg.functions)}")
+        print(f"  FFG 页面数: {len(ffg.pages)}")
+        print(f"  页面跳转数: {len(ffg.page_transitions)}")
+        print(f"  功能依赖数: {len(ffg.function_dependencies)}")
         status_counts = ffg.test_status_counts()
         print(
-            "  FFG status distribution: "
+            "  FFG 状态分布: "
             f"completed={status_counts.get('completed', 0)}, "
             f"in_progress={status_counts.get('in_progress', 0)}, "
             f"not_started={status_counts.get('not_started', 0)}, "
@@ -574,7 +749,7 @@ def _print_summary(state: dict, output_dir: str, elapsed_seconds: float):
     activities = timeline.get("activities", []) if isinstance(timeline, dict) else []
     if not activities:
         activities = sorted(_observed_activities(state))
-    print(f"  Discovered Android Activities: {len(activities)}")
+    print(f"  已发现 Android Activity: {len(activities)} 个")
 
     bugs = state.get("detected_bugs", [])
     if not isinstance(bugs, list):
@@ -582,33 +757,53 @@ def _print_summary(state: dict, output_dir: str, elapsed_seconds: float):
     if bugs:
         crash_bugs = [b for b in bugs if isinstance(b, dict) and b.get("type") == "crash"]
         non_crash_bugs = [b for b in bugs if isinstance(b, dict) and b.get("type") != "crash"]
-        print(f"  Detected bugs: {len(bugs)}")
-        print(f"    - Crash: {len(crash_bugs)}")
-        print(f"    - Non-crash: {len(non_crash_bugs)}")
+        print(f"  检测到的缺陷: {len(bugs)} 个")
+        print(f"    - 崩溃类: {len(crash_bugs)} 个")
+        print(f"    - 非崩溃类: {len(non_crash_bugs)} 个")
+    elif state.get("bug_detection_enabled", True):
+        print("  检测到的缺陷: 0 个")
     else:
-        print("  Detected bugs: 0")
+        print("  缺陷检测: 本次未运行")
 
-    print(f"  Execution iterations: {state.get('iteration_count', 0)}")
-    print(f"  Raw trace screenshots: {trace_screenshot_count()} (trace_screenshots/)")
-    usage_summary = get_llm_usage_summary()
-    usage_totals = usage_summary.get("totals", {}) if isinstance(usage_summary, dict) else {}
+    if bool(state.get("compliance_detection_enabled", False)):
+        try:
+            summary = ComplianceChecklist.from_state(
+                state.get("compliance_checklist")
+            ).summary(str(state.get("compliance_rules_path", "") or "").strip() or None)
+            print(
+                "  合规检测点: "
+                f"{summary.get('processed', summary.get('executed', 0))}/"
+                f"{summary['gui_total']} 已处理 | "
+                f"已形成结论 {summary.get('resolved', 0)} | "
+                f"符合 {summary['compliant']} | 违规 {summary['violation']} | "
+                f"证据不足 {summary['undetermined']} | 不适用 {summary['not_applicable']} | "
+                f"未决待新证据 {summary.get('unresolved', summary['deferred'])} | "
+                f"尚未处理 {summary.get('untested', summary['pending'])}"
+            )
+        except Exception as exc:
+            print(f"  合规检测统计失败: {exc}")
+
+    print(f"  执行轮次: {state.get('iteration_count', 0)}")
+    print(f"  原始轨迹截图: {trace_screenshot_count()} 张 (trace_screenshots/)")
+    usage_totals = get_llm_usage_totals()
     if usage_totals:
         print(
             "  LLM token: "
             f"prompt={usage_totals.get('prompt_tokens', 0)}, "
+            f"cached={usage_totals.get('cached_tokens', 0)}, "
             f"completion={usage_totals.get('completion_tokens', 0)}, "
             f"total={usage_totals.get('total_tokens', 0)}, "
             f"requests={usage_totals.get('requests', 0)}, "
             f"failures={usage_totals.get('failures', 0)}"
         )
-    print(f"  Output directory: {output_dir}")
-    print("  Activity timeline: activity_timeline.json / activity_timeline.png")
+    print(f"  输出目录: {output_dir}")
+    print("  Activity 时间序列: activity_timeline.json / activity_timeline.png")
     print(f"{'='*60}\n")
 
 
 def _save_final_outputs(state: dict, output_dir: str):
-    """Save final outputs, without saving recoverable workflow state."""
-    _save_outputs(state, output_dir, prefix="[Output]")
+    """保存最终输出，不保存可恢复的工作流状态。"""
+    _save_outputs(state, output_dir, prefix="[输出]")
 
 
 def _save_outputs(state: dict, output_dir: str, prefix: str):
@@ -618,13 +813,20 @@ def _save_outputs(state: dict, output_dir: str, prefix: str):
         try:
             ffg.save(output_dir)
         except Exception as exc:
-            print(f"{prefix} Failed to save FFG: {exc}")
+            print(f"{prefix} FFG 保存失败: {exc}")
     _save_bugs(state, output_dir, prefix=prefix)
+    _save_compliance_outputs(state, output_dir, prefix=prefix)
 
 
 def _save_bugs(state: dict, output_dir: str, prefix: str):
+    if not state.get("bug_detection_enabled", True):
+        return
     _sync_bug_state(state)
     with _BUGS_SAVE_LOCK:
+        _atomic_write_json(
+            Path(output_dir) / "defect_review_failures.json",
+            state.get("defect_review_failures", []),
+        )
         detected_bugs = state.get("detected_bugs", [])
         if not isinstance(detected_bugs, list):
             detected_bugs = []
@@ -640,9 +842,9 @@ def _save_bugs(state: dict, output_dir: str, prefix: str):
             existing_bugs = _filter_high_confidence_bugs(existing_bugs, prefix=prefix)
             merged_bugs = _merge_bugs_by_id(existing_bugs, detected_bugs)
             _atomic_write_json(bugs_path, merged_bugs)
-            print(f"{prefix} bugs.json saved: {bugs_path}")
+            print(f"{prefix} bugs.json 已保存: {bugs_path}")
         except Exception as exc:
-            print(f"{prefix} Failed to save bugs.json: {exc}")
+            print(f"{prefix} bugs.json 保存失败: {exc}")
         _save_bug_folders(state, output_dir, detected_bugs, prefix)
 
 
@@ -658,7 +860,7 @@ def _filter_high_confidence_bugs(bugs: list[dict[str, Any]], prefix: str) -> lis
     ]
     skipped_count = len([bug for bug in bugs if isinstance(bug, dict)]) - len(high_confidence)
     if skipped_count:
-        print(f"{prefix} Filtered non-high confidence bugs: {skipped_count}")
+        print(f"{prefix} 已过滤非 high 置信度缺陷: {skipped_count} 个")
     return high_confidence
 
 
@@ -773,6 +975,11 @@ def _serialize_trace(trace: list[dict[str, Any]], bug_dir: str) -> list[dict[str
     os.makedirs(screenshots_dir, exist_ok=True)
     serialized: list[dict[str, Any]] = []
     action_param_fields = (
+        "coordinate_space",
+        "model_coordinate_space",
+        "model_coordinates",
+        "image_size",
+        "screen_size",
         "x",
         "y",
         "x1",
@@ -787,12 +994,10 @@ def _serialize_trace(trace: list[dict[str, Any]], bug_dir: str) -> list[dict[str
         "recovery_method",
         "final_recovery",
         "recovered_to_target_app",
-        "external_app_used",
         "external_context",
         "external_package",
         "caused_external_transition",
         "caused_target_crash",
-        "final_recovery_method",
         "previous_package",
         "target_package",
         "foreground_package",
@@ -827,6 +1032,7 @@ def _serialize_trace(trace: list[dict[str, Any]], bug_dir: str) -> list[dict[str
             "trace_phase": step.get("trace_phase", ""),
             "operation": operation,
             "thought": step.get("thought", ""),
+            "action_description": step.get("action_description", ""),
             "is_interruption": bool(step.get("is_interruption", False)),
             "action_failed": bool(step.get("action_failed", False)),
             "external_context": bool(step.get("external_context", False)),
@@ -837,22 +1043,44 @@ def _serialize_trace(trace: list[dict[str, Any]], bug_dir: str) -> list[dict[str
     return serialized
 
 
-def _fallback_trace_for_bug(state: dict, bug: dict[str, Any]) -> list[dict[str, Any]]:
-    scenario_trace = state.get("scenario_execution_trace", [])
-    if isinstance(scenario_trace, list) and scenario_trace:
-        return scenario_trace
-    return []
+def _save_compliance_trace(job: dict, output_dir: str) -> str:
+    """Persist the exact review input; per-job step numbers are not globally unique."""
+    relative = Path("compliance_traces") / job["trace_id"] / "trace.json"
+    trace = list(job.get("navigation_execution_trace", [])) + list(job.get("scenario_execution_trace", []))
+    trace_dir = Path(output_dir) / relative.parent
+    steps = _serialize_trace(trace, str(trace_dir))
+    _atomic_write_json(Path(output_dir) / relative, {
+        "iteration_count": job.get("iteration_count", 0),
+        "plan": job.get("current_plan", {}),
+        "scenario": job.get("current_test_scenario", ""),
+        "execution_result": job.get("execution_result", {}),
+        "steps": steps,
+    })
+    return relative.as_posix()
 
 
-def _bug_artifact_fingerprint(bug: dict[str, Any], trace: list[dict[str, Any]]) -> str:
-    """Fingerprint exactly the bug metadata, trace metadata and screenshot content."""
-    digest = hashlib.sha256()
-    digest.update(json.dumps(
+# 缺陷产物指纹缓存：bug_id → (廉价键, 完整指纹, 截图字符串强引用)。
+# 每次快照/每个检测批次都会对全部缺陷重算指纹，其中逐字节哈希 base64 截图
+# 是主要开销。廉价键覆盖完整指纹的全部非截图输入（同样的 JSON 序列化），
+# 截图只按对象身份 (id, len) 计入；缓存条目持有这些截图字符串的强引用，
+# 保证缓存存活期间 id 不会被复用，字符串不可变，因此身份相同即内容相同。
+_BUG_FINGERPRINT_CACHE: dict[str, tuple[str, str, tuple[str, ...]]] = {}
+# 缺陷详情目录扫描缓存：bugs_dir → {"dirs": {bug_id: bug_dir}, "seen": {目录名}}。
+# 只为尚未识别过的目录读取 bug.json；本进程新建目录时直接登记。
+_BUG_DIR_SCAN_CACHE: dict[str, dict[str, Any]] = {}
+
+
+def _bug_fingerprint_inputs(
+    bug: dict[str, Any],
+    trace: list[dict[str, Any]],
+):
+    """逐段产出完整指纹的输入：("json", bytes) 或 ("screenshot", str)。"""
+    yield "json", json.dumps(
         _json_safe(bug),
         ensure_ascii=False,
         sort_keys=True,
         separators=(",", ":"),
-    ).encode("utf-8"))
+    ).encode("utf-8")
     for index, step in enumerate(trace, start=1):
         if not isinstance(step, dict):
             continue
@@ -862,19 +1090,95 @@ def _bug_artifact_fingerprint(bug: dict[str, Any], trace: list[dict[str, Any]]) 
         step_without_page = {
             key: value for key, value in step.items() if key != "current_page"
         }
-        digest.update(json.dumps(
+        yield "json", json.dumps(
             _json_safe(step_without_page),
             ensure_ascii=False,
             sort_keys=True,
             separators=(",", ":"),
-        ).encode("utf-8"))
-        digest.update(json.dumps(
+        ).encode("utf-8")
+        yield "json", json.dumps(
             _serialize_page(page, screenshot_ref),
             ensure_ascii=False,
             sort_keys=True,
             separators=(",", ":"),
-        ).encode("utf-8"))
-        digest.update(screenshot.encode("ascii", errors="ignore"))
+        ).encode("utf-8")
+        yield "screenshot", screenshot
+
+
+def _bug_artifact_fingerprint_cached(bug: dict[str, Any], trace: list[dict[str, Any]]) -> str:
+    """与 _bug_artifact_fingerprint 结果完全一致，但未变化时跳过截图内容哈希。"""
+    bug_id = str(bug.get("bug_id", "") or "").strip()
+    if not bug_id:
+        return _bug_artifact_fingerprint(bug, trace)
+    cheap = hashlib.sha256()
+    screenshots: list[str] = []
+    for kind, value in _bug_fingerprint_inputs(bug, trace):
+        if kind == "json":
+            cheap.update(value)
+        else:
+            screenshots.append(value)
+            cheap.update(f"\x00{id(value)}:{len(value)}\x00".encode("ascii"))
+    cheap_key = cheap.hexdigest()
+    cached = _BUG_FINGERPRINT_CACHE.get(bug_id)
+    if cached is not None and cached[0] == cheap_key:
+        return cached[1]
+    fingerprint = _bug_artifact_fingerprint(bug, trace)
+    _BUG_FINGERPRINT_CACHE[bug_id] = (cheap_key, fingerprint, tuple(screenshots))
+    return fingerprint
+
+
+def _scan_existing_bug_dirs(bugs_dir: str) -> dict[str, str]:
+    """bug_id → 详情目录；只解析新出现的目录，已识别目录被删除时同步移除。"""
+    cache = _BUG_DIR_SCAN_CACHE.setdefault(
+        os.path.abspath(bugs_dir),
+        {"dirs": {}, "seen": set()},
+    )
+    dirs: dict[str, str] = cache["dirs"]
+    seen: set[str] = cache["seen"]
+    names = set(os.listdir(bugs_dir))
+    for name in list(seen - names):
+        seen.discard(name)
+        for bug_id, bug_dir in list(dirs.items()):
+            if os.path.basename(bug_dir) == name:
+                dirs.pop(bug_id, None)
+    for name in sorted(names - seen):
+        bug_dir = os.path.join(bugs_dir, name)
+        bug_path = os.path.join(bug_dir, "bug.json")
+        if not os.path.isdir(bug_dir) or not os.path.exists(bug_path):
+            continue
+        try:
+            with open(bug_path, "r", encoding="utf-8") as f:
+                existing_bug = json.load(f)
+        except Exception:
+            continue
+        if not isinstance(existing_bug, dict):
+            continue
+        seen.add(name)
+        bug_id = str(existing_bug.get("bug_id", "")).strip()
+        if bug_id and bug_id not in dirs:
+            dirs[bug_id] = bug_dir
+    return dirs
+
+
+def _register_bug_dir(bugs_dir: str, bug_id: str, bug_dir: str) -> None:
+    """本进程刚写好 bug.json 的目录直接登记，下次无需再读回。"""
+    cache = _BUG_DIR_SCAN_CACHE.setdefault(
+        os.path.abspath(bugs_dir),
+        {"dirs": {}, "seen": set()},
+    )
+    cache["seen"].add(os.path.basename(bug_dir))
+    if bug_id:
+        cache["dirs"].setdefault(bug_id, bug_dir)
+
+
+def _bug_artifact_fingerprint(bug: dict[str, Any], trace: list[dict[str, Any]]) -> str:
+    """Fingerprint exactly the bug metadata, trace metadata and screenshot content."""
+    digest = hashlib.sha256()
+    for kind, value in _bug_fingerprint_inputs(bug, trace):
+        if kind == "json":
+            digest.update(value)
+        else:
+            digest.update(value.encode("ascii", errors="ignore"))
     return digest.hexdigest()
 
 
@@ -924,22 +1228,7 @@ def _save_bug_folders(
         os.makedirs(bugs_dir, exist_ok=True)
         updated_count = 0
         unchanged_count = 0
-        existing_dirs: dict[str, str] = {}
-        for name in os.listdir(bugs_dir):
-            bug_dir = os.path.join(bugs_dir, name)
-            bug_path = os.path.join(bug_dir, "bug.json")
-            if not os.path.isdir(bug_dir) or not os.path.exists(bug_path):
-                continue
-            try:
-                with open(bug_path, "r", encoding="utf-8") as f:
-                    existing_bug = json.load(f)
-            except Exception:
-                continue
-            if not isinstance(existing_bug, dict):
-                continue
-            bug_id = str(existing_bug.get("bug_id", "")).strip()
-            if bug_id and bug_id not in existing_dirs:
-                existing_dirs[bug_id] = bug_dir
+        existing_dirs = _scan_existing_bug_dirs(bugs_dir)
 
         for index, bug in enumerate(detected_bugs, start=1):
             if not isinstance(bug, dict):
@@ -955,15 +1244,21 @@ def _save_bug_folders(
                     suffix += 1
             os.makedirs(bug_dir, exist_ok=True)
             trace = bug_trace_records.get(bug_id) if bug_id else None
-            if not isinstance(trace, list):
-                trace = _fallback_trace_for_bug(state, bug)
-            fingerprint = _bug_artifact_fingerprint(bug, trace)
+            if not isinstance(trace, list) or not trace:
+                if os.path.isfile(os.path.join(bug_dir, "trace.json")):
+                    # A missing in-memory association must never erase or replace
+                    # an existing bug's evidence with an unrelated current scene.
+                    unchanged_count += 1
+                    continue
+                trace = []
+            fingerprint = _bug_artifact_fingerprint_cached(bug, trace)
             if _bug_artifacts_unchanged(bug_dir, fingerprint, trace):
                 unchanged_count += 1
                 continue
 
             bug_path = os.path.join(bug_dir, "bug.json")
             _atomic_write_json(bug_path, bug)
+            _register_bug_dir(bugs_dir, bug_id, bug_dir)
             _repair_bug_trace_screenshots(trace, bug_dir)
             trace_data = _serialize_trace(trace, bug_dir)
             trace_path = os.path.join(bug_dir, "trace.json")
@@ -974,11 +1269,11 @@ def _save_bug_folders(
             )
             updated_count += 1
         print(
-            f"{prefix} Bug details directory saved incrementally: {bugs_dir} "
-            f"(updated={updated_count}, unchanged={unchanged_count})"
+            f"{prefix} bug 详情目录已增量保存: {bugs_dir} "
+            f"(更新={updated_count}, 未变化={unchanged_count})"
         )
     except Exception as exc:
-        print(f"{prefix} Failed to save bug details directory: {exc}")
+        print(f"{prefix} bug 详情目录保存失败: {exc}")
 
 
 def _load_json_artifact(path: Path, errors: list[str]) -> Any:
@@ -986,7 +1281,7 @@ def _load_json_artifact(path: Path, errors: list[str]) -> Any:
         with path.open("r", encoding="utf-8") as f:
             return json.load(f)
     except Exception as exc:
-        errors.append(f"Cannot read {path.name}: {exc}")
+        errors.append(f"{path.name} 无法读取: {exc}")
         return None
 
 
@@ -998,6 +1293,7 @@ def _save_run_result(
     elapsed_seconds: float,
 ) -> None:
     _sync_bug_state(state)
+    _sync_compliance_state(state)
     ffg = state.get("ffg")
     bugs = state.get("detected_bugs", [])
     if not isinstance(bugs, list):
@@ -1019,8 +1315,24 @@ def _save_run_result(
         "elapsed_seconds": round(max(0.0, elapsed_seconds), 3),
         "app_name": str(state.get("app_name", "") or ""),
         "package_name": str(state.get("package_name", "") or ""),
+        "mode": state.get("run_mode", "compliance" if state.get("compliance_detection_enabled", False) else "defect"),
+        "reset_app_data": bool(state.get("reset_app_data", False)),
+        "grant_permissions": bool(state.get("grant_permissions", False)),
+        "permission_grant_report": state.get("permission_grant_report"),
+        "seed_provenance": state.get("seed_provenance"),
+        "compliance_detection_enabled": bool(state.get("compliance_detection_enabled", False)),
+        "compliance_targeted": bool(state.get("compliance_targeted", False)),
+        "compliance_summary": (ComplianceChecklist.from_state(state.get("compliance_checklist")).summary(
+            state.get("compliance_rules_path") or None
+        ) if state.get("compliance_detection_enabled", False) else None),
+        "pending_reviews": {"defect": bug_detection_worker.pending_count() if state.get("bug_detection_enabled", True) else 0,
+                            "compliance": compliance_worker.pending_count() if state.get("compliance_detection_enabled", False) else 0},
         "bug_detection_enabled": bool(state.get("bug_detection_enabled", True)),
+        "defect_review_failures": state.get("defect_review_failures", []),
+        "compliance_review_failures": state.get("compliance_review_failures", []),
         "workflow_complete": bool(state.get("workflow_complete", False)),
+        # 节点连续异常导致的提前结束原因（正常完成时为空）。
+        "workflow_stop_reason": str(state.get("workflow_stop_reason", "") or ""),
         "iteration_count": int(state.get("iteration_count", 0) or 0),
         "error_counts": {
             key: int(state.get(key, 0) or 0)
@@ -1039,6 +1351,7 @@ def _save_run_result(
             "page_transitions": len(ffg.page_transitions) if isinstance(ffg, FlowGraph) else 0,
             "function_dependencies": len(ffg.function_dependencies) if isinstance(ffg, FlowGraph) else 0,
             "test_status": ffg.test_status_counts() if isinstance(ffg, FlowGraph) else {},
+            "cross_test_status": ffg.cross_test_status_counts() if isinstance(ffg, FlowGraph) else {},
         }),
         "activity_discovery": {
             "count": len(activities),
@@ -1049,33 +1362,63 @@ def _save_run_result(
         "high_confidence_bug_count": len([
             bug for bug in bugs if isinstance(bug, dict) and _is_high_confidence_bug(bug)
         ]),
-        "llm_usage": get_llm_usage_summary().get("totals", {}),
+        "llm_usage": get_llm_usage_totals(),
         "fatal_error": _json_safe(state.get("fatal_error")),
     }
     _atomic_write_json(Path(output_dir) / "run_result.json", result)
 
 
-def _validate_final_artifacts(state: dict, output_dir: str, exit_code: int) -> dict[str, Any]:
-    """Validate the structure of the final directory, JSON readability, and all referenced files."""
+# 最近一次 manifest 的文件哈希：输出目录 → {相对路径: (size, mtime_ns, sha256)}。
+# 产物有错误时 manifest 会连续生成两次（中间只重写 run_result.json），第二次
+# 复用第一次的哈希，只重算 run_result.json 以及 size/mtime 变化过的文件。
+_MANIFEST_FILE_HASHES: dict[str, dict[str, tuple[int, int, str]]] = {}
+
+
+def _validate_final_artifacts(
+    state: dict,
+    output_dir: str,
+    exit_code: int,
+    *,
+    reuse_hashes: dict[str, tuple[int, int, str]] | None = None,
+) -> dict[str, Any]:
+    """校验最终目录的结构、JSON 可读性和所有被引用文件。"""
     root = Path(output_dir)
     errors: list[str] = []
     warnings: list[str] = []
+    if state.get("bug_detection_enabled", True):
+        failures = state.get("defect_review_failures", []) or bug_detection_worker.failures_snapshot()
+        if failures:
+            errors.append(f"缺陷判定有 {len(failures)} 个失败任务，最终产物不完整")
+    if state.get("compliance_detection_enabled", False):
+        # H4: 合规判定失败此前完全不校验——调用/解析重试耗尽后会被
+        # analyze_execution_for_compliance 悄悄写成 undetermined 的"模型未
+        # 返回该条款结论"，与缺陷侧不同，产物校验也没有对应项，导致合规判定
+        # 全线失败时仍可能被判定为 run_result.status=success。现在与缺陷侧
+        # 对齐：compliance_worker 记录的基础设施失败必须体现为产物不完整。
+        compliance_failures = (
+            state.get("compliance_review_failures", []) or compliance_worker.failures_snapshot()
+        )
+        if compliance_failures:
+            errors.append(f"合规判定有 {len(compliance_failures)} 个失败任务，最终产物不完整")
     required_files = [
         "activity_timeline.json",
         "activity_timeline.png",
-        "bugs.json",
         "llm_usage.json",
         "run.log",
         "run_result.json",
     ]
+    if state.get("bug_detection_enabled", True):
+        required_files.append("bugs.json")
+    if state.get("compliance_detection_enabled", False):
+        required_files.extend(["compliance_checklist.json", "compliance_report.json", "compliance_report.md"])
     if isinstance(state.get("ffg"), FlowGraph):
         required_files.append("ffg.json")
     for relative in required_files:
         path = root / relative
         if not path.is_file():
-            errors.append(f"Missing required artifact: {relative}")
+            errors.append(f"缺少必需产物: {relative}")
         elif path.stat().st_size <= 0:
-            errors.append(f"Required artifact is empty: {relative}")
+            errors.append(f"必需产物为空: {relative}")
 
     activity_path = root / "activity_timeline.json"
     activity_data = _load_json_artifact(activity_path, errors) if activity_path.is_file() else None
@@ -1083,18 +1426,18 @@ def _validate_final_artifacts(state: dict, output_dir: str, exit_code: int) -> d
         activities = activity_data.get("activities")
         points = activity_data.get("points")
         if not isinstance(activities, list) or any(not isinstance(item, str) for item in activities):
-            errors.append("activities in activity_timeline.json is not a list of strings")
+            errors.append("activity_timeline.json 的 activities 不是字符串列表")
         if not isinstance(points, list) or not points:
-            errors.append("activity_timeline.json is missing time sample points")
+            errors.append("activity_timeline.json 缺少时间采样点")
         elif isinstance(activities, list):
             last = points[-1]
             if not isinstance(last, dict) or int(last.get("activity_count", -1)) != len(activities):
-                errors.append("The last sample point in activity_timeline.json is inconsistent with total Activity count")
+                errors.append("activity_timeline.json 最后采样点与 Activity 总数不一致")
     elif activity_data is not None:
-        errors.append("activity_timeline.json is not an object")
+        errors.append("activity_timeline.json 不是对象")
     activity_image_path = root / "activity_timeline.png"
     if activity_image_path.is_file() and cv2.imread(str(activity_image_path)) is None:
-        errors.append("activity_timeline.png cannot be decoded")
+        errors.append("activity_timeline.png 无法解码")
 
     ffg_path = root / "ffg.json"
     if ffg_path.is_file():
@@ -1109,25 +1452,25 @@ def _validate_final_artifacts(state: dict, output_dir: str, exit_code: int) -> d
                 screenshots = page.get("evidence_screenshots")
                 controls = page.get("controls")
                 if not isinstance(screenshots, list):
-                    errors.append(f"evidence_screenshots of page {page_id} is not a list")
+                    errors.append(f"页面 {page_id} 的 evidence_screenshots 不是列表")
                     screenshots = []
                 if not isinstance(controls, list) or any(not isinstance(value, str) for value in controls):
-                    errors.append(f"controls of page {page_id} is not a list of natural language strings")
+                    errors.append(f"页面 {page_id} 的 controls 不是自然语言字符串列表")
                 for screenshot_ref in [representative, *screenshots]:
                     if not screenshot_ref:
                         continue
                     screenshot_path = root / "screenshots" / str(screenshot_ref)
                     if not screenshot_path.is_file() or screenshot_path.stat().st_size <= 0:
-                        errors.append(f"Page {page_id} is missing screenshot file: screenshots/{screenshot_ref}")
+                        errors.append(f"页面 {page_id} 缺少截图文件: screenshots/{screenshot_ref}")
             for function in functions:
                 function_id = str(function.get("id", "") or "")
                 page_refs = function.get("page_ids", [])
                 if not isinstance(page_refs, list):
-                    errors.append(f"page_ids of function {function_id} is not a list")
+                    errors.append(f"功能 {function_id} 的 page_ids 不是列表")
                     continue
                 for page_id in page_refs:
                     if str(page_id) not in page_ids:
-                        errors.append(f"Function {function_id} references non-existent page {page_id}")
+                        errors.append(f"功能 {function_id} 引用了不存在的页面 {page_id}")
                 coverage_percent = function.get("coverage_percent", 0)
                 if (
                     not isinstance(coverage_percent, int)
@@ -1135,13 +1478,13 @@ def _validate_final_artifacts(state: dict, output_dir: str, exit_code: int) -> d
                     or not 0 <= coverage_percent <= 100
                 ):
                     errors.append(
-                        f"coverage_percent of function {function_id} must be an integer between 0-100"
+                        f"功能 {function_id} 的 coverage_percent 必须是 0-100 的整数"
                     )
 
     bugs_path = root / "bugs.json"
     bugs_data = _load_json_artifact(bugs_path, errors) if bugs_path.is_file() else None
     if bugs_data is not None and not isinstance(bugs_data, list):
-        errors.append("bugs.json is not an array")
+        errors.append("bugs.json 不是数组")
         bugs_data = []
     bug_detail_dirs: dict[str, Path] = {}
     bugs_root = root / "bugs"
@@ -1154,23 +1497,23 @@ def _validate_final_artifacts(state: dict, output_dir: str, exit_code: int) -> d
                     bug_detail_dirs[bug_id] = bug_file.parent
     for bug in bugs_data or []:
         if not isinstance(bug, dict):
-            errors.append("bugs.json contains non-object entries")
+            errors.append("bugs.json 含非对象条目")
             continue
         bug_id = str(bug.get("bug_id", "") or "")
         detail_dir = bug_detail_dirs.get(bug_id)
         if detail_dir is None:
-            errors.append(f"Bug {bug_id or '<No ID>'} is missing details directory")
+            errors.append(f"缺陷 {bug_id or '<无 ID>'} 缺少详情目录")
             continue
         trace_path = detail_dir / "trace.json"
         trace_data = _load_json_artifact(trace_path, errors) if trace_path.is_file() else None
         if trace_data is None:
-            errors.append(f"Bug {bug_id} is missing trace.json")
+            errors.append(f"缺陷 {bug_id} 缺少 trace.json")
             continue
         if not isinstance(trace_data, list):
-            errors.append(f"trace.json of bug {bug_id} is not an array")
+            errors.append(f"缺陷 {bug_id} 的 trace.json 不是数组")
             continue
         if not trace_data:
-            warnings.append(f"trace of bug {bug_id} is empty")
+            warnings.append(f"缺陷 {bug_id} 的 trace 为空")
         for step in trace_data:
             if not isinstance(step, dict):
                 continue
@@ -1178,7 +1521,60 @@ def _validate_final_artifacts(state: dict, output_dir: str, exit_code: int) -> d
             if screenshot_ref:
                 screenshot_path = detail_dir / screenshot_ref
                 if not screenshot_path.is_file() or screenshot_path.stat().st_size <= 0:
-                    errors.append(f"Bug {bug_id} is missing trace screenshot: {screenshot_ref}")
+                    errors.append(f"缺陷 {bug_id} 缺少轨迹截图: {screenshot_ref}")
+
+    if state.get("compliance_detection_enabled", False):
+        checklist_path = root / "compliance_checklist.json"
+        report_path = root / "compliance_report.json"
+        checklist = _load_json_artifact(checklist_path, errors) if checklist_path.is_file() else None
+        report = _load_json_artifact(report_path, errors) if report_path.is_file() else None
+        if not isinstance(checklist, dict) or not isinstance(report, dict):
+            errors.append("合规清单或报告不是有效 JSON 对象")
+        elif not isinstance(report.get("checks"), list):
+            errors.append("合规报告缺少 checks 数组")
+        else:
+            for check in report["checks"]:
+                if not isinstance(check, dict):
+                    errors.append("合规报告含无效检测点")
+                    continue
+                relative = str(check.get("trace_path") or "")
+                if not relative:
+                    if check.get("evidence"):
+                        warnings.append(f"旧合规结论 {check.get('rule_id')} 缺少可定位的执行轨迹")
+                    continue
+                trace_path = (root / relative).resolve()
+                if not trace_path.is_relative_to(root.resolve()):
+                    errors.append("合规证据引用超出运行目录")
+                    continue
+                trace = _load_json_artifact(trace_path, errors) if trace_path.is_file() else None
+                if not isinstance(trace, dict) or not isinstance(trace.get("steps"), list):
+                    errors.append(f"合规结论 {check.get('rule_id')} 缺少有效轨迹: {relative}")
+                    continue
+                steps = {step.get("step_index"): step for step in trace["steps"] if isinstance(step, dict)}
+                for evidence in check.get("evidence", []):
+                    step = steps.get(evidence.get("global_step")) if isinstance(evidence, dict) else None
+                    screenshot = (step.get("page") or {}).get("screenshot") if step else None
+                    image_path = (trace_path.parent / str(screenshot or "")).resolve()
+                    if (not screenshot or not image_path.is_relative_to(root.resolve())
+                            or not image_path.is_file() or not image_path.stat().st_size):
+                        errors.append(f"合规结论 {check.get('rule_id')} 引用了无截图的步骤")
+
+    for label, enabled, worker in (
+        ("缺陷", state.get("bug_detection_enabled", True), bug_detection_worker),
+        ("合规", state.get("compliance_detection_enabled", False), compliance_worker),
+        ("页面审计", True, page_audit_worker),
+    ):
+        if enabled and worker.pending_count():
+            errors.append(f"{label}后台任务尚未排空，最终产物不完整")
+
+    # M4：页面审计队列饱和时的拒收此前完全静默；即使不阻断产物完整性判定，
+    # 也要留一条可见的警告，避免"部分页面控件清单缺失"在事后完全无法察觉。
+    rejected_page_audits = page_audit_worker.rejected_count()
+    if rejected_page_audits:
+        warnings.append(
+            f"页面审计队列饱和导致 {rejected_page_audits} 次提交被拒收，"
+            "部分页面控件清单可能不完整"
+        )
 
     trace_index_path = root / "trace_screenshots" / "index.jsonl"
     trace_screenshot_records = 0
@@ -1192,12 +1588,12 @@ def _validate_final_artifacts(state: dict, output_dir: str, exit_code: int) -> d
                         record = json.loads(line)
                     except json.JSONDecodeError as exc:
                         errors.append(
-                            f"trace_screenshots/index.jsonl line {line_number} cannot be parsed: {exc}"
+                            f"trace_screenshots/index.jsonl 第 {line_number} 行无法解析: {exc}"
                         )
                         continue
                     if not isinstance(record, dict):
                         errors.append(
-                            f"trace_screenshots/index.jsonl line {line_number} is not an object"
+                            f"trace_screenshots/index.jsonl 第 {line_number} 行不是对象"
                         )
                         continue
                     trace_screenshot_records += 1
@@ -1209,16 +1605,17 @@ def _validate_final_artifacts(state: dict, output_dir: str, exit_code: int) -> d
                         or screenshot_path.stat().st_size <= 0
                     ):
                         errors.append(
-                            f"Raw trace screenshot index line {line_number} is missing file: "
-                            f"{screenshot_ref or '<empty>'}"
+                            f"原始轨迹截图索引第 {line_number} 行缺少文件: "
+                            f"{screenshot_ref or '<空>'}"
                         )
         except OSError as exc:
-            errors.append(f"Cannot read raw trace screenshot index: {exc}")
+            errors.append(f"无法读取原始轨迹截图索引: {exc}")
 
     if exit_code != 0:
-        warnings.append("This run exited abnormally; artifacts represent the last consistent snapshot before the exception")
+        warnings.append("本次运行异常退出；产物是异常发生前的最后一致快照")
 
     files: list[dict[str, Any]] = []
+    file_hashes: dict[str, tuple[int, int, str]] = {}
     for path in sorted(
         item
         for item in root.rglob("*")
@@ -1227,15 +1624,27 @@ def _validate_final_artifacts(state: dict, output_dir: str, exit_code: int) -> d
         and item.name != "artifact_manifest.json"
     ):
         relative = path.relative_to(root).as_posix()
-        size = path.stat().st_size
-        digest = ""
-        if size <= 64 * 1024 * 1024:
-            hasher = hashlib.sha256()
-            with path.open("rb") as f:
-                for chunk in iter(lambda: f.read(1024 * 1024), b""):
-                    hasher.update(chunk)
-            digest = hasher.hexdigest()
+        stat = path.stat()
+        size = stat.st_size
+        previous = (reuse_hashes or {}).get(relative)
+        if (
+            previous is not None
+            and relative != "run_result.json"
+            and previous[0] == size
+            and previous[1] == stat.st_mtime_ns
+        ):
+            digest = previous[2]
+        else:
+            digest = ""
+            if size <= 64 * 1024 * 1024:
+                hasher = hashlib.sha256()
+                with path.open("rb") as f:
+                    for chunk in iter(lambda: f.read(1024 * 1024), b""):
+                        hasher.update(chunk)
+                digest = hasher.hexdigest()
+        file_hashes[relative] = (size, stat.st_mtime_ns, digest)
         files.append({"path": relative, "size_bytes": size, "sha256": digest or None})
+    _MANIFEST_FILE_HASHES[str(root.resolve())] = file_hashes
 
     return {
         "schema_version": 1,
@@ -1249,8 +1658,24 @@ def _validate_final_artifacts(state: dict, output_dir: str, exit_code: int) -> d
     }
 
 
-def _save_artifact_manifest(state: dict, output_dir: str, exit_code: int) -> dict[str, Any]:
-    manifest = _validate_final_artifacts(state, output_dir, exit_code)
+def _save_artifact_manifest(
+    state: dict,
+    output_dir: str,
+    exit_code: int,
+    *,
+    reuse_previous: bool = False,
+) -> dict[str, Any]:
+    reuse_hashes = (
+        _MANIFEST_FILE_HASHES.get(str(Path(output_dir).resolve()))
+        if reuse_previous
+        else None
+    )
+    manifest = _validate_final_artifacts(
+        state,
+        output_dir,
+        exit_code,
+        reuse_hashes=reuse_hashes,
+    )
     _atomic_write_json(Path(output_dir) / "artifact_manifest.json", manifest)
     return manifest
 
@@ -1261,27 +1686,30 @@ def _should_save_run_snapshot(node_name: str, state: dict) -> bool:
     if node_name != "scenario_plan":
         return False
     scenario_type = (state.get("current_plan", {}) or {}).get("scenario_type")
-    return scenario_type in {"bootstrap", "status_update", "ffg_audit_update"}
+    # L2：曾支持的 "ffg_audit_update" scenario_type 全仓已无生产者（规划器
+    # 从未产出过这个值），是纯死分支；一并从消费端移除，避免误读为
+    # "系统里存在这个能力"。
+    return scenario_type == "skip"
 
 
 def _save_run_snapshot(state: dict, output_dir: str):
-    """Save intermediate run artifacts: FFG, page screenshots, and bugs, without saving checkpoint resume state."""
-    _save_outputs(state, output_dir, prefix="[Run Snapshot]")
+    """保存运行中间产物：FFG、页面截图和 bugs，不保存断点续跑状态。"""
+    _save_outputs(state, output_dir, prefix="[运行快照]")
 
 
 def _resolve_foreground_package(device) -> str:
-    print("[Startup] Getting current foreground package name...")
+    print("[启动] 正在获取当前前台包名...")
     started_at = time.time()
     try:
         package_name = str(device.current_package() or "").strip()
         elapsed = time.time() - started_at
         if package_name:
-            print(f"[Startup] Current foreground package name: {package_name} ({elapsed:.2f}s)")
+            print(f"[启动] 当前前台包名: {package_name} ({elapsed:.2f}s)")
         else:
-            print(f"[Startup] Failed to get current foreground package name ({elapsed:.2f}s)")
+            print(f"[启动] 未获取到当前前台包名 ({elapsed:.2f}s)")
         return package_name
     except Exception as exc:
-        print(f"[Startup] Failed to get current foreground package name: {exc}")
+        print(f"[启动] 获取当前前台包名失败: {exc}")
         return ""
 
 
@@ -1305,7 +1733,7 @@ def _graph_recursion_limit(state: dict) -> int:
     max_iterations = int(state.get("max_iterations", 0) or 0)
     if max_iterations > 0:
         # A workflow iteration crosses several top-level graph nodes. Leave
-        # ample room for bootstrap/status-only iterations and final routing.
+        # ample room for skipped (no-execution) iterations and final routing.
         return max(1000, max_iterations * 8 + 100)
     # LangGraph requires a recursion guard even when FuncDroid is time-bound.
     # Keep it practically unreachable and expose an env override for operators.
@@ -1313,11 +1741,11 @@ def _graph_recursion_limit(state: dict) -> int:
 
 
 def _safe_run_dir_name(app_name: str) -> str:
-    name = str(app_name or "").strip() or "Current foreground app"
+    name = str(app_name or "").strip() or "当前前台应用"
     for separator in {os.sep, os.altsep}:
         if separator:
             name = name.replace(separator, "_")
-    return name or "Current foreground app"
+    return name or "当前前台应用"
 
 
 def _allocate_default_output_dir(app_name: str) -> str:
@@ -1338,129 +1766,141 @@ def _run_android_shell_best_effort(device, command: str, label: str) -> tuple[st
     try:
         return str(device.connector.shell(command) or ""), True
     except Exception as exc:
-        print(f"[Pre-startup Cleanup] {label} failed, continuing execution: {exc}")
+        print(f"[启动前清理] {label}失败，继续执行: {exc}")
         return "", False
 
 
-def _extract_recent_task_ids(dumpsys_output: str) -> list[str]:
-    task_ids: list[str] = []
-    seen: set[str] = set()
-    for line in dumpsys_output.splitlines():
-        if "Recent #" not in line and "RecentTaskInfo" not in line and "TaskRecord" not in line:
-            continue
-        for pattern in RECENT_TASK_ID_PATTERNS:
-            match = pattern.search(line)
-            if not match:
-                continue
-            task_id = match.group(1)
-            if task_id not in seen:
-                seen.add(task_id)
-                task_ids.append(task_id)
-            break
-    return task_ids
-
-
-def _clear_android_background_tasks(device, package_name: str) -> None:
+def _reset_android_app_data_at_run_start(device, package_name: str) -> bool:
+    """Reset app data once for a brand-new run, never from an inner scenario."""
+    package_name = str(package_name or "").strip()
+    if not package_name:
+        return False
     if getattr(device, "operating_system", "") not in {"adb", "android"}:
-        return
+        print("[启动前重置] 当前设备不支持自动清数据；请准备初始状态并使用 --no-reset-app-data。")
+        return False
 
-    print("[Pre-startup Cleanup] Clearing background tasks and preparing clean launch of target app.")
-    _run_android_shell_best_effort(device, "input keyevent KEYCODE_HOME", "Return to home screen")
-    dumpsys_output, _ = _run_android_shell_best_effort(
+    print(f"[启动前重置] 清除目标应用数据（本次运行仅执行一次）: {package_name}")
+    output, succeeded = _run_android_shell_best_effort(
         device,
-        "dumpsys activity recents",
-        "Read recent tasks",
+        f"pm clear {package_name}",
+        f"清除目标应用数据 {package_name}",
     )
-    task_ids = _extract_recent_task_ids(dumpsys_output)
-    removed = 0
-    activity_help, _ = _run_android_shell_best_effort(
-        device,
-        "cmd activity help",
-        "Read activity command capability",
-    )
-    if task_ids and "remove-task" not in activity_help:
-        print("[Pre-startup Cleanup] Current Android version does not support remove-task, skipping itemized removal of recent tasks.")
+    confirmed = succeeded and "success" in output.strip().lower()
+    if confirmed:
+        print(f"[启动前重置] pm clear 已确认成功: {output.strip()}")
     else:
-        for task_id in task_ids[:50]:
-            _, succeeded = _run_android_shell_best_effort(
-                device,
-                f"cmd activity remove-task {task_id}",
-                f"Remove recent task {task_id}",
-            )
-            if succeeded:
-                removed += 1
-    _run_android_shell_best_effort(device, "am kill-all", "Clean up background processes")
-    if package_name:
-        _run_android_shell_best_effort(device, f"am force-stop {package_name}", f"Stop target app {package_name}")
+        print(
+            "[启动前重置] pm clear 未明确成功，拒绝在非全新状态下开始测试: "
+            f"{output.strip() or '<空输出>'}"
+        )
+    return confirmed
+
+
+def _grant_app_permissions_at_run_start(device, package_name: str) -> dict:
+    """Grant the target app's runtime permissions once before the first launch.
+
+    缺陷检测的目标是功能行为，逐条权限弹窗会占用场景步数并可能触发重复索权
+    循环；因此在启动前把已申请且未授予的权限一次性补齐。单条授予失败不中止
+    运行：设备可能把权限标记为不可变更（USER_FIXED）或使用非标准权限名。
+    """
+    package_name = str(package_name or "").strip()
+    if not package_name:
+        print("[启动前授权] 未指定目标包名（测试当前前台应用），跳过预授予权限。")
+        return {}
+    print(f"[启动前授权] 预授予目标应用运行期权限: {package_name}")
+    try:
+        report = device.grant_app_permissions(package_name) or {}
+    except Exception as exc:  # noqa: BLE001 - 授权失败不应阻断本次运行
+        print(f"[启动前授权] 预授予权限异常，继续执行: {exc}")
+        return {"granted": [], "missing": [], "failed": [], "unavailable": True}
+    if report.get("unavailable"):
+        print("[启动前授权] 当前设备不支持自动授予权限，跳过；请手动确认授权状态。")
+        return report
+    granted = list(report.get("granted", []) or [])
+    missing = list(report.get("missing", []) or [])
+    failed = list(report.get("failed", []) or [])
     print(
-        "[Pre-startup Cleanup] Background cleanup finished: "
-        f"removed_recent_tasks={removed}/{min(len(task_ids), 50)}"
+        f"[启动前授权] 已授予 {len(granted)} 项运行期权限"
+        + (f"，不可变更/普通权限 {len(missing)} 项" if missing else "")
+        + (f"，授予失败 {len(failed)} 项: {', '.join(failed[:5])}" if failed else "")
     )
+    if not granted and not missing and not failed:
+        print("[启动前授权] 该应用没有可预授予的运行期权限（或权限已全部授予）。")
+    return report
 
 
-def _start_app_after_background_cleanup(
+def _start_target_app(
     device,
     package_name: str,
-) -> None:
-    _clear_android_background_tasks(device, package_name)
-    print(f"[Startup] Launching target app: {package_name}")
+    *,
+    reset_app_data: bool = False,
+    grant_permissions: bool = False,
+) -> dict:
+    device.stop_app(package_name)
+    if reset_app_data and not _reset_android_app_data_at_run_start(device, package_name):
+        raise RuntimeError("启动前无法确认目标应用数据已清除，已中止本次测试")
+    if not reset_app_data:
+        print("[启动] 保留目标应用数据，不执行 pm clear。")
+    permission_report: dict = {}
+    if grant_permissions:
+        permission_report = _grant_app_permissions_at_run_start(device, package_name)
+    print(f"[启动] 启动目标应用: {package_name}")
     device.start_app(package_name)
     time.sleep(float(os.getenv("APP_RESTART_DELAY", "2.0")))
+    return permission_report
 
 
 def _llm_timeout_value() -> str:
-    return os.getenv("LLM_REQUEST_TIMEOUT", "").strip() or "none"
+    # 与 create_llm 使用同一解析逻辑：未配置/非法时为有限默认超时，而非“不超时”。
+    return f"{_resolve_request_timeout(None):g}"
+
+
+def _exec_json_response_format_enabled() -> bool:
+    """场景执行是否开启服务端 JSON 模式（EXEC_JSON_RESPONSE_FORMAT，默认开启）。"""
+    return os.getenv("EXEC_JSON_RESPONSE_FORMAT", "1").strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
 
 
 def _ensure_device_id(args) -> None:
     if args.device_id:
         return
-
-    detected: list[tuple[str, str]] = []
-    errors: list[str] = []
-    for backend, connector in (("adb", ADB), ("hdc", HDC)):
-        try:
-            detected.extend((backend, serial) for serial in connector.devices())
-        except Exception as exc:
-            errors.append(f"{backend}: {exc}")
-
-    unique_serials = sorted({serial for _backend, serial in detected if serial})
-    if len(unique_serials) == 1:
-        args.device_id = unique_serials[0]
-        backend = next(name for name, serial in detected if serial == args.device_id)
-        print(f"[Startup] Automatically selected the only {backend} device: {args.device_id}")
-        return
-    if not unique_serials:
-        detail = f" (detection errors: {'; '.join(errors)})" if errors else ""
-        raise ValueError(
-            "No available devices detected. Please enable USB debugging and verify devices via adb devices or hdc list targets"
-            + detail
-        )
-    raise ValueError(
-        "Multiple devices detected, please specify one via --device-id: "
-        + ", ".join(unique_serials)
-    )
+    raise ValueError("必须通过 --device-id 显式指定要运行的设备编号，例如: --device-id emulator-5554")
 
 
 def _init_runtime(args):
-    print("[Startup] Initializing planning/update LLM...")
+    print("[启动] 初始化规划/更新 LLM...")
     planning_llm = create_llm()
-    print("[Startup] Initializing scenario execution LLM...")
-    execution_llm = create_llm()
-    # FFG update retains all unmatched trace graphs; local multimodal models processing full evidence are usually
-    # slower than planning, so use an independent long timeout and limit retries by total runtime budget.
+    # 场景执行是逐步骤的高频调用，思考强度单独配置（默认 none，关闭思考以降低单步延迟）。
+    execution_effort = os.getenv("EXECUTION_REASONING_EFFORT", "none").strip().lower()
+    # 场景执行要求纯 JSON 动作：开启服务端 JSON 模式可根治“模型把响应写成
+    # 自然语言”的解析失败；端点不支持时执行器会自动关闭（EXEC_JSON_RESPONSE_FORMAT=0）。
+    exec_json_format = _exec_json_response_format_enabled()
+    print(
+        f"[启动] 初始化场景执行 LLM（思考强度 {execution_effort or '服务端默认'}"
+        f"{'，JSON 模式' if exec_json_format else ''}）..."
+    )
+    execution_llm = create_llm(
+        reasoning_effort=execution_effort or None,
+        json_response_format=exec_json_format,
+    )
+    # FFG 更新保留所有尚未匹配的轨迹图；本地多模态模型处理完整证据通常
+    # 比规划慢，使用独立长超时并由总运行预算限制重试次数。
     ffg_update_timeout = float(os.getenv("FFG_UPDATE_LLM_TIMEOUT", "300") or 300)
-    print(f"[Startup] Initializing FFG update LLM (timeout {ffg_update_timeout:g}s)...")
+    print(f"[启动] 初始化 FFG 更新 LLM（超时 {ffg_update_timeout:g}s）...")
     ffg_update_llm = create_llm(timeout_seconds=ffg_update_timeout)
-    if bool(getattr(args, "bug_detection", True)):
-        print("[Startup] Initializing bug detection LLM...")
+    if bool(getattr(args, "bug_detection", True)) or bool(getattr(args, "compliance", False)):
+        print("[启动] 初始化判定 LLM...")
         bug_detection_llm = create_llm()
     else:
-        print("[Startup] Bug detection is disabled, skipping dedicated detection LLM initialization")
+        print("[启动] 合规判定与缺陷检测均关闭，跳过专用判定 LLM 初始化")
         bug_detection_llm = None
-    print(f"[Startup] Initializing device driver: {args.device_id}")
+    print(f"[启动] 初始化设备驱动: {args.device_id}")
     device = Driver(args.device_id)
-    print("[Startup] Device driver initialization completed")
+    print("[启动] 设备驱动初始化完成")
     return planning_llm, execution_llm, ffg_update_llm, bug_detection_llm, device
 
 
@@ -1474,11 +1914,11 @@ def _close_logcat_capture(
         return
     try:
         if announce:
-            print(f"[logcat] Stopping full logcat capture: {resources.logcat_capture.path}")
+            print(f"[logcat] 停止完整 logcat 采集: {resources.logcat_capture.path}")
         resources.logcat_capture.close()
     except Exception as exc:
         if announce:
-            print(f"[logcat] Failed to stop full logcat capture: {exc}")
+            print(f"[logcat] 停止完整 logcat 采集失败: {exc}")
         if not suppress_errors:
             raise
     finally:
@@ -1498,19 +1938,35 @@ def _resolve_target_app(args, device) -> bool:
         args.package_name = _resolve_foreground_package(device)
         if not args.package_name:
             raise RuntimeError(
-                "--package-name not specified and cannot identify current foreground App; "
-                "please open the target App on the device first"
+                "未指定 --package-name，且无法识别当前前台 App；"
+                "请先在设备上打开目标 App"
             )
-        print(f"[Startup] Using current foreground App: {args.package_name}")
+        print(f"[启动] 使用当前前台 App: {args.package_name}")
     if not args.app_name:
         args.app_name = args.package_name
     return explicit_package
 
 
-def _prepare_workflow_state(args, device, resources: RunResources, start_time: float) -> AgentState:
+def _prepare_workflow_state(
+    args, device, resources: RunResources, start_time: float,
+    resume_state: AgentState | None = None,
+) -> AgentState:
+    if args.compliance:
+        from compliance.rule_library import load_rules
+
+        snapshot_path = Path(resources.output_dir).resolve() / "compliance_rules.json"
+        if not bool(getattr(args, "resume_existing", False)) or not snapshot_path.is_file():
+            _atomic_write_json(snapshot_path, {"rules": load_rules(args.rules)})
+        args.rules = str(snapshot_path)
     if bool(getattr(args, "resume_existing", False)):
-        return _load_resume_state(args, resources.output_dir, start_time)
-    return _build_initial_state(args, start_time)
+        state = resume_state if resume_state is not None else _load_resume_state(args, resources.output_dir, start_time)
+        state["compliance_rules_path"] = str(args.rules or "")
+        return state
+    state = _build_initial_state(args, start_time)
+    if resume_state is not None:
+        state["ffg"] = resume_state["ffg"]
+        state["seed_provenance"] = resume_state["seed_provenance"]
+    return state
 
 
 def _prepare_run_logging(args, device, resources: RunResources) -> None:
@@ -1539,62 +1995,83 @@ def _prepare_run_logging(args, device, resources: RunResources) -> None:
 
 
 def _print_startup_banner(args, state: dict, resources: RunResources) -> None:
-    time_label = f"{args.total_time} minutes" if args.total_time > 0 else "unlimited"
-    llm_model = os.getenv("MODEL", "").strip()
+    time_label = f"{args.total_time} 分钟" if args.total_time > 0 else "无限制"
+    # 与 workflow/llm.py 的取用顺序保持一致：通用变量优先，其次 DEEPSEEK_* 回退。
+    llm_model = (
+        os.getenv("MODEL", "").strip()
+        or os.getenv("DEEPSEEK_MODEL", "").strip()
+        or "未指定"
+    )
     llm_timeout = _llm_timeout_value()
     ffg_update_timeout = os.getenv("FFG_UPDATE_LLM_TIMEOUT", "300").strip() or "300"
 
     print(f"\n{'='*60}")
-    print("  FuncDroid Workflow Started")
+    print("  FuncDroid 工作流启动")
     print(f"{'='*60}")
-    print(f"  App: {state.get('app_name')} ({state.get('package_name')})")
-    print(f"  App selection: {'Specified package name' if args.package_name_explicit else 'Current foreground App'}")
-    print(f"  Device: {args.device_id}")
-    print(f"  Planning mode: {PHASE_LABELS[args.phase]}")
+    print(f"  应用: {state.get('app_name')} ({state.get('package_name')})")
+    print(f"  应用选择: {'指定包名' if args.package_name_explicit else '当前前台 App'}")
+    print(f"  设备: {args.device_id}")
+    print(f"  规划模式: {PHASE_LABELS[args.phase]}")
     exploration_mode = str(state.get("exploration_mode") or DEFAULT_EXPLORATION_MODE)
     print(
-        f"  Exploration scope: {EXPLORATION_MODE_LABELS.get(exploration_mode, exploration_mode)}"
-        f" ({exploration_mode})"
+        f"  探索范围: {EXPLORATION_MODE_LABELS.get(exploration_mode, exploration_mode)}"
+        f"（{exploration_mode}）"
     )
     boundary_packages = enabled_packages()
     if exploration_mode == "core":
         print(
-            "  Exploration boundary: "
+            "  探索边界: "
             + (
-                "Enabled: " + ", ".join(boundary_packages)
+                "已启用: " + ", ".join(boundary_packages)
                 if boundary_packages
-                else "Disabled (no active rules in boundary_rules.json)"
+                else "未启用（boundary_rules.json 无启用规则）"
             )
         )
-    print(f"  Total time: {time_label}")
-    iteration_label = str(args.max_iterations) if args.max_iterations > 0 else "unlimited"
-    print(f"  Max iterations: {iteration_label}")
-    print(f"  LangGraph recursion budget: {_graph_recursion_limit(state)}")
-    print(f"  Planning/update model: {llm_model}")
-    print(f"  Scenario execution model: {llm_model}")
+    print(f"  总时间: {time_label}")
+    iteration_label = str(args.max_iterations) if args.max_iterations > 0 else "无限制"
+    print(f"  最大轮次: {iteration_label}")
+    print(f"  LangGraph 递归预算: {_graph_recursion_limit(state)}")
+    print(f"  规划/更新模型: {llm_model}")
+    print(f"  场景执行模型: {llm_model}")
+    global_effort = os.getenv("LLM_REASONING_EFFORT", "low").strip().lower() or "服务端默认"
+    exec_effort = os.getenv("EXECUTION_REASONING_EFFORT", "none").strip().lower() or "服务端默认"
+    print(f"  思考强度: 其他阶段={global_effort}, 场景执行={exec_effort}")
+    exec_json_format = _exec_json_response_format_enabled()
+    print(f"  场景执行 JSON 模式: {'开启（服务端保证合法 JSON）' if exec_json_format else '关闭'}")
     bug_detection_enabled = bool(state.get("bug_detection_enabled", True))
+    compliance_enabled = bool(state.get("compliance_detection_enabled", False))
+    print(f"  检测模式: {args.mode}")
+    print(f"  本次清除应用数据: {args.reset_app_data}")
+    print(f"  启动前预授予权限: {bool(getattr(args, 'grant_permissions', False))}")
+    if compliance_enabled:
+        compliance_rule_count = ComplianceChecklist.from_state(
+            state.get("compliance_checklist")
+        ).summary(str(state.get("compliance_rules_path", "") or "").strip() or None)["gui_total"]
+        print(f"  GUI 合规检测: 开启（{compliance_rule_count} 条规则）")
     print(
-        "  Bug detection: "
-        + (f"Enabled ({llm_model})" if bug_detection_enabled else "Disabled")
+        "  缺陷检测: "
+        + (f"开启（{llm_model}）" if bug_detection_enabled else "关闭")
     )
     print(
-        "  LLM timeout: "
-        f"regular={llm_timeout}s, "
-        f"ffg_update={ffg_update_timeout}s"
+        "  LLM 超时: "
+        f"常规={llm_timeout}s, "
+        f"FFG更新={ffg_update_timeout}s"
     )
-    print(f"  Output directory: {resources.output_dir}")
-    print(f"  Resume run: {'Yes' if bool(getattr(args, 'resume_existing', False)) else 'No'}")
-    print(f"  Run log: {resources.run_log.path}")
+    print(f"  输出目录: {resources.output_dir}")
+    print(f"  断点续跑: {'是' if bool(getattr(args, 'resume_existing', False)) else '否'}")
+    print(f"  运行日志: {resources.run_log.path}")
     if resources.logcat_capture is not None:
-        print(f"  Full logcat: {resources.logcat_capture.path}")
+        print(f"  完整 logcat: {resources.logcat_capture.path}")
     print(
-        "  Exploration params: "
-        f"max_scenarios_per_function={_env_value('PLAN_MAX_SCENARIOS_PER_FUNCTION', '6')}, "
+        "  探索参数: "
+        f"breadth_max_scenarios={_env_value('PLAN_BREADTH_MAX_SCENARIOS', '3')}, "
+        f"depth_controls_per_scenario={_env_value('PLAN_DEPTH_CONTROLS_PER_SCENARIO', '5')}, "
+        f"depth_scenarios={_env_value('PLAN_MIN_DEPTH_SCENARIOS', '1')}-{_env_value('PLAN_MAX_DEPTH_SCENARIOS', '6')}, "
         f"function_coverage_target={_env_value('PLAN_FUNCTION_COVERAGE_TARGET', '80')}%, "
         f"max_audit_images_per_function={_env_value('PLAN_MAX_AUDIT_IMAGES_PER_FUNCTION', '4')}"
     )
     print(
-        "  Timing params: "
+        "  时间参数: "
         f"action_delay={_env_value('ACTION_DELAY', '0.7')}s, "
         f"fast_action_delay={_env_value('FAST_ACTION_DELAY', '0.15')}s, "
         f"app_restart_delay={_env_value('APP_RESTART_DELAY', '2.0')}s, "
@@ -1602,9 +2079,9 @@ def _print_startup_banner(args, state: dict, resources: RunResources) -> None:
         f"max_navigation_steps={_effective_max_navigation_steps()}"
     )
     print(
-        "  Detection params: "
-        "ffg_update=incremental graph building from execution trace, "
-        f"trace_defect_detection={'background async thread (full trace + all screenshots)' if bug_detection_enabled else 'off'}, "
+        "  检测参数: "
+        "ffg_update=执行轨迹增量建图, "
+        f"trace_defect_detection={'后台异步线程(全量轨迹+全部截图)' if bug_detection_enabled else 'off'}, "
         "crash_logcat=on, "
         f"full_logcat={'on' if resources.logcat_capture is not None else 'off'}"
     )
@@ -1621,7 +2098,7 @@ def _merge_graph_step(final_state: dict, step: dict) -> str:
 
 def _compact_log_text(value: object, limit: int = 240) -> str:
     text = " ".join(str(value or "").split())
-    return text if len(text) <= limit else text[:limit - 3] + "..."
+    return text if len(text) <= limit else text[:limit - 1] + "…"
 
 
 def _print_graph_step_status(node_name: str, final_state: dict) -> None:
@@ -1630,20 +2107,20 @@ def _print_graph_step_status(node_name: str, final_state: dict) -> None:
         scenario_type = str(current_plan.get("scenario_type", "") or "none")
         if scenario_type == "cross_test":
             scope = (
-                f"{current_plan.get('src_function_id', '') or 'unknown'}->"
+                f"{current_plan.get('src_function_id', '') or 'unknown'}→"
                 f"{current_plan.get('dst_function_id', '') or 'unknown'}"
             )
         else:
             scope = str(current_plan.get("target_function_id", "") or "none")
-        print(f"[State] scenario_plan | type={scenario_type} | scope={scope}")
+        print(f"[状态] scenario_plan | type={scenario_type} | scope={scope}")
         navigation_scenario = _compact_log_text(
             final_state.get("current_navigation_scenario")
         )
         test_scenario = _compact_log_text(final_state.get("current_test_scenario"))
         if navigation_scenario:
-            print(f"[Plan] Navigation: {navigation_scenario}")
+            print(f"[计划] 导航: {navigation_scenario}")
         if test_scenario:
-            print(f"[Plan] Scenario: {test_scenario}")
+            print(f"[计划] 场景: {test_scenario}")
         return
 
     if node_name == "scenario_exec":
@@ -1651,11 +2128,11 @@ def _print_graph_step_status(node_name: str, final_state: dict) -> None:
         current_page = final_state.get("current_page")
         page_id = str(getattr(current_page, "id", "") or "unknown")
         print(
-            "[State] scenario_exec | "
+            "[状态] scenario_exec | "
             f"navigation={execution_result.get('navigation_status', 'unknown')}"
-            f"({int(execution_result.get('navigation_trace_length', 0) or 0)} steps) | "
+            f"({int(execution_result.get('navigation_trace_length', 0) or 0)}步) | "
             f"scenario={execution_result.get('scenario_status', 'unknown')}"
-            f"({int(execution_result.get('scenario_trace_length', 0) or 0)} steps) | "
+            f"({int(execution_result.get('scenario_trace_length', 0) or 0)}步) | "
             f"page={page_id}"
         )
         error = _compact_log_text(
@@ -1663,7 +2140,7 @@ def _print_graph_step_status(node_name: str, final_state: dict) -> None:
             or execution_result.get("navigation_error")
         )
         if error:
-            print(f"[State] scenario_exec | error={error}")
+            print(f"[状态] scenario_exec | error={error}")
         return
 
     if node_name == "ffg_update":
@@ -1677,17 +2154,17 @@ def _print_graph_step_status(node_name: str, final_state: dict) -> None:
             final_state.get("current_testing_function_status", "") or "not_started"
         )
         print(
-            "[State] ffg_update | "
+            "[状态] ffg_update | "
             f"decision={final_state.get('ffg_update_decision', 'finish')} | "
             f"graph={function_count}F/{page_count}P | "
             f"current_function={current_function_id}({current_function_status})"
         )
         issues = list(final_state.get("ffg_update_validation_issues", []) or [])
         if issues:
-            print(f"[State] ffg_update | validation={'; '.join(map(str, issues[:3]))}")
+            print(f"[状态] ffg_update | validation={'; '.join(map(str, issues[:3]))}")
         return
 
-    print(f"[State] node={node_name}")
+    print(f"[状态] node={node_name}")
 
 
 def _save_progress_best_effort(label: str, callback, fallback=None):
@@ -1705,8 +2182,8 @@ def _save_progress_best_effort(label: str, callback, fallback=None):
         if last_log == 0 or now - last_log >= _CHECKPOINT_FAILURE_LOG_INTERVAL_SECONDS:
             failure["last_log_monotonic"] = now
             print(
-                f"[Run Snapshot] Failed to save {label}, main test loop continues, subsequent nodes will retry: "
-                f"{exc} (cumulative failures={failure['count']})"
+                f"[运行快照] {label} 保存失败，主测试循环继续，后续节点会重试: "
+                f"{exc} (累计失败={failure['count']})"
             )
         return fallback
     _CHECKPOINT_FAILURES.pop(label, None)
@@ -1731,12 +2208,12 @@ def _run_graph(
     # Materialize a useful artifact set before the first LLM/device step, then
     # refresh lightweight metadata after every graph node.
     _save_progress_best_effort(
-        "FFG/Bug snapshot",
+        "FFG/缺陷快照",
         lambda: _save_run_snapshot(final_state, resources.output_dir),
     )
-    _save_progress_best_effort("LLM usage", save_llm_usage_summary)
+    _save_progress_best_effort("LLM 用量", save_llm_usage_summary)
     timeline = _save_progress_best_effort(
-        "Activity timeline",
+        "Activity 时间线",
         lambda: _save_activity_timeline(
             final_state,
             resources.output_dir,
@@ -1747,7 +2224,7 @@ def _run_graph(
     )
     final_state["_activity_timeline"] = timeline
     _save_progress_best_effort(
-        "Run state",
+        "运行状态",
         lambda: _save_run_result(
             final_state,
             resources.output_dir,
@@ -1762,14 +2239,25 @@ def _run_graph(
     for step in graph.stream(state, config=stream_config):
         node_name = _merge_graph_step(final_state, step)
         _print_graph_step_status(node_name, final_state)
-        _save_progress_best_effort("LLM usage", save_llm_usage_summary)
-        if _should_save_run_snapshot(node_name, final_state):
+        # 只有 FFG 更新后或跳过/收尾轮才是有意义的检查点：此时做完整快照、
+        # 显式落盘用量与 run_result。其余节点（规划/执行）只走节流的用量保存，
+        # 避免每个节点都深拷贝状态、fsync 多个文件。
+        checkpoint = _should_save_run_snapshot(node_name, final_state) or bool(
+            final_state.get("workflow_complete", False)
+        )
+        if checkpoint:
             _save_progress_best_effort(
-                "FFG/Bug snapshot",
+                "FFG/缺陷快照",
                 lambda: _save_run_snapshot(final_state, resources.output_dir),
             )
+            _save_progress_best_effort("LLM 用量", save_llm_usage_summary)
+        else:
+            _save_progress_best_effort(
+                "LLM 用量",
+                lambda: save_llm_usage_summary(durable=False),
+            )
         timeline = _save_progress_best_effort(
-            "Activity timeline",
+            "Activity 时间线",
             lambda: _save_activity_timeline(
                 final_state,
                 resources.output_dir,
@@ -1778,24 +2266,37 @@ def _run_graph(
             fallback=timeline,
         )
         final_state["_activity_timeline"] = timeline
-        _save_progress_best_effort(
-            "Run state",
-            lambda: _save_run_result(
-                final_state,
-                resources.output_dir,
-                exit_code=None,
-                elapsed_seconds=max(
-                    0.0,
-                    time.time() - float(final_state.get("start_time", 0) or time.time()),
+        if checkpoint:
+            _save_progress_best_effort(
+                "运行状态",
+                lambda: _save_run_result(
+                    final_state,
+                    resources.output_dir,
+                    exit_code=None,
+                    elapsed_seconds=max(
+                        0.0,
+                        time.time() - float(final_state.get("start_time", 0) or time.time()),
+                    ),
                 ),
-            ),
-        )
+            )
     return final_state
 
 
-def _save_and_summarize(final_state: dict, output_dir: str, elapsed: float) -> None:
-    _flush_bug_detection("save final outputs")
-    _flush_page_audit(final_state)
+def _save_and_summarize(
+    final_state: dict,
+    output_dir: str,
+    elapsed: float,
+    *,
+    interrupted: bool = False,
+    deadline: float | None = None,
+) -> None:
+    """收尾落盘。interrupted 时不补交新的页面审计；deadline 缺省为
+    现在起 FINALIZE_DEADLINE_SECONDS，约束页面审计的等待与补交总时长。"""
+    if deadline is None:
+        deadline = time.monotonic() + FINALIZE_DEADLINE_SECONDS
+    _flush_worker(bug_detection_worker, "保存最终输出")
+    _flush_worker(compliance_worker, "保存最终输出")
+    _flush_page_audit(final_state, interrupted=interrupted, deadline=deadline)
     save_llm_usage_summary()
     _save_final_outputs(final_state, output_dir)
     final_state["_activity_timeline"] = _save_activity_timeline(
@@ -1807,59 +2308,108 @@ def _save_and_summarize(final_state: dict, output_dir: str, elapsed: float) -> N
     _print_summary(final_state, output_dir, elapsed)
 
 
+def _stop_target_app_processes(args, resources: RunResources) -> None:
+    """测试结束后停止目标应用的后台进程。
+
+    连续测试多个 App 时，上一个应用常驻后台会占用内存，也可能在下一个
+    App 测试期间被任务切换弹回前台干扰操作。只停止进程（app_stop），
+    不清除数据、不卸载；启动前权限与登录态都不受影响。
+    """
+    device = resources.device
+    package_name = str(args.package_name or "").strip()
+    if device is None or not package_name:
+        return
+    try:
+        print(f"[收尾] 测试结束，停止目标应用后台进程: {package_name}")
+        device.stop_app(package_name)
+    except Exception as exc:  # noqa: BLE001 - 收尾清理失败不影响运行结果
+        print(f"[收尾] 停止目标应用后台进程失败（忽略继续）: {type(exc).__name__}: {exc}")
+
+
 def _cleanup_run_resources(resources: RunResources) -> None:
     _close_logcat_capture(resources)
     _close_run_log(resources)
 
 
 def _build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="FuncDroid Pure Defect Detection Workflow")
-    parser.add_argument("--device-id", type=_normalize_device_id, default=None,
-                        help="Device ID; auto-selected when only one device is connected, must be specified for multiple devices")
+    parser = RunArgumentParser(description="FuncDroid 独立缺陷检测 / GUI 合规检测")
+    parser.add_argument("--mode", choices=["defect", "compliance"], default=None,
+                        help="本次检测模式；默认 defect，两种模式必须分开运行")
+    parser.add_argument("--reset-app-data", action=argparse.BooleanOptionalAction, default=None,
+                        help="启动前清除目标 App 数据；defect 默认保留，compliance 默认清除，续跑始终保留")
+    parser.add_argument("--grant-permissions", action=argparse.BooleanOptionalAction, default=None,
+                        help="启动前预授予目标 App 的运行期权限；defect 默认授予（专注功能探索），"
+                             "compliance 默认不授予（权限申请本身是检测对象）")
+    parser.add_argument("--device-id", type=_normalize_device_id, required=True,
+                        help="设备 ID；必须显式指定，例如 emulator-5554。多设备请分别开多个终端运行")
     parser.add_argument("--app-name", default=None,
-                        help="App display name; defaults to target package name")
+                        help="应用显示名称；默认使用目标包名")
     parser.add_argument("--package-name", default=None,
-                        help="Package name of installed app on device; tests current foreground App if omitted")
+                        help="设备上已安装的应用包名；不传则测试当前前台打开的 App")
     parser.add_argument("--max-iterations", type=_nonnegative_int,
                         default=_nonnegative_int(os.getenv("MAX_ITERATIONS", str(DEFAULT_MAX_ITERATIONS))),
-                        help="Maximum execution iterations (default 0, unlimited)")
+                        help="最大执行轮次（默认 0，表示不限制）")
     parser.add_argument("--total-time", type=_nonnegative_float,
                         default=_nonnegative_float(os.getenv("TOTAL_TIME", str(DEFAULT_TOTAL_TIME_MINUTES))),
-                        help=f"Total run time limit (minutes, default {DEFAULT_TOTAL_TIME_MINUTES}, 0 for unlimited)")
+                        help=f"总运行时间限制（分钟，默认 {DEFAULT_TOTAL_TIME_MINUTES}，0 表示不限制）")
     parser.add_argument("--output-dir", default=None,
-                        help="Output directory for new run; must be empty, defaults to creating a separate directory under output/ by app name")
+                        help="新运行的输出目录；必须为空，默认在 experiments/output/ 下按应用名创建独立目录")
+    parser.add_argument("--seed-ffg", default=None,
+                        help="从成功运行继承页面和路径；新预算、新覆盖状态，保留应用数据")
     parser.add_argument(
         "--resume-output",
         default=None,
-        help="Resume cumulative run from an existing output directory with the same FFG, Activity timeline, bugs, and execution history",
+        help="从已有输出目录恢复同一张 FFG、Activity 时间线、缺陷和执行历史并继续累计运行",
     )
     parser.add_argument("--phase", choices=["all", "intra"], default="all",
-                        help="Planning mode: all=automatic selection, intra=intra-function only")
+                        help="规划模式: all=自动选择, intra=仅功能内")
     parser.add_argument(
         "--exploration-mode",
         choices=["core"],
         default=os.getenv("EXPLORATION_MODE", DEFAULT_EXPLORATION_MODE).strip() or DEFAULT_EXPLORATION_MODE,
-        help="Exploration mode: core=explore target app core functions only, "
-        "blocking third-party content like mini-programs if boundary_rules.json is configured (default core)",
+        help="探索模式: core=仅探索目标应用核心功能，"
+        "按 boundary_rules.json 拦截小程序等第三方服务内容（默认 core）",
     )
     parser.add_argument(
         "--bug-detection",
         action=argparse.BooleanOptionalAction,
-        default=True,
-        help="Whether to enable asynchronous bug detection; enabled by default, use --no-bug-detection to disable",
+        default=None,
+        help="缺陷模式是否进行轨迹判定；默认开启，可用 --no-bug-detection 仅探索",
+    )
+    parser.add_argument(
+        "--compliance",
+        action=argparse.BooleanOptionalAction,
+        default=None,
+        help=argparse.SUPPRESS,
+    )
+    parser.add_argument(
+        "--rules",
+        default=None,
+        help="自定义合规规则库 JSON 路径；默认使用 compliance/rules.json",
+    )
+    parser.add_argument(
+        "--compliance-targeted", action="store_true",
+        help="只执行规则库中的合规目标；全部目标完成一次判定后结束，证据不足如实保留",
     )
     return parser
 
 
 def _run_single(args) -> int:
     _ensure_device_id(args)
+    resolve_run_options(args)
+    validate_resume_options(args)
+    if args.compliance:
+        from compliance.rule_library import gui_rules
+
+        if not gui_rules(args.rules):
+            raise ValueError("合规规则库没有可执行的 GUI 检测条款")
     if args.output_dir and args.resume_output:
-        raise ValueError("--output-dir and --resume-output cannot be used together")
+        raise ValueError("--output-dir 与 --resume-output 不能同时使用")
     resources = RunResources(output_dir=args.resume_output or args.output_dir or "")
     requested_root = Path(resources.output_dir) if resources.output_dir else None
     existing_ffg = bool(requested_root and (requested_root / "ffg.json").is_file())
     if args.resume_output and not existing_ffg:
-        raise FileNotFoundError(f"Directory specified by --resume-output is missing ffg.json: {requested_root}")
+        raise FileNotFoundError(f"--resume-output 指定的目录缺少 ffg.json: {requested_root}")
     if (
         args.output_dir
         and requested_root
@@ -1867,37 +2417,76 @@ def _run_single(args) -> int:
         and any(requested_root.iterdir())
     ):
         raise FileExistsError(
-            f"New runs are not allowed to overwrite existing non-empty directory: {requested_root}; "
-            "please use a new directory, or use --resume-output only for disaster recovery"
+            f"新运行不允许覆盖已有非空目录: {requested_root}；"
+            "请换一个新目录，或仅在灾难恢复时使用 --resume-output"
         )
     args.resume_existing = bool(args.resume_output)
     if args.resume_existing:
-        print(f"[Resume] Explicitly resuming the same FFG: {requested_root}")
+        print(f"[断点续跑] 显式恢复同一张 FFG: {requested_root}")
     final_state: dict = {}
     start_time = time.time()
     device = None
     exit_code = 0
     outputs_saved = False
+    state_ready = False
+    interrupted = False
     elapsed = 0.0
     previous_sigterm_handler = signal.getsignal(signal.SIGTERM)
     signal.signal(signal.SIGTERM, _raise_run_termination)
     try:
+        # Validate and read every durable resume input before logging or device
+        # initialization can change files or application state.
+        state = _load_resume_state(args, resources.output_dir, start_time) if args.resume_existing else None
+        if getattr(args, "seed_ffg", None):
+            graph, provenance = load_seed_graph(args.seed_ffg, args.package_name)
+            state = {"ffg": graph, "seed_provenance": provenance}
         planning_llm, execution_llm, ffg_update_llm, bug_detection_llm, device = _init_runtime(args)
+        resources.device = device
         args.package_name_explicit = _resolve_target_app(args, device)
         _prepare_run_logging(args, device, resources)
+        permission_report: dict = {}
         if args.package_name_explicit:
-            _start_app_after_background_cleanup(device, args.package_name)
-        state = _prepare_workflow_state(args, device, resources, start_time)
+            permission_report = _start_target_app(
+                device,
+                args.package_name,
+                reset_app_data=args.reset_app_data,
+                grant_permissions=bool(getattr(args, "grant_permissions", False)),
+            )
+            if permission_report:
+                summary = {
+                    "granted": len(permission_report.get("granted", []) or []),
+                    "missing": len(permission_report.get("missing", []) or []),
+                    "failed": len(permission_report.get("failed", []) or []),
+                    "unavailable": bool(permission_report.get("unavailable", False)),
+                }
+                print(f"[启动前授权] 权限授予摘要: {summary}")
+        state = _prepare_workflow_state(args, device, resources, start_time, resume_state=state)
+        # 必须写在 _prepare_workflow_state 之后：它会重建 state，覆盖之前写入的字段。
+        if permission_report:
+            state["permission_grant_report"] = dict(permission_report)
         final_state.update(dict(state))
+        state_ready = True
         if state.get("bug_detection_enabled", True):
             bug_detection_worker.configure(
                 bug_detection_llm,
-                on_batch_done=lambda: _save_bugs(final_state, resources.output_dir, prefix="[Defect Detection Thread]"),
+                on_batch_done=lambda: _save_bugs(final_state, resources.output_dir, prefix="[缺陷检测线程]"),
                 initial_bugs=state.get("detected_bugs"),
                 initial_records=state.get("bug_trace_records"),
+                initial_failures=state.get("defect_review_failures"),
             )
-        # Background audit of page controls uses the same planning LLM as FFG update; queue and saturation
-        # state can be seen in workflow/page_audit_worker.py.
+        # 合规判定线程：读取执行轨迹 + 关联检测条款，输出条款级结论。
+        if state.get("compliance_detection_enabled", False):
+            compliance_worker.configure(
+                bug_detection_llm,
+                on_trace=lambda job: _save_compliance_trace(job, resources.output_dir),
+                on_batch_done=lambda: _save_compliance_outputs(
+                    final_state, resources.output_dir, prefix="[合规检测线程]"
+                ),
+                initial_checklist=state.get("compliance_checklist"),
+                initial_failures=state.get("compliance_review_failures"),
+            )
+        # 页面控件后台审计使用与 FFG 更新相同的规划 LLM；队列与饱和
+        # 状态见 workflow/page_audit_worker.py。
         page_audit_worker.configure(planning_llm)
         graph = build_graph(
             planning_llm,
@@ -1907,19 +2496,24 @@ def _run_single(args) -> int:
         )
         _print_startup_banner(args, state, resources)
         _run_graph(graph, state, resources, final_state)
+        if final_state.get("workflow_hard_stop"):
+            # 连续异常触发硬上限说明基础设施不可恢复（如设备断连），不能记为成功。
+            exit_code = 1
+            print(f"[运行异常] {final_state.get('workflow_stop_reason', '节点连续异常')}，本次运行记为失败。")
         elapsed = time.time() - float(final_state.get("start_time", start_time) or start_time)
         _save_and_summarize(final_state, resources.output_dir, elapsed)
         outputs_saved = True
-        print(f"[Done] Workflow execution finished, output saved in: {resources.output_dir}")
+        print(f"[完成] 工作流执行结束，输出保存在: {resources.output_dir}")
     except (KeyboardInterrupt, RunTerminationSignal) as exc:
         exit_code = 130 if isinstance(exc, KeyboardInterrupt) else 128 + exc.signum
         elapsed = time.time() - float(final_state.get("start_time", start_time) or start_time)
         final_state["fatal_error"] = {
             "type": type(exc).__name__,
-            "message": "User interrupted" if isinstance(exc, KeyboardInterrupt) else str(exc),
+            "message": "用户中断" if isinstance(exc, KeyboardInterrupt) else str(exc),
             "traceback": "",
         }
-        print(f"[Run Interrupted] Received stop request, saving current FFG, bugs, and usage data (exit={exit_code}).")
+        interrupted = True
+        print(f"[运行中断] 收到停止请求，正在保存当前 FFG、缺陷和用量数据（exit={exit_code}）。")
     except Exception as exc:
         exit_code = 1
         elapsed = time.time() - float(final_state.get("start_time", start_time) or start_time)
@@ -1928,41 +2522,106 @@ def _run_single(args) -> int:
             "message": str(exc),
             "traceback": traceback.format_exc(),
         }
-        print(f"[Run Exception] Workflow encountered an uncaught exception and exited safely: {exc}")
+        print(f"[运行异常] 工作流遇到未捕获异常，已安全退出: {exc}")
         print(traceback.format_exc())
-        if final_state:
-            _save_and_summarize(final_state, resources.output_dir, elapsed)
-            outputs_saved = True
+        # 不在这里保存：统一交给 finally 中带异常保护的保存路径，保证
+        # 保存本身再抛异常时 _run_single 仍返回退出码而不是向上传播。
     finally:
-        signal.signal(signal.SIGTERM, previous_sigterm_handler)
-        _flush_bug_detection("generate final run results")
-        elapsed = elapsed or (
-            time.time() - float(final_state.get("start_time", start_time) or start_time)
-        )
-        if resources.output_dir and final_state and not outputs_saved:
-            try:
-                _save_and_summarize(final_state, resources.output_dir, elapsed)
-            except Exception as exc:
+        # 收尾落盘期间暂缓 SIGTERM：此时再收到终止信号若直接按默认行为杀进程，
+        # 会在写 FFG/run_result/manifest 途中留下半成品。保存完成后再恢复原处理器。
+        deferred_sigterms: list[int] = []
+
+        def _defer_sigterm(signum, _frame) -> None:
+            deferred_sigterms.append(int(signum))
+
+        signal.signal(signal.SIGTERM, _defer_sigterm)
+        try:
+            exit_code = _finalize_run(
+                args,
+                resources,
+                final_state,
+                start_time=start_time,
+                elapsed=elapsed,
+                exit_code=exit_code,
+                outputs_saved=outputs_saved,
+                state_ready=state_ready,
+                interrupted=interrupted,
+            )
+        finally:
+            signal.signal(signal.SIGTERM, previous_sigterm_handler)
+            if deferred_sigterms:
+                print(
+                    f"[运行中断] 收尾保存期间收到 {len(deferred_sigterms)} 次终止信号，"
+                    "已在保存完成后退出。"
+                )
+    return exit_code
+
+
+def _finalize_run(
+    args,
+    resources: RunResources,
+    final_state: dict,
+    *,
+    start_time: float,
+    elapsed: float,
+    exit_code: int,
+    outputs_saved: bool,
+    state_ready: bool,
+    interrupted: bool,
+) -> int:
+    """运行收尾：保存最终输出、run_result 与 manifest，返回最终退出码。"""
+    elapsed = elapsed or (
+        time.time() - float(final_state.get("start_time", start_time) or start_time)
+    )
+    can_save = bool(resources.output_dir) and (state_ready or not args.resume_existing)
+    if resources.output_dir and final_state and not outputs_saved and can_save:
+        # _save_and_summarize 自身会等待判定线程排空，这里不再重复等待。
+        try:
+            _save_and_summarize(
+                final_state,
+                resources.output_dir,
+                elapsed,
+                interrupted=interrupted,
+            )
+        except Exception as exc:
+            exit_code = 1
+            print(f"[输出] 异常快照保存失败: {exc}")
+    elif not outputs_saved:
+        # 不保存最终输出时仍给后台判定一次排空机会（与原行为一致）。
+        _flush_worker(bug_detection_worker, "生成最终运行结果")
+        _flush_worker(compliance_worker, "生成最终运行结果")
+    _stop_target_app_processes(args, resources)
+    _cleanup_run_resources(resources)
+    if resources.output_dir and can_save:
+        try:
+            save_llm_usage_summary()
+            final_state.setdefault("start_time", start_time)
+            artifact_root = Path(resources.output_dir)
+            ffg_missing = (
+                isinstance(final_state.get("ffg"), FlowGraph)
+                and not (artifact_root / "ffg.json").is_file()
+            )
+            if ffg_missing or (final_state.get("bug_detection_enabled", True) and not (artifact_root / "bugs.json").is_file()):
+                _save_outputs(final_state, resources.output_dir, prefix="[输出修复]")
+            final_state["_activity_timeline"] = _save_activity_timeline(
+                final_state,
+                resources.output_dir,
+                final_state.get("_activity_timeline"),
+                force=True,
+            )
+            _save_run_result(
+                final_state,
+                resources.output_dir,
+                exit_code=exit_code,
+                elapsed_seconds=elapsed,
+            )
+            manifest = _save_artifact_manifest(
+                final_state,
+                resources.output_dir,
+                exit_code,
+            )
+            if manifest["errors"] and exit_code == 0:
                 exit_code = 1
-                print(f"[Output] Failed to save exception snapshot: {exc}")
-        _cleanup_run_resources(resources)
-        if resources.output_dir:
-            try:
-                save_llm_usage_summary()
-                final_state.setdefault("start_time", start_time)
-                artifact_root = Path(resources.output_dir)
-                ffg_missing = (
-                    isinstance(final_state.get("ffg"), FlowGraph)
-                    and not (artifact_root / "ffg.json").is_file()
-                )
-                if ffg_missing or not (artifact_root / "bugs.json").is_file():
-                    _save_outputs(final_state, resources.output_dir, prefix="[Output Recovery]")
-                final_state["_activity_timeline"] = _save_activity_timeline(
-                    final_state,
-                    resources.output_dir,
-                    final_state.get("_activity_timeline"),
-                    force=True,
-                )
                 _save_run_result(
                     final_state,
                     resources.output_dir,
@@ -1973,30 +2632,18 @@ def _run_single(args) -> int:
                     final_state,
                     resources.output_dir,
                     exit_code,
+                    reuse_previous=True,
                 )
-                if manifest["errors"] and exit_code == 0:
-                    exit_code = 1
-                    _save_run_result(
-                        final_state,
-                        resources.output_dir,
-                        exit_code=exit_code,
-                        elapsed_seconds=elapsed,
-                    )
-                    manifest = _save_artifact_manifest(
-                        final_state,
-                        resources.output_dir,
-                        exit_code,
-                    )
-                print(
-                    "[Artifact Validation] "
-                    f"status={manifest['status']}, files={len(manifest['files'])}, "
-                    f"errors={len(manifest['errors'])}, warnings={len(manifest['warnings'])}"
-                )
-                for error in manifest["errors"]:
-                    print(f"[Artifact Validation] Error: {error}")
-            except Exception as exc:
-                exit_code = 1
-                print(f"[Artifact Validation] Failed to generate manifest: {exc}")
+            print(
+                "[产物校验] "
+                f"status={manifest['status']}, files={len(manifest['files'])}, "
+                f"errors={len(manifest['errors'])}, warnings={len(manifest['warnings'])}"
+            )
+            for error in manifest["errors"]:
+                print(f"[产物校验] 错误: {error}")
+        except Exception as exc:
+            exit_code = 1
+            print(f"[产物校验] 生成 manifest 失败: {exc}")
     return exit_code
 
 
@@ -2005,7 +2652,13 @@ def main():
     args = parser.parse_args()
 
     _ensure_device_id(args)
-    sys.exit(_run_single(args))
+    try:
+        exit_code = _run_single(args)
+    except (ValueError, FileExistsError, FileNotFoundError) as exc:
+        # 启动前的参数/目录校验失败：给出一行可读原因，不打印内部调用栈。
+        print(f"[参数错误] {exc}", file=sys.stderr)
+        sys.exit(2)
+    sys.exit(exit_code)
 
 
 if __name__ == "__main__":
