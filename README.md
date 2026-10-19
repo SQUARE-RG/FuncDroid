@@ -14,9 +14,9 @@ FuncDroid addresses this with an inter-functionality, state-aware model and a cl
 
 ![Overview](overview.png)
 
-### Functionality Flow Graph (FFG)
+### Functional Flow Graph (FFG)
 
-The [paper](https://arxiv.org/abs/2602.12834) defines a directed **Functionality Flow Graph (FFG)**:
+The [paper](https://arxiv.org/abs/2602.12834) defines a directed **Functional Flow Graph (FFG)**:
 - Each node is a **meaningful functionality**: a complete, user-centric task that is logically indivisible (i.e., it does not contain other meaningful sub-functionalities).
 - Each node can be characterized by `(goal, vars, traces)`:
   - `goal`: semantic intent (e.g., "Add alarm")
@@ -70,16 +70,15 @@ Implementation entrypoints:
 - [GUI execution](funcdroid/workflow/nodes/scenario_exec.py)
 - [FFG model](funcdroid/model/flow_graph.py) and [incremental updates](funcdroid/workflow/nodes/ffg_update.py)
 
-The current prompts and runtime diagnostics are primarily in Chinese. Visible UI labels are supplied by the tested app; English-only model output is not enforced.
+Prompts, runtime diagnostics, and authored documentation are in English. Original UI labels and historical experiment evidence retain their source language.
 
 ## What This Repository Contains
 
 - `funcdroid/`: core implementation:
   - `main.py`: CLI entrypoint; defect detection is the default mode
   - `workflow/`: LangGraph-based exploration loop (scenario planning/execution, FFG update, async bug detection, page audit)
-  - `model/flow_graph.py`: Functionality Flow Graph structures
+  - `model/flow_graph.py`: Functional Flow Graph structures
   - `automator/`, `connector/`, `device.py`: device automation layer (uiautomator2/HarmonyOS, ADB/HDC)
-  - `compliance/`: rule resources and the independent optional GUI-compliance mode; these modules are also imported by the shared runtime
   - `tests/`: focused startup and scheduling regression checks
 - `Effectiveness evaluation/`, `Usefulness evaluation/`: experiment outputs and datasets (large; not required for running the tool).
 
@@ -154,7 +153,7 @@ Use a disposable test account and test data: GUI exploration can change app stat
 .\.venv\Scripts\python.exe funcdroid\main.py --device-id emulator-5554 --max-iterations 2 --total-time 5
 ```
 
-The first iteration reads the initial screen and builds the Functionality Flow Graph. Later iterations plan and execute scenarios. When the short check succeeds, start a normal run with the default 90-minute budget:
+The first iteration reads the initial screen and builds the Functional Flow Graph. Later iterations plan and execute scenarios. When the short check succeeds, start a normal run with the default 90-minute budget:
 
 ```bash
 ./run.sh --device-id emulator-5554
@@ -186,18 +185,6 @@ With the supplied `.env.example`, `OUTPUT_ROOT=output`: `./run.sh` writes under 
 ./run.sh --device-id emulator-5554 --resume-output output/<existing-run-directory>
 ```
 
-### Optional independent GUI-compliance mode
-
-Run compliance separately from defect detection, using a different output directory:
-
-```bash
-./run.sh --device-id emulator-5554 --mode compliance \
-  --package-name com.example.app --no-reset-app-data \
-  --output-dir output/example-compliance
-```
-
-**A new compliance run clears the specified app's data by default.** The command above explicitly preserves it; first-launch/consent evidence may then be unavailable. Only omit `--no-reset-app-data` for a disposable app state that you intend to reset. Compliance mode does not pre-grant permissions by default. Results concern observed GUI evidence, not network traffic, SDK behavior, or server-side compliance.
-
 Resume runs preserve app data and validate the original app and detection mode. Keep old run directories unchanged; this release has stricter coverage/outcome accounting, so use a new run when comparing versions.
 
 ### Offline checks
@@ -205,10 +192,11 @@ Resume runs preserve app data and validate the original app and detection mode. 
 After setup, run the focused checks without a device or model credentials:
 
 ```bash
-.venv/bin/python -m unittest discover -s funcdroid/tests -v
+.venv/bin/python -m pip install -r funcdroid/requirements-dev.txt
+.venv/bin/python -m pytest funcdroid/tests -q
 ```
 
-The source synchronization was checked with a clean Python 3.12 installation, the CLI help command, nine offline regression checks, and a direct scheduling/FFG round-trip smoke run. These checks do not establish model quality or successful GUI execution on a real device.
+Offline checks cover CLI startup, scenario scheduling, and FFG evidence accounting. They do not establish model quality or successful GUI execution on a real device.
 
 ## Troubleshooting
 

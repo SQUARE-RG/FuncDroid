@@ -1,4 +1,4 @@
-"""LLM 初始化。"""
+"""Model initialization and structured-response handling."""
 
 import json
 import math
@@ -25,9 +25,7 @@ except ImportError:  # pragma: no cover
 
 
 DEFAULT_JSON_BLOCK_PATTERN = re.compile(r"^```(?:json)?\s*|\s*```$")
-# 场景执行阶段要求纯 JSON 输出。开启后由服务端保证返回合法 JSON，根治
-# “模型把整个响应写成自然语言”的解析失败；OpenAI 兼容端点若不识别该参数，
-# 调用侧会依据下面的特征词自动关闭（见 disable_json_response_format）。
+# Request provider-enforced JSON for execution; disable unsupported response_format through the caller fallback.
 JSON_RESPONSE_FORMAT_PAYLOAD = {"type": "json_object"}
 JSON_FORMAT_REJECTION_PATTERN = re.compile(
     r"response_format|json_object|json\s*mode|unsupported\s+parameter|"
@@ -37,33 +35,26 @@ JSON_FORMAT_REJECTION_PATTERN = re.compile(
 
 
 def json_format_rejected(exc: BaseException) -> bool:
-    """判断异常是否为服务端拒绝 response_format 参数。"""
+    """Return whether the provider rejected response_format."""
     return bool(JSON_FORMAT_REJECTION_PATTERN.search(str(exc) or ""))
 
 
 def disable_json_response_format(llm) -> bool:
-    """服务端拒绝 response_format 后，把该实例切回自由文本输出。
+    """Remove response_format after provider rejection.
 
-    LangChain 每次请求都会合并 model_kwargs，因此原地移除即可让后续请求
-    不再携带该参数。返回是否真的移除了（未开启时返回 False）。
-    """
+    LangChain merges model_kwargs on every request, so removing the key affects subsequent calls. Return whether it was present."""
     model_kwargs = getattr(llm, "model_kwargs", None)
     if isinstance(model_kwargs, dict) and "response_format" in model_kwargs:
         model_kwargs.pop("response_format", None)
-        print("[LLM] 已关闭 response_format=json_object，后续请求回退到自由文本输出。")
+        print("[LLM] Disabled response_format=json_object; subsequent requests use free-text responses.")
         return True
     return False
 
 
 class _ReasoningAwareChatOpenAI(ChatOpenAI):
-    """补上 ChatOpenAI 官方声明会丢弃的第三方 reasoning_content 字段。
+    """Preserve third-party reasoning_content in additional_kwargs.
 
-    langchain_openai 的文档明确写着：非标准响应字段（如 DeepSeek 等第三方
-    端点返回的 reasoning_content）不会被提取或保留，只解析官方 OpenAI 字段。
-    openai SDK 的响应对象 extra="allow"，原始字段其实还在，只是
-    ChatOpenAI._create_chat_result 没读它——库内对 refusal/parsed 就是用
-    同样的手法从原始响应对象里搬进 additional_kwargs 的，这里照抄一份。
-    """
+    The OpenAI-compatible response may retain this extra field even when ChatOpenAI does not copy it into the resulting message."""
 
     def _create_chat_result(self, response, generation_info=None):
         result = super()._create_chat_result(response, generation_info)
@@ -90,13 +81,11 @@ def llm_json_result_failed(result: object) -> bool:
     """Whether the retry helper exhausted before producing valid JSON."""
     return isinstance(result, _FailedJsonResult)
 
-# 已知的高频 JSON 笔误修复模式：本地小模型常把坐标写成
-# "x": 226, 190（丢失 "y": 键名）。仅在严格解析失败后作为兜底尝试，
-# 只修复 x/y 坐标键的有限非负数字；实际范围由执行器按当前图片宽高校验。
+# Repair only the known missing-y coordinate typo after strict parsing fails; the executor validates image bounds.
 MISSING_COORD_KEY_PATTERN = re.compile(
     r'"x"\s*:\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*(?=[,}\]\n])'
 )
-# 部分模型把坐标写成数组：\"x\": [682, 954]（缺独立 y 键）。
+# Some providers emit x as a two-coordinate array without a separate y key.
 ARRAY_COORD_PATTERN = re.compile(
     r'"x"\s*:\s*\[\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*\]'
 )
@@ -114,7 +103,7 @@ def _repair_common_json_typos(text: str) -> str:
         text,
     )
     if repaired != text:
-        print("[LLM] 已修复缺失坐标键名的 JSON 笔误（\"x\": a, b → \"x\": a, \"y\": b）")
+        print("[LLM] Repaired missing coordinate key (\"x\": a, b → \"x\": a, \"y\": b）")
     array_repaired = ARRAY_COORD_PATTERN.sub(
         lambda match: (
             f'"x": {match.group(1)}, "y": {match.group(2)}'
@@ -125,7 +114,7 @@ def _repair_common_json_typos(text: str) -> str:
         repaired,
     )
     if array_repaired != repaired:
-        print("[LLM] 已修复数组坐标的 JSON 笔误（\"x\": [a, b] → \"x\": a, \"y\": b）")
+        print("[LLM] Repaired array-form coordinates (\"x\": [a, b] → \"x\": a, \"y\": b）")
     return array_repaired
 
 
@@ -144,10 +133,7 @@ def _parse_json_response(text: str):
     except json.JSONDecodeError as exact_error:
         decoder = json.JSONDecoder()
         selected = None
-        # 线性扫描：raw_decode 直接在原文上按偏移解析（不切片复制），一次
-        # 成功解析后跳到该对象末尾继续找下一个 "{"，因此外层对象内部的
-        # evidence 等嵌套对象不会再成为候选，只保留“最后一个顶层对象”。
-        # 解析失败的 "{" 只前进一个字符，与原先逐个左花括号尝试的语义一致。
+        # Decode linearly in the original string and skip entire decoded objects so nested evidence does not become a separate candidate.
         idx = text.find("{")
         while idx >= 0:
             try:
@@ -159,7 +145,7 @@ def _parse_json_response(text: str):
                 selected = value
             idx = text.find("{", max(end, idx + 1))
         if selected is not None:
-            print("[LLM] 已从附带解释文字的响应中提取最后一个顶层 JSON object。")
+            print("[LLM] Extracted the last top-level JSON object from a response containing prose.")
             return selected
         raise exact_error
 
@@ -176,7 +162,7 @@ def _load_env_once():
 
 
 def _normalize_response_text(content) -> str:
-    """把 LLM 响应内容归一化为文本，兼容 list-of-blocks 返回。"""
+    """Normalize text and list-of-blocks response content to a string."""
     if content is None:
         return ""
     if isinstance(content, str):
@@ -194,18 +180,14 @@ def _normalize_response_text(content) -> str:
     return str(content).strip()
 
 
-# 未配置 LLM_REQUEST_TIMEOUT 时的默认单请求超时（秒）。不传 request_timeout
-# 时 openai 客户端的 timeout=None 表示永不超时，一次挂起的请求就会让整个
-# 长时运行卡死在某个节点；因此始终下发一个有限超时。
+# Always supply a finite request timeout to prevent one stalled call from hanging the workflow.
 DEFAULT_LLM_REQUEST_TIMEOUT_SECONDS = 180.0
 
 
 def _resolve_request_timeout(timeout_seconds: float | None) -> float:
-    """解析单请求超时：显式参数 > LLM_REQUEST_TIMEOUT > 默认 180s。
+    """Resolve timeout from explicit value, environment, then the 180-second default.
 
-    显式传入或环境变量给出 0/负数/非法值时同样回退到默认值，而不是
-    关闭超时——框架自身已有重试与节点恢复，“无限等待”没有正当用途。
-    """
+    Nonpositive or invalid values use the finite default rather than disabling the timeout."""
     candidates = [timeout_seconds]
     if timeout_seconds is None:
         candidates = [os.getenv("LLM_REQUEST_TIMEOUT", "").strip() or None]
@@ -226,18 +208,12 @@ def create_llm(
     reasoning_effort: str | None = None,
     json_response_format: bool = False,
 ):
-    """根据环境变量创建聊天模型；所有角色共用同一个端点。
+    """Create a chat model using the shared configured endpoint.
 
-    reasoning_effort 显式传入时优先（用于按角色差异化思考强度，例如场景执行
-    用 none 关闭思考、其余阶段用全局值）；传 None 时回退到全局 LLM_REASONING_EFFORT。
-
-    json_response_format 为 True 时要求服务端返回合法 JSON（仅场景执行使用；
-    端点不支持时由调用侧捕获并自动关闭）。
-    """
+    Explicit reasoning_effort overrides the global setting. JSON response mode is requested only when enabled and can be disabled after provider rejection."""
     _load_env_once()
 
-    # 通用变量（API_KEY/BASE_URL/MODEL）优先；未配置时回退到 DEEPSEEK_* 变量，
-    # 便于在同一份 .env 中保留两套接入点，注释掉通用三件套即可切到 DeepSeek。
+    # Prefer generic API_KEY/BASE_URL/MODEL; retain DEEPSEEK_* compatibility fallbacks.
     api_key = os.getenv("API_KEY", "").strip() or os.getenv("DEEPSEEK_API_KEY", "").strip()
     base_url = os.getenv("BASE_URL", "").strip() or os.getenv("DEEPSEEK_BASE_URL", "").strip()
     model = os.getenv("MODEL", "").strip() or os.getenv("DEEPSEEK_MODEL", "").strip()
@@ -249,7 +225,7 @@ def create_llm(
 
     if not api_key or not base_url or not model:
         raise ValueError(
-            "缺少 LLM 配置，请检查 .env 中的 API_KEY、BASE_URL、MODEL"
+            "Missing model configuration: check API_KEY, BASE_URL, and MODEL in .env"
         )
 
     kwargs = {
@@ -271,8 +247,7 @@ def create_llm(
     elif resolved_effort:
         kwargs["reasoning_effort"] = resolved_effort
     if json_response_format:
-        # 通过 model_kwargs 注入，保持返回对象仍是 ChatOpenAI 实例，
-        # 用量统计与重试逻辑不受影响。
+        # Inject through model_kwargs without changing the model type, usage tracking, or retries.
         kwargs["model_kwargs"] = {
             "response_format": dict(JSON_RESPONSE_FORMAT_PAYLOAD),
         }
@@ -289,7 +264,7 @@ def compute_retry_delay_seconds(
     backoff_multiplier: float | None = None,
     max_delay_seconds: float | None = None,
 ) -> float:
-    """根据重试次数计算指数退避时长。attempt 从 1 开始。"""
+    """Compute exponential retry backoff; attempts are one-based."""
     _load_env_once()
     normalized_attempt = max(1, int(attempt))
     base_delay = float(os.getenv("LLM_RETRY_DELAY", "2.0")) if base_delay_seconds is None else float(base_delay_seconds)
@@ -300,20 +275,17 @@ def compute_retry_delay_seconds(
 
 
 def _build_json_retry_feedback(raw_content: str, exc: BaseException) -> str:
-    """解析失败后追加一条纠偏消息，而不是原样重发相同 prompt 盲重试。
+    """Explain the previous parsing failure instead of repeating an unchanged prompt.
 
-    温度已固定为 0，若不告知模型上一次输出哪里有问题，重试很大概率复现
-    同类偏差（例如整段自然语言、无花括号）。零花括号是最常见且最容易
-    识别的偏差，单独给出更强硬的措辞。
-    """
+    Give explicit JSON-only feedback when the response contained no object structure."""
     if "{" not in str(raw_content or ""):
         return (
-            "上一次响应是纯文字说明，完全没有包含任何 JSON 结构，无法解析。"
-            "请只输出一个 JSON object 本身，不要输出解释性文字、不要用 markdown 代码块围栏。"
+            "The previous response contained prose without a JSON object and could not be parsed. "
+            "Return only one JSON object, without explanation or Markdown fences."
         )
     return (
-        f"上一次响应解析失败：{str(exc)[:300]}。"
-        "请只输出一个完整、合法的 JSON object 本身，不要包含解释性文字或 markdown 代码块围栏。"
+        f"The previous response could not be parsed: {str(exc)[:300]}。"
+        "Return only one complete valid JSON object, without explanatory prose or Markdown fences."
     )
 
 
@@ -327,7 +299,7 @@ def invoke_llm_json_with_retry(
     retry_delay_seconds: float | None = None,
     deadline_monotonic: float | None = None,
 ):
-    """调用 LLM 并解析 JSON，失败时按统一策略重试。"""
+    """Call the model, parse its JSON response, and retry using the common policy."""
     _load_env_once()
     pattern = json_block_pattern or DEFAULT_JSON_BLOCK_PATTERN
     attempts = max(1, int(max_attempts or os.getenv("LLM_RETRY_ATTEMPTS", "3")))
@@ -339,7 +311,7 @@ def invoke_llm_json_with_retry(
 
     for attempt in range(1, attempts + 1):
         if deadline_monotonic is not None and time.monotonic() >= deadline_monotonic:
-            print(f"{log_prefix} 已到调用截止时间，停止后续重试。")
+            print(f"{log_prefix} Request deadline reached; stop retrying.")
             break
         parse_failed = False
         response = None
@@ -355,8 +327,7 @@ def invoke_llm_json_with_retry(
                 try:
                     parsed = _parse_json_response(cleaned)
                 except json.JSONDecodeError:
-                    # 已知笔误（如 "x": 226, 190 缺 "y": 键）先修复再试一次，
-                    # 避免为可机器修复的输出浪费整轮重试。
+                    # Repair recognized coordinate typos before spending a model retry.
                     repaired = _repair_common_json_typos(cleaned)
                     if repaired != cleaned:
                         parsed = _parse_json_response(repaired)
@@ -364,8 +335,8 @@ def invoke_llm_json_with_retry(
                         raise
                 if not isinstance(parsed, dict):
                     raise ValueError(
-                        "LLM JSON 顶层必须是 object，"
-                        f"实际为 {type(parsed).__name__}"
+                        "Model JSON must contain a top-level object; "
+                        f"received  {type(parsed).__name__}"
                     )
                 record_llm_diagnostic(response, operation=log_prefix, elapsed_seconds=time.monotonic() - request_started)
                 return parsed
@@ -375,19 +346,16 @@ def invoke_llm_json_with_retry(
         except Exception as exc:
             record_llm_diagnostic(response, operation=log_prefix, error=f"{type(exc).__name__}: {exc}", elapsed_seconds=time.monotonic() - request_started)
             record_llm_failure(llm, operation=log_prefix)
-            kind = "解析" if parse_failed else "调用"
-            failure_reason = f"{kind}失败: {type(exc).__name__}"
-            no_json_hint = " (响应零JSON结构)" if parse_failed and raw_content and "{" not in raw_content else ""
-            print(f"{log_prefix} LLM {kind}失败{no_json_hint}（第 {attempt}/{attempts} 次）: {exc}\n[原始内容]: {raw_content}")
+            kind = "parse" if parse_failed else "call"
+            failure_reason = f"{kind} failed: {type(exc).__name__}"
+            no_json_hint = " (response contains no JSON object)" if parse_failed and raw_content and "{" not in raw_content else ""
+            print(f"{log_prefix} LLM {kind} failed{no_json_hint} (attempt {attempt}/{attempts}): {exc}\n[Raw response]: {raw_content}")
             if attempt >= attempts:
                 break
-            # 解析失败重试同样的 prompt 意义不大，用较短固定间隔快速重试；
-            # 网络/调用失败走指数退避。
+            # Use short delays for parsing errors and exponential backoff for transport errors.
             if parse_failed:
                 sleep_seconds = min(delay_seconds, 1.0)
-                # 温度为 0，原样重发同一 prompt 命中同类偏差的概率不低；
-                # 追加一条纠偏消息而非盲重试。基于 base_messages 重建，
-                # 避免连续失败时反馈消息在历史里无限堆叠。
+                # Rebuild from base_messages with one corrective message so repeated failures do not grow prompt history.
                 current_messages = [
                     *base_messages,
                     HumanMessage(content=_build_json_retry_feedback(raw_content, exc)),
@@ -400,7 +368,7 @@ def invoke_llm_json_with_retry(
             if deadline_monotonic is not None:
                 remaining = deadline_monotonic - time.monotonic()
                 if remaining <= 0:
-                    print(f"{log_prefix} 已到调用截止时间，停止后续重试。")
+                    print(f"{log_prefix} Request deadline reached; stop retrying.")
                     break
                 sleep_seconds = min(sleep_seconds, remaining)
             time.sleep(sleep_seconds)

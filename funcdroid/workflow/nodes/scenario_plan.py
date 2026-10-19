@@ -1,7 +1,5 @@
-"""统一场景规划节点。"""
+"""Unified scenario-planning node for the Functional Flow Graph (FFG)."""
 
-import hashlib
-import json
 import os
 import re
 import time
@@ -19,8 +17,6 @@ from model.flow_graph import (
     TERMINAL_FUNCTION_STATUSES,
 )
 from tools.actions import ScreenshotUnavailableError, capture_current_page
-from compliance.checkpoints import ComplianceChecklist, build_compliance_scenarios
-from compliance.rule_library import GROUP_LABELS, gui_rules
 from workflow.llm import invoke_llm_json_with_retry, llm_json_result_failed
 from workflow.nodes._shared import (
     JSON_BLOCK_PATTERN,
@@ -29,14 +25,14 @@ from workflow.nodes._shared import (
 )
 from workflow.app_foreground import (
     APP_RESTART_RETRY_DELAY,
-    APP_RESTART_SETTLE_DELAY,  # noqa: F401  保留原模块名供引用/测试
+    APP_RESTART_SETTLE_DELAY,  # noqa: F401 - retain module exports for callers and tests
     APP_START_MAX_WAIT,
-    APP_START_POLL_INTERVAL,  # noqa: F401  保留原模块名供引用/测试
+    APP_START_POLL_INTERVAL,  # noqa: F401 - retain module exports for callers and tests
     restart_until_foreground,
     wait_target_app_foreground,
 )
 from workflow.exploration_boundary import rule_for
-from workflow.nodes.ffg_update import BLACK_SCREEN_PAGE_NAME, apply_ffg_patch
+from workflow.nodes.ffg_update import apply_ffg_patch, is_black_screen_page_name
 from workflow.nodes.prompt import (
     BOOTSTRAP_FFG_SYSTEM_PROMPT,
     EXPLORATION_MODE_INSTRUCTIONS,
@@ -60,38 +56,38 @@ MAX_COMPLETION_AUDITS_PER_FUNCTION = max(
     1,
     int(os.getenv("PLAN_MAX_COMPLETION_AUDITS_PER_FUNCTION", "20")),
 )
-# 每个规划轮次最多对几个已完成功能发起覆盖遗漏审计（每次审计可能是多批带图
-# 大模型调用）；其余功能留到后续轮次，避免收尾时单轮串行审计全部功能。
+# Limit completed-functionality audits per planning round; each audit may issue
+# several multimodal requests. Leave remaining functionalities to later rounds.
 PLAN_MAX_AUDITS_PER_ROUND = max(1, int(os.getenv("PLAN_MAX_AUDITS_PER_ROUND", "2")))
 MAX_CROSS_TEST_PAIRS = int(os.getenv("PLAN_MAX_CROSS_TEST_PAIRS", "20"))
-# 语义校验重试次数；底层 invoke_llm_json_with_retry 自身还会做传输/解析重试，
-# 两者相乘，因此外层默认只给 2 次。
+# Semantic retries multiply the transport/parsing retries inside
+# invoke_llm_json_with_retry, so the outer default is only two attempts.
 PLAN_VALIDATION_RETRY_ATTEMPTS = max(1, int(os.getenv("PLAN_VALIDATION_RETRY_ATTEMPTS", "2")))
-# 作用域摘要中每个功能只展示最近 K 个已测试场景，更早的只给数量汇总，
-# 避免规划提示词随运行时长无界增长。
+# Show only the latest K tested scenarios per functionality in scope summaries.
+# Summarize older scenarios by count to keep planning prompts bounded.
 PLAN_SCOPE_RECENT_SCENARIOS = max(1, int(os.getenv("PLAN_SCOPE_RECENT_SCENARIOS", "20")))
-# 作用域摘要中最多展示的相关页面跳转条数（作用域内部跳转优先）。
+# Limit related page transitions in the summary, preferring transitions within scope.
 PLAN_SCOPE_MAX_TRANSITIONS = max(1, int(os.getenv("PLAN_SCOPE_MAX_TRANSITIONS", "40")))
-# 单个补测场景一次覆盖的控件族数量。每轮的固定开销（规划 + FFG 更新的带图
-# 大模型调用 + 截图 + logcat）与场景长度无关，一次只探一个控件会让固定开销
-# 摊在 1-2 个有效动作上。
+# Number of widget families per supplementary scenario. Planning, FFG updates,
+# screenshots, and logcat have fixed per-round costs; batching related widgets
+# avoids spending that overhead on only one or two useful actions.
 PLAN_SCENARIO_CONTROL_BATCH = max(
     1,
     int(os.getenv("PLAN_SCENARIO_CONTROL_BATCH", "4")),
 )
-# 程序派生的控件/操作覆盖率达到该值后进入完成与遗漏审计。
+# Program-derived widget coverage required for completion and coverage-gap auditing.
 PLAN_FUNCTION_COVERAGE_TARGET = max(
     1,
     min(100, int(os.getenv("PLAN_FUNCTION_COVERAGE_TARGET", "80"))),
 )
-# 功能内两阶段：先广度铺入口，入口铺开后沿业务逻辑做深度场景。
-# 广度阶段的计数闸门——做满这么多个广度场景就转深度，否则单功能会一直铺入口。
+# Intra-functional exploration first covers entries, then tests complete business scenarios.
+# Bound breadth attempts so a large functionality cannot postpone depth indefinitely.
 PLAN_BREADTH_MAX_SCENARIOS = max(
     1,
     int(os.getenv("PLAN_BREADTH_MAX_SCENARIOS", "3")),
 )
-# 深度场景数随功能规模增长：每 PLAN_DEPTH_CONTROLS_PER_SCENARIO 个控件需要 1 个，
-# 结果夹在 [PLAN_MIN_DEPTH_SCENARIOS, PLAN_MAX_DEPTH_SCENARIOS]。
+# Require one depth scenario per PLAN_DEPTH_CONTROLS_PER_SCENARIO widgets,
+# bounded by PLAN_MIN_DEPTH_SCENARIOS and PLAN_MAX_DEPTH_SCENARIOS.
 PLAN_DEPTH_CONTROLS_PER_SCENARIO = max(
     1,
     int(os.getenv("PLAN_DEPTH_CONTROLS_PER_SCENARIO", "5")),
@@ -101,44 +97,32 @@ PLAN_MAX_DEPTH_SCENARIOS = max(
     PLAN_MIN_DEPTH_SCENARIOS,
     int(os.getenv("PLAN_MAX_DEPTH_SCENARIOS", "6")),
 )
-# 单功能场景上限 = 广度闸门 + 深度场景数 + 余量；达到后满足完成判定则 completed，
-# 否则 deferred，避免一个庞大的功能长期占用执行权。
+# Scenario cap = breadth budget + depth target + margin. At the cap, complete
+# only if the evidence gate passes; otherwise defer to avoid monopolizing execution.
 PLAN_SCENARIO_CAP_MARGIN = max(0, int(os.getenv("PLAN_SCENARIO_CAP_MARGIN", "2")))
-# 跨功能组合因导航失败/截图不可用而 retryable 时，同一组合最多尝试的次数。
+# Maximum attempts per retryable inter-functional candidate (navigation/screenshot failures).
 PLAN_MAX_CROSS_ATTEMPTS = max(1, int(os.getenv("PLAN_MAX_CROSS_ATTEMPTS", "2")))
-# 规划器与程序模板连续多少轮给不出场景才延后功能（单轮空场景常是模型偶发）。
+# Defer only after repeated empty plans from both the model and fallback templates.
 PLAN_UNPLANNABLE_ROUNDS_BEFORE_DEFER = max(
     1, int(os.getenv("PLAN_UNPLANNABLE_ROUNDS_BEFORE_DEFER", "2"))
 )
 FUNCTION_PHASE_BREADTH = "breadth"
 FUNCTION_PHASE_DEPTH = "depth"
-# 导航参考路径的级别（导航只是参考，不作为排程闸门）：
-# 空=当前页已在作用域内，无需导航；A=只走已记录正向边；B=允许把已记录边反向
-# 当作“返回”；C=先重开应用回到首页再走 A/B；D=图中找不到路径，只给目标描述，
-# 由执行器探索式导航，失败一次即搁置。
+# Navigation levels describe reference paths; they do not gate scheduling.
+# Empty: already in scope; A: recorded forward edges; B: reverse edges as back;
+# C: restart and use A/B; D: no recorded path, so the executor explores from
+# the target description and defers after a navigation failure.
 NAV_LEVEL_HERE = ""
 NAV_LEVEL_FORWARD = "A"
 NAV_LEVEL_BACKTRACK = "B"
 NAV_LEVEL_RESTART = "C"
 NAV_LEVEL_EXPLORE = "D"
 KNOWN_NAV_LEVELS = {NAV_LEVEL_HERE, NAV_LEVEL_FORWARD, NAV_LEVEL_BACKTRACK, NAV_LEVEL_RESTART}
-# 当前只支持 core 探索范围（EXPLORATION_MODE_INSTRUCTIONS 仅含 core）。
+# Only the core exploration scope is supported by EXPLORATION_MODE_INSTRUCTIONS.
 PLAN_EXPLORATION_MODE = "core"
-ENTRY_FUNCTION_NAME_PATTERN = re.compile(r"入口\s*$")
+# Match English output and legacy Chinese entry labels without changing UI data.
+ENTRY_FUNCTION_NAME_PATTERN = re.compile(r"(?:\u5165\u53e3|\bentry)\s*$", re.IGNORECASE)
 
-COMPLIANCE_GROUP_DISCOVERY_TERMS: dict[str, tuple[str, ...]] = {
-    "first_launch_flow": ("隐私", "协议", "同意", "拒绝", "开屏"),
-    "permission_denial_flow": ("权限", "相机", "定位", "位置", "通讯录", "相册", "存储", "麦克风"),
-    "consent_observation": ("敏感", "人脸", "位置", "通讯录", "健康", "支付", "会员", "订阅", "续费", "青少年"),
-    "registration_form": ("登录", "注册", "账号", "手机号", "资料", "实名认证", "个人信息"),
-    "settings_search": ("设置", "隐私", "推荐", "推送", "权限", "自启动", "设备标识", "资费"),
-    "rights_entry_search": ("设置", "账号", "注销", "删除", "更正", "撤回", "客服", "投诉", "反馈", "帮助"),
-    "policy_text_review": ("隐私政策", "隐私", "用户协议", "个人信息", "第三方", "共享清单"),
-}
-COMPLIANCE_CLOSE_LOOP_WAIT_SECONDS = max(
-    0.0,
-    float(os.getenv("COMPLIANCE_CLOSE_LOOP_WAIT_SECONDS", "10") or 10),
-)
 PLAN_APP_RESTART_ATTEMPTS = max(
     1,
     int(os.getenv("PLAN_APP_RESTART_ATTEMPTS", os.getenv("APP_RESTART_ATTEMPTS", "2"))),
@@ -147,9 +131,9 @@ PLAN_SCREENSHOT_BACK_ATTEMPTS = max(
     1,
     int(os.getenv("PLAN_SCREENSHOT_BACK_ATTEMPTS", os.getenv("APP_RECOVERY_BACK_ATTEMPTS", "3"))),
 )
-# APP_RESTART_RETRY_DELAY / APP_START_* / APP_RESTART_SETTLE_DELAY 与执行节点同口径，
-# 统一定义在 workflow/app_foreground.py：重启后轮询前台包名直到目标应用可见，
-# 避免固定 sleep 在重型应用（如微信）冷启动期间截到桌面截图。
+# Share APP_RESTART_RETRY_DELAY, APP_START_*, and APP_RESTART_SETTLE_DELAY
+# with the executor via workflow/app_foreground.py. Poll the foreground package
+# after restarting so slow app startup cannot be mistaken for the launcher.
 MAX_CONSECUTIVE_SCREENSHOT_UNAVAILABLE = max(1, int(os.getenv("MAX_CONSECUTIVE_SCREENSHOT_UNAVAILABLE", "2")))
 MAX_CONSECUTIVE_TARGET_APP_UNAVAILABLE = max(
     1,
@@ -168,7 +152,7 @@ AUDIT_REQUIRED_FIELDS = {"entry_page_ref", "entry_name"}
 
 
 def _planner_foreground_probe(device, package_name: str) -> tuple[str, str]:
-    """规划节点的前台探测：单次读取，读取失败按非前台处理（不重试、不刷日志）。"""
+    """Probe the foreground once; treat a failed read as background without retries or logs."""
     try:
         current = str(device.current_package() or "").strip()
     except Exception:
@@ -177,7 +161,7 @@ def _planner_foreground_probe(device, package_name: str) -> tuple[str, str]:
 
 
 def _wait_target_app_foreground(device, package_name: str) -> bool:
-    """轮询等待目标应用进入前台；上限 APP_START_MAX_WAIT 秒。"""
+    """Wait at most APP_START_MAX_WAIT seconds for the target app to enter the foreground."""
     return wait_target_app_foreground(
         device,
         package_name,
@@ -194,49 +178,49 @@ def _ensure_target_app(device, package_name: str, current_page: Page | None = No
     try:
         current_package = str(device.current_package() or "").strip()
     except Exception as exc:
-        print(f"[场景规划] 获取当前前台包名失败: {exc}")
+        print(f"[Scenario planning] Failed to read the foreground package: {exc}")
         current_package = ""
 
     if is_permission_dialog(current_package):
-        print("[场景规划] 系统权限弹窗覆盖目标应用，保留现场截图并交给执行器处理。")
+        print("[Scenario planning] A permission dialog covers the target app; preserve the screenshot for the executor.")
         return capture_current_page(device)
 
     needs_reset = False
     if current_package and current_package != package_name:
         print(
-            f"[场景规划] 当前前台应用为 {current_package}，目标应用为 {package_name}，"
-            "准备重启目标应用。"
+            f"[Scenario planning] Foreground app is {current_package}; target is {package_name}. "
+            "Restarting the target app."
         )
         needs_reset = True
     elif current_page is None and current_package == package_name:
-        print("[场景规划] 当前页面为空，目标应用已在前台，直接抓取页面。")
+        print("[Scenario planning] No current page, but the target app is foreground; capturing directly.")
         try:
             return capture_current_page(device)
         except ScreenshotUnavailableError as exc:
-            print(f"[场景规划] 前台截图不可用，先通过返回键恢复: {exc}")
+            print(f"[Scenario planning] Foreground screenshot unavailable; trying back navigation first: {exc}")
             for attempt in range(1, PLAN_SCREENSHOT_BACK_ATTEMPTS + 1):
                 try:
                     print(
-                        "[场景规划] 黑屏恢复："
-                        f"第 {attempt}/{PLAN_SCREENSHOT_BACK_ATTEMPTS} 次按返回键。"
+                        "[Scenario planning] Black-screen recovery: "
+                        f"back attempt {attempt}/{PLAN_SCREENSHOT_BACK_ATTEMPTS}."
                     )
                     device.back()
                     time.sleep(APP_RESTART_RETRY_DELAY)
                     recovered_package = str(device.current_package() or "").strip()
                     if recovered_package != package_name:
                         print(
-                            "[场景规划] 返回后目标应用已离开前台，转入重启恢复: "
-                            f"current={recovered_package or '未知'}"
+                            "[Scenario planning] Target app left the foreground after back; switching to restart recovery: "
+                            f"current={recovered_package or 'unknown'}"
                         )
                         break
                     return capture_current_page(device)
                 except ScreenshotUnavailableError as back_exc:
-                    print(f"[场景规划] 返回后截图仍不可用: {back_exc}")
+                    print(f"[Scenario planning] Screenshot still unavailable after back: {back_exc}")
                 except Exception as back_exc:
-                    print(f"[场景规划] 返回恢复失败: {back_exc}")
+                    print(f"[Scenario planning] Back-navigation recovery failed: {back_exc}")
             needs_reset = True
     elif current_page is None:
-        print("[场景规划] 无法确认目标应用在前台，准备重启目标应用。")
+        print("[Scenario planning] Target foreground state is unconfirmed; restarting the target app.")
         needs_reset = True
 
     if not needs_reset:
@@ -248,7 +232,7 @@ def _ensure_target_app(device, package_name: str, current_page: Page | None = No
         wait_foreground=lambda dev, pkg: _wait_target_app_foreground(dev, pkg),
         on_ready=lambda: capture_current_page(device),
         attempts=PLAN_APP_RESTART_ATTEMPTS,
-        log_prefix="[场景规划]",
+        log_prefix="[Scenario planning]",
     )
     if restarted:
         return page
@@ -264,7 +248,7 @@ def _safe_capture_current_page(device) -> Page | None:
     except ScreenshotUnavailableError:
         raise
     except Exception as exc:
-        print(f"[场景规划] 抓取当前页面失败: {exc}")
+        print(f"[Scenario planning] Failed to capture the current page: {exc}")
         return None
 
 
@@ -322,7 +306,7 @@ def _node_attempt_count(node: FunctionNode | None) -> int:
 
 
 def _node_cross_testable(node: FunctionNode | None) -> bool:
-    """跨功能测试只接受未处于失败/崩溃/让出关闭状态的功能。"""
+    """Accept inter-functional endpoints only when they are not blocked, unavailable, or deferred."""
     if node is None:
         return False
     return (node.test_status or "not_started") not in {
@@ -333,12 +317,12 @@ def _node_cross_testable(node: FunctionNode | None) -> bool:
 
 
 def _node_intra_attempt_count(node: FunctionNode | None) -> int:
-    """实际执行次数；旧快照的去重场景数仅作为下界。"""
+    """Actual test attempts; deduplicated scenario count is a lower bound for legacy snapshots."""
     return node.intra_attempts() if node is not None else 0
 
 
 def _node_depth_count(node: FunctionNode | None) -> int:
-    """本功能已进入测试阶段的深度场景数（测试阶段失败也计入）。"""
+    """Depth scenarios that entered the test phase, including failed test attempts."""
     return int(node.depth_scenario_count or 0) if node is not None else 0
 
 
@@ -347,7 +331,7 @@ def _node_breadth_count(node: FunctionNode | None) -> int:
 
 
 def _required_depth_count(graph: FlowGraph, node: FunctionNode | None) -> int:
-    """本功能需要的深度场景数：每 PLAN_DEPTH_CONTROLS_PER_SCENARIO 个控件 1 个。"""
+    """Require one depth scenario per PLAN_DEPTH_CONTROLS_PER_SCENARIO widgets."""
     if node is None:
         return PLAN_MIN_DEPTH_SCENARIOS
     controls = len(graph.function_controls(node.id))
@@ -356,7 +340,7 @@ def _required_depth_count(graph: FlowGraph, node: FunctionNode | None) -> int:
 
 
 def _function_scenario_cap(graph: FlowGraph, node: FunctionNode | None) -> int:
-    """单功能场景上限 = 广度闸门 + 深度场景数 + 余量；随控件增加而上调。"""
+    """Scenario cap = breadth budget + depth target + margin; it grows with widget count."""
     return (
         PLAN_BREADTH_MAX_SCENARIOS
         + _required_depth_count(graph, node)
@@ -365,17 +349,17 @@ def _function_scenario_cap(graph: FlowGraph, node: FunctionNode | None) -> int:
 
 
 def _function_phase(graph: FlowGraph, node: FunctionNode | None) -> str:
-    """功能当前所处阶段：广度铺入口 / 深度业务场景。
+    """Current intra-functional phase: entry breadth or complete business-scenario depth.
 
-    depth：深度场景数未达目标，且入口已铺开（广度场景数达到闸门，或控件已全部覆盖）。
-    其余情况都是 breadth：深度做够之后缺的只会是覆盖率，回到广度补控件。
+    Use depth while its target is unmet and either breadth is exhausted or every recorded widget is covered.
+    Otherwise use breadth; after sufficient depth, return to any remaining widget-coverage gaps.
     """
     if node is None:
         return FUNCTION_PHASE_BREADTH
     if node.successful_depth_scenario_count >= _required_depth_count(graph, node):
         return FUNCTION_PHASE_BREADTH
     if _node_breadth_count(node) >= PLAN_BREADTH_MAX_SCENARIOS:
-        # 计数闸门优先于覆盖事实：保证广度阶段有界，不被“控件永远覆盖不完”拖住。
+        # The attempt budget bounds breadth even when widget coverage keeps growing.
         return FUNCTION_PHASE_DEPTH
     details = graph.function_coverage_details(node.id)
     if int(details["total_controls"] or 0) > 0 and not details["uncovered_controls"]:
@@ -384,22 +368,22 @@ def _function_phase(graph: FlowGraph, node: FunctionNode | None) -> str:
 
 
 def _describe_function_phase(graph: FlowGraph, node: FunctionNode | None) -> str:
-    """给规划模型看的阶段与预算摘要，也用在同一行日志里。"""
+    """Phase and budget summary for both the planning model and runtime diagnostics."""
     if node is None:
-        return "无目标功能"
+        return "No target functionality"
     phase = _function_phase(graph, node)
     uncovered = len(graph.function_coverage_details(node.id)["uncovered_controls"])
     return (
-        f"{phase} | 广度 {_node_breadth_count(node)}/{PLAN_BREADTH_MAX_SCENARIOS}"
-        f" | 深度 {_node_depth_count(node)}/{_required_depth_count(graph, node)}"
-        f"（有效完成 {node.successful_depth_scenario_count}）"
-        f" | 未覆盖控件 {uncovered}"
-        f" | 场景 {_node_intra_attempt_count(node)}/{_function_scenario_cap(graph, node)}"
+        f"{phase} | breadth {_node_breadth_count(node)}/{PLAN_BREADTH_MAX_SCENARIOS}"
+        f" | depth {_node_depth_count(node)}/{_required_depth_count(graph, node)}"
+        f" (observed completions {node.successful_depth_scenario_count})"
+        f" | uncovered widgets {uncovered}"
+        f" | scenarios {_node_intra_attempt_count(node)}/{_function_scenario_cap(graph, node)}"
     )
 
 
 def _cross_pair_ready(graph: FlowGraph, src_id: str, dst_id: str) -> bool:
-    """两端功能都已有自身场景和成功业务操作，跨功能闭环才有可复用的前置。"""
+    """Both endpoints need their own attempts and successful business operations before flow testing."""
     return all(
         graph.get_node(node_id) is not None
         and graph.function_has_successful_business_operation(node_id)
@@ -409,10 +393,10 @@ def _cross_pair_ready(graph: FlowGraph, src_id: str, dst_id: str) -> bool:
 
 
 def _function_completion_met(graph: FlowGraph, node: FunctionNode) -> bool:
-    """完成判定：覆盖率达标 + 有业务操作 + 有效完成的深度场景数达标。
+    """Require sufficient widget coverage, a business operation, and successful depth scenarios.
 
-    覆盖率可能由共享页面的兄弟功能“继承”，但深度场景只在本功能的 depth 阶段产生，
-    而进入 depth 要求本功能自身铺过入口，所以深度场景数本身就是本功能自身的证据。
+    Shared pages may contribute coverage to sibling functionalities. Depth completions,
+    however, are counted only for the functionality explicitly targeted by the depth scenario.
     """
     return (
         node.coverage_percent >= PLAN_FUNCTION_COVERAGE_TARGET
@@ -422,16 +406,16 @@ def _function_completion_met(graph: FlowGraph, node: FunctionNode) -> bool:
 
 
 def _update_function_statuses(graph: FlowGraph) -> None:
-    """每轮按 FFG 统一迁移功能状态；之后的调度不再改状态。"""
+    """Apply FFG-derived status transitions once per round before scheduling."""
     reopened = _normalize_and_reopen_undercovered_functions(graph)
     if reopened:
-        print("[场景规划] 已完成节点按程序派生覆盖率/深度目标恢复待测: " + ", ".join(reopened))
+        print("[Scenario planning] Reopened completed nodes for derived coverage/depth targets: " + ", ".join(reopened))
     graph.recompute_all_coverages()
     completed: list[str] = []
     capped: list[str] = []
     for node in list(graph.functions.values()):
         status = node.test_status or "not_started"
-        # deferred 只表示“暂未满足完成判定”，事后补齐证据时仍可转为 completed。
+        # Deferred means the completion gate is unmet; later evidence may still complete it.
         if status in TERMINAL_FUNCTION_STATUSES and status != "deferred":
             continue
         if _function_completion_met(graph, node):
@@ -445,12 +429,12 @@ def _update_function_statuses(graph: FlowGraph) -> None:
             capped.append(node.id)
     if completed:
         print(
-            "[场景规划] 完成判定通过，标记 completed 并等待遗漏审计: "
+            "[Scenario planning] Completion gate passed; marked completed, pending coverage-gap audit: "
             + ", ".join(f"{fid} | {_function_label(graph.get_node(fid))}" for fid in completed)
         )
     if capped:
         print(
-            "[场景规划] 达到单功能场景上限但未满足完成判定，标记 deferred: "
+            "[Scenario planning] Scenario cap reached without completion evidence; marked deferred: "
             + ", ".join(f"{fid} | {_function_label(graph.get_node(fid))}" for fid in capped)
         )
 
@@ -467,24 +451,24 @@ def _normalize_and_reopen_undercovered_functions(graph: FlowGraph) -> list[str]:
         graph.recompute_function_coverage(node.id)
         coverage_details = graph.function_coverage_details(node.id)
         has_uncovered = bool(coverage_details["uncovered_controls"])
-        # 被规划过却没有留下任何控件与操作记录：其 completed 状态没有任何
-        # 可核对的覆盖依据，需要重新审计。未被规划过的节点不在此列，避免抢占
-        # 真正未开始功能的广度优先调度权。
+        # A planned functionality with no widget or operation records has no auditable
+        # coverage basis and must be revisited. Exclude unplanned nodes so truly new
+        # functionalities retain their place in breadth exploration.
         never_observed = (
             bool(node.scenarios)
             and int(coverage_details["total_controls"] or 0) == 0
             and not graph.function_executed_operation_keys(node.id)
         )
-        # 重开必须由“程序派生的覆盖事实”驱动：仍有未操作控件，或该功能名下
-        # 根本没有记录过任何控件（说明它从未被真正观察过）。与覆盖无关的启发式
-        # （例如入口命名 + 页面数量）会和完成判定互相翻转，白烧调度轮次。
+        # Reopening must follow derived coverage: unhandled widgets or no recorded
+        # observations. Unrelated heuristics such as entry naming and page count can
+        # oscillate against completion and waste planning rounds.
         needs_reopen = (
             (has_uncovered or never_observed)
             and node.coverage_percent < PLAN_FUNCTION_COVERAGE_TARGET
         )
-        # 旧 completed 快照同样必须有有效深度证据；历史尝试数不能追认为成功数。
+        # Legacy completed snapshots also need observed depth completions, not just attempts.
         needs_more_depth = node.successful_depth_scenario_count < _required_depth_count(graph, node)
-        # 已达场景上限的功能不再重开，剩余入口交给覆盖遗漏审计。
+        # At the scenario cap, defer remaining entries to the coverage-gap audit.
         if (
             (node.test_status or "not_started") != "completed"
             or not (needs_reopen or needs_more_depth)
@@ -515,10 +499,10 @@ def _intra_sort_key(
     failure_counts: dict[str, int],
     navigation_level: str = NAV_LEVEL_HERE,
 ) -> tuple:
-    """功能内目标的唯一排序键。
+    """Deterministic ordering for intra-functional targets.
 
-    无失败优先 → depth 阶段优先（深度场景尽快排上）→ 当前页面所属功能优先（少导航）
-    → 有已知路径优先（D 级探索式导航排后）→ 未尝试优先 → 尝试少优先 → 功能编号。
+    Prefer no recent failure, then depth, current-page ownership, known navigation,
+    no previous attempts, fewer attempts, and finally functionality ID.
     """
     return (
         0 if int(failure_counts.get(node.id, 0) or 0) == 0 else 1,
@@ -564,18 +548,18 @@ def _candidate_cross_pairs(graph: FlowGraph) -> list[tuple[str, str, str]]:
     seen: set[tuple[str, str, str]] = set()
 
     for dep in graph.function_dependencies:
-        reason = _clean_natural_text(dep.resource_variable) or "功能依赖"
+        reason = _clean_natural_text(dep.resource_variable) or "Functional dependency"
         _add_cross_candidate(
             candidates,
             seen,
             graph,
             dep.src_function_id,
             dep.dst_function_id,
-            f"功能依赖: {reason}",
+            f"Functional dependency: {reason}",
         )
 
-    # 共享资源变量没有显式方向：两个方向都可能是“写入→读取”，双向各生成一个候选；
-    # 某资源已有显式依赖方向时只保留显式方向。
+    # Without an explicit resource direction, either endpoint may produce the data.
+    # Generate both directions, but retain only explicit directions when available.
     resource_owners: dict[str, list[tuple[FunctionNode, str]]] = {}
     for node in sorted(graph.functions.values(), key=_function_sort_index):
         seen_resources: set[str] = set()
@@ -606,14 +590,14 @@ def _candidate_cross_pairs(graph: FlowGraph) -> list[tuple[str, str, str]]:
                         graph,
                         first.id,
                         second.id,
-                        f"共享资源变量: {resource}",
+                        f"Shared state variable: {resource}",
                     )
 
     return candidates
 
 
 def _cross_pair_exhausted_keys(graph: FlowGraph) -> set[tuple[str, str, str]]:
-    """不再排队的组合：已完成、不可重试的失败，或已用完重试次数的 retryable 结果。"""
+    """Candidates exhausted by completion, non-retryable failure, or the retry budget."""
     exhausted: set[tuple[str, str, str]] = set()
     for item in graph.cross_test_results:
         key = graph.cross_test_key(item["src_function_id"], item["dst_function_id"], item["resource_variable"])
@@ -627,7 +611,7 @@ def _cross_pair_exhausted_keys(graph: FlowGraph) -> set[tuple[str, str, str]]:
 
 
 def _pending_cross_pairs(graph: FlowGraph) -> list[tuple[str, str, str]]:
-    # 已完成与确定失败的组合离开队列；导航失败或截图不可用的组合按次数有限重试。
+    # Remove completed and terminal failures; bound retries for navigation/screenshot failures.
     processed = _cross_pair_exhausted_keys(graph)
     return [
         (src_id, dst_id, reason)
@@ -640,21 +624,21 @@ def _pending_cross_pairs(graph: FlowGraph) -> list[tuple[str, str, str]]:
 
 def _function_label(node) -> str:
     if node is None:
-        return "未知功能"
-    return _clean_natural_text(node.name or node.description) or "未命名功能"
+        return "Unknown functionality"
+    return _clean_natural_text(node.name or node.description) or "Unnamed functionality"
 
 
 def _page_display_name(page: Page | None) -> str:
-    """规划提示词中的页面自然语言名：名称 → 描述，剔除内部编号。"""
+    """Human-readable page name for planning: name, then description, with internal IDs removed."""
     if page is None:
-        return "未知页面"
-    return _clean_natural_text(page.name or page.description) or "未命名页面"
+        return "Unknown page"
+    return _clean_natural_text(page.name or page.description) or "Unnamed page"
 
 
 def _page_node_label(page: Page | None) -> str:
     if page is None:
-        return "未知页面"
-    return _clean_natural_text(page.name) or str(page.id or "").strip() or "未命名页面"
+        return "Unknown page"
+    return _clean_natural_text(page.name) or str(page.id or "").strip() or "Unnamed page"
 
 
 def _is_black_screen_page(
@@ -667,7 +651,7 @@ def _is_black_screen_page(
         if current_page_id is None else current_page_id
     )
     page = graph.get_page(page_id) if page_id else None
-    return bool(page and page.name == BLACK_SCREEN_PAGE_NAME)
+    return bool(page and is_black_screen_page_name(page.name))
 
 
 def _matches_black_screen_path(graph: FlowGraph, scenario: str) -> bool:
@@ -677,13 +661,13 @@ def _matches_black_screen_path(graph: FlowGraph, scenario: str) -> bool:
     black_page_ids = {
         str(page.id or "")
         for page in graph.active_pages()
-        if page.name == BLACK_SCREEN_PAGE_NAME
+        if is_black_screen_page_name(page.name)
     }
     for transition in graph.page_transitions:
         if transition.dst_page_id not in black_page_ids:
             continue
         failed_action = re.split(
-            r"[；;]?\s*结果[:：]",
+            r"[；;]?\s*(?:\u7ed3\u679c|[Rr]esult)[:：]",
             str(transition.operation or ""),
             maxsplit=1,
         )[0].strip()
@@ -736,7 +720,7 @@ def _attach_current_page_identity_with_id(
     graph: FlowGraph,
     current_page: Page | None,
 ) -> tuple[Page | None, str]:
-    """把运行时页面对齐到已记录 Page，同时返回解析出的页面 id（未匹配为空串）。"""
+    """Align a runtime observation with a recorded Page and return its ID, or an empty ID."""
     if not isinstance(current_page, Page):
         return current_page, ""
     page_id = _resolve_current_page_id(graph, current_page)
@@ -770,7 +754,7 @@ def _refresh_current_page_observation(
     except Exception as exc:
         # Refresh is a consistency check, not the primary screenshot-health
         # gate. Keep the last usable state when a transient capture fails.
-        print(f"[场景规划] 执行前页面刷新失败，沿用上一轮状态: {exc}")
+        print(f"[Scenario planning] Pre-execution page refresh failed; retaining previous state: {exc}")
         return current_page
     if not isinstance(observed, Page):
         return current_page
@@ -779,8 +763,8 @@ def _refresh_current_page_observation(
     observed_id = str(observed.id or "").strip()
     if previous_id and observed_id != previous_id:
         print(
-            "[场景规划] 执行前刷新发现当前页面已变化: "
-            f"state={previous_id}, observed={observed_id or '未匹配新页面'}"
+            "[Scenario planning] Pre-execution refresh detected a changed page: "
+            f"state={previous_id}, observed={observed_id or 'unmatched new page'}"
         )
     return observed
 
@@ -797,23 +781,23 @@ def _build_current_location_summary(
     page = graph.get_page(page_id) if page_id else None
     owner_ids = graph.get_page_owners(page_id) if page_id else []
 
-    lines = ["【当前位置】"]
+    lines = ["[Current position]"]
     if owner_ids:
         owner_labels = [
             f"{owner_id} | {_function_label(graph.get_node(owner_id))}"
             for owner_id in owner_ids
         ]
-        lines.append(f"- 当前页面所属功能候选: {'；'.join(owner_labels)}")
+        lines.append(f"- Candidate current functionality owners: {'; '.join(owner_labels)}")
     else:
-        lines.append("- 当前页面所属功能候选: 未匹配到已记录功能")
+        lines.append("- Candidate current functionality owners: no recorded functionality matched")
 
     if page is not None:
-        lines.append(f"- 当前页面节点: {page.id} | {_page_node_label(page)}")
-        lines.append(f"- 当前页面 owners: {owner_ids}")
+        lines.append(f"- Current page node: {page.id} | {_page_node_label(page)}")
+        lines.append(f"- Current page owners: {owner_ids}")
     else:
-        lines.append("- 当前页面节点: 未匹配到已记录页面")
+        lines.append("- Current page node: no recorded page matched")
         if isinstance(current_page, Page) and current_page.activity:
-            lines.append(f"- 当前 Activity: {_clean_natural_text(current_page.activity)}")
+            lines.append(f"- Current Activity: {_clean_natural_text(current_page.activity)}")
 
     return "\n".join(lines)
 
@@ -850,8 +834,8 @@ def _normalize_optional_id(value: object) -> str:
 
 def _sanitize_planned_scenario(text: str) -> str:
     text = _strip_internal_ids_from_text(text)
-    text = re.sub(r"进入\s*对应的\s*页面", "进入目标页面", text)
-    text = re.sub(r"在当前\s*页面", "在当前页面", text)
+    text = re.sub(r"\u8fdb\u5165\s*\u5bf9\u5e94\u7684\s*\u9875\u9762", "\u8fdb\u5165\u76ee\u6807\u9875\u9762", text)
+    text = re.sub(r"\u5728\u5f53\u524d\s*\u9875\u9762", "\u5728\u5f53\u524d\u9875\u9762", text)
     text = re.sub(r"\s+，", "，", text)
     text = re.sub(r"\s+。", "。", text)
     text = re.sub(r"\s{2,}", " ", text)
@@ -865,7 +849,7 @@ def _invoke_llm(llm, system_prompt: str, message_content: list[dict]) -> dict:
             SystemMessage(content=system_prompt),
             HumanMessage(content=message_content),
         ],
-        log_prefix="[场景规划]",
+        log_prefix="[Scenario planning]",
         json_block_pattern=JSON_BLOCK_PATTERN,
     )
 
@@ -906,7 +890,7 @@ def _invoke_valid_plan(
         result = _invoke_llm(llm, system_prompt, current_message_content)
         if llm_json_result_failed(result):
             last_errors = ["llm_request_or_parse_failed"]
-            print("[场景规划] 底层调用已耗尽重试，改用程序模板场景。")
+            print("[Scenario planning] Underlying request retries exhausted; using a fallback scenario.")
             break
         errors = _validate_plan_result(
             result,
@@ -917,18 +901,18 @@ def _invoke_valid_plan(
             return result, []
         last_errors = errors
         print(
-            "[场景规划] LLM 返回字段不合法"
-            f"（第 {attempt}/{PLAN_VALIDATION_RETRY_ATTEMPTS} 次）: {errors}"
+            "[Scenario planning] Invalid fields returned by the LLM"
+            f" (attempt {attempt}/{PLAN_VALIDATION_RETRY_ATTEMPTS}): {errors}"
         )
         current_message_content = list(message_content)
         current_message_content.append({
             "type": "text",
             "text": (
-                '上一次输出不合法，请重新输出 {"test_scenario": "..."}。'
-                "同功能且进入同一结果的重复控件只选一个代表项；"
-                "不同结果的并列控件可以按准确名称列出 2–3 个。"
-                "不得要求所有、全部、每个、逐个、逐一或遍历某类控件。"
-                f"字段问题: {errors}"
+                'The previous output was invalid. Return {"test_scenario": "..."} again. '
+                "For duplicate widgets in one functionality with the same outcome, select one representative. "
+                "You may name 2-3 parallel widgets with distinct outcomes precisely. "
+                "Do not request all, every, or exhaustive traversal of a widget family. "
+                f"Field errors: {errors}"
             ),
         })
     return {}, last_errors
@@ -944,7 +928,7 @@ def _skip_response(
     workflow_complete: bool = False,
     **extra,
 ) -> dict:
-    """本轮不执行场景（冷启动建图、状态迁移、等待或收尾）时的统一返回。"""
+    """Common response for rounds without execution: initialization, status updates, waits, or finalization."""
     return {
         "ffg": graph,
         "current_page": current_page,
@@ -1011,36 +995,36 @@ def _node_uncovered_control_hints(
 
 
 def _forced_depth_scenario(graph: FlowGraph, node: FunctionNode) -> str:
-    """在深度阶段生成一次通用的业务场景兜底。
+    """Generate a generic business-scenario fallback for the depth phase.
 
-    只描述“沿业务逻辑走完一个完整操作”的写法，不规定具体业务——做哪条业务
-    由执行器依据它看到的界面决定。这里刻意不写按文案匹配的候选规则表：那类
-    规则泛化能力差，换一个 App 就容易选错目标。
+    Describe completion of a business operation without hard-coding which operation.
+    The executor selects it from the observed interface; text-based business rule
+    tables generalize poorly and can select inappropriate targets in other apps.
     """
-    # 结构性守卫：没有任何功能承载页时无从执行。返回空让调用方走既有的
-    # “连续无可执行场景则 release 功能”通路，避免把功能卡死在深度阶段。
+    # No functionality page means no execution anchor. Return empty so the existing
+    # repeated-unplannable path can defer the functionality instead of trapping it in depth.
     if not node.coverage_page_ids:
         return ""
     label = _function_label(node)
     representative_page = _node_representative_page(graph, node)
     entry_label = (
-        _page_display_name(representative_page) if representative_page is not None else "该功能的已记录页面"
+        _page_display_name(representative_page) if representative_page is not None else "the recorded functionality page"
     )
     hints = _node_uncovered_control_hints(graph, node, limit=3)
     hint_text = (
-        "可优先结合仍未覆盖的可见控件：" + "、".join(f"“{hint}”" for hint in hints) + "。"
+        "Prefer relevant uncovered visible widgets: " + ", ".join(f'"{hint}"' for hint in hints) + ". "
         if hints
         else ""
     )
     return (
-        f"围绕“{label}”执行一条完整的业务操作：先尝试进入“{entry_label}”并截图记录当前可见状态，"
-        "然后在该功能已记录的控件中选择一条会产生可观察结果的操作链走完"
-        "（例如新建并保存、编辑已有条目、移除条目、切换开关或筛选条件），"
-        "动作完成后离开该页面再返回查看结果。"
+        f'Execute one complete business operation for "{label}": first try to enter "{entry_label}" and capture the visible state. '
+        "Then choose and complete an operation chain on the recorded widgets of this functionality with an observable result "
+        "(for example, create and save, edit an existing item, remove an item, or change a toggle or filter). "
+        "After the operation, leave the page and return to inspect the result. "
         f"{hint_text}"
-        "不要重复该功能已执行过的场景；每一步等待界面稳定后再截图；只使用已记录的页面与控件；"
-        "只操作用 FuncDroid_ 后缀自建的数据，不得执行注销账号、退出登录、切换账号、支付、下单、实名认证等不可逆操作；"
-        "入口不可达或动作确实无法执行时，记录原因后结束。"
+        "Do not repeat scenarios already executed for this functionality. Wait for a stable screen before each screenshot; use only recorded pages and widgets. "
+        "Operate only on self-created data identified by a FuncDroid_ suffix. Do not delete accounts, log out, switch accounts, pay, order, or perform identity verification. "
+        "If the entry is unreachable or the operation cannot be performed, record the reason and stop."
     )
 
 
@@ -1051,18 +1035,18 @@ def _forced_intra_scenario(
     package_name: str = "",
 ) -> str:
     if _function_phase(graph, node) == FUNCTION_PHASE_DEPTH:
-        # 深度阶段：优先给深度场景。返回空会让调用方把功能判为“无可产出场景”
-        # 并 release，所以深度模板不可用时必须回退到下面的广度模板。
+        # Prefer a depth scenario. An empty result would release the functionality as
+        # unplannable, so fall back to breadth below when the depth template cannot run.
         depth_scenario = _forced_depth_scenario(graph, node)
         if depth_scenario:
             print(
-                "[场景规划] 阶段=depth，生成深度业务场景: "
+                "[Scenario planning] phase=depth; generated a business scenario: "
                 f"{node.id} | {_function_label(node)}"
             )
             return depth_scenario
     label = _function_label(node)
     representative_page = _node_representative_page(graph, node)
-    entry_label = _page_display_name(representative_page) if representative_page is not None else "该功能的已记录页面"
+    entry_label = _page_display_name(representative_page) if representative_page is not None else "the recorded functionality page"
     hints = _node_uncovered_control_hints(
         graph,
         node,
@@ -1073,11 +1057,11 @@ def _forced_intra_scenario(
             violation = wechat_action_policy_violation(
                 package_name,
                 "click",
-                f"点击{hint}",
+                f"Click {hint}",
             )
             if violation:
                 print(
-                    "[场景规划] 微信账号保护跳过退出登录/删除账户控件: "
+                    "[Scenario planning] Account-session protection skipped a logout/account-deletion widget: "
                     f"{hint} | {violation}"
                 )
                 continue
@@ -1086,55 +1070,55 @@ def _forced_intra_scenario(
     if not hints:
         if not node.coverage_page_ids:
             return ""
-        # 零控件功能（页面已记录但尚无可见控件记录）先观察，不能直接判为“无可测”。
+        # Observe recorded pages with no widget records before concluding that nothing is testable.
         return (
-            f"观察“{label}”的可操作内容：从当前页面尝试进入“{entry_label}”，"
-            "等待界面稳定后截图，记录页面上所有可见的按钮、输入框、列表项、开关与标签；"
-            "若页面可滚动，向下滑动一屏再截图记录；选择一个低风险控件（如筛选、标签切换、"
-            "展开详情）点击一次并观察直接结果，进入新界面则返回；"
-            "不执行删除、支付、退出登录等不可逆操作；入口不可达时记录原因后结束。"
+            f'Observe the interactive content of "{label}": try to enter "{entry_label}" from the current page, '
+            "wait for the interface to stabilize, and capture visible buttons, inputs, list items, toggles, and tabs. "
+            "If scrollable, scroll down one screen and capture it. Select a low-risk widget such as a filter, tab, or "
+            "details expander, click once, and observe its direct result; return if a new screen opens. "
+            "Do not delete, pay, log out, or perform other irreversible operations. If unreachable, record the reason and stop."
         )
-    # 单轮只探一个控件会让每个场景仅剩 1-2 个有效动作，而每轮的固定开销
-    # （规划 1 次 + FFG 更新 1 次以上的大模型带图调用 + 截图 + logcat）不变，
-    # 摊薄后吞吐极低。这里一次给出多个控件族，让单个场景把同页可测点走完。
+    # Testing one widget per round leaves only one or two useful actions while
+    # planning, multimodal FFG updates, screenshots, and logcat retain fixed costs.
+    # Batch related widget families to cover testable entries on the same page.
     batch: list[str] = []
     for offset in range(min(PLAN_SCENARIO_CONTROL_BATCH, len(hints))):
         candidate = hints[(hint_index + offset) % len(hints)]
         if candidate not in batch:
             batch.append(candidate)
-    hint_text = "、".join(f"“{hint}”" for hint in batch)
+    hint_text = ", ".join(f'"{hint}"' for hint in batch)
     if len(batch) == 1:
         coverage_clause = (
-            f"本轮探索以下尚无执行记录的可见控件（{hint_text}），观察它的直接结果；"
+            f"Explore this visible widget with no execution record ({hint_text}) and observe its direct result. "
         )
     else:
         coverage_clause = (
-            f"本轮依次探索以下 {len(batch)} 个尚无执行记录的可见控件（{hint_text}），"
-            "每个控件点击后观察其直接结果，若进入了新界面就返回上一层再继续下一个；"
+            f"Explore these {len(batch)} visible widgets with no execution records in order ({hint_text}). "
+            "After each click observe its direct result; if a new screen opens, return before the next widget. "
         )
     return (
-        f"围绕“{label}”执行一次低风险补充探索：从当前页面尝试进入“{entry_label}”，"
+        f'Perform a low-risk supplementary exploration of "{label}": try to enter "{entry_label}" from the current page. '
         + coverage_clause
-        + "不要重复执行已有操作记录中的控件；"
-        "如果入口不可达、目标已无可测内容或只能重复历史路径，记录原因后结束。"
+        + "Do not repeat widgets already covered by operation records. "
+        "If the entry is unreachable, no testable content remains, or only historical paths can be repeated, record the reason and stop."
     )
 
 
 def _forced_cross_scenario(graph: FlowGraph, src_id: str, dst_id: str, reason: str) -> str:
     src_label = _function_label(graph.get_node(src_id))
     dst_label = _function_label(graph.get_node(dst_id))
-    reason = _clean_natural_text(reason) or "既有功能依赖"
+    reason = _clean_natural_text(reason) or "an existing functional dependency"
     data_values = [item["value"] for item in graph.function_test_data(src_id)][-3:]
     data_clause = (
-        "源功能此前已创建的测试数据：" + "、".join(f"“{value}”" for value in data_values)
-        + "，优先在目标功能中查找这些数据；"
+        "Test data previously created by the source functionality: " + ", ".join(f'"{value}"' for value in data_values)
+        + ". Prefer finding these data in the target functionality. "
         if data_values
-        else f"若源功能中没有可用数据，先用唯一名称 FuncDroid_{src_id} 创建一条；"
+        else f"If the source functionality has no usable data, create an item with the unique name FuncDroid_{src_id}. "
     )
     return (
-        f"测试“{src_label}”到“{dst_label}”的跨功能关系：先确认源功能中与“{reason}”相关的已记录资源、"
-        f"状态或结果，{data_clause}再进入目标功能观察该资源、状态或结果是否被正确读取、展示或使用；"
-        "如果路径不可达或条件不足，记录不可达原因后结束。"
+        f'Test the inter-functional interaction from "{src_label}" to "{dst_label}": first confirm the recorded resource, '
+        f'state, or result associated with "{reason}" in the source. {data_clause}Then enter the target and check that it reads, displays, or consumes that resource, state, or result correctly. '
+        "If the path is unreachable or preconditions are unmet, record the reason and stop."
     )
 
 
@@ -1144,13 +1128,13 @@ def _test_data_instruction(
     target: FunctionNode | None,
     src: FunctionNode | None,
 ) -> str:
-    """测试数据后缀按功能稳定（FuncDroid_<func_id>），跨轮次、跨功能可追溯。"""
+    """Stable per-functionality data suffixes (FuncDroid_<func_id>) support reuse across rounds and flows."""
     owner = src if scenario_type == "cross_test" else target
     owner_id = owner.id if owner is not None else "data"
-    text = f"【本轮测试数据】创建或命名资源时使用唯一后缀 FuncDroid_{owner_id}。"
+    text = f"[Test data for this round] Use the unique suffix FuncDroid_{owner_id} when creating or naming resources. "
     existing = [item["value"] for item in graph.function_test_data(owner_id)][-5:]
     if existing:
-        text += "该功能此前已创建的测试数据：" + "、".join(existing) + "；深度场景与跨功能读取优先复用这些数据。"
+        text += "Previously created test data: " + ", ".join(existing) + ". Prefer reusing these data in depth scenarios and inter-functional reads."
     return text
 
 
@@ -1161,21 +1145,21 @@ def _release_unplannable_function(
     reason: str,
     unplannable_counts: dict[str, int] | None = None,
 ) -> dict:
-    """规划器和程序模板都给不出可执行场景：连续多轮如此才延后该功能。
+    """Defer only after repeated rounds where neither model nor templates yield a scenario.
 
-    单轮空场景常是模型偶发或页面记录尚未补齐，先计数并跳过本轮；连续达到
-    PLAN_UNPLANNABLE_ROUNDS_BEFORE_DEFER 轮才标记 deferred（reason=unplannable）。
-    deferred 仍会在收尾时补测一次，且事后满足完成判定时可转为 completed。
+    An isolated empty plan may be a transient model failure or an incomplete page record.
+    Count it and skip the round; defer at PLAN_UNPLANNABLE_ROUNDS_BEFORE_DEFER.
+    Deferred functionalities retain a final retry and may complete once sufficient evidence arrives.
     """
     counts = dict(unplannable_counts or {})
     counts[node.id] = int(counts.get(node.id, 0) or 0) + 1
     if counts[node.id] < PLAN_UNPLANNABLE_ROUNDS_BEFORE_DEFER:
         print(
-            f"[场景规划] {reason}，本轮跳过（{counts[node.id]}/"
-            f"{PLAN_UNPLANNABLE_ROUNDS_BEFORE_DEFER}）: {node.id} | {_function_label(node)}"
+            f"[Scenario planning] {reason}; skipping this round ({counts[node.id]}/"
+            f"{PLAN_UNPLANNABLE_ROUNDS_BEFORE_DEFER}): {node.id} | {_function_label(node)}"
         )
         return {**_skip_response(graph, current_page, node.id), "unplannable_counts": counts}
-    print(f"[场景规划] {reason}，连续无可执行场景，标记 deferred 以释放调度: {node.id} | {_function_label(node)}")
+    print(f"[Scenario planning] {reason}; repeatedly unplannable, deferring to release scheduling: {node.id} | {_function_label(node)}")
     if not _node_is_terminal(node):
         graph.set_node_test_status(node.id, "deferred", reason="unplannable")
     counts.pop(node.id, None)
@@ -1192,7 +1176,7 @@ def _bootstrap_initial_ffg(
     """Build an initial FFG from the first screenshot."""
     message_content: list[dict] = [{
         "type": "text",
-        "text": f"目标应用: {app_name or package_name or '未知'} | package={package_name or '未知'}",
+        "text": f"Target app: {app_name or package_name or 'unknown'} | package={package_name or 'unknown'}",
     }]
     if current_page.representative_screenshot:
         message_content.append({
@@ -1202,11 +1186,11 @@ def _bootstrap_initial_ffg(
     else:
         message_content.append({
             "type": "text",
-            "text": '当前没有页面截图；请返回 {"functions": [], "pages": []}。',
+            "text": 'No page screenshot is available; return {"functions": [], "pages": []}.',
         })
 
     result = _invoke_llm(llm, BOOTSTRAP_FFG_SYSTEM_PROMPT, message_content)
-    # 冷启动只有一张截图，证据步骤固定为 1，由程序填写而不是让模型复述。
+    # Initialization has a single screenshot; assign evidence step 1 programmatically.
     bootstrap_patch = {
         key: [
             {**item, "source_step": 1}
@@ -1218,14 +1202,14 @@ def _bootstrap_initial_ffg(
     trace = [{"current_page": current_page, "raw_step_index": 1}]
     patch_result = apply_ffg_patch(graph, bootstrap_patch, trace, current_plan={})
     if not graph.functions:
-        print("[场景规划] 冷启动 patch 未产生功能节点，使用最小主页面 patch 兜底。")
+        print("[Scenario planning] Initialization patch produced no functionality; applying a minimal current-page fallback.")
         fallback_patch = {
             "functions": [
                 {
                     "function_ref": "new_func_1",
                     "source_step": 1,
-                    "name": _page_display_name(current_page) or "当前页面导航",
-                    "description": current_page.description or "冷启动识别的当前页面和可见入口。",
+                    "name": _page_display_name(current_page) or "Current-page navigation",
+                    "description": current_page.description or "Current page and visible entries observed during initialization.",
                 }
             ],
             "pages": [
@@ -1233,8 +1217,8 @@ def _bootstrap_initial_ffg(
                     "page_ref": "new_page_1",
                     "function_refs": ["new_func_1"],
                     "source_step": 1,
-                    "name": _page_display_name(current_page) or "当前页面",
-                    "description": current_page.description or "冷启动截图对应的当前页面。",
+                    "name": _page_display_name(current_page) or "Current page",
+                    "description": current_page.description or "Current page captured in the initialization screenshot.",
                 }
             ],
         }
@@ -1248,7 +1232,7 @@ def _bootstrap_initial_ffg(
 
     first_page = next(iter(graph.active_pages()), current_page)
     print(
-        "[场景规划] 冷启动建图完成: "
+        "[Scenario planning] FFG initialization complete: "
         f"functions={len(graph.functions)}, page={_page_display_name(first_page)}, "
         f"operations={sum(len(page.operations) for page in graph.active_pages())}, "
         f"patch_functions={len(patch_result.get('functions_patch', []))}, "
@@ -1266,61 +1250,61 @@ def _build_function_audit_summary(
 ) -> str:
     boundary_hint = rule_for(package_name).to_prompt_hint()
     lines: list[str] = [
-        "【覆盖遗漏检查】",
-        f"目标应用: {app_name or package_name or '未知'} | package={package_name or '未知'}",
+        "[Coverage-gap audit]",
+        f"Target app: {app_name or package_name or 'unknown'} | package={package_name or 'unknown'}",
         EXPLORATION_MODE_INSTRUCTIONS[PLAN_EXPLORATION_MODE],
         boundary_hint,
         "",
-        f"功能: {node.id} | {_function_label(node)}",
+        f"Functionality: {node.id} | {_function_label(node)}",
     ]
     if node.description:
-        lines.append(f"描述: {_clean_natural_text(node.description)}")
-    lines.append(f"测试状态: {node.test_status or 'not_started'}")
-    lines.append(f"覆盖率: {node.coverage_percent}%")
+        lines.append(f"Description: {_clean_natural_text(node.description)}")
+    lines.append(f"Test status: {node.test_status or 'not_started'}")
+    lines.append(f"Coverage score: {node.coverage_percent}%")
     coverage_details = graph.function_coverage_details(node.id)
     lines.append(
-        "控件/操作: "
+        "Widgets/operations: "
         f"{coverage_details['executed_operations']}/{coverage_details['total_controls']}"
     )
     if node.resource_variables:
-        lines.append(f"资源变量: {'、'.join(_clean_natural_text(item) for item in node.resource_variables)}")
+        lines.append(f"State variables: {', '.join(_clean_natural_text(item) for item in node.resource_variables)}")
     lines.append("")
-    lines.append("已记录页面、控件与操作:")
+    lines.append("Recorded pages, widgets, and operations:")
     for page_id in node.coverage_page_ids:
         page = graph.get_page(page_id)
         if page is None:
             continue
-        lines.append(f"- 页面: {page.id} | {_page_display_name(page)}")
+        lines.append(f"- Page: {page.id} | {_page_display_name(page)}")
         if page.description:
-            lines.append(f"  描述: {_clean_natural_text(page.description)}")
+            lines.append(f"  Description: {_clean_natural_text(page.description)}")
         if page.controls:
-            lines.append("  控件全集（跨截图状态）:")
+            lines.append("  All recorded widgets across screenshot states:")
             for control in page.controls:
                 lines.append(f"    * {_clean_natural_text(control)}")
         if page.operations:
-            lines.append("  已执行/已知操作:")
+            lines.append("  Executed/known operations:")
             for operation in page.operations:
                 lines.append(f"    * {_clean_natural_text(operation)}")
         else:
-            lines.append("  已执行/已知操作: 无")
+            lines.append("  Executed/known operations: none")
     transitions = graph.get_function_page_transitions(node.id)
     if transitions:
         lines.append("")
-        lines.append("页面跳转:")
+        lines.append("Page transitions:")
         for transition in transitions:
             src_page = graph.get_page(transition.src_page_id)
             dst_page = graph.get_page(transition.dst_page_id)
             lines.append(
-                f"- 从「{_page_display_name(src_page)}」通过「{_clean_natural_text(transition.operation)}」到「{_page_display_name(dst_page)}」"
+                f'- From "{_page_display_name(src_page)}" via "{_clean_natural_text(transition.operation)}" to "{_page_display_name(dst_page)}"'
             )
     if node.scenarios:
         lines.append("")
-        lines.append("已测试场景:")
+        lines.append("Tested scenarios:")
         for scenario in node.scenarios:
             lines.append(f"- {_clean_natural_text(scenario)}")
     else:
         lines.append("")
-        lines.append("已测试场景: 无")
+        lines.append("Tested scenarios: none")
     return "\n".join(lines)
 
 
@@ -1360,9 +1344,9 @@ def _audit_function_for_gap(
             {
                 "type": "text",
                 "text": (
-                    f"【分批视觉复核】当前是第 {batch_index}/{len(page_batches)} 批。"
-                    "只根据本批附带截图寻找可见遗漏；本批没有遗漏时返回 false，"
-                    "不要据此推断未附图页面。程序会继续检查其余批次。"
+                    f"[Batched visual review] Batch {batch_index}/{len(page_batches)}. "
+                    "Look for visible omissions only in the attached screenshots. Return false if this batch has none; "
+                    "do not infer anything about pages not pictured. Remaining batches will be checked separately."
                 ),
             },
         ]
@@ -1371,7 +1355,7 @@ def _audit_function_for_gap(
         for page in page_batch:
             message_content.append({
                 "type": "text",
-                "text": f"截图对应页面: {page.id} | {_page_display_name(page)}",
+                "text": f"Screenshot page: {page.id} | {_page_display_name(page)}",
             })
             message_content.append({
                 "type": "image_url",
@@ -1379,7 +1363,7 @@ def _audit_function_for_gap(
             })
 
         print(
-            "[场景规划] 覆盖遗漏检查: "
+            "[Scenario planning] Coverage-gap audit: "
             f"{_function_label(node)} | batch={batch_index}/{len(page_batches)}, "
             f"pages={len(node.coverage_page_ids)}, screenshots={len(page_batch)}"
         )
@@ -1400,7 +1384,7 @@ def _audit_has_gap(result: dict) -> bool:
 
 
 def _validate_audit_result(result: object) -> list[str]:
-    """两个字段要么都空（无遗漏），要么都非空（给出一个入口）。"""
+    """Both fields must be empty (no gap) or nonempty (one executable entry)."""
     if not isinstance(result, dict) or not result:
         return ["empty_or_non_object_result"]
     errors: list[str] = []
@@ -1416,18 +1400,18 @@ def _validate_audit_result(result: object) -> list[str]:
 
 def _audit_entry_scenario(page: Page | None, entry_name: str) -> str:
     return (
-        f"在“{_page_display_name(page)}”页面，点击“{entry_name}”，"
-        "观察并记录实际出现的页面、弹窗或状态变化后结束。"
+        f'On "{_page_display_name(page)}", click "{entry_name}", '
+        "observe and record the resulting page, dialog, or state change, then stop."
     )
 
 
 def _function_audit_signature(graph: FlowGraph, node: FunctionNode) -> str:
-    """结构覆盖签名：只有页面/控件/跳转变化才触发重新审计。
+    """Structural coverage signature; only page/widget/transition changes trigger a new audit.
 
-    刻意排除场景数量与操作数量：审计探索本身会 add_scenario 并新增操作记录，
-    若把它们计入签名，每次审计探索都会改变签名，导致下一轮对同一已完成功能
-    再次审计（最多 MAX_COMPLETION_AUDITS_PER_FUNCTION 次），即使探索没有
-    发现任何新的页面或控件。
+    Exclude scenario and operation counts because an audit execution adds both.
+    Including them would change the signature after every audit scenario and cause
+    repeated audits up to MAX_COMPLETION_AUDITS_PER_FUNCTION even when no new
+    pages or widgets were found.
     """
     coverage_page_ids = set(node.coverage_page_ids)
     page_ids = ",".join(sorted(str(page_id) for page_id in coverage_page_ids))
@@ -1460,12 +1444,12 @@ def _run_completion_audit(
     deadline: float | None = None,
     max_audits: int | None = None,
 ) -> tuple[dict | None, bool, dict[str, str]]:
-    """逐个审计已完成功能，返回 (待执行入口, 是否全部审计完, 已审计签名)。
+    """Audit completed functionalities and return (entry, all_done, audited_signatures).
 
-    模型连续返回非法结构或不存在的页面时，按“无可执行遗漏”记下签名，
-    避免同一功能每轮都重审而阻塞收尾；到达运行截止时间时停止审计。
-    每轮最多实际审计 max_audits（默认 PLAN_MAX_AUDITS_PER_ROUND）个功能，
-    其余留到后续规划轮次（返回“未审计完”）。
+    Record invalid model output or unknown pages as no executable gap to avoid
+    blocking finalization. Stop auditing when the run deadline is reached.
+    Audit at most max_audits functionalities per round (PLAN_MAX_AUDITS_PER_ROUND
+    by default), leaving remaining audits to later rounds with all_done=False.
     """
     previous_signatures = previous_signatures or {}
     audit_attempts = audit_attempts or {}
@@ -1476,23 +1460,23 @@ def _run_completion_audit(
         if (node.test_status or "not_started") != "completed":
             continue
         if deadline is not None and time.time() >= deadline:
-            print("[场景规划] 已到运行截止时间，停止覆盖遗漏检查。")
+            print("[Scenario planning] Run deadline reached; stopping the coverage-gap audit.")
             return None, False, audited_signatures
         signature = _function_audit_signature(graph, node)
         if previous_signatures.get(node.id) == signature:
             audited_signatures[node.id] = signature
-            print(f"[场景规划] 覆盖遗漏检查跳过未变化功能: {_function_label(node)}")
+            print(f"[Scenario planning] Coverage-gap audit skipped unchanged functionality: {_function_label(node)}")
             continue
         if int(audit_attempts.get(node.id, 0) or 0) >= MAX_COMPLETION_AUDITS_PER_FUNCTION:
             audited_signatures[node.id] = signature
             print(
-                "[场景规划] 单功能覆盖审计达到安全上限，结束该签名审计: "
+                "[Scenario planning] Per-functionality audit limit reached; closing this signature: "
                 f"{_function_label(node)} | {MAX_COMPLETION_AUDITS_PER_FUNCTION}"
             )
             continue
         if audits_this_round >= audit_budget:
             print(
-                "[场景规划] 本轮覆盖遗漏检查已达上限，其余功能留待后续轮次: "
+                "[Scenario planning] Per-round audit limit reached; deferring remaining functionalities: "
                 f"{audits_this_round}/{audit_budget}"
             )
             return None, False, audited_signatures
@@ -1520,14 +1504,14 @@ def _run_completion_audit(
             if not (protocol_errors or (has_gap and not valid_entry_page)):
                 break
             validation_feedback = (
-                "上一次输出不符合覆盖审计协议。无遗漏时 entry_page_ref 与 entry_name 都返回空字符串；"
-                "有遗漏时两者都必须非空：entry_page_ref 必须是摘要中该功能已有的 page_x，"
-                "entry_name 必须是该页截图或 description 中真实可见且尚未执行的入口名称。"
-                f"字段问题: {protocol_errors or ['entry_page_ref_not_in_function']}"
+                "The previous output violated the coverage-audit protocol. With no gap, return empty entry_page_ref and entry_name. "
+                "With a gap, both must be nonempty: entry_page_ref must be an existing page_x of this functionality in the summary, "
+                "and entry_name must identify an unexecuted entry visibly present in that page screenshot or description. "
+                f"Field errors: {protocol_errors or ['entry_page_ref_not_in_function']}"
             )
         if protocol_errors or (has_gap and not valid_entry_page):
             print(
-                "[场景规划] 覆盖遗漏检查连续返回不可执行结果，按无可执行遗漏记录该签名: "
+                "[Scenario planning] Audit repeatedly returned non-executable results; recording no executable gap for this signature: "
                 f"{_function_label(node)} | "
                 f"{protocol_errors or f'page={entry_page_ref} | entry={entry_name}'}"
             )
@@ -1535,21 +1519,21 @@ def _run_completion_audit(
             continue
         action_policy_violation = ""
         if has_gap:
-            # 通用登录态守卫（不限包名）：忽略“点击退出登录/切换账号”类候选，
-            # 避免为查看登录表单而主动登出，导致后续依赖登录态的取证全部失效。
+            # Protect account sessions regardless of package: ignore logout/account-switch
+            # candidates so visiting a login form cannot invalidate later authenticated evidence.
             action_policy_violation = wechat_action_policy_violation(
-                package_name, "click", f"点击{entry_name}"
-            ) or account_session_action_violation("click", f"点击{entry_name}")
+                package_name, "click", f"Click {entry_name}"
+            ) or account_session_action_violation("click", f"Click {entry_name}")
         if action_policy_violation:
             print(
-                "[场景规划] 覆盖遗漏候选涉及退出登录或删除账户，已忽略: "
+                "[Scenario planning] Ignored a coverage-gap candidate involving logout or account deletion: "
                 f"{_function_label(node)} | entry={entry_name} | "
                 f"reason={action_policy_violation}"
             )
         elif has_gap:
             test_scenario = _audit_entry_scenario(graph.get_page(entry_page_ref), entry_name)
             print(
-                "[场景规划] 覆盖遗漏检查发现待验证入口，转为真实执行而非直接建图: "
+                "[Scenario planning] Audit found an entry to verify; executing it before updating the FFG: "
                 f"{node.id} | page={entry_page_ref} | scenario={test_scenario}"
             )
             return {
@@ -1558,7 +1542,7 @@ def _run_completion_audit(
                 "test_scenario": test_scenario,
             }, False, audited_signatures
         else:
-            print(f"[场景规划] 覆盖遗漏检查通过: {_function_label(node)}")
+            print(f"[Scenario planning] Coverage-gap audit passed: {_function_label(node)}")
         audited_signatures[node.id] = signature
     return None, True, audited_signatures
 
@@ -1570,7 +1554,7 @@ def _page_path_to_entry(
     entry_page_id: str,
     allow_backtrack: bool = False,
 ) -> list[tuple[PageTransition, bool]]:
-    """功能内部页面之间到入口页的路径，只经过该功能自己的页面。"""
+    """Find a path to the entry page using only pages owned by this functionality."""
     return _leveled_page_path(
         graph,
         start_page_id,
@@ -1598,7 +1582,7 @@ def _build_audit_navigation_scenario(
     if current_page_id == entry_page_id:
         return ""
 
-    # A 级：已记录正向边；B 级：允许把已记录边反向当作返回。
+    # Level A uses recorded forward edges; level B also permits reverse edges as back.
     start_page_id = current_page_id
     path = _page_path_to_entry(graph, node, start_page_id, entry_page_id)
     if not path:
@@ -1620,25 +1604,25 @@ def _build_audit_navigation_scenario(
         )
         if current_is_owned_child:
             instructions.append(
-                "当前页仍属于目标功能但没有已记录的正向导航路径：若它明显是本轮入口页打开的"
-                f"子页面、选择页或弹层，先执行一次 back，截图确认是否直接回到“{_page_display_name(entry_page)}”；"
-                "若没有回到目标入口页或已离开目标应用，再执行一次 open_app 打开目标应用主页面，"
-                "并按后续已记录路径导航"
+                "The current page belongs to the target functionality but has no recorded forward path. If it is clearly a "
+                f'child page, selector, or overlay opened from the entry, try back once and capture whether it returns to "{_page_display_name(entry_page)}". '
+                "If the entry is not reached or the target app is left, use open_app once to open its main page, "
+                "then follow the recorded path below"
             )
         else:
             instructions.append(
-                "当前不在目标功能的已知导航路径上：先执行一次 open_app 直接打开目标应用主页面；"
-                "若仍未到主页面，再关闭导航开始时已有的临时菜单或弹窗，并使用页面返回回到已记录的"
-                f"“{_page_display_name(start_page)}”页面；若返回时离开目标应用，则再次 open_app"
+                "The current position is outside known navigation paths to the target. First use open_app once to open the app main page. "
+                "If still not there, close temporary menus or dialogs that were already open when navigation began, and safely go back to "
+                f'the recorded page "{_page_display_name(start_page)}". If back leaves the app, use open_app again'
             )
     instructions.extend(_path_step_instructions(graph, path))
     if not path and start_page_id != entry_page_id:
-        instructions.append(f"继续安全返回，直到进入已记录的“{_page_display_name(entry_page)}”页面")
+        instructions.append(f'Continue safe back navigation until reaching the recorded page "{_page_display_name(entry_page)}"')
     instructions.append(
-        f"截图确认已到达“{_page_display_name(entry_page)}”后结束导航，"
-        "不要在导航阶段点击本轮待验证入口；为到达目标页而主动打开的菜单属于导航路径，不要再把它关闭"
+        f'Capture confirmation that "{_page_display_name(entry_page)}" is reached, then end navigation. '
+        "Do not click the entry under test during navigation. Menus opened deliberately to reach the target are part of the path; do not close them again"
     )
-    return "；".join(instructions) + "。"
+    return "; ".join(instructions) + "."
 
 
 def _audit_exploration_response(
@@ -1660,7 +1644,7 @@ def _audit_exploration_response(
     next_attempts = dict(audit_attempts or {})
     next_attempts[owner_function_id] = int(next_attempts.get(owner_function_id, 0) or 0) + 1
     print(
-        "[场景规划] 覆盖遗漏检查转为证据驱动探索执行: "
+        "[Scenario planning] Coverage-gap audit scheduled evidence-driven execution: "
         f"owner={owner_function_id}, scenario={audit_scenario}"
     )
     return {
@@ -1690,17 +1674,16 @@ def _select_intra_target(
     graph: FlowGraph,
     current_page: Page | None,
     failure_counts: dict[str, int] | None = None,
-    compliance_terms: tuple[str, ...] = (),
     current_page_id: str | None = None,
 ) -> FunctionNode | None:
-    """在未完成的功能中按唯一排序键取第一个。
+    """Select the first unfinished functionality under the deterministic ordering.
 
-    导航只是参考路径，不作为候选闸门：没有已知路径的功能走 D 级探索式导航，
-    只是在排序上排到有已知路径的功能之后。
+    Navigation is a reference, not a candidate gate. Without a known path, use
+    level-D exploratory navigation, ranked after candidates with known paths.
     """
     failure_counts = failure_counts or {}
-    # 当前页面只解析一次（可能是对全部页面截图的相似度扫描），邻接表只建一次，
-    # 供所有候选功能的导航级别计算复用。
+    # Resolve current-page identity and build adjacency only once; all candidate
+    # navigation-level calculations reuse them instead of scanning screenshots again.
     if current_page_id is None:
         current_page_id = _resolve_current_page_id(graph, current_page)
     current_owner_ids = graph.get_page_owners(current_page_id)
@@ -1717,26 +1700,11 @@ def _select_intra_target(
             graph, node, current_owner_ids, failure_counts, levels[node.id],
         )
     )
-    # 合规闭环存在未决目标时，已发现相关页面/控件的功能优先，
-    # 让普通探索为下一次合规复判补充入口和路径证据。
-    if compliance_terms:
-        relevant = [
-            node for node in candidates
-            if _function_compliance_score(graph, node, compliance_terms) > 0
-        ]
-        # 刚失败的功能同样让出优先级：合规相关但刚失败的功能不压过健康的
-        # 非相关功能，此时回落到排序键的第一个。max 在同分时保留排序键顺序。
-        healthy = [node for node in relevant if not failure_counts.get(node.id)]
-        if healthy:
-            return max(
-                healthy,
-                key=lambda node: _function_compliance_score(graph, node, compliance_terms),
-            )
     return candidates[0] if candidates else None
 
 
 def _run_deadline(state: AgentState) -> float | None:
-    """运行截止的绝对时间戳；未设置总时长时返回 None。"""
+    """Absolute run deadline, or None when no total time limit is configured."""
     limit = float(state.get("total_time_limit", 0) or 0)
     start = float(state.get("start_time", 0) or 0)
     return start + limit if limit > 0 and start > 0 else None
@@ -1748,9 +1716,9 @@ def _select_deferred_retry(
     retried_ids: list[str],
     current_page_id: str | None = None,
 ) -> FunctionNode | None:
-    """收尾时每个 deferred 功能只再给一次补测机会，且只给有已知路径（A/B/C 级）的功能。
+    """Give each deferred functionality one final retry, restricted to known A/B/C paths.
 
-    D 级探索式导航已经失败过一次，没有新路径时重试只会重复同样的探索。
+    Level-D navigation already failed; retrying without a new path repeats the same exploration.
     """
     if current_page_id is None:
         current_page_id = _resolve_current_page_id(graph, current_page)
@@ -1766,7 +1734,7 @@ def _select_deferred_retry(
 
 @dataclass
 class _PageAdjacency:
-    """页面跳转的正向/反向邻接表；每次规划调用建一次，供多次 BFS 复用。"""
+    """Forward/reverse page adjacency, built once per planning round for repeated BFS calls."""
 
     forward: dict[str, list[PageTransition]] = field(default_factory=dict)
     reverse: dict[str, list[PageTransition]] = field(default_factory=dict)
@@ -1774,7 +1742,7 @@ class _PageAdjacency:
 
 def _page_adjacency(graph: FlowGraph) -> _PageAdjacency:
     adjacency = _PageAdjacency()
-    # 按 page_transitions 原顺序建表，保证 BFS 的边遍历顺序与逐条扫描一致。
+    # Preserve page_transitions order so BFS edge traversal matches the previous linear scan.
     for transition in graph.page_transitions:
         adjacency.forward.setdefault(transition.src_page_id, []).append(transition)
         adjacency.reverse.setdefault(transition.dst_page_id, []).append(transition)
@@ -1789,11 +1757,11 @@ def _leveled_page_path(
     allowed_page_ids: set[str] | None = None,
     adjacency: _PageAdjacency | None = None,
 ) -> list[tuple[PageTransition, bool]]:
-    """BFS 最短页面路径；每步为 (转移, 是否反向)。
+    """Shortest page path by BFS, with each step represented as (transition, reverse).
 
-    allow_backtrack 时把已记录的 src→dst 边也当作 dst→src 的“返回”候选：
-    进入过的页面大多能退回来源页，但这只是参考，执行器需截图确认。
-    adjacency 由调用方预建时直接复用，否则本次调用内建一次。
+    With allow_backtrack, a recorded src->dst edge also proposes dst->src as back.
+    This is only a reference; the executor must confirm the actual result by screenshot.
+    Reuse caller-supplied adjacency, otherwise build it once within this call.
     """
     start_page_id = graph.resolve_page_id(start_page_id)
     targets = {
@@ -1846,7 +1814,7 @@ def _shortest_page_path(
 
 
 def _root_page(graph: FlowGraph) -> Page | None:
-    """应用入口页：第一个功能的代表页面（open_app 重开后预期落在这里）。"""
+    """App entry page: the first functionality's representative page, expected after open_app."""
     return _node_representative_page(graph, next(iter(graph.functions.values()), None))
 
 
@@ -1857,9 +1825,9 @@ def _route_via_restart(
     adjacency: _PageAdjacency,
     allow_backtrack: bool,
 ) -> tuple[list[tuple[PageTransition, bool]], bool]:
-    """当前位置无路径时的 C 级兜底：重开应用回到入口页，再走入口页的已记录路径。
+    """Level-C fallback: reopen the app, then follow recorded paths from its entry page.
 
-    返回 (路径, 是否需要先重开)。入口页本身就是目标时只需重开，不需要路径。
+    Return (path, needs_restart). If the entry is the target, restart alone is sufficient.
     """
     root_page = _root_page(graph)
     root_page_id = str(root_page.id or "") if root_page is not None else ""
@@ -1875,8 +1843,8 @@ def _route_via_restart(
     return path, bool(path)
 
 
-# C 级导航的重开指令；执行器提示词中 open_app 规则对“导航任务明确要求重新打开”留有例外。
-RESTART_NAVIGATION_INSTRUCTION = "执行 open_app 重新打开目标应用，并等待界面稳定"
+# Level-C explicitly requests reopening, as permitted by the executor's open_app rule.
+RESTART_NAVIGATION_INSTRUCTION = "Execute open_app to reopen the target app and wait for a stable screen"
 
 
 def _path_step_instructions(
@@ -1889,18 +1857,18 @@ def _path_step_instructions(
         dst_page = graph.get_page(transition.dst_page_id)
         if reversed_edge:
             instructions.append(
-                f"在“{_page_display_name(dst_page)}”尝试执行一次 back，截图确认是否回到“{_page_display_name(src_page)}”"
+                f'On "{_page_display_name(dst_page)}", try back once and capture whether "{_page_display_name(src_page)}" is reached'
             )
             continue
-        operation = _clean_natural_text(transition.operation) or "执行已记录的页面操作"
+        operation = _clean_natural_text(transition.operation) or "perform the recorded page operation"
         instructions.append(
-            f"在“{_page_display_name(src_page)}”执行“{operation}”，进入“{_page_display_name(dst_page)}”"
+            f'On "{_page_display_name(src_page)}", perform "{operation}" to enter "{_page_display_name(dst_page)}"'
         )
     return instructions
 
 
 def _exploratory_navigation_text(graph: FlowGraph, target: FunctionNode) -> str:
-    """D 级：图中没有路径，只给目标描述，由执行器自行寻找进入方式。"""
+    """Level D: without a recorded path, describe the target and let the executor find an entry."""
     target_pages = [
         page for page_id in target.coverage_page_ids
         if (page := graph.get_page(page_id)) is not None
@@ -1909,25 +1877,25 @@ def _exploratory_navigation_text(graph: FlowGraph, target: FunctionNode) -> str:
         page for page_id in target.entry_page_ids
         if (page := graph.get_page(page_id)) is not None
     ][:3]
-    parts = [f"FFG 中没有到“{_function_label(target)}”的已记录路径，本次为探索式导航"]
+    parts = [f'No path to "{_function_label(target)}" is recorded in the FFG; use exploratory navigation']
     if target.description:
-        parts.append(f"该功能：{_clip_summary_text(target.description, 160)}")
+        parts.append(f"Functionality: {_clip_summary_text(target.description, 160)}")
     if target_pages:
         parts.append(
-            "目标页面："
-            + "、".join(
-                f"“{_page_display_name(page)}”"
-                + (f"（{_clip_summary_text(page.description, 80)}）" if page.description else "")
+            "Target pages: "
+            + ", ".join(
+                f'"{_page_display_name(page)}"'
+                + (f" ({_clip_summary_text(page.description, 80)})" if page.description else "")
                 for page in target_pages
             )
         )
     if entry_pages:
-        parts.append("已知入口页：" + "、".join(f"“{_page_display_name(page)}”" for page in entry_pages))
+        parts.append("Known entry pages: " + ", ".join(f'"{_page_display_name(page)}"' for page in entry_pages))
     parts.append(
-        "从当前页面自行寻找进入方式（可先 open_app 回到应用首页），每步截图确认；"
-        "看到目标页面后结束导航，找不到时说明原因后结束"
+        "Find an entry from the current page (you may first use open_app to return to the app main page), confirming each step by screenshot. "
+        "Stop navigation when the target page is visible; if it cannot be found, explain why and stop"
     )
-    return "；".join(parts) + "。"
+    return "; ".join(parts) + "."
 
 
 def _navigation_to_function(
@@ -1937,21 +1905,21 @@ def _navigation_to_function(
     current_page_id: str | None = None,
     adjacency: _PageAdjacency | None = None,
 ) -> tuple[str, str, str]:
-    """生成到目标功能的参考导航，返回 (导航文本, 原因, 级别)。
+    """Build reference navigation and return (instructions, reason, level).
 
-    current_page_id / adjacency 可由调用方在一轮规划内预先算好传入，避免
-    对每个候选功能重复做截图相似度匹配和邻接扫描。
+    Reuse current_page_id and adjacency supplied by the planning round to avoid
+    repeating screenshot-similarity matching and adjacency scans for each candidate.
 
-    级别见 NAV_LEVEL_*：空=已在目标页，A=正向边，B=允许返回，C=重开应用后走已知路径，
-    D=探索式导航。导航只是参考，不决定功能能否被排程。
+    NAV_LEVEL_*: empty=already at target, A=forward, B=backtrack, C=restart plus
+    recorded path, D=exploratory. Navigation does not determine scheduling eligibility.
     """
-    # entry_page_ids 只提供进入功能的入口，不承载目标功能本身。把入口页
-    # 当成导航终点会让执行器停在应用首页，再到其它模块里寻找同名控件。
+    # entry_page_ids are navigation-only anchors, not pages implementing the target
+    # functionality. Stopping there could test similarly named widgets in the wrong module.
     target_page_ids = list(target.coverage_page_ids)
     if current_page_id is None:
         current_page_id = _resolve_current_page_id(graph, current_page)
     if target_page_ids and current_page_id in target_page_ids:
-        return "", "当前位置已经属于目标功能页面", NAV_LEVEL_HERE
+        return "", "Already on a page of the target functionality", NAV_LEVEL_HERE
     if adjacency is None:
         adjacency = _page_adjacency(graph)
 
@@ -1974,7 +1942,7 @@ def _navigation_to_function(
     if not path and not restart_first:
         return (
             _exploratory_navigation_text(graph, target),
-            "当前位置和应用入口都没有到目标功能的已记录页面路径，改为探索式导航",
+            "No recorded path from the current position or app entry; using exploratory navigation",
             NAV_LEVEL_EXPLORE,
         )
 
@@ -1984,8 +1952,8 @@ def _navigation_to_function(
         root_page = _root_page(graph)
         if root_page is not None:
             instructions.append(
-                f"若打开后尚未处于“{_page_display_name(root_page)}”，"
-                "逐次执行安全返回并每次截图确认，直到回到该已记录入口页"
+                f'If reopening does not reach "{_page_display_name(root_page)}", '
+                "perform safe back actions with screenshot confirmation until this recorded entry page is reached"
             )
     instructions.extend(_path_step_instructions(graph, path))
     if path:
@@ -1995,13 +1963,13 @@ def _navigation_to_function(
         )
     else:
         target_page = _node_representative_page(graph, target)
-    instructions.append(f"确认到达“{_page_display_name(target_page)}”后结束导航")
+    instructions.append(f'Confirm arrival at "{_page_display_name(target_page)}", then end navigation')
     reason = {
-        NAV_LEVEL_FORWARD: "使用 FFG 中已记录的最短页面路径",
-        NAV_LEVEL_BACKTRACK: "已记录路径需要先返回到来源页面",
-        NAV_LEVEL_RESTART: "需要先重开应用再走已记录路径",
+        NAV_LEVEL_FORWARD: "Use the shortest recorded page path in the FFG",
+        NAV_LEVEL_BACKTRACK: "The recorded path requires returning to a source page first",
+        NAV_LEVEL_RESTART: "Reopen the app before following the recorded path",
     }[level]
-    return "；".join(instructions) + "。", reason, level
+    return "; ".join(instructions) + ".", reason, level
 
 
 def _build_scope_planning_summary(
@@ -2014,11 +1982,11 @@ def _build_scope_planning_summary(
     dependency_reason: str = "",
     current_page_id: str | None = None,
 ) -> tuple[str, str, str]:
-    """作用域摘要，同时返回 (摘要, 参考导航, 导航级别)。"""
+    """Build the scope summary and return (summary, reference navigation, navigation level)."""
     nodes = [node for node in (target, src, dst) if node is not None]
     navigation_target = src if scenario_type == "cross_test" else target
     navigation_scenario = ""
-    navigation_reason = "没有目标功能"
+    navigation_reason = "No target functionality"
     navigation_level = NAV_LEVEL_HERE
     if current_page_id is None:
         current_page_id = _resolve_current_page_id(graph, current_page)
@@ -2033,16 +2001,16 @@ def _build_scope_planning_summary(
         )
 
     lines = [
-        "【当前位置】",
+        "[Current position]",
         _build_current_location_summary(graph, current_page, current_page_id),
         "",
-        "【参考导航】（由执行器先行执行，仅供参考）",
+        "[Reference navigation] (executed first; verify against actual observations)",
         navigation_scenario or navigation_reason,
     ]
     if scenario_type == "cross_test":
         lines.extend([
             "",
-            "【本轮跨功能依赖】",
+            "[Inter-functional dependency for this round]",
             f"{src.id if src else ''} -> {dst.id if dst else ''} | {_clean_natural_text(dependency_reason)}",
         ])
         cross_path: list = []
@@ -2056,71 +2024,71 @@ def _build_scope_planning_summary(
                 )
                 if candidate and (not cross_path or len(candidate) < len(cross_path)):
                     cross_path = candidate
-        lines.append("【源功能到目标功能的已知路径】")
+        lines.append("[Known path from source to target functionality]")
         shared_pages = set(src.page_ids if src else []) & set(dst.page_ids if dst else [])
         if shared_pages:
-            lines.append(f"- 两个功能共享页面: {sorted(shared_pages)}")
+            lines.append(f"- Shared pages: {sorted(shared_pages)}")
         elif cross_path:
             for transition in cross_path:
                 lines.append(
-                    f"- {transition.src_page_id}（{_page_display_name(graph.get_page(transition.src_page_id))}）"
+                    f"- {transition.src_page_id} ({_page_display_name(graph.get_page(transition.src_page_id))})"
                     f" --[{_clean_natural_text(transition.operation)}]--> "
-                    f"{transition.dst_page_id}（{_page_display_name(graph.get_page(transition.dst_page_id))}）"
+                    f"{transition.dst_page_id} ({_page_display_name(graph.get_page(transition.dst_page_id))})"
                 )
         else:
-            lines.append("- 无已记录路径；在源功能完成后按界面自行寻找进入目标功能的方式")
+            lines.append("- No recorded path; after the source operation, use the interface to find the target entry")
 
     scope_page_ids = {page_id for node in nodes for page_id in node.page_ids}
     for node in nodes:
-        title = "当前功能" if scenario_type == "intra_test" else (
-            "源功能" if src is not None and node.id == src.id else "目标功能"
+        title = "Current functionality" if scenario_type == "intra_test" else (
+            "Source functionality" if src is not None and node.id == src.id else "Target functionality"
         )
         lines.extend([
             "",
-            f"【{title}】",
+            f"[{title}]",
             f"- {node.id} | {_function_label(node)}",
-            f"- 描述: {_clip_summary_text(node.description)}",
-            f"- 状态: {node.test_status} | 覆盖率: {node.coverage_percent}%",
-            f"- 阶段: {_describe_function_phase(graph, node)}",
-            f"- 关联页面: {node.page_ids or '无'}",
-            f"- 仅导航入口页: {node.entry_page_ids or '无'}",
-            f"- 资源变量: {node.resource_variables or '无'}",
-            "- 已测试场景:",
+            f"- Description: {_clip_summary_text(node.description)}",
+            f"- Status: {node.test_status} | Coverage score: {node.coverage_percent}%",
+            f"- Phase: {_describe_function_phase(graph, node)}",
+            f"- Associated pages: {node.page_ids or 'none'}",
+            f"- Navigation-only entry pages: {node.entry_page_ids or 'none'}",
+            f"- State variables: {node.resource_variables or 'none'}",
+            "- Tested scenarios:",
         ])
         if node.scenarios:
-            # 只展示最近 K 个：深度场景要避开已测过的业务，但全量展示会让提示词随
-            # 运行时长无界增长；更早的场景给出数量汇总，提醒模型它们同样已测。
+            # Show the latest K scenarios to avoid repeating tested business operations.
+            # Summarize older scenarios by count so long runs do not grow prompts without bound.
             older_count = max(0, len(node.scenarios) - PLAN_SCOPE_RECENT_SCENARIOS)
             if older_count:
                 lines.append(
-                    f"  - （另有更早的 {older_count} 个已测试场景未逐条列出，"
-                    "同样不要重复；以下为最近的场景）"
+                    f"  - ({older_count} earlier tested scenarios are omitted; "
+                    "do not repeat them either. The following are the most recent scenarios.)"
                 )
             lines.extend(
                 f"  - {_clip_summary_text(item, 360)}"
                 for item in node.scenarios[older_count:]
             )
         else:
-            lines.append("  - 无")
-        lines.append("- 页面:")
+            lines.append("  - none")
+        lines.append("- Pages:")
         for page_id in node.page_ids:
             page = graph.get_page(page_id)
             if page is None:
                 continue
-            page_role = "仅导航入口" if page_id in node.entry_page_ids else "功能页面"
+            page_role = "navigation-only entry" if page_id in node.entry_page_ids else "functionality page"
             lines.append(
                 f"  - {page.id} | {_page_display_name(page)} | role={page_role} | "
-                f"activity={page.activity or '未知'}"
+                f"activity={page.activity or 'unknown'}"
             )
             if page.description:
-                lines.append(f"    描述: {_clip_summary_text(page.description)}")
+                lines.append(f"    Description: {_clip_summary_text(page.description)}")
             if page.controls:
-                lines.append("    控件: " + "；".join(_clip_summary_text(value, 180) for value in page.controls[-30:]))
+                lines.append("    Widgets: " + "; ".join(_clip_summary_text(value, 180) for value in page.controls[-30:]))
             if page.operations:
-                lines.append("    已执行: " + "；".join(_clip_summary_text(value, 180) for value in page.operations[-12:]))
+                lines.append("    Executed: " + "; ".join(_clip_summary_text(value, 180) for value in page.operations[-12:]))
 
-    # 只列与作用域页面相邻的跳转：作用域内部跳转优先，其次是进出作用域的边界跳转，
-    # 总数有上限，避免大图下把整张跳转表塞进提示词。
+    # Include only transitions adjacent to scope pages: internal paths first, then
+    # boundary paths, capped so large graphs cannot fill the entire prompt.
     internal_transitions = [
         transition
         for transition in graph.page_transitions
@@ -2133,370 +2101,19 @@ def _build_scope_planning_summary(
     ]
     relevant_transitions = (internal_transitions + boundary_transitions)[:PLAN_SCOPE_MAX_TRANSITIONS]
     omitted_transitions = len(internal_transitions) + len(boundary_transitions) - len(relevant_transitions)
-    lines.extend(["", "【相关页面路径】"])
+    lines.extend(["", "[Related page paths]"])
     if relevant_transitions:
         for transition in relevant_transitions:
             lines.append(
-                f"- {transition.src_page_id}（{_page_display_name(graph.get_page(transition.src_page_id))}）"
+                f"- {transition.src_page_id} ({_page_display_name(graph.get_page(transition.src_page_id))})"
                 f" --[{_clean_natural_text(transition.operation)}]--> "
-                f"{transition.dst_page_id}（{_page_display_name(graph.get_page(transition.dst_page_id))}）"
+                f"{transition.dst_page_id} ({_page_display_name(graph.get_page(transition.dst_page_id))})"
             )
         if omitted_transitions > 0:
-            lines.append(f"- （另有 {omitted_transitions} 条作用域边界跳转未列出）")
+            lines.append(f"- ({omitted_transitions} additional scope-boundary transitions omitted)")
     else:
-        lines.append("- 无")
+        lines.append("- none")
     return "\n".join(lines), navigation_scenario, navigation_level
-
-
-def _compliance_evidence_signature(
-    graph: FlowGraph,
-    rules: list[dict[str, Any]] | None = None,
-) -> str:
-    """对会影响 GUI 导航/取证的 FFG 事实签名，不包含截图大字段。
-
-    传入规则时只签名与该检测组关键词相关的功能、页面和相邻路径。这样普通
-    商品浏览不会错误重开“设置/注销”等未决条款，而新发现隐私设置、客服、
-    权限入口时会触发对应组复判。未传规则时保留全图签名供诊断和兼容测试。
-    """
-    selected_function_ids: set[str] | None = None
-    selected_page_ids: set[str] | None = None
-    if rules:
-        terms = _compliance_terms(rules)
-        selected_page_ids = {
-            str(page.id or "")
-            for page in graph.active_pages()
-            if _page_compliance_score(page, terms) > 0
-        }
-        selected_function_ids = {
-            str(node.id or "")
-            for node in graph.functions.values()
-            if _function_compliance_score(graph, node, terms) > 0
-        }
-        for function_id in selected_function_ids:
-            node = graph.get_node(function_id)
-            if node is not None:
-                selected_page_ids.update(str(page_id or "") for page_id in node.page_ids)
-                selected_page_ids.update(str(page_id or "") for page_id in node.entry_page_ids)
-        for page_id in tuple(selected_page_ids):
-            selected_function_ids.update(graph.get_page_owners(page_id))
-
-    functions = [
-        node
-        for node in sorted(graph.functions.values(), key=lambda item: str(item.id or ""))
-        if selected_function_ids is None or str(node.id or "") in selected_function_ids
-    ]
-    pages = [
-        page
-        for page in sorted(graph.active_pages(), key=lambda item: str(item.id or ""))
-        if selected_page_ids is None or str(page.id or "") in selected_page_ids
-    ]
-    payload = {
-        "functions": [
-            {
-                "id": node.id,
-                "name": node.name,
-                "description": node.description,
-                "pages": sorted(node.page_ids),
-                "entries": sorted(node.entry_page_ids),
-            }
-            for node in functions
-        ],
-        "pages": [
-            {
-                "id": page.id,
-                "name": page.name,
-                "description": page.description,
-                "activity": page.activity,
-                "controls": sorted(page.controls),
-                "operations": sorted(page.operations),
-                # 只保留摘要，不把截图大字段写入签名 payload。普通探索在相关
-                # 页面采集到新的稳定 GUI 状态时，也应能触发未决条款复判。
-                "visual_evidence": sorted(
-                    hashlib.sha256(str(screenshot).encode("utf-8")).hexdigest()[:16]
-                    for screenshot in [
-                        page.representative_screenshot,
-                        *page.evidence_screenshots,
-                    ]
-                    if str(screenshot or "").strip()
-                ),
-            }
-            for page in pages
-        ],
-        "transitions": sorted(
-            (
-                str(transition.src_page_id or ""),
-                str(transition.dst_page_id or ""),
-                str(transition.operation or ""),
-            )
-            for transition in graph.page_transitions
-            if selected_page_ids is None
-            or str(transition.src_page_id or "") in selected_page_ids
-            or str(transition.dst_page_id or "") in selected_page_ids
-        ),
-    }
-    encoded = json.dumps(payload, ensure_ascii=False, sort_keys=True).encode("utf-8")
-    return hashlib.sha256(encoded).hexdigest()
-
-
-def _compliance_evidence_signatures(
-    graph: FlowGraph,
-    rules: list[dict[str, Any]],
-) -> dict[str, str]:
-    """同组规则共享相关 FFG 签名，返回 rule_id -> signature。"""
-    signatures: dict[str, str] = {}
-    for group in _compliance_groups(rules):
-        group_rules = [
-            rule
-            for rule in rules
-            if str(rule.get("checkpoint", {}).get("group", "") or "").strip() == group
-        ]
-        signature = _compliance_evidence_signature(graph, group_rules)
-        for rule in group_rules:
-            signatures[str(rule.get("rule_id", "") or "")] = signature
-    for rule in rules:
-        rule_id = str(rule.get("rule_id", "") or "")
-        signatures.setdefault(rule_id, _compliance_evidence_signature(graph, [rule]))
-    return signatures
-
-
-def _compliance_groups(rules: list[dict[str, Any]]) -> list[str]:
-    return list(dict.fromkeys(
-        str(rule.get("checkpoint", {}).get("group", "") or "").strip()
-        for rule in rules
-        if str(rule.get("checkpoint", {}).get("group", "") or "").strip()
-    ))
-
-
-def _compliance_terms(rules: list[dict[str, Any]]) -> tuple[str, ...]:
-    terms: list[str] = []
-    for group in _compliance_groups(rules):
-        terms.extend(COMPLIANCE_GROUP_DISCOVERY_TERMS.get(group, ()))
-    return tuple(dict.fromkeys(terms))
-
-
-def _page_compliance_score(page: Page, terms: tuple[str, ...]) -> int:
-    text = " ".join([
-        str(page.name or ""),
-        str(page.description or ""),
-        str(page.activity or ""),
-        *[str(item or "") for item in page.controls],
-        *[str(item or "") for item in page.operations],
-    ]).lower()
-    return sum(1 for term in terms if term.lower() in text)
-
-
-def _function_compliance_score(
-    graph: FlowGraph,
-    node: FunctionNode,
-    terms: tuple[str, ...],
-) -> int:
-    text = f"{node.name} {node.description}".lower()
-    score = sum(1 for term in terms if term.lower() in text)
-    for page_id in node.page_ids:
-        page = graph.get_page(page_id)
-        if page is not None:
-            score += _page_compliance_score(page, terms)
-    return score
-
-
-def _compliance_ffg_guidance(
-    graph: FlowGraph,
-    current_page: Page | None,
-    rules: list[dict[str, Any]],
-    current_page_id: str | None = None,
-) -> tuple[str, str]:
-    """返回基于已知 FFG 的导航场景与候选页面提示。"""
-    terms = _compliance_terms(rules)
-    if not terms:
-        return "", ""
-    ranked_pages = sorted(
-        (
-            (_page_compliance_score(page, terms), page)
-            for page in graph.active_pages()
-        ),
-        key=lambda item: (-item[0], str(item[1].id or "")),
-    )
-    candidates = [page for score, page in ranked_pages if score > 0][:5]
-    if not candidates:
-        return "", "【FFG 合规线索】当前尚未记录与本组目标明显相关的页面；优先探索设置、我的、登录或帮助等候选入口。"
-
-    candidate_lines = []
-    for page in candidates:
-        matched_controls = [
-            control
-            for control in page.controls
-            if any(term.lower() in str(control).lower() for term in terms)
-        ][:4]
-        candidate_lines.append(
-            f"- {_page_display_name(page)}"
-            + (f"｜相关控件：{'、'.join(matched_controls)}" if matched_controls else "")
-        )
-    guidance = "【FFG 已发现的合规线索】\n" + "\n".join(candidate_lines)
-
-    if current_page_id is None:
-        current_page_id = _resolve_current_page_id(graph, current_page)
-    adjacency = _page_adjacency(graph)
-    for candidate in candidates:
-        if current_page_id == candidate.id:
-            return "", guidance + f"\n当前位置已在候选页面“{_page_display_name(candidate)}”，直接从此处取证。"
-        # 只走已记录的正向边；当前位置无路径时与功能导航共用 C 级重开兜底。
-        path = _leveled_page_path(graph, current_page_id, [candidate.id], adjacency=adjacency)
-        restart_first = False
-        if not path:
-            path, restart_first = _route_via_restart(
-                graph, current_page_id, [str(candidate.id or "")], adjacency, allow_backtrack=False,
-            )
-        if not path and not restart_first:
-            continue
-        instructions = [RESTART_NAVIGATION_INSTRUCTION] if restart_first else []
-        instructions.extend(_path_step_instructions(graph, path))
-        instructions.append(f"确认到达“{_page_display_name(candidate)}”后结束导航")
-        return "；".join(instructions) + "。", guidance
-    return "", guidance + "\n当前没有到这些候选页的已记录路径；后续功能探索应优先补全入口路径。"
-
-
-def _deferred_compliance_guidance(rules_path: str | None) -> tuple[str, tuple[str, ...]]:
-    from workflow.compliance_worker import compliance_worker
-
-    checklist = ComplianceChecklist.from_state(compliance_worker.snapshot())
-    rules = checklist.deferred_rules(rules_path)
-    if not rules:
-        return "", ()
-    groups = _compliance_groups(rules)
-    lines = [
-        "【合规闭环未决目标】以下检测组上一轮证据不足。若本轮固定功能内存在相关入口，"
-        "优先探索能补充这些 GUI 证据的不同路径或控件，不要简单重复上一轮动作："
-    ]
-    for group in groups:
-        group_rules = [
-            rule for rule in rules
-            if str(rule.get("checkpoint", {}).get("group", "") or "") == group
-        ]
-        objectives = list(dict.fromkeys(
-            str(rule.get("checkpoint", {}).get("objective", "") or "").strip()
-            for rule in group_rules
-            if str(rule.get("checkpoint", {}).get("objective", "") or "").strip()
-        ))
-        lines.append(
-            f"- {GROUP_LABELS.get(group, group)}："
-            + "；".join(objectives[:2])
-        )
-    return "\n".join(lines), _compliance_terms(rules)
-
-
-def _maybe_schedule_compliance_check(
-    state: AgentState,
-    graph: FlowGraph,
-    current_page: Page | None,
-    *,
-    force_deferred: bool = False,
-    current_page_id: str | None = None,
-) -> dict | None:
-    """合规检测调度：合规模式下优先于功能探索，按组派发未完成的合规检测点。
-
-    检测点清单的权威状态保存在 compliance worker 单例里（后台线程异步写入
-    verdict）；规划器每轮从 worker 读取快照，避免读到过期的 state 副本。
-    """
-    if not bool(state.get("compliance_detection_enabled", False)):
-        return None
-    from workflow.compliance_worker import compliance_worker
-
-    rules_path = str(state.get("compliance_rules_path", "") or "").strip() or None
-    checklist = ComplianceChecklist.from_state(compliance_worker.snapshot())
-    group_rules = checklist.next_group_rules(rules_path)
-    if not group_rules:
-        deferred_rules = gui_rules(rules_path)
-        reopened, snapshot = compliance_worker.reopen_deferred(
-            _compliance_evidence_signatures(graph, deferred_rules),
-            force=force_deferred,
-            rules_path=rules_path,
-        )
-        if not reopened:
-            return None
-        checklist = ComplianceChecklist.from_state(snapshot)
-        group_rules = checklist.next_group_rules(rules_path)
-        if not group_rules:
-            return None
-        print(
-            "[场景规划] 合规闭环重开证据不足条款: "
-            f"checks={','.join(reopened)}, force={force_deferred}"
-        )
-    navigation_scenario, test_scenario, plan_extra = build_compliance_scenarios(group_rules)
-    rule_ids = plan_extra["compliance_check_ids"]
-    known_navigation, ffg_guidance = _compliance_ffg_guidance(
-        graph,
-        current_page,
-        group_rules,
-        current_page_id,
-    )
-    if not bool(plan_extra.get("compliance_cold_start")):
-        navigation_scenario = known_navigation
-    if ffg_guidance:
-        test_scenario = f"{test_scenario}\n{ffg_guidance}"
-    next_attempt = max(
-        (int(checklist.attempts.get(rule_id, 0) or 0) + 1 for rule_id in rule_ids),
-        default=1,
-    )
-    if next_attempt > 1:
-        previous_gaps = [
-            str(finding.get("description", "") or "").strip()
-            for finding in checklist.findings
-            if str(finding.get("check_id", "") or "") in rule_ids
-            and str(finding.get("description", "") or "").strip()
-        ]
-        test_scenario += (
-            f"\n【闭环复判｜第 {next_attempt} 次】上一轮证据不足："
-            + ("；".join(previous_gaps[:6]) if previous_gaps else "未记录具体缺口")
-            + "。优先使用上述新 FFG 路径或不同入口补证，不要机械重复上一轮动作。"
-        )
-    plan_extra["compliance_attempt"] = next_attempt
-    compliance_worker.mark_executing(
-        rule_ids,
-        _compliance_evidence_signatures(graph, group_rules),
-    )
-    checklist = ComplianceChecklist.from_state(compliance_worker.snapshot())
-    print(
-        "[场景规划] 合规检测调度: "
-        f"group={plan_extra['compliance_group']}, checks={','.join(rule_ids)}, "
-        f"attempt={next_attempt}, cold_start={plan_extra['compliance_cold_start']}"
-    )
-    return {
-        "ffg": graph,
-        "current_page": current_page,
-        "current_navigation_scenario": navigation_scenario,
-        "current_test_scenario": test_scenario,
-        "current_testing_function_id": "",
-        "current_testing_function_status": "not_started",
-        "current_plan": {
-            "scenario_type": "compliance_check",
-            "target_function_id": "",
-            "src_function_id": "",
-            "dst_function_id": "",
-            **plan_extra,
-        },
-        "compliance_checklist": checklist.to_state(),
-        "workflow_complete": False,
-    }
-
-
-def _targeted_compliance_stop(state: AgentState) -> dict | None:
-    """定向补测等待异步判定完成；不为已检查目标扩展无关功能。"""
-    if state.get("run_mode") != "compliance" or not state.get("compliance_targeted"):
-        return None
-    from workflow.compliance_worker import compliance_worker
-
-    update = {
-        "current_navigation_scenario": "", "current_test_scenario": "",
-        "current_plan": {"scenario_type": "skip"},
-    }
-    if compliance_worker.pending_count() and not compliance_worker.flush(timeout=1.0):
-        return {**update, "workflow_complete": False}
-    snapshot = compliance_worker.snapshot()
-    summary = ComplianceChecklist.from_state(snapshot).summary(state.get("compliance_rules_path") or None)
-    if summary["gui_total"] > 0 and summary["processed"] == summary["gui_total"]:
-        print("[定向合规检测] 指定规则已完成判定，结束补测；证据不足结果保留原状态。")
-        return {**update, "workflow_complete": True, "compliance_checklist": snapshot}
-    return None
 
 
 def _planning_skip_unavailable(
@@ -2505,7 +2122,7 @@ def _planning_skip_unavailable(
     *,
     screenshot_unavailable: bool,
 ) -> dict:
-    """截图不可用 / 无法确认目标应用页面时的跳过响应与连续失败计数。"""
+    """Skip unavailable screenshots or unconfirmed app pages and track consecutive failures."""
     if screenshot_unavailable:
         unavailable_count = int(state.get("screenshot_unavailable_count", 0) or 0) + 1
         workflow_complete = (
@@ -2514,12 +2131,12 @@ def _planning_skip_unavailable(
         )
         if workflow_complete:
             print(
-                "[场景规划] 当前 app 连续截图不可用或黑屏，结束该 app 运行: "
+                "[Scenario planning] Repeated unavailable/black screenshots; stopping this app run: "
                 f"{unavailable_count}/{MAX_CONSECUTIVE_SCREENSHOT_UNAVAILABLE}"
             )
         else:
             print(
-                "[场景规划] 当前截图不可用或黑屏，本轮跳过、恢复后继续重试: "
+                "[Scenario planning] Screenshot unavailable or black; skipping this round and retrying after recovery: "
                 f"{unavailable_count}/{MAX_CONSECUTIVE_SCREENSHOT_UNAVAILABLE}"
             )
         return _skip_response(
@@ -2541,12 +2158,12 @@ def _planning_skip_unavailable(
     )
     if workflow_complete:
         print(
-            "[场景规划] 连续无法恢复目标应用，结束运行以避免空转: "
+            "[Scenario planning] Repeated target-app recovery failures; stopping to avoid idle looping: "
             f"{unavailable_count}/{MAX_CONSECUTIVE_TARGET_APP_UNAVAILABLE}"
         )
     else:
         print(
-            "[场景规划] 未确认目标应用页面，本轮跳过、重启后继续重试: "
+            "[Scenario planning] Target-app page unconfirmed; skipping this round and retrying after restart: "
             f"{unavailable_count}/{MAX_CONSECUTIVE_TARGET_APP_UNAVAILABLE}"
         )
     return _skip_response(
@@ -2563,7 +2180,7 @@ def _observe_planning_page(
     device,
     cold_start: bool,
 ) -> tuple[Page | None, dict | None]:
-    """规划前确认目标应用在前台并刷新当前页面；返回 (当前页面, 提前返回的跳过响应)。"""
+    """Confirm the target app and refresh its page; return (page, optional early skip response)."""
     current_page = state.get("current_page")
     if not isinstance(current_page, Page):
         current_page = None
@@ -2590,8 +2207,8 @@ def _observe_planning_page(
 
 
 def _cold_start_response(llm, state: AgentState, graph: FlowGraph, current_page: Page) -> dict:
-    """FFG 为空：只根据当前截图建图，本轮不生成执行场景。"""
-    print("[场景规划] FFG 为空，进入冷启动截图建图。")
+    """Initialize an empty FFG from the current screenshot without executing a scenario."""
+    print("[Scenario planning] Empty FFG; initializing from the current screenshot.")
     _bootstrap_initial_ffg(
         llm,
         graph,
@@ -2601,24 +2218,24 @@ def _cold_start_response(llm, state: AgentState, graph: FlowGraph, current_page:
     )
     current_page = next(iter(graph.active_pages()), current_page)
     stats = _count_ffg_stats(graph)
-    print("[场景规划] 输入上下文")
+    print("[Scenario planning] Input context")
     print(
-        f"  探索范围: 核心功能 | 当前页面: {_page_display_name(current_page)} | 输入截图: yes"
+        f"  Exploration scope: core functionalities | Current page: {_page_display_name(current_page)} | Screenshot: yes"
     )
     print(
-        "  FFG 统计: "
-        f"功能={stats['functions']}, 页面={stats['pages']}, 操作={stats['operations']}, "
-        f"页面跳转={stats['page_transitions']}, "
-        f"功能依赖={stats['function_dependencies']}, 功能内场景={stats['intra_scenarios']}, "
-        f"跨功能场景={stats['cross_scenarios']}"
+        "  FFG statistics: "
+        f"functionalities={stats['functions']}, pages={stats['pages']}, operations={stats['operations']}, "
+        f"page_transitions={stats['page_transitions']}, "
+        f"functional_dependencies={stats['function_dependencies']}, intra_scenarios={stats['intra_scenarios']}, "
+        f"inter_functional_scenarios={stats['cross_scenarios']}"
     )
-    print("[场景规划] 冷启动仅建图，本轮不生成执行场景；下一轮基于 FFG 摘要继续规划。")
+    print("[Scenario planning] Initialization only this round; plan scenarios from the FFG summary next round.")
     return _skip_response(graph, current_page)
 
 
 @dataclass
 class _RoundSelection:
-    """一轮规划选中的作用域。"""
+    """Scope selected for one planning round."""
 
     scenario_type: str = ""
     target_node: FunctionNode | None = None
@@ -2630,7 +2247,7 @@ class _RoundSelection:
 
 @dataclass
 class _PlanningRound:
-    """一轮规划内各阶段共享的上下文；current_page_id 只解析一次。"""
+    """Context shared within a planning round; resolve current_page_id only once."""
 
     llm: Any
     state: AgentState
@@ -2639,11 +2256,9 @@ class _PlanningRound:
     current_page_id: str
     current_testing_function_id: str
     current_testing_function_status: str
-    compliance_guidance: str
-    compliance_terms: tuple[str, ...]
 
     def skip_round(self, reason: str, **extra) -> dict:
-        print(f"[场景规划] {reason}，本轮跳过执行。")
+        print(f"[Scenario planning] {reason}; skipping execution this round.")
         return _skip_response(
             self.graph,
             self.current_page,
@@ -2654,15 +2269,15 @@ class _PlanningRound:
 
 
 def _select_round_scope(round_ctx: _PlanningRound) -> tuple[_RoundSelection, dict | None]:
-    """按 跨功能 → 功能内 → 收尾（合规复判/deferred 补测/覆盖审计）的顺序选作用域。
+    """Select inter-functional, intra-functional, then finalization work in that order.
 
-    返回 (选中的作用域, 提前返回的响应)；后者非空时本轮不生成场景。
+    Return (selection, early_response); a nonempty early response suppresses scenario generation.
     """
     state, graph, current_page = round_ctx.state, round_ctx.graph, round_ctx.current_page
     selection = _RoundSelection()
 
-    # 1) 跨功能：两端都已有自身场景与成功业务操作的依赖即可立即排上，
-    #    不等待无关功能完成，也不被功能内探索永久抢占；导航只作参考，不做闸门。
+    # 1) Schedule inter-functional candidates once both endpoints have attempts and
+    # successful business operations. Unrelated work must not starve them; navigation is advisory.
     if _normalize_run_phase(state.get("run_phase", "all")) == "all":
         for src_id, dst_id, candidate_reason in _pending_cross_pairs(graph):
             if not _cross_pair_ready(graph, src_id, dst_id):
@@ -2672,45 +2287,20 @@ def _select_round_scope(round_ctx: _PlanningRound) -> tuple[_RoundSelection, dic
             selection.scenario_type = "cross_test"
             return selection, None
 
-    # 2) 功能内：未完成的功能按唯一排序键取第一个。
+    # 2) Select the first unfinished intra-functional target under the deterministic order.
     selection.target_node = _select_intra_target(
         graph,
         current_page,
         _normalize_failure_counts(state.get("function_execution_failure_counts")),
-        round_ctx.compliance_terms,
         round_ctx.current_page_id,
     )
     if selection.target_node is not None:
         selection.scenario_type = "intra_test"
         return selection, None
 
-    # 3) 收尾：没有可执行的常规目标。
-    if bool(state.get("compliance_detection_enabled", False)):
-        from workflow.compliance_worker import compliance_worker
-
-        if compliance_worker.pending_count() > 0:
-            print(
-                "[场景规划] 普通探索已无目标，等待异步合规判定完成后再决定复判或收尾。"
-            )
-            if not compliance_worker.flush(
-                timeout=COMPLIANCE_CLOSE_LOOP_WAIT_SECONDS
-            ):
-                return selection, round_ctx.skip_round("仍有异步合规判定任务，暂不结束工作流")
-    # 普通功能探索已经没有可执行目标时，给仍处于 deferred 且尚未
-    # 耗尽直接重试预算的检测组一次最终机会。达到预算的规则继续保留
-    # 为未决，但没有新的相关发现时不阻塞本次 App 运行收尾。
-    compliance_update = _maybe_schedule_compliance_check(
-        state,
-        graph,
-        current_page,
-        force_deferred=True,
-        current_page_id=round_ctx.current_page_id,
-    )
-    if compliance_update is not None:
-        return selection, compliance_update
-
-    # 3a) 每个 deferred 功能收尾时只再补测一次（仅限有已知路径的功能），
-    #     结果仍由下一轮状态迁移判定。
+    # 3) No ordinary executable targets remain; enter finalization.
+    # 3a) Give each deferred functionality one final retry when a known path exists.
+    #     The next round's status transition determines its outcome.
     retried_ids = [str(item) for item in (state.get("deferred_retry_ids") or [])]
     selection.target_node = _select_deferred_retry(
         graph, current_page, retried_ids, round_ctx.current_page_id,
@@ -2719,21 +2309,21 @@ def _select_round_scope(round_ctx: _PlanningRound) -> tuple[_RoundSelection, dic
         selection.scenario_type = "intra_test"
         selection.extra_updates["deferred_retry_ids"] = [*retried_ids, selection.target_node.id]
         print(
-            "[场景规划] 收尾：deferred 功能最后补测一次: "
+            "[Scenario planning] Finalization: one final retry for deferred functionality: "
             f"{selection.target_node.id} | {_function_label(selection.target_node)}"
         )
         return selection, None
 
-    # 3b) 对已完成功能做覆盖遗漏审计；审计不改变任何功能状态。
+    # 3b) Audit coverage gaps in completed functionalities without changing their status.
     return selection, _completion_audit_round(round_ctx)
 
 
 def _completion_audit_round(round_ctx: _PlanningRound) -> dict:
-    """收尾阶段的覆盖遗漏审计：有遗漏转为执行，未审计完则跳过，全部通过则结束。"""
+    """Execute audit gaps, skip while audits remain, or finish once all audits are processed."""
     state, graph, current_page = round_ctx.state, round_ctx.graph, round_ctx.current_page
     audit_attempts = state.get("completion_audit_attempts", {}) or {}
     previous_signatures = state.get("completion_audit_signatures", {}) or {}
-    print("[场景规划] 已无待测功能或跨功能依赖，开始覆盖遗漏检查。")
+    print("[Scenario planning] No functionality or flow targets remain; auditing coverage gaps.")
     audit_result, audit_complete, audited_signatures = _run_completion_audit(
         round_ctx.llm,
         graph,
@@ -2756,10 +2346,10 @@ def _completion_audit_round(round_ctx: _PlanningRound) -> dict:
         )
     if not audit_complete:
         return round_ctx.skip_round(
-            "覆盖遗漏检查未完成，暂不判定工作流完成",
+            "Coverage-gap auditing is unfinished; workflow remains open",
             completion_audit_signatures=merged_signatures,
         )
-    print("[场景规划] 所有功能、跨功能依赖和覆盖遗漏均已处理。")
+    print("[Scenario planning] All functionalities, inter-functional dependencies, and coverage gaps have been processed.")
     return _skip_response(
         graph,
         current_page,
@@ -2772,29 +2362,29 @@ def _scope_instruction(
     graph: FlowGraph,
     selection: _RoundSelection,
 ) -> tuple[str, str]:
-    """返回 (功能阶段, 本轮作用域说明)。"""
+    """Return (functionality phase, scope instructions for this round)."""
     if selection.scenario_type == "cross_test":
         return FUNCTION_PHASE_DEPTH, (
-            "【本轮作用域】cross_test："
-            f"源功能“{_function_label(selection.src_node)}”→目标功能“{_function_label(selection.dst_node)}”。"
-            "只围绕给定资源依赖生成一次源功能产生/修改、目标功能读取/展示/消费的闭环。"
+            "[Round scope] cross_test: "
+            f'source functionality "{_function_label(selection.src_node)}" -> target functionality "{_function_label(selection.dst_node)}". '
+            "Generate one resource-linked scenario: produce/modify in the source, then read/display/consume in the target."
         )
     target_node = selection.target_node
     function_phase = _function_phase(graph, target_node)
     if function_phase == FUNCTION_PHASE_DEPTH:
         return function_phase, (
-            f"【本轮作用域】intra_test：功能“{_function_label(target_node)}”。"
-            "【本轮阶段=depth 深度业务场景】入口已铺开，本轮沿该功能的业务逻辑写一个完整场景。"
-            "可参考的方向（仅供参考，由你结合已记录的页面、控件与操作自行选择）："
-            "操作结果离开后再回来是否保留；新建→编辑→删除的完整生命周期；"
-            "边界或异常输入（空值、超长、特殊字符）；状态联动或互斥选项；中途放弃或返回后的状态。"
-            "必须避开【已测试场景】中已经做过的业务；"
-            "确实没有新的业务场景可做时，test_scenario 留空。"
+            f'[Round scope] intra_test: functionality "{_function_label(target_node)}". '
+            "[Phase=depth: complete business scenario] Entries have been explored; write one complete scenario following this functionality's business logic. "
+            "Choose a suitable direction using recorded pages, widgets, and operations; examples are guidance rather than mandatory categories: "
+            "persistence after leaving and returning; a create-edit-delete lifecycle; "
+            "boundary or invalid input (empty, long, special characters); linked states or mutually exclusive options; cancellation or back-navigation state. "
+            "Avoid business scenarios already present in [Tested scenarios]. "
+            "If no new business scenario is possible, leave test_scenario empty."
         )
     return function_phase, (
-        f"【本轮作用域】intra_test：功能“{_function_label(target_node)}”。"
-        "【本轮阶段=breadth 铺入口】若仍有不同的可探索业务方向，返回非空 test_scenario；"
-        "若已充分覆盖或只能重复已测试场景，test_scenario 留空。"
+        f'[Round scope] intra_test: functionality "{_function_label(target_node)}". '
+        "[Phase=breadth: explore entries] Return a nonempty test_scenario if a distinct business direction remains. "
+        "If coverage is sufficient or only tested scenarios can be repeated, leave test_scenario empty."
     )
 
 
@@ -2811,14 +2401,14 @@ def _build_plan_message_content(
         {
             "type": "text",
             "text": (
-                f"【目标应用】name={state.get('app_name', '') or '未知'}，"
-                f"package={package_name or '未知'}"
+                f"[Target app] name={state.get('app_name', '') or 'unknown'}, "
+                f"package={package_name or 'unknown'}"
             ),
         },
         {
             "type": "text",
             "text": (
-                "【探索范围】"
+                "[Exploration scope] "
                 + EXPLORATION_MODE_INSTRUCTIONS[PLAN_EXPLORATION_MODE]
                 + (boundary_hint if boundary_hint else "")
             ),
@@ -2832,9 +2422,7 @@ def _build_plan_message_content(
             ),
         },
     ]
-    if round_ctx.compliance_guidance:
-        message_content.append({"type": "text", "text": round_ctx.compliance_guidance})
-    # 截图只在设备已经停在本轮功能页面时有用；否则导航后的画面与之无关。
+    # A screenshot helps only when already on this round's functionality page; navigation may change it.
     scope_node = selection.src_node if selection.scenario_type == "cross_test" else selection.target_node
     if (
         current_page is not None
@@ -2844,7 +2432,7 @@ def _build_plan_message_content(
         message_content.extend([
             {
                 "type": "text",
-                "text": "【当前页面截图】只用于核对当前位置，不得使用 FFG 中没有记录的控件。",
+                "text": "[Current-page screenshot] Use only to confirm position; do not use widgets absent from the FFG.",
             },
             {
                 "type": "image_url",
@@ -2862,7 +2450,7 @@ def _plan_test_scenario(
     message_content: list[dict],
     known_navigation: str,
 ) -> tuple[str, list[str]]:
-    """调用规划模型得到 test_scenario；不可用时回落到程序模板（可能为空）。"""
+    """Ask the planning model for test_scenario, falling back to a template (possibly empty)."""
     graph = round_ctx.graph
     package_name = str(round_ctx.state.get("package_name", "") or "")
     result, validation_errors = _invoke_valid_plan(
@@ -2876,13 +2464,13 @@ def _plan_test_scenario(
         _normalize_optional_id(result.get("test_scenario"))
     ) if result else ""
     if test_scenario and _matches_black_screen_path(
-        graph, f"{known_navigation}；{test_scenario}"
+        graph, f"{known_navigation}; {test_scenario}"
     ):
-        print("[场景规划] 规划结果重复了已知会导致黑屏或页面不可用的操作路径，改用程序模板。")
+        print("[Scenario planning] Plan repeats a path known to cause a black/unavailable page; using a fallback template.")
         test_scenario = ""
     if test_scenario:
         return test_scenario, validation_errors
-    # 大模型没给出可用场景：用程序模板兜底，本轮仍然执行。
+    # Keep the round executable with a fallback template when the model has no usable scenario.
     if selection.scenario_type == "cross_test":
         test_scenario = _forced_cross_scenario(
             graph, selection.src_node.id, selection.dst_node.id, selection.dependency_reason
@@ -2895,61 +2483,34 @@ def _plan_test_scenario(
             test_scenario = ""
     if test_scenario:
         print(
-            "[场景规划] 规划器未给出可用场景"
-            f"（{validation_errors or '空场景'}），使用程序模板。"
+            "[Scenario planning] Model produced no usable scenario"
+            f" ({validation_errors or 'empty scenario'}); using a fallback template."
         )
     return test_scenario, validation_errors
 
 
 def create_scenario_plan_node(llm, device):
-    """创建统一场景规划节点。"""
+    """Create the unified scenario-planning node."""
 
     def scenario_plan_node(state: AgentState) -> dict:
-        targeted_stop = _targeted_compliance_stop(state)
-        if targeted_stop is not None:
-            return targeted_stop
         graph = state.get("ffg")
         if not isinstance(graph, FlowGraph):
             graph = FlowGraph()
         cold_start = not bool(graph.functions)
 
-        # 阶段 1：观测当前页面（确认前台、刷新截图）。
+        # Stage 1: confirm the foreground app and refresh the current screenshot.
         current_page, early_response = _observe_planning_page(state, graph, device, cold_start)
         if early_response is not None:
             return early_response
         if cold_start:
             return _cold_start_response(llm, state, graph, current_page)
-        # 当前页面 id 每轮只解析一次（可能需要对全部页面截图做相似度匹配），
-        # 后续目标选择、导航与摘要构造全部复用。
+        # Resolve page identity once per round; target selection, navigation, and summaries
+        # reuse it instead of repeating potentially expensive screenshot comparisons.
         current_page, current_page_id = _attach_current_page_identity_with_id(graph, current_page)
 
-        # 阶段 2：状态迁移。覆盖率是“活”的（共享页面被其他功能测试会持续推高），
-        # 所有状态迁移在每轮开头统一按 FFG 事实完成，后面的目标选择只读状态、不再改状态。
+        # Stage 2: shared-page evidence can change coverage between rounds. Apply all
+        # FFG-derived status transitions now; later target selection reads those states.
         _update_function_statuses(graph)
-
-        rules_path = str(state.get("compliance_rules_path", "") or "").strip() or None
-        compliance_guidance, compliance_terms = (
-            _deferred_compliance_guidance(rules_path)
-            if bool(state.get("compliance_detection_enabled", False))
-            else ("", ())
-        )
-
-        # 合规模式下合规检测点优先于功能探索：冷启动流程要趁登录态尚未建立时
-        # 尽早执行（清数据代价最小），权限拒绝路径会破坏应用状态也需要先跑。
-        compliance_update = _maybe_schedule_compliance_check(
-            state, graph, current_page, current_page_id=current_page_id,
-        )
-        if compliance_update is not None:
-            return compliance_update
-
-        if state.get("run_mode") == "compliance":
-            from workflow.compliance_worker import compliance_worker
-
-            summary = ComplianceChecklist.from_state(compliance_worker.snapshot()).summary(rules_path)
-            if summary["resolved"] == summary["gui_total"] and not _unfinished_function_nodes(graph):
-                print("[合规检测] 全部适用检测点已形成结论，结束本次运行。")
-                return {"workflow_complete": True, "current_plan": {},
-                        "current_navigation_scenario": "", "current_test_scenario": ""}
 
         round_ctx = _PlanningRound(
             llm=llm,
@@ -2963,11 +2524,9 @@ def create_scenario_plan_node(llm, device):
             current_testing_function_status=str(
                 state.get("current_testing_function_status", "not_started")
             ).strip() or "not_started",
-            compliance_guidance=compliance_guidance,
-            compliance_terms=compliance_terms,
         )
 
-        # 阶段 3：选作用域（跨功能 → 功能内 → 收尾）。
+        # Stage 3: select scope (inter-functional, intra-functional, then finalization).
         selection, early_response = _select_round_scope(round_ctx)
         if early_response is not None:
             return early_response
@@ -2975,7 +2534,7 @@ def create_scenario_plan_node(llm, device):
         target_node, src_node, dst_node = selection.target_node, selection.src_node, selection.dst_node
         extra_updates = selection.extra_updates
 
-        # 阶段 4：构造规划输入并生成场景。
+        # Stage 4: build model context and generate the scenario.
         scope_summary, known_navigation, navigation_level = _build_scope_planning_summary(
             graph,
             current_page,
@@ -2991,14 +2550,14 @@ def create_scenario_plan_node(llm, device):
             round_ctx, selection, scope_summary, scope_instruction,
         )
         print(
-            "[场景规划] 固定作用域: "
+            "[Scenario planning] Fixed scope: "
             + (
                 f"cross {src_node.id}->{dst_node.id} | {selection.dependency_reason}"
                 if scenario_type == "cross_test"
                 else f"intra {target_node.id} | {_function_label(target_node)} | "
-                     f"阶段={_describe_function_phase(graph, target_node)}"
+                     f"phase={_describe_function_phase(graph, target_node)}"
             )
-            + f" | 导航级别={navigation_level or '无需导航'}"
+            + f" | navigation_level={navigation_level or 'already at target'}"
         )
         test_scenario, validation_errors = _plan_test_scenario(
             round_ctx, selection, message_content, known_navigation,
@@ -3009,23 +2568,23 @@ def create_scenario_plan_node(llm, device):
                     graph,
                     current_page,
                     target_node,
-                    f"规划器与程序模板均无可执行场景（{validation_errors or '空场景'}）",
+                    f"Neither model nor template produced an executable scenario ({validation_errors or 'empty scenario'})",
                     state.get("unplannable_counts") or {},
                 ),
                 **extra_updates,
             }
 
-        # 阶段 5：组装导航与调度状态。
+        # Stage 5: assemble navigation and scheduling state.
         navigation_scenario = known_navigation
         if _is_black_screen_page(graph, current_page, current_page_id):
             navigation_scenario = (
-                "当前停留在已记录的黑屏异常页面：先按一次返回键（press_back）并截图确认，"
-                "若已离开目标应用则执行 open_app；然后"
-                + (known_navigation or "确认回到目标功能页面后结束导航。")
+                "Currently on a recorded black-screen page: press_back once and confirm by screenshot; "
+                "if outside the target app, use open_app. Then "
+                + (known_navigation or "confirm arrival at the target functionality page and stop navigation.")
             )
 
         if scenario_type == "intra_test":
-            # deferred 的收尾补测保持终态，只有正常调度的功能才进入 in_progress。
+            # Final retries retain deferred status; only ordinarily scheduled targets become in_progress.
             if (target_node.test_status or "not_started") != "deferred":
                 graph.set_node_test_status(target_node.id, "in_progress", reason="scheduled")
             unplannable_counts = dict(state.get("unplannable_counts") or {})

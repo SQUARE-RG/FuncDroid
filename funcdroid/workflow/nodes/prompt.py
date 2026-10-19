@@ -1,387 +1,212 @@
-"""Prompt templates used by workflow nodes.
+"""English prompts for Functional Flow Graph construction and scenario testing.
 
-Keep these prompts compact.  They are injected on every long-running iteration, so
-duplicated prose costs tokens and tends to make the model duplicate work as well.
+Keep fixed instructions before dynamic task fields to permit prefix caching.
+Visible UI labels and quoted execution evidence retain their original language.
+Breadth/depth are scheduling phases, not aliases for the paper's LTV/STV views.
 """
 
+
 UNIFIED_SCENARIO_PLAN_SYSTEM_PROMPT = """\
-你是移动端探索测试规划助手。根据输入生成一次不重复、范围明确的探索方向。
+You plan exploratory tests for mobile apps. Produce one novel scenario with a clear scope.
 
-【约束】
-- 本轮作用域（intra_test 的当前功能，或 cross_test 的源功能、目标功能和共享资源）由程序固定，只为它写一条测试场景。
-- 只使用已记录的页面、控件、操作和路径。执行器会先按【参考导航】到达作用域，导航动作不得在 test_scenario 中重复；未知下游只描述探索方向和可观察的继续条件，不把未知对象写成已知事实。
-- “仅导航入口页”不承载目标功能行为，不能作为导航终点或到达目标功能的证据；导航必须最终进入目标 Function 的功能页面。test_scenario 中点名的控件必须属于该功能页面，禁止在其它业务模块中用同名或近义控件替代执行。
-- 优先未执行控件、未走过的业务操作和不同业务分支。去重由你判断：参考输入中的【已测试场景】避免实质重复；仅再次进入、等待加载、改写文本或重复同一路径不算新场景。
-- 本轮探索阶段由输入显式给出（breadth 铺入口 / depth 深度业务场景），必须严格按该阶段写作，不得自行切换阶段。
-- breadth 阶段：生成覆盖整体入口和结果呈现的宽泛探索方向，允许沿有因果关系的下游连续探索，不必在第一个下游页面就停止，也不强制点名控件清单；若输入给出未覆盖控件提示，则按下方清单式约束点名其中与本轮同一业务目标的控件。
-- depth 阶段：入口已铺开，本轮沿该功能的业务逻辑写一个完整的业务场景，不铺新入口。可参考的方向（仅供参考，由你结合该功能【已记录的页面、控件与操作】自行选择，也可以写其它更贴合该功能的业务）：操作结果离开后再回来是否保留；新建→编辑→删除的完整生命周期；边界或异常输入（空值、超长、特殊字符）；状态联动或互斥选项；中途放弃或返回后的状态。场景写清要做的操作链与要观察的结果即可，不要求固定格式。必须避开【已测试场景】中已经做过的业务；确实没有新的业务场景可做时，test_scenario 留空。
-- depth 场景只允许操作输入中已记录的页面与控件；需要产生数据时使用输入给出的唯一后缀自建数据，再对该自建数据做移除/清除等操作，绝不作用于真实用户数据；不得规划注销账号、退出登录、切换账号、支付、下单、实名认证等不可逆操作。
-- breadth 阶段且入口覆盖已过半时，输入若给出未覆盖控件提示（尚无执行记录的可见控件），test_scenario 必须显式点名其中与本轮同一业务目标的控件（引用清单原文，最多 2–3 个），形成“控件清单式”任务。只有这些控件属于同一稳定页面/同一结果域（如固定 Tab、筛选或排序变体）时才可批量；若它们分别打开相册、位置、文件、联系人、记录搜索、设置等独立稳定流程，本轮只选一个流程，其余留给后续场景或 Function。清单式任务以清单为准：执行器会逐个操作列出的控件，进入新页面就观察后返回、再操作下一个，全部走完才结束；因此清单内的控件必须同属一个稳定页面/结果域。起步期只需在方向中自然提及代表性入口，不逐项点名。
-- 同功能且进入同一结果的重复控件只选一个代表项。同一稳定页面/同一结果域内，明确名称且结果不同的并列控件才可批量覆盖，一次列出 2–3 个，逐项观察并在需要时返回；会打开不同稳定流程的入口绝不打包。不得要求所有、全部、每个、逐个、逐一或遍历某类控件。
-- 对“重复资源实例”只使用控件清单中的类型级名称：网格缩略图、消息/联系人/文件条目、主题/背景/头像样式等若仅资源值不同而点击动作与结果类型相同，只选一个代表；固定 Tab、固定分类或进入不同业务流程的入口才分别测试。不得把资源实例名称扩写成新的待覆盖控件。
-- 开放式探索（开放结尾）适用于 breadth 阶段：test_scenario 用一句简短的探索方向表达“要探索什么、关注什么结果以及何时停止”，不要把未知下游写成完整动作脚本。起步期方向可以包含“若出现明确且未执行的相关结果/入口则继续，否则结束”，允许沿有因果关系的下游连续深入。覆盖过半后“继续”只限完成同一目标所必需的直接结果；一旦进入新的全屏页面、独立 Activity 或具有独立业务目标的稳定区域，就把它作为本场景结果并停止，除非本轮唯一目标明确点名该下游。具体动作由执行器根据每一步截图决定。depth 阶段写完整操作链，不使用开放式结尾。
-- 一个场景只探索一个独立业务目标。覆盖过半后，未点名控件清单的场景在执行器到达独立稳定流程即停止，不得返回后再测试第二个入口；即使多个入口同属一个 Function 也必须拆成后续场景（点名控件清单的场景按上方清单式约束逐个走完，这是同一结果域内的批量覆盖，不算第二个目标）。起步期可在同一场景内沿同一方向连续经过多个有因果关系的下游页面，把它们都记为本场景的观察结果，直至无新的可观察内容或步数用尽。没有新的有价值方向时，intra_test 的 test_scenario 留空。
-- 动态对象必须已存在于当前作用域，或在本场景中先创建再使用。cross_test 必须验证同一持久资源从源功能到目标功能的产生与消费，不能只有页面跳转。
-- 自然语言场景不写 func_x/page_x。不能提供真人语音、指纹/人脸、实体卡、真实短信验证码或人工扫码；不得尝试图形验证码、滑块/拼图或其他人机验证。挑战出现后必须结束，不规划识别、拖动、提交或验证成功等后续场景。
+Constraints:
+- The program fixes the scope: the current functionality for intra_test, or source functionality, destination functionality and shared resource for cross_test. Write one scenario for that scope.
+- Use recorded pages, controls, operations and paths only. Navigation runs first using the reference path; do not repeat navigation in test_scenario. Describe unknown downstream behavior as a direction and observable continuation conditions, not as established facts.
+- Navigation-only entry pages do not implement the target functionality. Navigate to a page that actually implements it. Named controls must belong to that page; do not substitute similarly named controls in another module.
+- Prefer unexecuted controls, untested business operations and distinct branches. Use recorded scenarios to avoid substantive repetition. Re-entering, waiting, paraphrasing or repeating a path is not a new scenario.
+- Follow the explicitly supplied phase: breadth explores entries; depth exercises complete business scenarios. Do not switch phases yourself.
+- In breadth, begin with a broad direction covering entries and visible results. Causally related downstream exploration is allowed; the first downstream page is not automatically the endpoint. When uncovered-control hints are supplied, name only controls relevant to the same business goal, following the checklist rules below.
+- In depth, use recorded pages, controls and operations to describe a complete business action sequence and the results to observe. Possible directions include persistence after leaving and returning; create/edit/delete lifecycles; empty, long or special-character inputs; linked states or mutually exclusive options; cancellation and back navigation. These are examples, not a required format. Avoid previously tested business scenarios; return an empty test_scenario if none remains.
+- Depth may operate only recorded pages and controls. Create test data using the provided unique suffix before removing or clearing it; never affect real user data. Do not plan account deletion, logout, account switching, payments, orders or identity verification.
+- In breadth after entry coverage exceeds half, if uncovered controls are supplied, explicitly quote at most 2-3 relevant control names. Batch only controls on the same stable page or in the same result domain, such as fixed tabs, filters or sorting variants. Independent flows such as albums, locations, files, contacts, record search and settings must be separate scenarios. A named checklist is completed item by item: observe each entry result, return and try the next. Early exploration can mention representative entries without enumerating a checklist.
+- Select one representative for equivalent controls leading to the same result. Do not request exhaustive traversal of all entries. Fixed tabs, fixed categories and entries into distinct business flows remain separate.
+- For repeated resource instances, use only type-level control names from the recorded list. Equivalent thumbnails, messages, contacts, files, themes, backgrounds or avatars need one representative; do not turn instance names into new coverage targets.
+- Open-ended guidance belongs to breadth. Briefly state the exploration direction, observable result and stopping condition. Early exploration may continue to an explicit unexecuted related result. After coverage exceeds half, continue only as needed for the same goal; observe and stop at a new full-screen page, independent Activity or stable region with an independent goal unless that downstream goal was explicitly selected. Let the executor choose concrete actions from each screenshot. Depth requires a complete action chain rather than an open ending.
+- One scenario has one independent business goal. After coverage exceeds half, a scenario without a named checklist must stop on reaching an independent stable flow, rather than returning to test another entry. A same-result-domain checklist is the stated exception. Early exploration may cross several causally related pages until no new result remains or the step budget is exhausted. Return an empty intra_test scenario when no valuable new direction remains.
+- Dynamic objects must already exist in scope or be created before use. cross_test must verify production and consumption of the same persistent resource across the two functionalities; page navigation alone is insufficient.
+- Do not use func_x/page_x identifiers in natural-language guidance. The executor cannot supply human speech, biometrics, physical cards, real SMS codes or manual scanning. Do not attempt CAPTCHA, slider/puzzle challenges or other human verification. Stop when a challenge appears; do not plan solving, dragging, submitting or successful verification.
+- Write authored guidance in English. Preserve actual visible UI labels and quoted evidence in their original language.
 
-只输出合法 JSON：
-{
-  "test_scenario": "按【本轮阶段】写作：breadth 写探索方向；depth 写一条完整的业务操作链与要观察的结果"
-}
-只输出 JSON，不得输出注释或 Markdown。
+Return only valid JSON, without comments or Markdown:
+{"test_scenario": "A breadth exploration direction or a complete depth action chain with observable results"}
 """
 
 
 BOOTSTRAP_FFG_SYSTEM_PROMPT = """\
-你是移动端页面结构识别助手。只根据当前截图初始化空 FFG，不使用 App 常识。
+Initialize an empty Functional Flow Graph (FFG) using only the current mobile screenshot, not prior knowledge about the app.
 
-- 第一个 Function 描述当前页面实际承载的主目标，名称要具体，例如“内容列表浏览与进入”，不要使用覆盖整个模块的伞形名称。
-- 截图中名称明确、代表独立用户目标的可见入口可以创建额外 Function；只描述入口直接表达的能力，不猜测下游页面或成功结果，不使用“xx入口”这类控件位置名称。
-- 当前 Page 的 function_refs 只放实际承载该页面行为的 Function；尚未点击的可见入口放入 entry_function_refs，供导航使用但不计入该 Function 覆盖率。
-- Function 不是普通控件、弹窗、键盘、加载态或局部展开。Page 是稳定逻辑界面；controls 只列真实可交互控件，同功能同结果的重复项保留一到两个代表。忽略系统状态栏和系统导航条（应用内导航栏的各可点击项仍需逐项记录，见下条 controls 命名规范）。
-- Function 不得按列表条目实例拆分：同一列表中内容类型与操作集合相同的动态条目属于同一功能，按内容类型聚合命名（如“消息条目浏览”），不为某个具体名称的条目单独建功能；内容类型或可执行操作明显不同时仍应分别建模。
-- controls 必须区分“固定语义控件”和“重复资源实例”。固定 Tab、固定分类、进入不同业务流程的入口分别记录；网格缩略图、消息/联系人/文件条目、主题/背景/头像样式等若仅资源值或外观不同，而点击动作、交互流程和结果类型相同，必须合并为一个类型级控件（如“预设背景图项”“普通消息条目”），禁止按颜色、图片内容、昵称、文件名逐项命名。只有直接证据证明交互流程或结果类型不同，才最多保留一到两个行为类型代表。一个控件名只对应一个可点击控件：禁止用括号、顿号或逗号在一个名称里列举多个入口（如“工具项（A、B、C）”“A、B、C入口”）；列举的若是进入不同功能的入口，逐项写成独立控件，若只是同质资源实例，只写一个类型级名称。
-- controls 命名使用界面显示的实际名称或可辨业务类型（如"发送按钮""搜索按钮""预设背景图项"）；复合控件（底部导航栏、顶部标签栏等）必须拆分记录每个独立可点击项并使用界面显示的实际名称（如逐项记录"底部导航-消息Tab"等，不写容器名"底部导航栏"）；列表内容项按业务类型聚合，禁止用没有业务类型的"列表项""内容条目""XX区域"概括；纯展示区域与说明文案不记入 controls。
+- The first functionality must describe the specific main goal actually implemented by this page, such as browsing and opening content. Avoid umbrella module names.
+- A clearly named visible entry representing an independent user goal may establish another functionality. Describe only the capability directly supported by that entry, without inventing downstream pages or successful outcomes. Name the goal, not an entry location.
+- Page.function_refs identifies functionalities whose behavior the page implements. Unvisited visible entries belong in entry_function_refs for navigation, and do not count toward their target functionality's coverage.
+- A functionality is not an ordinary control, dialog, keyboard, loading state or local expansion. A Page is a stable logical interface. Record only actual interactive controls, retaining one or two representatives for equivalent outcomes. Ignore system status/navigation bars, but record each distinct clickable app-navigation item.
+- Do not split dynamic list instances into separate functionalities when their content type and operation set agree. Aggregate by business type, such as message browsing. Different content types or operations may justify separate functionalities.
+- Distinguish fixed semantic controls from repeated resource instances. Record fixed tabs, categories and entries into distinct flows separately. Equivalent thumbnails, messages, contacts, files, themes, backgrounds and avatars must be represented by a type-level control, not enumerated by color, picture, name or filename. Retain at most one or two behavioral types when direct evidence shows different interaction or result types.
+- One control name denotes one clickable control. Do not combine several entries into a comma-separated or parenthesized name. Split entries with different business goals; aggregate equivalent resource instances by type.
+- Use actual visible control names or identifiable business types. Split compound navigation/tab bars into individual clickable items. Avoid vague names such as list item, content area or region without a business type. Display-only regions and explanatory text are not controls.
+- Write descriptions in English while preserving visible UI labels in their original language.
 
-只输出合法 JSON：
-{
-  "functions": [{
-    "function_ref": "new_func_1",
-    "name": "当前页面承载的功能名称",
-    "description": "当前可见业务能力概述"
-  }],
-  "pages": [{
-    "page_ref": "new_page_1",
-    "function_refs": ["new_func_1"],
-    "entry_function_refs": [],
-    "name": "当前页面名称",
-    "description": "稳定逻辑页面概述",
-    "controls": ["自然语言控件描述"]
-  }]
-}
-只输出合法 JSON。
+Return only valid JSON:
+{"functions": [{"function_ref": "new_func_1", "name": "Functionality implemented by this page", "description": "Visible business capability"}], "pages": [{"page_ref": "new_page_1", "function_refs": ["new_func_1"], "entry_function_refs": [], "name": "Current page", "description": "Stable logical page", "controls": ["Visible control name"]}]}
 """
 
 
 FFG_AUDIT_SYSTEM_PROMPT = """\
-你是移动端 FFG 覆盖遗漏检查助手。对照单个 Function 的 FFG 摘要、截图、已执行操作和已测试场景，只找一个价值最高且尚未实际进入的可见入口。
+Audit coverage gaps in one functionality using its FFG summary, screenshots, recorded operations and tested scenarios. Identify only the most valuable visible entry that has not actually been explored.
 
-- 只能使用截图或 FFG 中真实出现的入口，不能猜测点击后的页面和操作。
-- 只返回一次入口探索；功能结构由执行 trace 中的真实结果确定。
-- 控件已记录不等于已探索；必须已有入口动作及结果观测才算覆盖。已尝试入口不得重复。
-- 动态列表条目以及进入相同结果页的分类、筛选、排序和样式选项，只测试一个代表项，不换名称逐项枚举；只有直接证据证明它们进入不同业务页面或 Activity 时才分别探索。
-- 底部主 Tab、创建菜单中的不同业务入口要分别核对。同一菜单的文本、清单、照片/相机、文件若进入不同流程，需要分别实际点击验证；普通同类参数只选代表项。
-- entry_page_ref 必须是摘要中该功能已有的页面编号；entry_name 使用截图或页面描述中真实可见的入口名称。程序会据此生成“到达该页、点击该入口并观察实际结果”的执行场景。
-- 语音、指纹/人脸、实体卡、短信验证码、人工扫码、图形验证码、滑块/拼图或其他人机验证入口最多探索到准备页/挑战出现；不得要求自动化识别、拖动、提交或完成验证。
-- 忽略系统状态栏和导航栏。
-- 无可信遗漏时两个字段都返回空字符串；有遗漏时两个字段都必须非空。
+- Use entries present in screenshots or the FFG; never invent downstream pages or actions.
+- Return one entry exploration. Actual execution results determine functionality structure.
+- Recording a control is not exploration: coverage requires an entry action and a subsequent observation. Do not repeat an attempted entry.
+- Use one representative for equivalent dynamic list instances, categories, filters, sorting or styles leading to the same result type. Explore separately only when direct evidence shows different business pages or Activities.
+- Check distinct main tabs and creation-menu business entries separately. Text, checklists, camera/photos and files need separate actions when they open different flows. Ordinary equivalent parameter variants need only a representative.
+- entry_page_ref must be an existing page identifier for this functionality. entry_name must quote a visible entry from the screenshot or description. The program will create a scenario that reaches the page, clicks the entry and observes its result.
+- Explore human speech, biometrics, physical cards, SMS codes, scanning or CAPTCHA only up to the preparation/challenge page. Never request automated solving, dragging, submission or completion of human verification.
+- Ignore system status and navigation bars.
+- With no credible gap, return two empty strings; otherwise both fields must be nonempty.
 
-只输出合法 JSON：
-{
-  "entry_page_ref": "",
-  "entry_name": ""
-}
-只输出 JSON。
+Return only JSON: {"entry_page_ref": "", "entry_name": ""}
 """
 
 
-EXPLORATION_MODE_INSTRUCTIONS = {
-    "core": (
-        "只探索目标应用自身的核心业务与必要支撑能力。"
-        "目标应用内的第三方服务内容（如小程序、内嵌网页、游戏中心等）"
-        "不属于核心功能，不得规划进入；应用内入口虽可见，"
-        "进入即视为离开目标应用边界。"
-    ),
-}
+EXPLORATION_MODE_INSTRUCTIONS = {'core': "Explore only the target app's own core functionalities and necessary supporting capabilities. Third-party service content inside the app, such as mini-apps, embedded websites or game centers, is outside this scope. Do not enter it: even an in-app entry crosses the target-app boundary."}
 
 
-# 提示词按「固定内容在前、动态任务信息在后」组织：DeepSeek 等服务的自动前缀
-# 缓存从头匹配，固定前缀（执行原则/输出格式）可被同一 App 的后续场景、乃至
-# 跨 App 的调用复用；把 {scenario} 等动态值放在开头会让整段固定内容无法命中。
 SCENARIO_EXEC_SYSTEM_PROMPT_TEMPLATE = """\
-你是移动端测试场景执行器。
+Execute a mobile app test scenario, choosing exactly one device action per turn.
 
-【执行原则】
-- 每轮只决定一个设备动作。把任务理解为探索方向而不是固定动作脚本：根据方向、完整历史和当前截图自主选择下一步；可以继续进入同一方向的可观察下游，但不得扩展到第二个目标，也不要为凑步数多点控件。
-- 场景边界按“独立稳定流程”判断，并服从【本次任务】里的阶段：任务明确列出待操作控件清单时，以清单为准（见下一条），清单之外的入口一律不碰。breadth 阶段任务只给出明确终点（未列控件清单）时，首次进入新的全屏页面、独立 Activity 或具有独立业务目标的稳定区域，先观察并把它作为当前入口的结果，然后 finished；除非任务唯一目标明确点名该下游，否则不得继续点击其内部入口，也不能返回后测试第二个入口。任务为宽泛探索方向（未点名控件清单）时，到达独立稳定流程先观察并记录结果，若与本方向仍有因果关系且存在未观察的直接结果，可选一个代表项继续，深度以本场景步数为限，不重复走已观察路径。比如任务只要求展开面板就停在面板；任务只要求进入设置就停在设置页，不能再顺带进入搜索、媒体、文件、位置、联系人等其它流程。
-- 任务本身列出多个待操作控件时，清单优先于“首次进入新页面即结束”：逐个操作列出的控件，每个控件进入新的全屏页面或独立流程后只观察其直接结果，不点击其内部入口，然后 press_back 回到列表所在页，再操作下一个；只有全部列出的控件都已尝试过，或剩余控件确实不可见/不可达时才 finished。
-- thought 只用一句短句写“当前关键状态 + 下一动作理由”，不要复述任务、历史动作、页面控件清单或完整推理；建议不超过 40 个汉字。
-- action_description 必须是“动作 + 具体控件名”的形式（如“点击发送按钮”“在搜索输入框输入关键词”），控件名与截图或任务清单中的真实控件一一对应；禁止“点击某条目”“操作页面某处”这类没有明确锚定目标的表述。
-- 坐标使用【当前截图】的图片像素：左上角为 (0, 0)，右下角为 (图片宽度 - 1, 图片高度 - 1)，具体宽高由每步消息提供。点击、长按与滑动都输出目标在这张图片中的像素位置；不要输出 0–1000 归一化坐标或自行换算手机屏幕坐标。程序负责换算，历史图片的尺寸不可套用于当前图片。
-- 输出 finished 时，thought 必须明确写“目标已达成”或“目标不可达 + 原因”，不能只写“结束”“完成检查”等含糊结论；运行器会据此区分成功与失败。
-- 只有探索方向已经完成、没有明确且相关的未执行控件、继续会重复/不可达/触发风险，或达到本场景现有步数上限时才 finished。中间结果页不是默认终点；如果方向涉及下游探索，首次看到结果后应根据截图选择一个代表项继续。任务明确要求“出现页面、弹窗或状态即结束”时，首次看到该结果就 finished；保存/提交后的可见变化也按任务目标判断。任务还列有未尝试控件时，返回后继续，不要提前 finished。depth 阶段任务要把任务写出的操作链走完再 finished，看到第一步的结果不等于完成。
-- 同一列表或网格中的同类条目（进入相同类型的页面），只测试一个代表项，不逐个点击不同名称的同质条目。
-- scroll 的 direction 表示手指滑动方向：查看页面下方/更靠后的内容用 up，返回上方/更靠前的内容用 down。
-- swipe 是需要精确起止点的拖动手势：必须给出 x1、y1、x2、y2（当前图片的像素坐标，手指从起点移动到终点），可选 duration（秒，0.1–1.5，缺省 0.5）。只有 scroll 无法完成的系统级手势才用它，例如从当前图片顶边中点向下拖到图片高度约七成的位置以拉出通知栏、侧滑抽屉、精确拖动滑块；普通列表翻页一律用 scroll。
-- wait 只用于等待页面加载或状态刷新，可带 duration（秒，1–10，缺省 3）；不要连续输出两次 wait，一次等待后应观察截图再决定下一步。
-- 指定对象不可替换成语义不同的对象来制造成功。动作产生的页面、弹窗、Toast 或状态就是测试结果，不是干扰。
-- 任务中的控件名称与目标页面绑定；看不到指定控件时，应先返回目标页面。没有可靠路径时输出 finished，并写“目标不可达：未到达承载指定控件的目标页面”；禁止到其它模块漫游寻找同名控件。
-- 导航阶段的任务是一条参考路径（来自已记录的页面跳转，可能已过时）：每步以截图为准，截图与路径描述不符时，用返回键或应用内导航自行调整；看到目标页面就结束导航，不必走完剩余步骤。探索式导航只给出目标描述，由你自行寻找进入方式。
-- finished 只能表达一种结论：全部目标均已实际操作并观察时写“目标已达成”；任一指定控件未操作、未观察或不可达时写“目标不可达：具体未完成项”。“完成了可执行部分”不等于目标完成，禁止同时出现成功和失败结论。
-- 截图中已有数字键盘、密码键盘或其他屏幕内虚拟按键时，必须逐个 click 可见按键；只有已聚焦的文本输入框才使用 type。
-- 点击完全按你给出的图片坐标执行，程序不会修正到附近控件：坐标要落在目标控件的可见范围内，小控件（开关、图标、复选框）瞄准其中心。
-- type 会先清空已聚焦输入框的原有内容再写入 content，不需要先点清空按钮或删除键；要改写内容时直接对该输入框再次 type。
-- 输入后以截图中输入框实际显示的内容为准：显示内容与 content 不一致（字符被过滤、截断）说明该输入框限制了格式或长度（如只收数字、手机号、邮箱），改用符合该格式的内容，禁止原样重复输入。
-- 软键盘遮挡目标时，先收起键盘：点击键盘上的完成/收起键，或在键盘仍可见时 press_back 一次；不要点击被键盘遮住位置的控件。
-- 历史中每步标注了动作后的“效果”。对同一控件点击后界面无变化：先核对坐标是否落在控件上，偏了就换到控件中心再试一次；坐标无误仍无变化，说明控件未响应，应先满足其前置条件（如填写必填项、达到所需数量、先选中对象）或改测其他控件，禁止连续点击同一位置。开关、勾选框等小控件的状态以前后截图对比为准，效果显示“局部变化”且变化区域覆盖该控件时，说明状态已切换。
-- 你不能发出真人语音、提供指纹/人脸、实体卡、真实短信验证码或人工扫码，也不得尝试图形验证码、滑块/拼图或其他人机验证。看到验证挑战后先执行一次 press_back 退出；返回后输出 finished，并明确说明“验证阻塞，已退出”。若返回后仍停留在挑战页也立即 finished，禁止识别、拖动、提交挑战或声称验证成功。
-- open_app 每次都可能触发应用真实重启，代价高：只在目标应用不在前台（如处于手机桌面）时使用一次；导航任务明确要求执行 open_app（重新打开目标应用或打开主页面）时除外，此时即使目标应用在前台也按导航任务执行一次，以回到应用入口页。执行 open_app 后若截图仍为手机桌面或应用启动/加载页，下一步必须选 wait 等待界面加载，禁止连续输出 open_app。
-- 保留登录态是硬约束：应用已登录时，禁止点击“退出登录”“登出”“切换账号”等会使当前会话失效的控件；目标涉及注销功能时，可以打开注销入口并阅读说明，但禁止提交注销申请、确认注销或删除账号，也不要为了查看登录/注册表单而先退出登录。运行器没有账号与验证码凭据，退出后不可恢复，会使本次测试后续所有依赖登录态的取证全部失效。若要找的登录/注册表单因已登录而不可达，直接输出 finished 并写“目标不可达：需保持登录态，禁止退出登录”。
+Execution rules:
+- Treat guidance as an exploration direction, not a fixed script. Choose the next action from the goal, complete history and current screenshot. Continue into observable causally related results, but do not add a second goal or click merely to consume steps.
+- Follow the task phase and independent stable-flow boundaries. A named control checklist is authoritative: do not touch unlisted entries. In breadth with an explicit endpoint and no checklist, observe the first new full-screen page, independent Activity or stable region with an independent goal, then finish, unless that downstream goal is explicitly selected. Do not enter its internal entries or return to test a second entry. Broad initial guidance may continue through one representative causally related result, within the step budget, without repeating observed paths. A task to expand a panel stops at that panel; entering settings does not authorize unrelated search, media, file, location or contact flows.
+- For a named checklist, try every listed control. After an entry opens an independent flow, observe its direct result without exploring internal entries, press_back to the checklist and try the next. Finish only when all listed controls were attempted or the remainder is truly invisible or unreachable.
+- thought must be one brief English sentence stating the important current state and the next action's reason. Do not repeat the task, history, control inventory or detailed reasoning.
+- action_description must identify the action and a concrete control, such as click the Send button or type in the Search field. Preserve visible UI labels in their original language. Do not use unanchored targets such as an arbitrary item or somewhere on the page.
+- Coordinates are pixels of the CURRENT uploaded screenshot: (0, 0) to (width - 1, height - 1). Each message supplies its dimensions. Do not use normalized 0-1000 coordinates, screen coordinates or dimensions of a historical image; the program handles conversion.
+- For finished, begin thought with exactly 'Goal achieved' or 'Goal unreachable: <reason>'. Do not use a vague completion phrase. The runtime distinguishes success from failure using this conclusion.
+- Finish only when the direction is complete, no relevant unexecuted control remains, further actions would be repetitive/unreachable/risky, or the step budget is reached. An intermediate page is not automatically the endpoint. If guidance requests downstream exploration, select a representative result to continue. An explicitly requested page/dialog/state is an endpoint when first observed. A save/submit result is evaluated against the goal. Complete outstanding checklist controls before finishing. In depth, complete the entire stated action chain; the first result is insufficient.
+- Test one representative among equivalent list/grid instances leading to the same page type.
+- scroll.direction is finger motion: up reveals lower/later content; down reveals upper/earlier content.
+- swipe is a precise drag with x1, y1, x2, y2 in current-image pixels and optional duration in seconds (0.1-1.5, default 0.5). Use it only for gestures scroll cannot express, such as notification drawers, side drawers or precise dragging. Use scroll for ordinary list paging.
+- wait is for loading/state refresh, with optional duration in seconds (1-10, default 3). Do not emit consecutive waits: inspect the result before choosing again.
+- Never substitute a semantically different object to manufacture success. Pages, dialogs, Toasts and state changes caused by an action are results, not interruptions.
+- Control names are bound to the target page. If a named control is missing, return to that page first. With no reliable route, finish with 'Goal unreachable: target page containing the specified control was not reached'. Do not roam other modules looking for the same name.
+- Navigation is a possibly stale reference path from recorded transitions. Follow each screenshot; adapt with back or in-app navigation if needed. Finish navigation upon reaching the target page, even if reference steps remain. Exploratory navigation supplies only a goal; find the route from visible evidence.
+- finished must express one conclusion. Use 'Goal achieved' only if all targets were actually operated and observed. If any named control was not operated, not observed or unreachable, use 'Goal unreachable: <unfinished target>'. Completing the executable subset is not full completion; do not combine success and failure claims.
+- Click visible virtual numeric/password keypad keys individually. Use type only for a focused text field.
+- Clicks use the exact supplied image coordinates; the program does not snap them to nearby controls. Keep them inside the visible target; aim at the center of small switches, icons and checkboxes.
+- type clears the focused field before entering content. Do not clear it separately; type again to replace its value.
+- Trust the text actually visible after typing. Filtered/truncated input indicates a format/length constraint; adapt to that format instead of repeating the same input.
+- If the keyboard covers the target, dismiss it using its Done/Hide key or one press_back while visible. Do not click through it.
+- History includes action effects. If a click produced no change, check its coordinates and retry once at the control center if mis-aimed. If accurately aimed, satisfy prerequisites or test another control rather than repeatedly clicking. Compare before/after screenshots for switches and checkboxes; a local change over the control indicates a state transition.
+- You cannot provide human speech, biometrics, physical cards, real SMS codes or manual scanning, and must not solve CAPTCHA, slider/puzzle or human-verification challenges. On a challenge, press_back once, then finish with 'Goal unreachable: verification blocked; exited'. If still on the challenge, finish immediately; do not solve, drag, submit or claim verification success.
+- open_app can restart the app and is expensive. Use once only when the target is not foreground, except when navigation explicitly requests reopening the app/main page. After open_app, if still on the launcher or loading page, choose wait; never repeatedly open_app.
+- Preserve the authenticated session. Do not log out, switch accounts or invalidate the session. You may inspect account-deletion explanations but must not submit/confirm deletion. Never log out merely to reach login/registration forms. Without credentials the session cannot be restored; if a form is unavailable while logged in, finish with 'Goal unreachable: preserve the authenticated session'.
 
-【外部页面与恢复】
-- 只有与任务无关且遮挡操作的广告、更新、评分、权限等临时页面才设 is_interruption=true，并关闭/跳过后继续。
-- 文件选择器、相机、相册、系统权限/设置、分享面板或外部 App 若是任务必需流程，应继续完成必要的一次选择、确认或返回，is_interruption=false。
+External pages and recovery:
+- Set is_interruption=true only for unrelated temporary ads, updates, ratings or permission dialogs that obstruct the task; dismiss/skip and continue.
+- Task-required file pickers, camera/albums, system permissions/settings, share panels or external apps are part of the flow: perform the necessary selection, confirmation or return, with is_interruption=false.
 
-只输出合法 JSON：
-{{
-  "thought": "一句简短的当前判断",
-  "action_description": "本次动作的简短描述",
-  "action_name": "click",
-  "is_interruption": false,
-  "x": 100,
-  "y": 100,
-  "x1": 500,
-  "y1": 0,
-  "x2": 500,
-  "y2": 700,
-  "content": "",
-  "direction": "up",
-  "app_name": "",
-  "duration": 3
-}}
-action_name 只能取 click、long_press、type、scroll、swipe、open_app、press_back、finished、wait 之一。坐标必须是当前图片宽高范围内的有限像素数值，且 x 和 y 必须写成两个独立的 JSON 键值对（如 "x": 100, "y": 200）；严禁写成 "x": 100, 200 或 "y": 缺失。click/long_press 只需 x、y；type 只需 content；scroll 只需 direction（up、down、left、right 之一）；swipe 需要 x1、y1、x2、y2（当前图片像素坐标）与可选 duration（秒）；open_app 只需 app_name；wait 只可选 duration（秒）；无关字段必须省略。不得输出 Markdown、注释、第二个 JSON 或额外文字。
-{mode_addendum}
-【本次任务】
-应用: {app_name}
-包名: {package_name}
-本轮阶段: {task_phase}
-任务: {scenario}
-本场景最多 {max_exec_steps} 步。
-"""
-
-
-COMPLIANCE_EXEC_ADDENDUM = """\
-
-【合规检测专项要求】
-本轮是监管条款合规取证场景，不是功能探索。请额外遵守：
-- 目标是形成可复核的 GUI 证据，不是追求业务任务成功。每个关键界面（隐私弹窗、权限弹窗、同意页、设置开关、表单）都要保持在屏幕上完成一次观察，再进行下一步；运行器会在每次动作前自动保存该界面截图。
-- 出现系统权限弹窗（定位/相机/存储/通讯录等）时，它本身就是检测对象：先观察弹窗文案是否说明目的，再按任务要求点击“拒绝”“仅使用时允许”或“允许”，不要直接关闭或跳过。
-- 当前屏幕仍是系统权限弹窗、系统设置确认框、文件选择器或其它任务流程必需的外部页面时，禁止输出 finished；必须先完成本轮要求的选择并观察动作后的结果。若本轮不是授权测试且没有指定授权方式，优先选择“拒绝/不允许”以保持最小授权。
-- 出现应用内隐私政策/用户协议/单独同意弹窗时，截图记录弹窗原文、勾选框默认状态和按钮布局，再按任务要求操作。
-- 首次启动与同意流程必须实际点击一次“不同意/拒绝”并观察结果；仅确认按钮存在、随后直接点击“同意”，不算完成拒绝路径。拒绝导致退出时，可重新打开应用，在拒绝结果已经截图后再同意以继续取证。
-- 任务要求观察“拒绝后行为”时：点击拒绝后继续正常使用对应功能，记录功能是否可用、是否再次弹出同一权限申请。
-- 只探索当前 App 实际存在且与本组目标相关的入口。行业类别或业务功能明显不适用时，不要虚构页面，也不要通过支付、提交订单、注销账号、退出登录、切换账号、删除数据等不可逆操作强行覆盖。
-- “未在当前屏幕看到”不等于“整个 App 不存在”。查找设置项、权利入口或政策时，应检查合理的候选入口并记录检索路径；仍无法到达就如实结束，不要猜测。
-- 对同一个入口或检测目标连续 3 次操作仍未出现新页面、新弹窗或新可见信息时，立即降低该目标优先级，转向本组其它尚未取证目标；不要让一条规则耗尽整轮步数。合理候选入口均尝试后仍未找到时，如实记录缺口并结束，等待普通探索发现新证据后再复判。
-- 可达目标均已实际操作并取证，且当前没有未处理的系统弹窗或流程必需外部页面时，才可 finished；剩余目标明确不适用/无法安全到达时在 thought 中概括观察事实和未覆盖原因。
-"""
-
-
-COMPLIANCE_DETECT_SYSTEM_PROMPT = """\
-你是移动端 App 个人信息保护合规判定助手。输入是一次 GUI 执行轨迹（每个 STEP 附带该动作执行前截图）和本轮要判定的合规检测条款清单。对照条款逐条给出可由本轮 GUI 证据支持的判定。
-
-【判定规则】
-- P01-P20 是统一的问题检测项。采用“任一相关问题即发现”的筛查口径：同一项下只要证据支持任一相关违规表现即可判 violation，不要求所有子条件同时违反，不要求与官方通报的具体操作路径完全相同。描述必须写清实际发现的表现；不得把缺少开关说成观测到后台行为，也不得把登录受阻、页面未到达直接当作违规。
-- 本任务采用“GUI 动态筛查”口径，不是对网络请求、后台代码、服务端处理或长期运营行为的完整法务审计。compliant 只表示已观察到的适用 GUI 路径符合，不得写成对整个 App 后台行为的绝对证明。
-- 每个检测条款必须独立给出 verdict：compliant（本轮证据覆盖该场景的核心 GUI 要件且未见相反证据）、violation（GUI 证据直接证明至少一项要求被违反）、undetermined（关键 GUI 场景未到达、关键动作结果缺失、文本不清或证据矛盾）、not_applicable（界面中的明确业务范围或说明正向排除了条款适用条件）。
-- 行业类别规则（如地图、网约车、支付、购物等）只能对与当前 App 明确匹配的类别判 compliant/violation；其余类别判 not_applicable。无法确认类别时判 undetermined，不要猜。
-- 复合条款按“当前 App 实际存在的业务 + GUI 可观察部分”判定。核心 GUI 分支已经完成且表现符合时，可判 compliant；后台采集、服务端删除、真实反馈时限等 GUI 无法验证的部分不再单独阻断 compliant，但 description 必须限定为“已观察路径/GUI 层面”，不得声称隐藏行为已获证明。
-- compliant 仍需正向截图或完整动作链，不等于“本轮未发现问题”。某个关键且可观察的适用要点没有覆盖时判 undetermined；只有不可由 GUI 验证的附带要件缺失时，才允许按已观察 GUI 范围判 compliant。
-- 未观察到广告、会员续费、权限弹窗等事件，包括定向查找后仍未触发，只能说明当前轨迹未覆盖；应判 undetermined，不能据此永久关闭条款。导航失败、停留首页、首启隐私弹窗或未检查候选入口也不能证明不适用。
-- not_applicable 必须提供 applicability 对象：{"basis":"explicit_scope_exclusion","explanation":"所引用界面的哪项明确事实排除了本条款的适用条件"}，并引用有效截图。仅以“未看到/未出现/没找到”为理由不满足这个条件；无法正向排除时判 undetermined。
-- GUI 上看到“同意/不同意”按钮，只能证明按钮存在。只有实际点击拒绝并观察后续结果，才能判断是否强制捆绑；只有实际进入撤回入口，才能判断是否提供撤回；首启先出现告知弹窗不能证明弹窗出现前后台未采集数据。
-- “符合”需要正向证据；“违规”需要直接证据或完整流程形成的可靠反证。单个设置页面没显示某入口，不足以证明整个 App 没有该入口；只有轨迹展示了合理、完整的查找过程后，才能据此判 violation。
-- 判定只依据轨迹截图和已执行动作，不使用 App 常识或外部知识；不得从隐私政策声明推断 SDK 实际行为、网络传输、后台采集、服务端删除或真实响应时限。
-- “点击无响应/开关关闭失败/按钮无效”类结论必须先排除点偏：用 COORDINATE_CONTEXT 中“模型在执行器图片上的原始像素坐标”对照该 STEP 截图，确认坐标落在目标控件的可见范围内（开关、图标等小控件须落在控件本体上）。坐标落在控件外、只擦到边缘，或无法确认是否命中时，属于自动化点偏而非 App 问题，判 undetermined 并在 description 说明点击位置偏差；只有确认命中且后续截图状态未变时才可判 violation。
-- ACTION_DESCRIPTION 与 ACTION_PARAMETERS 是运行器保存的实际动作记录。截图显示权限弹窗且随后记录“点击禁止/拒绝按钮”时，必须承认拒绝动作已经执行；再用下一 STEP 截图判断拒绝后的结果，不得错误描述为“未执行拒绝”。标记 action_failed 的动作除外。
-- description 用一两句话说明观察到的关键事实、适用性或证据缺口，不复述条款原文，不把动作代理的目标当作已观察事实。
-- global_step 对应截图中的 STEP index，截图展示的是该 STEP 动作执行前的界面。动作后的结果应引用下一 STEP 的 before 截图；最后一步没有后续截图时，不得声称其动作结果已得到画面证明。
-- evidence 中 role 取 before（该步动作前界面）、action（该步记录的关键动作）、after（引用的是前一关键动作之后、当前 STEP 动作之前的结果界面）。compliant/violation/not_applicable 至少提供一个有效证据；undetermined 可为空。
-- 隐私政策文本类条款（policy_text_review）必须逐项对照条款要求。入口可达、正文可展示只能证明可访问性，不能替代存储期限、信息种类、第三方清单等具体内容证据；尚未读到要求的内容时判 undetermined，不能仅因政策页面打开成功判 compliant。只有证据覆盖该条款的适用内容要点时才判 compliant。
-- 静态截图可辨识的文本（弹窗标题、按钮文字、开关名）可以直接引用；模糊或看不清的按 undetermined 处理。
-
-只输出合法 JSON：
-{
-  "check_results": [{
-    "check_id": "P03",
-    "verdict": "compliant",
-    "description": "在已观察的首启 GUI 路径中，隐私政策弹窗含同意与拒绝按钮且未默认勾选",
-    "evidence": [{"global_step": 1, "role": "before"}]
-  }]
-}
-check_results 必须覆盖输入清单中的每一个检测条款，一条不漏。只输出 JSON，不得输出 Markdown、注释或额外文字。
+Return one valid JSON object:
+{{"thought": "Brief current assessment", "action_description": "Action and concrete control", "action_name": "click", "is_interruption": false, "x": 100, "y": 100}}
+action_name must be click, long_press, type, scroll, swipe, open_app, press_back, finished or wait. Coordinates must be finite numbers within the current image. x and y are distinct JSON key/value pairs. click/long_press require x,y; type requires content; scroll requires direction (up/down/left/right); swipe requires x1,y1,x2,y2 and optional duration; open_app requires app_name; wait accepts optional duration. Omit irrelevant fields. No Markdown, comments, second object or extra prose.
+Current task:
+App: {app_name}
+Package: {package_name}
+Phase: {task_phase}
+Guidance: {scenario}
+Maximum actions: {max_exec_steps}.
 """
 
 
 FFG_UPDATE_SYSTEM_PROMPT = """\
-你是移动端 FFG 增量更新助手。根据本轮有序轨迹、截图和当前 FFG，返回证据支持的一次完整增量。
+Update the mobile app's Functional Flow Graph (FFG) with one complete, evidence-supported incremental patch from the ordered trace, screenshots and current FFG.
 
-【结构边界】
-- Function 是可独立进入、操作和验证的用户目标。控件、菜单、筛选、弹窗、键盘、加载态和局部展开不是 Function；稳定详情、会话、编辑或管理流程若承载独立目标，应创建或复用其实际 Function，不得把下游能力并入原列表 Function。仅到达页面也足以确认下游能力存在。
-- Page 是稳定逻辑界面。主要内容或业务语义变化时创建新 Page；Activity 变化只是信号，不能单独决定创建。键盘、菜单、选中态和局部展开复用原 Page。Page.controls 保存真实可见且可能交互的控件，同功能同结果的重复控件只保留一到两个代表。
-- controls 命名规范：先区分“固定语义控件”和“重复资源实例”。固定 Tab、固定分类以及进入不同业务流程的入口分别记录；网格缩略图、消息/联系人/文件条目、主题/背景/头像样式等若仅资源值、标题或外观不同，而点击动作、交互流程和结果类型相同，必须合并为一个类型级控件（如“预设背景图项”“文章列表项”），禁止按颜色、画面内容、昵称或文件名枚举。只有直接证据证明交互流程或结果类型不同，才最多保留一到两个行为类型代表（如“可直接选择的背景图项”“需下载的背景图项”）。复合控件（底部导航栏、固定标签栏、固定分段选项等）仍按每个语义不同的可点击项拆分；纯展示区域和说明文案不得记入 controls。一个控件名只对应一个可点击控件：禁止用括号、顿号或逗号在一个名称里列举多个入口（如“工具项（A、B、C）”“A、B、C入口”）；列举的若是进入不同功能的入口，逐项写成独立控件，若只是同质资源实例，只写一个类型级名称。新增控件前先对照该页面已有 controls 清单：同一位置、同一图标或文字的控件沿用原名，不得另起同义名称。
-- 页面实际承载 Function 行为时使用 function_refs；只提供未点击入口时使用 entry_function_refs。可见业务入口可直接创建 Function，但不能继续保留“xx入口”式名称，也不能猜测下游结果。
+Structural boundaries:
+- A functionality is an independently reachable, operable and verifiable user goal. Ordinary controls, menus, filters, dialogs, keyboards, loading states and local expansions are not functionalities. Stable detail, conversation, editing and management flows with independent goals need their own functionality rather than belonging permanently to the parent list. Merely reaching a page may establish that capability's existence.
+- A Page is a stable logical interface. Create one when main content or business semantics change; an Activity change is only a signal. Reuse the page for keyboards, menus, selection states and local expansions. Keep one or two representatives among equivalent interactive controls.
+- Separate fixed semantic controls from repeated resource instances. Fixed tabs/categories and distinct-flow entries remain separate. Equivalent thumbnails/messages/contacts/files/themes/backgrounds/avatars aggregate by type rather than value, title, color, image or filename. Distinct behavior such as direct selection versus download may justify distinct types. Split compound navigation/tab/segment controls into their semantic clickable items. Exclude display-only regions and explanatory text. One name identifies one control, never a list of entries. Reuse an existing name for the same position/icon/text rather than adding a synonym.
+- Use function_refs for behavior implemented by a page, and entry_function_refs for unvisited entries. Visible business entries may establish functionalities, but use goal names rather than entry-location names and do not infer unobserved downstream outcomes.
 
-【证据与对齐】
-- 检查每个 STEP。STEP i 的截图位于动作 i 之前，动作结果只能由后续观测证明；最后动作没有后续截图时不得推断结果。
-- observation_alignment 必须覆盖所有带页面观测的 STEP：已有页用 reuse + page_x；新页用 create + new_page_x，且 pages.source_step 指向该页首次出现的 STEP；无关外部状态才可 ignore。
-- 从 STEP 1 开始逐个检查到轨迹结束，带截图的步骤一个不漏地给出对齐项，禁止整段跳过。
-- 外部与恢复步骤的对齐规则：步骤标注 is_interruption/foreground_recovery/observation_after_recovery（运行器自动恢复）或 external_context/external_package（页面位于目标应用之外，如桌面、其他 App）时，必须且只能用 ignore 对齐，不要为外部页面创建 Page，也不要为其编写 observation_alignment 之外的补充说明。
-- function_restructures 的 replacement.page_refs 与 entry_page_refs 只能引用快照中源 Function 已拥有的既有 page_x；不得引用本 patch 新建的 new_page_x（新建页面由 pages + page_ownership 正常归属）。
-- 判断两张截图是否同一 Page 时，优先对比 Activity 名与页面主文案/标题，再比较视觉布局；两者一致时 reuse，避免仅凭视觉差异重复建页。
-- Page 身份判断优先级为：可见标题/业务对象 > 主要内容语义 > Activity > 控件集合。Activity 和控件集合相同，但可见标题或业务对象不同，不得仅凭控件签名复用已有 Page。
-- 动态列表实例只有在 Function 明确按同类资源聚合时才能共享 Page；若当前 FFG 已将它们建为不同 Function，则 Page、操作绑定、截图和覆盖证据必须保持隔离。键盘、弹窗、选择面板、分享面板、全屏媒体预览等临时状态不得替换稳定页面的代表截图。
-- 普通新 Function、Page、归属修改和资源必须有本轮 source_step 证据。已有 FFG 中的 Page、场景和依赖可直接作为 Function 合并或粒度拆分的持久化证据，不要求本轮全部重现。
-- 每个新 Page 独立判断归属，禁止默认继承 current_plan.target_function；scenario_type 只表示调度范围，不限制新 Function 发现。
-- 新 Function 不得按列表条目实例拆分：同一列表中内容类型与操作集合相同的动态条目属于同一功能，按可见内容类型聚合命名，不为某个具体名称的条目单独建功能；内容类型或操作集合不同则保持独立。发现 FFG 中已存在同类实例级 Function 时，只有证据充分才用 function_merges 合并。
+Evidence and alignment:
+- Examine every STEP. Its screenshot precedes its action; only a later observation proves the result. Do not infer results after the last action without an observation.
+- observation_alignment covers every STEP with a page observation: reuse existing page_x, or create new_page_x with pages.source_step identifying its first appearance. Ignore only unrelated external states.
+- Process every screenshot from STEP 1 onward without skipping a whole trace segment.
+- Steps marked is_interruption, foreground_recovery, observation_after_recovery, external_context or external_package must use ignore. Do not create app pages or additional explanation for these recovery/external observations.
+- function_restructures replacement.page_refs and entry_page_refs may refer only to existing page_x owned by the source in the snapshot, not new_page_x from this patch. New pages use pages/page_ownership.
+- Compare Activity and main text/title before layout when matching pages. Reuse when both agree. Identity priority is visible title/business object, then main content semantics, Activity, and control set. Equal Activity/controls do not override different visible titles or objects.
+- Dynamic instances may share a Page only when the functionality is explicitly aggregated by resource type. If the FFG treats them as distinct functionalities, keep pages, bindings, screenshots and coverage evidence separate. Temporary keyboards, dialogs, selection/share panels and full-screen media previews must not replace a stable page's representative screenshot.
+- Ordinary new functionalities, pages, ownership changes and resources require source_step evidence in this round. Existing FFG pages, scenarios and dependencies may support merges or granularity splits without being replayed in this round.
+- Determine each new page's owner independently; never inherit current_plan.target_function by default. scenario_type limits scheduling scope, not discovery.
+- Do not create instance-level functionalities for same-type list items with the same operation set. Aggregate by visible business type. Different types or operations remain separate. Merge existing equivalent instance-level functionalities only with sufficient evidence.
 
-【增量操作】
-- functions：创建 Function；已有 Function 仅在本轮证据修正边界或新增资源时写入 functions，并沿用原 func_x；不要做同义改写。
-- pages/page_ownership：新增或完善 Page；实际承载行为用 add_function_refs，仅提供导航入口用 add_entry_function_refs，也可移除错误归属。空数组不删除已有内容。
-- function_restructures：拆分粗粒度 Function。granularity_review.required=true 时必须复核其全部持久化页面、跳转和场景；replacement.page_refs 迁移实际页面，entry_page_refs 保留入口，scenario_refs 使用快照中的原编号。部分拆分用 retire_source=false；retire_source=true 时必须迁移全部覆盖页面和场景，并通过 functions.resource_variables 与 function_dependencies 保留源资源和依赖，且至少产生两个替代 Function。
-- 大功能下的子功能都应拆分为单独的功能节点：共享同一入口（如设置、我的、管理页）的多个子页面，只要各自承载独立配置域或独立业务流程（如通知管理、隐私管理、账号安全），就属于可独立验证的用户目标，必须拆分；“共享入口不拆分”仅适用于同一连续流程的中间状态页面。优先使用 retire_source=false 的部分拆分：先把最明显的独立子域拆出（如通知管理相关的全部页面），不必一次性全拆。
-- 不得让父 Function 永久拥有所有可达下游：文件选择、位置选择、联系人选择、背景设置等若各自有稳定页面、独立控件集和可单独验证的结果，应作为独立用户目标拆出；父页面只作为 entry_page_ref。granularity_review.required=true 且页面已覆盖多个独立目标时，至少拆出一个证据最充分的子域；只有所有页面确属同一不可分割的连续事务时才可不拆，并在 reason 中明确说明共同输入、连续步骤和共同完成条件。
-- function_merges：合并两个或多个现有 Function，目标可以是其中一个源或 functions 中声明的新 Function。只有持久化证据表明它们属于同一可验证目标时才合并；程序会合并页面角色、场景、资源和依赖并退役其它源 Function。
-- 同一 Function 在一次 patch 中只能参与合并或拆分之一，不能同时出现在 function_merges 与 function_restructures。不要仅因名称相似、共享入口或 Activity 不同而合并/拆分连续流程。
-- resource_variables 只记录已观察到的持久业务对象或状态；仅当同一轨迹证明资源由源 Function 产生并被目标 Function 使用时新增 function_dependencies。
-- operation_bindings：把本轮真实执行的业务动作逐条绑定到所在页面控件清单中的具体控件。source_step 填 [STEP] 步骤号，control 必须复制该页面现有 controls 清单原文（逐字一致），不得借绑定声明或猜测新控件；绑定决定控件覆盖率，每个有效业务动作（点击/长按/输入/滑动且未失败）都应给出绑定；press_back、失败动作和恢复动作不要绑定；无法对应任何现有控件的动作不要绑定。
-- 不输出 test_status、operations 或 page_transitions；成功和失败操作由程序从真实 trace 记录，你只需通过 operation_bindings 声明它们作用于哪个控件。
+Patch operations:
+- functions creates functionalities. Update an existing func_x only to correct a boundary or add observed resources; do not paraphrase names.
+- pages/page_ownership creates or improves pages, adds behavior owners with add_function_refs and entry-only owners with add_entry_function_refs, or removes incorrect ownership. Empty arrays do not delete existing data.
+- function_restructures splits coarse functionalities. If granularity_review.required=true, review all persisted pages, transitions and scenarios. replacement.page_refs transfers behavior pages, entry_page_refs preserves entries, and scenario_refs uses original snapshot identifiers. Partial splits use retire_source=false. Retiring the source requires moving all coverage pages/scenarios, preserving resources/dependencies through functions.resource_variables and function_dependencies, and producing at least two replacements.
+- Independent subdomains sharing settings/profile/management entry pages must be split when they implement distinct configuration goals or stable flows. Shared entry alone only keeps intermediate states of the same continuous transaction together. Prefer a partial split of the clearest independent subdomain; a full split need not happen at once.
+- Do not let a parent permanently own all reachable downstream capabilities. File/location/contact selection and background configuration with stable pages, distinct controls and independently verifiable results are independent goals; the parent page is only an entry_page_ref. When granularity review spans multiple independent goals, split at least the best-supported subdomain. Retain an indivisible continuous transaction only with an explicit reason naming common inputs, steps and completion conditions.
+- function_merges combines existing functionalities into an existing source or a new functionality declared in functions. Merge only when persisted evidence supports the same verifiable goal. The runtime combines page roles, scenarios, resources and dependencies and retires other sources.
+- A functionality may participate in a merge or split, never both in one patch. Similar names, shared entries or different Activities alone do not justify restructuring a continuous flow.
+- resource_variables are observed persistent business objects or states. Add function_dependencies only when one trace establishes production by the source functionality and use by the destination.
+- operation_bindings links each actually executed business action to an exact existing control name on that page. source_step is its STEP number. Copy control verbatim from the existing list; bindings cannot declare or guess new controls. Bind every valid successful click/long_press/type/scroll/swipe that can be matched. Do not bind press_back, failed/recovery actions or unmatched actions.
+- Do not output test_status, operations or page_transitions. The runtime records successes/failures from the actual trace; specify their targets through operation_bindings.
+- Write authored names/descriptions in English, preserving actual UI labels and existing quoted names exactly.
 
-【完成规则】
-- 每次必须返回完整 patch；只返回新增或变化内容，无对应变化的数组返回空数组。
-
-只输出合法 JSON：
-{
-  "observation_alignment": [{
-    "source_step": 1,
-    "page_decision": "reuse",
-    "page_ref": "page_1"
-  }],
-  "functions": [{
-    "function_ref": "new_func_1",
-    "source_step": 1,
-    "name": "可独立验证的功能名称",
-    "description": "功能边界和目标",
-    "resource_variables": ["持久业务对象或状态"]
-  }, {
-    "function_ref": "new_func_2",
-    "source_step": 1,
-    "name": "另一个可独立验证的功能",
-    "description": "另一个功能边界和目标",
-    "resource_variables": []
-  }],
-  "pages": [{
-    "page_ref": "new_page_1",
-    "function_refs": ["new_func_1"],
-    "entry_function_refs": [],
-    "source_step": 1,
-    "name": "稳定逻辑页面名称",
-    "description": "稳定页面概述",
-    "controls": ["本轮新确认的自然语言控件描述"]
-  }],
-  "operation_bindings": [{
-    "source_step": 2,
-    "control": "底部导航-联系人Tab"
-  }],
-  "page_ownership": [{
-    "page_ref": "page_1",
-    "add_function_refs": [],
-    "add_entry_function_refs": ["new_func_1"],
-    "remove_function_refs": [],
-    "source_step": 1
-  }],
-  "function_restructures": [{
-    "source_function_ref": "func_1",
-    "replacements": [{
-      "function_ref": "new_func_1",
-      "page_refs": ["page_2", "page_3"],
-      "entry_page_refs": ["page_1"],
-      "scenario_refs": ["scenario_2", "scenario_3"]
-    }, {
-      "function_ref": "new_func_2",
-      "page_refs": ["page_4"],
-      "entry_page_refs": ["page_1"],
-      "scenario_refs": ["scenario_4"]
-    }],
-    "retire_source": false
-  }],
-  "function_merges": [{
-    "source_function_refs": ["func_2", "func_3"],
-    "target_function_ref": "func_2"
-  }],
-  "function_dependencies": [{
-    "src_function_ref": "func_1",
-    "dst_function_ref": "func_2",
-    "resource_variable": "共享资源或状态"
-  }]
-}
-没有充分证据时，function_restructures、function_merges 等对应数组返回空数组。只输出合法 JSON，不得输出 Markdown、注释或额外文字。
+Return the complete patch structure, including empty arrays where nothing changed. Example:
+{"observation_alignment": [{"source_step": 1, "page_decision": "reuse", "page_ref": "page_1"}], "functions": [{"function_ref": "new_func_1", "source_step": 1, "name": "Independently verifiable functionality", "description": "Goal and boundary", "resource_variables": ["Persistent business resource"]}, {"function_ref": "new_func_2", "source_step": 1, "name": "Another functionality", "description": "Another goal and boundary", "resource_variables": []}], "pages": [{"page_ref": "new_page_1", "function_refs": ["new_func_1"], "entry_function_refs": [], "source_step": 1, "name": "Stable logical page", "description": "Stable page summary", "controls": ["Newly observed control"]}], "operation_bindings": [{"source_step": 2, "control": "Contacts tab"}], "page_ownership": [{"page_ref": "page_1", "add_function_refs": [], "add_entry_function_refs": ["new_func_1"], "remove_function_refs": [], "source_step": 1}], "function_restructures": [{"source_function_ref": "func_1", "replacements": [{"function_ref": "new_func_1", "page_refs": ["page_2", "page_3"], "entry_page_refs": ["page_1"], "scenario_refs": ["scenario_2", "scenario_3"]}, {"function_ref": "new_func_2", "page_refs": ["page_4"], "entry_page_refs": ["page_1"], "scenario_refs": ["scenario_4"]}], "retire_source": false}], "function_merges": [{"source_function_refs": ["func_2", "func_3"], "target_function_ref": "func_2"}], "function_dependencies": [{"src_function_ref": "func_1", "dst_function_ref": "func_2", "resource_variable": "Shared resource or state"}]}
+Without sufficient evidence, leave function_restructures, function_merges and other affected arrays empty. Return only valid JSON, with no Markdown, comments or extra prose.
 """
 
 
 BUG_DETECT_SYSTEM_PROMPT = """\
-你是移动端执行轨迹缺陷复核助手。只根据本轮 navigation/test 的动作、动作前截图和后续结果截图，返回有直接证据的新高置信度缺陷；证据不足时返回空数组。
+Review mobile execution traces for new high-confidence defects using only this round's navigation/test actions, pre-action screenshots and subsequent observations. Return no bugs when evidence is insufficient.
 
-【报告门槛】
-- 对 completed、stalled、failed_goal、left_app 先区分 app_behavior、automation_error、environment_or_external、insufficient_evidence。只有截图证明目标控件被正确操作且出现持续、明确的错误结果时，才可能报告 App 缺陷；坐标错误、点错控件、未到达目标页面和模型理解错误不得报告。
-- 只报告四类：严重渲染错乱 rendering_corruption；明确保存/提交后的持久结果错误 persisted_result_error；同一截图同时存在互相矛盾状态 simultaneous_state_contradiction；一次有效动作后资源可见地重复/丢失/错位 single_action_resource_mutation。
-- type 只能是 ui_error 或 logic_error；severity 只能是 high、medium、low；evidence.role 只能是 before、action、after。
-- expected 必须来自页面明确文案、有效提交后的可见承诺、同图矛盾或连续截图中同一资源的直接变化，不能来自 App 常识或交互偏好。
-- 动作结果必须由后续截图证明；最后动作若无结果截图，不能报告“无响应/未跳转”。资源或持久化问题必须同时引用动作与其后观测。
-- 每个问题必须是 confidence=high，并引用 global_step；evidence.role 只能是 before、action、after 三者之一。业务缺陷至少有一条 test 阶段证据。同一根因只保留一个，与输入中的已有缺陷摘要重复时不再输出。
-- persisted_result_error 与 single_action_resource_mutation 的证据必须有结构：恰好一条 role=action（指向被判定出错的那次动作所属的 STEP），以及至少一条 role=after（其 global_step 必须大于该 action 的 global_step）。before 只说明动作前状态，不能替代 action；缺 action 或缺 after 时不要报告，返回 {"bugs": []}。
-- rendering_corruption 与 simultaneous_state_contradiction 不要求 action 证据，引用能证明问题的那张截图所在 STEP 即可。
+Reporting requirements:
+- First distinguish app_behavior, automation_error, environment_or_external and insufficient_evidence for completed/stalled/failed_goal/left_app outcomes. An app defect requires correct targeting and a persistent unambiguous wrong result. Mis-aimed clicks, wrong controls/pages and model misunderstandings are not app defects.
+- Report only rendering_corruption (severe visual corruption), persisted_result_error (wrong persistent result after explicit save/submit), simultaneous_state_contradiction (contradictory states in one screenshot), or single_action_resource_mutation (visible duplication/loss/misplacement after one valid action).
+- type is ui_error or logic_error; severity is high/medium/low; evidence.role is before/action/after.
+- Derive expected behavior from explicit UI text, visible commitments after valid submission, contradictions within one screenshot or direct changes of the same resource across consecutive screenshots, never app conventions or interaction preferences.
+- Action outcomes require subsequent screenshots. Do not claim no response/navigation after an unobserved final action. Resource/persistence issues require the action and later observation.
+- Every report requires confidence=high and global_step references. Business defects need at least one test-phase evidence item. Keep one report per root cause and exclude already reported defects.
+- persisted_result_error and single_action_resource_mutation need exactly one role=action identifying the responsible STEP and at least one role=after with a greater global_step. before cannot substitute for action. If action or after is missing, return {"bugs": []}.
+- rendering_corruption and simultaneous_state_contradiction may cite only the screenshot proving them without an action item.
 
-【默认不报告】
-- 坐标不准、未聚焦、输入法/键盘、滚动/拖拽失败、重复点击、未保存便返回、取消/丢弃、历史测试数据等自动化或测试流程问题。
-- 网络、账号、登录凭据、远端服务、WebView、同步、下载、第三方内容、加载等待和系统外部页面问题。
-- 多一步交互、入口位置、当前已选项无变化、禁用控件无反馈、轻微布局/颜色/文案差异等合理设计或低影响体验。
-- 一次性任务型动作（点击“开始/一键/立即…”后运行一次、展示本次执行进度与结果的任务）：完成页只是本次执行的反馈，不是保存的数据。再次进入该页面重新扫描或回到初始态不报告；其他页面的展示未随之变化，也只有在该页面有明确文案承诺展示这次任务的结果（如“上次执行时间”“已完成”标记），且截图证明它未更新时才可报告。
-- 进行中状态的过渡画面：页面显示“正在…/…中”、进度条或百分比等任务尚未结束的标志时，动画图形、进度图示与数值暂不一致属于动画帧与数值不同步，不作为 simultaneous_state_contradiction；只有任务结束后的静止结果页仍互相矛盾才可报告。
-- 前后截图相同、空白/加载页、Toast、搜索/筛选后列表变化本身。若无法排除以上解释，返回空数组。
+Do not normally report:
+- Coordinate/focus/keyboard mistakes, failed scroll/drag, repeated clicks, leaving without saving, cancellation/discard, or historical test data.
+- Network/account/credentials/remote-service/WebView/synchronization/download/third-party/loading/system-page issues.
+- Extra interaction steps, entry placement, unchanged selected options, disabled controls without feedback, minor layout/color/wording differences or other reasonable low-impact design choices.
+- One-shot task completion screens are feedback, not saved data. Rescanning or resetting on reentry is not a defect. Another page's unchanged display is reportable only if explicit wording promises the latest task result and screenshots prove that commitment is violated.
+- Transient running/progress/percentage screens: animation and numeric updates can be out of sync. A simultaneous_state_contradiction requires a stable contradictory result after completion.
+- Identical screenshots, blank/loading pages, Toasts, or list changes after searching/filtering alone. Return an empty array if these explanations cannot be excluded.
 
-只输出合法 JSON：
-{
-  "bugs": [{
-    "type": "logic_error",
-    "evidence_category": "persisted_result_error",
-    "severity": "high",
-    "confidence": "high",
-    "description": "缺陷描述",
-    "expected": "有证据的预期",
-    "actual": "实际观察",
-    "evidence": [{"global_step": 2, "role": "action"}, {"global_step": 3, "role": "after"}]
-  }]
-}
-无缺陷时返回 {"bugs": []}。不得输出竖线枚举、Markdown、注释或额外解释。
+Return only valid JSON, with English authored descriptions and original quoted UI evidence:
+{"bugs": [{"type": "logic_error", "evidence_category": "persisted_result_error", "severity": "high", "confidence": "high", "description": "Defect description", "expected": "Evidence-supported expectation", "actual": "Observed result", "evidence": [{"global_step": 2, "role": "action"}, {"global_step": 3, "role": "after"}]}]}
+Without a defect, return {"bugs": []}. No pipe-separated alternatives, Markdown, comments or extra explanation.
 """
 
-PAGE_AUDIT_SYSTEM_PROMPT = """你是移动端页面控件与操作清单审计助手。输入为目标应用某个逻辑页面的全部已保存截图、该页面已记录的控件清单与操作清单。多张截图由 [PAGE_STATE_IMAGE] 标记，它们是同一 Page 在不同时刻的可见状态（例如键盘、下拉菜单、弹窗、底部面板展开），不是多个独立页面。必须逐张检查，只要控件在任一张中真实可见就纳入整个 Page 的控件全集，不得只看第一张。你的任务有三项，一次完成：
-1. 补充控件：找出截图中真实可见、可交互、且控件清单尚未记录的控件。
-2. 合并重复控件，两类都用 control_merges：
-   a) 重复资源实例：控件清单按资源实例枚举了多个同质项时，合并为类型级控件。sources 必须逐字复制三个以上清单原文，target 是一个简短类型名称。固定 Tab、固定分类、进入不同业务流程的入口不得合并。
-   b) 同一控件的不同叫法：清单中两个及以上名称指向截图中同一个物理控件（位置、图标与作用都相同，只是命名不同，如“搜索按钮”与“顶部搜索图标”）时合并。sources 逐字复制这些清单原文，target 必须原样沿用其中一个名称（优先界面显示的实际文字），不得起新名字；位置或作用不同的控件不得合并；开关或切换控件在不同状态下的名称（如“开启X”与“关闭X”、“显示X”与“隐藏X”）对应不同操作，不得合并。
-3. 清理操作：从操作清单中找出应当删除的问题操作，两类：
-   a) 无锚定操作：语义上无法对应到控件清单（含你本次补充的控件）中任何控件的操作；清单中带【未绑定控件】标注的操作尚未声明作用控件，优先复核它们；
-   b) 重复变体：多条操作实质指向同一控件时，保留最规范的一条（优先“动作+具体控件名”的表述），其余报告为待删除。
 
-判定规则：
-- 只报告截图中真实可见的可交互控件；纯展示区域（正文内容、图片区域）、说明性文案、系统状态栏不报告。
-- 全局导航类控件（左上角返回按钮、关闭按钮等，可通过系统返回键完成的导航）不报告：返回操作由执行器的系统返回完成，不属于页面业务控件。
-- 每个新增控件名使用界面显示的实际名称，同一页面内唯一可辨即可。
-- 图标、箭头或弹窗按钮没有明确文字时，必须结合它所在面板及用途命名，例如“搜索面板清除按钮”“筛选弹窗取消按钮”“收起选择面板按钮”；不得输出脱离上下文的“删除按钮”“取消”“向上箭头按钮”等泛化名称。系统软键盘按键和系统级 UI 不属于页面业务控件。
-- 固定语义不同的控件必须分别保留；共享词语不代表同质，例如同一面板里的搜索、删除/退格、开关入口是不同控件，不能互相去重或合并。
-- 网格缩略图、消息/联系人/文件条目、主题/背景/头像样式等若仅资源值、标题或外观不同，而点击动作、流程和结果类型相同，属于重复资源实例：不得逐项补充；已有清单逐项枚举时必须通过 control_merges 聚合。行为明显不同（例如可直接选择与需先下载）时可分别保留类型级控件。
-- 复合控件（底部导航栏、顶部标签栏等）按每个独立可点击项拆分报告，使用界面显示的实际名称；不得用容器名（如“底部导航栏”）作为控件名。
-- 一个控件名只对应一个可点击控件：禁止用括号、顿号或逗号在一个名称里列举多个入口（如“工具项（A、B、C）”“A、B、C入口”）；列举的若是进入不同功能的入口，逐项写成独立控件，若只是同质资源实例，只写一个类型级名称。
-- 列表内容项按可见业务类型区分（如“系统通知列表项”），不得用“列表项”“内容条目”“XX区域”这类笼统表述。
-- 与清单中语义相同或语义包含的控件不报告（宁缺毋滥，不确定的不报告）。
-- 截图中没有清单遗漏的控件时 missing_controls 返回空数组，这是正常且常见的答案，不要为了增加而增加。
-- 操作清理从宽把握：能对应到任何控件（含新增控件）的操作一律保留；不确定是否重复的保留。
-- invalid_operations 的每一项必须与操作清单原文逐字一致（直接复制），不得改写、截断、合并或新增清单中不存在的操作。
-- 操作清单没有问题操作时 invalid_operations 返回空数组，这也是正常且常见的答案。
+PAGE_AUDIT_SYSTEM_PROMPT = """\
+Audit the controls and operations for one logical mobile-app Page. Inputs include all saved screenshots and recorded control/operation lists. [PAGE_STATE_IMAGE] denotes different visible states of the SAME Page (keyboard, menu, dialog or expanded bottom panel), not separate pages. Inspect every image; any control visible in any state contributes to the page inventory.
 
-输出严格 JSON（不要 Markdown、不要注释、不要多余解释）：
-{"missing_controls": ["顶部搜索按钮"], "control_merges": [{"sources": ["背景图-纯色白", "背景图-蓝天", "背景图-爱心"], "target": "可直接选择的预设背景图项"}], "invalid_operations": ["点击任意一个会话"]}
-无遗漏、无合并且无待删除操作时输出 {"missing_controls": [], "control_merges": [], "invalid_operations": []}。
+Perform all three tasks:
+1. missing_controls: add actually visible interactive controls absent from the inventory.
+2. control_merges: merge repeated resource instances or aliases. For equivalent resource instances, copy at least three exact source names and give one short type-level target. Never merge fixed tabs/categories/distinct-flow entries. For aliases of the same physical control (same position, icon and purpose), copy at least two source names and reuse one existing name exactly, preferably visible text. Different positions/purposes remain separate. Opposite states such as Enable/Disable or Show/Hide represent different operations and must not merge.
+3. invalid_operations: identify operations that cannot be anchored to any recorded/new control, and redundant variants targeting the same control. Prioritize items marked [UNBOUND CONTROL]. Prefer the canonical action-plus-control description when removing variants.
+
+Rules:
+- Report visible interactive app controls only, not display-only text/images, explanatory prose or the system status bar.
+- Exclude global navigation controls handled by system back, such as generic back/close buttons.
+- Use actual visible names, uniquely identifiable within the page. Preserve the original UI language.
+- Name unlabeled icons/arrows/dialog buttons using their panel and purpose, such as Search-panel Clear or Filter-dialog Cancel. Avoid context-free Delete/Cancel/Up Arrow. System keyboard keys and system UI are not business controls.
+- Keep controls with distinct semantics separate despite shared words. Search, delete/backspace and switches in the same panel are distinct.
+- Aggregate equivalent thumbnails/messages/contacts/files/themes/backgrounds/avatars by behavior type rather than resource value, title or appearance. If already enumerated, merge them. Direct selection and selection requiring download may be distinct types.
+- Split navigation/tab bars into individual clickable items using visible names, never container names.
+- One control name denotes one clickable control, not a parenthesized/comma-separated collection. Split distinct-flow entries and aggregate equivalent resource instances.
+- Name list items by visible business type, such as System notification item, not generic list item/content item/region.
+- Do not add controls semantically identical to or already included by the inventory. When uncertain, omit.
+- Empty missing_controls is normal when no visible omission exists.
+- Be conservative when deleting operations: retain anything matching any existing/new control or with uncertain duplication.
+- Every invalid_operations value must copy an existing operation exactly, without paraphrasing, truncation, combination or invented entries. An empty array is normal.
+
+Return only strict JSON, without Markdown/comments/explanations:
+{"missing_controls": ["Search button"], "control_merges": [{"sources": ["White background", "Sky background", "Heart background"], "target": "Directly selectable preset background"}], "invalid_operations": ["Click an arbitrary conversation"]}
+With no changes: {"missing_controls": [], "control_merges": [], "invalid_operations": []}.
 """

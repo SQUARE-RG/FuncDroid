@@ -16,12 +16,9 @@ class FFGUpdateSubgraphState(AgentState, total=False):
 
 
 def create_ffg_update_subgraph(llm, device=None):
-    """Compile the FFG update as a single-pass subgraph.
+    """Compile the FFG update as one subgraph node.
 
-    旧设计在副本上更新、校验失败时 refinement 重试并最终整轮回滚，导致本轮
-    已执行的页面、操作与跳转经常整体丢失。现在一轮只调用一次模型：patch
-    尽力应用，非法条目跳过，模型遗漏由程序兜底，结构不一致确定性修复。
-    """
+    Retain valid observations, skip invalid patch entries, repair omissions, and reconcile structure instead of rolling back the entire round."""
     update_pass = create_ffg_update_node(llm, device)
 
     def agent_update(state: FFGUpdateSubgraphState) -> dict[str, Any]:
@@ -30,7 +27,7 @@ def create_ffg_update_subgraph(llm, device=None):
         result = update_pass(state)
         issues = list(result.get("ffg_update_validation_issues", []) or [])
         print(
-            "[FFG 更新] 更新完成: "
+            "[FFG update] Update completed: "
             f"diagnostics={len(issues)}"
             + (f" | {'; '.join(map(str, issues[:3]))}" if issues else "")
         )

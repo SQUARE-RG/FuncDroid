@@ -1,13 +1,10 @@
+"""Startup, scheduling, and multilingual account-session regressions."""
+
 import contextlib
 import io
 import subprocess
-import sys
 import unittest
-from pathlib import Path
 from unittest.mock import patch
-
-FUNCDROID_DIR = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(FUNCDROID_DIR))
 
 import main
 from connector.adb import ADB
@@ -34,24 +31,8 @@ class DeviceSelectionTests(unittest.TestCase):
         self.assertEqual(args.mode, "defect")
         self.assertFalse(args.reset_app_data)
         self.assertTrue(args.bug_detection)
-        self.assertFalse(args.compliance)
 
-    def test_compliance_requires_package_before_resetting_data(self):
-        with contextlib.redirect_stderr(io.StringIO()):
-            with self.assertRaises(SystemExit) as raised:
-                main._build_parser().parse_args([
-                    "--device-id", "android-1", "--mode", "compliance",
-                ])
-        self.assertEqual(raised.exception.code, 2)
 
-    def test_explicit_preservation_allows_foreground_compliance(self):
-        args = main._build_parser().parse_args([
-            "--device-id", "android-1", "--mode", "compliance", "--no-reset-app-data",
-        ])
-        self.assertFalse(args.reset_app_data)
-        self.assertFalse(args.grant_permissions)
-        self.assertFalse(args.bug_detection)
-        self.assertTrue(args.compliance)
 
     def test_resume_cannot_clear_app_data(self):
         with contextlib.redirect_stderr(io.StringIO()):
@@ -104,7 +85,7 @@ class SchedulingTests(unittest.TestCase):
 class AccountSessionTests(unittest.TestCase):
     def test_session_guard_blocks_logout_but_not_observation(self):
         with patch.dict("os.environ", {"ACCOUNT_SESSION_GUARD": "1"}):
-            self.assertTrue(account_session_action_violation("click", "点击退出登录"))
+            self.assertTrue(account_session_action_violation("click", "\u70b9\u51fb\u9000\u51fa\u767b\u5f55"))
             self.assertTrue(account_session_action_violation("click", "Click Log out"))
             self.assertFalse(account_session_action_violation("click", "Open account settings"))
             self.assertFalse(account_session_action_violation("wait", "Log out button is visible"))

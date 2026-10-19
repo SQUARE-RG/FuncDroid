@@ -9,7 +9,7 @@ from .base import (
 
 
 def parse_hdc_targets(output: str) -> list[str]:
-    """解析 `hdc list targets` 输出；无设备时 hdc 打印 [Empty]，不能当成序列号。"""
+    """Parse hdc list targets; the [Empty] sentinel is not a device serial."""
     return [
         line.strip()
         for line in str(output or "").splitlines()

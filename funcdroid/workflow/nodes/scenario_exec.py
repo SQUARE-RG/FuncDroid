@@ -1,4 +1,4 @@
-"""场景执行节点。"""
+"""Scenario-driven GUI execution."""
 
 import json
 import math
@@ -23,14 +23,14 @@ from tools.actions import (
 from workflow.logcat_crash import NON_CRASH_LOGCAT_PATTERNS, _logcat_has_target_process_crash
 from workflow.app_foreground import (
     APP_RESTART_ATTEMPTS,
-    APP_RESTART_DELAY,  # noqa: F401  保留原模块名供引用/测试
+    APP_RESTART_DELAY,  # noqa: F401 - retained for callers and tests
     APP_RESTART_MAX_SECONDS,
-    APP_RESTART_RETRY_DELAY,  # noqa: F401  保留原模块名供引用/测试
+    APP_RESTART_RETRY_DELAY,  # noqa: F401 - retained for callers and tests
     APP_RESTART_SETTLE_DELAY,
     APP_START_MAX_WAIT,
-    APP_START_POLL_INTERVAL,  # noqa: F401  保留原模块名供引用/测试
+    APP_START_POLL_INTERVAL,  # noqa: F401 - retained for callers and tests
     FOREGROUND_CHECK_RETRIES,
-    FOREGROUND_CHECK_RETRY_DELAY,  # noqa: F401  保留原模块名供引用/测试
+    FOREGROUND_CHECK_RETRY_DELAY,  # noqa: F401 - retained for callers and tests
     current_foreground_package,
     deadline_allows,
     restart_until_foreground,
@@ -47,7 +47,6 @@ from workflow.llm import (
 )
 from workflow.llm_usage import record_llm_failure, record_llm_request, record_llm_response, record_llm_diagnostic
 from workflow.nodes.prompt import (
-    COMPLIANCE_EXEC_ADDENDUM,
     SCENARIO_EXEC_SYSTEM_PROMPT_TEMPLATE,
 )
 from workflow.nodes._shared import (
@@ -71,19 +70,18 @@ def _compact_execution_log_text(value: object, limit: int = 200) -> str:
     return text if len(text) <= limit else text[:limit - 1] + "…"
 
 
-# 每步随消息发送的历史截图张数；默认 1，仅带上一步执行前截图，与当前截图
-# 构成最近一次动作的前后对照。需要更长视觉记忆时调大（如 EXEC_KEEP_IMAGE_STEPS=3）；
-# 设为 0 表示不发送历史截图（注意 trace[-0:] 会取全量，必须单独处理）。
+# Historical screenshots per decision; one gives a before/after pair, zero omits history explicitly.
+
+
 KEEP_IMAGE_STEPS = max(0, int(os.getenv("EXEC_KEEP_IMAGE_STEPS", "1")))
-# 生成失败（解析/校验/调用失败）写回执行历史的滚动窗口上限。
+# Maximum recent generation failures retained in model-visible history.
 MAX_RECENT_FAILURES = 3
-# 场景执行（test 阶段）单轮步数上限；导航阶段使用独立的 MAX_NAVIGATION_STEPS。
+# Test actions per scenario; navigation has a separate MAX_NAVIGATION_STEPS budget.
 MAX_EXEC_STEPS = max(1, int(os.getenv("MAX_EXEC_STEPS", "15")))
 MAX_NAVIGATION_STEPS = max(1, int(os.getenv("MAX_NAVIGATION_STEPS", "10")))
-# 实测：部分本地模型即使开启 response_format=json_object，仍会偶发用纯文字
-# 描述动作意图而不带 JSON（见合规批量实验 run.log），通常 2-3 次重试后恢复。
-# 默认从 3 调到 4，给这种“格式回退”留出更充分的纠偏机会，避免整个场景
-# （及其覆盖的一组合规条款）因临界的连续失败直接判 error/deferred。
+# Allow four consecutive generation failures: some endpoints return prose despite JSON mode, then recover after format feedback.
+
+
 MAX_CONSECUTIVE_ERRORS = max(1, int(os.getenv("EXEC_MAX_CONSECUTIVE_ERRORS", "4")))
 MAX_ACTION_FAILURE_RECOVERIES = max(
     0,
@@ -98,25 +96,25 @@ FAST_ACTION_DELAY = float(os.getenv("FAST_ACTION_DELAY", "0.15"))
 FAST_ACTIONS = {"press_back"}
 COORDINATE_FIELDS = ("x", "y")
 SWIPE_COORDINATE_FIELDS = ("x1", "y1", "x2", "y2")
-# wait 的显式等待时长：默认 3s 覆盖启动页/WebView 加载，避免模型为了等加载
-# 连续输出两次 wait 而被 WAIT_STALL_REPEAT_WINDOW 误判为重复动作。
+# An explicit default wait covers loading without forcing repeated wait actions.
+
 MIN_WAIT_SECONDS = max(0.5, float(os.getenv("EXEC_WAIT_MIN_SECONDS", "1")))
 MAX_WAIT_SECONDS = max(MIN_WAIT_SECONDS, float(os.getenv("EXEC_WAIT_MAX_SECONDS", "10")))
 DEFAULT_WAIT_SECONDS = min(
     MAX_WAIT_SECONDS,
     max(MIN_WAIT_SECONDS, float(os.getenv("EXEC_WAIT_DEFAULT_SECONDS", "3"))),
 )
-# swipe 拖动时长（秒）：短=快速甩动，长=可控拖动（通知栏下拉、滑块）。
+# Swipe duration in seconds: shorter flicks versus controlled drawer or slider drags.
 MIN_SWIPE_DURATION = max(0.05, float(os.getenv("EXEC_SWIPE_MIN_DURATION", "0.1")))
 MAX_SWIPE_DURATION = max(MIN_SWIPE_DURATION, float(os.getenv("EXEC_SWIPE_MAX_DURATION", "1.5")))
 DEFAULT_SWIPE_DURATION = min(
     MAX_SWIPE_DURATION,
     max(MIN_SWIPE_DURATION, float(os.getenv("EXEC_SWIPE_DEFAULT_DURATION", "0.5"))),
 )
-# scroll 与 swipe 共用同一套滚动类判据（同方向预算、无进展），
-# 避免新增手势成为绕过停滞检测的新通道。
+# Scroll and swipe share budgets and stall checks so a new gesture cannot bypass them.
+
 SCROLL_LIKE_ACTIONS = {"scroll", "swipe"}
-# 模型动作中需要记入轨迹并透传给设备的参数字段。
+# Action parameter fields persisted in traces and forwarded to the device.
 ACTION_PARAMETER_FIELDS = (
     *COORDINATE_FIELDS,
     *SWIPE_COORDINATE_FIELDS,
@@ -125,8 +123,8 @@ ACTION_PARAMETER_FIELDS = (
     "app_name",
     "duration",
 )
-# 同一动作在界面无变化时连续重复多少次判停滞。open_app 每次都可能真实重启，
-# 代价高，2 次即拦截；滚动在长列表中合理地多次重复，放宽到 5 次。
+# Unchanged repeat limits: open_app can restart, while repeated list scrolling may be useful.
+
 STALL_REPEAT_WINDOW = 3
 WAIT_STALL_REPEAT_WINDOW = max(
     2,
@@ -140,8 +138,8 @@ STALL_REPEAT_WINDOWS = {
     "scroll": SCROLL_STALL_REPEAT_WINDOW,
     "swipe": SCROLL_STALL_REPEAT_WINDOW,
 }
-# test 阶段同方向连续滚动的硬预算：达到该次数后必须转向其他探索，
-# 继续同方向滚动会被 _detect_stall 提前拦截。
+# Hard same-direction scroll budget in the test phase; further attempts are blocked by stall detection.
+
 TEST_MAX_CONSECUTIVE_SAME_DIRECTION_SCROLLS = max(
     1,
     min(
@@ -150,18 +148,18 @@ TEST_MAX_CONSECUTIVE_SAME_DIRECTION_SCROLLS = max(
     ),
 )
 PAGE_NAVIGATION_CYCLE_WINDOW = 6
-# 动作效果反馈：变化像素占比低于该值视为界面无变化（光标闪烁、JPEG 噪声），
-# 高于 EFFECT_MAJOR_CHANGE_RATIO 视为整页级变化。只给最近几步计算，控制解码开销。
+# Pixel-change ratios distinguish noise, local changes and page changes; compute only recent effects.
+
 EFFECT_NO_CHANGE_RATIO = float(os.getenv("EXEC_EFFECT_NO_CHANGE_RATIO", "0.0002"))
-# “同一位置”按模型输出的图片坐标判断（与 REPEAT_COORD_TOLERANCE 的屏幕像素口径不同）。
+# Coordinate tolerance here uses uploaded-image pixels, not device-screen pixels.
 EFFECT_SAME_POINT_TOLERANCE = int(os.getenv("EXEC_EFFECT_SAME_POINT_TOLERANCE", "50"))
 EFFECT_MAJOR_CHANGE_RATIO = float(os.getenv("EXEC_EFFECT_MAJOR_CHANGE_RATIO", "0.15"))
 EFFECT_HISTORY_STEPS = max(1, int(os.getenv("EXEC_EFFECT_HISTORY_STEPS", "6")))
 EFFECT_ACTIONS = {"click", "long_press", "type", "press_back", "scroll", "swipe"}
 REPEAT_COORD_TOLERANCE = int(os.getenv("EXEC_REPEAT_COORD_TOLERANCE", "80"))
-# 点击落点二次定位：执行模型在完整提示下对小控件常有稳定的数十像素偏差。
-# 落点周围没有局部纹理（高频分量标准差低于阈值；背景通常 <5，控件上 >9）
-# 时才裁剪放大落点附近区域、请模型再定位一次；其余点击不额外调用，保持速度。
+# Refine taps only on low-texture backgrounds by magnifying the local region; avoid an extra model call for ordinary clicks.
+
+
 TAP_REFINE_ENABLED = os.getenv("EXEC_TAP_REFINE", "1").strip().lower() not in {"0", "false", "no", "off"}
 TAP_REFINE_FLAT_STD = float(os.getenv("EXEC_TAP_REFINE_FLAT_STD", "6"))
 TAP_REFINE_RADIUS = max(60, int(os.getenv("EXEC_TAP_REFINE_RADIUS", "180")))
@@ -169,8 +167,8 @@ TAP_REFINE_MAX_SHIFT = max(10, int(os.getenv("EXEC_TAP_REFINE_MAX_SHIFT", "120")
 TAP_REFINE_TIMEOUT_SECONDS = max(1.0, float(os.getenv("EXEC_TAP_REFINE_TIMEOUT", "8")))
 STALL_SCREENSHOT_SIMILARITY_THRESHOLD = float(os.getenv("EXEC_STALL_SCREENSHOT_SIMILARITY", "0.9995"))
 PAGE_CYCLE_ACTIONS = {"click", "press_back", "wait"}
-# 方向无关、动作无关的兜底停滞判据：在同一 Activity 内反复试探却始终在
-# 少数几个视觉状态之间打转时提前收尾，避免把 MAX_EXEC_STEPS 走满。
+# Stop direction-independent probing among a few visual states before the action budget is exhausted.
+
 NO_PROGRESS_STALL_WINDOW = max(
     3,
     min(int(os.getenv("EXEC_NO_PROGRESS_STALL_WINDOW", "6")), MAX_EXEC_STEPS),
@@ -179,28 +177,20 @@ NO_PROGRESS_MAX_VISUAL_STATES = max(
     1,
     int(os.getenv("EXEC_NO_PROGRESS_MAX_VISUAL_STATES", "2")),
 )
-# 聚类同一视觉状态时用比重复动作判定更宽松的阈值：这里要回答的是
-# “界面有没有实质变化”，而不是“两张截图是否逐像素一致”。
+# Visual-state clustering uses a looser threshold than identical-action detection to measure substantive change.
+
 NO_PROGRESS_SIMILARITY_THRESHOLD = float(
     os.getenv("EXEC_NO_PROGRESS_SIMILARITY", "0.985")
 )
 NO_PROGRESS_STALL_ACTIONS = {"click", "long_press", "scroll", "swipe", "press_back", "wait"}
 APP_RECOVERY_BACK_ATTEMPTS = max(1, int(os.getenv("APP_RECOVERY_BACK_ATTEMPTS", "3")))
-# APP_RESTART_* / APP_START_* / FOREGROUND_CHECK_* 冷启动轮询与重启参数统一定义在
-# workflow/app_foreground.py（规划节点同口径），此处导入后保留原名供调用与测试引用。
-# 前台是桌面（launcher）时按返回键无效，恢复流程直接跳到重启。
+# Foreground/restart constants are shared with workflow.app_foreground; retain imported names for callers and tests. Launcher recovery skips ineffective back presses.
+
+
 LAUNCHER_PACKAGE_PATTERN = re.compile(r"launcher|home", re.IGNORECASE)
-# 执行结果状态（navigation_status / scenario_status 共用）：
-#   completed               执行模型确认目标达成
-#   failed_goal             执行模型判定目标不可达，或运行器拦截了破坏登录态的动作
-#   blocked                 硬墙：验证码、账号安全策略、探索边界，当前环境不可测
-#   stalled                 停滞检测提前结束
-#   incomplete              步数或时间预算耗尽
-#   left_app                目标应用离开前台（非崩溃），已尝试返回/重启恢复
-#   app_crashed             目标应用崩溃
-#   screenshot_unavailable  截图黑屏或不可用
-#   error                   模型、设备或拉起应用连续出错
-#   skipped                 未执行（未配置场景，或导航未完成导致测试跳过）
+# Statuses: completed; failed_goal; blocked; stalled; incomplete; left_app; app_crashed; screenshot_unavailable; error; skipped. Each distinguishes task, environment and infrastructure outcomes.
+
+
 EXECUTION_STATUSES = frozenset({
     "completed",
     "failed_goal",
@@ -213,19 +203,19 @@ EXECUTION_STATUSES = frozenset({
     "error",
     "skipped",
 })
-# 已由运行器自行恢复前台（或无法取得画面）的状态：结束时不再补观测、不再恢复。
+# These states already restored foreground or lost observations; avoid another final observation/recovery.
 FOREGROUND_HANDLED_STATUSES = frozenset({"left_app", "app_crashed", "screenshot_unavailable"})
-TARGET_APP_CRASHED_END = "检测到目标应用崩溃，已重启目标应用并结束当前场景"
-TARGET_APP_CRASH_RECOVERY_FAILED_END = "检测到目标应用崩溃，但重启后仍未恢复到目标应用，已结束当前场景"
-TARGET_APP_RECOVERY_FAILED_END = "目标应用离开前台，自动返回和重启均未能恢复，已结束本轮场景"
-EXTERNAL_TRANSITION_BLOCKED_END = "目标应用跳转到未受控外部应用，已恢复目标应用并结束当前场景"
-# 探索边界（core 模式）结束文案模板：{label} 来自边界规则配置，如"小程序/第三方服务"。
-EXPLORATION_BOUNDARY_BLOCKED_END = "检测到进入{label}（非目标应用核心功能），已自动返回并结束当前场景"
-WECHAT_READ_ONLY_BLOCKED_END = "微信账号安全策略拦截了退出登录或删除账户操作"
-VERIFICATION_BLOCKED_END = "验证码或人机验证无法由无人值守测试完成，已退出当前阻塞页面"
-# 前台状态复检：页面切换动画期间 current_package 可能瞬时上报桌面
-# launcher（应用自身过渡态），单次立即检测会把过渡态误判为外部跳转
-# （left_app）。非前台结论必须经短暂等待复检确认。
+TARGET_APP_CRASHED_END = "Target app crashed; restarted it and ended the current scenario"
+TARGET_APP_CRASH_RECOVERY_FAILED_END = "Target app crashed and remained unavailable after restart; ended the current scenario"
+TARGET_APP_RECOVERY_FAILED_END = "Target app left foreground; back and restart failed to restore it; ended the scenario"
+EXTERNAL_TRANSITION_BLOCKED_END = "Target app entered an uncontrolled external app; restored the target and ended the scenario"
+# Boundary message template; label comes from the configured rule.
+EXPLORATION_BOUNDARY_BLOCKED_END = "Entered {label} (outside target app core functionality); returned automatically and ended the scenario"
+WECHAT_READ_ONLY_BLOCKED_END = "WeChat account safety blocked logout or account deletion"
+VERIFICATION_BLOCKED_END = "Human verification cannot be completed unattended; exited the blocked page"
+# Recheck non-foreground reports after a short delay because transitions may briefly report the launcher.
+
+
 EXTERNAL_RECHECK_ATTEMPTS = max(1, int(os.getenv("EXTERNAL_RECHECK_ATTEMPTS", "3")))
 EXTERNAL_RECHECK_DELAY = max(0.1, float(os.getenv("EXTERNAL_RECHECK_DELAY", "0.5")))
 CRASH_LOGCAT_TAIL_LINES = max(50, min(int(os.getenv("CRASH_LOGCAT_TAIL_LINES", "400")), 2000))
@@ -243,20 +233,24 @@ CRASH_LOGCAT_PATTERNS = (
     "Failed to create EGLSurface",
     "Failed to choose config",
 )
+# Legacy multilingual verdicts and UI vocabulary remain supported for saved traces.
 FINISHED_FAILURE_PATTERNS = (
-    "目标不可达",
-    "当前不可达",
-    "任务无法",
-    "无法完成",
-    "无法继续",
-    "无法切换",
-    "无法找到",
-    "无法进入",
-    "未找到",
-    "未成功",
-    "不能继续",
-    "均未成功",
-    "均无法",
+    "\u76ee\u6807\u4e0d\u53ef\u8fbe",
+    "\u5f53\u524d\u4e0d\u53ef\u8fbe",
+    "\u4efb\u52a1\u65e0\u6cd5",
+    "\u65e0\u6cd5\u5b8c\u6210",
+    "\u65e0\u6cd5\u7ee7\u7eed",
+    "\u65e0\u6cd5\u5207\u6362",
+    "\u65e0\u6cd5\u627e\u5230",
+    "\u65e0\u6cd5\u8fdb\u5165",
+    "\u672a\u627e\u5230",
+    "\u672a\u6210\u529f",
+    "\u4e0d\u80fd\u7ee7\u7eed",
+    "\u5747\u672a\u6210\u529f",
+    "\u5747\u65e0\u6cd5",
+    "not completed",
+    "not verified",
+    "not executed",
     "not able",
     "unable",
     "cannot",
@@ -266,62 +260,66 @@ FINISHED_FAILURE_PATTERNS = (
     "failed to",
 )
 FINISHED_OVERRIDE_FAILURE_PATTERNS = (
-    r"(替代|更换).{0,12}(入口|路径|控件|按钮)",
-    r"(原|指定).{0,20}(未找到|未成功|未完成|无法|不能|不符合)",
+    r"(\u66ff\u4ee3|\u66f4\u6362).{0,12}(\u5165\u53e3|\u8def\u5f84|\u63a7\u4ef6|\u6309\u94ae)",
+    r"(\u539f|\u6307\u5b9a).{0,20}(\u672a\u627e\u5230|\u672a\u6210\u529f|\u672a\u5b8c\u6210|\u65e0\u6cd5|\u4e0d\u80fd|\u4e0d\u7b26\u5408)",
     r"(instead|alternate|alternative).{0,20}(original|specified|requested)",
 )
 FINISHED_SUCCESS_PATTERNS = (
-    r"目标已达成",
-    r"任务目标已达成",
-    r"(所有|全部).{0,8}(任务)?目标.{0,4}(满足|达成|完成)",
-    r"当前任务已完成",
-    r"(所有|全部).{0,16}(验证项|检查项).{0,8}(均已确认|已确认|完成)",
-    r"已完成.{0,12}(所有|全部)",
-    r"测试任务已完成",
-    r"验证了.{0,40}正常",
-    r"(所有|全部).{0,12}验证(点|要求|目标).{0,12}(满足|达成|完成)",
-    r"功能正常",
-    r"(主要|核心).{0,16}(验证点|目标).{0,20}(覆盖|达成|满足|完成|已验证)",
+    r"\u76ee\u6807\u5df2\u8fbe\u6210",
+    r"\u4efb\u52a1\u76ee\u6807\u5df2\u8fbe\u6210",
+    r"(\u6240\u6709|\u5168\u90e8).{0,8}(\u4efb\u52a1)?\u76ee\u6807.{0,4}(\u6ee1\u8db3|\u8fbe\u6210|\u5b8c\u6210)",
+    r"\u5f53\u524d\u4efb\u52a1\u5df2\u5b8c\u6210",
+    r"(\u6240\u6709|\u5168\u90e8).{0,16}(\u9a8c\u8bc1\u9879|\u68c0\u67e5\u9879).{0,8}(\u5747\u5df2\u786e\u8ba4|\u5df2\u786e\u8ba4|\u5b8c\u6210)",
+    r"\u5df2\u5b8c\u6210.{0,12}(\u6240\u6709|\u5168\u90e8)",
+    r"\u6d4b\u8bd5\u4efb\u52a1\u5df2\u5b8c\u6210",
+    r"\u9a8c\u8bc1\u4e86.{0,40}\u6b63\u5e38",
+    r"(\u6240\u6709|\u5168\u90e8).{0,12}\u9a8c\u8bc1(\u70b9|\u8981\u6c42|\u76ee\u6807).{0,12}(\u6ee1\u8db3|\u8fbe\u6210|\u5b8c\u6210)",
+    r"\u529f\u80fd\u6b63\u5e38",
+    r"(\u4e3b\u8981|\u6838\u5fc3).{0,16}(\u9a8c\u8bc1\u70b9|\u76ee\u6807).{0,20}(\u8986\u76d6|\u8fbe\u6210|\u6ee1\u8db3|\u5b8c\u6210|\u5df2\u9a8c\u8bc1)",
     r"\bgoal\b.{0,30}\b(achieved|complete|completed)\b",
     r"\btask\b.{0,30}\b(complete|completed)\b",
 )
 MIXED_FINISH_FAILURE_PATTERN = re.compile(
-    r"(?:目标已达成|任务已完成|已完成可执行部分).{0,120}"
-    r"(?:不可达|未完成|未验证|未找到|未执行|无法进入)"
-    r"|(?:不可达|未完成|未验证|未找到|未执行|无法进入).{0,120}"
-    r"(?:目标已达成|任务已完成|已完成可执行部分)",
+    r"(?:\u76ee\u6807\u5df2\u8fbe\u6210|\u4efb\u52a1\u5df2\u5b8c\u6210|\u5df2\u5b8c\u6210\u53ef\u6267\u884c\u90e8\u5206).{0,120}"
+    r"(?:\u4e0d\u53ef\u8fbe|\u672a\u5b8c\u6210|\u672a\u9a8c\u8bc1|\u672a\u627e\u5230|\u672a\u6267\u884c|\u65e0\u6cd5\u8fdb\u5165)"
+    r"|(?:\u4e0d\u53ef\u8fbe|\u672a\u5b8c\u6210|\u672a\u9a8c\u8bc1|\u672a\u627e\u5230|\u672a\u6267\u884c|\u65e0\u6cd5\u8fdb\u5165).{0,120}"
+    r"(?:\u76ee\u6807\u5df2\u8fbe\u6210|\u4efb\u52a1\u5df2\u5b8c\u6210|\u5df2\u5b8c\u6210\u53ef\u6267\u884c\u90e8\u5206)"
+    r"|(?:goal achieved|task completed).{0,120}(?:unreachable|not completed|not verified|not executed|not found|unable|cannot)"
+    r"|(?:unreachable|not completed|not verified|not executed|not found|unable|cannot).{0,120}(?:goal achieved|task completed)",
     re.IGNORECASE,
 )
-# 单独的“滑块”也可能是音量/亮度/进度等普通控件；“拖动滑块验证读数”里的“验证”
-# 只是核对。只有成词的“滑块验证/滑动验证”（后接“码”、标点或结尾）才算挑战。
+# A generic slider may be an ordinary control; only explicit CAPTCHA/verification phrases denote a challenge.
+
 VERIFICATION_CHALLENGE_PATTERN = re.compile(
-    r"验证码|图形验证|人机验证|安全验证|拼图|captcha|verification\s+challenge"
-    r"|(?:滑块|滑动)验证(?=码|[，。、；,.;!！?？\s]|$)"
-    r"|(?:拖动|滑动)滑块(?:以|来)?(?:完成|通过)验证",
+    r"\u9a8c\u8bc1\u7801|\u56fe\u5f62\u9a8c\u8bc1|\u4eba\u673a\u9a8c\u8bc1|\u5b89\u5168\u9a8c\u8bc1|\u62fc\u56fe|captcha|verification\s+challenge"
+    r"|(?:\u6ed1\u5757|\u6ed1\u52a8)\u9a8c\u8bc1(?=\u7801|[，。、；,.;!！?？\s]|$)"
+    r"|(?:\u62d6\u52a8|\u6ed1\u52a8)\u6ed1\u5757(?:\u4ee5|\u6765)?(?:\u5b8c\u6210|\u901a\u8fc7)\u9a8c\u8bc1",
     re.IGNORECASE,
 )
 VERIFICATION_ATTEMPT_PATTERN = re.compile(
-    r"识别|拖动|滑动|对齐|拼合|提交|完成|通过|solve|drag|swipe|submit|verify",
+    r"\u8bc6\u522b|\u62d6\u52a8|\u6ed1\u52a8|\u5bf9\u9f50|\u62fc\u5408|\u63d0\u4ea4|\u5b8c\u6210|\u901a\u8fc7|solve|drag|swipe|submit|verify",
     re.IGNORECASE,
 )
 VERIFICATION_EXIT_PATTERN = re.compile(
-    r"关闭|取消|返回|退出|close|cancel|back|exit",
+    r"\u5173\u95ed|\u53d6\u6d88|\u8fd4\u56de|\u9000\u51fa|close|cancel|back|exit",
     re.IGNORECASE,
 )
 EXTERNAL_APP_SCENARIO_PATTERNS = (
-    r"(点击|选择).{0,20}(应用项|应用列表项|app item)",
-    # “目标应用”是被测应用本身，常出现在导航恢复文案中，不能据此放行外部应用。
-    r"(启动|打开|跳转到|进入).{0,30}(外部应用|其他应用|另一个应用|对应应用|应用程序)",
-    r"(启动|打开).{0,30}(Calculator|Calendar|Camera|Clock|Contacts|Files|Gmail|Maps|Messages|Phone|Photos)",
-    r"(返回|回到).{0,30}(launcher|启动器|应用列表|TextLauncher)",
-    r"(系统)?(文件|文档).{0,20}(选择器|管理器|保存|打开|导入|创建)",
-    r"(打开|进入|前往).{0,24}(系统设置|系统权限页|权限管理页|相机|相册)",
-    r"(?:在|使用|通过)?\s*(?:系统|外部|默认)?\s*(?:浏览器|browser).{0,16}(?:中)?\s*(?:打开|查看)",
-    r"(?:打开|进入|跳转到).{0,24}(?:浏览器|browser)",
-    r"(系统权限|定位权限|相机权限|相册权限).{0,30}(设置|授权|允许|管理|选择)",
-    # 单独的“路径”也会命中“打开的菜单属于导航路径”这类通用导航提示。
-    # 文件和目录已经覆盖真实的系统选择器场景，不需要这个过宽关键词。
-    r"(选择|导入|保存|创建|打开).{0,30}(文件|文档|目录|TiddlyWiki)",
+    r"\b(open|enter|visit)\b.{0,24}\b(system settings|permission settings|camera|album|browser)\b",
+    r"\b(select|import|save|create|open)\b.{0,30}\b(file|document|directory)\b",
+    r"(\u70b9\u51fb|\u9009\u62e9).{0,20}(\u5e94\u7528\u9879|\u5e94\u7528\u5217\u8868\u9879|app item)",
+    # The target app itself does not authorize an external transition.
+    r"(\u542f\u52a8|\u6253\u5f00|\u8df3\u8f6c\u5230|\u8fdb\u5165).{0,30}(\u5916\u90e8\u5e94\u7528|\u5176\u4ed6\u5e94\u7528|\u53e6\u4e00\u4e2a\u5e94\u7528|\u5bf9\u5e94\u5e94\u7528|\u5e94\u7528\u7a0b\u5e8f)",
+    r"(\u542f\u52a8|\u6253\u5f00).{0,30}(Calculator|Calendar|Camera|Clock|Contacts|Files|Gmail|Maps|Messages|Phone|Photos)",
+    r"(\u8fd4\u56de|\u56de\u5230).{0,30}(launcher|\u542f\u52a8\u5668|\u5e94\u7528\u5217\u8868|TextLauncher)",
+    r"(\u7cfb\u7edf)?(\u6587\u4ef6|\u6587\u6863).{0,20}(\u9009\u62e9\u5668|\u7ba1\u7406\u5668|\u4fdd\u5b58|\u6253\u5f00|\u5bfc\u5165|\u521b\u5efa)",
+    r"(\u6253\u5f00|\u8fdb\u5165|\u524d\u5f80).{0,24}(\u7cfb\u7edf\u8bbe\u7f6e|\u7cfb\u7edf\u6743\u9650\u9875|\u6743\u9650\u7ba1\u7406\u9875|\u76f8\u673a|\u76f8\u518c)",
+    r"(?:\u5728|\u4f7f\u7528|\u901a\u8fc7)?\s*(?:\u7cfb\u7edf|\u5916\u90e8|\u9ed8\u8ba4)?\s*(?:\u6d4f\u89c8\u5668|browser).{0,16}(?:\u4e2d)?\s*(?:\u6253\u5f00|\u67e5\u770b)",
+    r"(?:\u6253\u5f00|\u8fdb\u5165|\u8df3\u8f6c\u5230).{0,24}(?:\u6d4f\u89c8\u5668|browser)",
+    r"(\u7cfb\u7edf\u6743\u9650|\u5b9a\u4f4d\u6743\u9650|\u76f8\u673a\u6743\u9650|\u76f8\u518c\u6743\u9650).{0,30}(\u8bbe\u7f6e|\u6388\u6743|\u5141\u8bb8|\u7ba1\u7406|\u9009\u62e9)",
+    # Generic path wording is not sufficient to authorize external apps; require file/directory evidence.
+
+    r"(\u9009\u62e9|\u5bfc\u5165|\u4fdd\u5b58|\u521b\u5efa|\u6253\u5f00).{0,30}(\u6587\u4ef6|\u6587\u6863|\u76ee\u5f55|TiddlyWiki)",
     r"(DocumentsUI|document picker|file picker|file chooser|system file)",
     r"\b(open|launch)\b.{0,30}\b(app|application)\b",
 )
@@ -343,9 +341,10 @@ SAFE_EXTERNAL_PACKAGES = {
     if package.strip()
 }
 TARGET_EXIT_SCENARIO_PATTERNS = (
-    r"(退出|关闭).{0,20}(应用|app|App|程序)",
-    r"(返回|回到|退回).{0,30}(系统桌面|桌面|launcher|启动器|前一个应用)",
-    r"(验证|测试).{0,30}(退出逻辑|退出功能|关闭逻辑)",
+    r"\b(return|go back)\b.{0,30}\b(home screen|launcher|previous app)\b",
+    r"(\u9000\u51fa|\u5173\u95ed).{0,20}(\u5e94\u7528|app|App|\u7a0b\u5e8f)",
+    r"(\u8fd4\u56de|\u56de\u5230|\u9000\u56de).{0,30}(\u7cfb\u7edf\u684c\u9762|\u684c\u9762|launcher|\u542f\u52a8\u5668|\u524d\u4e00\u4e2a\u5e94\u7528)",
+    r"(\u9a8c\u8bc1|\u6d4b\u8bd5).{0,30}(\u9000\u51fa\u903b\u8f91|\u9000\u51fa\u529f\u80fd|\u5173\u95ed\u903b\u8f91)",
     r"\b(exit|quit|close)\b.{0,20}\b(app|application)\b",
 )
 
@@ -355,7 +354,7 @@ def _parse_coordinate_value(value, key: str) -> float | None:
     if value is None:
         return None
     if isinstance(value, bool):
-        raise ValueError(f"{key} 坐标不能是布尔值: {value!r}")
+        raise ValueError(f"{key} coordinate cannot be boolean: {value!r}")
     if isinstance(value, (int, float)):
         number = float(value)
     elif isinstance(value, str):
@@ -365,44 +364,44 @@ def _parse_coordinate_value(value, key: str) -> float | None:
         try:
             number = float(stripped)
         except ValueError as exc:
-            raise ValueError(f"{key} 坐标不是数字: {value!r}") from exc
+            raise ValueError(f"{key} coordinate is not numeric: {value!r}") from exc
     else:
-        raise ValueError(f"{key} 坐标类型不支持: {type(value).__name__}")
+        raise ValueError(f"Unsupported {key} coordinate type: {type(value).__name__}")
 
     if not math.isfinite(number):
-        raise ValueError(f"{key} 坐标不是有限数字: {value!r}")
+        raise ValueError(f"{key} coordinate is not finite: {value!r}")
     return number
 
 
 def _parse_optional_seconds(value: object, key: str) -> float | None:
-    """解析可选的秒数参数；空值表示“未提供”，非法值交给模型重试。"""
+    """Parse optional seconds; absent values remain unset and invalid values trigger a model retry."""
     if value is None:
         return None
     if isinstance(value, str) and not value.strip():
         return None
     if isinstance(value, bool) or not isinstance(value, (int, float, str)):
-        raise ValueError(f"{key} 必须是数字: {value!r}")
+        raise ValueError(f"{key} must be numeric: {value!r}")
     try:
         number = float(str(value).strip())
     except ValueError as exc:
-        raise ValueError(f"{key} 必须是数字: {value!r}") from exc
+        raise ValueError(f"{key} must be numeric: {value!r}") from exc
     if not math.isfinite(number) or number <= 0:
-        raise ValueError(f"{key} 必须是正数: {value!r}")
+        raise ValueError(f"{key} must be positive: {value!r}")
     return number
 
 
 def _clamp_seconds(value: float | None, default: float, lower: float, upper: float) -> float:
-    """把秒数收敛到配置区间；缺省值时用默认值参与收敛。"""
+    """Clamp the supplied duration, or its default, to the configured interval."""
     return max(lower, min(upper, default if value is None else value))
 
 
 def _scale_plan_coordinates(
     plan: dict, screen_w: int, screen_h: int, image_size: tuple[int, int],
 ) -> None:
-    """将上传图片像素坐标换算为屏幕像素；不推断或兼容其他坐标制。"""
+    """Map uploaded-image pixels to screen pixels without inferring other coordinate systems."""
     image_w, image_h = image_size
     if min(image_w, image_h, screen_w, screen_h) <= 1:
-        raise ValueError("图片和屏幕宽高必须大于 1")
+        raise ValueError("Image and screen dimensions must exceed 1")
     for keys, source, target in (
         (("x", "x1", "x2"), image_w, screen_w),
         (("y", "y1", "y2"), image_h, screen_h),
@@ -415,7 +414,7 @@ def _scale_plan_coordinates(
                 plan.pop(key, None)
                 continue
             if not 0 <= number <= source - 1:
-                raise ValueError(f"{key} 超出当前图片像素范围 0–{source - 1}: {number}")
+                raise ValueError(f"{key} is outside current-image pixel range 0-{source - 1}: {number}")
             plan[key] = round(number / (source - 1) * (target - 1))
 
 
@@ -484,37 +483,37 @@ def _validate_action_plan(plan: dict, image_size: tuple[int, int] | None = None)
         "open_app", "press_back", "finished", "wait",
     }
     if action_name not in valid_actions:
-        raise ValueError(f"不支持或缺失的操作类型: {action_name!r}")
+        raise ValueError(f"Unsupported or missing action type: {action_name!r}")
     if action_name in {"click", "long_press"} and (
         plan.get("x") is None or plan.get("y") is None
     ):
-        raise ValueError(f"{action_name} 缺少 x/y 坐标")
+        raise ValueError(f"{action_name} requires x/y coordinates")
     if action_name in {"click", "long_press"}:
         for key in COORDINATE_FIELDS:
             number = _parse_coordinate_value(plan.get(key), key)
             if image_size is None or min(image_size) <= 1:
-                raise ValueError("缺少有效的当前截图尺寸，无法校验图片像素坐标")
+                raise ValueError("Current screenshot dimensions are unavailable; cannot validate pixel coordinates")
             limit = image_size[0 if key.startswith("x") else 1] - 1
             if number is None or not 0 <= number <= limit:
-                raise ValueError(f"{key} 坐标必须在当前图片像素范围 0–{limit} 内: {plan.get(key)!r}")
+                raise ValueError(f"{key} must be within current-image pixel range 0-{limit}: {plan.get(key)!r}")
     if action_name == "type" and not str(plan.get("content", "")):
-        raise ValueError("type 缺少 content")
+        raise ValueError("type requires content")
     if action_name == "scroll":
         direction = str(plan.get("direction", "")).strip().lower()
         if direction not in {"up", "down", "left", "right"}:
-            raise ValueError(f"scroll direction 非法: {direction!r}")
+            raise ValueError(f"Invalid scroll direction: {direction!r}")
     if action_name == "swipe":
         for key in SWIPE_COORDINATE_FIELDS:
             number = _parse_coordinate_value(plan.get(key), key)
             if number is None:
-                raise ValueError(f"swipe 的 {key} 缺失")
+                raise ValueError(f"swipe requires {key}")
             if image_size is None or min(image_size) <= 1:
-                raise ValueError("缺少有效的当前截图尺寸，无法校验图片像素坐标")
+                raise ValueError("Current screenshot dimensions are unavailable; cannot validate pixel coordinates")
             limit = image_size[0 if key.startswith("x") else 1] - 1
             if not 0 <= number <= limit:
-                raise ValueError(f"swipe 的 {key} 必须在当前图片像素范围 0–{limit} 内: {plan.get(key)!r}")
+                raise ValueError(f"swipe {key} must be within current-image pixel range 0-{limit}: {plan.get(key)!r}")
         if plan.get("x1") == plan.get("x2") and plan.get("y1") == plan.get("y2"):
-            raise ValueError("swipe 的起点与终点不能相同")
+            raise ValueError("swipe start and end coordinates must differ")
     if action_name == "wait":
         plan["duration"] = _clamp_seconds(
             _parse_optional_seconds(plan.get("duration"), "duration"),
@@ -530,13 +529,13 @@ def _validate_action_plan(plan: dict, image_size: tuple[int, int] | None = None)
             MAX_SWIPE_DURATION,
         )
     if action_name == "open_app" and not str(plan.get("app_name", "")).strip():
-        raise ValueError("open_app 缺少 app_name")
+        raise ValueError("open_app requires app_name")
     if not isinstance(plan.get("is_interruption", False), bool):
-        raise ValueError("is_interruption 必须是 boolean")
+        raise ValueError("is_interruption must be boolean")
 
 
 _ACTION_CLAUSE_MARKERS = re.compile(
-    r"下一步|接下来|需要|准备|将要|立即|点击|长按|输入|滚动|打开|进入|选择|发送|切换|开启|关闭|删除|标记|置顶|返回"
+    r"\u4e0b\u4e00\u6b65|\u63a5\u4e0b\u6765|\u9700\u8981|\u51c6\u5907|\u5c06\u8981|\u7acb\u5373|\u70b9\u51fb|\u957f\u6309|\u8f93\u5165|\u6eda\u52a8|\u6253\u5f00|\u8fdb\u5165|\u9009\u62e9|\u53d1\u9001|\u5207\u6362|\u5f00\u542f|\u5173\u95ed|\u5220\u9664|\u6807\u8bb0|\u7f6e\u9876|\u8fd4\u56de"
 )
 
 
@@ -553,24 +552,26 @@ def _proposed_action_text(plan: dict) -> str:
     return " ".join(item for item in (intent, content) if item)
 
 
-# finished 的 thought 按系统提示词要求以结论开头；开头前容许少量括号/标点。
+# Finish conclusions begin with a recognized verdict, optionally after punctuation.
 FINISHED_LEADING_PUNCTUATION = "【[（(「『<《“\"'*#-—:：·• \t"
-FINISHED_FAILURE_PREFIX = "目标不可达"
-FINISHED_SUCCESS_PREFIX = "目标已达成"
+FINISHED_FAILURE_PREFIX = "goal unreachable"
+LEGACY_FINISHED_FAILURE_PREFIX = "\u76ee\u6807\u4e0d\u53ef\u8fbe"
+FINISHED_SUCCESS_PREFIX = "goal achieved"
+LEGACY_FINISHED_SUCCESS_PREFIX = "\u76ee\u6807\u5df2\u8fbe\u6210"
 
 
 def _finished_declares_failure(thought: str) -> bool:
     text = str(thought or "").strip().lower()
     if not text:
         return False
-    # 系统提示词规定 thought 以“目标已达成 / 目标不可达”开头：显式结论优先于
-    # 正文中的成功/失败关键词。否则“目标不可达：……已完成所有可见控件检查”
-    # 会先命中成功模式（已完成…所有）而被记为 completed。
+    # An explicit leading failure verdict takes precedence over success words in the explanatory body.
+
+
     leading = text.lstrip(FINISHED_LEADING_PUNCTUATION)
-    if leading.startswith(FINISHED_FAILURE_PREFIX):
+    if leading.startswith((FINISHED_FAILURE_PREFIX, LEGACY_FINISHED_FAILURE_PREFIX)):
         return True
-    if leading.startswith(FINISHED_SUCCESS_PREFIX):
-        # 以“目标已达成”开头但后文又承认未完成/不可达或改用替代入口，仍判失败。
+    if leading.startswith((FINISHED_SUCCESS_PREFIX, LEGACY_FINISHED_SUCCESS_PREFIX)):
+        # A success prefix cannot override an admitted unfinished target or substituted entry.
         return bool(MIXED_FINISH_FAILURE_PATTERN.search(text)) or any(
             re.search(pattern, text, re.IGNORECASE)
             for pattern in FINISHED_OVERRIDE_FAILURE_PATTERNS
@@ -601,7 +602,7 @@ def _verification_finish_reason(thought: str) -> str:
     text = str(thought or "").strip()
     if not VERIFICATION_CHALLENGE_PATTERN.search(text):
         return ""
-    if re.search(r"验证成功|已通过验证|成功通过|verification\s+succeeded", text, re.IGNORECASE):
+    if re.search(r"\u9a8c\u8bc1\u6210\u529f|\u5df2\u901a\u8fc7\u9a8c\u8bc1|\u6210\u529f\u901a\u8fc7|verification\s+succeeded", text, re.IGNORECASE):
         return ""
     return VERIFICATION_BLOCKED_END
 
@@ -633,8 +634,8 @@ def _unfinished_safe_external_reason(action_name: str, foreground_package: str) 
     if not _is_safe_external_package(foreground_package):
         return ""
     return (
-        f"当前仍停留在任务流程相关的系统页面 {foreground_package}；"
-        "必须先处理可见选择并观察结果，不能 finished"
+        f"Still on required external/system page {foreground_package}; "
+        "resolve the visible selection and observe its result before finished"
     )
 
 
@@ -644,7 +645,7 @@ def _uses_adb_backend(device) -> bool:
 
 
 def _current_package(device, retries: int = FOREGROUND_CHECK_RETRIES) -> str | None:
-    return current_foreground_package(device, retries, log_prefix="[场景执行]")
+    return current_foreground_package(device, retries, log_prefix="[Scenario execution]")
 
 
 def _target_process_pid(device, package_name: str) -> str:
@@ -676,13 +677,9 @@ def _looks_like_launcher_package(package_name: str) -> bool:
 
 
 def _settle_foreground_state(device, package_name: str):
-    """短暂等待后复检前台状态，过滤页面切换动画期间的过渡态误报。
+    """Recheck after a short delay to avoid treating transient launcher reports during page animation as external transitions."""
 
-    实测（微信服务号卡片跳转）：点击后 current_package 瞬时上报桌面
-    launcher，最终稳定在目标应用内的新 Activity（webview 等）；单次
-    立即检测会把过渡态误判为外部跳转（left_app），
-    白白终止场景并给功能记一次失败。
-    """
+
     state, current = _target_app_foreground_state(device, package_name)
     for _ in range(EXTERNAL_RECHECK_ATTEMPTS):
         if state == "foreground":
@@ -698,8 +695,8 @@ def _wait_target_app_foreground(
     *,
     max_wait: float | None = None,
 ) -> bool:
-    """轮询等待目标应用进入前台，代替固定时长的冷启动等待。"""
-    # 通过模块级 _target_app_foreground_state 探测，保留测试替换该函数的能力。
+    """Poll for the target foreground instead of assuming a fixed cold-start delay."""
+    # Keep the module-level foreground probe replaceable by tests.
     return wait_target_app_foreground(
         device,
         package_name,
@@ -717,7 +714,7 @@ def _restart_target_app(device, package_name: str) -> bool:
         package_name,
         wait_foreground=lambda dev, pkg: _wait_target_app_foreground(dev, pkg),
         attempts=APP_RESTART_ATTEMPTS,
-        log_prefix="[场景执行]",
+        log_prefix="[Scenario execution]",
     )
     return restarted
 
@@ -727,15 +724,15 @@ def _ensure_target_app(device, package_name: str) -> bool:
     if foreground_state == "foreground":
         return True
     if is_permission_dialog(current_package):
-        print("[场景执行] 保留系统权限弹窗，先取证并执行可见选择，避免反复重启。")
+        print("[Scenario execution] Preserve the permission dialog for observation and selection; avoid repeated restarts.")
         return True
 
     if foreground_state == "unknown":
-        print(f"[场景执行] 无法确认当前前台应用，目标应用为 {package_name}，准备重启目标应用。")
+        print(f"[Scenario execution] Foreground app unknown; preparing to restart target {package_name}.")
     else:
         print(
-            f"[场景执行] 检测到当前前台应用为 {current_package}，目标应用为 {package_name}，"
-            "准备重启目标应用。"
+            f"[Scenario execution] Foreground={current_package}, target={package_name}; "
+            "preparing to restart the target app."
         )
     return _restart_target_app(device, package_name)
 
@@ -751,31 +748,31 @@ def _recover_target_app_by_back(
     if foreground_state == "foreground":
         return True
 
-    # 复用同一次前台查询结果，不再紧接着重复查询一次。
+    # Reuse the foreground query instead of issuing another identical request.
     current_package = str(current_package or "").strip()
     if _looks_like_launcher_package(current_package):
-        # 桌面上按返回键既回不到目标应用，也可能误触系统手势；
-        # 直接放弃返回恢复，让调用方走重启路径。
+        # Back cannot restore the target from the launcher; let the caller restart it.
+
         print(
-            "[场景执行] 当前前台为桌面（launcher），返回键无法恢复目标应用，"
-            "跳过返回恢复直接尝试重启。"
+            "[Scenario execution] Foreground is the launcher; back cannot restore the target. "
+            "Skip back recovery and try restart."
         )
         return False
 
     for attempt in range(1, attempts + 1):
         if foreground_state == "unknown":
-            print(f"[场景执行] 无法确认目标应用是否在前台，等待后第 {attempt}/{attempts} 次重查。")
+            print(f"[Scenario execution] Foreground uncertain; rechecking after delay {attempt}/{attempts}.")
         else:
             try:
-                print(f"[场景执行] 目标应用离开前台，尝试第 {attempt}/{attempts} 次返回恢复。")
+                print(f"[Scenario execution] Target left foreground; back recovery attempt {attempt}/{attempts}.")
                 _perform_action(device=device, action_name="press_back")
             except Exception as exc:
-                print(f"[场景执行] 返回恢复动作失败: {exc}")
+                print(f"[Scenario execution] Back recovery action failed: {exc}")
         time.sleep(FAST_ACTION_DELAY)
         foreground_state, _ = _target_app_foreground_state(device, package_name)
         if foreground_state == "foreground":
-            message = "继续执行当前场景。" if continue_message else "准备结束当前场景。"
-            print(f"[场景执行] 已通过返回恢复到目标应用，{message}")
+            message = "Continue the scenario." if continue_message else "Prepare to end the scenario."
+            print(f"[Scenario execution] Restored target with back. {message}")
             return True
     return False
 
@@ -794,20 +791,20 @@ def _append_target_app_recovery_step(
     try:
         page = capture_current_page(device)
     except Exception as exc:
-        print(f"[场景执行] 返回恢复后抓取页面失败: {exc}")
+        print(f"[Scenario execution] Capture after back recovery failed: {exc}")
         page = trace[-1].get("current_page") if trace else None
 
     action_name = "press_back" if recovery_method == "press_back" else "restart_app"
-    recovery_text = "返回键" if recovery_method == "press_back" else "重启目标应用"
-    scene_text = "场景结束时" if final_recovery else "执行过程中"
+    recovery_text = "back" if recovery_method == "press_back" else "target app restart"
+    scene_text = "At scenario end, " if final_recovery else "During execution, "
     thought = (
-        f"{scene_text}检测到目标应用离开前台，运行器已自动通过{recovery_text}恢复到目标应用。"
-        "这是测试环境恢复步骤，不代表用户场景内的有效操作。"
+        f"{scene_text}the target left foreground; the runtime restored it using {recovery_text}. "
+        "This is environment recovery, not a valid business action in the user scenario."
     )
     trace.append({
         "action_name": action_name,
         "thought": thought,
-        "action_description": "目标应用离开前台后的自动恢复",
+        "action_description": "Automatic recovery after target app left foreground",
         "current_page": page,
         "is_interruption": True,
         "trace_phase": trace_phase,
@@ -821,8 +818,8 @@ def _append_target_app_recovery_step(
         "action_error": (
             reason
             or (
-                f"目标应用离开前台: current={previous_package or '未知'}, "
-                f"target={package_name or '未知'}；已通过{recovery_text}恢复。"
+                f"Target left foreground: current={previous_package or 'unknown'}, "
+                f"target={package_name or 'unknown'}; restored using {recovery_text}."
             )
         ),
     })
@@ -839,12 +836,12 @@ def _append_external_observation_step(
     try:
         page = capture_current_page(device)
     except Exception as exc:
-        print(f"[场景执行] 自动恢复前抓取外部页面失败: {exc}")
+        print(f"[Scenario execution] External-page capture before recovery failed: {exc}")
         return
     trace.append({
         "action_name": "capture_screenshot",
-        "thought": "运行器在自动返回前保留外部前台页面，供执行轨迹审计。",
-        "action_description": "自动恢复前的外部页面观测",
+        "thought": "The runtime preserves the external foreground page before automatic return for trace auditing.",
+        "action_description": "Observe external page before automatic recovery",
         "current_page": page,
         "observation_only": True,
         "is_interruption": True,
@@ -868,8 +865,8 @@ def _append_external_observation_step(
     if screenshot_ref:
         trace[-1]["trace_screenshot_before"] = screenshot_ref
     print(
-        "[场景执行] 已保存自动恢复前的外部页面观测: "
-        f"current={external_package or '未知'}, target={package_name or '未知'}"
+        "[Scenario execution] Saved external-page observation before recovery: "
+        f"current={external_package or 'unknown'}, target={package_name or 'unknown'}"
     )
 
 
@@ -878,27 +875,24 @@ def _recover_from_exploration_boundary(
     package_name: str,
     hit: BoundaryHit,
 ) -> bool:
-    """自动退出越过探索边界的页面（如小程序），返回是否已离开边界。
+    """Exit an out-of-scope in-app page and report recovery. Reuse Activity-first boundary detection because its package may still be the target package."""
 
-    与外部应用恢复不同：边界页面仍运行在目标应用包内（前台包名不变），
-    因此复检与进入检测共用 _current_boundary_hit 判据（Activity 优先，
-    仅在前台为目标包且 Activity 不可读时才看进程），而非按包名复检。
-    """
+
     attempts = max(1, APP_RECOVERY_BACK_ATTEMPTS)
     for attempt in range(1, attempts + 1):
         try:
             print(
-                f"[探索边界] 尝试第 {attempt}/{attempts} 次 {hit.rule.exit_action} "
-                f"退出{hit.rule.label}（via={hit.via}, matched={hit.matched}）。"
+                f"[Exploration boundary] Attempt {attempt}/{attempts}: {hit.rule.exit_action} "
+                f"to exit {hit.rule.label} (via={hit.via}, matched={hit.matched})."
             )
             _perform_action(device=device, action_name="press_back")
         except Exception as exc:
-            print(f"[探索边界] 退出动作失败: {exc}")
+            print(f"[Exploration boundary] Exit action failed: {exc}")
         time.sleep(FAST_ACTION_DELAY)
         try:
             current_activity = str(device.current_activity() or "")
         except Exception as exc:
-            print(f"[探索边界] 读取当前 Activity 失败: {exc}")
+            print(f"[Exploration boundary] Cannot read current Activity: {exc}")
             current_activity = ""
         if _current_boundary_hit(device, package_name, current_activity) is None:
             return True
@@ -911,13 +905,9 @@ def _current_boundary_hit(
     activity: str | None,
     foreground_package: str | None = None,
 ) -> BoundaryHit | None:
-    """进入与退出探索边界共用的判据。
+    """Use Activity as the authoritative boundary signal. Fall back to process matching only when the target is foreground and its Activity is unavailable; persistent service processes alone do not prove an active boundary crossing."""
 
-    Activity 是权威信号：读到 Activity 时只按 Activity 特征判断。进程特征
-    （如微信 :appbrand）在小程序退出后仍常驻，“进程存在”不等于“正在边界内”，
-    因此只有前台确实是目标包、且 Activity 为空/不可读时才用 ``ps -A`` 兜底；
-    这也避免了每一步都执行一次 ``ps -A``。foreground_package 为 None 时按需查询。
-    """
+
     rule = rule_for(package_name)
     if not rule.enabled:
         return None
@@ -935,7 +925,7 @@ def _current_boundary_hit(
     try:
         snapshot = str(device.connector.shell("ps -A") or "")
     except Exception as exc:
-        print(f"[探索边界] 进程兜底检测失败（忽略）: {exc}")
+        print(f"[Exploration boundary] Process fallback failed (ignored): {exc}")
         return None
     return check_boundary(package_name, activity=None, process_snapshot=snapshot)
 
@@ -953,11 +943,9 @@ def _recover_to_target(
     final_recovery: bool = False,
     crashed: bool | None = None,
 ) -> tuple[bool, bool]:
-    """统一的前台恢复：崩溃直接重启；否则先 back() 退出，失败再重启。
+    """Return (crashed, recovered): restart on a crash; otherwise try back before restart. Append a non-business recovery step on success. Reuse a supplied crash verdict to avoid parsing logcat twice."""
 
-    返回 (crashed, recovered)。恢复成功时追加一条非业务的恢复步骤。
-    调用方已对同一份 logcat 做过崩溃判定时通过 crashed 传入，避免重复解析。
-    """
+
     if crashed is None:
         crashed = _logcat_has_target_process_crash(crash_logcat, package_name)
     method = ""
@@ -980,7 +968,7 @@ def _recover_to_target(
 
 
 def _recovery_outcome(crashed: bool, recovered: bool) -> tuple[str, str]:
-    """崩溃或恢复失败时的统一结束状态；恢复成功的非崩溃情形由调用方决定。"""
+    """Return a terminal state for crashes or failed recovery; callers decide successful non-crash recovery outcomes."""
     if crashed:
         return "app_crashed", (
             TARGET_APP_CRASHED_END if recovered else TARGET_APP_CRASH_RECOVERY_FAILED_END
@@ -993,7 +981,7 @@ def _clear_logcat(device):
         return
     device_serial = device.serial if hasattr(device, "serial") else ""
     if not device_serial:
-        print("[场景执行] 未获取到设备序列号，跳过清空 logcat。")
+        print("[Scenario execution] Device serial unavailable; skip clearing logcat.")
         return
     try:
         subprocess.run(
@@ -1001,9 +989,9 @@ def _clear_logcat(device):
             timeout=5,
             capture_output=True,
         )
-        print(f"[场景执行] 已清空 logcat: device={device_serial}")
+        print(f"[Scenario execution] Cleared logcat: device={device_serial}")
     except Exception as exc:
-        print(f"[场景执行] 清空 logcat 失败: {exc}")
+        print(f"[Scenario execution] Clearing logcat failed: {exc}")
 
 
 def _read_crash_logcat(device, package_name: str = "") -> str:
@@ -1031,7 +1019,7 @@ def _read_crash_logcat(device, package_name: str = "") -> str:
             errors="replace",
         )
     except Exception as exc:
-        print(f"[场景执行] 读取 crash logcat 失败: {exc}")
+        print(f"[Scenario execution] Reading crash logcat failed: {exc}")
         return ""
 
     output = (result.stdout or "") + ("\n" + result.stderr if result.stderr else "")
@@ -1058,7 +1046,7 @@ def _read_crash_logcat(device, package_name: str = "") -> str:
 
 
 def _sleep_for_llm_retry(consecutive_errors: int, deadline: float | None = None) -> bool:
-    """按退避时长等待后重试；剩余阶段时间不足以等待时不睡眠并返回 False。"""
+    """Sleep for retry backoff only when the remaining phase budget permits it."""
     delay = compute_retry_delay_seconds(consecutive_errors)
     if not deadline_allows(deadline, delay):
         return False
@@ -1071,30 +1059,26 @@ def _describe_generation_failure(
     error: Exception,
     response_received: bool = True,
 ) -> str:
-    """把一次生成失败压缩成写回执行历史的一行原因（agent 式循环：失败也是上下文）。
+    """Record one concise failure reason in execution history, distinguishing transport errors, empty content, non-JSON prose and invalid JSON so the next decision can correct the actual problem."""
 
-    区分“模型调用本身失败（传输/超时）”“响应正文为空”“纯文字、零 JSON”与
-    “JSON 有但不合法/未通过校验”（实测合规批量 run.log 中零 JSON 占比高），
-    让后续步骤能针对性纠正而不是重复同样错误；传输失败不是模型输出问题，
-    不能描述成“响应是纯文字说明”。
-    """
+
     if not response_received:
-        return f"模型调用失败（传输/超时），未获得响应：{type(error).__name__}"
+        return f"Model call failed (transport/timeout), no response received: {type(error).__name__}"
     if not str(raw_content or "").strip():
-        return "模型响应正文为空，动作未执行；必须只输出一个 JSON object"
+        return "Empty model response; no action executed. Return exactly one JSON object."
     if "{" not in str(raw_content or ""):
         return (
-            "响应是纯文字说明，未包含任何 JSON 结构，动作未执行；"
-            "必须只输出一个 JSON object，禁止用文字复述动作意图"
+            "Response contained prose without JSON; no action executed. "
+            "Return exactly one JSON object, not a textual description of the intended action."
         )
-    return f"响应未通过解析/校验，动作未执行：{str(error)[:300]}"
+    return f"Response failed parsing/validation; no action executed: {str(error)[:300]}"
 
 
 def _runtime_page_label(page: Page | None) -> str:
-    """执行历史/日志中的运行时页面名：名称 → 描述 → Activity 依次兜底。"""
+    """Use page name, description, then Activity as a runtime history label."""
     if not isinstance(page, Page):
-        return "未知页面"
-    return page.name or page.description or page.activity or "未知页面"
+        return "Unknown page"
+    return page.name or page.description or page.activity or "Unknown page"
 
 
 def _model_point(step: dict) -> tuple[int, int] | None:
@@ -1112,30 +1096,29 @@ def _action_effect(
     after_screenshot: str,
     image_size: tuple[int, int] | None,
 ) -> tuple[str, str]:
-    """描述一次动作前后的界面变化，返回 (类别, 文字)；类别为 none/local/major/""。
+    """Return a pixel-based effect category and description: none, local, major or empty. Do not infer effects from the UI hierarchy."""
 
-    只比较截图像素，不读取控件树：点击是否起作用完全以画面为准。
-    """
+
     result = screenshot_change_region(before_screenshot, after_screenshot)
     if result is None:
         return "", ""
     ratio, box = result
     if box is None or ratio < EFFECT_NO_CHANGE_RATIO:
-        return "none", "界面无变化"
+        return "none", "No visible change"
     if ratio >= EFFECT_MAJOR_CHANGE_RATIO:
-        return "major", "界面明显变化"
+        return "major", "Major visible change"
     region = ""
     if image_size:
         width, height = image_size
         region = (
-            f"，变化区域约 ({int(box[0] * width)},{int(box[1] * height)})"
+            f", approximate changed region ({int(box[0] * width)},{int(box[1] * height)})"
             f"–({int(box[2] * width)},{int(box[3] * height)})"
         )
-    return "local", f"界面局部变化（约 {ratio * 100:.2f}%{region}）"
+    return "local", f"Local visible change (about {ratio * 100:.2f}%{region})"
 
 
-# 动作效果缓存：键为 (前截图哈希, 后截图哈希, 图片尺寸)。不写回 step dict，
-# 因为执行轨迹会按 step 的全部字段序列化进产物（main.py 只剔除 current_page）。
+# Cache effects by screenshot hashes and dimensions, outside serialized trace-step dictionaries.
+
 _ACTION_EFFECT_CACHE = BoundedCache(max(16, EFFECT_HISTORY_STEPS * 8))
 
 
@@ -1161,10 +1144,9 @@ def _step_effects(
     current_screenshot: str,
     image_size: tuple[int, int] | None,
 ) -> dict[int, tuple[str, str]]:
-    """最近几步动作的效果；键为 trace 下标。每步的“后”截图是下一步执行前截图。
+    """Return recent effects by trace index. The next pre-action screenshot observes the prior result; cache already compared pairs."""
 
-    已比较过的前后截图对直接复用缓存结果，每步只新算最后一个动作的效果。
-    """
+
     effects: dict[int, tuple[str, str]] = {}
     start = max(0, len(trace) - EFFECT_HISTORY_STEPS)
     for index in range(start, len(trace)):
@@ -1185,7 +1167,7 @@ def _no_response_note(
     trace: list[dict],
     effects: dict[int, tuple[str, str]],
 ) -> str:
-    """末尾连续“点击同一位置且界面无变化”时，提醒换策略而不是再点。"""
+    """Warn against repeating an unchanged click at the same position; suggest prerequisites or another target."""
     if not trace:
         return ""
     last = trace[-1]
@@ -1194,12 +1176,12 @@ def _no_response_note(
     if action == "type" and last_effect in {"none", "local"}:
         if last_effect == "none":
             return (
-                "【上一步效果】type 后界面无变化：输入框可能未聚焦或不接受该内容。"
-                "先点击目标输入框使其聚焦，或改用符合其格式的内容；不要原样重复输入。\n"
+                "[Previous effect] No visible change after type: the field may be unfocused or reject this input. "
+                "Focus the intended field or use input matching its format; do not repeat unchanged input.\n"
             )
         return (
-            "【上一步效果】已执行 type。核对输入框实际显示的内容是否与输入的 content 一致；"
-            "不一致说明该输入框限制了字符类型或长度，改用符合其格式的内容，不要原样重复输入。\n"
+            "[Previous effect] type executed. Compare visible field content with the supplied content. "
+            "A mismatch indicates character/length restrictions; adapt the value instead of repeating it.\n"
         )
     if action not in {"click", "long_press"} or last_effect != "none":
         return ""
@@ -1221,14 +1203,14 @@ def _no_response_note(
     where = f" ({point[0]},{point[1]})" if point else ""
     if repeats >= 2:
         return (
-            f"【上一步效果】已连续 {repeats} 次点击{where}附近，界面都没有变化：该控件当前无响应。"
-            "禁止再次点击这个位置；改为检查并满足它的前置条件（如必填内容、所需数量、先选中对象），"
-            "或改测其他未执行控件；都不可行时输出 finished，写“目标不可达：控件无响应”。\n"
+            f"[Previous effect] {repeats} consecutive clicks near {where} produced no change; the control is currently unresponsive. "
+            "Do not click this position again. Check prerequisites such as required fields, counts or selection, "
+            "or test another unexecuted control. If neither is possible, finish with 'Goal unreachable: control unresponsive'.\n"
         )
     return (
-        f"【上一步效果】上一步点击{where}后界面无变化。先核对截图中目标控件的真实位置："
-        "若位置有偏差，换到控件中心再试一次；若位置无误，说明控件未响应，不要原样重复，"
-        "改为满足其前置条件或测试其他控件。\n"
+        f"[Previous effect] No visible change after clicking {where}. Check the actual target position in the screenshot. "
+        "If mis-aimed, retry once at its center; if correctly aimed, do not repeat the unresponsive action. "
+        "Satisfy prerequisites or test another control.\n"
     )
 
 
@@ -1236,12 +1218,9 @@ def _repeated_success_note(
     trace: list[dict],
     effects: dict[int, tuple[str, str]],
 ) -> str:
-    """上一步点击的点在本场景中已成功执行过一次时，提醒不要原样重复。
+    """Warn when an already successful click is repeated, including actions that keep reopening the same panel and otherwise consume steps before stall detection."""
 
-    “无响应提醒”只覆盖界面无变化的情形；实测模型还会陷入另一类循环：
-    动作每次都生效（如反复打开同一个切换面板、重复点同一个档位），模型却
-    意识不到目标已经达成，原样重试直到停滞检测兜底，每轮浪费 3–5 步。
-    """
+
     if not trace:
         return ""
     last = trace[-1]
@@ -1269,20 +1248,17 @@ def _repeated_success_note(
             continue
         effect_text = effects.get(index, ("", ""))[1]
         return (
-            f"【已执行过】上一步点击 ({point[0]},{point[1]}) 在本场景早前已成功执行过（{effect_text}），"
-            "界面已处于该动作产生的结果状态。不要原样重复这个动作；"
-            "应改为测试当前界面的其他未执行控件；若目标已达成且没有新控件，输出 finished。\n"
+            f"[Already executed] The previous click ({point[0]},{point[1]}) succeeded earlier in this scenario ({effect_text}). "
+            "The interface already reflects its result. Do not repeat it unchanged; "
+            "test another unexecuted control, or finish if the goal is achieved and no new target remains.\n"
         )
     return ""
 
 
 def _mark_tap_point(screenshot: str, point: tuple[int, int] | None) -> str:
-    """在历史截图上标出上一步实际点击的位置（红色准星）；失败时返回原图。
+    """Mark the actual historical tap with a red crosshair to distinguish inaccurate aim from an unresponsive control. Return the original image on failure."""
 
-    模型对小控件（开关、弹窗按钮）的定位常有稳定偏差，只看“界面无变化”的文字
-    提示时会原样重复同一坐标。把真实落点画在它刚看过的截图上，模型能直接比对
-    落点与控件，从而修正坐标或确认控件确实无响应。
-    """
+
     if not screenshot or point is None:
         return screenshot
     image = decode_screenshot(screenshot)
@@ -1306,45 +1282,45 @@ def _format_execution_history(
     effects: dict[int, tuple[str, str]] | None = None,
 ) -> str:
     if not trace:
-        return "暂无历史步骤。"
+        return "No historical steps."
 
     effects = effects or {}
     lines = []
     for index, step in enumerate(trace, start=1):
         page = step.get("current_page")
-        action = str(step.get("action_name", "")).strip() or "未知动作"
+        action = str(step.get("action_name", "")).strip() or "Unknown action"
         thought = str(step.get("thought", "")).strip()
         content = str(step.get("content", "")).strip()
         direction = str(step.get("direction", "")).strip()
         detail_parts = []
         if step.get("external_context"):
-            external_package = str(step.get("external_package", "")).strip() or "外部应用"
-            detail_parts.append(f"外部页面: {external_package}")
+            external_package = str(step.get("external_package", "")).strip() or "External app"
+            detail_parts.append(f"External page: {external_package}")
         if step.get("caused_external_transition"):
-            external_package = str(step.get("external_package", "")).strip() or "外部应用"
-            detail_parts.append(f"触发外部跳转: {external_package}")
+            external_package = str(step.get("external_package", "")).strip() or "External app"
+            detail_parts.append(f"External transition: {external_package}")
         if step.get("is_interruption"):
-            detail_parts.append("干扰/恢复步骤")
+            detail_parts.append("Interruption/recovery step")
         if step.get("foreground_recovery"):
-            previous_package = str(step.get("previous_package", "")).strip() or "未知"
-            target_package = str(step.get("target_package", "")).strip() or "目标应用"
-            detail_parts.append(f"自动返回恢复: {previous_package} -> {target_package}")
+            previous_package = str(step.get("previous_package", "")).strip() or "unknown"
+            target_package = str(step.get("target_package", "")).strip() or "target app"
+            detail_parts.append(f"Automatic back recovery: {previous_package} -> {target_package}")
         if content:
-            detail_parts.append(f"输入/文本: {content}")
+            detail_parts.append(f"Input/text: {content}")
         if direction:
-            detail_parts.append(f"方向: {direction}")
+            detail_parts.append(f"Direction: {direction}")
         if step.get("action_failed"):
-            action_error = str(step.get("action_error", "")).strip() or "设备动作执行失败"
-            detail_parts.append(f"动作失败: {action_error[:200]}")
+            action_error = str(step.get("action_error", "")).strip() or "Device action failed"
+            detail_parts.append(f"Action failed: {action_error[:200]}")
         point = _model_point(step) if action in {"click", "long_press"} else None
         if point:
-            detail_parts.append(f"图片坐标: ({point[0]},{point[1]})")
+            detail_parts.append(f"Image coordinates: ({point[0]},{point[1]})")
         effect = effects.get(index - 1)
         if effect:
-            detail_parts.append(f"效果: {effect[1]}")
+            detail_parts.append(f"Effect: {effect[1]}")
         detail = f" | {'; '.join(detail_parts)}" if detail_parts else ""
-        thought_text = f" | 判断: {thought}" if thought else ""
-        lines.append(f"{index}. 页面: {_runtime_page_label(page)} | 动作: {action}{detail}{thought_text}")
+        thought_text = f" | Assessment: {thought}" if thought else ""
+        lines.append(f"{index}. Page: {_runtime_page_label(page)} | Action: {action}{detail}{thought_text}")
     return "\n".join(lines)
 
 
@@ -1355,41 +1331,41 @@ def _foreground_state_note(foreground_package: str, package_name: str) -> str:
     if not foreground_package or not package_name:
         return ""
     if foreground_package == package_name:
-        return f"【前台状态】前台应用: {foreground_package}（目标应用，截图是它的当前界面；Activity 名即使包含 Launcher/Home 也不能据此判定为手机桌面）。\n"
+        return f"[Foreground] {foreground_package} is the target app. Its current screenshot is not the system launcher merely because Activity contains Launcher/Home.\n"
     if _looks_like_launcher_package(foreground_package):
-        return f"【前台状态】前台应用: {foreground_package}（手机桌面，目标应用 {package_name} 不在前台，可能仍在启动）。\n"
-    return f"【前台状态】前台应用: {foreground_package}（非目标应用 {package_name}）。\n"
+        return f"[Foreground] {foreground_package} is the system launcher. Target {package_name} is not foreground and may still be starting.\n"
+    return f"[Foreground] {foreground_package} is not the target app {package_name}.\n"
 
 
 def _recent_failure_note(recent_failures: list[dict] | None) -> str:
-    """把最近几次生成失败写进模型可见历史；空列表返回空串。"""
+    """Expose recent generation failures to the next model decision; return empty text for no failures."""
     failures = [f for f in (recent_failures or []) if f]
     if not failures:
         return ""
     entries = failures[-MAX_RECENT_FAILURES:]
     lines = []
     for failure in entries:
-        reason = str(failure.get("reason", "") or "未知原因")
+        reason = str(failure.get("reason", "") or "Unknown reason")
         attempt = int(failure.get("attempt", 1) or 1)
-        attempt_text = f"（第 {attempt} 次尝试）" if attempt > 1 else ""
-        lines.append(f"- 第 {failure.get('step', '?')} 步{attempt_text}生成失败：{reason}")
+        attempt_text = f" (attempt {attempt})" if attempt > 1 else ""
+        lines.append(f"- Step {failure.get('step', '?')}{attempt_text} generation failed: {reason}")
     body = "\n".join(lines)
     return (
-        "【近期异常记录】以下步骤没有执行任何动作，页面未变化；"
-        f"请据此调整输出后再决策：\n{body}\n\n"
+        "[Recent failures] No actions were executed for these steps; the page did not change. "
+        f"Adjust the output before deciding again:\n{body}\n\n"
     )
 
 
 def _history_screenshot_label() -> str:
     if KEEP_IMAGE_STEPS <= 0:
-        return "【历史截图】本轮不附带历史截图，仅参考上方执行历史与当前截图。"
+        return "[Historical screenshots] None attached; use the execution history and current screenshot."
     if KEEP_IMAGE_STEPS == 1:
-        return "【上一步执行前的页面】"
-    return f"【最近 {KEEP_IMAGE_STEPS} 张历史截图】"
+        return "[Page before the previous action]"
+    return f"[Latest {KEEP_IMAGE_STEPS} historical screenshots]"
 
 
 def _recent_history_steps(trace: list[dict]) -> list[dict]:
-    """最近 KEEP_IMAGE_STEPS 步；0 时返回空列表（trace[-0:] 会取全量）。"""
+    """Return the latest KEEP_IMAGE_STEPS entries; handle zero explicitly because trace[-0:] returns everything."""
     return trace[-KEEP_IMAGE_STEPS:] if KEEP_IMAGE_STEPS > 0 else []
 
 
@@ -1405,10 +1381,10 @@ def _build_step_input(
 ) -> list[dict]:
     image_size = image_size or screenshot_dimensions(current_screenshot)
     coordinate_note = (
-        f"【坐标约定】当前图片宽 {image_size[0]} 像素、高 {image_size[1]} 像素；"
-        f"左上角为 (0, 0)，x 范围 0–{image_size[0] - 1}，y 范围 0–{image_size[1] - 1}。"
-        "点击、长按及滑动均输出当前图片的像素坐标，不输出归一化坐标或手机屏幕坐标。\n"
-        if image_size else "当前截图尺寸不可用，不得输出坐标操作。\n"
+        f"[Coordinates] Current image: width={image_size[0]}, height={image_size[1]} pixels. "
+        f"Origin=(0, 0), x=0-{image_size[0] - 1}, y=0-{image_size[1] - 1}. "
+        "Use current-image pixels for clicks, long presses and swipes, never normalized or screen coordinates.\n"
+        if image_size else "Current screenshot dimensions unavailable; do not emit coordinate actions.\n"
     )
     remaining_steps = max(0, max_steps - step_index + 1)
     effects = _step_effects(trace, current_screenshot, image_size)
@@ -1421,33 +1397,33 @@ def _build_step_input(
         )
         if consecutive_scrolls >= TEST_MAX_CONSECUTIVE_SAME_DIRECTION_SCROLLS:
             scroll_budget_note = (
-                f"【滚动预算】已连续向{_format_scroll_direction(scroll_direction)}滑动"
-                f"{consecutive_scrolls} 次，达到同方向滑动上限"
-                f"（{TEST_MAX_CONSECUTIVE_SAME_DIRECTION_SCROLLS} 次）。"
-                "禁止继续向该方向滑动；请改为点击列表项、返回或转向其他探索。\n"
+                f"[Scroll budget] Consecutive {_format_scroll_direction(scroll_direction)} gestures: "
+                f"{consecutive_scrolls}; same-direction limit reached "
+                f"({TEST_MAX_CONSECUTIVE_SAME_DIRECTION_SCROLLS}). "
+                "Do not continue in this direction; select a list item, return or explore another target.\n"
             )
         elif consecutive_scrolls >= TEST_MAX_CONSECUTIVE_SAME_DIRECTION_SCROLLS - 1:
             scroll_budget_note = (
-                f"【滚动预算】已连续向{_format_scroll_direction(scroll_direction)}滑动"
-                f"{consecutive_scrolls} 次，最多允许"
-                f"{TEST_MAX_CONSECUTIVE_SAME_DIRECTION_SCROLLS} 次同方向连续滑动。"
-                "下一步请准备转向点击列表项、返回或其他探索。\n"
+                f"[Scroll budget] Consecutive {_format_scroll_direction(scroll_direction)} gestures: "
+                f"{consecutive_scrolls}; maximum "
+                f"{TEST_MAX_CONSECUTIVE_SAME_DIRECTION_SCROLLS} consecutive gestures in one direction. "
+                "Prepare to select a list item, return or explore another target.\n"
             )
     content: list[dict] = [
         {
             "type": "text",
             "text": (
-                f"【第 {step_index} 步】请根据测试任务、完整执行历史和当前截图决定下一步操作。\n"
-                f"本阶段最多执行 {max_steps} 步；当前是第 {step_index} 步，包含本步还剩 {remaining_steps} 步。\n"
-                "如果剩余步数不足以继续有价值探索，应优先记录当前可验证结果并选择 finished。\n"
-                "具有相同功能并进入相同结果的重复控件只操作一个代表项；"
-                "中间结果页不是默认终点；只有探索方向已完成或没有明确相关的未执行控件时才 finished。\n"
-                "在输出前先检查：最近是否已经在相同页面对相同控件做过相同动作且没有变化；"
-                "如果是，请不要重复原动作，应换策略或 finished。\n"
+                f"[Step {step_index}] Choose the next action from the task, full history and current screenshot.\n"
+                f"This phase allows {max_steps} steps; current={step_index}, remaining including this step={remaining_steps}.\n"
+                "If too few steps remain for valuable exploration, record the current verifiable result and finish.\n"
+                "Use one representative among equivalent controls leading to the same result. "
+                "Intermediate pages are not automatic endpoints; finish when the direction is complete or no relevant unexecuted control remains.\n"
+                "Before responding, check whether the same action on the same page/control recently produced no change. "
+                "If so, change strategy or finish rather than repeating it.\n"
                 f"{scroll_budget_note}"
                 f"{effect_note}"
                 f"{repeat_note}"
-                "【完整执行历史】\n"
+                "[Complete execution history]\n"
                 f"{_format_execution_history(trace, effects)}\n\n"
                 f"{_recent_failure_note(recent_failures)}"
                 f"{_history_screenshot_label()}"
@@ -1462,15 +1438,15 @@ def _build_step_input(
         if not screenshot:
             continue
         absolute_index = len(trace) - len(recent_steps) + offset
-        label = f"历史截图：第 {absolute_index} 步执行前的页面。"
+        label = f"Historical screenshot: page before step {absolute_index}."
         tap_point = _model_point(step) if str(step.get("action_name", "")).strip() in {"click", "long_press"} else None
         if tap_point is not None and effects.get(absolute_index - 1, ("", ""))[0] == "none":
-            # 无效点击：把实际落点画出来，便于模型判断是点偏了还是控件无响应。
+            # Mark ineffective taps so the next decision can distinguish aim from control response.
             screenshot = _mark_tap_point(screenshot, tap_point)
             label += (
-                f"图中红色准星是该步实际点击位置 ({tap_point[0]},{tap_point[1]})，点击后界面无变化："
-                "若准星不在目标控件上，说明坐标偏了，按准星与控件的相对位置修正后再点；"
-                "若准星已落在控件中心，说明控件无响应。"
+                f"The red crosshair marks the actual tap ({tap_point[0]},{tap_point[1]}), after which no visible change occurred. "
+                "If it misses the target, correct coordinates using the relative position of crosshair and control. "
+                "If it is already at the center, the control was unresponsive."
             )
         content.append({
             "type": "text",
@@ -1486,10 +1462,10 @@ def _build_step_input(
         "text": (
             f"{foreground_note}"
             f"{coordinate_note}"
-            "【当前截图】请基于这张截图输出下一步 JSON 动作。"
+            "[Current screenshot] Return the next JSON action using this image."
             + (
-                "\n截图健康检查认为当前界面可能是黑屏或不可用状态。"
-                "如果能通过返回键退出，优先执行一次 press_back；不要重复进入造成该状态的入口。"
+                "\nScreenshot health suggests a black or unavailable page. "
+                "Prefer one press_back if possible; do not repeatedly enter the cause of this state."
                 if screenshot_health_error
                 else ""
             )
@@ -1512,8 +1488,8 @@ def _parse_action_json(raw_content: str) -> dict[str, Any]:
     except (TypeError, ValueError, json.JSONDecodeError):
         pass
 
-    # 已知高频笔误统一修复（如 "x": 226, 190 丢失 "y": 键名）：
-    # 与 llm.invoke_json 共用同一修复层，避免各解析路径规则漂移。
+    # Share JSON typo repair with llm.invoke_json to avoid divergent parser behavior.
+
     repaired_text = _repair_common_json_typos(text)
     if repaired_text != text:
         try:
@@ -1546,7 +1522,7 @@ def _parse_action_json(raw_content: str) -> dict[str, Any]:
             return parsed
     except ValueError:
         pass
-    raise ValueError("模型输出中没有合法 JSON object")
+    raise ValueError("Model output contains no valid JSON object")
 
 
 def _recent_screenshot_count(trace: list[dict]) -> int:
@@ -1650,11 +1626,9 @@ def _is_consecutive_repeated_action(steps: list[dict]) -> bool:
 
 
 def _step_scroll_direction(step: dict) -> str:
-    """解析滚动类动作的“手指方向”。
+    """Use scroll.direction or derive finger motion from swipe endpoints so both gestures share budgets and stall detection."""
 
-    scroll 直接读 direction；swipe 由起止点推导，使两种手势共用同一套
-    滚动判据（同方向预算、意图重复、页面无变化），避免新增动作绕过检测。
-    """
+
     action_name = str(step.get("action_name", "")).strip()
     if action_name == "scroll":
         direction = str(step.get("direction", "")).strip().lower()
@@ -1678,19 +1652,17 @@ def _step_scroll_direction(step: dict) -> str:
 
 def _format_scroll_direction(direction: str) -> str:
     return {
-        "up": "上",
-        "down": "下",
-        "left": "左",
-        "right": "右",
-    }.get(str(direction or "").strip(), str(direction or "").strip() or "未知方向")
+        "up": "up",
+        "down": "down",
+        "left": "left",
+        "right": "right",
+    }.get(str(direction or "").strip(), str(direction or "").strip() or "unknown direction")
 
 
 def _consecutive_same_direction_scroll(trace: list[dict]) -> tuple[str, int]:
-    """从尾部向前统计连续同方向滚动步数（scroll 与 swipe 共用预算）。
+    """Count the trailing scroll/swipe segment in one direction. Other actions or a direction change break it; unknown trailing direction yields zero."""
 
-    只统计滚动类动作（scroll/swipe）的连续段；中间插入其他动作或改变方向
-    都会中断计数。尾部动作不是滚动类（或无法解析方向）时返回 0。
-    """
+
     if not trace:
         return "", 0
     latest_direction = _step_scroll_direction(trace[-1])
@@ -1725,12 +1697,9 @@ def _alternation_explores_distinct_targets(
     steps: list[dict],
     action_names: list[str],
 ) -> bool:
-    """两页交替中，前进动作是否每次都点了不同目标（“进入-返回-换下一个控件”）。
+    """Recognize entry-back-next-target exploration. Require press_back and comparable coordinates in one system for every click/long_press, with distinct targets beyond tolerance. Missing or repeated coordinates remain a loop."""
 
-    窗口内必须出现 press_back；所有前进动作（click/long_press）都要在同一坐标系
-    （优先模型图片坐标，否则屏幕坐标）下有可比较的坐标，且两两不在同一目标容差内。
-    坐标缺失或任意两次前进命中同一目标都按真循环处理。
-    """
+
     if "press_back" not in action_names:
         return False
     forward_steps = [
@@ -1771,22 +1740,18 @@ def _detect_page_navigation_cycle(trace: list[dict]) -> str:
         and page_keys[-6] == page_keys[-4] == page_keys[-2]
         and page_keys[-5] == page_keys[-3] == page_keys[-1]
         and page_keys[-1] != page_keys[-2]
-        # 与下方 period-3 分支同理：规划模板“依次探索多个控件，进入新页面就返回”
-        # 会产生 列表→点控件1→详情→返回→列表→点控件2→… 的严格两页交替，
-        # 详情页在 FFG 中合并为同一 Page 节点。只有每次前进都点同一目标才是死循环。
+        # Entry-back-next-control exploration can alternate the same two modeled pages; only repeated forward targets imply a loop.
+
+
         and not _alternation_explores_distinct_targets(recent, action_names)
     ):
-        return "检测到页面导航循环"
+        return "Page navigation loop detected"
 
-    # M2：period-3 的通用回环检测（前三步状态与后三步状态完全相同）会把
-    # "点条目→页内操作→返回，换下一个条目重复同样动作"这个正常的多条目遍历
-    # 误判为死循环——因为条目详情页在 FFG 里通常合并成同一个 Page 节点，
-    # 不同条目会产生相同的 page_key。真正的死循环（如页面间纯前进式互相
-    # 跳转）不会在窗口内出现 press_back；而"进入-操作-返回"模式一定会。
-    # 用窗口内是否出现过 press_back 区分这两种情况，不放宽 2 页严格交替
-    # （上面那条分支）的判定，因为那种情况本身就只在两个页面间打转。
+    # For period-three cycles, a back step can identify legitimate entry-action-return exploration across different instances sharing one Page.
+
+
     if page_keys[-6:-3] == page_keys[-3:] and "press_back" not in action_names:
-        return "检测到页面导航循环"
+        return "Page navigation loop detected"
 
     return ""
 
@@ -1801,8 +1766,8 @@ def _detect_visual_action_cycle(trace: list[dict]) -> str:
         for step in recent
     ):
         return ""
-    # 最新一步是 wait：模型在回到 B 后停下观察（如“返回再进入，看进度是否续接”），
-    # 不是又一次往返导航；若之后继续来回切换，下一个窗口仍会被识别。
+    # A trailing wait observes the revisited state; it is not another navigation cycle.
+
     if str(recent[-1].get("action_name", "")).strip() == "wait":
         return ""
     screenshots = [_page_screenshot(step) for step in recent]
@@ -1818,7 +1783,7 @@ def _detect_visual_action_cycle(trace: list[dict]) -> str:
         and same_b >= STALL_SCREENSHOT_SIMILARITY_THRESHOLD
         and different_states < STALL_SCREENSHOT_SIMILARITY_THRESHOLD
     ):
-        return "检测到相同 Activity 内的界面状态往返循环"
+        return "Visual-state alternation within the same Activity detected"
     return ""
 
 
@@ -1842,7 +1807,7 @@ def _count_distinct_visual_states(steps: list[dict]) -> int | None:
 
 
 def _wait_observed_progress(trace: list[dict], start: int) -> bool:
-    """窗口内是否有 wait 步之后界面出现了可见变化（以下一步执行前截图为准）。"""
+    """Check whether a wait is followed by visible progress in the next pre-action screenshot."""
     for index in range(max(0, start), len(trace) - 1):
         if str(trace[index].get("action_name", "")).strip() != "wait":
             continue
@@ -1853,12 +1818,9 @@ def _wait_observed_progress(trace: list[dict], start: int) -> bool:
 
 
 def _detect_no_progress_stall(trace: list[dict]) -> str:
-    """Catch direction-agnostic blind probing that existing detectors miss.
+    """Catch direction-independent blind probing using Activity and screenshots. Mixed clicks and scroll directions can evade action-specific checks; no UI hierarchy is needed."""
 
-    重复动作、同方向滚动和 A→B→A→B 往返都各有专门判据，但混合方向的盲试
-    （如 scroll up/left/right 与 click 交替）会绕过全部判据，把步数走满。
-    这里只依赖 Activity 与截图，不依赖 UI 层级，也不要求动作或方向一致。
-    """
+
     if len(trace) < NO_PROGRESS_STALL_WINDOW:
         return ""
 
@@ -1868,11 +1830,11 @@ def _detect_no_progress_stall(trace: list[dict]) -> str:
         for step in recent
     ):
         return ""
-    # 干扰恢复本身会切换界面，另有专门判据处理，这里不介入。
+    # Interruption recovery has dedicated cycle checks.
     if any(bool(step.get("is_interruption")) for step in recent):
         return ""
-    # 等待期间界面在变（进度百分比、计时、加载内容）说明流程在推进，不是盲试；
-    # 64×64 缩略图看不出这类小区域文字变化，用逐像素变化区域判断。
+    # Visible progress after waiting is not blind probing; pixel comparisons detect small counters that thumbnails miss.
+
     if _wait_observed_progress(trace, len(trace) - len(recent)):
         return ""
 
@@ -1888,17 +1850,15 @@ def _detect_no_progress_stall(trace: list[dict]) -> str:
         return ""
 
     return (
-        f"连续 {NO_PROGRESS_STALL_WINDOW} 步在同一界面反复试探，"
-        f"视觉状态仅 {visual_states} 种，判定当前目标不可达"
+        f"Blind probing for {NO_PROGRESS_STALL_WINDOW} steps on the same interface; "
+        f"only {visual_states} visual states observed; current goal is unreachable"
     )
 
 
 def _detect_stall(trace: list[dict]) -> str:
-    """停滞检测：只看动作与截图，不解析模型的自然语言。
+    """Detect loops, no progress, recovery cycles, same-direction scroll exhaustion and unchanged repeated actions, using actions/screenshots rather than model prose."""
 
-    依次检查：页面/界面往返循环、同一界面无进展、干扰恢复往返、
-    test 阶段同方向滚动预算、同一动作在界面无变化时的连续重复。
-    """
+
     if len(trace) < 2:
         return ""
 
@@ -1918,7 +1878,7 @@ def _detect_stall(trace: list[dict]) -> str:
             any(bool(step.get("is_interruption")) for step in recent_cycle)
             and cycle_signatures[:2] == cycle_signatures[2:]
         ):
-            return "检测到目标动作与干扰恢复之间的重复循环"
+            return "Repeated cycle between target action and interruption recovery detected"
 
     latest_action = str(trace[-1].get("action_name", "")).strip()
     if (
@@ -1928,10 +1888,10 @@ def _detect_stall(trace: list[dict]) -> str:
         scroll_direction, consecutive_scrolls = _consecutive_same_direction_scroll(trace)
         if consecutive_scrolls > TEST_MAX_CONSECUTIVE_SAME_DIRECTION_SCROLLS:
             return (
-                f"连续向{_format_scroll_direction(scroll_direction)}滚动"
-                f"{consecutive_scrolls} 次，超出同方向滑动预算"
-                f"（{TEST_MAX_CONSECUTIVE_SAME_DIRECTION_SCROLLS} 次），"
-                "应转向点击列表项、返回或其他方向探索"
+                f"Consecutive {_format_scroll_direction(scroll_direction)} scrolls: "
+                f"{consecutive_scrolls}, exceeding same-direction budget "
+                f"({TEST_MAX_CONSECUTIVE_SAME_DIRECTION_SCROLLS}); "
+                "select a list item, return or explore another direction"
             )
 
     repeat_window = STALL_REPEAT_WINDOWS.get(latest_action, STALL_REPEAT_WINDOW)
@@ -1940,10 +1900,10 @@ def _detect_stall(trace: list[dict]) -> str:
     recent = trace[-repeat_window:]
     if _is_consecutive_repeated_action(recent):
         if latest_action == "type":
-            return f"检测到连续 {repeat_window} 次重复输入"
+            return f"Detected {repeat_window} consecutive repeated inputs"
         if latest_action in {"click", "long_press"}:
-            return f"检测到连续 {repeat_window} 次重复点击同一区域"
-        return f"检测到连续 {repeat_window} 次重复动作: {latest_action}"
+            return f"Detected {repeat_window} consecutive clicks in the same region"
+        return f"Detected {repeat_window} consecutive repeated actions: {latest_action}"
     return ""
 
 
@@ -1962,8 +1922,8 @@ def _append_unavailable_observation(
 ) -> None:
     trace.append({
         "action_name": "capture_screenshot",
-        "thought": "运行时观察到黑屏或不可用界面，结束当前场景并交给下一轮恢复。",
-        "action_description": "观察到黑屏或页面不可用",
+        "thought": "The runtime observed a black/unavailable page; end this scenario and let the next round recover.",
+        "action_description": "Observe black or unavailable page",
         "current_page": page,
         "trace_phase": trace_phase,
         "observation_only": True,
@@ -1991,15 +1951,15 @@ def _append_terminal_observation(
     try:
         page, health_error = capture_runtime_page(device)
     except ScreenshotUnavailableError as exc:
-        print(f"[场景执行] 终止前最终观测不可用: {exc}")
+        print(f"[Scenario execution] Final observation unavailable: {exc}")
         return None, str(exc)
     except Exception as exc:
-        print(f"[场景执行] 终止前最终观测失败: {exc}")
+        print(f"[Scenario execution] Final observation failed: {exc}")
         return None, ""
     trace.append({
         "action_name": "capture_screenshot",
-        "thought": "场景结束前补充最后一个有副作用动作的结果观测。",
-        "action_description": "场景终止前最终页面观测",
+        "thought": "Observe the last side-effecting action's result before ending the scenario.",
+        "action_description": "Final page observation before scenario termination",
         "current_page": page,
         "trace_phase": trace_phase,
         "observation_only": True,
@@ -2007,8 +1967,8 @@ def _append_terminal_observation(
         **({"screenshot_health_error": health_error} if health_error else {}),
     })
     print(
-        "[场景执行] 已补充终止前最终观测: "
-        f"phase={trace_phase}, page={page.id or '未知'}, "
+        "[Scenario execution] Added final observation: "
+        f"phase={trace_phase}, page={page.id or 'unknown'}, "
         f"health={'ok' if not health_error else health_error}"
     )
     return page, health_error
@@ -2052,19 +2012,19 @@ def _restart_after_repeated_black_screen(
     package_name: str,
     trace_phase: str,
 ) -> tuple[Page | None, str]:
-    print("[场景执行] 连续黑屏达到阈值，重启目标 App 并等待界面稳定。")
+    print("[Scenario execution] Consecutive black-screen threshold reached; restart and wait for stabilization.")
     if not _restart_target_app(device, package_name):
-        return None, "连续黑屏后重启目标 App 失败"
+        return None, "Target restart after consecutive black screens failed"
     try:
         page = capture_current_page(device)
     except ScreenshotUnavailableError as exc:
-        return None, f"连续黑屏重启后界面仍不可用: {exc}"
+        return None, f"Screenshot still unavailable after black-screen restart: {exc}"
     except Exception as exc:
-        return None, f"连续黑屏重启后抓取页面失败: {exc}"
+        return None, f"Capture after black-screen restart failed: {exc}"
     trace.append({
         "action_name": "restart_app",
-        "thought": "连续黑屏达到阈值，运行器重启目标 App 以恢复可测试状态。",
-        "action_description": "连续黑屏后重启目标 App",
+        "thought": "The runtime restarts the target after consecutive black screens to restore a testable state.",
+        "action_description": "Restart target after consecutive black screens",
         "current_page": page,
         "trace_phase": trace_phase,
         "is_interruption": True,
@@ -2104,20 +2064,20 @@ def _exit_blocked_page(
         "",
     )
     if last_executed_action == "press_back":
-        print("[场景执行] 阻塞页已由执行器返回，不重复执行返回动作。")
+        print("[Scenario execution] Executor already backed out of the blocked page; do not repeat back.")
         return None
     try:
-        print("[场景执行] 当前页面无法继续，自动按一次返回退出阻塞页。")
+        print("[Scenario execution] Cannot proceed; press back once to exit the blocked page.")
         _perform_action(device=device, action_name="press_back")
         time.sleep(FAST_ACTION_DELAY)
         page = capture_current_page(device)
     except Exception as exc:
-        print(f"[场景执行] 退出阻塞页失败，结束当前功能并切换其它功能: {exc}")
+        print(f"[Scenario execution] Failed to exit blocked page; switch functionalities: {exc}")
         return None
     trace.append({
         "action_name": "press_back",
-        "thought": "运行器退出验证码或已确认无法继续的阻塞页面。",
-        "action_description": "退出无法继续的阻塞页面",
+        "thought": "The runtime exits a CAPTCHA or another confirmed impassable page.",
+        "action_description": "Exit an impassable blocked page",
         "current_page": page,
         "trace_phase": trace_phase,
         "is_interruption": True,
@@ -2128,21 +2088,21 @@ def _exit_blocked_page(
 
 
 def _task_phase_label(phase: str) -> str:
-    """把规划器给出的功能阶段转成执行器可读的任务说明。"""
+    """Describe the planner-selected functionality phase to the executor."""
     phase = str(phase or "").strip().lower()
     if phase == "depth":
         return (
-            "depth（深度业务场景）：本轮沿功能的业务逻辑走完一条完整操作，"
-            "不要在进入第一个新页面时就结束"
+            "depth: complete one business action sequence for the current functionality; "
+            "do not stop merely upon reaching the first new page"
         )
     if phase == "breadth":
-        return "breadth（铺入口）：把入口与可见控件触发一遍并观察直接结果"
-    return "未指定：按任务文本自行判断边界"
+        return "breadth: exercise entries and visible controls and observe direct results"
+    return "Unspecified: follow the task's stated boundary"
 
 
 @dataclass
 class _ScenarioRun:
-    """单个场景执行在各阶段 helper 之间共享的可变状态。"""
+    """Mutable execution state shared by scenario-stage helpers."""
 
     llm: Any
     device: Any
@@ -2159,14 +2119,14 @@ class _ScenarioRun:
     error_message: str = ""
     final_page_override: Page | None = None
     crash_logcat: str = ""
-    # 连续失败预算分开计：截图/屏幕尺寸等观测失败与模型生成失败互不叠加，
-    # 各自连续 MAX_CONSECUTIVE_ERRORS 次结束场景。
+    # Observation failures and generation failures have independent consecutive-error budgets.
+
     observation_errors: int = 0
     llm_errors: int = 0
-    # 截图失败触发的应用重启次数，防止设备持续故障时无限“失败-重启”。
+    # Bound screenshot-triggered restarts to avoid a persistent failure/restart loop.
     screenshot_restart_count: int = 0
     action_failure_recoveries: int = 0
-    # 生成失败滚动记录：写回后续每步的执行历史（agent 式循环），而非一次性反馈。
+    # Retain recent generation failures in every subsequent decision until corrected.
     recent_failures: list[dict] = field(default_factory=list)
 
     def stop(self, status: str, error_message: str) -> None:
@@ -2176,7 +2136,7 @@ class _ScenarioRun:
         try:
             self.final_page_override = capture_current_page(self.device)
         except Exception as capture_err:
-            print(f"[场景执行] 恢复后抓取页面失败: {capture_err}")
+            print(f"[Scenario execution] Capture after recovery failed: {capture_err}")
 
     def record_generation_failure(self, step_index: int, reason: str) -> None:
         attempt = 1 + sum(
@@ -2191,7 +2151,7 @@ class _ScenarioRun:
 
 @dataclass
 class _StepObservation:
-    """一步决策所需的观测：前台状态、截图页面与图片/屏幕尺寸。"""
+    """One decision observation: foreground, page screenshot, image dimensions and screen dimensions."""
 
     page: Page
     health_error: str
@@ -2202,9 +2162,9 @@ class _StepObservation:
     image_size: tuple[int, int] = (0, 0)
 
 
-# 截图/屏幕尺寸等观测失败后的重试等待（秒）。
+# Retry delay after screenshot or dimension observations fail.
 OBSERVATION_RETRY_DELAY = 2.0
-# 阶段 helper 的控制结果：继续本步 / 重新观测（下一轮循环）/ 结束场景。
+# Helper control results: continue this step, reobserve, or stop the scenario.
 _STEP_OK = "ok"
 _STEP_RETRY = "retry"
 _STEP_STOP = "stop"
@@ -2216,49 +2176,37 @@ def _prepare_scenario_start(
     scenario: str,
     clear_logcat: bool,
     trace_phase: str,
-    compliance_cold_start: bool,
     deadline: float | None,
 ) -> tuple[str, str] | None:
-    """场景起点：安全策略、logcat 起点、冷启动与前台确认。失败时返回 (status, error)。"""
+    """Apply safety checks, establish the logcat start, handle cold start and confirm foreground. Return (status, error) on failure."""
     risky_scenario_intent = wechat_read_only_violation(package_name, scenario)
     if risky_scenario_intent:
         reason = f"{WECHAT_READ_ONLY_BLOCKED_END}: {risky_scenario_intent}"
-        print(f"[场景执行] {reason}")
+        print(f"[Scenario execution] {reason}")
         return "blocked", reason
 
     if clear_logcat:
         _clear_logcat(device)
-        print(f"[场景执行] 已设置场景 logcat 起点: phase={trace_phase}")
+        print(f"[Scenario execution] Set scenario logcat start: phase={trace_phase}")
 
-    if compliance_cold_start:
-        print(
-            "[场景执行] 合规冷启动仅重启目标应用并保留数据；"
-            "清除应用数据只允许在整次运行启动前执行一次。"
-        )
-        if not deadline_allows(deadline, APP_RESTART_MAX_SECONDS):
-            return "incomplete", "阶段剩余时间不足以完成合规冷启动"
-        if not _restart_target_app(device, package_name):
-            return "error", "合规冷启动失败：无法重新拉起应用"
     if not _ensure_target_app(device, package_name):
-        return "error", "无法拉起目标应用"
+        return "error", "Cannot launch target app"
     return None
 
 
 def _check_target_foreground(run: _ScenarioRun) -> tuple[str, str, str]:
-    """前台检查：外部/崩溃时恢复并结束场景。
+    """Recover and stop after unexpected external transitions or crashes. Return control result, foreground package and allowed external package; a nonempty allowed package permits continuation."""
 
-    返回 (控制结果, 前台包名, 受控外部包名)；受控外部包名非空表示当前位于
-    场景允许的外部页面，继续执行。
-    """
+
     device, package_name, trace = run.device, run.package_name, run.trace
     foreground_state, current_package = _target_app_foreground_state(device, package_name)
     if foreground_state != "foreground":
-        # 页面切换动画期间可能瞬时上报 launcher（应用自身过渡态），
-        # 复检确认后再定性为外部跳转/崩溃，避免误终止场景。
+        # Settle transient launcher reports before declaring an external transition or crash.
+
         foreground_state, current_package = _settle_foreground_state(device, package_name)
     if foreground_state == "foreground":
         if not current_package:
-            # 未配置目标包名时前台检查不查询设备；此时单独读取一次供提示与守卫使用。
+            # Without a target package the foreground probe is a no-op; query once for prompts and guards.
             try:
                 current_package = str(device.current_package() or "").strip()
             except Exception:
@@ -2266,7 +2214,7 @@ def _check_target_foreground(run: _ScenarioRun) -> tuple[str, str, str]:
         return _STEP_OK, current_package or "", ""
 
     scene_crash_logcat = _read_crash_logcat(device, package_name)
-    # 同一份 logcat 只判定一次崩溃，后续分支与恢复流程复用该结论。
+    # Parse each logcat snapshot for a crash once and reuse the verdict.
     target_crashed = _logcat_has_target_process_crash(scene_crash_logcat, package_name)
     controlled_external = (
         foreground_state == "background"
@@ -2282,14 +2230,14 @@ def _check_target_foreground(run: _ScenarioRun) -> tuple[str, str, str]:
         trace[-1]["external_package"] = current_package or ""
     if controlled_external:
         print(
-            f"[场景执行] 检测到受控外部应用上下文，继续执行当前场景: "
-            f"current={current_package or '未知'}, target={package_name or '未知'}"
+            f"[Scenario execution] Allowed external context; continue scenario: "
+            f"current={current_package or 'unknown'}, target={package_name or 'unknown'}"
         )
         return _STEP_OK, current_package or "", current_package or ""
 
     print(
-        f"[场景执行] 目标应用离开前台，恢复后结束当前场景: status={foreground_state}, "
-        f"current={current_package or '未知'}, target={package_name or '未知'}"
+        f"[Scenario execution] Target left foreground; restore and end scenario: status={foreground_state}, "
+        f"current={current_package or 'unknown'}, target={package_name or 'unknown'}"
     )
     if target_crashed:
         run.crash_logcat = scene_crash_logcat
@@ -2297,10 +2245,10 @@ def _check_target_foreground(run: _ScenarioRun) -> tuple[str, str, str]:
             trace[-1]["caused_target_crash"] = True
     elif foreground_state == "background":
         _append_external_observation_step(
-            trace, device, package_name, current_package or "未知", run.trace_phase,
+            trace, device, package_name, current_package or "unknown", run.trace_phase,
         )
     crashed, recovered = _recover_to_target(
-        trace, device, package_name, run.trace_phase, current_package or "未知",
+        trace, device, package_name, run.trace_phase, current_package or "unknown",
         scene_crash_logcat,
         back=lambda: _recover_target_app_by_back(
             device, package_name, continue_message=False
@@ -2317,57 +2265,57 @@ def _check_target_foreground(run: _ScenarioRun) -> tuple[str, str, str]:
 
 
 def _handle_screenshot_failure(run: _ScenarioRun, error: Exception) -> str:
-    """截图异常：连续失败达到阈值时经前台轮询重启应用；预算或时间耗尽则结束。"""
-    print(f"[错误] 截图失败: {error}")
+    """Restart through foreground polling after repeated capture failures; stop when retry or time budget is exhausted."""
+    print(f"[Error] Screenshot failed: {error}")
     run.observation_errors += 1
     if run.observation_errors >= MAX_CONSECUTIVE_ERRORS:
         if run.screenshot_restart_count >= APP_RESTART_ATTEMPTS:
             run.stop(
                 "error",
-                f"连续截图失败且应用重启已达 {APP_RESTART_ATTEMPTS} 次，结束当前场景: {error}",
+                f"Repeated screenshot failures after {APP_RESTART_ATTEMPTS} app restarts; end scenario: {error}",
             )
-            print(f"[场景执行] {run.error_message}")
+            print(f"[Scenario execution] {run.error_message}")
             return _STEP_STOP
         if not run.deadline_allows(APP_RESTART_MAX_SECONDS):
-            run.stop("incomplete", f"连续截图失败且阶段剩余时间不足以重启目标应用: {error}")
+            run.stop("incomplete", f"Repeated screenshot failures with insufficient time to restart: {error}")
             return _STEP_STOP
-        # 走 _restart_target_app：轮询前台包名而非固定 sleep，避免冷启动未完成
-        # 时截到桌面而诱发新一轮“失败-重启”（重启风暴）。
+        # Restart through foreground polling to avoid capturing the launcher during cold start and inducing a restart storm.
+
         run.screenshot_restart_count += 1
         if _restart_target_app(run.device, run.package_name):
             run.observation_errors = 0
             return _STEP_RETRY
-        run.stop("error", f"连续截图失败且重启目标应用失败: {error}")
+        run.stop("error", f"Repeated screenshot failures and target restart failed: {error}")
         return _STEP_STOP
     if not run.deadline_allows(OBSERVATION_RETRY_DELAY):
-        run.stop("incomplete", f"截图失败且阶段剩余时间不足以等待重试: {error}")
+        run.stop("incomplete", f"Screenshot failure with insufficient time for retry: {error}")
         return _STEP_STOP
     time.sleep(OBSERVATION_RETRY_DELAY)
     return _STEP_RETRY
 
 
 def _capture_step_page(run: _ScenarioRun) -> tuple[str, Page | None, str]:
-    """抓取当前运行时页面，返回 (控制结果, 页面, 截图健康错误)。"""
+    """Return control result, captured runtime page and screenshot-health error."""
     try:
         page, page_health_error = capture_runtime_page(
             run.device,
             page_id=run.initial_page_id if not run.trace else None,
         )
     except ScreenshotUnavailableError as e:
-        print(f"[场景执行] 完全无法取得运行时截图，立即停止当前场景: {e}")
-        run.stop("screenshot_unavailable", f"无法取得运行时截图，当前场景已停止: {e}")
+        print(f"[Scenario execution] Runtime screenshot unavailable; stop immediately: {e}")
+        run.stop("screenshot_unavailable", f"Runtime screenshot unavailable; scenario stopped: {e}")
         return _STEP_STOP, None, ""
     except Exception as e:
         return _handle_screenshot_failure(run, e), None, ""
     if page_health_error:
-        print(f"[场景执行] 运行时观察到异常截图: {page_health_error}")
+        print(f"[Scenario execution] Unhealthy runtime screenshot: {page_health_error}")
         if run.trace:
             _append_unavailable_observation(
                 run.trace, page, page_health_error, run.trace_phase,
             )
             run.stop(
                 "screenshot_unavailable",
-                f"观察到黑屏或页面不可用，已保留当前界面并结束场景: {page_health_error}",
+                f"Black/unavailable page observed; preserved it and ended scenario: {page_health_error}",
             )
             run.final_page_override = page
             return _STEP_STOP, page, page_health_error
@@ -2379,11 +2327,9 @@ def _handle_exploration_boundary(
     page: Page,
     foreground_package: str,
 ) -> bool:
-    """探索边界检测（core 模式）；命中时自动退出并结束场景，返回是否已结束。
+    """Exit and stop after an out-of-scope third-party in-app flow. Package-specific configured rules apply; apps without rules retain ordinary behavior."""
 
-    目标应用内进入第三方服务内容（如小程序、内嵌网页等）时自动退出并结束
-    当前场景。规则按包名从配置加载，未配置的应用不启用，行为与无本检测时完全一致。
-    """
+
     if run.exploration_mode != "core":
         return False
     device, package_name, trace = run.device, run.package_name, run.trace
@@ -2394,26 +2340,26 @@ def _handle_exploration_boundary(
         return False
     boundary_label = boundary_hit.rule.label
     print(
-        f"[探索边界] 检测到进入{boundary_label}"
+        f"[Exploration boundary] Entered {boundary_label}"
         f"（via={boundary_hit.via}, matched={boundary_hit.matched}），"
-        "自动退出并结束当前场景。"
+        "; exit automatically and end scenario."
     )
     reason = (
-        f"进入{boundary_label}越过探索边界"
+        f"Entering {boundary_label} crossed the exploration boundary"
         f"（via={boundary_hit.via}, matched={boundary_hit.matched}）"
     )
     if _recover_from_exploration_boundary(device, package_name, boundary_hit):
         _append_target_app_recovery_step(
             trace, device, package_name, package_name, run.trace_phase,
-            recovery_method="press_back", reason=f"{reason}；已通过返回键退出。",
+            recovery_method="press_back", reason=f"{reason}; exited with back.",
         )
         run.stop("blocked", EXPLORATION_BOUNDARY_BLOCKED_END.format(label=boundary_label))
         return True
-    print("[探索边界] 返回退出失败，重启目标应用并结束本轮场景。")
+    print("[Exploration boundary] Back failed; restart target and end scenario.")
     run.crash_logcat = _read_crash_logcat(device, package_name)
     crashed, recovered = _recover_to_target(
         trace, device, package_name, run.trace_phase, package_name, run.crash_logcat,
-        back=None, reason=f"{reason}且返回退出失败；已重启目标应用。",
+        back=None, reason=f"{reason}; back failed, so restarted the target.",
     )
     if recovered and not crashed:
         run.stop("left_app", EXPLORATION_BOUNDARY_BLOCKED_END.format(label=boundary_label))
@@ -2425,12 +2371,12 @@ def _handle_exploration_boundary(
 
 
 def _observe_step(run: _ScenarioRun) -> tuple[str, _StepObservation | None]:
-    """观测阶段：前台检查 → 截图 → 探索边界 → 屏幕与图片尺寸。"""
+    """Observe foreground, screenshot, exploration boundary and image/screen dimensions."""
     try:
         control, foreground_package, external_package = _check_target_foreground(run)
     except ScreenshotUnavailableError as e:
-        print(f"[场景执行] 完全无法取得运行时截图，立即停止当前场景: {e}")
-        run.stop("screenshot_unavailable", f"无法取得运行时截图，当前场景已停止: {e}")
+        print(f"[Scenario execution] Runtime screenshot unavailable; stop immediately: {e}")
+        run.stop("screenshot_unavailable", f"Runtime screenshot unavailable; scenario stopped: {e}")
         return _STEP_STOP, None
     except Exception as e:
         return _handle_screenshot_failure(run, e), None
@@ -2445,15 +2391,15 @@ def _observe_step(run: _ScenarioRun) -> tuple[str, _StepObservation | None]:
         img_w, img_h = run.device.display_size()
         image_size = screenshot_dimensions(page.representative_screenshot)
         if image_size is None or min(image_size) <= 1:
-            raise ValueError("当前上传截图无法解码或尺寸无效")
+            raise ValueError("Current uploaded screenshot cannot be decoded or has invalid dimensions")
     except Exception as e:
-        print(f"[错误] 获取屏幕或截图尺寸失败: {e}")
+        print(f"[Error] Reading screen/image dimensions failed: {e}")
         run.observation_errors += 1
         if run.observation_errors >= MAX_CONSECUTIVE_ERRORS:
-            run.stop("error", f"连续获取屏幕尺寸失败: {e}")
+            run.stop("error", f"Repeated screen-dimension failures: {e}")
             return _STEP_STOP, None
         if not run.deadline_allows(OBSERVATION_RETRY_DELAY):
-            run.stop("incomplete", f"获取屏幕尺寸失败且阶段剩余时间不足以等待重试: {e}")
+            run.stop("incomplete", f"Dimension read failed with insufficient time to retry: {e}")
             return _STEP_STOP, None
         time.sleep(OBSERVATION_RETRY_DELAY)
         return _STEP_RETRY, None
@@ -2470,13 +2416,13 @@ def _observe_step(run: _ScenarioRun) -> tuple[str, _StepObservation | None]:
 
 
 def _handle_generation_failure(run: _ScenarioRun, error_message: str) -> str:
-    """模型生成失败计数与退避；预算耗尽或剩余时间不足时结束场景。"""
+    """Count model-generation failures and back off; stop on exhausted retries or insufficient time."""
     run.llm_errors += 1
     if run.llm_errors >= MAX_CONSECUTIVE_ERRORS:
         run.stop("error", error_message)
         return _STEP_STOP
     if not _sleep_for_llm_retry(run.llm_errors, run.deadline):
-        run.stop("incomplete", f"阶段剩余时间不足以等待模型重试（{error_message}）")
+        run.stop("incomplete", f"Insufficient phase time for model retry ({error_message})")
         return _STEP_STOP
     return _STEP_RETRY
 
@@ -2487,10 +2433,9 @@ def _decide_action(
     observation: _StepObservation,
     step_index: int,
 ) -> tuple[str, dict | None, str, str]:
-    """决策阶段：构造输入、调用模型并解析校验动作。
+    """Build input, invoke the model, parse and validate its action. Return control result, plan, raw response and pre-action screenshot reference."""
 
-    返回 (控制结果, plan, 原始响应, 动作前截图引用)。
-    """
+
     page = observation.page
     b64_image = page.representative_screenshot
     trace = run.trace
@@ -2526,11 +2471,11 @@ def _decide_action(
     ))
     messages = [system_msg, current_human_msg]
     print(
-        "[场景执行] LLM 输入摘要: "
+        "[Scenario execution] LLM input summary: "
         f"phase={run.trace_phase}, step={step_index}, history_steps={len(trace)}, "
         f"recent_screenshots={_recent_screenshot_count(trace)}, "
-        f"current_page={_runtime_page_label(page)}, activity={page.activity or '未知'}, "
-        f"foreground={observation.foreground_package or '未知'}, "
+        f"current_page={_runtime_page_label(page)}, activity={page.activity or 'unknown'}, "
+        f"foreground={observation.foreground_package or 'unknown'}, "
         f"current_screenshot={'yes' if b64_image else 'no'}"
     )
 
@@ -2539,50 +2484,48 @@ def _decide_action(
     response = None
     request_started = time.monotonic()
     try:
-        record_llm_request(llm, operation="[场景执行]")
+        record_llm_request(llm, operation="[Scenario execution]")
         response = llm.invoke(messages)
-        record_llm_response(llm, response, operation="[场景执行]")
+        record_llm_response(llm, response, operation="[Scenario execution]")
         raw_content = normalize_llm_text(getattr(response, "content", ""))
         if not raw_content:
-            raise ValueError("empty_content: 响应正文为空")
+            raise ValueError("empty_content: response body is empty")
         if (getattr(response, "response_metadata", {}) or {}).get("finish_reason") == "length":
-            raise ValueError("truncated_output: 响应被截断")
+            raise ValueError("truncated_output: response was truncated")
         plan = _parse_action_json(raw_content)
         plan = _normalize_action_plan(plan)
         _validate_action_plan(plan, observation.image_size)
-        record_llm_diagnostic(response, operation="[场景执行]", elapsed_seconds=time.monotonic() - request_started)
+        record_llm_diagnostic(response, operation="[Scenario execution]", elapsed_seconds=time.monotonic() - request_started)
         log_plan = dict(plan)
         log_plan.pop("action_description", None)
-        print(f"[场景执行] LLM 输出 JSON: {log_plan}")
+        print(f"[Scenario execution] LLM output JSON: {log_plan}")
     except Exception as e:
-        # 服务端不识别 response_format 时，属配置问题而非模型错误：
-        # 关闭 JSON 模式后立即重试，不计入错误预算，也不写入模型可见的失败记录
-        # （模型无法修正配置问题，写进历史只会干扰决策）。
+        # Unsupported response_format is an endpoint configuration issue: retry without JSON mode, without charging the model error budget or polluting its history.
+
+
         if json_format_rejected(e) and disable_json_response_format(llm):
             print(
-                "[场景执行] 服务端不接受 response_format=json_object，"
-                "已自动关闭 JSON 模式并重试（不计入错误预算）。"
+                "[Scenario execution] Endpoint rejected response_format=json_object. "
+                "Disabled JSON mode and retried without charging the error budget."
             )
             return _STEP_RETRY, None, raw_content, trace_screenshot_before
-        record_llm_diagnostic(response, operation="[场景执行]", error=f"{type(e).__name__}: {e}", elapsed_seconds=time.monotonic() - request_started)
-        record_llm_failure(llm, operation="[场景执行]")
-        no_json_hint = " (响应零JSON结构)" if raw_content and "{" not in raw_content else ""
-        print(f"[错误] LLM调用或解析失败{no_json_hint}: {e}\n[原始内容]: {raw_content}")
+        record_llm_diagnostic(response, operation="[Scenario execution]", error=f"{type(e).__name__}: {e}", elapsed_seconds=time.monotonic() - request_started)
+        record_llm_failure(llm, operation="[Scenario execution]")
+        no_json_hint = " (response contains no JSON)" if raw_content and "{" not in raw_content else ""
+        print(f"[Error] LLM call/parsing failed{no_json_hint}: {e}\n[Raw content]: {raw_content}")
         run.record_generation_failure(
             step_index,
             _describe_generation_failure(raw_content, e, response_received=response is not None),
         )
-        control = _handle_generation_failure(run, f"连续 LLM 解析失败: {e}")
+        control = _handle_generation_failure(run, f"Repeated LLM parsing failures: {e}")
         return control, None, raw_content, trace_screenshot_before
     return _STEP_OK, plan, raw_content, trace_screenshot_before
 
 
 def _tap_point_on_flat_background(screenshot: str, x: int, y: int) -> bool:
-    """落点 8px 邻域没有局部纹理 → 大概率点在控件之外的背景上。
+    """Detect low local high-frequency texture near a tap. Subtract Gaussian blur before measuring deviation so smooth gradients do not resemble control edges or text."""
 
-    先减去高斯模糊得到高频分量再算标准差：渐变背景（灰度缓慢变化）原始标准差
-    可能不小，但高频分量接近 0；控件的文字、边缘、图标会产生明显的高频分量。
-    """
+
     image = decode_screenshot(screenshot)
     if image is None:
         return False
@@ -2599,11 +2542,9 @@ def _tap_point_on_flat_background(screenshot: str, x: int, y: int) -> bool:
 
 
 def _refine_tap_point(llm, screenshot: str, plan: dict) -> tuple[int, int] | None:
-    """裁剪放大落点附近区域，请模型对意图中的控件再定位一次。
+    """Ask the model to locate the intended control in a magnified crop. Accept only coordinates inside the crop and within TAP_REFINE_MAX_SHIFT; return None on missing targets, errors or suspicious results."""
 
-    只返回落在裁剪区内、与原落点距离不超过 TAP_REFINE_MAX_SHIFT 的新坐标；
-    模型找不到、调用失败或结果可疑时返回 None，调用方保留原坐标。
-    """
+
     image = decode_screenshot(screenshot)
     if image is None:
         return None
@@ -2617,29 +2558,29 @@ def _refine_tap_point(llm, screenshot: str, plan: dict) -> tuple[int, int] | Non
         str(plan.get(key, "") or "").strip() for key in ("action_description", "thought")
     ).strip()
     question = (
-        f"这是手机截图的局部放大图（宽 {crop_w} 像素、高 {crop_h} 像素，左上角为 (0, 0)）。"
-        f"执行意图：{intent}。找到意图要点击的那个控件，给出其可点击本体中心在这张放大图中的"
-        "像素坐标；图中没有该控件时 found 为 false。只输出 JSON："
+        f"This is a magnified screenshot crop (width={crop_w}, height={crop_h} pixels, origin=(0, 0)). "
+        f"Action intent: {intent}. Locate the intended control and return its clickable center "
+        "in this crop's pixels. If absent, set found=false. Return only JSON: "
         '{"found": true, "x": 0, "y": 0}'
     )
     try:
         payload = encode_image_to_jpg_base64(crop, max_side=max(crop_w, crop_h), quality=85)
         caller = llm.bind(timeout=TAP_REFINE_TIMEOUT_SECONDS) if hasattr(llm, "bind") else llm
-        record_llm_request(llm, operation="[点击定位]")
+        record_llm_request(llm, operation="[Tap refinement]")
         request_started = time.monotonic()
         response = caller.invoke([HumanMessage(content=[
             {"type": "text", "text": question},
             {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{payload}"}},
         ])])
-        # 与主执行路径同口径落盘 llm_responses.jsonl：只记计数不落响应，
-        # 离线复盘时就算不出二次定位的真实耗时、也看不到模型输出。
-        record_llm_diagnostic(response, operation="[点击定位]", elapsed_seconds=time.monotonic() - request_started)
-        record_llm_response(llm, response, operation="[点击定位]")
+        # Persist refinement responses alongside primary execution calls so diagnostics retain timing and output.
+
+        record_llm_diagnostic(response, operation="[Tap refinement]", elapsed_seconds=time.monotonic() - request_started)
+        record_llm_response(llm, response, operation="[Tap refinement]")
         result = _parse_action_json(normalize_llm_text(getattr(response, "content", "")))
-    except Exception as exc:  # noqa: BLE001 - 二次定位只是优化，失败沿用原坐标
-        record_llm_failure(llm, operation="[点击定位]")
-        record_llm_diagnostic(response=None, operation="[点击定位]", error=f"{type(exc).__name__}: {exc}")
-        print(f"[场景执行] 点击二次定位失败，沿用原坐标: {type(exc).__name__}: {exc}")
+    except Exception as exc:  # noqa: BLE001 - optional refinement retains original coordinates on failure
+        record_llm_failure(llm, operation="[Tap refinement]")
+        record_llm_diagnostic(response=None, operation="[Tap refinement]", error=f"{type(exc).__name__}: {exc}")
+        print(f"[Scenario execution] Tap refinement failed; retain original coordinates: {type(exc).__name__}: {exc}")
         return None
     if not isinstance(result, dict) or result.get("found") is False:
         return None
@@ -2657,7 +2598,7 @@ def _refine_tap_point(llm, screenshot: str, plan: dict) -> tuple[int, int] | Non
 
 
 def _repeats_ineffective_tap(trace: list[dict], current_screenshot: str, x: int, y: int) -> bool:
-    """上一步在几乎同一位置点击后界面无变化：落点大概率擦在控件边缘或之外。"""
+    """Identify another tap near the preceding unchanged click, including edge or off-target hits."""
     if not trace:
         return False
     last = trace[-1]
@@ -2673,11 +2614,9 @@ def _repeats_ineffective_tap(trace: list[dict], current_screenshot: str, x: int,
 
 
 def _maybe_refine_tap(run: "_ScenarioRun", plan: dict, observation: "_StepObservation") -> None:
-    """click/long_press 可能点偏时做一次放大二次定位，原地修正 plan 坐标。
+    """Refine click/long_press coordinates in place when local texture is absent or the preceding nearby tap had no effect. Both trigger checks are model-free."""
 
-    触发条件（都不需要模型调用即可判断）：落点在无纹理背景上；或上一步在几乎
-    同一位置点击后界面无变化（落点擦在控件边缘时纹理不低，只能靠这一条兜住）。
-    """
+
     if (
         not TAP_REFINE_ENABLED
         or plan.get("action_name") not in {"click", "long_press"}
@@ -2693,15 +2632,15 @@ def _maybe_refine_tap(run: "_ScenarioRun", plan: dict, observation: "_StepObserv
     if not screenshot:
         return
     if _tap_point_on_flat_background(screenshot, x, y):
-        trigger = "落点位于空白背景"
+        trigger = "tap on a flat background"
     elif _repeats_ineffective_tap(run.trace, screenshot, x, y):
-        trigger = "重复上一步无效点击的位置"
+        trigger = "repeated ineffective tap position"
     else:
         return
     refined = _refine_tap_point(run.llm, screenshot, plan)
     if refined is None or refined == (x, y):
         return
-    print(f"[场景执行] {trigger}，放大二次定位修正坐标: ({x},{y}) -> ({refined[0]},{refined[1]})")
+    print(f"[Scenario execution] {trigger}; magnified refinement: ({x},{y}) -> ({refined[0]},{refined[1]})")
     plan["x"], plan["y"] = refined
     plan["tap_refined_from"] = {"x": x, "y": y}
 
@@ -2750,8 +2689,8 @@ def _apply_post_record_guards(
     observation: _StepObservation,
     proposed_action: str,
 ) -> str:
-    """动作已记入轨迹、尚未下发设备前的守卫：验证挑战、未处理系统页、停滞、
-    finished 结论与登录态。返回 _STEP_OK 表示可执行动作。"""
+    """After recording but before dispatch, guard verification challenges, required external pages, stalls, finish verdicts and authenticated sessions. _STEP_OK permits execution."""
+
     action_name = plan.get("action_name", "")
     thought = plan.get("thought", "")
 
@@ -2767,7 +2706,7 @@ def _apply_post_record_guards(
     )
     if verification_attempt_reason:
         end_step("blocked", verification_attempt_reason)
-        print(f"[场景执行] 动作执行前拦截: {verification_attempt_reason}")
+        print(f"[Scenario execution] Pre-action guard: {verification_attempt_reason}")
         return _STEP_STOP
 
     unresolved_external_reason = _unfinished_safe_external_reason(
@@ -2777,41 +2716,41 @@ def _apply_post_record_guards(
     if unresolved_external_reason:
         step_info["action_failed"] = True
         step_info["action_error"] = unresolved_external_reason
-        print(f"[场景执行] 拒绝提前结束: {unresolved_external_reason}")
+        print(f"[Scenario execution] Rejected premature finish: {unresolved_external_reason}")
         return _STEP_RETRY
 
     stall_reason = _detect_stall(run.trace)
     if stall_reason:
-        print(f"[警告] {stall_reason}，提前结束当前场景。")
+        print(f"[Warning] {stall_reason}; ending scenario early.")
         end_step("stalled", stall_reason)
         return _STEP_STOP
 
     if action_name == "finished":
         if observation.health_error:
-            end_step("screenshot_unavailable", "执行器在黑屏或不可用界面结束，等待下一轮恢复")
+            end_step("screenshot_unavailable", "Executor finished on a black/unavailable page; defer recovery to next round")
             run.final_page_override = observation.page
             return _STEP_STOP
         verification_finish_reason = _verification_finish_reason(thought)
         if verification_finish_reason:
             end_step("blocked", verification_finish_reason)
-            print(f"[场景执行] 验证挑战阻塞当前功能: {thought[:160]}")
+            print(f"[Scenario execution] Verification challenge blocks functionality: {thought[:160]}")
         elif _finished_declares_failure(thought):
-            end_step("failed_goal", f"执行器判断当前目标不可达: {thought[:240]}")
-            print(f"[场景执行] finished 包含失败语义，降级为 failed_goal: {thought[:160]}")
+            end_step("failed_goal", f"Executor declared goal unreachable: {thought[:240]}")
+            print(f"[Scenario execution] finished expresses failure; downgraded to failed_goal: {thought[:160]}")
         return _STEP_STOP
 
-    # 只看动作本身（action_description，缺失时取 thought 的动作子句），不看完整
-    # thought：thought 常复述“保持登录态、不点退出登录”之类约束，会误伤正常动作。
+    # Inspect the action clause, not the entire thought, which may merely restate session-preservation restrictions.
+
     session_violation = account_session_action_violation(action_name, proposed_action)
     if session_violation:
         print(
-            "[场景执行] 硬拦截会破坏登录态的动作: "
+            "[Scenario execution] Blocked action that would invalidate the authenticated session: "
             f"{session_violation} | {(plan.get('action_description') or '')[:80]}"
         )
         end_step(
             "failed_goal",
-            "运行器拦截了会退出登录/切换账号的动作"
-            f"（{session_violation}）；已保持登录态结束本场景",
+            "Runtime blocked logout/account-switch action "
+            f"({session_violation}); ended scenario with session preserved",
         )
         step_info["session_guard_blocked"] = True
         return _STEP_STOP
@@ -2819,7 +2758,7 @@ def _apply_post_record_guards(
 
 
 def _execute_planned_action(run: _ScenarioRun, plan: dict, step_info: dict) -> str:
-    """执行阶段：下发设备动作并按动作类型等待界面稳定。"""
+    """Dispatch the action and wait for stabilization according to its type."""
     action_name = plan.get("action_name", "")
     package_name = run.package_name
     if action_name != "wait":
@@ -2831,7 +2770,7 @@ def _execute_planned_action(run: _ScenarioRun, plan: dict, step_info: dict) -> s
         if action_name == "open_app" and package_name:
             action_kwargs["package_name"] = package_name
         if action_kwargs:
-            print(f"[场景执行] 动作参数: {action_kwargs}")
+            print(f"[Scenario execution] Action parameters: {action_kwargs}")
         try:
             action_result = _perform_action(device=run.device, action_name=action_name, **action_kwargs)
             if action_name in {"click", "long_press"} and isinstance(action_result, dict):
@@ -2839,32 +2778,32 @@ def _execute_planned_action(run: _ScenarioRun, plan: dict, step_info: dict) -> s
                     if key in action_result:
                         step_info[key] = action_result[key]
         except Exception as e:
-            print(f"[错误] 执行动作失败: {e}")
+            print(f"[Error] Action execution failed: {e}")
             step_info["is_interruption"] = True
             step_info["action_failed"] = True
             step_info["action_error"] = str(e)
             if run.action_failure_recoveries < MAX_ACTION_FAILURE_RECOVERIES:
                 run.action_failure_recoveries += 1
                 print(
-                    "[场景执行] 将动作失败及原因交给执行模型，允许改用一次替代动作继续当前场景。"
+                    "[Scenario execution] Return the action failure to the model; allow one alternative action."
                 )
                 return _STEP_RETRY
-            run.stop("error", f"动作执行失败且替代策略仍失败，已结束当前场景: {e}")
+            run.stop("error", f"Action and alternative strategy both failed; scenario ended: {e}")
             return _STEP_STOP
 
     if action_name == "wait":
-        # wait 携带显式时长时按模型要求等待，避免“等 1 秒不够 → 再等一次”
-        # 被 WAIT_STALL_REPEAT_WINDOW 误判为重复动作而提前结束场景。
+        # Honor explicit wait durations to avoid repeated short waits being classified as stalls.
+
         wait_seconds = max(
             MIN_WAIT_SECONDS,
             min(MAX_WAIT_SECONDS, float(plan.get("duration") or DEFAULT_WAIT_SECONDS)),
         )
         if wait_seconds > ACTION_DELAY:
-            print(f"[场景执行] 显式等待 {wait_seconds:.1f}s（等待页面加载）")
+            print(f"[Scenario execution] Explicit wait {wait_seconds:.1f}s for page loading")
         time.sleep(wait_seconds)
     elif action_name == "open_app" and package_name:
-        # 冷启动轮询代替固定延时：避免在应用仍在启动时截图，
-        # 让执行模型看到桌面/启动页而误判重复 open_app。
+        # Poll after cold start rather than showing a premature launcher/loading screenshot to the model.
+
         _wait_target_app_foreground(
             run.device,
             package_name,
@@ -2879,7 +2818,7 @@ def _execute_planned_action(run: _ScenarioRun, plan: dict, step_info: dict) -> s
 
 
 def _run_scenario_step(run: _ScenarioRun, system_msg: SystemMessage) -> str:
-    """执行一步：观测 → 决策 → 守卫 → 执行。返回控制结果。"""
+    """Run observation, decision, guards and execution; return the control result."""
     control, observation = _observe_step(run)
     if control != _STEP_OK:
         return control
@@ -2892,7 +2831,7 @@ def _run_scenario_step(run: _ScenarioRun, system_msg: SystemMessage) -> str:
         return control
 
     if run.deadline is not None and time.time() >= run.deadline:
-        run.stop("incomplete", "模型返回时阶段时间预算已耗尽，未执行其建议动作")
+        run.stop("incomplete", "Phase budget expired during model response; suggested action was not executed")
         return _STEP_STOP
     action_name = plan.get("action_name", "")
     thought = plan.get("thought", "")
@@ -2906,12 +2845,12 @@ def _run_scenario_step(run: _ScenarioRun, system_msg: SystemMessage) -> str:
     )
     if risky_action_intent:
         run.stop("blocked", f"{WECHAT_READ_ONLY_BLOCKED_END}: {risky_action_intent}")
-        print(f"[场景执行] 动作执行前拦截: {run.error_message}")
+        print(f"[Scenario execution] Pre-action guard: {run.error_message}")
         return _STEP_STOP
 
     print(
-        f"\n[步骤 {step_index}]{' [干扰]' if is_interruption else ''} "
-        f"页面={observation.page.id or '未知'} 动作={action_name} | 思考: {thought}"
+        f"\n[Step {step_index}]{' [Interruption]' if is_interruption else ''} "
+        f"page={observation.page.id or 'unknown'} action={action_name} | Assessment: {thought}"
     )
 
     _maybe_refine_tap(run, plan, observation)
@@ -2923,12 +2862,12 @@ def _run_scenario_step(run: _ScenarioRun, system_msg: SystemMessage) -> str:
     try:
         _scale_plan_coordinates(plan, img_w, img_h, observation.image_size)
     except ValueError as e:
-        print(f"[错误] LLM坐标解析失败: {e}\n[原始内容]: {raw_content}")
-        run.record_generation_failure(step_index, f"坐标换算失败，动作未执行：{str(e)[:300]}")
-        return _handle_generation_failure(run, f"连续 LLM 坐标解析失败: {e}")
+        print(f"[Error] LLM coordinate parsing failed: {e}\n[Raw content]: {raw_content}")
+        run.record_generation_failure(step_index, f"Coordinate conversion failed; action not executed: {str(e)[:300]}")
+        return _handle_generation_failure(run, f"Repeated LLM coordinate parsing failures: {e}")
 
-    # 本步得到了可执行动作：重置模型错误预算，并清空已被纠正的失败记录，
-    # 避免过期警告持续出现在后续步骤的历史里。
+    # A valid action clears generation failures so stale warnings do not affect later decisions.
+
     run.llm_errors = 0
     run.recent_failures.clear()
     step_info = _build_step_info(
@@ -2943,7 +2882,7 @@ def _run_scenario_step(run: _ScenarioRun, system_msg: SystemMessage) -> str:
 
 
 def _finalize_scenario(run: _ScenarioRun) -> None:
-    """收尾：退出阻塞页、补终止观测、恢复目标应用前台、补存截图。"""
+    """Exit blocked pages, observe the last result, restore target foreground and persist screenshots."""
     device, package_name, trace, trace_phase = run.device, run.package_name, run.trace, run.trace_phase
     if run.status in {"blocked", "stalled"}:
         blocked_exit_page = _exit_blocked_page(trace, device, trace_phase)
@@ -2961,17 +2900,17 @@ def _finalize_scenario(run: _ScenarioRun) -> None:
         if terminal_health_error:
             run.stop(
                 "screenshot_unavailable",
-                "最后一个有副作用动作后的页面不可用，已结束当前场景: "
+                "Page unavailable after the last side-effecting action; scenario ended: "
                 f"{terminal_health_error}",
             )
 
-    # 场景结束时保证目标应用在前台（受控外部跳转等情形），超时结束的场景不再额外恢复。
+    # Restore foreground at scenario end, except when the time budget is exhausted.
     if package_name and run.status not in FOREGROUND_HANDLED_STATUSES and run.status != "incomplete":
         foreground_state, current_package = _target_app_foreground_state(device, package_name)
         if foreground_state != "foreground":
             scene_end_logcat = _read_crash_logcat(device, package_name)
             crashed, recovered = _recover_to_target(
-                trace, device, package_name, trace_phase, current_package or "未知",
+                trace, device, package_name, trace_phase, current_package or "unknown",
                 scene_end_logcat,
                 back=lambda: _recover_target_app_by_back(
                     device, package_name, continue_message=False
@@ -2985,7 +2924,7 @@ def _finalize_scenario(run: _ScenarioRun) -> None:
 
     supplemental_screenshots = _persist_unwritten_trace_screenshots(trace, trace_phase)
     print(
-        "[轨迹截图] 场景截图索引完成: "
+        "[Trace screenshots] Scenario screenshot indexing complete: "
         f"phase={trace_phase}, trace_steps={len(trace)}, "
         f"supplemental_saved={supplemental_screenshots}"
     )
@@ -3001,47 +2940,39 @@ def _run_single_scenario(
     clear_logcat: bool,
     trace_phase: str,
     exploration_mode: str = "core",
-    compliance_context: dict[str, Any] | None = None,
     deadline: float | None = None,
     task_phase: str = "",
 ) -> tuple[list[dict], Page | None, str, str, str]:
-    """执行一个场景，返回 (trace, final_page, status, error, crash_logcat)。
+    """Return (trace, final_page, status, error, crash_logcat). Each step observes, decides, applies guards and executes; see EXECUTION_STATUSES for outcomes."""
 
-    status 取值见 EXECUTION_STATUSES。每步依次经过 观测（前台/截图/边界/尺寸）
-    → 决策（模型调用与解析）→ 守卫（安全策略、停滞、finished 结论）→ 执行。
-    """
-    phase_label = {"navigation": "导航", "test": "场景"}.get(
+
+    phase_label = {"navigation": "navigation", "test": "test"}.get(
         trace_phase, trace_phase
     )
     step_limit = (
         MAX_NAVIGATION_STEPS if trace_phase == "navigation" else MAX_EXEC_STEPS
     )
     if not scenario:
-        print(f"[场景执行] {phase_label}阶段跳过: 未配置场景。")
+        print(f"[Scenario execution] Skipped {phase_label}: no scenario configured.")
         return [], initial_page, "skipped", "", ""
     if deadline is not None and time.time() >= deadline:
-        return [], initial_page, "incomplete", "阶段时间预算已耗尽", ""
+        return [], initial_page, "incomplete", "Phase time budget exhausted", ""
 
     scene_started_at = time.time()
-    compliance_cold_start = bool(
-        (compliance_context or {}).get("cold_start")
-    ) and trace_phase == "test"
     start_failure = _prepare_scenario_start(
         device, package_name, scenario, clear_logcat, trace_phase,
-        compliance_cold_start, deadline,
+        deadline,
     )
     if start_failure is not None:
         return [], initial_page, start_failure[0], start_failure[1], ""
     target_pid = _target_process_pid(device, package_name)
     print(
-        "[场景执行] 场景起点: "
-        f"phase={trace_phase}, target={package_name or '未知'}, "
-        f"pid={target_pid or '未知'}, started_at={time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(scene_started_at))}"
+        "[Scenario execution] Scenario start: "
+        f"phase={trace_phase}, target={package_name or 'unknown'}, "
+        f"pid={target_pid or 'unknown'}, started_at={time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(scene_started_at))}"
     )
 
     system_prompt = SCENARIO_EXEC_SYSTEM_PROMPT_TEMPLATE.format(
-        # 合规专项要求是固定内容，同样放在动态任务信息之前，保持可缓存前缀。
-        mode_addendum=COMPLIANCE_EXEC_ADDENDUM if compliance_context else "",
         app_name=app_name,
         package_name=package_name,
         task_phase=_task_phase_label(task_phase),
@@ -3051,10 +2982,10 @@ def _run_single_scenario(
     system_msg = SystemMessage(content=system_prompt)
     allows_external_app = _scenario_allows_external_app(scenario)
     if allows_external_app:
-        print("[场景执行] 当前场景允许受控外部应用跳转；场景结束时会恢复目标应用。")
+        print("[Scenario execution] Controlled external transitions allowed; restore target at scenario end.")
     allows_target_exit = _scenario_allows_target_exit(scenario)
     if allows_target_exit:
-        print("[场景执行] 当前场景允许目标应用退出前台；场景结束时会恢复目标应用。")
+        print("[Scenario execution] Target may leave foreground; restore it at scenario end.")
 
     run = _ScenarioRun(
         llm=llm,
@@ -3069,17 +3000,17 @@ def _run_single_scenario(
         initial_page_id=initial_page.id if isinstance(initial_page, Page) else None,
     )
 
-    print(f"[场景执行] 开始{phase_label}阶段: {scenario}")
+    print(f"[Scenario execution] Start {phase_label}: {scenario}")
     if isinstance(initial_page, Page):
-        print(f"[场景执行] 起始页面: {initial_page.id or '未知'}")
+        print(f"[Scenario execution] Initial page: {initial_page.id or 'unknown'}")
 
     while True:
         if deadline is not None and time.time() >= deadline:
-            run.stop("incomplete", "阶段时间预算已耗尽，停止新动作并保存最终观测")
+            run.stop("incomplete", "Phase time budget exhausted; stop new actions and save final observation")
             break
         if len(run.trace) >= step_limit:
-            print(f"[警告] 达到最大步数限制 ({step_limit})，强制结束。")
-            run.stop("incomplete", f"达到最大步数限制 {step_limit}")
+            print(f"[Warning] Maximum step limit ({step_limit}) reached; stopping.")
+            run.stop("incomplete", f"Maximum step limit {step_limit} reached")
             break
         if _run_scenario_step(run, system_msg) == _STEP_STOP:
             break
@@ -3096,7 +3027,7 @@ def _run_single_scenario(
     )
     reason = f" | reason={_compact_execution_log_text(run.error_message)}" if run.error_message else ""
     print(
-        f"[场景执行] {phase_label}阶段完成 | status={run.status} | "
+        f"[Scenario execution] {phase_label} finished | status={run.status} | "
         f"steps={len(trace)} | interruptions={interruption_count} | "
         f"page={final_page_id}{reason}"
     )
@@ -3149,7 +3080,7 @@ def create_scenario_execution_pass(execution_llm, device):
             }
 
         def handle_unavailable(trace: list[dict], trace_phase: str, page):
-            """连续黑屏计数；达到阈值时重启应用，重启仍失败且配置允许时结束整次运行。"""
+            """Count consecutive unavailable screenshots, restart at the threshold, and optionally terminate the run if recovery still fails."""
             count = unavailable_count + 1
             restart_error = ""
             if count >= MAX_CONSECUTIVE_SCREENSHOT_UNAVAILABLE:
@@ -3163,8 +3094,8 @@ def create_scenario_execution_pass(execution_llm, device):
                 and count >= MAX_CONSECUTIVE_SCREENSHOT_UNAVAILABLE
             )
             print(
-                f"[场景执行] {trace_phase} 阶段截图不可用，"
-                f"{'结束当前 app 运行' if workflow_complete else '当前场景结束；后续探索其它功能'}: "
+                f"[Scenario execution] Screenshot unavailable in {trace_phase}; "
+                f"{'end current app run' if workflow_complete else 'end scenario and explore other functionalities'}: "
                 f"{count}/{MAX_CONSECUTIVE_SCREENSHOT_UNAVAILABLE}"
             )
             return page, count, restart_error, workflow_complete
@@ -3175,7 +3106,7 @@ def create_scenario_execution_pass(execution_llm, device):
                 "scenario_execution_trace": [],
                 "navigation_failure_count": navigation_failure_count + 1,
                 "scenario_exec_error_count": 0,
-                "execution_result": execution_result("error", "目标应用无法拉起", []),
+                "execution_result": execution_result("error", "Target app could not be launched", []),
             }
 
         (
@@ -3197,7 +3128,7 @@ def create_scenario_execution_pass(execution_llm, device):
             deadline=deadline,
         )
 
-        # 导航未完成：本轮跳过测试场景，由 navigation_status 说明原因。
+        # If navigation did not finish, skip testing and retain the navigation outcome.
         if navigation_scenario and navigation_status != "completed":
             final_page = nav_final_page or current_page
             workflow_complete = False
@@ -3208,18 +3139,18 @@ def create_scenario_execution_pass(execution_llm, device):
                 navigation_error = restart_error or navigation_error
                 navigation_failure_count = 0
             elif navigation_status in {"left_app", "app_crashed"}:
-                # 已在执行中恢复过目标应用，不再计入导航失败。
+                # Recovery already occurred during execution; do not count another navigation failure.
                 navigation_failure_count = 0
             else:
                 navigation_failure_count += 1
-                print(f"[场景执行] 导航失败，本轮跳过执行场景。连续失败次数: {navigation_failure_count}")
+                print(f"[Scenario execution] Navigation failed; skip test scenario. Consecutive failures: {navigation_failure_count}")
                 if navigation_failure_count >= 2:
-                    print("[场景执行] 连续两次导航失败，重启 app 回到初始页面。")
+                    print("[Scenario execution] Two consecutive navigation failures; restart app at its initial page.")
                     if package_name and _restart_target_app(device, package_name):
                         try:
                             final_page = capture_current_page(device)
                         except Exception as e:
-                            print(f"[场景执行] 重启后抓取页面失败: {e}")
+                            print(f"[Scenario execution] Capture after restart failed: {e}")
                     navigation_failure_count = 0
             updates = {
                 "current_page": final_page,
@@ -3243,21 +3174,6 @@ def create_scenario_execution_pass(execution_llm, device):
             return updates
 
         test_initial_page = nav_final_page if isinstance(nav_final_page, Page) else current_page
-        compliance_context = None
-        if str(scenario_type).strip() == "compliance_check":
-            compliance_context = {
-                "cold_start": bool(current_plan.get("compliance_cold_start")),
-                "check_ids": [
-                    str(item).strip()
-                    for item in current_plan.get("compliance_check_ids", []) or []
-                    if str(item).strip()
-                ],
-            }
-            print(
-                "[场景执行] 合规检测场景: "
-                f"checks={len(compliance_context['check_ids'])}, "
-                f"cold_start={compliance_context['cold_start']}"
-            )
         (
             test_trace,
             test_final_page,
@@ -3274,7 +3190,6 @@ def create_scenario_execution_pass(execution_llm, device):
             clear_logcat=True,
             trace_phase="test",
             exploration_mode=exploration_mode,
-            compliance_context=compliance_context,
             deadline=deadline,
             task_phase=str(current_plan.get("function_phase", "") or ""),
         )

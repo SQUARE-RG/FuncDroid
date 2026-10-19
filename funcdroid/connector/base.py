@@ -33,7 +33,7 @@ class Connector(ABC):
 
     @staticmethod
     def _shell_args(extra_args) -> list:
-        """shell 参数：字符串沿用旧语义按空白切分；列表原样传递（不经本地 shell 解释）。"""
+        """Split legacy string arguments on whitespace; pass argument lists without local shell interpretation."""
         if isinstance(extra_args, str):
             return ["shell", *extra_args.split()]
         if isinstance(extra_args, (list, tuple)):

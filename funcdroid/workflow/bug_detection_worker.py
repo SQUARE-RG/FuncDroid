@@ -1,15 +1,6 @@
-"""异步执行轨迹缺陷检测。
+"""Asynchronous execution-trace bug detection.
 
-缺陷检测结果（detected_bugs/bug_trace_records）不参与 scenario_plan/ffg_update 的决策，
-只用于落盘报告，因此异步化不会影响主循环的正确性。去重依赖“上一轮已确认的缺陷列表”，
-由单一后台线程顺序合并。
-
-用法：
-    bug_detection_worker.configure(bug_detection_llm, on_batch_done=save_callback)
-    bug_detection_worker.submit(job_state)   # 立即返回，不阻塞主循环
-    bug_detection_worker.flush()             # 工作流结束前等待队列排空
-    detected_bugs, bug_trace_records = bug_detection_worker.snapshot()
-"""
+Findings are persisted for reports and do not drive planning or FFG updating. One worker serially merges and deduplicates findings. Configure, submit jobs, flush before shutdown, and read snapshot results."""
 
 from __future__ import annotations
 
@@ -25,7 +16,7 @@ def _copy_bugs(bugs: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 
 def _copy_records(records: dict[str, list[dict[str, Any]]]) -> dict[str, list[dict[str, Any]]]:
-    # 轨迹步骤生成后不再被原地修改；复制到列表层，避免与 worker 共享同一个列表。
+    # Copy the trace list while sharing immutable step records.
     return {
         key: list(value) if isinstance(value, list) else value
         for key, value in records.items()
@@ -33,9 +24,9 @@ def _copy_records(records: dict[str, list[dict[str, Any]]]) -> dict[str, list[di
 
 
 class BugDetectionWorker(SerialWorker):
-    """顺序执行 `analyze_execution_for_bugs`。"""
+    """Run analyze_execution_for_bugs serially."""
 
-    log_prefix = "[缺陷检测线程]"
+    log_prefix = "[Bug detection worker]"
     thread_name = "bug-detection-worker"
 
     def __init__(self) -> None:
@@ -52,7 +43,7 @@ class BugDetectionWorker(SerialWorker):
         initial_records: dict[str, list[dict[str, Any]]] | None = None,
         initial_failures: list[dict[str, Any]] | None = None,
     ) -> None:
-        """配置本次运行使用的 LLM、落盘回调，并（重新）播种已有缺陷（断点续跑场景）。"""
+        """Configure the model, save callback, and existing findings for a new or resumed run."""
         with self._lock:
             self._detected_bugs = _copy_bugs(list(initial_bugs or []))
             self._bug_trace_records = _copy_records(dict(initial_records or {}))
@@ -61,13 +52,12 @@ class BugDetectionWorker(SerialWorker):
     def _process_job(self, job_state: dict[str, Any]) -> None:
         with self._lock:
             llm = self._llm
-            # 用当前权威缺陷列表覆盖任务快照里的旧值，保证顺序合并不丢更新。
-            # 逐条复制：分析过程不得改动主线程快照可能仍在序列化的字典。
+            # Replace stale snapshot findings with authoritative copies before sequential merging.
             job_state["detected_bugs"] = _copy_bugs(self._detected_bugs)
             job_state["bug_trace_records"] = _copy_records(self._bug_trace_records)
         updates = analyze_execution_for_bugs(llm, job_state)  # type: ignore[arg-type]
         with self._lock:
-            # 整体替换为新列表/新字典，不原地修改已发布出去的对象。
+            # Publish new containers instead of mutating already shared objects.
             if isinstance(updates.get("detected_bugs"), list):
                 self._detected_bugs = _copy_bugs(updates["detected_bugs"])
             if isinstance(updates.get("bug_trace_records"), dict):
@@ -75,7 +65,7 @@ class BugDetectionWorker(SerialWorker):
         self._batch_done()
 
     def snapshot(self) -> tuple[list[dict[str, Any]], dict[str, list[dict[str, Any]]]]:
-        """线程安全地读取当前权威缺陷列表和轨迹记录快照（逐条复制，调用方可自由序列化/修改）。"""
+        """Return thread-safe copies of authoritative findings and trace records."""
         with self._lock:
             return _copy_bugs(self._detected_bugs), _copy_records(self._bug_trace_records)
 
@@ -87,7 +77,7 @@ class BugDetectionWorker(SerialWorker):
 
 
 def build_defect_detection_job(state: AgentState) -> dict[str, Any]:
-    """抽取缺陷检测所需的只读快照；trace 元素生成后不再被原地修改，浅拷贝即可。"""
+    """Capture a read-only detection snapshot; trace elements remain immutable."""
     return build_trace_job(
         state,  # type: ignore[arg-type]
         "current_navigation_scenario",
@@ -97,5 +87,5 @@ def build_defect_detection_job(state: AgentState) -> dict[str, Any]:
     )
 
 
-# 进程内单例。
+# Process-local singleton.
 bug_detection_worker = BugDetectionWorker()

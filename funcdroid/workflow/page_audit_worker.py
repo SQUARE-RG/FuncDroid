@@ -1,30 +1,6 @@
-"""后台页面控件审计 worker。
+"""Background audit of controls visible in saved page screenshots.
 
-设计动机：
-- Page.controls 的补充目前依赖 FFG 更新 LLM 在复用页面时自觉声明，小参数
-  模型几乎不会主动补充，形成"首次识别遗漏 → 永远没人补"的自锁循环。
-  本 worker 用独立后台线程定期对页面截图做一次控件清单复核，把"补充
-  controls"变成程序主动触发的确定性机制。
-- 审计只挖掘已有证据（页面已保存截图），不产生新执行；输入是截图与
-  现有清单，输出是"截图中真实可见但清单遗漏的可交互控件"。
-- 与 bug_detection_worker 同构：后台线程只做 LLM 调用（算），不直接写
-  FFG；合并动作由主线程在 ffg_update 节点入口完成（写），保持单写者。
-- 退出条件：页面截图集合指纹未变化，或连续 DEFAULT_ZERO_ADD_LIMIT
-  次审计零新增（且该页全部截图都已审计过），则标记 saturated 不再审计；
-  连续 DEFAULT_FAILURE_LIMIT 次调用失败同样停止重试，直到页面指纹变化。
-  已提交未完成的任务按 (page_id, fingerprint) 登记在途，不会被重复提交。
-  状态仅存进程内，重启清零。
-
-用法：
-    from workflow.page_audit_worker import page_audit_worker
-
-    page_audit_worker.configure(llm)
-    page_audit_worker.submit(job)      # job 含 page_id 与已构建好的消息
-    ...                                # ffg_update 节点入口：
-    for job in page_audit_worker.collect_results(): ...
-    page_audit_worker.record_result(page_id, added_count)
-    page_audit_worker.flush(timeout)   # 运行结束前等待排空
-"""
+Audits identify omitted interactive controls without performing new GUI actions. The worker calls the model; the main thread alone merges results into the FFG. Deduplicate in-flight jobs by page and screenshot fingerprint. Stop unchanged, saturated, or repeatedly failing fingerprints until evidence changes. All scheduling state is process-local."""
 
 from __future__ import annotations
 
@@ -39,17 +15,16 @@ from workflow.worker_utils import SerialWorker
 DEFAULT_BATCH_SIZE = 3
 DEFAULT_ZERO_ADD_LIMIT = 2
 DEFAULT_PER_PAGE_LIMIT = 5
-# 同一指纹连续失败达到该次数后不再重试（请求过大、模型持续输出非 JSON 等）；
-# 页面截图或操作变化（指纹变化）后自动解除。
+# Pause repeated failures for an unchanged fingerprint; new evidence re-enables auditing.
 DEFAULT_FAILURE_LIMIT = max(1, int(os.getenv("PAGE_AUDIT_FAILURE_LIMIT", "2")))
-# 审计在后台线程里执行，失败由 worker 自己的失败计数兜底，单次调用不重试。
+# The worker manages failure counts; individual audit calls do not retry.
 PAGE_AUDIT_LLM_ATTEMPTS = max(1, int(os.getenv("PAGE_AUDIT_LLM_ATTEMPTS", "1")))
 
 
 class PageAuditWorker(SerialWorker):
-    """顺序执行页面控件审计 LLM 调用；队列满时丢弃（页面下轮会被重新挑选）。"""
+    """Process page-audit model calls serially; a full queue drops candidates for a later round."""
 
-    log_prefix = "[页面审计线程]"
+    log_prefix = "[Page audit worker]"
     thread_name = "page-audit-worker"
     default_max_pending = 4
     drop_when_full = True
@@ -66,15 +41,12 @@ class PageAuditWorker(SerialWorker):
         self._configure_base(llm)
 
     # ------------------------------------------------------------------
-    # 提交任务（主线程调用）
+    # Submission from the main thread.
     # ------------------------------------------------------------------
     def filter_candidates(self, candidates: list[dict[str, Any]]) -> list[dict[str, Any]]:
-        """按饱和/指纹状态过滤候选页面，返回允许提交的子集。
+        """Select unsaturated, changed page fingerprints not already in flight or repeatedly failing.
 
-        每个 candidate: {"page_id": str, "fingerprint": str, ...}。
-        跳过：已 saturated；指纹与上次成功审计相同（截图集合未变化）；同一指纹
-        仍在队列或执行中；同一指纹连续失败已达上限。
-        """
+        Each candidate contains page_id and fingerprint."""
         allowed: list[dict[str, Any]] = []
         with self._lock:
             for candidate in candidates:
@@ -99,8 +71,7 @@ class PageAuditWorker(SerialWorker):
         return allowed
 
     def submit(self, job: dict[str, Any], timeout: float | None = None) -> bool:
-        # 入队前登记在途：后台线程可能在 super().submit 返回前就处理完任务，
-        # 事后登记会留下永不清除的 inflight，使该页面再也不会被审计。
+        # Register in-flight state before submitting; the worker can finish before submit returns.
         page_id = str(job.get("page_id", "") or "")
         fingerprint = str(job.get("fingerprint", "") or "")
         with self._lock:
@@ -135,11 +106,11 @@ class PageAuditWorker(SerialWorker):
         payload = invoke_llm_json_with_retry(
             llm,
             messages,
-            log_prefix="[页面审计]",
+            log_prefix="[Page audit]",
             max_attempts=PAGE_AUDIT_LLM_ATTEMPTS,
         )
         if llm_json_result_failed(payload):
-            print(f"[页面审计线程] LLM 调用或解析失败（page={page_id}），稍后按失败计数重试")
+            print(f"[Page audit worker] Model call or parsing failed for page={page_id}; retry according to the failure limit")
             self._record_failure(page_id, fingerprint)
             return
         missing, control_merges, invalid_operations = self._clean_audit_payload(payload)
@@ -151,7 +122,7 @@ class PageAuditWorker(SerialWorker):
                 "control_merges": control_merges,
                 "invalid_operations": invalid_operations,
             })
-            # 指纹记账放在结果里，等主线程合并后 record_result 决定饱和。
+            # Let the main thread determine saturation after merging the result.
             state = self._audit_state.setdefault(page_id, {})
             state["fingerprint"] = fingerprint
             if state.get("inflight") == fingerprint:
@@ -163,9 +134,9 @@ class PageAuditWorker(SerialWorker):
             state["audited_screenshots"] = audited
             state["pending_screenshots"] = int(job.get("pending_screenshots", 0) or 0)
         print(
-            f"[页面审计线程] 页面清单复核完成: page={page_id}, "
-            f"候选遗漏控件={len(missing)}, 候选待删操作={len(invalid_operations)}"
-            f", 候选控件合并={len(control_merges)}"
+            f"[Page audit worker] Page inventory audit completed: page={page_id}, "
+            f"missing_control_candidates={len(missing)}, invalid_operation_candidates={len(invalid_operations)}"
+            f", control_merge_candidates={len(control_merges)}"
         )
 
     def _clean_audit_payload(
@@ -185,7 +156,7 @@ class PageAuditWorker(SerialWorker):
         self,
         content: str,
     ) -> tuple[list[str], list[dict[str, Any]], list[str], bool]:
-        """从文本解析审计结果（兼容入口；后台线程走 invoke_llm_json_with_retry）。"""
+        """Parse an audit response through the compatibility entrypoint."""
         text = str(content or "").strip()
         start = text.find("{")
         end = text.rfind("}")
@@ -225,10 +196,9 @@ class PageAuditWorker(SerialWorker):
         return cleaned
 
     def _record_failure(self, page_id: str, fingerprint: str = "") -> None:
-        """失败审计保持可重试，但同一指纹连续失败达到上限后暂停重试。
+        """Keep failed audits retryable until the fingerprint failure limit.
 
-        不改变零新增计数；成功审计过的旧指纹作废，避免页面看起来已审计。
-        """
+        Invalidate the previous success fingerprint without changing the zero-addition counter."""
         with self._lock:
             state = self._audit_state.setdefault(str(page_id or ""), {})
             state["fingerprint"] = ""
@@ -241,33 +211,33 @@ class PageAuditWorker(SerialWorker):
                 state["fail_streak"] = 1
             if fingerprint and state["fail_streak"] >= DEFAULT_FAILURE_LIMIT:
                 print(
-                    f"[页面审计线程] 页面同一状态连续 {state['fail_streak']} 次审计失败，"
-                    f"暂停重试直到页面变化: page={page_id}"
+                    f"[Page audit worker] Page state failed {state['fail_streak']} consecutive audits; "
+                    f"pause retries until page evidence changes: page={page_id}"
                 )
 
     # ------------------------------------------------------------------
-    # 结果读取 / 状态回报（主线程调用）
+    # Main-thread result collection and state reporting.
     # ------------------------------------------------------------------
     def collect_results(self) -> list[dict[str, Any]]:
-        """取走已完成的审计结果（不改变饱和状态，等 record_result）。"""
+        """Collect completed results; saturation is updated later by record_result."""
         with self._lock:
             results = list(self._results)
             self._results = []
         return results
 
     def record_result(self, page_id: str, added: int) -> None:
-        """主线程合并完成后回报实际新增数，驱动饱和判定。"""
+        """Report actual merged additions from the main thread to update saturation."""
         with self._lock:
             state = self._audit_state.setdefault(str(page_id or ""), {})
             streak = int(state.get("zero_streak", 0) or 0)
             streak = 0 if added > 0 else streak + 1
             state["zero_streak"] = streak
-            # 还有截图没审计过时不判饱和：否则被单次上限省略的状态永远补不进来。
+            # Do not saturate while any saved screenshot remains unaudited.
             if streak >= DEFAULT_ZERO_ADD_LIMIT and not state.get("pending_screenshots"):
                 state["saturated"] = True
                 print(
-                    f"[页面审计线程] 页面连续 {DEFAULT_ZERO_ADD_LIMIT} 次审计无新增，"
-                    f"标记饱和不再审计: page={page_id}"
+                    f"[Page audit worker] Page had no additions in {DEFAULT_ZERO_ADD_LIMIT} consecutive audits; "
+                    f"mark saturated and stop auditing: page={page_id}"
                 )
 
     def is_configured(self) -> bool:
@@ -289,5 +259,5 @@ class PageAuditWorker(SerialWorker):
             self._audit_state = {}
 
 
-# 进程内单例，语义与 workflow/bug_detection_worker.py 一致。
+# Process-local singleton, matching the bug-detection worker.
 page_audit_worker = PageAuditWorker()

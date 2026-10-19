@@ -1,5 +1,6 @@
 """Run-level stdout/stderr and device logcat logging."""
 
+# Unicode escapes preserve literal UI labels and legacy evidence matching.
 from __future__ import annotations
 
 import atexit
@@ -13,47 +14,44 @@ from typing import BinaryIO, Callable, TextIO
 
 
 RUNTIME_LOG_TERM_REPLACEMENTS = (
-    ("基线", "起点"),
-    ("批测", "应用队列"),
-    ("验收", "运行"),
-    ("试跑", "运行"),
-    ("实验", "运行"),
-    ("测试", "执行"),
+    ("\u57fa\u7ebf", "\u8d77\u70b9"),
+    ("\u6279\u6d4b", "\u5e94\u7528\u961f\u5217"),
+    ("\u9a8c\u6536", "\u8fd0\u884c"),
+    ("\u8bd5\u8dd1", "\u8fd0\u884c"),
+    ("\u5b9e\u9a8c", "\u8fd0\u884c"),
+    ("\u6d4b\u8bd5", "\u6267\u884c"),
 )
 
 
-# 术语替换只作用于框架自身输出的固定日志行：以下列 [标签] 开头的行由框架
-# 代码生成、内容可控。其它行（LLM 原始响应 [原始内容]、规划场景 [计划]、
-# 执行/判定详情、异常堆栈等）可能逐字包含模型输出或场景文本，全局改写会
-# 篡改证据，使日志与实际发送给模型/设备的内容对不上，因此一律原样保留。
+# Normalize only controlled framework messages; preserve model responses, scenarios, traces, and errors as evidence.
 RUNTIME_LOG_NORMALIZED_TAGS = frozenset({
-    "日志",
-    "启动",
-    "启动前清理",
-    "启动前重置",
-    "启动前授权",
-    "运行快照",
-    "输出",
-    "输出修复",
-    "产物校验",
-    "完成",
-    "运行中断",
-    "运行异常",
-    "路由",
-    "轮次",
-    "轮次信息",
-    "长时运行",
-    "持久化",
-    "LLM统计",
+    "\u65e5\u5fd7",
+    "\u542f\u52a8",
+    "\u542f\u52a8\u524d\u6e05\u7406",
+    "\u542f\u52a8\u524d\u91cd\u7f6e",
+    "\u542f\u52a8\u524d\u6388\u6743",
+    "\u8fd0\u884c\u5feb\u7167",
+    "\u8f93\u51fa",
+    "\u8f93\u51fa\u4fee\u590d",
+    "\u4ea7\u7269\u6821\u9a8c",
+    "\u5b8c\u6210",
+    "\u8fd0\u884c\u4e2d\u65ad",
+    "\u8fd0\u884c\u5f02\u5e38",
+    "\u8def\u7531",
+    "\u8f6e\u6b21",
+    "\u8f6e\u6b21\u4fe1\u606f",
+    "\u957f\u65f6\u8fd0\u884c",
+    "\u6301\u4e45\u5316",
+    "LLM\u7edf\u8ba1",
     "logcat",
 })
 _RUNTIME_LOG_TAG_PATTERN = re.compile(r"^\s*\[([^\[\]\n]{1,32})\]")
-# 启动横幅/轮次横幅/结束摘要中无标签的固定行（框架常量拼接，不含模型输出）。
+# Fixed untagged banner and summary prefixes contain no model-authored output.
 RUNTIME_LOG_NORMALIZED_PREFIXES = (
-    "  第 ",
-    "  规划模式:",
-    "  探索范围:",
-    "  执行轮次:",
+    "  \u7b2c ",
+    "  \u89c4\u5212\u6a21\u5f0f:",
+    "  \u63a2\u7d22\u8303\u56f4:",
+    "  \u6267\u884c\u8f6e\u6b21:",
 )
 
 
@@ -72,10 +70,9 @@ def _normalize_runtime_log_line(line: str) -> str:
 
 
 def normalize_runtime_log_text(text: str) -> str:
-    """Keep framework runtime messages in product terminology.
+    """Normalize fixed framework messages one line at a time.
 
-    逐行处理，只改写以框架标签开头的行；模型输出、场景文本等动态内容不变。
-    """
+    Only recognized framework prefixes are rewritten; preserve model output, scenario text, and other dynamic evidence verbatim."""
     text = str(text)
     if not any(source in text for source, _target in RUNTIME_LOG_TERM_REPLACEMENTS):
         return text
@@ -115,8 +112,8 @@ class _TeeStream:
             self._secondary_error_reported = True
         try:
             self.primary.write(
-                "[日志] run.log 写入失败，已停用本次文件镜像；"
-                f"控制台输出和测试流程将继续: {exc}\n"
+                "[Logging] run.log write failed; disabled file mirroring. "
+                f"Console output and execution will continue: {exc}\n"
             )
             self.primary.flush()
         except Exception:
@@ -134,7 +131,7 @@ class _TeeStream:
         return result
 
     def write(self, text: str):
-        # 先按行缓冲再规范化：标签与正文可能分多次 write 到达，按完整行判断标签。
+        # Buffer complete lines before identifying framework prefixes.
         thread_id = threading.get_ident()
         with self._lock:
             buffered = self._pending_by_thread.get(thread_id, "") + str(text)
@@ -183,7 +180,7 @@ class _RotatingTextSink:
             max_bytes,
             backup_count,
             append=append,
-            # 续写头的时间戳在每次滚动时生成，而不是固定为 sink 创建时刻。
+            # Generate rollover timestamps at rotation time, not at sink creation.
             continuation_header=lambda: (
                 "===== FuncDroid run log continued: "
                 f"{datetime.now().isoformat()} =====\n"
@@ -233,14 +230,14 @@ class RunLogHandle:
             self._log_file.flush()
         except Exception as exc:
             try:
-                self._stderr.write(f"[日志] run.log 刷盘失败，关闭流程继续: {exc}\n")
+                self._stderr.write(f"[Logging] run.log flush failed; shutdown will continue: {exc}\n")
             except Exception:
                 pass
         try:
             self._log_file.close()
         except Exception as exc:
             try:
-                self._stderr.write(f"[日志] run.log 关闭失败，退出流程继续: {exc}\n")
+                self._stderr.write(f"[Logging] run.log close failed; exit will continue: {exc}\n")
             except Exception:
                 pass
 
@@ -269,14 +266,14 @@ def setup_run_logging(output_dir: str, filename: str = "run.log") -> RunLogHandl
     sys.stdout = _TeeStream(original_stdout, log_file, stream_lock)
     sys.stderr = _TeeStream(original_stderr, log_file, stream_lock)
 
-    print(f"[日志] 命令行输出同步保存到: {log_path}")
+    print(f"[Logging] Console output is mirrored to: {log_path}")
     rotation_label = (
-        f"单文件 {rotate_bytes} bytes，保留 {backup_count} 个历史文件"
+        f"{rotate_bytes} bytes per file; retain {backup_count} backups"
         if rotate_bytes > 0
-        else "不滚动"
+        else "rotation disabled"
     )
-    print(f"[日志] run.log 滚动策略: {rotation_label}")
-    print(f"[日志] 会话开始: {datetime.now().isoformat()}")
+    print(f"[Logging] run.log rotation: {rotation_label}")
+    print(f"[Logging] Session started: {datetime.now().isoformat()}")
     atexit.register(handle.close)
     return handle
 
@@ -294,7 +291,7 @@ class _RotatingBinarySink:
         self.path = path
         self.max_bytes = max(0, max_bytes)
         self.backup_count = max(1, backup_count)
-        # 可传固定字节串或生成函数；默认在每次滚动时生成带当前时间的续写头。
+        # Accept fixed bytes or a factory; generate a fresh continuation timestamp by default.
         self.continuation_header = continuation_header or (
             lambda: (
                 "===== FuncDroid logcat capture continued: "
@@ -406,17 +403,17 @@ def setup_logcat_capture(
 ) -> LogcatCaptureHandle | None:
     """Continuously save Android logcat output for the whole run."""
     if os.getenv("LOGCAT_CAPTURE", "1").strip().lower() in {"0", "false", "off", "no"}:
-        print("[logcat] LOGCAT_CAPTURE 已关闭，跳过完整 logcat 采集。")
+        print("[logcat] LOGCAT_CAPTURE is disabled; skipping full logcat capture.")
         return None
 
     operating_system = str(getattr(device, "operating_system", "") or "").strip().lower()
     if operating_system not in {"adb", "android"}:
-        print("[logcat] 非 Android/ADB 设备，跳过完整 logcat 采集。")
+        print("[logcat] Device is not Android/ADB; skipping full logcat capture.")
         return None
 
     device_serial = str(getattr(device, "serial", "") or "").strip()
     if not device_serial:
-        print("[logcat] 未获取到设备序列号，跳过完整 logcat 采集。")
+        print("[logcat] Device serial is unavailable; skipping full logcat capture.")
         return None
 
     os.makedirs(output_dir, exist_ok=True)
@@ -429,9 +426,9 @@ def setup_logcat_capture(
                 timeout=5,
                 capture_output=True,
             )
-            print(f"[logcat] 已清空历史 logcat: device={device_serial}")
+            print(f"[logcat] Cleared historical logcat: device={device_serial}")
         except Exception as exc:
-            print(f"[logcat] 清空历史 logcat 失败，继续采集: {exc}")
+            print(f"[logcat] Could not clear logcat; continuing capture: {exc}")
 
     rotate_bytes = max(0, int(os.getenv("LOGCAT_ROTATE_BYTES", str(256 * 1024 * 1024))))
     backup_count = max(1, int(os.getenv("LOGCAT_BACKUP_COUNT", "3")))
@@ -451,15 +448,15 @@ def setup_logcat_capture(
         )
     except Exception as exc:
         sink.close()
-        print(f"[logcat] 启动完整 logcat 采集失败: {exc}")
+        print(f"[logcat] Could not start full logcat capture: {exc}")
         return None
 
     handle = LogcatCaptureHandle(process, sink, logcat_path)
     rotation_label = (
-        f"每卷 {rotate_bytes} bytes，保留 {backup_count} 个历史卷"
+        f"{rotate_bytes} bytes per segment; retain {backup_count} backups"
         if rotate_bytes > 0
-        else "不滚动"
+        else "rotation disabled"
     )
-    print(f"[logcat] 完整 logcat 正在保存到: {logcat_path}（{rotation_label}）")
+    print(f"[logcat] Full logcat is being saved to: {logcat_path}（{rotation_label}）")
     atexit.register(handle.close)
     return handle
