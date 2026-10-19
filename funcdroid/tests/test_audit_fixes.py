@@ -8,7 +8,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from model.flow_graph import FlowGraph, FunctionNode, Page, operation_is_failure
+from model.flow_graph import FunctionalFlowGraph, FunctionalityNode, Page, operation_is_failure
 from tools.utils import encode_image_to_jpg_base64
 from workflow.bug_dedupe import bug_identity_key, dedupe_bugs
 from workflow.trace_defect_detection import (
@@ -39,8 +39,8 @@ def test_failure_pattern_accepts_trailing_bracket():
 
 def test_failed_black_screen_operation_is_not_counted_as_coverage():
     """A failed black-screen operation provides neither control coverage nor successful-operation evidence."""
-    graph = FlowGraph()
-    node = FunctionNode(id="func_1", name="\u5e94\u7528\u8bbe\u7f6e", test_status="in_progress")
+    graph = FunctionalFlowGraph()
+    node = FunctionalityNode(id="func_1", name="\u5e94\u7528\u8bbe\u7f6e", test_status="in_progress")
     node.add_scenario("\u63a2\u7d22\u8bbe\u7f6e\u9875\u5165\u53e3")
     graph.add_node(node)
     page = Page(id="page_1", name="\u8bbe\u7f6e\u9875", controls=["\u6e05\u9664\u7f13\u5b58"], operations=[])
@@ -60,8 +60,8 @@ def test_failed_black_screen_operation_is_not_counted_as_coverage():
 
 def test_operation_family_merge_migrates_binding(tmp_path: Path):
     """Preserve bindings across family merges: the regression changed coverage from 100% in memory to 0% after save/load."""
-    graph = FlowGraph()
-    node = FunctionNode(id="func_1", name="\u6211\u7684\u6536\u85cf", test_status="in_progress")
+    graph = FunctionalFlowGraph()
+    node = FunctionalityNode(id="func_1", name="\u6211\u7684\u6536\u85cf", test_status="in_progress")
     graph.add_node(node)
     page = Page(id="page_1", name="\u6536\u85cf\u9875", controls=["\u5220\u9664\u6309\u94ae"], operations=[])
     graph.add_page(page, "func_1")
@@ -79,7 +79,7 @@ def test_operation_family_merge_migrates_binding(tmp_path: Path):
 
     before = graph.function_coverage_details("func_1")["coverage_percent"]
     graph.save(str(tmp_path / "out"))
-    reloaded = FlowGraph.load(str(tmp_path / "out"))
+    reloaded = FunctionalFlowGraph.load(str(tmp_path / "out"))
     after = reloaded.function_coverage_details("func_1")["coverage_percent"]
     assert before == after == 100, "\u8986\u76d6\u7387\u4e0d\u5f97\u56e0\u4e00\u6b21\u843d\u76d8/\u7eed\u8dd1\u800c\u4e0b\u8dcc"
 
@@ -302,8 +302,8 @@ def test_missing_screenshot_file_fails_fast_on_load_instead_of_corrupting_next_s
     tmp_path: Path,
 ):
     """Fail during load when a referenced screenshot file is missing. Returning its filename as screenshot content previously delayed a base64 error until an unrelated save checkpoint."""
-    graph = FlowGraph()
-    node = FunctionNode(id="func_1", name="\u6211\u7684\u6536\u85cf")
+    graph = FunctionalFlowGraph()
+    node = FunctionalityNode(id="func_1", name="\u6211\u7684\u6536\u85cf")
     graph.add_node(node)
     page = Page(id="page_1", name="\u6536\u85cf\u9875", representative_screenshot="aGVsbG8=")
     graph.add_page(page, "func_1")
@@ -312,7 +312,7 @@ def test_missing_screenshot_file_fails_fast_on_load_instead_of_corrupting_next_s
     (tmp_path / "out" / "screenshots" / "page_1_representative.jpg").unlink()
 
     with pytest.raises(ValueError, match="screenshot file is missing"):
-        FlowGraph.load(str(tmp_path / "out"))
+        FunctionalFlowGraph.load(str(tmp_path / "out"))
 
 
 def test_strict_two_page_alternation_is_still_detected_even_with_back():

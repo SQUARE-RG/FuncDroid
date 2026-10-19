@@ -29,7 +29,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from device import Driver  # noqa: E402
-from model.flow_graph import FlowGraph, Page  # noqa: E402
+from model.flow_graph import FunctionalFlowGraph, Page  # noqa: E402
 from workflow.bug_detection_worker import bug_detection_worker  # noqa: E402
 from workflow.exploration_boundary import enabled_packages  # noqa: E402
 from workflow.graph import build_graph  # noqa: E402
@@ -158,7 +158,7 @@ def _build_initial_state(args, start_time: float) -> AgentState:
         detected_bugs=[],
         bug_trace_records={},
         bug_detection_enabled=bool(args.bug_detection),
-        ffg=FlowGraph(),
+        ffg=FunctionalFlowGraph(),
         navigation_failure_count=0,
         scenario_exec_error_count=0,
         scenario_plan_error_count=0,
@@ -191,7 +191,7 @@ def _load_resume_state(args, output_dir: str, started_at: float) -> AgentState:
     ffg_path = root / "ffg.json"
     if not ffg_path.is_file():
         raise FileNotFoundError(f"Resume directory is missing ffg.json: {ffg_path}")
-    state["ffg"] = FlowGraph.load(output_dir)
+    state["ffg"] = FunctionalFlowGraph.load(output_dir)
 
     result_path = root / "run_result.json"
     previous_elapsed = 0.0
@@ -321,7 +321,7 @@ def _activity_from_page(page: Any) -> str:
 def _observed_activities(state: dict) -> set[str]:
     activities: set[str] = set()
     graph = state.get("ffg")
-    if isinstance(graph, FlowGraph):
+    if isinstance(graph, FunctionalFlowGraph):
         activities.update(
             activity
             for page in graph.active_pages()
@@ -574,7 +574,7 @@ def _flush_page_audit(
     share the supplied monotonic deadline.
     """
     graph = final_state.get("ffg")
-    if isinstance(graph, FlowGraph):
+    if isinstance(graph, FunctionalFlowGraph):
         try:
             from workflow.nodes.ffg_update import (
                 _merge_page_audit_results,
@@ -645,7 +645,7 @@ def _print_summary(state: dict, output_dir: str, elapsed_seconds: float):
     exploration_mode = str(state.get("exploration_mode") or DEFAULT_EXPLORATION_MODE)
     print(f"  Exploration scope: {EXPLORATION_MODE_LABELS.get(exploration_mode, exploration_mode)}")
 
-    if isinstance(ffg, FlowGraph):
+    if isinstance(ffg, FunctionalFlowGraph):
         print(f"  FFG functionalities: {len(ffg.functions)}")
         print(f"  FFG pages: {len(ffg.pages)}")
         print(f"  Page transitions: {len(ffg.page_transitions)}")
@@ -708,7 +708,7 @@ def _save_final_outputs(state: dict, output_dir: str):
 def _save_outputs(state: dict, output_dir: str, prefix: str):
     os.makedirs(output_dir, exist_ok=True)
     ffg = state.get("ffg")
-    if isinstance(ffg, FlowGraph):
+    if isinstance(ffg, FunctionalFlowGraph):
         try:
             ffg.save(output_dir)
         except Exception as exc:
@@ -1222,12 +1222,12 @@ def _save_run_result(
             )
         },
         "ffg_counts": _json_safe({
-            "functions": len(ffg.functions) if isinstance(ffg, FlowGraph) else 0,
-            "pages": len(ffg.pages) if isinstance(ffg, FlowGraph) else 0,
-            "page_transitions": len(ffg.page_transitions) if isinstance(ffg, FlowGraph) else 0,
-            "function_dependencies": len(ffg.function_dependencies) if isinstance(ffg, FlowGraph) else 0,
-            "test_status": ffg.test_status_counts() if isinstance(ffg, FlowGraph) else {},
-            "cross_test_status": ffg.cross_test_status_counts() if isinstance(ffg, FlowGraph) else {},
+            "functions": len(ffg.functions) if isinstance(ffg, FunctionalFlowGraph) else 0,
+            "pages": len(ffg.pages) if isinstance(ffg, FunctionalFlowGraph) else 0,
+            "page_transitions": len(ffg.page_transitions) if isinstance(ffg, FunctionalFlowGraph) else 0,
+            "function_dependencies": len(ffg.function_dependencies) if isinstance(ffg, FunctionalFlowGraph) else 0,
+            "test_status": ffg.test_status_counts() if isinstance(ffg, FunctionalFlowGraph) else {},
+            "cross_test_status": ffg.cross_test_status_counts() if isinstance(ffg, FunctionalFlowGraph) else {},
         }),
         "activity_discovery": {
             "count": len(activities),
@@ -1274,7 +1274,7 @@ def _validate_final_artifacts(
     ]
     if state.get("bug_detection_enabled", True):
         required_files.append("bugs.json")
-    if isinstance(state.get("ffg"), FlowGraph):
+    if isinstance(state.get("ffg"), FunctionalFlowGraph):
         required_files.append("ffg.json")
     for relative in required_files:
         path = root / relative
@@ -1958,8 +1958,8 @@ def _print_graph_step_status(node_name: str, final_state: dict) -> None:
 
     if node_name == "ffg_update":
         ffg = final_state.get("ffg")
-        function_count = len(ffg.functions) if isinstance(ffg, FlowGraph) else 0
-        page_count = len(ffg.pages) if isinstance(ffg, FlowGraph) else 0
+        function_count = len(ffg.functions) if isinstance(ffg, FunctionalFlowGraph) else 0
+        page_count = len(ffg.pages) if isinstance(ffg, FunctionalFlowGraph) else 0
         current_function_id = str(
             final_state.get("current_testing_function_id", "") or "none"
         )
@@ -2377,7 +2377,7 @@ def _finalize_run(
             final_state.setdefault("start_time", start_time)
             artifact_root = Path(resources.output_dir)
             ffg_missing = (
-                isinstance(final_state.get("ffg"), FlowGraph)
+                isinstance(final_state.get("ffg"), FunctionalFlowGraph)
                 and not (artifact_root / "ffg.json").is_file()
             )
             if ffg_missing or (final_state.get("bug_detection_enabled", True) and not (artifact_root / "bugs.json").is_file()):

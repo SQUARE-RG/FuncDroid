@@ -10,8 +10,8 @@ from typing import Any
 from langchain_core.messages import HumanMessage, SystemMessage
 
 from model.flow_graph import (
-    FlowGraph,
-    FunctionNode,
+    FunctionalFlowGraph,
+    FunctionalityNode,
     Page,
     PageTransition,
     TERMINAL_FUNCTION_STATUSES,
@@ -106,8 +106,8 @@ PLAN_MAX_CROSS_ATTEMPTS = max(1, int(os.getenv("PLAN_MAX_CROSS_ATTEMPTS", "2")))
 PLAN_UNPLANNABLE_ROUNDS_BEFORE_DEFER = max(
     1, int(os.getenv("PLAN_UNPLANNABLE_ROUNDS_BEFORE_DEFER", "2"))
 )
-FUNCTION_PHASE_BREADTH = "breadth"
-FUNCTION_PHASE_DEPTH = "depth"
+FUNCTIONALITY_PHASE_BREADTH = "breadth"
+FUNCTIONALITY_PHASE_DEPTH = "depth"
 # Navigation levels describe reference paths; they do not gate scheduling.
 # Empty: already in scope; A: recorded forward edges; B: reverse edges as back;
 # C: restart and use A/B; D: no recorded path, so the executor explores from
@@ -266,7 +266,7 @@ def _normalize_run_phase(value: object) -> str:
     return "all"
 
 
-def _count_ffg_stats(graph: FlowGraph) -> dict[str, int]:
+def _count_ffg_stats(graph: FunctionalFlowGraph) -> dict[str, int]:
     active_pages = graph.active_pages()
     page_count = len(active_pages)
     operation_count = sum(len(page.operations) for page in active_pages)
@@ -287,7 +287,7 @@ def _count_ffg_stats(graph: FlowGraph) -> dict[str, int]:
     }
 
 
-def _node_is_terminal(node: FunctionNode | None) -> bool:
+def _node_is_terminal(node: FunctionalityNode | None) -> bool:
     """True for any terminal status (completed/blocked/deferred/unavailable).
 
     Terminal functions leave the active scheduling queue and never get planned
@@ -299,13 +299,13 @@ def _node_is_terminal(node: FunctionNode | None) -> bool:
     return (node.test_status or "not_started") in TERMINAL_FUNCTION_STATUSES
 
 
-def _node_attempt_count(node: FunctionNode | None) -> int:
+def _node_attempt_count(node: FunctionalityNode | None) -> int:
     if node is None:
         return 0
     return len(node.scenarios)
 
 
-def _node_cross_testable(node: FunctionNode | None) -> bool:
+def _node_cross_testable(node: FunctionalityNode | None) -> bool:
     """Accept inter-functional endpoints only when they are not blocked, unavailable, or deferred."""
     if node is None:
         return False
@@ -316,21 +316,21 @@ def _node_cross_testable(node: FunctionNode | None) -> bool:
     }
 
 
-def _node_intra_attempt_count(node: FunctionNode | None) -> int:
+def _node_intra_attempt_count(node: FunctionalityNode | None) -> int:
     """Actual test attempts; deduplicated scenario count is a lower bound for legacy snapshots."""
     return node.intra_attempts() if node is not None else 0
 
 
-def _node_depth_count(node: FunctionNode | None) -> int:
+def _node_depth_count(node: FunctionalityNode | None) -> int:
     """Depth scenarios that entered the test phase, including failed test attempts."""
     return int(node.depth_scenario_count or 0) if node is not None else 0
 
 
-def _node_breadth_count(node: FunctionNode | None) -> int:
+def _node_breadth_count(node: FunctionalityNode | None) -> int:
     return max(0, _node_intra_attempt_count(node) - _node_depth_count(node))
 
 
-def _required_depth_count(graph: FlowGraph, node: FunctionNode | None) -> int:
+def _required_depth_scenario_count(graph: FunctionalFlowGraph, node: FunctionalityNode | None) -> int:
     """Require one depth scenario per PLAN_DEPTH_CONTROLS_PER_SCENARIO widgets."""
     if node is None:
         return PLAN_MIN_DEPTH_SCENARIOS
@@ -339,50 +339,50 @@ def _required_depth_count(graph: FlowGraph, node: FunctionNode | None) -> int:
     return max(PLAN_MIN_DEPTH_SCENARIOS, min(PLAN_MAX_DEPTH_SCENARIOS, required))
 
 
-def _function_scenario_cap(graph: FlowGraph, node: FunctionNode | None) -> int:
+def _function_scenario_cap(graph: FunctionalFlowGraph, node: FunctionalityNode | None) -> int:
     """Scenario cap = breadth budget + depth target + margin; it grows with widget count."""
     return (
         PLAN_BREADTH_MAX_SCENARIOS
-        + _required_depth_count(graph, node)
+        + _required_depth_scenario_count(graph, node)
         + PLAN_SCENARIO_CAP_MARGIN
     )
 
 
-def _function_phase(graph: FlowGraph, node: FunctionNode | None) -> str:
+def _intra_functionality_phase(graph: FunctionalFlowGraph, node: FunctionalityNode | None) -> str:
     """Current intra-functional phase: entry breadth or complete business-scenario depth.
 
     Use depth while its target is unmet and either breadth is exhausted or every recorded widget is covered.
     Otherwise use breadth; after sufficient depth, return to any remaining widget-coverage gaps.
     """
     if node is None:
-        return FUNCTION_PHASE_BREADTH
-    if node.successful_depth_scenario_count >= _required_depth_count(graph, node):
-        return FUNCTION_PHASE_BREADTH
+        return FUNCTIONALITY_PHASE_BREADTH
+    if node.successful_depth_scenario_count >= _required_depth_scenario_count(graph, node):
+        return FUNCTIONALITY_PHASE_BREADTH
     if _node_breadth_count(node) >= PLAN_BREADTH_MAX_SCENARIOS:
         # The attempt budget bounds breadth even when widget coverage keeps growing.
-        return FUNCTION_PHASE_DEPTH
+        return FUNCTIONALITY_PHASE_DEPTH
     details = graph.function_coverage_details(node.id)
     if int(details["total_controls"] or 0) > 0 and not details["uncovered_controls"]:
-        return FUNCTION_PHASE_DEPTH
-    return FUNCTION_PHASE_BREADTH
+        return FUNCTIONALITY_PHASE_DEPTH
+    return FUNCTIONALITY_PHASE_BREADTH
 
 
-def _describe_function_phase(graph: FlowGraph, node: FunctionNode | None) -> str:
+def _describe_intra_functionality_phase(graph: FunctionalFlowGraph, node: FunctionalityNode | None) -> str:
     """Phase and budget summary for both the planning model and runtime diagnostics."""
     if node is None:
         return "No target functionality"
-    phase = _function_phase(graph, node)
+    phase = _intra_functionality_phase(graph, node)
     uncovered = len(graph.function_coverage_details(node.id)["uncovered_controls"])
     return (
         f"{phase} | breadth {_node_breadth_count(node)}/{PLAN_BREADTH_MAX_SCENARIOS}"
-        f" | depth {_node_depth_count(node)}/{_required_depth_count(graph, node)}"
+        f" | depth {_node_depth_count(node)}/{_required_depth_scenario_count(graph, node)}"
         f" (observed completions {node.successful_depth_scenario_count})"
         f" | uncovered widgets {uncovered}"
         f" | scenarios {_node_intra_attempt_count(node)}/{_function_scenario_cap(graph, node)}"
     )
 
 
-def _cross_pair_ready(graph: FlowGraph, src_id: str, dst_id: str) -> bool:
+def _cross_pair_ready(graph: FunctionalFlowGraph, src_id: str, dst_id: str) -> bool:
     """Both endpoints need their own attempts and successful business operations before flow testing."""
     return all(
         graph.get_node(node_id) is not None
@@ -392,7 +392,7 @@ def _cross_pair_ready(graph: FlowGraph, src_id: str, dst_id: str) -> bool:
     )
 
 
-def _function_completion_met(graph: FlowGraph, node: FunctionNode) -> bool:
+def _function_completion_met(graph: FunctionalFlowGraph, node: FunctionalityNode) -> bool:
     """Require sufficient widget coverage, a business operation, and successful depth scenarios.
 
     Shared pages may contribute coverage to sibling functionalities. Depth completions,
@@ -401,11 +401,11 @@ def _function_completion_met(graph: FlowGraph, node: FunctionNode) -> bool:
     return (
         node.coverage_percent >= PLAN_FUNCTION_COVERAGE_TARGET
         and graph.function_has_successful_business_operation(node.id)
-        and node.successful_depth_scenario_count >= _required_depth_count(graph, node)
+        and node.successful_depth_scenario_count >= _required_depth_scenario_count(graph, node)
     )
 
 
-def _update_function_statuses(graph: FlowGraph) -> None:
+def _update_function_statuses(graph: FunctionalFlowGraph) -> None:
     """Apply FFG-derived status transitions once per round before scheduling."""
     reopened = _normalize_and_reopen_undercovered_functions(graph)
     if reopened:
@@ -439,7 +439,7 @@ def _update_function_statuses(graph: FlowGraph) -> None:
         )
 
 
-def _normalize_and_reopen_undercovered_functions(graph: FlowGraph) -> list[str]:
+def _normalize_and_reopen_undercovered_functions(graph: FunctionalFlowGraph) -> list[str]:
     """Normalize entry names and reopen completed nodes below derived coverage."""
     reopened: list[str] = []
     for node in graph.functions.values():
@@ -467,7 +467,7 @@ def _normalize_and_reopen_undercovered_functions(graph: FlowGraph) -> list[str]:
             and node.coverage_percent < PLAN_FUNCTION_COVERAGE_TARGET
         )
         # Legacy completed snapshots also need observed depth completions, not just attempts.
-        needs_more_depth = node.successful_depth_scenario_count < _required_depth_count(graph, node)
+        needs_more_depth = node.successful_depth_scenario_count < _required_depth_scenario_count(graph, node)
         # At the scenario cap, defer remaining entries to the coverage-gap audit.
         if (
             (node.test_status or "not_started") != "completed"
@@ -483,18 +483,18 @@ def _normalize_and_reopen_undercovered_functions(graph: FlowGraph) -> list[str]:
     return reopened
 
 
-def _unfinished_function_nodes(graph: FlowGraph) -> list[FunctionNode]:
+def _unfinished_function_nodes(graph: FunctionalFlowGraph) -> list[FunctionalityNode]:
     return [node for node in graph.functions.values() if not _node_is_terminal(node)]
 
 
-def _function_sort_index(node: FunctionNode) -> int:
+def _function_sort_index(node: FunctionalityNode) -> int:
     match = re.search(r"\d+", str(node.id or ""))
     return int(match.group(0)) if match else 10**9
 
 
 def _intra_sort_key(
-    graph: FlowGraph,
-    node: FunctionNode,
+    graph: FunctionalFlowGraph,
+    node: FunctionalityNode,
     current_owner_ids: list[str],
     failure_counts: dict[str, int],
     navigation_level: str = NAV_LEVEL_HERE,
@@ -506,7 +506,7 @@ def _intra_sort_key(
     """
     return (
         0 if int(failure_counts.get(node.id, 0) or 0) == 0 else 1,
-        0 if _function_phase(graph, node) == FUNCTION_PHASE_DEPTH else 1,
+        0 if _intra_functionality_phase(graph, node) == FUNCTIONALITY_PHASE_DEPTH else 1,
         0 if node.id in current_owner_ids else 1,
         0 if navigation_level in KNOWN_NAV_LEVELS else 1,
         0 if not _node_intra_attempt_count(node) else 1,
@@ -519,14 +519,14 @@ def _cross_pair_key(src_function_id: str, dst_function_id: str) -> tuple[str, st
     return (str(src_function_id or "").strip(), str(dst_function_id or "").strip())
 
 
-def _cross_resource(reason: str) -> str:
+def _cross_state_variable(reason: str) -> str:
     return str(reason or "").partition(": ")[2] or str(reason or "").strip()
 
 
 def _add_cross_candidate(
     candidates: list[tuple[str, str, str]],
     seen: set[tuple[str, str, str]],
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     src_function_id: str,
     dst_function_id: str,
     reason: str,
@@ -536,51 +536,51 @@ def _add_cross_candidate(
         return
     if graph.get_node(src_function_id) is None or graph.get_node(dst_function_id) is None:
         return
-    key = graph.cross_test_key(src_function_id, dst_function_id, _cross_resource(reason))
+    key = graph.cross_test_key(src_function_id, dst_function_id, _cross_state_variable(reason))
     if key in seen:
         return
     seen.add(key)
     candidates.append((src_function_id, dst_function_id, reason))
 
 
-def _candidate_cross_pairs(graph: FlowGraph) -> list[tuple[str, str, str]]:
+def _candidate_inter_functional_pairs(graph: FunctionalFlowGraph) -> list[tuple[str, str, str]]:
     candidates: list[tuple[str, str, str]] = []
     seen: set[tuple[str, str, str]] = set()
 
-    for dep in graph.function_dependencies:
-        reason = _clean_natural_text(dep.resource_variable) or "Functional dependency"
+    for dependency in graph.function_dependencies:
+        dependency_state_variable = _clean_natural_text(dependency.resource_variable) or "Functional dependency"
         _add_cross_candidate(
             candidates,
             seen,
             graph,
-            dep.src_function_id,
-            dep.dst_function_id,
-            f"Functional dependency: {reason}",
+            dependency.src_function_id,
+            dependency.dst_function_id,
+            f"Functional dependency: {dependency_state_variable}",
         )
 
     # Without an explicit resource direction, either endpoint may produce the data.
     # Generate both directions, but retain only explicit directions when available.
-    resource_owners: dict[str, list[tuple[FunctionNode, str]]] = {}
-    for node in sorted(graph.functions.values(), key=_function_sort_index):
-        seen_resources: set[str] = set()
-        for raw_resource in node.resource_variables:
-            resource = _clean_natural_text(raw_resource)
-            resource_key = _normalize_similarity_key(resource)
-            if not resource_key or resource_key in seen_resources:
+    state_variable_owners: dict[str, list[tuple[FunctionalityNode, str]]] = {}
+    for functionality in sorted(graph.functions.values(), key=_function_sort_index):
+        seen_state_variables: set[str] = set()
+        for raw_state_variable in functionality.resource_variables:
+            state_variable = _clean_natural_text(raw_state_variable)
+            state_variable_key = _normalize_similarity_key(state_variable)
+            if not state_variable_key or state_variable_key in seen_state_variables:
                 continue
-            seen_resources.add(resource_key)
-            resource_owners.setdefault(resource_key, []).append((node, resource))
+            seen_state_variables.add(state_variable_key)
+            state_variable_owners.setdefault(state_variable_key, []).append((functionality, state_variable))
 
-    for owners in resource_owners.values():
-        if len(owners) < 2:
+    for functionality_owners in state_variable_owners.values():
+        if len(functionality_owners) < 2:
             continue
-        for src_index, (src_node, resource) in enumerate(owners[:-1]):
-            for dst_node, _ in owners[src_index + 1:]:
+        for src_index, (src_node, state_variable) in enumerate(functionality_owners[:-1]):
+            for dst_node, _ in functionality_owners[src_index + 1:]:
                 # Explicit producer/consumer directions take precedence for this
                 # resource only. Do not guess a reverse direction for shared data.
                 if (
-                    graph.cross_test_key(src_node.id, dst_node.id, resource) in seen
-                    or graph.cross_test_key(dst_node.id, src_node.id, resource) in seen
+                    graph.cross_test_key(src_node.id, dst_node.id, state_variable) in seen
+                    or graph.cross_test_key(dst_node.id, src_node.id, state_variable) in seen
                 ):
                     continue
                 for first, second in ((src_node, dst_node), (dst_node, src_node)):
@@ -590,13 +590,13 @@ def _candidate_cross_pairs(graph: FlowGraph) -> list[tuple[str, str, str]]:
                         graph,
                         first.id,
                         second.id,
-                        f"Shared state variable: {resource}",
+                        f"Shared state variable: {state_variable}",
                     )
 
     return candidates
 
 
-def _cross_pair_exhausted_keys(graph: FlowGraph) -> set[tuple[str, str, str]]:
+def _cross_pair_exhausted_keys(graph: FunctionalFlowGraph) -> set[tuple[str, str, str]]:
     """Candidates exhausted by completion, non-retryable failure, or the retry budget."""
     exhausted: set[tuple[str, str, str]] = set()
     for item in graph.cross_test_results:
@@ -610,13 +610,13 @@ def _cross_pair_exhausted_keys(graph: FlowGraph) -> set[tuple[str, str, str]]:
     return exhausted
 
 
-def _pending_cross_pairs(graph: FlowGraph) -> list[tuple[str, str, str]]:
+def _pending_cross_pairs(graph: FunctionalFlowGraph) -> list[tuple[str, str, str]]:
     # Remove completed and terminal failures; bound retries for navigation/screenshot failures.
     processed = _cross_pair_exhausted_keys(graph)
     return [
         (src_id, dst_id, reason)
-        for src_id, dst_id, reason in _candidate_cross_pairs(graph)
-        if graph.cross_test_key(src_id, dst_id, _cross_resource(reason)) not in processed
+        for src_id, dst_id, reason in _candidate_inter_functional_pairs(graph)
+        if graph.cross_test_key(src_id, dst_id, _cross_state_variable(reason)) not in processed
         and _node_cross_testable(graph.get_node(src_id))
         and _node_cross_testable(graph.get_node(dst_id))
     ][:MAX_CROSS_TEST_PAIRS]
@@ -642,7 +642,7 @@ def _page_node_label(page: Page | None) -> str:
 
 
 def _is_black_screen_page(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     current_page: Page | None,
     current_page_id: str | None = None,
 ) -> bool:
@@ -654,7 +654,7 @@ def _is_black_screen_page(
     return bool(page and is_black_screen_page_name(page.name))
 
 
-def _matches_black_screen_path(graph: FlowGraph, scenario: str) -> bool:
+def _matches_black_screen_path(graph: FunctionalFlowGraph, scenario: str) -> bool:
     scenario_key = _normalize_similarity_key(scenario)
     if not scenario_key:
         return False
@@ -677,7 +677,7 @@ def _matches_black_screen_path(graph: FlowGraph, scenario: str) -> bool:
     return False
 
 
-def _resolve_current_page_id(graph: FlowGraph, current_page: Page | None) -> str:
+def _resolve_current_page_id(graph: FunctionalFlowGraph, current_page: Page | None) -> str:
     if not isinstance(current_page, Page):
         return ""
     page_id = str(current_page.id or "").strip()
@@ -717,7 +717,7 @@ def _resolve_current_page_id(graph: FlowGraph, current_page: Page | None) -> str
 
 
 def _attach_current_page_identity_with_id(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     current_page: Page | None,
 ) -> tuple[Page | None, str]:
     """Align a runtime observation with a recorded Page and return its ID, or an empty ID."""
@@ -734,12 +734,12 @@ def _attach_current_page_identity_with_id(
     return current_page, str(recorded_page.id or "")
 
 
-def _attach_current_page_identity(graph: FlowGraph, current_page: Page | None) -> Page | None:
+def _attach_current_page_identity(graph: FunctionalFlowGraph, current_page: Page | None) -> Page | None:
     return _attach_current_page_identity_with_id(graph, current_page)[0]
 
 
 def _refresh_current_page_observation(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     device,
     current_page: Page | None,
 ) -> Page | None:
@@ -770,7 +770,7 @@ def _refresh_current_page_observation(
 
 
 def _build_current_location_summary(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     current_page: Page | None,
     current_page_id: str | None = None,
 ) -> str:
@@ -919,7 +919,7 @@ def _invoke_valid_plan(
 
 
 def _skip_response(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     current_page: Page | None,
     target_function_id: str = "",
     *,
@@ -959,7 +959,7 @@ def _normalize_failure_counts(value: object) -> dict[str, int]:
     return normalized
 
 
-def _node_representative_page(graph: FlowGraph, node: FunctionNode | None) -> Page | None:
+def _node_representative_page(graph: FunctionalFlowGraph, node: FunctionalityNode | None) -> Page | None:
     if node is None:
         return None
     page_ids = node.coverage_page_ids or node.page_ids
@@ -971,8 +971,8 @@ def _node_representative_page(graph: FlowGraph, node: FunctionNode | None) -> Pa
 
 
 def _node_uncovered_control_hints(
-    graph: FlowGraph,
-    node: FunctionNode | None,
+    graph: FunctionalFlowGraph,
+    node: FunctionalityNode | None,
     limit: int = 4,
 ) -> list[str]:
     """Return visible controls with no directly matching success/failure operation."""
@@ -994,7 +994,7 @@ def _node_uncovered_control_hints(
     return hints
 
 
-def _forced_depth_scenario(graph: FlowGraph, node: FunctionNode) -> str:
+def _fallback_intra_functionality_depth_scenario(graph: FunctionalFlowGraph, node: FunctionalityNode) -> str:
     """Generate a generic business-scenario fallback for the depth phase.
 
     Describe completion of a business operation without hard-coding which operation.
@@ -1029,15 +1029,15 @@ def _forced_depth_scenario(graph: FlowGraph, node: FunctionNode) -> str:
 
 
 def _forced_intra_scenario(
-    graph: FlowGraph,
-    node: FunctionNode,
+    graph: FunctionalFlowGraph,
+    node: FunctionalityNode,
     hint_index: int = 0,
     package_name: str = "",
 ) -> str:
-    if _function_phase(graph, node) == FUNCTION_PHASE_DEPTH:
+    if _intra_functionality_phase(graph, node) == FUNCTIONALITY_PHASE_DEPTH:
         # Prefer a depth scenario. An empty result would release the functionality as
         # unplannable, so fall back to breadth below when the depth template cannot run.
-        depth_scenario = _forced_depth_scenario(graph, node)
+        depth_scenario = _fallback_intra_functionality_depth_scenario(graph, node)
         if depth_scenario:
             print(
                 "[Scenario planning] phase=depth; generated a business scenario: "
@@ -1104,7 +1104,7 @@ def _forced_intra_scenario(
     )
 
 
-def _forced_cross_scenario(graph: FlowGraph, src_id: str, dst_id: str, reason: str) -> str:
+def _fallback_inter_functional_scenario(graph: FunctionalFlowGraph, src_id: str, dst_id: str, reason: str) -> str:
     src_label = _function_label(graph.get_node(src_id))
     dst_label = _function_label(graph.get_node(dst_id))
     reason = _clean_natural_text(reason) or "an existing functional dependency"
@@ -1123,10 +1123,10 @@ def _forced_cross_scenario(graph: FlowGraph, src_id: str, dst_id: str, reason: s
 
 
 def _test_data_instruction(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     scenario_type: str,
-    target: FunctionNode | None,
-    src: FunctionNode | None,
+    target: FunctionalityNode | None,
+    src: FunctionalityNode | None,
 ) -> str:
     """Stable per-functionality data suffixes (FuncDroid_<func_id>) support reuse across rounds and flows."""
     owner = src if scenario_type == "cross_test" else target
@@ -1139,9 +1139,9 @@ def _test_data_instruction(
 
 
 def _release_unplannable_function(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     current_page: Page | None,
-    node: FunctionNode,
+    node: FunctionalityNode,
     reason: str,
     unplannable_counts: dict[str, int] | None = None,
 ) -> dict:
@@ -1168,7 +1168,7 @@ def _release_unplannable_function(
 
 def _bootstrap_initial_ffg(
     llm,
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     current_page: Page,
     app_name: str = "",
     package_name: str = "",
@@ -1242,8 +1242,8 @@ def _bootstrap_initial_ffg(
 
 
 def _build_function_audit_summary(
-    graph: FlowGraph,
-    node: FunctionNode,
+    graph: FunctionalFlowGraph,
+    node: FunctionalityNode,
     exploration_mode: str,
     app_name: str = "",
     package_name: str = "",
@@ -1308,10 +1308,10 @@ def _build_function_audit_summary(
     return "\n".join(lines)
 
 
-def _audit_function_for_gap(
+def _audit_functionality_completeness(
     llm,
-    graph: FlowGraph,
-    node: FunctionNode,
+    graph: FunctionalFlowGraph,
+    node: FunctionalityNode,
     exploration_mode: str,
     validation_feedback: str = "",
     app_name: str = "",
@@ -1405,7 +1405,7 @@ def _audit_entry_scenario(page: Page | None, entry_name: str) -> str:
     )
 
 
-def _function_audit_signature(graph: FlowGraph, node: FunctionNode) -> str:
+def _function_audit_signature(graph: FunctionalFlowGraph, node: FunctionalityNode) -> str:
     """Structural coverage signature; only page/widget/transition changes trigger a new audit.
 
     Exclude scenario and operation counts because an audit execution adds both.
@@ -1435,7 +1435,7 @@ def _function_audit_signature(graph: FlowGraph, node: FunctionNode) -> str:
 
 def _run_completion_audit(
     llm,
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     exploration_mode: str,
     previous_signatures: dict[str, str] | None = None,
     audit_attempts: dict[str, int] | None = None,
@@ -1483,7 +1483,7 @@ def _run_completion_audit(
         audits_this_round += 1
         validation_feedback = ""
         for _ in range(2):
-            result = _audit_function_for_gap(
+            result = _audit_functionality_completeness(
                 llm,
                 graph,
                 node,
@@ -1548,8 +1548,8 @@ def _run_completion_audit(
 
 
 def _page_path_to_entry(
-    graph: FlowGraph,
-    node: FunctionNode,
+    graph: FunctionalFlowGraph,
+    node: FunctionalityNode,
     start_page_id: str,
     entry_page_id: str,
     allow_backtrack: bool = False,
@@ -1565,7 +1565,7 @@ def _page_path_to_entry(
 
 
 def _build_audit_navigation_scenario(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     current_page: Page | None,
     owner_function_id: str,
     entry_page_id: str,
@@ -1626,7 +1626,7 @@ def _build_audit_navigation_scenario(
 
 
 def _audit_exploration_response(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     current_page: Page | None,
     audit_result: dict,
     audit_signatures: dict[str, str],
@@ -1671,11 +1671,11 @@ def _audit_exploration_response(
 
 
 def _select_intra_target(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     current_page: Page | None,
     failure_counts: dict[str, int] | None = None,
     current_page_id: str | None = None,
-) -> FunctionNode | None:
+) -> FunctionalityNode | None:
     """Select the first unfinished functionality under the deterministic ordering.
 
     Navigation is a reference, not a candidate gate. Without a known path, use
@@ -1711,11 +1711,11 @@ def _run_deadline(state: AgentState) -> float | None:
 
 
 def _select_deferred_retry(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     current_page: Page | None,
     retried_ids: list[str],
     current_page_id: str | None = None,
-) -> FunctionNode | None:
+) -> FunctionalityNode | None:
     """Give each deferred functionality one final retry, restricted to known A/B/C paths.
 
     Level-D navigation already failed; retrying without a new path repeats the same exploration.
@@ -1740,7 +1740,7 @@ class _PageAdjacency:
     reverse: dict[str, list[PageTransition]] = field(default_factory=dict)
 
 
-def _page_adjacency(graph: FlowGraph) -> _PageAdjacency:
+def _page_adjacency(graph: FunctionalFlowGraph) -> _PageAdjacency:
     adjacency = _PageAdjacency()
     # Preserve page_transitions order so BFS edge traversal matches the previous linear scan.
     for transition in graph.page_transitions:
@@ -1750,7 +1750,7 @@ def _page_adjacency(graph: FlowGraph) -> _PageAdjacency:
 
 
 def _leveled_page_path(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     start_page_id: str,
     target_page_ids: list[str],
     allow_backtrack: bool = False,
@@ -1800,7 +1800,7 @@ def _leveled_page_path(
 
 
 def _shortest_page_path(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     start_page_id: str,
     target_page_ids: list[str],
     adjacency: _PageAdjacency | None = None,
@@ -1813,13 +1813,13 @@ def _shortest_page_path(
     ]
 
 
-def _root_page(graph: FlowGraph) -> Page | None:
+def _root_page(graph: FunctionalFlowGraph) -> Page | None:
     """App entry page: the first functionality's representative page, expected after open_app."""
     return _node_representative_page(graph, next(iter(graph.functions.values()), None))
 
 
 def _route_via_restart(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     current_page_id: str,
     target_page_ids: list[str],
     adjacency: _PageAdjacency,
@@ -1848,7 +1848,7 @@ RESTART_NAVIGATION_INSTRUCTION = "Execute open_app to reopen the target app and 
 
 
 def _path_step_instructions(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     path: list[tuple[PageTransition, bool]],
 ) -> list[str]:
     instructions: list[str] = []
@@ -1867,7 +1867,7 @@ def _path_step_instructions(
     return instructions
 
 
-def _exploratory_navigation_text(graph: FlowGraph, target: FunctionNode) -> str:
+def _exploratory_navigation_text(graph: FunctionalFlowGraph, target: FunctionalityNode) -> str:
     """Level D: without a recorded path, describe the target and let the executor find an entry."""
     target_pages = [
         page for page_id in target.coverage_page_ids
@@ -1899,9 +1899,9 @@ def _exploratory_navigation_text(graph: FlowGraph, target: FunctionNode) -> str:
 
 
 def _navigation_to_function(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     current_page: Page | None,
-    target: FunctionNode,
+    target: FunctionalityNode,
     current_page_id: str | None = None,
     adjacency: _PageAdjacency | None = None,
 ) -> tuple[str, str, str]:
@@ -1973,12 +1973,12 @@ def _navigation_to_function(
 
 
 def _build_scope_planning_summary(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     current_page: Page | None,
     scenario_type: str,
-    target: FunctionNode | None = None,
-    src: FunctionNode | None = None,
-    dst: FunctionNode | None = None,
+    target: FunctionalityNode | None = None,
+    src: FunctionalityNode | None = None,
+    dst: FunctionalityNode | None = None,
     dependency_reason: str = "",
     current_page_id: str | None = None,
 ) -> tuple[str, str, str]:
@@ -2049,7 +2049,7 @@ def _build_scope_planning_summary(
             f"- {node.id} | {_function_label(node)}",
             f"- Description: {_clip_summary_text(node.description)}",
             f"- Status: {node.test_status} | Coverage score: {node.coverage_percent}%",
-            f"- Phase: {_describe_function_phase(graph, node)}",
+            f"- Phase: {_describe_intra_functionality_phase(graph, node)}",
             f"- Associated pages: {node.page_ids or 'none'}",
             f"- Navigation-only entry pages: {node.entry_page_ids or 'none'}",
             f"- State variables: {node.resource_variables or 'none'}",
@@ -2118,7 +2118,7 @@ def _build_scope_planning_summary(
 
 def _planning_skip_unavailable(
     state: AgentState,
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     *,
     screenshot_unavailable: bool,
 ) -> dict:
@@ -2176,7 +2176,7 @@ def _planning_skip_unavailable(
 
 def _observe_planning_page(
     state: AgentState,
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     device,
     cold_start: bool,
 ) -> tuple[Page | None, dict | None]:
@@ -2206,7 +2206,7 @@ def _observe_planning_page(
     return current_page, None
 
 
-def _cold_start_response(llm, state: AgentState, graph: FlowGraph, current_page: Page) -> dict:
+def _cold_start_response(llm, state: AgentState, graph: FunctionalFlowGraph, current_page: Page) -> dict:
     """Initialize an empty FFG from the current screenshot without executing a scenario."""
     print("[Scenario planning] Empty FFG; initializing from the current screenshot.")
     _bootstrap_initial_ffg(
@@ -2238,9 +2238,9 @@ class _RoundSelection:
     """Scope selected for one planning round."""
 
     scenario_type: str = ""
-    target_node: FunctionNode | None = None
-    src_node: FunctionNode | None = None
-    dst_node: FunctionNode | None = None
+    target_node: FunctionalityNode | None = None
+    src_node: FunctionalityNode | None = None
+    dst_node: FunctionalityNode | None = None
     dependency_reason: str = ""
     extra_updates: dict = field(default_factory=dict)
 
@@ -2251,7 +2251,7 @@ class _PlanningRound:
 
     llm: Any
     state: AgentState
-    graph: FlowGraph
+    graph: FunctionalFlowGraph
     current_page: Page | None
     current_page_id: str
     current_testing_function_id: str
@@ -2359,19 +2359,19 @@ def _completion_audit_round(round_ctx: _PlanningRound) -> dict:
 
 
 def _scope_instruction(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     selection: _RoundSelection,
 ) -> tuple[str, str]:
     """Return (functionality phase, scope instructions for this round)."""
     if selection.scenario_type == "cross_test":
-        return FUNCTION_PHASE_DEPTH, (
+        return FUNCTIONALITY_PHASE_DEPTH, (
             "[Round scope] cross_test: "
             f'source functionality "{_function_label(selection.src_node)}" -> target functionality "{_function_label(selection.dst_node)}". '
             "Generate one resource-linked scenario: produce/modify in the source, then read/display/consume in the target."
         )
     target_node = selection.target_node
-    function_phase = _function_phase(graph, target_node)
-    if function_phase == FUNCTION_PHASE_DEPTH:
+    function_phase = _intra_functionality_phase(graph, target_node)
+    if function_phase == FUNCTIONALITY_PHASE_DEPTH:
         return function_phase, (
             f'[Round scope] intra_test: functionality "{_function_label(target_node)}". '
             "[Phase=depth: complete business scenario] Entries have been explored; write one complete scenario following this functionality's business logic. "
@@ -2472,7 +2472,7 @@ def _plan_test_scenario(
         return test_scenario, validation_errors
     # Keep the round executable with a fallback template when the model has no usable scenario.
     if selection.scenario_type == "cross_test":
-        test_scenario = _forced_cross_scenario(
+        test_scenario = _fallback_inter_functional_scenario(
             graph, selection.src_node.id, selection.dst_node.id, selection.dependency_reason
         )
     else:
@@ -2494,8 +2494,8 @@ def create_scenario_plan_node(llm, device):
 
     def scenario_plan_node(state: AgentState) -> dict:
         graph = state.get("ffg")
-        if not isinstance(graph, FlowGraph):
-            graph = FlowGraph()
+        if not isinstance(graph, FunctionalFlowGraph):
+            graph = FunctionalFlowGraph()
         cold_start = not bool(graph.functions)
 
         # Stage 1: confirm the foreground app and refresh the current screenshot.
@@ -2555,7 +2555,7 @@ def create_scenario_plan_node(llm, device):
                 f"cross {src_node.id}->{dst_node.id} | {selection.dependency_reason}"
                 if scenario_type == "cross_test"
                 else f"intra {target_node.id} | {_function_label(target_node)} | "
-                     f"phase={_describe_function_phase(graph, target_node)}"
+                     f"phase={_describe_intra_functionality_phase(graph, target_node)}"
             )
             + f" | navigation_level={navigation_level or 'already at target'}"
         )
@@ -2610,7 +2610,7 @@ def create_scenario_plan_node(llm, device):
                 "target_function_id": target_node.id if target_node is not None else "",
                 "src_function_id": src_node.id if src_node is not None else "",
                 "dst_function_id": dst_node.id if dst_node is not None else "",
-                "resource_variable": _cross_resource(selection.dependency_reason) if scenario_type == "cross_test" else "",
+                "resource_variable": _cross_state_variable(selection.dependency_reason) if scenario_type == "cross_test" else "",
             },
             "workflow_complete": False,
             **extra_updates,

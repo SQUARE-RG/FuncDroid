@@ -4,9 +4,9 @@
 import pytest
 
 from model.flow_graph import (
-    FlowGraph,
+    FunctionalFlowGraph,
     FunctionDependency,
-    FunctionNode,
+    FunctionalityNode,
     Page,
     PageTransition,
 )
@@ -49,21 +49,21 @@ def _intra_state(function_id, execution_result, failure_counts=None):
 
 def test_function_node_accepts_terminal_statuses():
     for status in ("blocked", "deferred", "unavailable"):
-        node = FunctionNode(id="func_1", test_status=status)
+        node = FunctionalityNode(id="func_1", test_status=status)
         assert node.test_status == status
 
 
 def test_flow_graph_set_status_accepts_terminal_statuses():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1"))
     for status in ("blocked", "deferred", "unavailable"):
         graph.set_node_test_status("func_1", status)
         assert graph.get_node_test_status("func_1") == status
 
 
 def test_stalled_execution_flags_function_but_stays_in_progress():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", test_status="in_progress"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", test_status="in_progress"))
     state, execution_result = _intra_state(
         "func_1",
         {"scenario_status": "stalled", "scenario_error": "\u8fde\u7eed\u591a\u6b65\u9875\u9762\u65e0\u53d8\u5316"},
@@ -76,8 +76,8 @@ def test_stalled_execution_flags_function_but_stays_in_progress():
 
 
 def test_test_phase_blocked_marks_function_unavailable_with_reason():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", test_status="in_progress"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", test_status="in_progress"))
     state, execution_result = _intra_state(
         "func_1",
         {
@@ -96,8 +96,8 @@ def test_test_phase_blocked_marks_function_unavailable_with_reason():
 
 
 def test_navigation_blocked_counts_navigation_failure_instead_of_unavailable():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", test_status="in_progress"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", test_status="in_progress"))
     state, execution_result = _intra_state(
         "func_1",
         {"navigation_status": "blocked", "scenario_status": "skipped"},
@@ -113,8 +113,8 @@ def test_navigation_blocked_counts_navigation_failure_instead_of_unavailable():
 def test_repeated_navigation_failures_defer_function_with_reopenable_reason():
     from workflow.nodes.ffg_update import NAVIGATION_FAILURE_DEFER_LIMIT
 
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", test_status="in_progress"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", test_status="in_progress"))
     state, execution_result = _intra_state(
         "func_1",
         {"navigation_status": "stalled", "scenario_status": "skipped"},
@@ -128,8 +128,8 @@ def test_repeated_navigation_failures_defer_function_with_reopenable_reason():
 
 
 def test_infrastructure_error_does_not_change_scheduling_state():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", test_status="in_progress"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", test_status="in_progress"))
     state, execution_result = _intra_state(
         "func_1",
         {"scenario_status": "error", "infrastructure_error": True},
@@ -142,15 +142,15 @@ def test_infrastructure_error_does_not_change_scheduling_state():
 
 
 def test_set_node_test_status_rejects_unknown_status():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1"))
     with pytest.raises(ValueError):
         graph.set_node_test_status("func_1", "done")
 
 
 def test_crash_flags_function_without_marking_unavailable():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", test_status="in_progress"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", test_status="in_progress"))
     state, execution_result = _intra_state(
         "func_1",
         {"scenario_status": "app_crashed", "crash_detected": True},
@@ -163,9 +163,9 @@ def test_crash_flags_function_without_marking_unavailable():
 
 
 def test_crashed_cross_test_flags_source_without_marking_unavailable():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", test_status="in_progress"))
-    graph.add_node(FunctionNode(id="func_2", test_status="in_progress"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", test_status="in_progress"))
+    graph.add_node(FunctionalityNode(id="func_2", test_status="in_progress"))
     state = {
         "current_plan": {"scenario_type": "cross_test", "src_function_id": "func_1", "dst_function_id": "func_2"},
         "current_test_scenario": "\u8de8\u529f\u80fd\u5d29\u6e83\u573a\u666f",
@@ -180,8 +180,8 @@ def test_crashed_cross_test_flags_source_without_marking_unavailable():
 
 
 def test_screenshot_unavailable_is_not_counted_as_failure():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", test_status="in_progress"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", test_status="in_progress"))
     state, execution_result = _intra_state("func_1", {"scenario_status": "screenshot_unavailable"})
 
     assert _record_execution_outcome(graph, state, execution_result) == {}
@@ -190,10 +190,10 @@ def test_screenshot_unavailable_is_not_counted_as_failure():
 
 # P1a: Failure yielding and priority.
 
-def _two_reachable_functions() -> tuple[FlowGraph, Page]:
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u529f\u80fd\u4e00", test_status="in_progress"))
-    graph.add_node(FunctionNode(id="func_2", name="\u529f\u80fd\u4e8c", test_status="not_started"))
+def _two_reachable_functions() -> tuple[FunctionalFlowGraph, Page]:
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u529f\u80fd\u4e00", test_status="in_progress"))
+    graph.add_node(FunctionalityNode(id="func_2", name="\u529f\u80fd\u4e8c", test_status="not_started"))
     page_1 = Page(id="page_1", name="\u529f\u80fd\u4e00\u5165\u53e3")
     page_2 = Page(id="page_2", name="\u529f\u80fd\u4e8c\u5165\u53e3")
     graph.add_page(page_1, "func_1")
@@ -234,13 +234,13 @@ def test_select_intra_target_keeps_actual_current_function_before_unstarted_func
 
 
 def test_select_intra_target_prioritizes_unstarted_function_sharing_current_entry_page():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(
         id="func_1",
         name="\u4f1a\u8bdd\u6d88\u606f\u6d4f\u89c8\u4e0e\u6536\u53d1",
         test_status="in_progress",
     ))
-    graph.add_node(FunctionNode(
+    graph.add_node(FunctionalityNode(
         id="func_2",
         name="\u4ece\u76f8\u518c\u9009\u62e9\u5e76\u53d1\u9001\u5a92\u4f53",
         test_status="not_started",
@@ -258,8 +258,8 @@ def test_select_intra_target_prioritizes_unstarted_function_sharing_current_entr
 # P1a: Per-functionality scenario budget.
 
 def test_scenario_budget_does_not_complete_when_program_coverage_is_low():
-    graph = FlowGraph()
-    node = FunctionNode(id="func_1", name="\u5e9e\u5927\u529f\u80fd", test_status="in_progress")
+    graph = FunctionalFlowGraph()
+    node = FunctionalityNode(id="func_1", name="\u5e9e\u5927\u529f\u80fd", test_status="in_progress")
     graph.add_node(node)
     graph.add_page(Page(id="page_1", name="\u5165\u53e3", controls=["\u641c\u7d22\u6309\u94ae"]), "func_1")
     for index in range(_function_scenario_cap(graph, node)):
@@ -298,8 +298,8 @@ def test_coverage_target_forces_completion_without_llm(monkeypatch):
     monkeypatch.setenv("LLM_RETRY_ATTEMPTS", "1")
     monkeypatch.setenv("LLM_RETRY_DELAY", "0")
     monkeypatch.setenv("LLM_RETRY_MAX_DELAY", "0")
-    graph = FlowGraph()
-    node = FunctionNode(
+    graph = FunctionalFlowGraph()
+    node = FunctionalityNode(
         id="func_1",
         name="\u5df2\u5145\u5206\u8986\u76d6\u529f\u80fd",
         test_status="in_progress",
@@ -338,8 +338,8 @@ def test_coverage_target_forces_completion_without_llm(monkeypatch):
 
 
 def test_expanded_entry_placeholder_is_renamed_and_reopened():
-    graph = FlowGraph()
-    node = FunctionNode(
+    graph = FunctionalFlowGraph()
+    node = FunctionalityNode(
         id="func_1",
         name="\u670d\u52a1\u53f7\u5165\u53e3",
         test_status="completed",
@@ -359,8 +359,8 @@ def test_expanded_entry_placeholder_is_renamed_and_reopened():
 
 
 def test_multi_page_coverage_needs_representative_scenario_per_page():
-    graph = FlowGraph()
-    node = FunctionNode(
+    graph = FunctionalFlowGraph()
+    node = FunctionalityNode(
         id="func_1",
         name="\u5185\u5bb9\u6d4f\u89c8",
         test_status="in_progress",
@@ -402,8 +402,8 @@ def test_multi_page_coverage_needs_representative_scenario_per_page():
 
 
 def test_repeated_entry_observation_does_not_count_as_new_scenario():
-    graph = FlowGraph()
-    node = FunctionNode(
+    graph = FunctionalFlowGraph()
+    node = FunctionalityNode(
         id="func_1",
         name="\u670d\u52a1\u53f7",
         test_status="completed",
@@ -458,17 +458,17 @@ def test_completed_scenario_is_recorded_on_planned_target_function():
 # P2: Deduplicate audit signatures.
 
 def test_blocked_function_is_excluded_from_pending_cross_pairs():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u6e90\u529f\u80fd", test_status="blocked"))
-    graph.add_node(FunctionNode(id="func_2", name="\u76ee\u6807\u529f\u80fd", test_status="completed"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u6e90\u529f\u80fd", test_status="blocked"))
+    graph.add_node(FunctionalityNode(id="func_2", name="\u76ee\u6807\u529f\u80fd", test_status="completed"))
     graph.add_function_dependency(FunctionDependency("func_1", "func_2", "\u4efb\u52a1\u8bb0\u5f55"))
 
     assert _pending_cross_pairs(graph) == []
 
 
 def test_audit_signature_ignores_scenario_count_but_tracks_structure():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", test_status="completed"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", test_status="completed"))
     graph.add_page(
         Page(id="page_1", name="\u5165\u53e3", controls=["\u6309\u94ae"], operations=["\u70b9\u51fb\u6309\u94ae"]),
         "func_1",
@@ -502,8 +502,8 @@ def test_audit_signature_ignores_scenario_count_but_tracks_structure():
 )
 def test_terminal_status_is_not_flipped_by_execution_failure(execution_result):
     """An execution failure during a coverage audit must not change a completed functionality or mark it failed."""
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", test_status="completed"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", test_status="completed"))
     state, execution_result = _intra_state("func_1", execution_result)
 
     assert _record_execution_outcome(graph, state, execution_result) == {}

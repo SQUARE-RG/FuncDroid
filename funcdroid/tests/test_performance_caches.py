@@ -9,7 +9,7 @@ import automator.u2 as u2_module
 import model.flow_graph as flow_graph_module
 import workflow.image_compact as image_compact_module
 from automator.u2 import U2
-from model.flow_graph import FlowGraph, FunctionNode, Page
+from model.flow_graph import FunctionalFlowGraph, FunctionalityNode, Page
 from workflow.image_compact import compact_screenshot
 from workflow.nodes import ffg_update as ffg_update_module
 
@@ -57,8 +57,8 @@ def test_page_audit_batch_caps_images(monkeypatch):
     monkeypatch.setattr(ffg_update_module, "PAGE_AUDIT_MAX_IMAGES", 4)
     monkeypatch.setattr(ffg_update_module.page_audit_worker, "submit", fake_submit)
 
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u529f\u80fd\u4e00"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u529f\u80fd\u4e00"))
     graph.add_page(Page(
         id="page_1",
         activity="MainActivity",
@@ -90,8 +90,8 @@ def test_flow_graph_save_skips_unchanged_screenshot_decode(tmp_path, monkeypatch
 
     monkeypatch.setattr(flow_graph_module.base64, "b64decode", counting_b64decode)
 
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u529f\u80fd\u4e00"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u529f\u80fd\u4e00"))
     graph.add_page(Page(
         id="page_1",
         activity="MainActivity",

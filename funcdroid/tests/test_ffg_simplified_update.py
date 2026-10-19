@@ -8,7 +8,7 @@ import cv2
 import numpy as np
 
 from model import flow_graph as flow_graph_module
-from model.flow_graph import FlowGraph, FunctionNode, Page, PageTransition
+from model.flow_graph import FunctionalFlowGraph, FunctionalityNode, Page, PageTransition
 from workflow.nodes import ffg_update as updater
 from workflow.nodes.ffg_update import (
     NAVIGATION_FAILURE_STATUSES,
@@ -27,9 +27,9 @@ def _screenshot(value: int) -> str:
     return base64.b64encode(buffer.tobytes()).decode("utf-8")
 
 
-def _graph() -> FlowGraph:
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u529f\u80fd\u4e00", test_status="in_progress"))
+def _graph() -> FunctionalFlowGraph:
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u529f\u80fd\u4e00", test_status="in_progress"))
     graph.add_page(Page(id="page_1", name="\u9996\u9875", activity="HomeActivity"), "func_1")
     return graph
 
@@ -361,7 +361,7 @@ def test_repair_pass_sends_only_focused_screenshots(monkeypatch):
         trace,
         {index + 1: shot for index, shot in enumerate(shots)},
         ["missing observation_alignment for source_step 3"],
-        FlowGraph(),
+        FunctionalFlowGraph(),
         {},
         2,
     )
@@ -372,8 +372,8 @@ def test_repair_pass_sends_only_focused_screenshots(monkeypatch):
 
 
 def test_text_similarity_pruning_keeps_exact_ranking():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u529f\u80fd"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u529f\u80fd"))
     for index in range(30):
         graph.add_page(Page(id=f"page_{index}", name=f"\u9875\u9762{index}", activity="A",
                             controls=[f"\u6309\u94ae{index}"]), "func_1")

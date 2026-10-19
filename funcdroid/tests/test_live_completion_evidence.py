@@ -4,15 +4,15 @@
 import numpy as np
 import pytest
 
-from model.flow_graph import FlowGraph, FunctionNode, Page
+from model.flow_graph import FunctionalFlowGraph, FunctionalityNode, Page
 from tools.utils import encode_image_to_jpg_base64
 from workflow.nodes.ffg_update import _record_intra_attempt
 from workflow.nodes.scenario_plan import _function_completion_met, _update_function_statuses
 
 
 def graph_and_state(status="completed", changed=True, **flags):
-    graph = FlowGraph()
-    node = FunctionNode(id="f1", scenarios=["\u5f00\u542f\u8bbe\u7f6e"], test_status="in_progress")
+    graph = FunctionalFlowGraph()
+    node = FunctionalityNode(id="f1", scenarios=["\u5f00\u542f\u8bbe\u7f6e"], test_status="in_progress")
     graph.add_node(node)
     before = np.full((400, 200, 3), 240, dtype=np.uint8)
     after = before.copy()
@@ -53,7 +53,7 @@ def test_observed_response_completes_and_survives_copy_and_reload():
     _record_intra_attempt(graph, state)
     assert node.successful_depth_scenario_count == 1
     assert _function_completion_met(graph, node)
-    for restored in (graph.clone(), FlowGraph.from_dict(graph.to_dict())):
+    for restored in (graph.clone(), FunctionalFlowGraph.from_dict(graph.to_dict())):
         assert restored.get_node("f1").successful_depth_scenario_count == 1
         assert _function_completion_met(restored, restored.get_node("f1"))
 

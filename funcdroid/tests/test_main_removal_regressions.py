@@ -9,7 +9,7 @@ import numpy as np
 import pytest
 
 import main
-from model.flow_graph import FlowGraph, FunctionNode, Page
+from model.flow_graph import FunctionalFlowGraph, FunctionalityNode, Page
 from workflow.run_options import validate_resume_options
 
 
@@ -34,7 +34,7 @@ def workers(monkeypatch):
 
 def _artifact_bundle(root, *, review_enabled=True):
     """Create minimal real artifacts for the final-validator integration checks."""
-    graph = FlowGraph()
+    graph = FunctionalFlowGraph()
     graph.save(str(root))
     (root / "activity_timeline.json").write_text(json.dumps({
         "activities": [], "points": [{"activity_count": 0}],
@@ -145,8 +145,8 @@ def test_run_result_retains_defect_failures_and_pending_review_counts(tmp_path, 
 
 
 def test_resume_keeps_functionality_graph_budget_and_review_failures(tmp_path):
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="Record editing", successful_depth_scenario_count=1))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="Record editing", successful_depth_scenario_count=1))
     graph.add_page(Page(id="page_1", name="Editor", controls=["Save"]), "func_1")
     graph.save(str(tmp_path))
     (tmp_path / "run_result.json").write_text(json.dumps({
@@ -188,8 +188,8 @@ def test_resumed_unavailable_page_is_reused_and_its_failed_path_is_avoided(tmp_p
     from workflow.nodes.ffg_update import _record_screenshot_unavailable_page
     from workflow.nodes.scenario_plan import _is_black_screen_page, _matches_black_screen_path
 
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="Settings"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="Settings"))
     graph.add_page(Page(id="page_1", name="Settings page"), "func_1")
     graph.add_page(Page(id="page_2", name=marker), "func_1")
     graph.add_page_transition(PageTransition(
@@ -197,7 +197,7 @@ def test_resumed_unavailable_page_is_reused_and_its_failed_path_is_avoided(tmp_p
         operation="Open unstable panel; result: screenshot unavailable",
     ))
     graph.save(str(tmp_path))
-    graph = FlowGraph.load(str(tmp_path))
+    graph = FunctionalFlowGraph.load(str(tmp_path))
 
     assert _is_black_screen_page(graph, graph.get_page("page_2"))
     assert _matches_black_screen_path(graph, "Open unstable panel and inspect its content")
@@ -221,8 +221,8 @@ def test_resumed_unavailable_page_is_reused_and_its_failed_path_is_avoided(tmp_p
 def test_legacy_unavailable_page_is_excluded_from_screenshot_identity_matching(monkeypatch):
     from workflow.nodes import ffg_update
 
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="Settings"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="Settings"))
     graph.add_page(Page(
         id="page_1", name="Settings page", representative_screenshot="valid",
     ), "func_1")

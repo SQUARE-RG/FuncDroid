@@ -9,7 +9,7 @@ import time
 import pytest
 
 import main
-from model.flow_graph import FlowGraph, FunctionNode, Page
+from model.flow_graph import FunctionalFlowGraph, FunctionalityNode, Page
 from workflow import graph as workflow_graph
 from workflow import llm as llm_module
 from workflow import llm_usage
@@ -26,8 +26,8 @@ def _no_proxy_env(monkeypatch):
 # 1. Functional Flow Graph seed.
 
 def _seed_run(root, *, file_refs=True):
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="f1", name="\u7ffb\u8bd1", test_status="completed",
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="f1", name="\u7ffb\u8bd1", test_status="completed",
                                 scenarios=["\u5df2\u6d4b\u8bd5"], depth_scenario_count=4,
                                 successful_depth_scenario_count=4))
     graph.add_page(Page(id="p1", controls=["\u7ffb\u8bd1"],
@@ -181,8 +181,8 @@ def test_time_limit_round_does_not_increment_iteration_count():
 # 5. Repeated failed audits must not prevent long-running exploration from converging.
 
 def test_long_run_converges_when_audits_only_resubmit_same_fingerprints(monkeypatch):
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="f1", test_status="completed"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="f1", test_status="completed"))
     submitted_calls = []
 
     def fake_submit(_graph, llm=None, *, exclude_fingerprints=None):
@@ -279,7 +279,7 @@ def test_run_graph_writes_run_result_only_at_checkpoints(monkeypatch, tmp_path):
         def stream(self, state, config):
             yield {"scenario_plan": {"current_plan": {"scenario_type": "intra_test"}}}
             yield {"scenario_exec": {"execution_result": {}}}
-            yield {"ffg_update": {"ffg": FlowGraph()}}
+            yield {"ffg_update": {"ffg": FunctionalFlowGraph()}}
             yield {"scenario_plan": {"current_plan": {"scenario_type": "skip"}}}
 
     main._run_graph(Graph(), {"start_time": time.time()}, main.RunResources(output_dir=str(tmp_path)))
@@ -349,7 +349,7 @@ def test_bug_dir_scan_reads_each_bug_json_once(monkeypatch, tmp_path):
 def test_activity_timeline_with_zero_activities_does_not_redraw_every_node(monkeypatch, tmp_path):
     rendered = []
     monkeypatch.setattr(main, "_render_activity_timeline", lambda timeline, path: rendered.append(1) or path.write_bytes(b"png"))
-    state = {"start_time": time.time(), "ffg": FlowGraph()}
+    state = {"start_time": time.time(), "ffg": FunctionalFlowGraph()}
     timeline = main._save_activity_timeline(state, str(tmp_path), force=True)
     for _ in range(5):
         timeline = main._save_activity_timeline(state, str(tmp_path), timeline)
@@ -369,7 +369,7 @@ def test_interrupted_flush_page_audit_never_submits(monkeypatch):
     monkeypatch.setattr(main.page_audit_worker, "pending_count", lambda: 2)
     monkeypatch.setattr(main.page_audit_worker, "flush",
                         lambda timeout=None: pytest.fail("\u4e2d\u65ad\u65f6\u4e0d\u5e94\u7b49\u5f85\u5728\u9014\u5ba1\u8ba1"))
-    main._flush_page_audit({"ffg": FlowGraph()}, interrupted=True)
+    main._flush_page_audit({"ffg": FunctionalFlowGraph()}, interrupted=True)
     assert merged == [1]
 
 
@@ -380,7 +380,7 @@ def test_flush_page_audit_stops_submitting_at_deadline(monkeypatch):
     monkeypatch.setattr(ffg_update, "_merge_page_audit_results", lambda g: 0)
     monkeypatch.setattr(ffg_update, "_submit_page_audit_batch", lambda *a, **k: submits.append(1) or 1)
     monkeypatch.setattr(main.page_audit_worker, "pending_count", lambda: 0)
-    main._flush_page_audit({"ffg": FlowGraph()}, deadline=time.monotonic() - 1)
+    main._flush_page_audit({"ffg": FunctionalFlowGraph()}, deadline=time.monotonic() - 1)
     assert submits == []
 
 

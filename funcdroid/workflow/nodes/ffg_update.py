@@ -14,9 +14,9 @@ from langchain_core.messages import HumanMessage, SystemMessage
 
 from model.flow_graph import (
     TERMINAL_FUNCTION_STATUSES,
-    FlowGraph,
+    FunctionalFlowGraph,
     FunctionDependency,
-    FunctionNode,
+    FunctionalityNode,
     Page,
     PageTransition,
     control_family_key,
@@ -203,7 +203,7 @@ def _page_screenshot(page: Page | dict[str, Any] | None) -> str:
 
 
 def _unrepresented_trace_activities(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     trace: list[dict[str, Any]],
     trace_page_map: dict[int, str] | None = None,
 ) -> list[str]:
@@ -247,7 +247,7 @@ class _ScreenshotThumbnailCache:
     def clear(self) -> None:
         self._thumbnails.clear()
 
-    def preload_graph(self, graph: FlowGraph) -> None:
+    def preload_graph(self, graph: FunctionalFlowGraph) -> None:
         for page in graph.active_pages():
             for screenshot in [
                 page.representative_screenshot,
@@ -359,7 +359,7 @@ def _page_audit_semantically_duplicate(candidate: str, existing: list[str]) -> b
     return False
 
 
-def _merge_page_audit_results(graph: FlowGraph) -> int:
+def _merge_page_audit_results(graph: FunctionalFlowGraph) -> int:
     """Validate and merge background audit results on the main thread. Reject semantic duplicates and global navigation controls, then report actual additions for saturation detection. Do not require positional words: legitimate album/camera controls otherwise lose bindings and coverage."""
 
 
@@ -566,7 +566,7 @@ def _select_page_audit_screenshots(page_id: str, screenshots: list[str]) -> list
 
 
 def _submit_page_audit_batch(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     llm=None,
     *,
     exclude_fingerprints: set[tuple[str, str]] | None = None,
@@ -791,7 +791,7 @@ def _screenshot_unavailable_source_step(
     return None, 0
 
 
-def _black_screen_page(graph: FlowGraph) -> Page | None:
+def _black_screen_page(graph: FunctionalFlowGraph) -> Page | None:
     return next(
         (page for page in graph.active_pages() if is_black_screen_page_name(page.name)),
         None,
@@ -799,7 +799,7 @@ def _black_screen_page(graph: FlowGraph) -> Page | None:
 
 
 def _resolve_observed_page_id(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     step: dict[str, Any] | None,
     raw_step: int,
     trace_page_map: dict[int, str] | None = None,
@@ -857,7 +857,7 @@ def _black_screen_operation(step: dict[str, Any] | None) -> str:
 
 
 def _record_screenshot_unavailable_page(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     state: AgentState,
     execution_result: dict[str, Any],
     trace_page_map: dict[int, str] | None = None,
@@ -953,7 +953,7 @@ def _runtime_page_with_ffg_identity(
 
 
 def _map_current_page_after_update(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     state: AgentState,
     trace_page_map: dict[int, str] | None = None,
 ) -> Page | None:
@@ -1006,7 +1006,7 @@ def _map_current_page_after_update(
 
 
 def _trace_step_page_id(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     step: dict[str, Any],
     raw_step: int,
     trace_page_map: dict[int, str],
@@ -1038,7 +1038,7 @@ def _trace_step_operation_text(step: dict[str, Any]) -> tuple[str, bool]:
 
 
 def _apply_trace_operations_and_transitions(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     trace: list[dict[str, Any]],
     trace_page_map: dict[int, str] | None = None,
 ) -> list[str]:
@@ -1159,7 +1159,7 @@ def _apply_trace_operations_and_transitions(
 
 
 def _apply_operation_bindings(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     patch: dict[str, Any],
     trace: list[dict[str, Any]],
     trace_page_map: dict[int, str],
@@ -1240,7 +1240,7 @@ def _apply_operation_bindings(
 
 
 def _auto_bind_unambiguous_trace_operations(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     trace: list[dict[str, Any]],
     trace_page_map: dict[int, str],
 ) -> int:
@@ -1309,7 +1309,7 @@ def _clip_context_text(value: object, limit: int = FFG_CONTEXT_FIELD_MAX_CHARS) 
 
 
 def _focused_update_function_ids(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     current_plan: dict[str, Any],
     trace: list[dict[str, Any]],
 ) -> list[str]:
@@ -1360,7 +1360,7 @@ def _focused_update_function_ids(
 
 
 def _function_granularity_metrics(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     function_id: str,
 ) -> dict[str, Any]:
     node = graph.get_node(function_id)
@@ -1382,8 +1382,8 @@ def _function_granularity_metrics(
     }
 
 
-def _select_granularity_review_function(
-    graph: FlowGraph,
+def _select_functionality_independence_review(
+    graph: FunctionalFlowGraph,
     current_plan: dict[str, Any],
     review_attempts: dict[str, int],
 ) -> tuple[str, dict[str, Any]]:
@@ -1460,7 +1460,7 @@ def _semantic_text_similarity(left: object, right: object) -> float:
 
 
 def _retrieve_page_candidates(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     step: dict[str, Any],
     current_plan: dict[str, Any],
     previous_page_ids: list[str] | None = None,
@@ -1572,7 +1572,7 @@ def _retrieve_page_candidates(
 
 
 def _build_observation_candidate_map(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     current_plan: dict[str, Any],
     trace: list[dict[str, Any]],
     thumbnail_cache: _ScreenshotThumbnailCache | None = None,
@@ -1602,7 +1602,7 @@ def _build_observation_candidate_map(
 
 
 def _boundary_context(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     selected_page_ids: list[str],
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     selected = set(selected_page_ids)
@@ -1643,7 +1643,7 @@ def _boundary_context(
 
 
 def _build_ffg_summary(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     current_plan: dict[str, Any] | None = None,
     trace: list[dict[str, Any]] | None = None,
     candidate_map: dict[int, list[dict[str, Any]]] | None = None,
@@ -1845,7 +1845,7 @@ def _build_ffg_summary(
     return "[Focused FFG fact snapshot]\n" + serialized
 
 
-def _function_context(graph: FlowGraph, function_id: object) -> dict[str, Any]:
+def _function_context(graph: FunctionalFlowGraph, function_id: object) -> dict[str, Any]:
     normalized_id = str(function_id or "").strip()
     node = graph.get_node(normalized_id)
     return {
@@ -1855,7 +1855,7 @@ def _function_context(graph: FlowGraph, function_id: object) -> dict[str, Any]:
     }
 
 
-def _build_plan_context(graph: FlowGraph, current_plan: dict[str, Any]) -> str:
+def _build_plan_context(graph: FunctionalFlowGraph, current_plan: dict[str, Any]) -> str:
     scenario_type = str(current_plan.get("scenario_type", "")).strip()
     facts = {
         "scenario_type": scenario_type,
@@ -1884,7 +1884,7 @@ def _build_plan_context(graph: FlowGraph, current_plan: dict[str, Any]) -> str:
 
 
 def _build_function_boundary_context(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     current_plan: dict[str, Any],
     trace: list[dict[str, Any]],
     granularity_review_function_id: str = "",
@@ -2054,7 +2054,7 @@ def _refinement_focus_steps(
 
 
 def _reference_pages_for_update(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     current_plan: dict[str, Any],
     trace: list[dict[str, Any]],
     candidate_map: dict[int, list[dict[str, Any]]] | None = None,
@@ -2124,7 +2124,7 @@ def _reference_pages_for_update(
     ]
 
 
-def _snapshot_graph(graph: FlowGraph) -> dict[str, int]:
+def _snapshot_graph(graph: FunctionalFlowGraph) -> dict[str, int]:
     return {
         "functions": len(graph.functions),
         "pages": len(graph.active_pages()),
@@ -2228,7 +2228,7 @@ def _strip_enumerated_controls(patch: dict[str, Any]) -> list[str]:
 
 def _normalize_observation_alignment(
     patch: dict[str, Any],
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     trace: list[dict[str, Any]],
     candidate_map: dict[int, list[dict[str, Any]]],
 ) -> list[dict[str, Any]]:
@@ -2435,7 +2435,7 @@ def _ensure_ignorable_alignments(
 
 
 def validate_observation_alignment(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     patch: dict[str, Any],
     trace: list[dict[str, Any]],
     candidate_map: dict[int, list[dict[str, Any]]],
@@ -2502,7 +2502,7 @@ def validate_observation_alignment(
     return list(dict.fromkeys(issues))
 
 
-def _resolve_function_ref(ref: str, temp_refs: dict[str, str], graph: FlowGraph) -> str:
+def _resolve_function_ref(ref: str, temp_refs: dict[str, str], graph: FunctionalFlowGraph) -> str:
     ref = _normalize_ref(ref)
     if not ref:
         return ""
@@ -2512,7 +2512,7 @@ def _resolve_function_ref(ref: str, temp_refs: dict[str, str], graph: FlowGraph)
     return temp_refs.get(ref, "")
 
 
-def _resolve_page_ref(ref: str, temp_refs: dict[str, str], graph: FlowGraph) -> str:
+def _resolve_page_ref(ref: str, temp_refs: dict[str, str], graph: FunctionalFlowGraph) -> str:
     ref = _normalize_ref(ref)
     if not ref:
         return ""
@@ -2522,7 +2522,7 @@ def _resolve_page_ref(ref: str, temp_refs: dict[str, str], graph: FlowGraph) -> 
     return temp_refs.get(ref, "")
 
 
-def _allocate_function_id(graph: FlowGraph, next_index: int) -> tuple[str, int]:
+def _allocate_function_id(graph: FunctionalFlowGraph, next_index: int) -> tuple[str, int]:
     function_id = f"func_{next_index}"
     while function_id in graph.functions:
         next_index += 1
@@ -2530,7 +2530,7 @@ def _allocate_function_id(graph: FlowGraph, next_index: int) -> tuple[str, int]:
     return function_id, next_index + 1
 
 
-def _allocate_page_id(graph: FlowGraph, next_index: int) -> tuple[str, int]:
+def _allocate_page_id(graph: FunctionalFlowGraph, next_index: int) -> tuple[str, int]:
     page_id = f"page_{next_index}"
     while page_id in graph.pages:
         next_index += 1
@@ -2543,7 +2543,7 @@ def _function_match_key(value: object) -> str:
 
 
 def _find_exact_duplicate_function_id(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     item: dict[str, Any],
     accepted_keys: dict[str, str],
 ) -> str:
@@ -2598,7 +2598,7 @@ def _patch_resource_variables(item: dict[str, Any]) -> list[str]:
 
 
 def _merge_function_resource_variables(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     function_id: str,
     resources: list[str],
 ) -> bool:
@@ -2642,7 +2642,7 @@ def _merge_page_observation(
 
 
 def _find_entity_generalized_page(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     item: dict[str, Any],
     source_page: Page | dict[str, Any],
     target_function_ids: list[str] | None = None,
@@ -2674,7 +2674,7 @@ def _control_signature(controls: list[str]) -> set[str]:
 
 
 def _find_control_signature_page(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     source_page: Page | dict[str, Any],
     declared_controls: list[str],
     declared_name: str = "",
@@ -2741,7 +2741,7 @@ def _merge_source_refs(item: dict[str, Any]) -> list[str]:
 
 
 def _persisted_restructure_function_refs(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     patch_items: list[dict[str, Any]],
 ) -> set[str]:
     """Return new refs backed by Pages already persisted under the source.
@@ -2779,7 +2779,7 @@ def _persisted_restructure_function_refs(
 
 
 def _persisted_merge_function_refs(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     patch_items: list[dict[str, Any]],
 ) -> set[str]:
     """Return new merge targets backed by at least two existing Functions."""
@@ -2800,7 +2800,7 @@ def _persisted_merge_function_refs(
 
 
 def _apply_functions(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     patch_items: list[dict[str, Any]],
     trace: list[dict[str, Any]],
     function_refs: dict[str, str],
@@ -2888,7 +2888,7 @@ def _apply_functions(
         semantic_name_key = _function_match_key(name)
         if len(semantic_name_key) >= 6:
             accepted_keys[f"semantic:{semantic_name_key}"] = function_id
-        node = FunctionNode(
+        node = FunctionalityNode(
             id=function_id,
             name=name or description or function_id,
             description=description or name or function_id,
@@ -2900,7 +2900,7 @@ def _apply_functions(
 
 
 def _apply_pages(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     patch_items: list[dict[str, Any]],
     trace: list[dict[str, Any]],
     function_refs: dict[str, str],
@@ -3015,7 +3015,7 @@ def _apply_pages(
 
 
 def _apply_page_ownership(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     patch_items: list[dict[str, Any]],
     trace: list[dict[str, Any]],
     function_refs: dict[str, str],
@@ -3078,7 +3078,7 @@ def _apply_page_ownership(
 
 
 def _separate_new_function_pages_from_planned_target(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     function_items: list[dict[str, Any]],
     page_items: list[dict[str, Any]],
     function_refs: dict[str, str],
@@ -3125,7 +3125,7 @@ def _same_resource(left: object, right: object) -> bool:
 
 
 def _dependency_has_replacement(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     dependency: FunctionDependency,
     source_function_id: str,
     replacement_ids: set[str],
@@ -3150,7 +3150,7 @@ def _dependency_has_replacement(
 
 
 def _plan_function_restructure(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     item: dict[str, Any],
     prefix: str,
     function_refs: dict[str, str],
@@ -3280,7 +3280,7 @@ def _plan_function_restructure(
 
 
 def _apply_function_restructures(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     patch_items: list[dict[str, Any]],
     function_refs: dict[str, str],
     page_refs: dict[str, str],
@@ -3344,7 +3344,7 @@ def _apply_function_restructures(
 
 
 def _apply_function_merges(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     patch_items: list[dict[str, Any]],
     function_refs: dict[str, str],
 ) -> tuple[dict[str, list[str]], list[str]]:
@@ -3463,7 +3463,7 @@ def _apply_function_merges(
 
 
 def _apply_observation_alignment(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     alignment_items: list[dict[str, Any]],
     page_refs: dict[str, str],
     trace_page_map: dict[int, str],
@@ -3484,7 +3484,7 @@ def _apply_observation_alignment(
 
 
 def _persist_aligned_trace_screenshots(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     trace: list[dict[str, Any]],
     trace_page_map: dict[int, str],
 ) -> int:
@@ -3521,7 +3521,7 @@ def _persist_aligned_trace_screenshots(
     return added
 
 
-def validate_ffg_invariants(graph: FlowGraph) -> list[str]:
+def validate_ffg_invariants(graph: FunctionalFlowGraph) -> list[str]:
     """Return structural consistency violations for an active FFG."""
     issues: list[str] = []
     active_ids = {node.id for node in graph.active_nodes()}
@@ -3557,7 +3557,7 @@ def validate_ffg_invariants(graph: FlowGraph) -> list[str]:
 
 
 def _apply_function_dependencies(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     patch_items: list[dict[str, Any]],
     function_refs: dict[str, str],
 ):
@@ -3575,7 +3575,7 @@ def _apply_function_dependencies(
 
 
 def _resolve_plan_target_function_id(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     current_plan: dict[str, Any],
 ) -> str:
     target_function_id = str(current_plan.get("target_function_id", "")).strip()
@@ -3595,7 +3595,7 @@ def _is_exploratory_navigation_plan(current_plan: dict[str, Any]) -> bool:
 
 
 def _record_completed_intra_scenario(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     current_plan: dict[str, Any],
     test_scenario: str,
 ) -> str:
@@ -3669,7 +3669,7 @@ def _execution_result_for_llm(execution_result: dict[str, Any]) -> dict[str, Any
 
 
 def _record_execution_outcome(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     state: AgentState,
     execution_result: dict[str, Any],
     yielded_structure: bool = True,
@@ -3831,7 +3831,7 @@ def _trace_has_observed_business_response(trace: list[dict]) -> bool:
     return False
 
 
-def _record_intra_attempt(graph: FlowGraph, state: AgentState) -> None:
+def _record_intra_attempt(graph: FunctionalFlowGraph, state: AgentState) -> None:
     plan = state.get("current_plan", {}) or {}
     execution_result = state.get("execution_result") or {}
     status = str(execution_result.get("scenario_status", ""))
@@ -3855,7 +3855,7 @@ def _record_intra_attempt(graph: FlowGraph, state: AgentState) -> None:
 
 
 def _record_execution_facts(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     state: AgentState,
     execution_result: dict[str, Any],
     *,
@@ -3906,7 +3906,7 @@ def _record_execution_facts(
 
 
 def _apply_non_recordable_execution_outcome(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     state: AgentState,
     execution_result: dict[str, Any],
     *,
@@ -3927,7 +3927,7 @@ def _apply_non_recordable_execution_outcome(
 
 
 def _fill_unmapped_observations(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     trace: list[dict[str, Any]],
     trace_page_map: dict[int, str],
     current_plan: dict[str, Any],
@@ -3988,7 +3988,7 @@ def _fill_unmapped_observations(
     return created
 
 
-def _repair_ffg_invariants(graph: FlowGraph, current_plan: dict[str, Any]) -> list[str]:
+def _repair_ffg_invariants(graph: FunctionalFlowGraph, current_plan: dict[str, Any]) -> list[str]:
     """Repair invalid membership, transitions and dependencies, archive stale outcomes, and attach ownerless observations to planned or adjacent functionality owners. Return pre-repair issues for diagnostics instead of rolling back a whole round."""
 
 
@@ -4053,7 +4053,7 @@ def _run_patch_stage(name: str, func, *args, default=None, **kwargs):
 
 
 def apply_ffg_patch(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     patch: dict[str, Any],
     trace: list[dict[str, Any]],
     current_plan: dict[str, Any] | None = None,
@@ -4176,7 +4176,7 @@ _ISSUE_STEP_PATTERN = re.compile(r"(?:source_step\s+|alignment\s+)(\d+)", re.IGN
 def _issue_step_already_mapped(
     issue: str,
     trace_page_map: dict[int, str],
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
 ) -> bool:
     """Treat alignment issues as resolved when earlier repair calls mapped the step to an existing page."""
     match = _ISSUE_STEP_PATTERN.search(str(issue or ""))
@@ -4187,7 +4187,7 @@ def _issue_step_already_mapped(
 
 
 def _open_update_issues(
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     trace: list[dict[str, Any]],
     trace_page_map: dict[int, str],
     alignment_issues: list[str],
@@ -4236,7 +4236,7 @@ def _build_repair_message_content(
     trace: list[dict[str, Any]],
     compact_trace_screenshots: dict[int, str],
     open_issues: list[str],
-    graph: FlowGraph,
+    graph: FunctionalFlowGraph,
     candidate_map: dict[int, list[dict[str, Any]]],
     step_index: int,
 ) -> list[dict[str, Any]]:
@@ -4298,8 +4298,8 @@ def create_ffg_update_node(llm, device=None):
         raw_trace = _combined_execution_trace(state)
         trace = _filter_trace(raw_trace)
         graph = state.get("ffg")
-        if not isinstance(graph, FlowGraph):
-            graph = FlowGraph()
+        if not isinstance(graph, FunctionalFlowGraph):
+            graph = FunctionalFlowGraph()
         _record_intra_attempt(graph, state)
 
         # Merge completed audits before the baseline snapshot so round statistics reflect only its patch; then submit new audits.
@@ -4320,7 +4320,7 @@ def create_ffg_update_node(llm, device=None):
         (
             granularity_review_function_id,
             granularity_review_metrics,
-        ) = _select_granularity_review_function(
+        ) = _select_functionality_independence_review(
             graph,
             current_plan,
             review_attempts,

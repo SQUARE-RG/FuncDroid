@@ -10,7 +10,7 @@ import cv2
 import numpy as np
 import pytest
 
-from model.flow_graph import FlowGraph, FunctionNode, Page
+from model.flow_graph import FunctionalFlowGraph, FunctionalityNode, Page
 from workflow.nodes.ffg_update import (
     ZERO_YIELD_MIN_COVERAGE,
     _record_execution_outcome,
@@ -144,9 +144,9 @@ def test_interruption_recovery_is_left_to_its_own_detector():
     assert _detect_no_progress_stall(trace) == ""
 
 
-def _zero_yield_graph(coverage_controls: int, handled: int) -> FlowGraph:
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u516c\u4f17\u53f7\u56fe\u6587\u5185\u5bb9\u8be6\u60c5\u67e5\u770b"))
+def _zero_yield_graph(coverage_controls: int, handled: int) -> FunctionalFlowGraph:
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u516c\u4f17\u53f7\u56fe\u6587\u5185\u5bb9\u8be6\u60c5\u67e5\u770b"))
     graph.add_page(Page(
         id="page_1",
         activity=".plugin.brandservice.ui.timeline.preload.ui.TmplWebViewMMUI",
@@ -193,8 +193,8 @@ def test_early_exploration_is_not_penalised_for_zero_yield():
 
 
 def test_forced_intra_scenario_batches_multiple_uncovered_controls():
-    graph = FlowGraph()
-    node = FunctionNode(id="func_1", name="\u804a\u5929\u4fe1\u606f\u7ba1\u7406")
+    graph = FunctionalFlowGraph()
+    node = FunctionalityNode(id="func_1", name="\u804a\u5929\u4fe1\u606f\u7ba1\u7406")
     graph.add_node(node)
     graph.add_page(Page(
         id="page_1",
@@ -217,8 +217,8 @@ def test_forced_intra_scenario_batches_multiple_uncovered_controls():
 
 
 def test_forced_intra_scenario_degrades_to_single_control():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u626b\u7801"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u626b\u7801"))
     graph.add_page(Page(
         id="page_1",
         name="\u626b\u7801\u9875",

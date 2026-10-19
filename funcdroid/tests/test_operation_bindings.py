@@ -6,7 +6,7 @@ from __future__ import annotations
 import pytest
 
 from model import flow_graph as flow_graph_module
-from model.flow_graph import FlowGraph, FunctionNode, Page
+from model.flow_graph import FunctionalFlowGraph, FunctionalityNode, Page
 from workflow.nodes import ffg_update as ffg_update_module
 from workflow.nodes.ffg_update import (
     _apply_operation_bindings,
@@ -36,9 +36,9 @@ def _wechat_page() -> Page:
     )
 
 
-def _graph_with_wechat_page() -> tuple[FlowGraph, Page]:
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u6d88\u606f\u5217\u8868\u6d4f\u89c8"))
+def _graph_with_wechat_page() -> tuple[FunctionalFlowGraph, Page]:
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u6d88\u606f\u5217\u8868\u6d4f\u89c8"))
     page = _wechat_page()
     graph.add_page(page, "func_1")
     return graph, page
@@ -151,8 +151,8 @@ def test_legacy_text_matching_is_off_by_default(monkeypatch):
     importlib.reload(flow_graph_module)
     assert flow_graph_module.COVERAGE_LEGACY_TEXT_MATCHING is False
 
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u6d88\u606f\u5217\u8868\u6d4f\u89c8"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u6d88\u606f\u5217\u8868\u6d4f\u89c8"))
     page = Page(
         id="page_1",
         controls=["\u5217\u8868\u9879-\u5fae\u4fe1\u56e2\u961f", "\u5217\u8868\u9879-\u670d\u52a1\u901a\u77e5", "\u5217\u8868\u9879-\u6d4b\u8bd5"],
@@ -165,8 +165,8 @@ def test_legacy_text_matching_is_off_by_default(monkeypatch):
 def test_legacy_text_matching_can_be_reenabled(monkeypatch):
     """The explicit compatibility switch can reenable legacy text matching."""
     monkeypatch.setattr(flow_graph_module, "COVERAGE_LEGACY_TEXT_MATCHING", True)
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u6d88\u606f\u5217\u8868\u6d4f\u89c8"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u6d88\u606f\u5217\u8868\u6d4f\u89c8"))
     page = Page(
         id="page_1",
         controls=["\u53d1\u9001\u6309\u94ae"],
@@ -205,7 +205,7 @@ def test_bindings_roundtrip_through_serialization():
     graph, page = _graph_with_wechat_page()
     page.add_operation_binding("\u70b9\u51fb\u5e95\u90e8\u5bfc\u822a\u680f\u4e2d\u7684“\u901a\u8baf\u5f55”Tab", "\u5e95\u90e8\u5bfc\u822a-\u901a\u8baf\u5f55Tab")
     data = graph.to_dict()
-    restored = FlowGraph.from_dict(data)
+    restored = FunctionalFlowGraph.from_dict(data)
     restored_page = restored.get_page("page_1")
     assert restored_page is not None
     assert restored_page.operation_bindings == [{
@@ -250,8 +250,8 @@ def _trace_step(
 
 def test_apply_operation_bindings_resolves_step_and_control():
     """Resolve source_step bindings to operation text derived consistently from the trace."""
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u6d88\u606f\u5217\u8868\u6d4f\u89c8"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u6d88\u606f\u5217\u8868\u6d4f\u89c8"))
     page = _wechat_page()
     graph.add_page(page, "func_1")
     trace = [
@@ -277,8 +277,8 @@ def test_apply_operation_bindings_resolves_step_and_control():
 
 
 def test_apply_operation_bindings_drops_invalid_entries():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u6d88\u606f\u5217\u8868\u6d4f\u89c8"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u6d88\u606f\u5217\u8868\u6d4f\u89c8"))
     page = _wechat_page()
     graph.add_page(page, "func_1")
     trace = [
@@ -304,8 +304,8 @@ def test_apply_operation_bindings_drops_invalid_entries():
 
 def test_apply_operation_bindings_rejects_missing_control():
     """A valid operation must not implicitly register an invented control or one assigned to the wrong page."""
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u6d88\u606f\u5217\u8868\u6d4f\u89c8"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u6d88\u606f\u5217\u8868\u6d4f\u89c8"))
     page = _wechat_page()
     graph.add_page(page, "func_1")
     # Match the real sequence: record trace operations before declaring bindings.
@@ -346,9 +346,9 @@ def test_scenario_credit_goes_to_planned_target_function():
     """Credit the planned target rather than the endpoint functionality; shared pages previously stole scenario counts despite 92% target coverage."""
     from workflow.nodes.ffg_update import _record_completed_intra_scenario
 
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_2", name="\u6267\u884c\u4f1a\u8bdd\u6d4f\u89c8"))
-    graph.add_node(FunctionNode(id="func_10", name="\u6d4b\u8bd5\u4f1a\u8bdd\u6d4f\u89c8"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_2", name="\u6267\u884c\u4f1a\u8bdd\u6d4f\u89c8"))
+    graph.add_node(FunctionalityNode(id="func_10", name="\u6d4b\u8bd5\u4f1a\u8bdd\u6d4f\u89c8"))
     graph.get_node("func_10").test_status = "in_progress"
 
     owner = _record_completed_intra_scenario(
@@ -388,8 +388,8 @@ def test_page_audit_removal_preserves_bound_operations():
 
 def test_apply_operation_bindings_redeclaration_is_not_validation_failure():
     """Repeated declarations of existing bindings are valid during refinement and must not generate validation-failure warnings."""
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u6d88\u606f\u5217\u8868\u6d4f\u89c8"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u6d88\u606f\u5217\u8868\u6d4f\u89c8"))
     page = _wechat_page()
     graph.add_page(page, "func_1")
     trace = [_trace_step(1, "click", "\u70b9\u51fb\u5e95\u90e8\u5bfc\u822a\u680f\u4e2d\u7684“\u901a\u8baf\u5f55”Tab")]
@@ -403,8 +403,8 @@ def test_apply_operation_bindings_redeclaration_is_not_validation_failure():
 
 
 def test_apply_operation_bindings_ignores_press_back_steps():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u6d88\u606f\u5217\u8868\u6d4f\u89c8"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u6d88\u606f\u5217\u8868\u6d4f\u89c8"))
     page = _wechat_page()
     graph.add_page(page, "func_1")
     trace = [_trace_step(1, "press_back", "\u8fd4\u56de\u4e0a\u4e00\u9875")]
@@ -489,8 +489,8 @@ def test_action_plan_accepts_action_type_alias():
 
 def test_back_button_and_return_home_button_are_bound_separately():
     """Keep back and return-home controls distinct; merging them previously lost bindings and stalled coverage at 67%."""
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_3", name="\u7535\u6c60\u6062\u590d"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_3", name="\u7535\u6c60\u6062\u590d"))
     page = Page(
         id="page_4",
         name="\u7535\u6c60\u4fee\u590d\u9875",

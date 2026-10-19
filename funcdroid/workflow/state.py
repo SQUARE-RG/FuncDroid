@@ -2,7 +2,7 @@
 
 from typing import Any, TypedDict
 
-from model.flow_graph import FlowGraph, Page
+from model.flow_graph import FunctionalFlowGraph, Page
 
 
 class AgentState(TypedDict, total=False):
@@ -26,7 +26,7 @@ class AgentState(TypedDict, total=False):
     bug_trace_records: dict[str, list[dict[str, Any]]]
     bug_detection_enabled: bool
     defect_review_failures: list[dict[str, Any]]
-    ffg: FlowGraph
+    ffg: FunctionalFlowGraph
     navigation_failure_count: int
     scenario_exec_error_count: int
     scenario_plan_error_count: int

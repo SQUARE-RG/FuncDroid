@@ -7,7 +7,7 @@ from unittest.mock import Mock
 import pytest
 
 import main
-from model.flow_graph import FlowGraph, FunctionNode, Page
+from model.flow_graph import FunctionalFlowGraph, FunctionalityNode, Page
 from workflow.graph import _fallback_scenario_exec
 from workflow.nodes import ffg_update
 from workflow.nodes.scenario_plan import _function_completion_met, _update_function_statuses
@@ -52,8 +52,8 @@ def test_resume_requires_matching_explicit_mode(tmp_path, saved_mode):
 
 
 def test_completion_needs_successful_depth_after_full_widget_coverage():
-    graph = FlowGraph()
-    node = FunctionNode(id="func_1", name="Save a record", page_ids=["page_1"])
+    graph = FunctionalFlowGraph()
+    node = FunctionalityNode(id="func_1", name="Save a record", page_ids=["page_1"])
     graph.add_node(node)
     page = Page(id="page_1", controls=["Save"], operations=["click Save"])
     graph.add_page(page, node.id)
@@ -71,8 +71,8 @@ def test_completion_needs_successful_depth_after_full_widget_coverage():
 
 def test_infrastructure_failure_does_not_consume_scenario_budget(monkeypatch):
     monkeypatch.setattr("workflow.graph._backoff_on_node_error", lambda *args: None, raising=False)
-    graph = FlowGraph()
-    node = FunctionNode(id="func_1", name="Record management")
+    graph = FunctionalFlowGraph()
+    node = FunctionalityNode(id="func_1", name="Record management")
     graph.add_node(node)
     state = {
         "ffg": graph,
