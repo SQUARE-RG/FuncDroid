@@ -7,7 +7,7 @@ import json
 
 import pytest
 
-from model.flow_graph import FlowGraph, FunctionNode, Page, PageTransition
+from model.flow_graph import FunctionalFlowGraph, FunctionalityNode, Page, PageTransition
 from compliance.checkpoints import (
     CHECK_STATUS_DEFERRED,
     CHECK_STATUS_DONE,
@@ -297,9 +297,9 @@ def test_build_compliance_scenarios_batches_same_group():
 
 
 def test_ffg_change_signature_and_guidance_expose_new_compliance_route():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u9996\u9875"))
-    graph.add_node(FunctionNode(id="func_2", name="\u8bbe\u7f6e"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u9996\u9875"))
+    graph.add_node(FunctionalityNode(id="func_2", name="\u8bbe\u7f6e"))
     home = Page(id="page_1", name="\u9996\u9875", controls=["\u6211\u7684\u6309\u94ae"])
     settings = Page(
         id="page_2",
@@ -325,9 +325,9 @@ def test_ffg_change_signature_and_guidance_expose_new_compliance_route():
 
 
 def test_deferred_compliance_terms_prioritize_related_unfinished_function():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u5185\u5bb9\u6d4f\u89c8"))
-    graph.add_node(FunctionNode(id="func_2", name="\u9690\u79c1\u8bbe\u7f6e"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u5185\u5bb9\u6d4f\u89c8"))
+    graph.add_node(FunctionalityNode(id="func_2", name="\u9690\u79c1\u8bbe\u7f6e"))
     home = Page(id="page_1", name="\u5185\u5bb9\u9996\u9875", controls=["\u5185\u5bb9\u5217\u8868"])
     settings = Page(id="page_2", name="\u9690\u79c1\u8bbe\u7f6e", controls=["\u4e2a\u6027\u5316\u63a8\u8350\u5f00\u5173"])
     graph.add_page(home, "func_1")
@@ -362,8 +362,8 @@ def test_planner_reopens_deferred_group_after_ffg_progress(tmp_path):
             },
         }],
     }, ensure_ascii=False), encoding="utf-8")
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u9996\u9875"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u9996\u9875"))
     home = Page(id="page_1", name="\u9996\u9875", controls=["\u6211\u7684\u6309\u94ae"])
     graph.add_page(home, "func_1")
     custom_rule = gui_rules(str(rules_path))[0]
@@ -390,7 +390,7 @@ def test_planner_reopens_deferred_group_after_ffg_progress(tmp_path):
             state, graph, home
         ) is None
 
-        graph.add_node(FunctionNode(id="func_2", name="\u8bbe\u7f6e"))
+        graph.add_node(FunctionalityNode(id="func_2", name="\u8bbe\u7f6e"))
         settings = Page(id="page_2", name="\u9690\u79c1\u8bbe\u7f6e", controls=["\u4e2a\u6027\u5316\u63a8\u8350\u5f00\u5173"])
         graph.add_page(settings, "func_2")
         graph.add_page_transition(PageTransition("page_1", "page_2", "\u70b9\u51fb\u6211\u7684\u548c\u8bbe\u7f6e"))
@@ -426,8 +426,8 @@ def test_planner_after_retry_budget_waits_for_related_discovery(tmp_path):
             },
         }],
     }, ensure_ascii=False), encoding="utf-8")
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u9996\u9875"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u9996\u9875"))
     home = Page(id="page_1", name="\u9996\u9875", controls=["\u5546\u54c1\u5217\u8868"])
     graph.add_page(home, "func_1")
     initial = ComplianceChecklist(
@@ -454,13 +454,13 @@ def test_planner_after_retry_budget_waits_for_related_discovery(tmp_path):
         assert scenario_plan._maybe_schedule_compliance_check(state, graph, home) is None
 
         # An unrelated product discovery does not reopen a settings rule.
-        graph.add_node(FunctionNode(id="func_2", name="\u5546\u54c1\u8be6\u60c5"))
+        graph.add_node(FunctionalityNode(id="func_2", name="\u5546\u54c1\u8be6\u60c5"))
         graph.add_page(Page(id="page_2", name="\u5546\u54c1\u8be6\u60c5"), "func_2")
         graph.add_page_transition(PageTransition("page_1", "page_2", "\u70b9\u51fb\u5546\u54c1"))
         assert scenario_plan._maybe_schedule_compliance_check(state, graph, home) is None
 
         # Discovering a relevant settings entry resumes compliance evaluation.
-        graph.add_node(FunctionNode(id="func_3", name="\u9690\u79c1\u8bbe\u7f6e"))
+        graph.add_node(FunctionalityNode(id="func_3", name="\u9690\u79c1\u8bbe\u7f6e"))
         graph.add_page(
             Page(id="page_3", name="\u9690\u79c1\u8bbe\u7f6e", controls=["\u4e2a\u6027\u5316\u63a8\u8350\u5f00\u5173"]),
             "func_3",
@@ -477,13 +477,13 @@ def test_planner_after_retry_budget_waits_for_related_discovery(tmp_path):
 
 
 def test_related_compliance_signature_ignores_unrelated_product_exploration():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u9996\u9875"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u9996\u9875"))
     graph.add_page(Page(id="page_1", name="\u9996\u9875", controls=["\u5546\u54c1\u5217\u8868"]), "func_1")
     settings_rule = rule_by_id("R019")
     before = scenario_plan._compliance_evidence_signature(graph, [settings_rule])
 
-    graph.add_node(FunctionNode(id="func_2", name="\u5546\u54c1\u8be6\u60c5"))
+    graph.add_node(FunctionalityNode(id="func_2", name="\u5546\u54c1\u8be6\u60c5"))
     graph.add_page(
         Page(id="page_2", name="\u5546\u54c1\u8be6\u60c5", controls=["\u6536\u85cf", "\u5206\u4eab"]),
         "func_2",
@@ -495,8 +495,8 @@ def test_related_compliance_signature_ignores_unrelated_product_exploration():
 
 
 def test_related_compliance_signature_tracks_new_visual_evidence():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u9690\u79c1\u8bbe\u7f6e"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u9690\u79c1\u8bbe\u7f6e"))
     page = Page(
         id="page_1",
         name="\u9690\u79c1\u8bbe\u7f6e",

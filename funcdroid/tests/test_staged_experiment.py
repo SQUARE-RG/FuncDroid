@@ -8,15 +8,15 @@ from types import SimpleNamespace
 import pytest
 
 import main
-from model.flow_graph import FlowGraph, FunctionNode, Page
+from model.flow_graph import FunctionalFlowGraph, FunctionalityNode, Page
 from scripts import staged_apk_experiment as staged
 from scripts.review_compliance_trace import load_trace
 from workflow.seed_graph import load_seed_graph
 
 
 def seed_run(root):
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="f1", name="\u7ffb\u8bd1", test_status="completed", scenarios=["\u5df2\u6d4b\u8bd5"] ))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="f1", name="\u7ffb\u8bd1", test_status="completed", scenarios=["\u5df2\u6d4b\u8bd5"] ))
     graph.add_page(Page(id="p1", controls=["\u7ffb\u8bd1"], operations=["\u70b9\u51fb\u7ffb\u8bd1"],
                         operation_bindings=[{"operation": "\u70b9\u51fb\u7ffb\u8bd1", "control": "\u7ffb\u8bd1"}],
                         representative_screenshot=base64.b64encode(b"image bytes").decode()), "f1")

@@ -3,20 +3,20 @@
 
 from __future__ import annotations
 
-from model.flow_graph import FlowGraph, FunctionNode, Page
+from model.flow_graph import FunctionalFlowGraph, FunctionalityNode, Page
 from workflow.nodes.scenario_plan import (
     PLAN_BREADTH_MAX_SCENARIOS,
     _forced_intra_scenario,
-    _forced_depth_scenario,
+    _fallback_intra_functionality_depth_scenario,
     _cross_pair_ready,
 )
 
 
 def build_function(
     total_controls: int, covered_controls: int = 0
-) -> tuple[FlowGraph, FunctionNode]:
-    graph = FlowGraph()
-    node = FunctionNode(id="func_1", name="\u6211\u7684\u6536\u85cf", test_status="in_progress")
+) -> tuple[FunctionalFlowGraph, FunctionalityNode]:
+    graph = FunctionalFlowGraph()
+    node = FunctionalityNode(id="func_1", name="\u6211\u7684\u6536\u85cf", test_status="in_progress")
     graph.add_node(node)
     page = Page(
         id="page_1",
@@ -53,23 +53,23 @@ def test_depth_phase_uses_business_scenario_template():
 def test_depth_template_mentions_uncovered_controls_when_present():
     graph, node = build_function(total_controls=3)
     node.scenarios = [f"\u5e7f\u5ea6{i}" for i in range(PLAN_BREADTH_MAX_SCENARIOS)]
-    scenario = _forced_depth_scenario(graph, node)
+    scenario = _fallback_intra_functionality_depth_scenario(graph, node)
     assert "uncovered visible widgets" in scenario
 
 
 def test_depth_template_is_empty_without_covered_pages():
     """Without any observed functionality pages, return an empty template for the existing release path."""
-    graph = FlowGraph()
-    node = FunctionNode(id="func_1", name="\u7a7a\u529f\u80fd", test_status="in_progress")
+    graph = FunctionalFlowGraph()
+    node = FunctionalityNode(id="func_1", name="\u7a7a\u529f\u80fd", test_status="in_progress")
     graph.add_node(node)
-    assert _forced_depth_scenario(graph, node) == ""
+    assert _fallback_intra_functionality_depth_scenario(graph, node) == ""
     assert _forced_intra_scenario(graph, node) == ""
 
 
-def _shared_resource_graph(business_operation: bool) -> FlowGraph:
-    graph = FlowGraph()
+def _shared_resource_graph(business_operation: bool) -> FunctionalFlowGraph:
+    graph = FunctionalFlowGraph()
     for index, name in enumerate(("\u4e2a\u4eba\u4e2d\u5fc3", "\u8d26\u53f7\u767b\u5f55"), start=1):
-        node = FunctionNode(id=f"func_{index}", name=name, test_status="in_progress")
+        node = FunctionalityNode(id=f"func_{index}", name=name, test_status="in_progress")
         graph.add_node(node)
         page = Page(
             id=f"page_{index}",
@@ -95,5 +95,5 @@ def test_cross_pair_waits_for_both_functions_to_have_business_evidence():
 def test_cross_pair_is_ready_without_waiting_for_unrelated_breadth():
     """Schedule a pair once both endpoints have own evidence without waiting for unrelated breadth exploration."""
     graph = _shared_resource_graph(business_operation=True)
-    graph.add_node(FunctionNode(id="func_3", name="\u672a\u89e6\u78b0\u529f\u80fd", test_status="not_started"))
+    graph.add_node(FunctionalityNode(id="func_3", name="\u672a\u89e6\u78b0\u529f\u80fd", test_status="not_started"))
     assert _cross_pair_ready(graph, "func_1", "func_2") is True

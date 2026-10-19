@@ -13,10 +13,10 @@ from langgraph.graph import END, START, StateGraph
 os.environ.setdefault("LANGCHAIN_TRACING_V2", "false")
 os.environ.setdefault("LANGSMITH_TRACING", "false")
 
-from model.flow_graph import FlowGraph
+from model.flow_graph import FunctionalFlowGraph
 from workflow.nodes.scenario_plan import (
-    FUNCTION_PHASE_DEPTH,
-    _function_phase,
+    FUNCTIONALITY_PHASE_DEPTH,
+    _intra_functionality_phase,
     create_scenario_plan_node,
 )
 from workflow.nodes.ffg_update import (
@@ -186,8 +186,8 @@ def _fallback_scenario_exec(state: AgentState, exc: Exception) -> dict:
 def _fallback_ffg_update(state: AgentState, exc: Exception) -> dict:
     error_count = int(state.get("ffg_update_error_count", 0) or 0) + 1
     graph = state.get("ffg")
-    if not isinstance(graph, FlowGraph):
-        graph = FlowGraph()
+    if not isinstance(graph, FunctionalFlowGraph):
+        graph = FunctionalFlowGraph()
     # FFG updates mutate the shared graph; retain audits and observations applied
     # before failure, then record execution facts so attempts are not lost.
     updates: dict = {}
@@ -207,7 +207,7 @@ def _fallback_ffg_update(state: AgentState, exc: Exception) -> dict:
 
 
 def _long_run_converged(
-    graph: FlowGraph | None,
+    graph: FunctionalFlowGraph | None,
     submitted_fingerprints: set[tuple[str, str]] | None = None,
 ) -> bool:
     """When planning is idle, only page audits can expose new coverage gaps.
@@ -473,7 +473,7 @@ def _print_iteration_metrics(state: AgentState, outcome: str) -> None:
     graph = state.get("ffg")
     functions = pages = completed = blocked = unavailable = scenarios = 0
     breadth_functions = depth_functions = depth_scenarios = 0
-    if isinstance(graph, FlowGraph):
+    if isinstance(graph, FunctionalFlowGraph):
         active_nodes = graph.active_nodes()
         functions = len(active_nodes)
         pages = len(graph.pages)
@@ -488,7 +488,7 @@ def _print_iteration_metrics(state: AgentState, outcome: str) -> None:
                 unavailable += 1
             scenarios += len(node.scenarios)
             depth_scenarios += int(node.depth_scenario_count or 0)
-            if _function_phase(graph, node) == FUNCTION_PHASE_DEPTH:
+            if _intra_functionality_phase(graph, node) == FUNCTIONALITY_PHASE_DEPTH:
                 depth_functions += 1
             else:
                 breadth_functions += 1

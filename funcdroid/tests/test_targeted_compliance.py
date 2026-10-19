@@ -6,7 +6,7 @@ import pytest
 
 from compliance.checkpoints import ComplianceChecklist
 from compliance.rule_library import load_rules
-from model.flow_graph import FlowGraph, FunctionNode
+from model.flow_graph import FunctionalFlowGraph, FunctionalityNode
 from workflow.nodes.scenario_plan import create_scenario_plan_node, _targeted_compliance_stop
 from workflow import compliance_worker as worker_module
 from main import _build_parser
@@ -22,8 +22,8 @@ def test_targeted_run_ends_with_original_verdict_before_unrelated_exploration(tm
     monkeypatch.setattr(worker_module, 'compliance_worker', SimpleNamespace(
         pending_count=lambda: 0, snapshot=checklist.to_state,
     ))
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id='unrelated', name='\u65e0\u5173\u9605\u8bfb\u529f\u80fd'))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id='unrelated', name='\u65e0\u5173\u9605\u8bfb\u529f\u80fd'))
     result = create_scenario_plan_node(None, None)({
         'run_mode': 'compliance', 'compliance_targeted': True,
         'compliance_rules_path': str(path), 'ffg': graph,

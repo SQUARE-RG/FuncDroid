@@ -13,7 +13,7 @@ import numpy as np
 import pytest
 
 import main
-from model.flow_graph import FlowGraph, Page
+from model.flow_graph import FunctionalFlowGraph, Page
 from scripts import batch_compliance_run, batch_test_apks
 from workflow.bug_detection_worker import bug_detection_worker
 from workflow.compliance_worker import build_compliance_detection_job, compliance_worker
@@ -63,7 +63,7 @@ def review_job(status="completed"):
 
 
 def resume_directory(root, mode="defect"):
-    FlowGraph().save(str(root))
+    FunctionalFlowGraph().save(str(root))
     (root / "run_result.json").write_text(json.dumps({
         "status": "success", "mode": mode, "package_name": "com.example",
         "app_name": "Example", "iteration_count": 12, "elapsed_seconds": 600,

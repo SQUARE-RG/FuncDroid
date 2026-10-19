@@ -6,9 +6,9 @@ import json
 import pytest
 
 from model.flow_graph import (
-    FlowGraph,
+    FunctionalFlowGraph,
     FunctionDependency,
-    FunctionNode,
+    FunctionalityNode,
     Page,
     PageTransition,
     adjusted_control_coverage,
@@ -23,7 +23,7 @@ from workflow.nodes.ffg_update import (
     _build_observation_candidate_map,
     _combined_execution_trace,
     _normalize_observation_alignment,
-    _select_granularity_review_function,
+    _select_functionality_independence_review,
     apply_ffg_patch,
     validate_observation_alignment,
     validate_ffg_invariants,
@@ -50,9 +50,9 @@ def test_navigation_and_scenario_traces_are_both_used_for_ffg_updates():
 
 
 def test_update_summary_keeps_one_hop_boundary_page_and_transition():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u9996\u9875"))
-    graph.add_node(FunctionNode(id="func_2", name="\u6536\u85cf"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u9996\u9875"))
+    graph.add_node(FunctionalityNode(id="func_2", name="\u6536\u85cf"))
     graph.add_page(Page(id="page_1", name="\u9996\u9875", activity="HomeActivity"), "func_1")
     graph.add_page(Page(id="page_2", name="\u6536\u85cf\u5217\u8868", activity="CollectionActivity"), "func_2")
     graph.add_page_transition(PageTransition("page_1", "page_2", "\u70b9\u51fb\u6536\u85cf\u5165\u53e3"))
@@ -82,9 +82,9 @@ def test_update_summary_keeps_one_hop_boundary_page_and_transition():
 
 
 def test_observation_candidates_rank_matching_activity_and_semantics_first():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u9996\u9875"))
-    graph.add_node(FunctionNode(id="func_2", name="\u7f16\u8f91"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u9996\u9875"))
+    graph.add_node(FunctionalityNode(id="func_2", name="\u7f16\u8f91"))
     graph.add_page(Page(id="page_1", name="\u9996\u9875", activity="HomeActivity"), "func_1")
     graph.add_page(Page(
         id="page_2",
@@ -116,8 +116,8 @@ def test_observation_candidates_rank_matching_activity_and_semantics_first():
 
 
 def test_observation_alignment_maps_reused_page_without_pages_patch():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u9996\u9875"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u9996\u9875"))
     graph.add_page(Page(
         id="page_1",
         name="\u9996\u9875",
@@ -153,8 +153,8 @@ def test_observation_alignment_maps_reused_page_without_pages_patch():
 
 
 def test_observation_alignment_reports_missing_observed_step():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u9996\u9875"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u9996\u9875"))
     graph.add_page(Page(id="page_1", name="\u9996\u9875"), "func_1")
     trace = [{"raw_step_index": 1, "current_page": Page(name="\u672a\u77e5\u9875\u9762")}]
 
@@ -175,7 +175,7 @@ def test_alignment_reuse_of_same_patch_page_is_normalized_to_create():
 
     alignments = _normalize_observation_alignment(
         patch,
-        FlowGraph(),
+        FunctionalFlowGraph(),
         [{"raw_step_index": 1, "current_page": Page(name="\u65b0\u9875\u9762")}],
         {},
     )
@@ -195,7 +195,7 @@ def test_non_ignorable_observation_with_page_patch_is_normalized_to_create():
 
     alignments = _normalize_observation_alignment(
         patch,
-        FlowGraph(),
+        FunctionalFlowGraph(),
         [{"raw_step_index": 1, "current_page": Page(activity="NovelActivity")}],
         {},
     )
@@ -218,7 +218,7 @@ def test_external_interruption_ignore_is_not_forced_to_create():
 
     alignments = _normalize_observation_alignment(
         patch,
-        FlowGraph(),
+        FunctionalFlowGraph(),
         [{
             "raw_step_index": 1,
             "current_page": Page(activity="ExternalActivity"),
@@ -232,7 +232,7 @@ def test_external_interruption_ignore_is_not_forced_to_create():
 
 
 def test_new_activity_ignore_is_reported_without_page_patch():
-    graph = FlowGraph()
+    graph = FunctionalFlowGraph()
     trace = [{
         "raw_step_index": 1,
         "current_page": Page(activity="NovelActivity"),
@@ -254,8 +254,8 @@ def test_new_activity_ignore_is_reported_without_page_patch():
 
 def test_ffg_subgraph_keeps_observed_page_when_alignment_is_missing(monkeypatch):
     """Keep observed pages and audit results even when the model omits alignment; do not roll back the iteration."""
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u9996\u9875"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u9996\u9875"))
     graph.add_page(Page(id="page_1", name="\u9996\u9875", activity="HomeActivity"), "func_1")
 
     class MissingAlignmentLlm:
@@ -318,8 +318,8 @@ def test_ffg_subgraph_keeps_observed_page_when_alignment_is_missing(monkeypatch)
 
 
 def test_planner_refreshes_stale_page_id_from_live_visual(monkeypatch):
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u6d88\u606f\u5217\u8868"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u6d88\u606f\u5217\u8868"))
     graph.add_page(Page(
         id="page_1",
         name="\u6d88\u606f\u5217\u8868",
@@ -352,8 +352,8 @@ def test_planner_refreshes_stale_page_id_from_live_visual(monkeypatch):
 
 
 def test_planner_does_not_force_unmatched_visual_to_only_activity_page(monkeypatch):
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u6d88\u606f\u5217\u8868"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u6d88\u606f\u5217\u8868"))
     graph.add_page(Page(
         id="page_1",
         name="\u6d88\u606f\u5217\u8868",
@@ -379,8 +379,8 @@ def test_planner_does_not_force_unmatched_visual_to_only_activity_page(monkeypat
 
 
 def test_existing_page_merges_changed_state_without_replacing_stable_image():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u4efb\u52a1\u5217\u8868"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u4efb\u52a1\u5217\u8868"))
     graph.add_page(Page(
         id="page_1",
         name="\u4efb\u52a1\u5217\u8868",
@@ -430,8 +430,8 @@ def test_existing_page_merges_changed_state_without_replacing_stable_image():
 
 
 def test_new_independent_function_entry_is_removed_from_parent_shell_owner():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u5fae\u4fe1\u4f1a\u8bdd"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u5fae\u4fe1\u4f1a\u8bdd"))
     graph.add_page(Page(id="page_1", name="\u804a\u5929\u9875"), "func_1")
     trace = [{
         "raw_step_index": 2,
@@ -465,9 +465,9 @@ def test_new_independent_function_entry_is_removed_from_parent_shell_owner():
 
 
 def test_named_dynamic_instances_are_not_auto_merged_by_app_specific_vocabulary():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u5fae\u4fe1\u4f1a\u8bdd\u5217\u8868\u6d4f\u89c8\u4e0e\u8fdb\u5165"))
-    graph.add_node(FunctionNode(
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u5fae\u4fe1\u4f1a\u8bdd\u5217\u8868\u6d4f\u89c8\u4e0e\u8fdb\u5165"))
+    graph.add_node(FunctionalityNode(
         id="func_2",
         name="\u6587\u4ef6\u4f20\u8f93\u52a9\u624b\u4f1a\u8bdd\u6d88\u606f\u6d4f\u89c8\u4e0e\u6536\u53d1",
         description="\u6d4f\u89c8\u4f1a\u8bdd\u6d88\u606f\u5e76\u53d1\u9001\u5185\u5bb9",
@@ -514,9 +514,9 @@ def test_named_dynamic_instances_are_not_auto_merged_by_app_specific_vocabulary(
 
 
 def test_dynamic_chat_pages_stay_separate_when_functions_are_already_distinct():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u6587\u4ef6\u4f20\u8f93\u52a9\u624b\u4f1a\u8bdd"))
-    graph.add_node(FunctionNode(id="func_2", name="\u6d4b\u8bd5\u7fa4\u4f1a\u8bdd"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u6587\u4ef6\u4f20\u8f93\u52a9\u624b\u4f1a\u8bdd"))
+    graph.add_node(FunctionalityNode(id="func_2", name="\u6d4b\u8bd5\u7fa4\u4f1a\u8bdd"))
     graph.add_page(Page(
         id="page_1",
         name="\u6587\u4ef6\u4f20\u8f93\u52a9\u624b\u804a\u5929\u9875\u9762",
@@ -543,8 +543,8 @@ def test_dynamic_chat_pages_stay_separate_when_functions_are_already_distinct():
 
 
 def test_page_ownership_patch_can_split_page_from_coarse_function():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u5fae\u4fe1\u4f1a\u8bdd"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u5fae\u4fe1\u4f1a\u8bdd"))
     graph.add_page(Page(id="page_1", name="\u4f1a\u8bdd\u5217\u8868"), "func_1")
     graph.add_page(Page(id="page_2", name="\u804a\u5929\u8bb0\u5f55\u67e5\u627e"), "func_1")
     trace = [{
@@ -577,8 +577,8 @@ def test_page_ownership_patch_can_split_page_from_coarse_function():
 
 
 def test_oversized_function_can_be_atomically_replaced_from_persisted_pages():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(
         id="func_1",
         name="\u4e2a\u4eba\u4e2d\u5fc3\u4e0e\u8bbe\u7f6e",
         scenarios=[
@@ -602,7 +602,7 @@ def test_oversized_function_can_be_atomically_replaced_from_persisted_pages():
             activity=f"Activity{index}",
             operations=[f"\u70b9\u51fb{name}\u5165\u53e3"],
         ), "func_1")
-    graph.add_node(FunctionNode(id="func_2", name="\u9996\u9875"))
+    graph.add_node(FunctionalityNode(id="func_2", name="\u9996\u9875"))
     graph.add_page(Page(id="page_0", name="\u5fae\u4fe1\u9996\u9875"), "func_2")
     graph.add_entry_page(graph.get_page("page_0"), "func_1")
 
@@ -661,8 +661,8 @@ def test_oversized_function_can_be_atomically_replaced_from_persisted_pages():
 
 
 def test_full_function_split_keeps_source_when_scenario_evidence_would_be_lost():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(
         id="func_1",
         name="\u7c97\u7c92\u5ea6\u529f\u80fd",
         scenarios=["\u573a\u666f\u4e00", "\u573a\u666f\u4e8c"],
@@ -696,22 +696,22 @@ def test_full_function_split_keeps_source_when_scenario_evidence_would_be_lost()
 
 
 def test_existing_functions_can_be_merged_with_pages_scenarios_and_dependencies():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(
         id="func_1",
         name="\u6536\u85cf\u5165\u53e3\u6d4f\u89c8",
         scenarios=["\u4ece\u4e2a\u4eba\u4e2d\u5fc3\u8fdb\u5165\u6536\u85cf"],
         resource_variables=["\u6536\u85cf\u5185\u5bb9"],
         test_status="completed",
     ))
-    graph.add_node(FunctionNode(
+    graph.add_node(FunctionalityNode(
         id="func_2",
         name="\u6536\u85cf\u5217\u8868\u67e5\u770b",
         scenarios=["\u67e5\u770b\u6536\u85cf\u5217\u8868"],
         resource_variables=["\u6536\u85cf\u5185\u5bb9"],
         test_status="in_progress",
     ))
-    graph.add_node(FunctionNode(id="func_3", name="\u4e2a\u4eba\u4e2d\u5fc3"))
+    graph.add_node(FunctionalityNode(id="func_3", name="\u4e2a\u4eba\u4e2d\u5fc3"))
     graph.add_page(Page(id="page_1", name="\u4e2a\u4eba\u4e2d\u5fc3"), "func_3")
     graph.add_page(Page(
         id="page_2",
@@ -752,8 +752,8 @@ def test_existing_functions_can_be_merged_with_pages_scenarios_and_dependencies(
 
 
 def test_granularity_review_is_spaced_as_function_grows(monkeypatch):
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u4e2a\u4eba\u4e2d\u5fc3\u4e0e\u8bbe\u7f6e"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u4e2a\u4eba\u4e2d\u5fc3\u4e0e\u8bbe\u7f6e"))
     for index in range(1, 13):
         graph.add_page(Page(
             id=f"page_{index}",
@@ -764,17 +764,17 @@ def test_granularity_review_is_spaced_as_function_grows(monkeypatch):
     monkeypatch.setattr(
         "workflow.nodes.ffg_update.FFG_UPDATE_GRANULARITY_MIN_PAGES", 6
     )
-    first_id, first_metrics = _select_granularity_review_function(
+    first_id, first_metrics = _select_functionality_independence_review(
         graph,
         {"target_function_id": "func_1"},
         {},
     )
-    second_id, second_metrics = _select_granularity_review_function(
+    second_id, second_metrics = _select_functionality_independence_review(
         graph,
         {"target_function_id": "func_1"},
         {"func_1": 1},
     )
-    exhausted_id, _ = _select_granularity_review_function(
+    exhausted_id, _ = _select_functionality_independence_review(
         graph,
         {"target_function_id": "func_1"},
         {"func_1": 2},
@@ -787,8 +787,8 @@ def test_granularity_review_is_spaced_as_function_grows(monkeypatch):
 
 
 def test_visible_business_entry_creates_function_with_shared_entry_page():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u4f1a\u8bdd\u6d88\u606f\u6d4f\u89c8\u4e0e\u6536\u53d1"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u4f1a\u8bdd\u6d88\u606f\u6d4f\u89c8\u4e0e\u6536\u53d1"))
     graph.add_page(Page(
         id="page_1",
         name="\u4f1a\u8bdd\u804a\u5929\u9875\u9762",
@@ -833,8 +833,8 @@ def test_visible_business_entry_creates_function_with_shared_entry_page():
 
 
 def test_existing_function_name_and_description_update_require_direct_evidence():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(
         id="func_1",
         name="\u76f8\u518c\u76f8\u5173\u529f\u80fd",
         description="\u4ece\u76f8\u518c\u5165\u53e3\u53d1\u73b0，\u5177\u4f53\u6d41\u7a0b\u5f85\u786e\u8ba4。",
@@ -874,8 +874,8 @@ def test_existing_function_name_and_description_update_require_direct_evidence()
 
 
 def test_ffg_patch_cannot_write_function_terminal_status():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(
         id="func_1",
         name="\u4ece\u76f8\u518c\u9009\u62e9\u5e76\u53d1\u9001\u5a92\u4f53",
         test_status="in_progress",
@@ -910,8 +910,8 @@ def test_ffg_patch_cannot_write_function_terminal_status():
 
 
 def test_existing_function_resource_variables_are_merged_from_direct_evidence():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(
         id="func_1",
         name="\u6587\u7ae0\u9605\u8bfb",
         resource_variables=["\u9605\u8bfb\u8fdb\u5ea6"],
@@ -943,8 +943,8 @@ def test_existing_function_resource_variables_are_merged_from_direct_evidence():
 
 
 def test_existing_function_resource_update_requires_direct_trace_step():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u6587\u7ae0\u9605\u8bfb"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u6587\u7ae0\u9605\u8bfb"))
 
     apply_ffg_patch(graph, {
         "functions": [{
@@ -958,9 +958,9 @@ def test_existing_function_resource_update_requires_direct_trace_step():
 
 
 def test_function_dependency_syncs_resource_to_both_functions():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u6587\u7ae0\u9605\u8bfb"))
-    graph.add_node(FunctionNode(id="func_2", name="\u6536\u85cf\u5217\u8868"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u6587\u7ae0\u9605\u8bfb"))
+    graph.add_node(FunctionalityNode(id="func_2", name="\u6536\u85cf\u5217\u8868"))
     graph.add_page(Page(id="page_1", name="\u6587\u7ae0\u8be6\u60c5"), "func_1")
     graph.add_page(Page(id="page_2", name="\u6536\u85cf\u5217\u8868"), "func_2")
 
@@ -1000,8 +1000,8 @@ def test_page_control_union_preserves_similar_but_distinct_dropdown_options():
 
 
 def test_page_round_trip_has_only_screenshot_and_control_lists():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u4e3b\u9875"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u4e3b\u9875"))
     graph.add_page(Page(
         id="page_1",
         representative_screenshot="image-a",
@@ -1019,20 +1019,20 @@ def test_page_round_trip_has_only_screenshot_and_control_lists():
     assert "status" not in page_data
     assert "alias_to" not in page_data
     assert "correction_log" not in data
-    restored = FlowGraph.from_dict(data)
+    restored = FunctionalFlowGraph.from_dict(data)
     assert restored.get_page("page_1").representative_screenshot == "image-a"
     assert restored.get_page("page_1").evidence_screenshots == ["image-b"]
 
 
 def test_entry_page_role_survives_flow_graph_round_trip():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u4e3b\u9875"))
-    graph.add_node(FunctionNode(id="func_2", name="\u76f8\u518c\u9009\u62e9"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u4e3b\u9875"))
+    graph.add_node(FunctionalityNode(id="func_2", name="\u76f8\u518c\u9009\u62e9"))
     page = Page(id="page_1", name="\u4e3b\u9875", controls=["\u76f8\u518c\u5165\u53e3"])
     graph.add_page(page, "func_1")
     graph.add_entry_page(page, "func_2")
 
-    restored = FlowGraph.from_dict(graph.to_dict())
+    restored = FunctionalFlowGraph.from_dict(graph.to_dict())
 
     assert restored.get_node("func_2").page_ids == ["page_1"]
     assert restored.get_node("func_2").entry_page_ids == ["page_1"]
@@ -1040,9 +1040,9 @@ def test_entry_page_role_survives_flow_graph_round_trip():
 
 
 def test_page_owners_are_derived_and_global_transitions_can_cross_functions():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u5217\u8868"))
-    graph.add_node(FunctionNode(id="func_2", name="\u8be6\u60c5"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u5217\u8868"))
+    graph.add_node(FunctionalityNode(id="func_2", name="\u8be6\u60c5"))
     shared = Page(id="page_shared", name="\u5171\u4eab\u5165\u53e3")
     graph.add_page(shared, "func_1")
     graph.add_page(shared, "func_2")
@@ -1093,7 +1093,7 @@ def test_flow_graph_load_rejects_removed_legacy_structure(tmp_path):
     )
 
     try:
-        FlowGraph.load(str(tmp_path))
+        FunctionalFlowGraph.load(str(tmp_path))
     except ValueError as exc:
         assert "functions" in str(exc)
     else:
@@ -1101,8 +1101,8 @@ def test_flow_graph_load_rejects_removed_legacy_structure(tmp_path):
 
 
 def test_function_coverage_percent_is_clamped_and_serialized():
-    below = FunctionNode(id="func_1", coverage_percent=-1)
-    above = FunctionNode(id="func_2", coverage_percent=120)
+    below = FunctionalityNode(id="func_1", coverage_percent=-1)
+    above = FunctionalityNode(id="func_2", coverage_percent=120)
 
     assert below.coverage_percent == 0
     assert above.coverage_percent == 100
@@ -1111,8 +1111,8 @@ def test_function_coverage_percent_is_clamped_and_serialized():
 
 
 def test_llm_function_coverage_is_ignored_and_program_derived():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u641c\u7d22", coverage_percent=10))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u641c\u7d22", coverage_percent=10))
     graph.add_page(Page(id="page_1", name="\u641c\u7d22\u9875"), "func_1")
     trace = [{
         "raw_step_index": 2,
@@ -1195,8 +1195,8 @@ def test_instance_conversation_operations_merge_into_one_family():
 
 
 def test_function_coverage_counts_all_page_controls_without_name_filtering():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u53d1\u9001\u8868\u60c5\u6d88\u606f"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u53d1\u9001\u8868\u60c5\u6d88\u606f"))
     graph.add_page(Page(
         id="page_1",
         controls=[
@@ -1230,8 +1230,8 @@ def test_function_coverage_counts_all_page_controls_without_name_filtering():
 
 
 def test_failed_operation_counts_as_executed_but_not_successful():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u641c\u7d22"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u641c\u7d22"))
     graph.add_page(Page(
         id="page_1",
         controls=["\u641c\u7d22\u6309\u94ae"],
@@ -1246,8 +1246,8 @@ def test_failed_operation_counts_as_executed_but_not_successful():
 
 
 def test_many_recorded_operations_do_not_drop_to_zero_from_function_name_filtering():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u5fae\u4fe1\u804a\u5929\u6d88\u606f\u6536\u53d1"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u5fae\u4fe1\u804a\u5929\u6d88\u606f\u6536\u53d1"))
     graph.add_page(Page(
         id="page_1",
         controls=[f"\u63a7\u4ef6{i}" for i in range(22)],

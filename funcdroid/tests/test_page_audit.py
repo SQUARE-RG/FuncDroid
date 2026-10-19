@@ -8,15 +8,15 @@ from unittest.mock import patch
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from model.flow_graph import FlowGraph, FunctionNode, Page, control_family_key  # noqa: E402
+from model.flow_graph import FunctionalFlowGraph, FunctionalityNode, Page, control_family_key  # noqa: E402
 from workflow import page_audit_worker as paw  # noqa: E402
 from workflow.nodes import ffg_update  # noqa: E402
 from workflow.page_audit_worker import page_audit_worker  # noqa: E402
 
 
-def _graph_with_pages() -> FlowGraph:
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u529f\u80fd\u4e00", description=""))
+def _graph_with_pages() -> FunctionalFlowGraph:
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u529f\u80fd\u4e00", description=""))
     graph.add_page(
         Page(
             id="page_1",
@@ -327,7 +327,7 @@ class SubmitBatchTest(unittest.TestCase):
 
     def test_completed_owner_pages_prioritized(self):
         graph = _graph_with_pages()
-        graph.add_node(FunctionNode(id="func_2", name="\u529f\u80fd\u4e8c", description=""))
+        graph.add_node(FunctionalityNode(id="func_2", name="\u529f\u80fd\u4e8c", description=""))
         # page_2 belongs to a completed functionality.
         graph.add_page(
             Page(id="page_2", name="\u5b8c\u6210\u9875", activity=".ui.Done",

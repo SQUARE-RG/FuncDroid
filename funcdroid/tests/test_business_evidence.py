@@ -6,7 +6,7 @@ from tools.utils import encode_image_to_jpg_base64
 
 from compliance.checkpoints import ComplianceChecklist
 from compliance.report import build_compliance_report
-from model.flow_graph import FlowGraph, FunctionNode, Page
+from model.flow_graph import FunctionalFlowGraph, FunctionalityNode, Page
 from workflow.nodes.ffg_update import _record_completed_intra_scenario
 from workflow.nodes.scenario_plan import _cross_pair_ready
 from workflow.nodes.scenario_exec import _normalize_action_plan
@@ -14,8 +14,8 @@ from workflow.trace_defect_detection import _dedupe_bugs, _bug_has_required_trac
 
 
 def test_depth_attempt_is_counted_once_and_recorded_like_breadth():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u6536\u85cf"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u6536\u85cf"))
     plan = dict(target_function_id="func_1", function_phase="depth")
     _record_completed_intra_scenario(graph, plan, "\u6536\u85cf\u540e\u79bb\u5f00\u518d\u8fd4\u56de\u67e5\u770b")
     _record_completed_intra_scenario(graph, plan, "\u6536\u85cf\u540e\u79bb\u5f00\u518d\u8fd4\u56de\u67e5\u770b")
@@ -25,9 +25,9 @@ def test_depth_attempt_is_counted_once_and_recorded_like_breadth():
 
 
 def test_ready_pair_does_not_depend_on_unrelated_unexplored_function():
-    graph = FlowGraph()
+    graph = FunctionalFlowGraph()
     for n in range(1, 4):
-        node = FunctionNode(id=f"func_{n}", name=f"\u529f\u80fd{n}")
+        node = FunctionalityNode(id=f"func_{n}", name=f"\u529f\u80fd{n}")
         graph.add_node(node)
         graph.add_page(Page(id=f"page_{n}", name="\u9875\u9762", controls=["\u6309\u94ae"]), node.id)
         if n < 3:
@@ -86,9 +86,9 @@ def test_exec_prompt_has_no_verification_protocol():
 
 def test_planner_selects_ready_cross_before_intra(monkeypatch):
     from workflow.nodes import scenario_plan as planner
-    graph = FlowGraph()
+    graph = FunctionalFlowGraph()
     for n in range(1, 4):
-        graph.add_node(FunctionNode(id=f"func_{n}", name=f"\u529f\u80fd{n}"))
+        graph.add_node(FunctionalityNode(id=f"func_{n}", name=f"\u529f\u80fd{n}"))
         graph.add_page(Page(id=f"page_{n}", name=f"\u9875\u9762{n}", controls=["\u6309\u94ae"]), f"func_{n}")
     monkeypatch.setattr(planner, "_refresh_current_page_observation", lambda g, d, p: p)
     monkeypatch.setattr(planner, "_pending_cross_pairs", lambda g: [("func_1", "func_2", "\u5171\u4eab\u8d44\u6e90")])

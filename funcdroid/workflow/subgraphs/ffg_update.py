@@ -6,7 +6,7 @@ from typing import Any
 
 from langgraph.graph import END, START, StateGraph
 
-from model.flow_graph import FlowGraph
+from model.flow_graph import FunctionalFlowGraph
 from workflow.nodes.ffg_update import create_ffg_update_node
 from workflow.state import AgentState
 
@@ -22,8 +22,8 @@ def create_ffg_update_subgraph(llm, device=None):
     update_pass = create_ffg_update_node(llm, device)
 
     def agent_update(state: FFGUpdateSubgraphState) -> dict[str, Any]:
-        if not isinstance(state.get("ffg"), FlowGraph):
-            state = {**state, "ffg": FlowGraph()}
+        if not isinstance(state.get("ffg"), FunctionalFlowGraph):
+            state = {**state, "ffg": FunctionalFlowGraph()}
         result = update_pass(state)
         issues = list(result.get("ffg_update_validation_issues", []) or [])
         print(

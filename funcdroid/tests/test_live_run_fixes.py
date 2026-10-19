@@ -25,8 +25,8 @@ from main import (
     _save_run_result,
 )
 from model.flow_graph import (
-    FlowGraph,
-    FunctionNode,
+    FunctionalFlowGraph,
+    FunctionalityNode,
     Page,
     PageTransition,
 )
@@ -825,8 +825,8 @@ def test_planning_output_clears_previous_execution_payload():
 
 
 def test_graph_step_status_prints_compact_node_specific_summaries(capsys):
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", test_status="in_progress"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", test_status="in_progress"))
     graph.add_page(Page(id="page_1", activity="MainActivity"), "func_1")
     state = {
         "ffg": graph,
@@ -886,8 +886,8 @@ def test_skip_round_is_not_replanned_inside_the_same_iteration():
 
 
 def test_current_page_identity_uses_closest_recorded_screenshot():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1"))
     graph.add_page(
         Page(
             id="page_1",
@@ -1009,8 +1009,8 @@ def test_graph_stream_gets_long_run_recursion_budget(tmp_path):
 
 
 def test_time_budget_keeps_one_ffg_alive_after_planner_reports_done(monkeypatch):
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u4e3b\u529f\u80fd", test_status="completed"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u4e3b\u529f\u80fd", test_status="completed"))
 
     def planner(state):
         assert state["ffg"] is graph
@@ -1042,8 +1042,8 @@ def test_time_budget_keeps_one_ffg_alive_after_planner_reports_done(monkeypatch)
 
 def test_time_budget_run_ends_early_once_audits_are_exhausted(monkeypatch):
     """Finish early when audit work is exhausted instead of idling for the remaining time budget."""
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u4e3b\u529f\u80fd", test_status="completed"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u4e3b\u529f\u80fd", test_status="completed"))
 
     def planner(state):
         return {
@@ -1070,8 +1070,8 @@ def test_time_budget_run_ends_early_once_audits_are_exhausted(monkeypatch):
 
 
 def test_time_budget_run_continues_when_audit_just_changed_the_graph(monkeypatch):
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u4e3b\u529f\u80fd", test_status="completed"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u4e3b\u529f\u80fd", test_status="completed"))
 
     def planner(state):
         return {"ffg": graph, "workflow_complete": True, "current_plan": {"scenario_type": "done"}}
@@ -1092,8 +1092,8 @@ def test_time_budget_run_continues_when_audit_just_changed_the_graph(monkeypatch
 
 
 def test_final_artifact_set_is_complete(tmp_path):
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u4e3b\u529f\u80fd"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u4e3b\u529f\u80fd"))
     graph.add_page(Page(
         id="page_1",
         representative_screenshot=_screenshot(12),
@@ -1164,8 +1164,8 @@ def test_bug_folders_skip_unchanged_artifacts(monkeypatch, tmp_path):
 
 
 def test_activity_timeline_accumulates_unique_discovered_activities(tmp_path):
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u4e3b\u529f\u80fd"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u4e3b\u529f\u80fd"))
     graph.add_page(Page(id="page_1", activity="LauncherUI"), "func_1")
     state = {
         "start_time": time.time() - 60,
@@ -1440,8 +1440,8 @@ def test_planner_restarts_after_back_cannot_recover_black_screen(monkeypatch):
 
 
 def test_planner_uses_black_screen_as_current_page_and_generates_recovery_navigation():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u8bbe\u7f6e\u529f\u80fd", test_status="in_progress"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u8bbe\u7f6e\u529f\u80fd", test_status="in_progress"))
     graph.add_page(Page(
         id="page_1",
         name="\u8bbe\u7f6e\u9875",
@@ -1494,8 +1494,8 @@ def test_planner_uses_black_screen_as_current_page_and_generates_recovery_naviga
 
 
 def test_planner_rejects_scenario_that_repeats_known_black_screen_path():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u8bbe\u7f6e\u529f\u80fd", test_status="in_progress"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u8bbe\u7f6e\u529f\u80fd", test_status="in_progress"))
     graph.add_page(Page(id="page_1", name="\u8bbe\u7f6e\u9875"), "func_1")
     graph.add_page(Page(id="page_2", name="\u9ed1\u5c4f\u6216\u9875\u9762\u4e0d\u53ef\u7528"), "func_1")
     graph.add_page_transition(PageTransition(
@@ -2176,8 +2176,8 @@ def test_json_retry_helper_marks_exhausted_failure_but_not_valid_empty_object():
 
 def test_ffg_update_context_separates_plan_facts_and_before_step_evidence():
     screenshot = _screenshot(20)
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u79d1\u5b66\u8ba1\u7b97"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u79d1\u5b66\u8ba1\u7b97"))
     graph.add_page(Page(id="page_1", name="\u8ba1\u7b97\u5668", representative_screenshot=screenshot), "func_1")
 
     class Response:
@@ -2258,8 +2258,8 @@ def test_ffg_update_context_separates_plan_facts_and_before_step_evidence():
 
 
 def test_ffg_update_rejects_filtered_ordinal_as_source_step():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u4e3b\u529f\u80fd"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u4e3b\u529f\u80fd"))
     trace = [
         {"raw_step_index": 1, "current_page": Page(representative_screenshot=_screenshot(10))},
         {"raw_step_index": 3, "current_page": Page(representative_screenshot=_screenshot(30))},
@@ -2284,9 +2284,9 @@ def test_ffg_update_rejects_filtered_ordinal_as_source_step():
 
 
 def test_ffg_update_does_not_auto_reuse_page_across_functions():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u6587\u672c\u7b14\u8bb0"))
-    graph.add_node(FunctionNode(id="func_2", name="\u5f85\u529e\u6e05\u5355"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u6587\u672c\u7b14\u8bb0"))
+    graph.add_node(FunctionalityNode(id="func_2", name="\u5f85\u529e\u6e05\u5355"))
     screenshot = _screenshot(20)
     graph.add_page(Page(id="page_1", name="\u6587\u672c\u7f16\u8f91\u9875", representative_screenshot=screenshot), "func_1")
 
@@ -2320,8 +2320,8 @@ def test_ffg_update_uses_screenshots_and_natural_language_controls():
 
 
 def test_obsolete_correction_patch_is_ignored():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u7a33\u5b9a\u529f\u80fd"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u7a33\u5b9a\u529f\u80fd"))
 
     result = apply_ffg_patch(
         graph,
@@ -2332,12 +2332,12 @@ def test_obsolete_correction_patch_is_ignored():
     assert "corrections_patch" not in result
     assert graph.get_node("func_1").name == "\u7a33\u5b9a\u529f\u80fd"
 def test_large_ffg_context_uses_global_index_and_bounded_focused_details():
-    graph = FlowGraph()
+    graph = FunctionalFlowGraph()
     long_description = "\u9875\u9762\u63a7\u4ef6\u548c\u5386\u53f2\u8bf4\u660e" * 120
     for index in range(1, 81):
         function_id = f"func_{index}"
         page_id = f"page_{index}"
-        graph.add_node(FunctionNode(
+        graph.add_node(FunctionalityNode(
             id=function_id,
             name=f"\u529f\u80fd {index}",
             description=long_description,
@@ -2363,8 +2363,8 @@ def test_large_ffg_context_uses_global_index_and_bounded_focused_details():
 
 def test_ffg_update_respects_model_decision_to_create_new_page():
     screenshot = _screenshot(24)
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u4e3b\u529f\u80fd"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u4e3b\u529f\u80fd"))
     graph.add_page(Page(
         id="page_1",
         name="\u5df2\u8bb0\u5f55\u9875\u9762",
@@ -2397,8 +2397,8 @@ def test_ffg_update_respects_model_decision_to_create_new_page():
 
 
 def test_empty_ffg_patch_without_device_action_keeps_function_in_progress():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u4e3b\u529f\u80fd", test_status="in_progress"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u4e3b\u529f\u80fd", test_status="in_progress"))
     graph.add_page(Page(id="page_1", representative_screenshot=_screenshot(10)), "func_1")
 
     class EmptyPatchLlm:
@@ -2433,8 +2433,8 @@ def test_empty_ffg_patch_without_device_action_keeps_function_in_progress():
 
 
 def test_ffg_transport_failure_applies_trace_without_model_patch(monkeypatch):
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u4e3b\u529f\u80fd", test_status="in_progress"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u4e3b\u529f\u80fd", test_status="in_progress"))
     graph.add_page(Page(
         id="page_1",
         representative_screenshot=_screenshot(10),
@@ -2479,8 +2479,8 @@ def test_ffg_transport_failure_applies_trace_without_model_patch(monkeypatch):
 
 
 def test_failed_intra_execution_is_recorded_as_attempted_but_not_successful():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u4e3b\u529f\u80fd", test_status="in_progress"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u4e3b\u529f\u80fd", test_status="in_progress"))
     graph.add_page(Page(
         id="page_1",
         representative_screenshot=_screenshot(10),
@@ -2530,8 +2530,8 @@ def test_failed_intra_execution_is_recorded_as_attempted_but_not_successful():
 
 
 def test_finished_only_trace_does_not_record_a_test_scenario():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u4e3b\u529f\u80fd", test_status="in_progress"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u4e3b\u529f\u80fd", test_status="in_progress"))
     graph.add_page(Page(id="page_1", controls=["\u641c\u7d22\u6309\u94ae"]), "func_1")
 
     class EmptyPatchLlm:
@@ -2566,8 +2566,8 @@ def test_finished_only_trace_does_not_record_a_test_scenario():
 
 
 def test_failed_intra_execution_without_trace_is_still_remembered():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u4e3b\u529f\u80fd", test_status="in_progress"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u4e3b\u529f\u80fd", test_status="in_progress"))
 
     class NeverCalledLlm:
         def invoke(self, _messages):
@@ -2594,8 +2594,8 @@ def test_failed_intra_execution_without_trace_is_still_remembered():
 
 
 def test_black_screen_trace_updates_ffg_and_reuses_single_error_page():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u4e3b\u529f\u80fd", test_status="in_progress"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u4e3b\u529f\u80fd", test_status="in_progress"))
     graph.add_page(Page(id="page_1", name="\u4e3b\u9875\u9762", representative_screenshot=_screenshot(10)), "func_1")
 
     class EmptyPatchLlm:
@@ -2708,8 +2708,8 @@ def test_ffg_update_keeps_failed_external_and_recovery_trace_steps():
 
 
 def test_ffg_records_black_observation_even_when_model_recovers_in_same_scenario():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u4e3b\u529f\u80fd", test_status="in_progress"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u4e3b\u529f\u80fd", test_status="in_progress"))
     graph.add_page(Page(id="page_1", name="\u4e3b\u9875\u9762", representative_screenshot=_screenshot(10)), "func_1")
 
     class EmptyPatchLlm:
@@ -2750,8 +2750,8 @@ def test_ffg_records_black_observation_even_when_model_recovers_in_same_scenario
 
 
 def test_ffg_deterministically_records_operations_and_direct_transitions():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u4e3b\u529f\u80fd", test_status="in_progress"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u4e3b\u529f\u80fd", test_status="in_progress"))
     graph.add_page(Page(id="page_1", name="\u5217\u8868\u9875", representative_screenshot=_screenshot(10)), "func_1")
     graph.add_page(Page(id="page_2", name="\u8be6\u60c5\u9875", representative_screenshot=_screenshot(20)), "func_1")
 
@@ -2800,8 +2800,8 @@ def test_ffg_deterministically_records_operations_and_direct_transitions():
 
 
 def test_new_activity_in_scenario_trace_must_be_represented_by_a_page():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u4e3b\u529f\u80fd"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u4e3b\u529f\u80fd"))
     graph.add_page(Page(id="page_1", activity="LauncherUI"), "func_1")
 
     missing = _unrepresented_trace_activities(
@@ -2813,8 +2813,8 @@ def test_new_activity_in_scenario_trace_must_be_represented_by_a_page():
 
 
 def test_model_can_map_transient_activity_to_existing_logical_page():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u4e3b\u529f\u80fd"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u4e3b\u529f\u80fd"))
     graph.add_page(Page(id="page_1", activity="ArticleUI"), "func_1")
 
     missing = _unrepresented_trace_activities(
@@ -2827,8 +2827,8 @@ def test_model_can_map_transient_activity_to_existing_logical_page():
 
 
 def test_navigation_only_trace_does_not_mark_test_scenario_attempted():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u4e3b\u529f\u80fd", test_status="in_progress"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u4e3b\u529f\u80fd", test_status="in_progress"))
     graph.add_page(Page(id="page_1", representative_screenshot=_screenshot(10)), "func_1")
 
     class EmptyPatchLlm:

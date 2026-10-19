@@ -7,7 +7,7 @@ import unittest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from model.flow_graph import FlowGraph, FunctionNode, Page  # noqa: E402
+from model.flow_graph import FunctionalFlowGraph, FunctionalityNode, Page  # noqa: E402
 from workflow.nodes.ffg_update import (  # noqa: E402
     _ensure_ignorable_alignments,
     _is_ignorable_observation_step,
@@ -16,9 +16,9 @@ from workflow.nodes.ffg_update import (  # noqa: E402
 )
 
 
-def _graph() -> FlowGraph:
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u529f\u80fd\u4e00", description=""))
+def _graph() -> FunctionalFlowGraph:
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u529f\u80fd\u4e00", description=""))
     graph.add_page(Page(id="page_1", name="\u4f1a\u8bdd\u9875", activity=".ui.LauncherUI", description=""), "func_1")
     return graph
 

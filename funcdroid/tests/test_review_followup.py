@@ -10,14 +10,14 @@ import pytest
 from automator.u2 import U2
 from compliance.checkpoints import ComplianceChecklist
 from compliance.report import build_compliance_report
-from model.flow_graph import FlowGraph, FunctionDependency, FunctionNode, Page
+from model.flow_graph import FunctionalFlowGraph, FunctionDependency, FunctionalityNode, Page
 from workflow.nodes import scenario_plan as planner
 from workflow.nodes import ffg_update as updater
 
 
 def graph_with_controls():
-    graph = FlowGraph()
-    node = FunctionNode(id="func_1", name="\u6536\u85cf", test_status="in_progress")
+    graph = FunctionalFlowGraph()
+    node = FunctionalityNode(id="func_1", name="\u6536\u85cf", test_status="in_progress")
     graph.add_node(node)
     page = Page(id="page_1", name="\u6536\u85cf\u9875", controls=["\u6536\u85cf\u6309\u94ae"], operations=["\u70b9\u51fb\u6536\u85cf\u6309\u94ae"])
     graph.add_page(page, node.id)
@@ -85,9 +85,9 @@ def test_keep_app_reaches_main_as_no_reset(monkeypatch, tmp_path, mode):
 
 
 def cross_graph():
-    graph = FlowGraph()
+    graph = FunctionalFlowGraph()
     for index in (1, 2):
-        graph.add_node(FunctionNode(id=f"func_{index}", name=f"\u529f\u80fd{index}"))
+        graph.add_node(FunctionalityNode(id=f"func_{index}", name=f"\u529f\u80fd{index}"))
     for src, dst, resource in [("func_1", "func_2", "\u8d44\u6e90\u7532"),
                                ("func_2", "func_1", "\u8d44\u6e90\u7532"),
                                ("func_1", "func_2", "\u8d44\u6e90\u4e59")]:
@@ -108,7 +108,7 @@ def test_cross_outcomes_preserve_direction_resource_and_evidence(outcome):
         result = {"scenario_status": "app_crashed", "crash_detected": True}
     counts = updater._record_execution_outcome(graph, state, result)
     assert counts == ({"func_1": 1} if outcome == "crashed" else {})
-    restored = FlowGraph.from_dict(json.loads(json.dumps(graph.to_dict())))
+    restored = FunctionalFlowGraph.from_dict(json.loads(json.dumps(graph.to_dict())))
     assert restored.cross_test_results[0]["status"] == ("failed" if outcome == "crashed" else outcome)
     # Completed and definitively failed test phases leave the queue without retries.
     assert planner._pending_cross_pairs(restored) == [
@@ -127,7 +127,7 @@ def test_legacy_verified_cross_results_load_as_done():
         {"src_function_id": "func_2", "dst_function_id": "func_1", "resource_variable": "\u8d44\u6e90\u7532",
          "scenario": "\u65e7\u5feb\u7167", "status": "unverified"}
     ]
-    restored = FlowGraph.from_dict(data)
+    restored = FunctionalFlowGraph.from_dict(data)
     assert [item["status"] for item in restored.cross_test_results] == ["done", "done"]
     assert all("verification" not in item for item in restored.cross_test_results)
 
@@ -135,7 +135,7 @@ def test_legacy_verified_cross_results_load_as_done():
 def test_legacy_cross_attempt_is_not_a_cross_result():
     graph = cross_graph()
     graph.add_cross_scenario("func_1", "func_2", "\u81ea\u52a8\u5316\u65e0\u6cd5\u5b8c\u6210")
-    assert len(planner._pending_cross_pairs(FlowGraph.from_dict(graph.to_dict()))) == 3
+    assert len(planner._pending_cross_pairs(FunctionalFlowGraph.from_dict(graph.to_dict()))) == 3
     assert not _done_cross_keys(graph)
 
 
@@ -195,9 +195,9 @@ def test_cross_results_survive_patch_and_reset_for_seed(tmp_path):
     assert seed.cross_test_results == []
     assert seed.cross_test_history == []
     assert seed.get_node("func_1").intra_attempt_count == 0
-    assert FlowGraph.load(str(tmp_path)).get_node("func_1").intra_attempt_count == 9
+    assert FunctionalFlowGraph.load(str(tmp_path)).get_node("func_1").intra_attempt_count == 9
     assert len(planner._pending_cross_pairs(seed)) == 3
-    assert FlowGraph.load(str(tmp_path)).cross_test_results[0]["status"] == "failed"
+    assert FunctionalFlowGraph.load(str(tmp_path)).cross_test_results[0]["status"] == "failed"
 
 
 def test_batch_report_labels_rule_hits_as_candidates(tmp_path):

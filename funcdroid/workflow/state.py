@@ -2,7 +2,7 @@
 
 from typing import Any, TypedDict
 
-from model.flow_graph import FlowGraph, Page
+from model.flow_graph import FunctionalFlowGraph, Page
 
 
 class AgentState(TypedDict, total=False):
@@ -34,7 +34,7 @@ class AgentState(TypedDict, total=False):
     compliance_checklist: dict[str, Any]
     compliance_rules_path: str           # Custom rule path; empty selects the default rules.json.
     compliance_review_failures: list[dict[str, Any]]
-    ffg: FlowGraph
+    ffg: FunctionalFlowGraph
     navigation_failure_count: int
     scenario_exec_error_count: int
     scenario_plan_error_count: int

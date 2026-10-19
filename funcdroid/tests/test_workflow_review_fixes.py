@@ -4,9 +4,9 @@ import time
 import pytest
 
 from model.flow_graph import (
-    FlowGraph,
+    FunctionalFlowGraph,
     FunctionDependency,
-    FunctionNode,
+    FunctionalityNode,
     Page,
     PageTransition,
 )
@@ -14,10 +14,10 @@ from workflow.nodes import scenario_plan as scenario_plan_module
 from workflow.graph import _fallback_scenario_exec, _route_after_plan
 from workflow.nodes.ffg_update import _resolve_plan_target_function_id
 from workflow.nodes.scenario_plan import (
-    _audit_function_for_gap,
+    _audit_functionality_completeness,
     _build_audit_navigation_scenario,
     _forced_intra_scenario,
-    _candidate_cross_pairs,
+    _candidate_inter_functional_pairs,
     _pending_cross_pairs,
     _release_unplannable_function,
     _navigation_to_function,
@@ -44,10 +44,10 @@ def _legacy_text_matching_enabled(monkeypatch):
     monkeypatch.setattr(_flow_graph, "COVERAGE_LEGACY_TEXT_MATCHING", True)
 
 
-def _graph_with_two_functions() -> FlowGraph:
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u6e90\u529f\u80fd"))
-    graph.add_node(FunctionNode(id="func_2", name="\u76ee\u6807\u529f\u80fd"))
+def _graph_with_two_functions() -> FunctionalFlowGraph:
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u6e90\u529f\u80fd"))
+    graph.add_node(FunctionalityNode(id="func_2", name="\u76ee\u6807\u529f\u80fd"))
     return graph
 
 
@@ -72,8 +72,8 @@ def test_navigation_reaches_function_page_instead_of_stopping_at_entry_page():
 
 
 def test_completion_audit_batches_cover_every_page_image(monkeypatch):
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u591a\u9875\u9762\u529f\u80fd"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u591a\u9875\u9762\u529f\u80fd"))
     for index in range(5):
         graph.add_page(Page(
             id=f"page_{index + 1}",
@@ -100,7 +100,7 @@ def test_completion_audit_batches_cover_every_page_image(monkeypatch):
     monkeypatch.setattr(scenario_plan_module, "MAX_AUDIT_IMAGES_PER_FUNCTION", 2)
     llm = Llm()
 
-    result = _audit_function_for_gap(
+    result = _audit_functionality_completeness(
         llm,
         graph,
         graph.get_node("func_1"),
@@ -208,13 +208,13 @@ def test_audit_protocol_rejects_empty_or_ambiguous_results():
 
 def test_invalid_audit_result_is_capped_instead_of_blocking_completion(monkeypatch):
     """Remember the signature after two invalid audit responses to avoid repeated audits and blocked completion."""
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u8bbe\u7f6e", test_status="completed"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u8bbe\u7f6e", test_status="completed"))
     graph.add_page(Page(id="page_1", name="\u8bbe\u7f6e\u9875"), "func_1")
     calls = []
     monkeypatch.setattr(
         scenario_plan_module,
-        "_audit_function_for_gap",
+        '_audit_functionality_completeness',
         lambda *_args, **_kwargs: calls.append(1) or {},
     )
 
@@ -236,12 +236,12 @@ def test_invalid_audit_result_is_capped_instead_of_blocking_completion(monkeypat
 
 
 def test_completion_audit_stops_at_run_deadline(monkeypatch):
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u8bbe\u7f6e", test_status="completed"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u8bbe\u7f6e", test_status="completed"))
     graph.add_page(Page(id="page_1", name="\u8bbe\u7f6e\u9875"), "func_1")
     monkeypatch.setattr(
         scenario_plan_module,
-        "_audit_function_for_gap",
+        '_audit_functionality_completeness',
         lambda *_args, **_kwargs: pytest.fail("audit must not run after the deadline"),
     )
 
@@ -277,7 +277,7 @@ def test_ffg_prompt_leaves_trace_edges_to_deterministic_code():
 
 
 def test_bootstrap_does_not_rewrite_function_by_package_specific_rule():
-    graph = FlowGraph()
+    graph = FunctionalFlowGraph()
     current_page = Page(
         name="\u5fae\u4fe1\u4f1a\u8bdd\u5217\u8868",
         description="\u663e\u793a\u5f53\u524d\u4f1a\u8bdd\u6761\u76ee",
@@ -311,7 +311,7 @@ def test_bootstrap_does_not_rewrite_function_by_package_specific_rule():
 
 
 def test_bootstrap_visible_business_entries_share_the_observed_page():
-    graph = FlowGraph()
+    graph = FunctionalFlowGraph()
     current_page = Page(
         name="\u4f1a\u8bdd\u804a\u5929\u9875\u9762",
         description="\u663e\u793a\u6d88\u606f\u548c\u6269\u5c55\u529f\u80fd\u9762\u677f",
@@ -371,7 +371,7 @@ def test_cross_candidates_ignore_navigation_transition_and_prefer_dependency():
     graph = _graph_with_two_functions()
     graph.add_function_dependency(FunctionDependency("func_1", "func_2", "\u5df2\u521b\u5efa\u8bb0\u5f55"))
 
-    candidates = _candidate_cross_pairs(graph)
+    candidates = _candidate_inter_functional_pairs(graph)
 
     assert candidates == [("func_1", "func_2", "Functional dependency: \u5df2\u521b\u5efa\u8bb0\u5f55")]
 
@@ -381,7 +381,7 @@ def test_cross_candidates_fall_back_to_shared_resource_variables():
     graph.get_node("func_1").resource_variables = ["\u4efb\u52a1\u8bb0\u5f55"]
     graph.get_node("func_2").resource_variables = ["\u4efb\u52a1\u8bb0\u5f55"]
 
-    candidates = _candidate_cross_pairs(graph)
+    candidates = _candidate_inter_functional_pairs(graph)
 
     assert candidates == [
         ("func_1", "func_2", "Shared state variable: \u4efb\u52a1\u8bb0\u5f55"),
@@ -392,14 +392,14 @@ def test_cross_candidates_fall_back_to_shared_resource_variables():
 def test_navigation_transition_alone_does_not_create_cross_test_candidate():
     graph = _graph_with_two_functions()
 
-    assert _candidate_cross_pairs(graph) == []
+    assert _candidate_inter_functional_pairs(graph) == []
 
 
 def test_shared_resource_fallback_uses_stable_function_order():
     graph = _graph_with_two_functions()
     graph.get_node("func_1").resource_variables = ["\u4efb\u52a1\u8bb0\u5f55"]
     graph.get_node("func_2").resource_variables = ["\u4efb\u52a1\u8bb0\u5f55"]
-    candidates = _candidate_cross_pairs(graph)
+    candidates = _candidate_inter_functional_pairs(graph)
 
     assert candidates == [
         ("func_1", "func_2", "Shared state variable: \u4efb\u52a1\u8bb0\u5f55"),
@@ -411,7 +411,7 @@ def test_cross_candidates_dedupe_reverse_directions():
     graph = _graph_with_two_functions()
     graph.add_function_dependency(FunctionDependency("func_1", "func_2", "\u5df2\u521b\u5efa\u8bb0\u5f55"))
 
-    candidates = _candidate_cross_pairs(graph)
+    candidates = _candidate_inter_functional_pairs(graph)
 
     assert candidates == [("func_1", "func_2", "Functional dependency: \u5df2\u521b\u5efa\u8bb0\u5f55")]
 
@@ -431,8 +431,8 @@ def test_cross_pair_done_does_not_block_reverse():
 
 
 def test_completion_audit_returns_execution_candidate_without_mutating_ffg():
-    graph = FlowGraph()
-    node = FunctionNode(id="func_1", name="\u4e3b\u5bfc\u822a", test_status="completed")
+    graph = FunctionalFlowGraph()
+    node = FunctionalityNode(id="func_1", name="\u4e3b\u5bfc\u822a", test_status="completed")
     graph.add_node(node)
     graph.add_page(Page(
         id="page_1",
@@ -462,8 +462,8 @@ def test_completion_audit_returns_execution_candidate_without_mutating_ffg():
 
 
 def test_completion_audit_retries_a_gap_on_an_unknown_page():
-    graph = FlowGraph()
-    node = FunctionNode(id="func_1", name="\u4e3b\u5bfc\u822a", test_status="completed")
+    graph = FunctionalFlowGraph()
+    node = FunctionalityNode(id="func_1", name="\u4e3b\u5bfc\u822a", test_status="completed")
     graph.add_node(node)
     graph.add_page(Page(
         id="page_1",
@@ -494,8 +494,8 @@ def test_completion_audit_retries_a_gap_on_an_unknown_page():
 
 
 def test_completion_audit_allows_wechat_conversation_entry():
-    graph = FlowGraph()
-    node = FunctionNode(id="func_1", name="\u5fae\u4fe1\u9996\u9875", test_status="completed")
+    graph = FunctionalFlowGraph()
+    node = FunctionalityNode(id="func_1", name="\u5fae\u4fe1\u9996\u9875", test_status="completed")
     graph.add_node(node)
     graph.add_page(Page(
         id="page_1",
@@ -525,10 +525,10 @@ def test_completion_audit_allows_wechat_conversation_entry():
 
 
 def test_new_unfinished_function_runs_before_resuming_completed_function_audit():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u5df2\u5b8c\u6210\u5165\u53e3", test_status="completed"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u5df2\u5b8c\u6210\u5165\u53e3", test_status="completed"))
     graph.add_page(Page(id="page_1", name="\u9996\u9875", representative_screenshot="stored"), "func_1")
-    graph.add_node(FunctionNode(id="func_2", name="\u65b0\u53d1\u73b0\u529f\u80fd", test_status="not_started"))
+    graph.add_node(FunctionalityNode(id="func_2", name="\u65b0\u53d1\u73b0\u529f\u80fd", test_status="not_started"))
     graph.add_page(Page(id="page_2", name="\u65b0\u9875\u9762", representative_screenshot="stored"), "func_2")
 
     class PlanningLlm:
@@ -565,8 +565,8 @@ def test_new_unfinished_function_runs_before_resuming_completed_function_audit()
 
 
 def test_existing_tested_scenarios_do_not_bypass_program_limits():
-    graph = FlowGraph()
-    node = FunctionNode(id="func_1", name="\u4e3b\u9875\u529f\u80fd", test_status="in_progress")
+    graph = FunctionalFlowGraph()
+    node = FunctionalityNode(id="func_1", name="\u4e3b\u9875\u529f\u80fd", test_status="in_progress")
     graph.add_node(node)
     graph.add_page(Page(
         id="page_1",
@@ -610,8 +610,8 @@ def test_existing_tested_scenarios_do_not_bypass_program_limits():
 
 
 def test_unplannable_function_is_deferred_without_marking_it_completed():
-    graph = FlowGraph()
-    node = FunctionNode(id="func_1", name="\u8bb0\u5f55\u6d3b\u52a8", test_status="in_progress")
+    graph = FunctionalFlowGraph()
+    node = FunctionalityNode(id="func_1", name="\u8bb0\u5f55\u6d3b\u52a8", test_status="in_progress")
     graph.add_node(node)
     graph.add_page(Page(id="page_1", name="\u6d3b\u52a8\u4e3b\u9875"), "func_1")
 
@@ -642,8 +642,8 @@ def test_unplannable_function_is_deferred_without_marking_it_completed():
 
 
 def test_low_coverage_empty_plan_immediately_generates_representative_scenario():
-    graph = FlowGraph()
-    node = FunctionNode(id="func_1", name="\u8bb0\u5f55\u6d3b\u52a8", test_status="in_progress")
+    graph = FunctionalFlowGraph()
+    node = FunctionalityNode(id="func_1", name="\u8bb0\u5f55\u6d3b\u52a8", test_status="in_progress")
     graph.add_node(node)
     graph.add_page(Page(
         id="page_1",
@@ -673,7 +673,7 @@ def test_shared_resource_fallback_does_not_depend_on_navigation_direction():
     graph = _graph_with_two_functions()
     graph.get_node("func_1").resource_variables = ["\u4efb\u52a1\u8bb0\u5f55"]
     graph.get_node("func_2").resource_variables = ["\u4efb\u52a1\u8bb0\u5f55"]
-    candidates = _candidate_cross_pairs(graph)
+    candidates = _candidate_inter_functional_pairs(graph)
 
     assert candidates == [
         ("func_1", "func_2", "Shared state variable: \u4efb\u52a1\u8bb0\u5f55"),
@@ -845,10 +845,10 @@ def test_unfinished_current_function_is_dispatched_before_pending_cross_test():
 
 
 def test_planner_unfinished_function_is_dispatched_before_completed_function_audit():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u4e3b\u5bfc\u822a", test_status="completed",
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u4e3b\u5bfc\u822a", test_status="completed",
                                 depth_scenario_count=1, successful_depth_scenario_count=1))
-    graph.add_node(FunctionNode(id="func_2", name="\u5f85\u6d4b\u529f\u80fd", test_status="not_started"))
+    graph.add_node(FunctionalityNode(id="func_2", name="\u5f85\u6d4b\u529f\u80fd", test_status="not_started"))
     graph.add_page(Page(
         id="page_1",
         name="Navigation Drawer",
@@ -895,8 +895,8 @@ def test_planner_unfinished_function_is_dispatched_before_completed_function_aud
 
 
 def test_completed_coverage_finishes_early_when_frontier_is_exhausted():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u4e3b\u529f\u80fd", test_status="completed",
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u4e3b\u529f\u80fd", test_status="completed",
                                 depth_scenario_count=1, successful_depth_scenario_count=1))
     graph.add_page(Page(id="page_1", name="\u4e3b\u9875", operations=["\u70b9\u51fb\u5237\u65b0\u6309\u94ae"]), "func_1")
 
@@ -925,8 +925,8 @@ def test_completed_coverage_finishes_early_when_frontier_is_exhausted():
 
 
 def test_completion_audit_gets_recorded_navigation_to_its_entry_page():
-    graph = FlowGraph()
-    node = FunctionNode(id="func_1", name="\u7b14\u8bb0\u5217\u8868")
+    graph = FunctionalFlowGraph()
+    node = FunctionalityNode(id="func_1", name="\u7b14\u8bb0\u5217\u8868")
     graph.add_node(node)
     graph.add_page(Page(id="page_1", name="\u7b14\u8bb0\u9996\u9875"), "func_1")
     graph.add_page(Page(id="page_2", name="\u65b0\u589e\u7c7b\u578b\u83dc\u5355"), "func_1")
@@ -955,10 +955,10 @@ def test_completion_audit_gets_recorded_navigation_to_its_entry_page():
 
 
 def test_completion_audit_uses_open_app_first_for_unrelated_current_page():
-    graph = FlowGraph()
-    node = FunctionNode(id="func_1", name="\u7b14\u8bb0\u5217\u8868")
+    graph = FunctionalFlowGraph()
+    node = FunctionalityNode(id="func_1", name="\u7b14\u8bb0\u5217\u8868")
     graph.add_node(node)
-    graph.add_node(FunctionNode(id="func_2", name="\u5176\u4ed6\u529f\u80fd"))
+    graph.add_node(FunctionalityNode(id="func_2", name="\u5176\u4ed6\u529f\u80fd"))
     graph.add_page(Page(id="page_1", name="\u7b14\u8bb0\u9996\u9875"), "func_1")
     graph.add_page(Page(id="page_2", name="\u65b0\u589e\u7c7b\u578b\u83dc\u5355"), "func_1")
     graph.add_page(Page(id="page_other", name="\u5176\u4ed6\u529f\u80fd\u9875\u9762"), "func_2")
@@ -986,8 +986,8 @@ def test_audit_entry_scenario_uses_page_names_not_internal_ids():
 
 
 def test_forced_progress_selects_only_one_uncovered_control():
-    graph = FlowGraph()
-    node = FunctionNode(id="func_1", name="\u7b14\u8bb0\u5217\u8868")
+    graph = FunctionalFlowGraph()
+    node = FunctionalityNode(id="func_1", name="\u7b14\u8bb0\u5217\u8868")
     graph.add_node(node)
     graph.add_page(Page(
         id="page_1",
@@ -1009,8 +1009,8 @@ def test_forced_progress_selects_only_one_uncovered_control():
 
 
 def test_forced_progress_may_choose_wechat_conversation_control():
-    graph = FlowGraph()
-    node = FunctionNode(id="func_1", name="\u5fae\u4fe1\u9996\u9875")
+    graph = FunctionalFlowGraph()
+    node = FunctionalityNode(id="func_1", name="\u5fae\u4fe1\u9996\u9875")
     graph.add_node(node)
     graph.add_page(Page(
         id="page_1",

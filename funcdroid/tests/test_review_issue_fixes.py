@@ -3,16 +3,16 @@
 
 import threading
 
-from model.flow_graph import FlowGraph, FunctionDependency, FunctionNode, Page, PageTransition
+from model.flow_graph import FunctionalFlowGraph, FunctionDependency, FunctionalityNode, Page, PageTransition
 from workflow.graph import _fallback_scenario_exec
 from workflow.nodes import ffg_update as updater
 from workflow.nodes import scenario_plan as planner
 from workflow.worker_utils import SerialWorker
 
 
-def _intra_graph() -> FlowGraph:
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u8bb0\u5f55\u6d3b\u52a8", test_status="in_progress"))
+def _intra_graph() -> FunctionalFlowGraph:
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u8bb0\u5f55\u6d3b\u52a8", test_status="in_progress"))
     graph.add_page(Page(id="page_1", name="\u6d3b\u52a8\u4e3b\u9875"), "func_1")
     return graph
 
@@ -45,10 +45,10 @@ def test_execution_facts_are_recorded_without_structural_patch():
 
 # Issue 3: Bounded inter-functional retries with traceable test data.
 
-def _cross_graph() -> FlowGraph:
-    graph = FlowGraph()
+def _cross_graph() -> FunctionalFlowGraph:
+    graph = FunctionalFlowGraph()
     for index in (1, 2):
-        graph.add_node(FunctionNode(id=f"func_{index}", name=f"\u529f\u80fd{index}"))
+        graph.add_node(FunctionalityNode(id=f"func_{index}", name=f"\u529f\u80fd{index}"))
     graph.add_function_dependency(FunctionDependency("func_1", "func_2", "\u8d44\u6e90\u7532"))
     return graph
 
@@ -89,10 +89,10 @@ def test_cross_scenario_reuses_source_test_data():
     graph = _cross_graph()
     graph.record_test_data("func_1", ["FuncDroid_func_1"], iteration=3)
 
-    scenario = planner._forced_cross_scenario(graph, "func_1", "func_2", "\u529f\u80fd\u4f9d\u8d56: \u8d44\u6e90\u7532")
+    scenario = planner._fallback_inter_functional_scenario(graph, "func_1", "func_2", "\u529f\u80fd\u4f9d\u8d56: \u8d44\u6e90\u7532")
 
     assert "FuncDroid_func_1" in scenario
-    restored = FlowGraph.from_dict(graph.to_dict())
+    restored = FunctionalFlowGraph.from_dict(graph.to_dict())
     assert restored.function_test_data("func_1")[0]["iteration"] == 3
 
 
@@ -196,9 +196,9 @@ def test_infrastructure_error_records_no_scenario_or_attempt():
 # Issue 6: Compliance relevance does not override failure yielding.
 
 def test_compliance_relevance_prefers_functions_without_recent_failure():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u9690\u79c1\u8bbe\u7f6e", test_status="in_progress"))
-    graph.add_node(FunctionNode(id="func_2", name="\u9690\u79c1\u653f\u7b56", test_status="in_progress"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u9690\u79c1\u8bbe\u7f6e", test_status="in_progress"))
+    graph.add_node(FunctionalityNode(id="func_2", name="\u9690\u79c1\u653f\u7b56", test_status="in_progress"))
     graph.add_page(Page(id="page_1", name="\u9690\u79c1\u8bbe\u7f6e\u9875"), "func_1")
     graph.add_page(Page(id="page_2", name="\u9690\u79c1\u653f\u7b56\u9875"), "func_2")
     graph.add_page_transition(PageTransition(src_page_id="page_1", dst_page_id="page_2", operation="\u70b9\u51fb\u9690\u79c1\u653f\u7b56"))
@@ -220,9 +220,9 @@ def test_zero_control_function_gets_observation_template():
 
 # Depth scenario targets scale with control counts.
 
-def _graph_with_controls(control_count: int) -> FlowGraph:
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u8bb0\u8d26", test_status="in_progress"))
+def _graph_with_controls(control_count: int) -> FunctionalFlowGraph:
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u8bb0\u8d26", test_status="in_progress"))
     graph.add_page(Page(id="page_1", name="\u8bb0\u8d26\u9875",
                         controls=[f"\u63a7\u4ef6{index}" for index in range(control_count)]), "func_1")
     return graph
@@ -231,30 +231,30 @@ def _graph_with_controls(control_count: int) -> FlowGraph:
 def test_depth_target_is_ceil_of_controls_over_five():
     for controls, expected in ((1, 1), (5, 1), (6, 2), (11, 3), (30, 6), (60, 6)):
         graph = _graph_with_controls(controls)
-        assert planner._required_depth_count(graph, graph.get_node("func_1")) == expected
+        assert planner._required_depth_scenario_count(graph, graph.get_node("func_1")) == expected
 
 
 def test_function_stays_in_depth_until_depth_target():
     graph = _graph_with_controls(8)
     node = graph.get_node("func_1")
     node.intra_attempt_count = planner.PLAN_BREADTH_MAX_SCENARIOS
-    assert planner._function_phase(graph, node) == planner.FUNCTION_PHASE_DEPTH
+    assert planner._intra_functionality_phase(graph, node) == planner.FUNCTIONALITY_PHASE_DEPTH
 
     node.intra_attempt_count += 1
     node.depth_scenario_count = 1
-    assert planner._function_phase(graph, node) == planner.FUNCTION_PHASE_DEPTH
+    assert planner._intra_functionality_phase(graph, node) == planner.FUNCTIONALITY_PHASE_DEPTH
 
     node.intra_attempt_count += 1
     node.depth_scenario_count = 2
     # Attempts without effective depth completion keep the functionality in its depth phase.
-    assert planner._function_phase(graph, node) == planner.FUNCTION_PHASE_DEPTH
+    assert planner._intra_functionality_phase(graph, node) == planner.FUNCTIONALITY_PHASE_DEPTH
     node.successful_depth_scenario_count = 2
-    assert planner._function_phase(graph, node) == planner.FUNCTION_PHASE_BREADTH
+    assert planner._intra_functionality_phase(graph, node) == planner.FUNCTIONALITY_PHASE_BREADTH
 
 
 def test_depth_template_avoids_repeating_recorded_scenarios():
     graph = _graph_with_controls(4)
-    scenario = planner._forced_depth_scenario(graph, graph.get_node("func_1"))
+    scenario = planner._fallback_intra_functionality_depth_scenario(graph, graph.get_node("func_1"))
     assert "Do not repeat scenarios already executed for this functionality" in scenario
     assert "[verify:" not in scenario and "verification checkpoint" not in scenario
 
@@ -262,8 +262,8 @@ def test_depth_template_avoids_repeating_recorded_scenarios():
 # Synonym merge: two labels referring to one control.
 
 def test_synonym_control_merge_accepts_two_sources_with_existing_name_as_target():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u641c\u7d22"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u641c\u7d22"))
     page = Page(id="page_1", name="\u9996\u9875", controls=["\u641c\u7d22\u6309\u94ae", "\u9876\u90e8\u641c\u7d22\u56fe\u6807", "\u8bbe\u7f6e"])
     graph.add_page(page, "func_1")
     updater._apply_page_audit_control_merges(
@@ -273,8 +273,8 @@ def test_synonym_control_merge_accepts_two_sources_with_existing_name_as_target(
 
 
 def test_two_source_merge_with_new_target_name_is_rejected():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u641c\u7d22"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u641c\u7d22"))
     page = Page(id="page_1", name="\u9996\u9875", controls=["\u641c\u7d22\u6309\u94ae", "\u9876\u90e8\u641c\u7d22\u56fe\u6807", "\u8bbe\u7f6e"])
     graph.add_page(page, "func_1")
     updater._apply_page_audit_control_merges(
@@ -286,8 +286,8 @@ def test_two_source_merge_with_new_target_name_is_rejected():
 
 def test_synonym_merge_of_toggle_state_names_is_rejected():
     """Do not merge opposing enable/disable toggle labels as synonyms."""
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u624b\u7535\u7b52"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u624b\u7535\u7b52"))
     controls = ["\u5f00\u542f\u624b\u7535\u7b52\u6309\u94ae", "\u5173\u95ed\u624b\u7535\u7b52\u6309\u94ae", "\u8fd4\u56de\u6309\u94ae"]
     page = Page(id="page_1", name="\u624b\u7535\u7b52\u9875", controls=list(controls))
     graph.add_page(page, "func_1")
@@ -365,8 +365,8 @@ def test_enumerated_control_names_are_detected_generically():
 
 
 def test_enumerated_control_is_not_written_and_is_reported():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u5de5\u5177\u7bb1"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u5de5\u5177\u7bb1"))
     graph.add_page(Page(id="page_1", name="\u5de5\u5177\u7bb1\u9875", controls=["\u8fd4\u56de\u6309\u94ae"]), "func_1")
     trace = [{"raw_step_index": 2, "current_page": Page(name="\u5de5\u5177\u7bb1\u9875")}]
     patch = {

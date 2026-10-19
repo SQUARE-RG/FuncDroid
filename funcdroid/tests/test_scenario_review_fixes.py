@@ -12,7 +12,7 @@ import cv2
 import numpy as np
 import pytest
 
-from model.flow_graph import FlowGraph, FunctionNode, Page, PageTransition
+from model.flow_graph import FunctionalFlowGraph, FunctionalityNode, Page, PageTransition
 from workflow import app_foreground
 from workflow import exploration_boundary as boundary
 from workflow.account_safety import account_session_action_violation, account_session_violation
@@ -330,10 +330,10 @@ def test_executor_session_guard_blocks_logout_action(monkeypatch):
 
 # 8. Parse the current page once per planning iteration; BFS uses adjacency lists.
 
-def _chain_graph(count: int = 4) -> FlowGraph:
-    graph = FlowGraph()
+def _chain_graph(count: int = 4) -> FunctionalFlowGraph:
+    graph = FunctionalFlowGraph()
     for index in range(1, count + 1):
-        graph.add_node(FunctionNode(id=f"func_{index}", name=f"\u529f\u80fd{index}"))
+        graph.add_node(FunctionalityNode(id=f"func_{index}", name=f"\u529f\u80fd{index}"))
         graph.add_page(Page(id=f"page_{index}", name=f"\u9875\u9762{index}"), f"func_{index}")
     for index in range(1, count):
         graph.add_page_transition(PageTransition(f"page_{index}", f"page_{index + 1}", f"\u8fdb\u5165\u9875\u9762{index + 1}"))
@@ -437,13 +437,13 @@ def test_plan_validation_retries_default_to_two(monkeypatch):
 # 11. Per-iteration coverage-audit limit.
 
 def test_completion_audit_caps_functions_per_round(monkeypatch):
-    graph = FlowGraph()
+    graph = FunctionalFlowGraph()
     for index in range(1, 5):
-        graph.add_node(FunctionNode(id=f"func_{index}", name=f"\u529f\u80fd{index}", test_status="completed"))
+        graph.add_node(FunctionalityNode(id=f"func_{index}", name=f"\u529f\u80fd{index}", test_status="completed"))
         graph.add_page(Page(id=f"page_{index}", name=f"\u9875\u9762{index}"), f"func_{index}")
     audited = []
     monkeypatch.setattr(
-        planner, "_audit_function_for_gap",
+        planner, '_audit_functionality_completeness',
         lambda _llm, _g, node, *_a, **_k: audited.append(node.id) or {"entry_page_ref": "", "entry_name": ""},
     )
     result, complete, signatures = planner._run_completion_audit(object(), graph, "core", max_audits=2)
@@ -456,9 +456,9 @@ def test_completion_audit_caps_functions_per_round(monkeypatch):
 # 12. Compliance priority must not override failure yielding.
 
 def test_compliance_relevant_failed_function_does_not_beat_healthy_candidate():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u9690\u79c1\u8bbe\u7f6e", test_status="in_progress"))
-    graph.add_node(FunctionNode(id="func_2", name="\u5185\u5bb9\u6d4f\u89c8", test_status="in_progress"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u9690\u79c1\u8bbe\u7f6e", test_status="in_progress"))
+    graph.add_node(FunctionalityNode(id="func_2", name="\u5185\u5bb9\u6d4f\u89c8", test_status="in_progress"))
     graph.add_page(Page(id="page_1", name="\u9690\u79c1\u8bbe\u7f6e\u9875"), "func_1")
     graph.add_page(Page(id="page_2", name="\u5185\u5bb9\u9875"), "func_2")
     selected = planner._select_intra_target(graph, graph.get_page("page_1"), {"func_1": 1}, ("\u9690\u79c1",))

@@ -5,10 +5,10 @@ import hashlib
 import json
 from pathlib import Path
 
-from model.flow_graph import FlowGraph
+from model.flow_graph import FunctionalFlowGraph
 
 
-def load_seed_graph(source: str, package_name: str) -> tuple[FlowGraph, dict]:
+def load_seed_graph(source: str, package_name: str) -> tuple[FunctionalFlowGraph, dict]:
     root = Path(source).resolve()
     result = json.loads((root / "run_result.json").read_text(encoding="utf-8"))
     if not package_name or result.get("package_name") != package_name:
@@ -18,7 +18,7 @@ def load_seed_graph(source: str, package_name: str) -> tuple[FlowGraph, dict]:
     manifest = json.loads((root / "artifact_manifest.json").read_text(encoding="utf-8"))
     if manifest.get("status") != "complete":
         raise ValueError("FFG seed artifacts are incomplete")
-    graph = FlowGraph.load(str(root))
+    graph = FunctionalFlowGraph.load(str(root))
     graph.cross_test_results = []
     graph.cross_test_history = []
     graph.test_data_records = []

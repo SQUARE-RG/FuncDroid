@@ -4,7 +4,7 @@ import base64
 import cv2
 import numpy as np
 
-from model.flow_graph import FlowGraph, FunctionNode, Page
+from model.flow_graph import FunctionalFlowGraph, FunctionalityNode, Page
 from workflow.nodes import ffg_update as ffg_update_module
 from workflow.nodes.ffg_update import (
     _ScreenshotThumbnailCache,
@@ -29,8 +29,8 @@ def test_thumbnail_cache_decodes_each_graph_screenshot_once(monkeypatch):
         return np.zeros((size, size), dtype=np.uint8)
 
     monkeypatch.setattr(ffg_update_module, "screenshot_thumbnail", fake_thumbnail)
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u529f\u80fd"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u529f\u80fd"))
     representative = _screenshot(10)
     evidence = _screenshot(20)
     graph.add_page(Page(
@@ -56,8 +56,8 @@ def test_reference_lookup_reuses_candidate_similarity_results():
             self.calls += 1
             return 0.9
 
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u529f\u80fd"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u529f\u80fd"))
     graph.add_page(Page(
         id="page_1",
         activity="MainActivity",
@@ -116,7 +116,7 @@ def test_compacted_images_are_compressed_once_across_cycles(monkeypatch):
             return Response()
 
     node = create_ffg_update_node(Llm())
-    graph = FlowGraph()
+    graph = FunctionalFlowGraph()
     state = {
         "ffg": graph,
         "current_plan": {},
@@ -169,7 +169,7 @@ def test_total_image_budget_never_drops_unmatched_new_pages(monkeypatch):
     llm = _CapturingPatchLlm()
 
     create_ffg_update_node(llm)({
-        "ffg": FlowGraph(),
+        "ffg": FunctionalFlowGraph(),
         "current_plan": {},
         "scenario_execution_trace": [
             {
@@ -191,8 +191,8 @@ def test_total_image_budget_never_drops_unmatched_new_pages(monkeypatch):
 def test_default_fidelity_mode_keeps_known_and_new_trace_images(monkeypatch):
     monkeypatch.setattr(ffg_update_module, "FFG_UPDATE_MAX_TOTAL_IMAGES", 6)
     monkeypatch.setattr(ffg_update_module, "_compact_screenshot_for_llm", lambda value: value)
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id="func_1", name="\u529f\u80fd"))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id="func_1", name="\u529f\u80fd"))
     known_screenshots = [_screenshot(10 + index * 20) for index in range(10)]
     trace = []
     for index, screenshot in enumerate(known_screenshots):

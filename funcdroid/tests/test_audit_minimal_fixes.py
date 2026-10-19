@@ -5,7 +5,7 @@ from copy import deepcopy
 import numpy as np
 import pytest
 
-from model.flow_graph import FlowGraph, FunctionNode, FunctionDependency, Page
+from model.flow_graph import FunctionalFlowGraph, FunctionalityNode, FunctionDependency, Page
 from tools.utils import encode_image_to_jpg_base64
 from workflow import graph as workflow_graph
 from workflow import trace_defect_detection as detector
@@ -45,9 +45,9 @@ def test_deduplicated_bug_and_trace_are_replaced_together(image, better):
 
 
 def cross_graph():
-    graph = FlowGraph()
+    graph = FunctionalFlowGraph()
     for n in range(1, 5):
-        graph.add_node(FunctionNode(id=f'func_{n}', name=f'\u4e1a\u52a1{n}'))
+        graph.add_node(FunctionalityNode(id=f'func_{n}', name=f'\u4e1a\u52a1{n}'))
     graph.add_function_dependency(FunctionDependency('func_3', 'func_1', '\u5171\u4eab\u6570\u636e'))
     graph.record_cross_test('func_3', 'func_1', '\u5171\u4eab\u6570\u636e', '\u4ea7\u751f\u5e76\u8bfb\u56de', 'done')
     graph.record_cross_test('func_1', 'func_4', '\u5176\u4ed6\u6570\u636e', '\u4e0d\u53d7\u5f71\u54cd', 'done')
@@ -64,7 +64,7 @@ def test_merge_preserves_invalidated_evidence_across_patch_and_reload():
     assert graph.cross_test_history[0].items() >= original.items()
     assert ('func_2', 'func_1', 'Functional dependency: \u5171\u4eab\u6570\u636e') in planner._pending_cross_pairs(graph)
     snapshot = graph.to_dict()
-    restored = FlowGraph.from_dict(snapshot)
+    restored = FunctionalFlowGraph.from_dict(snapshot)
     updater.apply_ffg_patch(restored, {}, [])
     assert restored.to_dict() == snapshot
 
@@ -92,14 +92,14 @@ def test_split_archives_evidence_and_invalid_split_is_skipped():
     assert updater.apply_ffg_patch(graph, patch, [])['validation_issues'] == []
     assert 'func_3' not in graph.functions
     assert len(graph.cross_test_history) == 1
-    assert FlowGraph.from_dict(graph.to_dict()).cross_test_history == graph.cross_test_history
+    assert FunctionalFlowGraph.from_dict(graph.to_dict()).cross_test_history == graph.cross_test_history
 
 
 def test_legacy_dangling_cross_evidence_is_preserved_for_review():
     graph = cross_graph()
     del graph.functions['func_3']
     assert any('cross-test' in issue for issue in updater.validate_ffg_invariants(graph))
-    restored = FlowGraph.from_dict(graph.to_dict())
+    restored = FunctionalFlowGraph.from_dict(graph.to_dict())
     assert len(restored.cross_test_results) == 1
     assert restored.cross_test_history[0]['src_function_id'] == 'func_3'
     assert restored.cross_test_history[0]['status'] == 'done'
@@ -112,22 +112,22 @@ def attempt_state(graph):
 
 
 def test_repeated_failure_consumes_attempt_budget_and_survives_reload(monkeypatch):
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id='func_1', test_status='in_progress'))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id='func_1', test_status='in_progress'))
     state = attempt_state(graph)
     monkeypatch.setattr(updater, '_merge_page_audit_results', lambda *a: 0)
     monkeypatch.setattr(updater, '_submit_page_audit_batch', lambda *a: None)
     node = updater.create_ffg_update_node(None)
     for _ in range(20):
         state.update(node(state))
-    restored = FlowGraph.from_dict(graph.to_dict())
+    restored = FunctionalFlowGraph.from_dict(graph.to_dict())
     assert len(restored.get_node('func_1').scenarios) == 1
     assert planner._node_intra_attempt_count(restored.get_node('func_1')) == 20
 
 
 def test_update_pass_counts_attempt_once_per_round(monkeypatch):
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id='func_1'))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id='func_1'))
     state = attempt_state(graph)
     monkeypatch.setattr(updater, '_merge_page_audit_results', lambda *a: 0)
     monkeypatch.setattr(updater, '_submit_page_audit_batch', lambda *a: None)
@@ -137,8 +137,8 @@ def test_update_pass_counts_attempt_once_per_round(monkeypatch):
 
 
 def test_navigation_skips_do_not_consume_intra_attempts():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id='func_1', scenarios=['\u65e7\u573a\u666f']))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id='func_1', scenarios=['\u65e7\u573a\u666f']))
     state = attempt_state(graph)
     state['execution_result']['scenario_status'] = 'skipped'
     updater._apply_non_recordable_execution_outcome(graph, state, state['execution_result'])
@@ -161,8 +161,8 @@ def test_planner_exception_obeys_iteration_limit(monkeypatch):
 
 
 def test_audit_failure_is_not_converted_to_completion():
-    graph = FlowGraph()
-    graph.add_node(FunctionNode(id='func_1', test_status='completed'))
+    graph = FunctionalFlowGraph()
+    graph.add_node(FunctionalityNode(id='func_1', test_status='completed'))
     response = planner._skip_response(graph, None)
     assert not response['workflow_complete']
 
