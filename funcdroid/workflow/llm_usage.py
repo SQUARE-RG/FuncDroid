@@ -16,12 +16,7 @@ _USAGE_PATH = ""
 _LLM_REGISTRY: dict[int, dict[str, str]] = {}
 _USAGE: dict[str, Any] = {}
 
-# 写盘节流：一次工作流有几十上百次 LLM 调用，每次调用会触发 2-3 次计数更新。
-# 若每次都全量序列化落盘，累计几百次磁盘写入。改为累积到阈值或超时才落盘，
-# 关键节点（configure/save_summary）仍强制 flush 保证不丢数据。
-# 单次 LLM 调用本身常需数秒，5s 的间隔几乎让每次请求/响应都触发一次全量
-# 落盘；默认间隔放宽到 30s。高频路径只做原子替换不 fsync，fsync 留给
-# 显式/最终保存（save_llm_usage_summary 默认 durable=True）。
+# Throttle usage persistence to update-count/time thresholds; explicit and final saves flush durably, while frequent writes use atomic replacement without fsync.
 _DIRTY_WRITES = 0
 _LAST_SAVE_MONOTONIC = 0.0
 _LAST_SAVE_ERROR_LOG_MONOTONIC = 0.0
@@ -31,7 +26,7 @@ _SAVE_ERROR_LOG_INTERVAL = max(
     1.0,
     float(os.getenv("LLM_USAGE_SAVE_ERROR_LOG_INTERVAL", "60")),
 )
-# llm_responses.jsonl 中保留的推理文本上限（字符）。落盘用于复盘判定结论的来历。
+# Maximum retained reasoning characters per response for later review.
 LLM_DIAGNOSTIC_REASONING_MAX_CHARS = max(
     0,
     int(os.getenv("LLM_DIAGNOSTIC_REASONING_MAX_CHARS", "4000")),
@@ -93,7 +88,7 @@ def configure_llm_usage(output_dir: str, filename: str = "llm_usage.json", reset
         else:
             _USAGE = _empty_usage(normalized_dir)
         _save_locked()
-    print(f"[LLM统计] token 用量将保存到: {_USAGE_PATH}")
+    print(f"[LLM usage] Token usage will be saved to: {_USAGE_PATH}")
 
 
 def register_llm(llm, *, model: str):
@@ -150,19 +145,16 @@ def get_llm_usage_summary() -> dict[str, Any]:
 
 
 def get_llm_usage_totals() -> dict[str, Any]:
-    """只读取总计计数（浅拷贝）。
-
-    轮次指标/运行状态每轮只需要 totals；get_llm_usage_summary 会经 JSON
-    往返深拷贝整个 by_model/by_operation 结构，长时运行下没有必要。
-    """
+    """Return a shallow copy of totals without copying per-model/per-operation history."""
     with _LOCK:
         totals = _USAGE.get("totals") if _USAGE else None
         return dict(totals) if isinstance(totals, dict) else {}
 
 
 def save_llm_usage_summary(*, durable: bool = True):
-    """显式落盘。durable=False 时只做节流保存（有脏数据且满足阈值才写、不 fsync），
-    供高频检查点使用；最终/显式保存保持 fsync。"""
+    """Persist usage explicitly.
+
+    With durable=False, throttle writes and omit fsync for frequent checkpoints. Final and explicit saves remain durable."""
     with _LOCK:
         if not _USAGE:
             return
@@ -260,7 +252,7 @@ def _extract_usage(response) -> dict[str, int]:
 
     if not total_tokens and (prompt_tokens or completion_tokens):
         total_tokens = prompt_tokens + completion_tokens
-    # 缓存命中量（DeepSeek/GLM 的自动前缀缓存）：命中部分按缓存价计费。
+    # Track cached-input tokens separately for provider prefix-cache accounting.
     cached_tokens = 0
     for usage in candidates:
         if cached_tokens:
@@ -294,7 +286,7 @@ def _int_first(mapping: dict[str, Any], *keys: str) -> int:
 
 
 def _save_due_locked() -> bool:
-    """脏计数达到阈值，或距上次落盘已超过最小间隔。"""
+    """Check the dirty-count threshold or minimum save interval."""
     return (
         _DIRTY_WRITES >= _SAVE_EVERY_N
         or (_time.monotonic() - _LAST_SAVE_MONOTONIC) >= _SAVE_MIN_INTERVAL
@@ -302,11 +294,9 @@ def _save_due_locked() -> bool:
 
 
 def _save_locked_throttled():
-    """按写入次数或时间间隔节流落盘，减少高频全量序列化。
+    """Throttle full serialization by update count or elapsed time.
 
-    每次请求/响应都会走到这里：只累计脏计数，满足阈值时才写盘，且高频
-    路径不做 fsync（只用原子替换保证文件完整），fsync 留给显式/最终保存。
-    """
+    Frequent updates use atomic replacement without fsync; explicit and final saves provide durability."""
     global _DIRTY_WRITES
     _DIRTY_WRITES += 1
     if _save_due_locked():
@@ -324,7 +314,7 @@ def _log_save_error_locked(exc: BaseException) -> None:
     _LAST_SAVE_ERROR_LOG_MONOTONIC = now
     try:
         print(
-            "[LLM统计] 用量文件保存失败，内存计数已保留，后续检查点会重试: "
+            "[LLM usage] Persistence failed; counters remain in memory for the next checkpoint: "
             f"{exc}"
         )
     except Exception:
@@ -370,8 +360,7 @@ def record_llm_diagnostic(response=None, *, operation="", error="", elapsed_seco
         return
     metadata = getattr(response, "response_metadata", {}) or {}
     additional = getattr(response, "additional_kwargs", {}) or {}
-    # 推理模型的最终结论常常只有几个 token，真正的判断过程在 reasoning_content 里。
-    # 不落盘就没法复盘“为什么这条判定给空了”，因此显式保留（截断，避免单条记录过大）。
+    # Persist bounded reasoning text so reviewers can inspect how short final verdicts were reached.
     reasoning = additional.get("reasoning_content") or additional.get("reasoning")
     if not isinstance(reasoning, str):
         reasoning = ""
@@ -391,4 +380,4 @@ def record_llm_diagnostic(response=None, *, operation="", error="", elapsed_seco
             with open(os.path.join(_OUTPUT_DIR, "llm_responses.jsonl"), "a", encoding="utf-8") as stream:
                 stream.write(json.dumps(record, ensure_ascii=False, default=str) + "\n")
     except OSError as exc:
-        print(f"[LLM诊断] 写盘失败: {type(exc).__name__}")
+        print(f"[LLM diagnostics] Persistence failed: {type(exc).__name__}")

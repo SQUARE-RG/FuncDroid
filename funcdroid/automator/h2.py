@@ -15,7 +15,7 @@ from .base import Automator, validate_package_name
 h2_logger = logging.getLogger("hmdriver2")
 h2_logger.setLevel(logging.CRITICAL)
 
-# HarmonyOS 按键码（hmdriver2.proto.KeyCode）：返回、退格、左 Ctrl、A、光标移到末尾。
+# HarmonyOS key codes: Back, Backspace, left Ctrl, A, and End.
 KEYCODE_BACK = 2
 KEYCODE_DEL = 2055
 KEYCODE_CTRL_LEFT = 2072
@@ -25,8 +25,7 @@ KEYCODE_MOVE_END = 2082
 HDC_SCREENSHOT_TIMEOUT = max(1.0, float(os.getenv("HDC_SCREENSHOT_TIMEOUT", "15")))
 HDC_APP_TIMEOUT = max(3.0, float(os.getenv("HDC_APP_TIMEOUT", "30")))
 HDC_SHORT_TIMEOUT = max(1.0, float(os.getenv("HDC_SHORT_TIMEOUT", "10")))
-# 按键清空兜底时额外发送的退格次数（部分输入法/控件不响应 Ctrl+A）；每次是一条
-# hdc 命令，默认关闭，需要时通过环境变量开启。
+# Optional extra backspaces for controls that ignore Ctrl+A; each requires an HDC command and is disabled by default.
 H2_CLEAR_BACKSPACE_COUNT = max(0, int(os.getenv("H2_CLEAR_BACKSPACE_COUNT", "0")))
 HDC_FAILURE_MARKERS = ("error:", "[fail]")
 
@@ -34,7 +33,7 @@ ABILITY_NAME_PATTERN = re.compile(r"^[A-Za-z_][A-Za-z0-9_.]*$")
 
 
 def parse_foreground_mission(output: str) -> tuple[str, str]:
-    """解析 `aa dump -l`，返回前台任务的 (bundle, ability)；与 hmdriver2 的解析口径一致。"""
+    """Parse aa dump -l into the foreground (bundle, ability), matching hmdriver2."""
     for block in re.findall(r"Mission ID #[\s\S]*?isKeepAlive: \w+\s*}", str(output or "")):
         if "state #FOREGROUND" not in block:
             continue
@@ -46,8 +45,7 @@ def parse_foreground_mission(output: str) -> tuple[str, str]:
 
 
 def select_main_ability(bm_dump_output: str) -> str:
-    """从 `bm dump -n <bundle>` 的 JSON 中选出启动 Ability，选择规则与 hmdriver2 的
-    get_app_main_ability 一致：launcher Ability 优先，其次是模块主 Ability、主模块。"""
+    """Select the launcher ability, then module main ability, then main module, matching hmdriver2."""
     text = str(bm_dump_output or "")
     start, end = text.find("{"), text.rfind("}") + 1
     if start < 0 or end <= start:
@@ -68,13 +66,9 @@ def select_main_ability(bm_dump_output: str) -> str:
 
 
 class H2(Automator):
-    """HarmonyOS 自动化后端。
+    """HarmonyOS automation backend.
 
-    hmdriver2 的 hdc 层用 Popen(shell=True).communicate() 执行命令，既没有超时，
-    又把包名拼进 shell 字符串；因此截图、启停应用、返回键、前台查询等设备命令
-    全部改走项目自己的 HDC connector（列表参数 + 硬超时），hmdriver2 只保留
-    UI 注入（click/swipe/input）所需的 RPC 通道。
-    """
+    Use this project's HDC connector with argument lists and bounded timeouts for device commands. Retain hmdriver2 RPC only for GUI input injection."""
 
     def __init__(self, device):
         super().__init__(device)
@@ -82,28 +76,26 @@ class H2(Automator):
         self._driver = Driver(self._serial)
         self._display_size_cache = None
         self._last_frame_size = None
-        logger.debug("hmdriver2 已连接: {}", self._serial)
+        logger.debug("hmdriver2 connected: {}", self._serial)
 
-    # ---- 内部工具 -------------------------------------------------------
+    # Internal helpers.
     def _connector(self):
         connector = getattr(getattr(self, "device", None), "connector", None)
         if connector is None:
-            raise RuntimeError("h2 缺少 HDC connector，无法执行设备命令")
+            raise RuntimeError("h2 requires an HDC connector for device commands")
         return connector
 
     def _hdc_shell(self, args, timeout: float) -> str:
         output = str(self._connector().shell([str(arg) for arg in args], timeout=timeout) or "")
         lowered = output.lower()
         if any(marker in lowered for marker in HDC_FAILURE_MARKERS):
-            raise RuntimeError(f"hdc shell 执行失败: {' '.join(map(str, args))}: {output.strip()[:300]}")
+            raise RuntimeError(f"hdc shell failed: {' '.join(map(str, args))}: {output.strip()[:300]}")
         return output
 
     def _rpc(self, name: str, *args):
-        """调用 hmdriver2 的 UI 方法并绕过其 @delay 固定 0.6s 休眠。
+        """Invoke hmdriver2 GUI methods without the fixed 0.6-second delay decorator.
 
-        工作流自己有 ACTION_DELAY，再叠加 0.6s 只会拖慢每一步；functools.wraps 保留了
-        原函数的 __wrapped__，缺失时（库版本变化）退回带延迟的调用。
-        """
+        The workflow already controls action delays. Fall back to the wrapped method if __wrapped__ is unavailable."""
         method = getattr(type(self._driver), name, None)
         raw = getattr(method, "__wrapped__", None)
         if callable(raw):
@@ -113,10 +105,10 @@ class H2(Automator):
     def _press_key(self, key_code: int) -> None:
         self._hdc_shell(["uitest", "uiInput", "keyEvent", int(key_code)], HDC_SHORT_TIMEOUT)
 
-    # ---- 应用生命周期 ---------------------------------------------------
+    # Application lifecycle.
     def start_app(self, package_name: str):
         package_name = validate_package_name(package_name)
-        logger.info("h2 启动应用: {}", package_name)
+        logger.info("h2 launch application: {}", package_name)
         ability = self._main_ability(package_name)
         return self._hdc_shell(["aa", "start", "-a", ability, "-b", package_name], HDC_APP_TIMEOUT)
 
@@ -124,8 +116,8 @@ class H2(Automator):
         try:
             output = str(self._connector().shell(["bm", "dump", "-n", package_name], timeout=HDC_APP_TIMEOUT) or "")
             ability = select_main_ability(output)
-        except Exception as exc:  # noqa: BLE001 - 解析失败时使用 hmdriver2 的默认值
-            logger.warning("h2 查询主 Ability 失败，使用 MainAbility: {}", exc)
+        except Exception as exc:  # noqa: BLE001 - Use the hmdriver2 default ability if parsing fails.
+            logger.warning("h2 main ability lookup failed; using MainAbility: {}", exc)
             ability = ""
         if not ABILITY_NAME_PATTERN.fullmatch(ability):
             ability = "MainAbility"
@@ -133,10 +125,10 @@ class H2(Automator):
 
     def stop_app(self, package_name: str):
         package_name = validate_package_name(package_name)
-        logger.info("h2 停止应用: {}", package_name)
+        logger.info("h2 stop application: {}", package_name)
         return self._hdc_shell(["aa", "force-stop", package_name], HDC_APP_TIMEOUT)
 
-    # ---- 输入注入（hmdriver2 RPC） --------------------------------------
+    # Input injection through hmdriver2 RPC.
     def click(self, x, y):
         px, py = self._normalize_point(x, y)
         self._rpc("click", int(px), int(py))
@@ -155,31 +147,29 @@ class H2(Automator):
 
     def input(self, text, x=None, y=None, clear: bool = True):
         if x is not None and y is not None:
-            logger.debug("h2 通过坐标输入: ({}, {})", x, y)
+            logger.debug("h2 coordinate input: ({}, {})", x, y)
             self.click(x, y)
             self._wait_for_input_focus()
         if clear:
             self._clear_focused_text()
-        logger.debug("h2 通过焦点控件输入(clear={}): {}", clear, text)
+        logger.debug("h2 focused input(clear={}): {}", clear, text)
         return self._rpc("input_text", text)
 
     def _clear_focused_text(self) -> None:
-        """清空当前焦点输入框，使 input 与 Android 端（send_keys clear=True）语义一致。
+        """Clear the focused field with the same replacement semantics as Android.
 
-        优先用 hmdriver2 的焦点控件 Component.clearText（一次 RPC）；找不到焦点控件
-        时退回按键：Ctrl+A 全选后删除，可选再“移到末尾 + 连续退格”兜底。
-        """
+        Prefer Component.clearText; otherwise use Ctrl+A and delete, optionally followed by end-of-field backspaces."""
         try:
             focused = self._driver(focused=True)
-            # find_component 默认每次重试前 sleep 1s；这里只查一次且不等待。
+            # Query once without the default one-second retry delay.
             if not focused.find_component(retries=1, wait_time=0):
-                raise LookupError("未找到焦点控件")
+                raise LookupError("Focused control not found")
             method = getattr(type(focused), "clear_text", None)
             raw = getattr(method, "__wrapped__", None)
             raw(focused) if callable(raw) else focused.clear_text()
             return
-        except Exception as exc:  # noqa: BLE001 - 退回按键清空
-            logger.debug("h2 焦点控件 clearText 失败，改用按键清空: {}", exc)
+        except Exception as exc:  # noqa: BLE001 - Fall back to keyboard-based clearing.
+            logger.debug("h2 focused clearText failed; clearing with keys: {}", exc)
         try:
             self._hdc_shell(
                 ["uitest", "uiInput", "keyEvent", KEYCODE_CTRL_LEFT, KEYCODE_A], HDC_SHORT_TIMEOUT
@@ -189,23 +179,23 @@ class H2(Automator):
                 self._press_key(KEYCODE_MOVE_END)
                 for _ in range(H2_CLEAR_BACKSPACE_COUNT):
                     self._press_key(KEYCODE_DEL)
-        except Exception as exc:  # noqa: BLE001 - 清空失败仍继续输入，由执行器观察结果
-            logger.warning("h2 清空输入框失败（继续输入）: {}", exc)
+        except Exception as exc:  # noqa: BLE001 - Continue typing after clear failure; let the executor observe the result.
+            logger.warning("h2 field clearing failed; continuing input: {}", exc)
 
     def back(self):
         return self._press_key(KEYCODE_BACK)
 
-    # ---- 屏幕电源 -------------------------------------------------------
+    # Screen power.
     def keep_awake(self) -> None:
         self.wake_screen()
 
     def wake_screen(self) -> None:
         try:
             self._hdc_shell(["power-shell", "wakeup"], HDC_SHORT_TIMEOUT)
-        except Exception as exc:  # noqa: BLE001 - 尽力而为
-            logger.warning("h2 唤醒屏幕失败（忽略继续）: {}", exc)
+        except Exception as exc:  # noqa: BLE001 - Best effort.
+            logger.warning("h2 Could not wake screen; continuing: {}", exc)
 
-    # ---- 前台应用 -------------------------------------------------------
+    # Foreground application.
     def current_activity(self):
         _package_name, page_name = self.current_app()
         return page_name
@@ -219,7 +209,7 @@ class H2(Automator):
             try:
                 return parse_foreground_mission(self._hdc_shell(["aa", "dump", "-l"], HDC_SHORT_TIMEOUT))
             except Exception as exc:  # noqa: BLE001
-                logger.warning("h2 获取当前前台应用失败: {}", exc)
+                logger.warning("h2 foreground query failed: {}", exc)
                 return "", ""
         return self._current_app_from_driver()
 
@@ -230,7 +220,7 @@ class H2(Automator):
         try:
             current = self._driver.current_app()
         except Exception as exc:
-            logger.warning("h2 获取当前前台应用失败: {}", exc)
+            logger.warning("h2 foreground query failed: {}", exc)
             return "", ""
         if isinstance(current, (tuple, list)) and len(current) >= 2:
             return str(current[0] or "").strip(), str(current[1] or "").strip()
@@ -238,10 +228,10 @@ class H2(Automator):
             package_name = current.get("package_name") or current.get("bundle_name") or current.get("package")
             page_name = current.get("page_name") or current.get("ability_name") or current.get("ability")
             return str(package_name or "").strip(), str(page_name or "").strip()
-        logger.warning("h2 当前前台应用返回格式不可识别: {!r}", current)
+        logger.warning("Unrecognized h2 foreground response: {!r}", current)
         return "", ""
 
-    # ---- 截图与尺寸 -----------------------------------------------------
+    # Screenshots and display dimensions.
     def screenshot(self, path=""):
         remote_path = f"/data/local/tmp/_funcdroid_{uuid.uuid4().hex}.jpeg"
         fd, local_path = tempfile.mkstemp(prefix="_funcdroid_h2_", suffix=".jpeg")
@@ -253,26 +243,25 @@ class H2(Automator):
                 ["file", "recv", remote_path, local_path], timeout=HDC_SCREENSHOT_TIMEOUT
             ) or "")
             if any(marker in output.lower() for marker in HDC_FAILURE_MARKERS):
-                raise RuntimeError(f"h2 截图文件拉取失败: {output.strip()[:300]}")
+                raise RuntimeError(f"h2 screenshot transfer failed: {output.strip()[:300]}")
             image = cv2.imread(local_path)
             if image is None:
-                raise RuntimeError(f"h2 截图文件无法解码: {local_path}")
+                raise RuntimeError(f"Cannot decode h2 screenshot file: {local_path}")
             self._record_frame_size(image)
             if path:
-                logger.debug("h2 保存截图: {}", path)
+                logger.debug("h2 save screenshot: {}", path)
                 shutil.copyfile(local_path, path)
             return image
         finally:
             try:
                 self._hdc_shell(["rm", "-f", remote_path], HDC_SHORT_TIMEOUT)
-            except Exception as exc:  # noqa: BLE001 - 远端临时文件清理失败不影响本次截图
-                logger.debug("h2 清理设备端截图临时文件失败: {}", exc)
+            except Exception as exc:  # noqa: BLE001 - Temporary-file cleanup failure must not discard a captured screenshot.
+                logger.debug("Could not remove temporary h2 screenshot from device: {}", exc)
             if os.path.isfile(local_path):
                 os.remove(local_path)
 
     def _resolve_display_size(self):
-        # hmdriver2 的 display_size 是 cached_property，旋转后不会更新；
-        # 先使其失效再读取，保证拿到的是当前方向的尺寸。
+        # Invalidate cached display_size before reading it so rotation is reflected.
         invalidate = getattr(self._driver, "_invalidate_cache", None)
         if callable(invalidate):
             invalidate("display_size")
@@ -286,7 +275,7 @@ class H2(Automator):
         width, height = self.display_size()
 
         def absolute(value, extent):
-            # 与 _normalize_point 一致：只有 [0, 1] 内的浮点数才是比例坐标，整数 0/1 是像素。
+            # Only floats in [0, 1] are relative coordinates; integer 0/1 remains pixels.
             return value * extent if isinstance(value, float) and 0 <= value <= 1 else value
 
         start_x, start_y = absolute(x1, width), absolute(y1, height)

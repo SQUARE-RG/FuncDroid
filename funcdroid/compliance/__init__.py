@@ -1,11 +1,6 @@
-"""App 合规性动态检测（GUI 探索 + 轨迹合规判定）。
+"""Dynamic GUI compliance screening through exploration and trace review.
 
-规则来源：检测规则罗列表，经 GUI 动态可观测性筛选后写入
-compliance/rules.json。检测点分两类：
-- gui_direct：GUI 动态测试可直接判定（本工具核心能力）；
-- gui_collect_llm：GUI 采集截图后由 LLM 做条款文本审查；
-静态分析、流量监控或服务端审计专属条款不进入本规则库和报告。
-"""
+The rule library contains gui_direct checks and gui_collect_llm text review of captured screenshots. Requirements that need static analysis, traffic monitoring, or server-side auditing are outside this library."""
 
 from compliance.rule_library import (
     CHECKPOINT_GROUP_ORDER,

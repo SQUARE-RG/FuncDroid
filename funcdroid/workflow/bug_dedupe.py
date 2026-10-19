@@ -7,11 +7,11 @@ from typing import Any
 
 
 TEXT_NORMALIZE_PATTERN = re.compile(r"[\"'“”‘’（）()【】\[\]{}<>《》、，,。.：:；;!！?？\-_/\s]+")
-# 每次运行 PID/TID 都不同；不剥离会让同一次崩溃被判成两个缺陷重复上报。
+# Remove volatile process/thread IDs to avoid reporting the same crash twice.
 CRASH_VOLATILE_PATTERN = re.compile(r"\b(pid|tid)\s*[:：]?\s*\d+", re.IGNORECASE)
-# 对象哈希（如 Foo@1a2b3c4）每次运行也不同。
+# Object hashes vary between executions.
 CRASH_OBJECT_HASH_PATTERN = re.compile(r"@[0-9a-f]{5,}\b", re.IGNORECASE)
-# logcat 行前缀（时间戳、级别/标签、进程号）每次出现都不同，必须先剥离再提取特征：
+# Strip variable logcat prefixes before extracting identity features.
 #   -v time:       10-05 12:00:01.123 E/AndroidRuntime( 4321): FATAL EXCEPTION: main
 #   -v threadtime: 10-05 12:00:01.123  4321  4350 E AndroidRuntime: FATAL EXCEPTION: main
 #   -v brief:      E/AndroidRuntime( 4321): FATAL EXCEPTION: main
@@ -34,7 +34,7 @@ def normalize_bug_text(value: Any) -> str:
 
 
 def strip_logcat_prefix(line: str) -> str:
-    """剥离单行 logcat 的时间戳/级别/标签/进程号前缀，返回正文。"""
+    """Remove the timestamp, level/tag, and process prefix from a logcat line."""
     text = str(line or "")
     for pattern in LOGCAT_PREFIX_PATTERNS:
         stripped, count = pattern.subn("", text, count=1)
@@ -49,8 +49,7 @@ def _crash_lines(text: str) -> list[str]:
         line = strip_logcat_prefix(raw_line)
         if not line:
             continue
-        # PID/对象哈希是每次运行的易变字段，必须在选特征行之前剥离，
-        # 否则同一崩溃在两次复现里会得到不同的身份键。
+        # Normalize volatile process IDs and object hashes before selecting signature lines.
         line = CRASH_VOLATILE_PATTERN.sub(lambda match: f"{match.group(1).lower()}:", line)
         line = CRASH_OBJECT_HASH_PATTERN.sub("@", line)
         lines.append(line)
@@ -61,7 +60,7 @@ def _extract_crash_signature(text: str) -> str:
     if not text:
         return ""
     lines = _crash_lines(text)
-    # 首选“异常类行 + 第一帧 at”：与时间、进程号、线程名无关，最能代表同一根因。
+    # Prefer the exception class and first stack frame as a stable root-cause signature.
     for position, line in enumerate(lines):
         if not CRASH_EXCEPTION_LINE_PATTERN.search(line):
             continue
@@ -99,15 +98,14 @@ def bug_identity_key(bug: dict[str, Any]) -> str:
     if bug_type == "crash":
         actual_text = str(bug.get("actual") or "")
         crash_signature = _extract_crash_signature(actual_text)
-        # 兜底同样基于剥离 logcat 前缀后的正文，避免时间戳让每次出现都成为新键。
+        # Fallback signatures also exclude variable logcat prefixes.
         stable_actual = normalize_bug_text(" ".join(_crash_lines(actual_text)))
         evidence = crash_signature or stable_actual or description_key
         if not evidence:
             return ""
         return f"crash|{target_key[:64]}|{evidence[:240]}"
 
-    # 场景文本由 LLM 每轮重新生成，纳入身份键会让跨轮去重完全失效；
-    # 同一功能下用户可见后果相同即视为同一缺陷。
+    # Exclude regenerated scenario wording from identity; use functionality and visible consequence.
     evidence = actual_key if len(actual_key) >= 12 else description_key
     if not evidence:
         return ""

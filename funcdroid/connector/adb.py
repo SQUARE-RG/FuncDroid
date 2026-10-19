@@ -16,11 +16,9 @@ ADB_COMMAND_TIMEOUT = max(
 
 
 def parse_adb_devices(output: str) -> list[str]:
-    """解析 `adb devices` 输出，只保留状态为 device（已授权且在线）的序列号。
+    """Parse adb devices and retain only authorized, online device serials.
 
-    offline / unauthorized / recovery 等状态的设备无法执行命令，若计入列表会让
-    后端推断把不可用设备当成可用设备。
-    """
+    Exclude offline, unauthorized, and recovery entries so backend selection cannot treat them as usable devices."""
     devices = []
     for line in str(output or "").splitlines():
         line = line.strip()

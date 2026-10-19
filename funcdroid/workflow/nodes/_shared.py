@@ -1,4 +1,4 @@
-"""节点间共享的常量与轻量 helper。"""
+"""Shared constants and lightweight node utilities."""
 
 from __future__ import annotations
 
@@ -14,24 +14,25 @@ import numpy as np
 
 JSON_BLOCK_PATTERN = re.compile(r"^```(?:json)?\s*|\s*```$")
 
+# Unicode escapes preserve multilingual UI and legacy scenario matching.
 EXHAUSTIVE_CONTROL_FAMILY_PATTERN = re.compile(
-    r"(?:所有|全部|每个|逐个|逐一|遍历)"
+    r"(?:\u6240\u6709|\u5168\u90e8|\u6bcf\u4e2a|\u9010\u4e2a|\u9010\u4e00|\u904d\u5386)"
     r"[^→，,.\u3002；;]{0,28}?"
-    r"(?:表情|选项|条目|按钮|控件|标签|分类|菜单项|导航项|列表项|图标|项目|结果)"
+    r"(?:\u8868\u60c5|\u9009\u9879|\u6761\u76ee|\u6309\u94ae|\u63a7\u4ef6|\u6807\u7b7e|\u5206\u7c7b|\u83dc\u5355\u9879|\u5bfc\u822a\u9879|\u5217\u8868\u9879|\u56fe\u6807|\u9879\u76ee|\u7ed3\u679c)"
     r"|\b(?:all|every|each)\b.{0,28}\b"
     r"(?:items?|options?|buttons?|tabs?|emojis?|entries?|results?)\b",
     re.IGNORECASE,
 )
 
 EXPLICIT_BULK_OPERATION_PATTERN = re.compile(
-    r"全选按钮|点击全选|选择全部(?:内容|文本|文件)|删除全部|全部删除|"
-    r"清空全部|全部清除|一键(?:清空|删除)|\bselect all\b|\bdelete all\b|\bclear all\b",
+    r"\u5168\u9009\u6309\u94ae|\u70b9\u51fb\u5168\u9009|\u9009\u62e9\u5168\u90e8(?:\u5185\u5bb9|\u6587\u672c|\u6587\u4ef6)|\u5220\u9664\u5168\u90e8|\u5168\u90e8\u5220\u9664|"
+    r"\u6e05\u7a7a\u5168\u90e8|\u5168\u90e8\u6e05\u9664|\u4e00\u952e(?:\u6e05\u7a7a|\u5220\u9664)|\bselect all\b|\bdelete all\b|\bclear all\b",
     re.IGNORECASE,
 )
 
 
 def has_exhaustive_control_family_intent(value: object) -> bool:
-    """识别要求穷尽同功能重复控件的场景，但保留真正的单次批量操作。"""
+    """Identify exhaustive same-functionality control exploration while retaining single bulk operations."""
     text = str(value or "").strip()
     if not text:
         return False
@@ -40,7 +41,7 @@ def has_exhaustive_control_family_intent(value: object) -> bool:
 
 
 class BoundedCache:
-    """按插入/访问顺序淘汰的有界 LRU 缓存（单线程场景使用）。"""
+    """Bounded least-recently-used cache for single-threaded execution."""
 
     def __init__(self, max_entries: int):
         self.max_entries = max(1, int(max_entries))
@@ -68,15 +69,14 @@ class BoundedCache:
         return len(self._items)
 
 
-# 截图解码缓存：同一张截图在规划（当前页匹配）、执行（动作效果、三个停滞
-# 检测器）中会被反复解码。按截图内容哈希缓存，避免持有大字符串本身。
+# Cache decoded screenshots shared by planning, action comparison, and stagnation detection. Use content hashes instead of retaining large screenshot strings.
 SCREENSHOT_DECODE_CACHE_SIZE = max(8, int(os.getenv("SCREENSHOT_DECODE_CACHE_SIZE", "512")))
 _THUMBNAIL_CACHE = BoundedCache(SCREENSHOT_DECODE_CACHE_SIZE)
 _CHANGE_IMAGE_CACHE = BoundedCache(max(8, SCREENSHOT_DECODE_CACHE_SIZE // 8))
 
 
 def screenshot_digest(screenshot: str) -> str:
-    """截图内容哈希，用作解码缓存键。"""
+    """Hash screenshot content for the decoding cache key."""
     return hashlib.blake2b(str(screenshot or "").encode("utf-8"), digest_size=16).hexdigest()
 
 
@@ -95,10 +95,9 @@ def _decode_thumbnail(screenshot: str, size: int) -> np.ndarray | None:
 
 
 def screenshot_thumbnail(screenshot: str, size: int = 64) -> np.ndarray | None:
-    """把截图字符串解码为灰度缩略图；无法解码时返回 None。
+    """Decode a screenshot into a grayscale thumbnail, or return None on failure.
 
-    结果按截图内容哈希缓存（有界 LRU），返回的数组只读，调用方需要修改时自行复制。
-    """
+    Cache by content hash in a bounded LRU. Cached arrays are read-only; copy before editing."""
     if not screenshot:
         return None
     key = (screenshot_digest(screenshot), int(size))
@@ -111,8 +110,7 @@ def screenshot_thumbnail(screenshot: str, size: int = 64) -> np.ndarray | None:
     return thumbnail
 
 
-# 动作效果比较：顶部系统状态栏（时钟、信号）会自行变化，不计入界面变化；
-# 单像素灰度差超过阈值才算“变了”，以免 JPEG 噪声和光标闪烁被当成响应。
+# Ignore the changing system status bar. Apply a per-pixel threshold so JPEG noise and cursor blinking do not count as action responses.
 CHANGE_DIFF_WIDTH = 240
 CHANGE_STATUS_BAR_RATIO = 0.04
 CHANGE_PIXEL_THRESHOLD = 40
@@ -131,7 +129,7 @@ def _gray_image(screenshot: str) -> np.ndarray | None:
 
 
 def _change_diff_image(screenshot: str) -> tuple[int, int, np.ndarray] | None:
-    """返回 (原图高, 原图宽, 按 CHANGE_DIFF_WIDTH 等比缩放的灰度图)，按内容哈希缓存。"""
+    """Return original height, original width, and grayscale image scaled to CHANGE_DIFF_WIDTH; cache by content hash."""
     if not screenshot:
         return None
     key = screenshot_digest(screenshot)
@@ -155,7 +153,7 @@ def _change_small_image(
     cached: tuple[int, int, np.ndarray],
     height: int,
 ) -> np.ndarray | None:
-    """取缩放到 (CHANGE_DIFF_WIDTH, height) 的灰度图；与缓存尺寸一致时直接复用。"""
+    """Return grayscale pixels scaled to (CHANGE_DIFF_WIDTH, height), reusing matching cached dimensions."""
     if cached[2].shape[0] == height:
         return cached[2]
     image = _gray_image(screenshot)
@@ -168,12 +166,11 @@ def screenshot_change_region(
     before: str,
     after: str,
 ) -> tuple[float, tuple[float, float, float, float] | None] | None:
-    """比较动作前后截图，返回 (变化像素占比, 变化区域外接框)。
+    """Compare screenshots and return the changed-pixel ratio and enclosing region.
 
-    外接框用 0–1 的相对坐标 (left, top, right, bottom) 表示，调用方按当前
-    图片尺寸换算；无变化时外接框为 None。无法解码或比例不一致时返回 None。
-    缩放后的灰度图按截图内容哈希缓存，最近几步效果反复计算时不再全尺寸解码。
-    """
+    The region uses relative (left, top, right, bottom) coordinates in [0, 1].
+    Return a None region when unchanged, or None for decoding or aspect-ratio failures.
+    Cache scaled grayscale pixels by content hash to avoid repeated full-resolution decoding."""
     left_cached = _change_diff_image(before)
     right_cached = _change_diff_image(after)
     if left_cached is None or right_cached is None:
@@ -219,12 +216,10 @@ def screenshot_similarity(left: str, right: str, size: int = 64) -> float | None
 
 
 def normalize_llm_text(content: Any) -> str:
-    """把 LLM 响应的 content 归一化为纯文本。
+    """Normalize LLM response content into plain text.
 
-    多数模型返回 str，但部分模型返回 list-of-blocks（如 [{"type":"text","text":...}]）。
-    直接对 list 调 .strip() 会抛异常，被上层的宽泛 except 吞掉后误判为解析失败，
-    导致一次结构合法的响应被丢弃。这里统一先抽取文本。
-    """
+    Accept strings and lists of text blocks. Extract text before parsing so a valid
+    block response is not discarded by calling string methods on a list."""
     if content is None:
         return ""
     if isinstance(content, str):

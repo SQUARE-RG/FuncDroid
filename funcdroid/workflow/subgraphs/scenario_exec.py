@@ -17,35 +17,31 @@ from workflow.state import AgentState
 
 
 def create_scenario_exec_subgraph(execution_llm, device):
-    """Compile action agent -> submit async reviews.
+    """Compile the action agent followed by asynchronous review submission.
 
-    判定不阻塞本子图：只读取已完成的 navigation/test trace（不触碰设备），
-    交给后台线程，外层工作流直接进入 `ffg_update`。每次运行只启用所选模式
-    的判定器；缺陷模式提交缺陷轨迹，合规模式提交条款取证（普通探索场景
-    没有关联检测点，跳过合规判定）。
-    """
+    Review completed navigation/test traces without touching the device. Enable only the selected reviewer; ordinary exploration without associated checks skips rule review."""
     execution_pass = create_scenario_execution_pass(execution_llm, device)
 
     def submit_reviews(state: AgentState) -> dict[str, Any]:
         if bool(state.get("compliance_detection_enabled", False)):
             check_ids = plan_check_ids(state.get("current_plan"))
             if not check_ids:
-                print("[合规检测] 本轮为普通探索场景，无关联合规检测点，跳过判定。")
+                print("[Compliance review] Ordinary exploration has no associated checks; skipping review.")
             else:
                 accepted = False
                 try:
                     accepted = compliance_worker.submit(build_compliance_detection_job(state))
                 except Exception as exc:
-                    print(f"[合规检测] 提交异步判定任务失败，本轮判定已跳过: {exc}")
+                    print(f"[Compliance review] Background submission failed; skipping this review: {exc}")
                 if not accepted:
-                    compliance_worker.defer_checks(check_ids, "执行轨迹未成功进入合规判定队列，等待补测")
+                    compliance_worker.defer_checks(check_ids, "Execution trace was not queued for compliance review; awaiting another attempt")
 
         if bool(state.get("bug_detection_enabled", True)):
             try:
                 bug_detection_worker.submit(build_defect_detection_job(state))
             except Exception as exc:
                 bug_detection_worker.record_failure(state, exc)
-                print(f"[缺陷检测] 提交异步检测任务失败，本轮缺陷复核已跳过: {exc}")
+                print(f"[Bug detection] Background submission failed; skipping this review: {exc}")
         return {}
 
     graph = StateGraph(AgentState)

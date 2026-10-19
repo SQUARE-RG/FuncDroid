@@ -1,8 +1,6 @@
-"""后台检测线程的公共骨架：单一后台线程顺序消费队列。
+"""Shared serial background-worker queue.
 
-缺陷检测、合规判定、页面审计都只读取已拍好的截图做 LLM 调用，不触碰设备，
-因此放到后台线程与设备操作重叠。单线程顺序处理让结果合并天然无竞态。
-"""
+Reviewers consume previously captured screenshots without device access, overlapping model calls with GUI execution. A single consumer serializes result merging."""
 
 from __future__ import annotations
 
@@ -14,24 +12,21 @@ import traceback
 import uuid
 from typing import Any, Callable
 
-# 队列满时 submit 等待空位的总时长上限（秒）；超时放弃并记录失败，避免后台线程
-# 卡死时把主循环永久阻塞。<=0 表示不设上限（不推荐）。
+# Bound queue-slot waiting to avoid blocking the main loop indefinitely; nonpositive values disable the limit.
 SUBMIT_WAIT_TIMEOUT_SECONDS = float(os.getenv("WORKER_SUBMIT_WAIT_TIMEOUT_SECONDS", "600") or 600)
-# 等待空位时每次 wait 的时间片：醒来后检查后台线程存活并按需重启。
+# Check worker liveness between bounded waits and restart it if needed.
 _SUBMIT_WAIT_SLICE_SECONDS = 1.0
 UNFINISHED_ERROR_TYPE = "ReviewUnfinished"
 
 
 class SubmitTimeoutError(TimeoutError):
-    """队列持续满载，submit 在超时内未等到空位。"""
+    """The queue remained full until the submission timeout."""
 
 
 def build_trace_job(state: dict[str, Any], *extra_fields: str, with_trace_id: bool = False) -> dict[str, Any]:
-    """从工作流状态抽取判定任务的只读快照（缺陷检测/合规检测共用）。
+    """Capture a read-only review-job snapshot from workflow state.
 
-    trace 元素生成后不再被原地修改，浅拷贝列表即可；extra_fields 为按字符串
-    复制的附加字段。
-    """
+    Trace elements are immutable after creation, so copying the list is sufficient. Extra fields are copied as strings."""
     navigation_trace = state.get("navigation_execution_trace", [])
     scenario_trace = state.get("scenario_execution_trace", [])
     job: dict[str, Any] = {}
@@ -50,12 +45,12 @@ def build_trace_job(state: dict[str, Any], *extra_fields: str, with_trace_id: bo
 
 
 class SerialWorker:
-    """单一后台线程 + 有界待处理计数。子类实现 `_process_job`。"""
+    """One background consumer with bounded pending count; subclasses implement _process_job."""
 
-    log_prefix = "[后台线程]"
+    log_prefix = "[Worker]"
     thread_name = "serial-worker"
     default_max_pending = 8
-    # True：队列满时丢弃并计数（页面审计可随时重提）；False：阻塞等待空位，不丢证据。
+    # Drop and count full-queue submissions only when the work can be retried later.
     drop_when_full = False
 
     def __init__(self) -> None:
@@ -69,7 +64,7 @@ class SerialWorker:
         self._pending = 0
         self._rejected_count = 0
         self._max_pending = self.default_max_pending
-        # 已提交但尚未处理完的任务（含正在处理的一个），flush 超时时据此留痕。
+        # Track all pending jobs, including the active job, for timeout reporting.
         self._outstanding: dict[int, dict[str, Any]] = {}
         self._timed_out_ids: set[int] = set()
         self._next_job_id = 0
@@ -95,12 +90,9 @@ class SerialWorker:
         thread.start()
 
     def submit(self, job: dict[str, Any], timeout: float | None = None) -> bool:
-        """提交任务；成功入队返回 True。
+        """Submit a job, returning True only after it enters the queue.
 
-        队列满时：drop_when_full 直接丢弃返回 False；否则按时间片等待空位，
-        每片醒来检查后台线程是否存活（死亡则重启），总等待超过 timeout
-        （默认 SUBMIT_WAIT_TIMEOUT_SECONDS）仍无空位则记录失败并返回 False。
-        """
+        When full, either drop immediately or wait in bounded intervals, restarting a dead worker as needed. Record failure if the overall submission timeout expires."""
         self._ensure_worker_started()
         wait_limit = SUBMIT_WAIT_TIMEOUT_SECONDS if timeout is None else float(timeout)
         deadline = time.monotonic() + wait_limit if wait_limit > 0 else None
@@ -111,12 +103,12 @@ class SerialWorker:
                 if self.drop_when_full:
                     self._rejected_count += 1
                     print(
-                        f"{self.log_prefix} 队列已达上限，本次提交被丢弃: "
-                        f"pending={self._pending}, 累计丢弃={self._rejected_count}"
+                        f"{self.log_prefix} Queue is full; submission dropped: "
+                        f"pending={self._pending}, total_dropped={self._rejected_count}"
                     )
                     return False
                 if not announced:
-                    print(f"{self.log_prefix} 待处理任务已达上限，等待空位: pending={self._pending}")
+                    print(f"{self.log_prefix} Pending limit reached; waiting for queue space: pending={self._pending}")
                     announced = True
                 remaining = None if deadline is None else deadline - time.monotonic()
                 if remaining is not None and remaining <= 0:
@@ -127,10 +119,10 @@ class SerialWorker:
                 )
                 self._idle_cond.wait(slice_seconds)
                 if self._thread is None or not self._thread.is_alive():
-                    # 后台线程意外退出时队列永远不会被消费；锁外重启后继续等待。
+                    # Restart a dead consumer outside the lock, then continue waiting.
                     self._idle_cond.release()
                     try:
-                        print(f"{self.log_prefix} 后台线程已退出，重新启动以继续消费队列")
+                        print(f"{self.log_prefix} Worker stopped; restarting queue consumer")
                         self._ensure_worker_started()
                     finally:
                         self._idle_cond.acquire()
@@ -141,11 +133,11 @@ class SerialWorker:
                 job_id = self._next_job_id
                 self._outstanding[job_id] = job
         if timed_out:
-            print(f"{self.log_prefix} 等待队列空位超时（{wait_limit:.0f}s），本次提交放弃并记入失败")
-            self.record_failure(job, SubmitTimeoutError(f"等待判定队列空位超时（{wait_limit:.0f}s）"))
+            print(f"{self.log_prefix} Timed out waiting for queue space ({wait_limit:.0f}s); recording submission failure")
+            self.record_failure(job, SubmitTimeoutError(f"Timed out waiting for review queue space ({wait_limit:.0f}s)"))
             return False
         self._queue.put((job_id, job))
-        print(f"{self.log_prefix} 已提交异步任务: pending={pending}")
+        print(f"{self.log_prefix} Submitted background job: pending={pending}")
         return True
 
     def _worker_loop(self) -> None:
@@ -153,8 +145,8 @@ class SerialWorker:
             job_id, job = self._queue.get()
             try:
                 self._process_job(job)
-            except Exception as exc:  # noqa: BLE001 - 后台线程需要吞掉异常继续消费
-                print(f"{self.log_prefix} 处理任务失败: {exc}")
+            except Exception as exc:  # noqa: BLE001 - Keep consuming after an individual job exception.
+                print(f"{self.log_prefix} Job processing failed: {exc}")
                 print(traceback.format_exc())
                 self.record_failure(job, exc)
             finally:
@@ -164,9 +156,7 @@ class SerialWorker:
                     self._outstanding.pop(job_id, None)
                     if job_id in self._timed_out_ids:
                         self._timed_out_ids.discard(job_id)
-                        # flush 超时时记过“判定未完成”，任务随后结束：成功则结论已合并，
-                        # 失败则上面已按真实异常留痕。两种情况都撤销那条“未完成”记录，
-                        # 避免产物里同一任务既有结论又报未完成（或重复计失败）。
+                        # Remove an unfinished marker after the job finishes, whether successfully or with a recorded failure.
                         before = len(self._failures)
                         self._failures = [
                             failure for failure in self._failures
@@ -190,7 +180,7 @@ class SerialWorker:
             try:
                 callback()
             except Exception as exc:  # noqa: BLE001
-                print(f"{self.log_prefix} 落盘回调失败: {exc}")
+                print(f"{self.log_prefix} Persistence callback failed: {exc}")
 
     def _failure_record(self, job: dict[str, Any], exc: BaseException) -> dict[str, Any]:
         return {
@@ -202,10 +192,10 @@ class SerialWorker:
         }
 
     def _on_failure_locked(self, job: dict[str, Any], exc: BaseException) -> None:
-        """子类钩子：在锁内同步更新自身结果状态。"""
+        """Subclass hook to update result state under the lock."""
 
     def _on_unfinished_locked(self, job: dict[str, Any], exc: BaseException) -> None:
-        """子类钩子：flush 超时仍未完成的任务；默认与普通失败相同处理。"""
+        """Subclass hook for jobs unfinished at flush timeout; defaults to ordinary failure handling."""
         self._on_failure_locked(job, exc)
 
     def record_failure(self, job: dict[str, Any], exc: BaseException) -> None:
@@ -229,10 +219,9 @@ class SerialWorker:
             return self._rejected_count
 
     def flush(self, timeout: float | None = None) -> bool:
-        """等待已提交任务全部完成；全部完成返回 True，超时返回 False。
+        """Wait for submitted jobs; return False on timeout.
 
-        timeout=None 表示无限等待；timeout<=0 表示不等待，只报告当前是否已空闲。
-        """
+        None waits indefinitely; nonpositive timeout only checks whether the worker is idle."""
         with self._idle_cond:
             if timeout is not None and timeout <= 0:
                 return self._pending <= 0
@@ -245,11 +234,9 @@ class SerialWorker:
             return True
 
     def record_unfinished(self, reason: str) -> int:
-        """把仍未完成的任务记为“判定未完成”失败，保证产物可按迭代/条款追溯。
+        """Record unfinished jobs once for traceable reporting.
 
-        同一任务只留痕一次；任务若之后仍在后台成功完成，其结论照常合并，并按
-        job_id 撤销这条“判定未完成”记录。
-        """
+        A later completion still merges its result and removes the unfinished marker by job_id."""
         with self._lock:
             unfinished = [
                 (job_id, job) for job_id, job in self._outstanding.items()
@@ -269,7 +256,7 @@ class SerialWorker:
         return len(unfinished)
 
     def reset(self) -> None:
-        """恢复到未配置的初始状态；仅供测试隔离使用。"""
+        """Restore unconfigured initial state for isolated tests."""
         with self._lock:
             self._llm = None
             self._on_batch_done = None
@@ -280,7 +267,7 @@ class SerialWorker:
             self._outstanding = {}
             self._timed_out_ids = set()
             self._next_job_id = 0
-            # 丢弃尚未被消费的任务；正在处理的任务完成后只会把 _pending 下限钳到 0。
+            # Discard queued jobs; active jobs later clamp the pending count at zero.
             while True:
                 try:
                     self._queue.get_nowait()

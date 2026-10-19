@@ -1,1 +1,1 @@
-"""LangGraph 工作流包。"""
+"""LangGraph workflow package."""

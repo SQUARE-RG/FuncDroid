@@ -1,10 +1,6 @@
-"""执行轨迹合规判定。
+"""Review execution traces against associated compliance checkpoints.
 
-与 trace_defect_detection 平行的管线：输入一次执行轨迹 + 关联的合规检测点，
-输出每个检测点的 verdict（compliant/violation/undetermined）。
-截图直接复用采集阶段的统一高清编码，避免二次缩放和有损压缩：合规证据要读取
-弹窗小字，且 COORDINATE_CONTEXT 声明的执行器图片尺寸必须与复核图片一致。
-"""
+Return a verdict per rule using original execution JPEGs. Reusing image dimensions preserves coordinate context and small text legibility."""
 
 from __future__ import annotations
 
@@ -39,14 +35,14 @@ from tools.utils import decode_screenshot
 
 
 class ComplianceReviewError(RuntimeError):
-    """判定模型调用/解析在重试耗尽后仍未成功，与"模型正常返回但漏答某条款"区分开。"""
+    """Model invocation or parsing still failed after retries, distinct from an omitted rule verdict."""
 
 
 TERMINAL_EVIDENCE_VERDICTS = {VERDICT_COMPLIANT, VERDICT_VIOLATION, VERDICT_NOT_APPLICABLE}
 
 
 def _collect_steps(trace: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    """合规取证保留全部步骤（含弹窗/恢复步骤），只要求带页面观测。"""
+    """Keep all observed steps, including dialogs and recovery, when page evidence exists."""
     steps: list[dict[str, Any]] = []
     for raw_index, step in enumerate(trace, start=1):
         if not isinstance(step, dict):
@@ -60,10 +56,9 @@ def _collect_steps(trace: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 
 def _compact_screenshot(screenshot: str) -> str:
-    """复用执行时的 JPEG（只剥离 data URL 前缀）；不再继承 FFG 参数或重复压缩证据图片。
+    """Reuse the execution JPEG, removing only its data-URL prefix.
 
-    这里刻意不走 workflow.image_compact：缩放会让复核图片与执行器图片尺寸不一致。
-    """
+    Do not resize review evidence or change the coordinate reference dimensions."""
     screenshot = str(screenshot or "").strip()
     if screenshot.startswith("data:image") and "," in screenshot:
         screenshot = screenshot.split(",", 1)[1]
@@ -71,7 +66,7 @@ def _compact_screenshot(screenshot: str) -> str:
 
 
 def _downgrade_without_evidence(normalized: dict[str, Any], reason: str) -> dict[str, Any]:
-    """终态结论没有有效截图证据时降级为 undetermined（原地更新并返回）。"""
+    """Downgrade unsupported terminal verdicts to undetermined in place."""
     if normalized["verdict"] in TERMINAL_EVIDENCE_VERDICTS and not normalized["evidence"]:
         normalized["verdict"] = VERDICT_UNDETERMINED
         normalized["description"] = reason + normalized["description"]
@@ -92,7 +87,7 @@ def _normalize_result(item: dict[str, Any]) -> dict[str, Any] | None:
         or not str(applicability.get("explanation", "") or "").strip()
     ):
         verdict = VERDICT_UNDETERMINED
-        description = "缺少排除条款适用性的正向证据，暂未观察到不等于不适用。" + description
+        description = "No positive evidence excludes applicability; not observed does not mean not applicable. " + description
     return _downgrade_without_evidence(
         {
             "check_id": check_id,
@@ -101,7 +96,7 @@ def _normalize_result(item: dict[str, Any]) -> dict[str, Any] | None:
             "evidence": evidence,
             **({"applicability": applicability} if applicability else {}),
         },
-        "判定模型未提供有效截图证据。",
+        "The reviewer did not provide valid screenshot evidence. ",
     )
 
 
@@ -110,7 +105,7 @@ def _validate_functionality_evidence(item, steps):
     chain = item.get("functionality_evidence")
     if not isinstance(chain, dict):
         return False
-    # 与 evidence 归一化同一套步号规则：接受 5 与 "5"，拒绝 bool/0/负数。
+    # Accept positive integer steps, including numeric strings; reject booleans and nonpositive values.
     indices = [
         coerce_step(chain.get(key))
         for key in ("denial_step", "functional_action_step", "result_observation_step")
@@ -170,23 +165,23 @@ def _build_messages(
         hints = "；".join(checkpoint.get("verdict_hints") or [])
         check_lines.append(
             f"- {rule['rule_id']}（{rule['regulation']}）：{rule['clause']}"
-            + (f"｜判定要点：{hints}" if hints else "")
+            + (f" | Review hints: {hints}" if hints else "")
         )
     header_text = (
-        "【合规检测轨迹判定】\n"
-        "以下是本轮合规取证场景的完整动作序列，每一步都附带该动作执行前的截图。\n\n"
-        "【本轮检测条款】\n" + "\n".join(check_lines) + "\n\n"
-        "【场景目标】\n"
+        "[Compliance trace review]\n"
+        "The complete evidence-collection trace follows; each step includes its pre-action screenshot.\n\n"
+        "[Rules under review]\n" + "\n".join(check_lines) + "\n\n"
+        "[Scenario objective]\n"
         f"{str(state.get('current_test_scenario', ''))[:800]}\n\n"
-        "- ACTION_DESCRIPTION、动作参数与截图共同说明实际执行了哪个动作；例如“点击禁止按钮”"
-        "不能被概括成未执行拒绝。\n"
-        "- STEP N 的截图也是 STEP N-1 动作后的结果观测；只有最后一步没有后续结果截图。\n"
-        "- 步骤里的系统权限弹窗、应用内同意弹窗、设置开关截图是核心证据，重点读取其中的文案与按钮。\n"
-        "- 对要求拒绝后基本功能可用的条款，compliant 必须附 functionality_evidence："
-        "{denial_step:实际拒绝步骤, functional_action_step:拒绝后实际验证基本功能的步骤, "
-        "result_observation_step:后续结果截图步骤, observed_result:实际成功结果描述}。"
-        "入口可见、回到首页、代理的 thought 均不能证明功能可用；未实际验证则 undetermined。"
-        "- 每个条款都要给出结论；轨迹没有覆盖到的条款给 undetermined，不要臆断。"
+        "- ACTION_DESCRIPTION, parameters, and screenshots jointly identify the executed action; clicking a Deny button "
+        "must not be described as never denying permission.\n"
+        "- STEP N also observes the result of STEP N-1; the final step has no later result screenshot.\n"
+        "- Permission dialogs, consent dialogs, and settings controls are core evidence; inspect their text and buttons.\n"
+        "- For rules requiring basic functionality after denial, compliant must include functionality_evidence: "
+        "{denial_step: actual denial step, functional_action_step: basic functionality action after denial, "
+        "result_observation_step: later result screenshot step, observed_result: observed successful outcome}. "
+        "A visible entry, returning home, or agent reasoning does not prove usability; without execution, return undetermined. "
+        "- Return a verdict for every rule; use undetermined when the trace does not cover it."
     )
     message_content: list[dict[str, Any]] = [{"type": "text", "text": header_text}]
     previous_raw_index: int | None = None
@@ -196,16 +191,15 @@ def _build_messages(
         text = build_step_text(
             step,
             raw_index,
-            coordinate_note="请区分图片坐标与屏幕坐标，不能仅凭执行器的文字判断点击是否命中目标。",
+            coordinate_note="Distinguish image and screen coordinates; executor prose alone cannot prove a tap hit its target.",
         )
-        # 只有上一条保留步骤正好是原始轨迹的前一步时，当前截图才是它的动作结果；
-        # 中间有无截图而被跳过的步骤时，这张图反映的是被跳过步骤之后的界面。
+        # A screenshot observes the previous retained action only when their original step indices are consecutive.
         if compact and previous_raw_index is not None and previous_raw_index == raw_index - 1:
             text += (
-                f"\n[OBSERVES_PREVIOUS_RESULT] 当前图片是 STEP {previous_raw_index} "
-                "动作执行后的界面。"
+                f"\n[OBSERVES_PREVIOUS_RESULT] This image shows the state after STEP {previous_raw_index} "
+                "was executed."
             )
-        text += image_ref_text(raw_index, has_image=bool(compact), image_note="动作执行前的界面。")
+        text += image_ref_text(raw_index, has_image=bool(compact), image_note="state before the action.")
         message_content.append({"type": "text", "text": text})
         if compact:
             message_content.append(image_block(compact))
@@ -220,7 +214,7 @@ def analyze_execution_for_compliance(
     llm,
     state: dict[str, Any],
 ) -> dict:
-    """对一次合规取证轨迹做条款判定，返回 {check_results}。"""
+    """Review one evidence trace and return check_results."""
     check_ids = [
         str(item).strip()
         for item in (state.get("current_plan", {}) or {}).get("compliance_check_ids", []) or []
@@ -238,13 +232,13 @@ def analyze_execution_for_compliance(
     steps = _collect_steps(navigation_trace + scenario_trace)
 
     if not steps:
-        # 没有任何带截图的步骤：全部条款记 undetermined，仍要销项避免死循环。
+        # Without screenshot-bearing steps, mark every rule undetermined and finish this review attempt.
         return {
             "check_results": [
                 {
                     "check_id": rule["rule_id"],
                     "verdict": VERDICT_UNDETERMINED,
-                    "description": "本轮轨迹没有任何带截图的步骤，无法取证。",
+                    "description": "This trace contains no screenshot-bearing steps; evidence is unavailable.",
                     "evidence": [],
                 }
                 for rule in rules
@@ -252,26 +246,22 @@ def analyze_execution_for_compliance(
         }
 
     print(
-        f"[合规检测] 输入状态: check_ids={len(rules)}, "
+        f"[Compliance review] Input state: check_ids={len(rules)}, "
         f"recordable_steps={len(steps)}"
     )
     messages = _build_messages(state, steps, rules)
     result = invoke_llm_json_with_retry(
         llm,
         messages,
-        log_prefix="[合规检测]",
+        log_prefix="[Compliance review]",
         json_block_pattern=JSON_BLOCK_PATTERN,
     )
     if llm_json_result_failed(result):
-        # H4: 调用/解析重试耗尽是基础设施失败，不是"模型正常返回但漏答该条款"。
-        # 之前这里直接往下走，把两种情况都写成同一句 undetermined 兜底文案
-        # （"判定模型未返回该条款结论。"），main.py 的产物校验也不检查这类失败，
-        # 导致合规判定整体失效时产物仍可能标记为 success/complete。抛出异常，
-        # 交给 compliance_worker 记入 failures 并按基础设施失败处理。
-        raise ComplianceReviewError(getattr(result, "failure_reason", "模型判定失败"))
+        # Exhausted model/parse retries are infrastructure failures, distinct from an omitted verdict; raise so the worker records artifact incompleteness.
+        raise ComplianceReviewError(getattr(result, "failure_reason", "Model review failed"))
     raw_results = _extract_raw_check_results(result)
     print(
-        "[合规检测] 模型返回结构: "
+        "[Compliance review] Model response structure: "
         f"top_keys={list(result)[:8] if isinstance(result, dict) else []}, "
         f"raw_results={len(raw_results)}, "
         f"ids={[str(item.get('check_id', '') or item.get('rule_id', '')) for item in raw_results[:12]]}"
@@ -286,24 +276,24 @@ def analyze_execution_for_compliance(
                 evidence for evidence in normalized["evidence"]
                 if evidence["global_step"] in observed_indices
             ]
-            _downgrade_without_evidence(normalized, "判定引用的步骤没有有效截图证据。")
+            _downgrade_without_evidence(normalized, "Referenced steps do not have valid screenshot evidence. ")
             rule = rules_by_id.get(normalized["check_id"], {})
             requires_functionality = rule.get("checkpoint", {}).get("requires_functionality_evidence", False)
             if normalized["verdict"] == VERDICT_COMPLIANT and requires_functionality:
                 if not _validate_functionality_evidence(item, steps):
                     normalized["verdict"] = VERDICT_UNDETERMINED
-                    normalized["description"] = "缺少拒绝后实际验证基本功能及结果截图的完整证据链。" + normalized["description"]
+                    normalized["description"] = "Missing a complete chain of denial, actual basic-functionality execution, and a later result screenshot. " + normalized["description"]
                 else:
                     normalized["functionality_evidence"] = dict(item["functionality_evidence"])
             normalized_by_id[normalized["check_id"]] = normalized
-    # LLM 漏掉的条款补 undetermined，保证每个 check_id 都有结论。
+    # Fill omitted rules with undetermined so every check_id receives a result.
     check_results = [
         normalized_by_id.get(
             rule["rule_id"],
             {
                 "check_id": rule["rule_id"],
                 "verdict": VERDICT_UNDETERMINED,
-                "description": "判定模型未返回该条款结论。",
+                "description": "The reviewer omitted this rule verdict.",
                 "evidence": [],
             },
         )
@@ -312,5 +302,5 @@ def analyze_execution_for_compliance(
     verdict_counts: dict[str, int] = {}
     for item in check_results:
         verdict_counts[item["verdict"]] = verdict_counts.get(item["verdict"], 0) + 1
-    print(f"[合规检测] 本轮判定: {json.dumps(verdict_counts, ensure_ascii=False)}")
+    print(f"[Compliance review] Round verdicts: {json.dumps(verdict_counts, ensure_ascii=False)}")
     return {"check_results": check_results}

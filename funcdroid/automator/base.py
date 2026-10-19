@@ -5,12 +5,10 @@ from abc import ABC, abstractmethod
 from enum import Enum
 
 
-# 坐标点击后到输入前的焦点就绪等待（秒）：输入框获得焦点、软键盘弹出需要一点时间，
-# 立即输入可能落到旧焦点或被丢弃。
+# Allow focus and the keyboard to settle after a coordinate tap before typing.
 INPUT_FOCUS_DELAY = max(0.0, float(os.getenv("INPUT_FOCUS_DELAY", "0.3")))
 
-# Android 包名 / HarmonyOS bundle 名：反向域名，至少两段，只允许字母数字下划线。
-# 包名会被拼进设备 shell 命令，严格校验可以杜绝命令注入与误把应用标签当包名。
+# Validate reverse-domain package/bundle names before inserting them into device commands.
 PACKAGE_NAME_PATTERN = re.compile(r"^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z0-9_]+)+$")
 
 ACTIVITY_LINE_PATTERN = re.compile(r"^[ \t]*ACTIVITY[ \t]+(\S+)", re.MULTILINE)
@@ -19,20 +17,14 @@ ACTIVITY_LINE_PATTERN = re.compile(r"^[ \t]*ACTIVITY[ \t]+(\S+)", re.MULTILINE)
 def validate_package_name(package_name) -> str:
     value = str(package_name or "").strip()
     if not PACKAGE_NAME_PATTERN.fullmatch(value):
-        raise ValueError(f"非法的应用包名: {package_name!r}")
+        raise ValueError(f"Invalid application package name: {package_name!r}")
     return value
 
 
 def parse_activity_top(output: str) -> tuple[str, str]:
-    """解析 `dumpsys activity top`，返回前台（top resumed）Activity 的 (package, activity)。
+    """Parse dumpsys activity top into the foreground (package, activity).
 
-    该命令会按“从底到顶”的顺序列出各可见任务栈的栈顶 Activity，因此最后一个
-    ACTIVITY 才是最上层的那个（adbutils 的 app_current 同样取最后一个匹配；旧实现
-    取第一个，在分屏/悬浮窗/桌面残留时会拿到底层任务）。每个 ACTIVITY 段内的
-    “Local Activity … mResumed=true” 标记更直接地说明它处于 resumed 状态，存在时
-    优先取最后一个带该标记的段。activity 保持 dumpsys 原样（可能是 .Xxx 相对名），
-    与 app_current 的返回格式一致，避免同一页面在两种来源下被当成不同 Activity。
-    """
+    Tasks appear bottom to top: prefer the last resumed ACTIVITY section, otherwise the last ACTIVITY. Preserve relative activity names to match adbutils and avoid duplicate page identities."""
     text = str(output or "")
     matches = list(ACTIVITY_LINE_PATTERN.finditer(text))
     if not matches:
@@ -69,7 +61,7 @@ class Automator(ABC):
         pass
 
     def grant_app_permissions(self, package_name: str) -> dict:
-        """授予应用运行期权限；不支持的平台返回 unavailable，由调用方跳过。"""
+        """Grant runtime permissions; unsupported backends return unavailable."""
         return {"granted": [], "missing": [], "failed": [], "unavailable": True}
 
     def restart_app(self, package_name: str):
@@ -100,11 +92,9 @@ class Automator(ABC):
 
     @abstractmethod
     def input(self, text, x=None, y=None, clear: bool = True):
-        """向焦点控件输入文本。
+        """Type into the focused control.
 
-        clear=True（默认）表示先清空再输入（替换语义），两个平台保持一致；
-        给出坐标时先点击该位置并等待焦点就绪。
-        """
+        clear=True replaces existing text consistently on both backends. When coordinates are supplied, tap first and wait for focus."""
 
     @abstractmethod
     def current_activity(self):
@@ -114,7 +104,7 @@ class Automator(ABC):
         return ""
 
     def current_app(self) -> tuple[str, str]:
-        """前台应用 (package, activity/ability)；子类应以一次查询同时取得两者。"""
+        """Return foreground (package, activity/ability), preferably in one backend query."""
         return str(self.current_package() or ""), str(self.current_activity() or "")
 
     @abstractmethod
@@ -122,15 +112,13 @@ class Automator(ABC):
         pass
 
     def display_size(self):
-        """当前方向下的屏幕尺寸 (width, height)。
+        """Return (width, height) in the current orientation.
 
-        优先使用最近一帧截图的尺寸：截图总是反映当前方向，横竖屏切换后坐标换算
-        仍然正确；尚未截图时才回退到平台查询（_resolve_display_size）。
-        """
+        Prefer the latest screenshot dimensions so rotation cannot stale coordinate conversion; query the backend only before the first screenshot."""
         frame_size = getattr(self, "_last_frame_size", None)
         if frame_size:
             return frame_size
-        # 尚无截图时的平台查询结果只缓存到第一帧到来为止（之后始终以帧尺寸为准）。
+        # Cache backend dimensions only until the first screenshot supplies current orientation.
         cached = getattr(self, "_display_size_cache", None)
         if cached:
             return cached
@@ -150,8 +138,7 @@ class Automator(ABC):
                 self._display_size_cache = None
 
     def _normalize_point(self, x, y):
-        # 执行器已经把模型的图片坐标换算成整数屏幕像素，(1, 1) 也必须保留。
-        # 仅为 swipe_ext 等调用保留浮点数 0–1 比例坐标的兼容入口。
+        # Preserve integer pixel coordinates, including (1, 1); only floating-point values in [0, 1] denote relative coordinates.
         if (isinstance(x, float) or isinstance(y, float)) and 0 <= x <= 1 and 0 <= y <= 1:
             width, height = self.display_size()
             return min(width - 1, int(x * width)), min(height - 1, int(y * height))
@@ -162,10 +149,10 @@ class Automator(ABC):
             time.sleep(INPUT_FOCUS_DELAY)
 
     def keep_awake(self) -> None:
-        """尽力让屏幕保持常亮；不支持的平台什么都不做。"""
+        """Best-effort keep-awake request; unsupported backends do nothing."""
 
     def wake_screen(self) -> None:
-        """尽力点亮屏幕；不支持的平台什么都不做。"""
+        """Best-effort screen wake request; unsupported backends do nothing."""
 
     @abstractmethod
     def back(self):

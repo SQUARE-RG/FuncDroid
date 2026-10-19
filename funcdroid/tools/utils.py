@@ -1,4 +1,4 @@
-"""工作流工具的公共辅助函数。"""
+"""Shared workflow utilities."""
 
 import base64
 import os
@@ -28,10 +28,9 @@ def decode_screenshot(screenshot: str):
 
 
 def screenshot_dimensions(screenshot: str) -> tuple[int, int] | None:
-    """读取实际上传图片的宽高；无法解码时不猜测尺寸。
+    """Read actual uploaded-image dimensions; never guess after decoding failure.
 
-    只解析图片头（PIL 惰性打开，不解码像素），避免每步为读尺寸整图解码一次 JPEG。
-    """
+    Parse only the image header with lazy PIL loading to avoid decoding every JPEG just to read its size."""
     value = str(screenshot or "").strip()
     if value.startswith("data:image") and "," in value:
         value = value.split(",", 1)[1]
@@ -51,16 +50,16 @@ def screenshot_dimensions(screenshot: str) -> tuple[int, int] | None:
 def encode_image_to_jpg_base64(
     image, max_side: int = SCREENSHOT_MAX_SIDE, quality: int = SCREENSHOT_QUALITY,
 ) -> str:
-    """统一编码执行与合规取证截图；后续合规判定直接复用编码结果。"""
+    """Encode execution evidence once so asynchronous reviewers can reuse the same image."""
     image = resize_image(image, max_side=max_side)
     success, buffer = cv2.imencode(".jpg", image, [int(cv2.IMWRITE_JPEG_QUALITY), quality])
     if not success:
-        raise ValueError("截图编码失败")
+        raise ValueError("Screenshot encoding failed")
     return base64.b64encode(buffer.tobytes()).decode("utf-8")
 
 
 def resize_image(image, max_side: int):
-    """缩放图片，使其最长边不超过 max_side。"""
+    """Resize an image so its longest edge is at most max_side."""
     height, width = image.shape[:2]
     longest_side = max(height, width)
     if longest_side <= max_side:

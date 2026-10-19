@@ -1,3 +1,4 @@
+# Unicode escapes preserve literal UI labels and legacy evidence matching.
 from __future__ import annotations
 
 import base64
@@ -8,24 +9,19 @@ import re
 from dataclasses import dataclass, field
 
 TEXT_NORMALIZE_PATTERN = re.compile(r"[\"'“”‘’（）()【】\[\]{}<>《》、，,。.：:；;!！?？\-_/\s]+")
-# 旧快照中验证型场景的标记；加载时去掉并计入深度场景数。
+# Legacy verification markers are removed on load and counted as depth attempts.
 LEGACY_DEPTH_MARKER_PATTERN = re.compile(r"^\[(?:verify|mismatch):[^\]]*\]\s*")
 MAX_EVIDENCE_SCREENSHOTS_PER_PAGE = max(
     0,
     int(os.getenv("FFG_MAX_SCREENSHOTS_PER_PAGE", "12")) - 1,
 )
-# 覆盖率的权威来源是 Page.operation_bindings 显式绑定（操作→控件由
-# FFG 更新 patch 声明并做清单原文校验）。旧文本家族匹配会把不同命名
-# 列表项剥成同一个通用家族，产生未执行控件被覆盖的假阳性；也会因控件
-# 清单与动作措辞不同产生系统性漏配。因此文本兜底默认关闭；如需临时
-# 恢复可设 FFG_COVERAGE_LEGACY_MATCHING=1。
+# Explicit Page.operation_bindings are authoritative. Legacy text matching can merge distinct controls or miss paraphrases; enable FFG_COVERAGE_LEGACY_MATCHING=1 only for compatibility.
 COVERAGE_LEGACY_TEXT_MATCHING = (
     os.getenv("FFG_COVERAGE_LEGACY_MATCHING", "0").strip().lower()
     in {"1", "true", "yes", "on"}
 )
 
-# FunctionNode test_status 状态机。completed 只表示“有成功场景且覆盖充分”；
-# blocked/deferred/unavailable 是终端但非成功的关闭状态，不能再被当作覆盖完成。
+# Functionality status machine: completed requires successful scenarios and sufficient coverage. Other terminal states do not imply successful completion.
 FUNCTION_STATUSES = {
     "not_started",
     "in_progress",
@@ -34,9 +30,9 @@ FUNCTION_STATUSES = {
     "deferred",
     "unavailable",
 }
-# 终端状态：调度器不再为其规划新场景，完成审计也只针对 completed。
+# Terminal statuses leave normal scheduling; only completed functionalities receive completion audits.
 TERMINAL_FUNCTION_STATUSES = {"completed", "blocked", "deferred", "unavailable"}
-# 仍在待测队列中的状态。
+# Statuses remaining in the test queue.
 ACTIVE_FUNCTION_STATUSES = {"not_started", "in_progress"}
 
 
@@ -95,7 +91,7 @@ def _merge_exact_texts(values: list[str]) -> list[str]:
 
 
 def _resolve_list_text(text: object, values: list[str]) -> str:
-    """返回清单中与 text 对应的原文（先逐字一致，再归一化一致）。"""
+    """Return the original list entry matching text, preferring exact over normalized equality."""
     text = str(text or "").strip()
     if not text:
         return ""
@@ -112,7 +108,7 @@ def _normalize_operation_bindings(
     operations: list[str],
     controls: list[str],
 ) -> list[dict]:
-    """只保留能对上清单原文的绑定，并按 (操作, 控件) 去重。"""
+    """Keep bindings to recorded entries and deduplicate by (operation, control)."""
     normalized: list[dict] = []
     seen: set[tuple[str, str]] = set()
     bound_operations: set[str] = set()
@@ -132,36 +128,42 @@ def _normalize_operation_bindings(
     return normalized
 
 
-# 失败结果常被写成「动作；结果：xxx（截图健康检查失败）」这种收尾带括号的
-# 形式，所以「失败」之后允许跟一个收尾括号。否则黑屏/截图不可用的失败记录
-# 会被判成成功操作：既计入控件覆盖，又让功能获得「有成功业务操作」。
-OPERATION_FAILURE_PATTERN = re.compile(r"^(?:尝试)?(.+?)失败(?:[：:].*)?[）)]?$")
-OPERATION_RECOVERY_PATTERN = re.compile(r"自动恢复|恢复目标app|打开.+应用|打开.+主页面", re.IGNORECASE)
+# Accept a closing parenthesis after a failed result, including screenshot-health failures, so failures cannot count as successful operations.
+OPERATION_FAILURE_PATTERN = re.compile(r"^(?:\u5c1d\u8bd5)?(.+?)\u5931\u8d25(?:[：:].*)?[）)]?$")
+OPERATION_RECOVERY_PATTERN = re.compile(
+    r"automatic recovery|restore (?:the )?target app|open .+ (?:app|main page)|\u81ea\u52a8\u6062\u590d|\u6062\u590d\u76ee\u6807app|\u6253\u5f00.+\u5e94\u7528|\u6253\u5f00.+\u4e3b\u9875\u9762", re.IGNORECASE
+)
+ENGLISH_OPERATION_FAILURE_PATTERN = re.compile(
+    r"^failed attempt:\s*(.*?)\s*(?:;\s*error:.*)?$|^(.+?)\s+failed(?:[:;].*)?$", re.IGNORECASE
+)
 CONTROL_INSTANCE_PATTERN = re.compile(
-    r"会话条目|联系人条目|联系人列表|文章卡片|内容卡片|商品卡片|动态列表条目|列表项"
+    r"\u4f1a\u8bdd\u6761\u76ee|\u8054\u7cfb\u4eba\u6761\u76ee|\u8054\u7cfb\u4eba\u5217\u8868|\u6587\u7ae0\u5361\u7247|\u5185\u5bb9\u5361\u7247|\u5546\u54c1\u5361\u7247|\u52a8\u6001\u5217\u8868\u6761\u76ee|\u5217\u8868\u9879"
 )
 CONTROL_NOISE_PATTERN = re.compile(
-    r"一直可见的?|当前可见的?|可点击的?|页面中的?|页面上|顶部工具栏中的?|"
-    r"顶部|底部导航栏的?|底部|左上角|右上角|左下角|右下角|中的?|上的?"
+    r"\u4e00\u76f4\u53ef\u89c1\u7684?|\u5f53\u524d\u53ef\u89c1\u7684?|\u53ef\u70b9\u51fb\u7684?|\u9875\u9762\u4e2d\u7684?|\u9875\u9762\u4e0a|\u9876\u90e8\u5de5\u5177\u680f\u4e2d\u7684?|"
+    r"\u9876\u90e8|\u5e95\u90e8\u5bfc\u822a\u680f\u7684?|\u5e95\u90e8|\u5de6\u4e0a\u89d2|\u53f3\u4e0a\u89d2|\u5de6\u4e0b\u89d2|\u53f3\u4e0b\u89d2|\u4e2d\u7684?|\u4e0a\u7684?"
 )
 CONTROL_WIDGET_PATTERN = re.compile(
-    r"按钮|图标|入口条目|入口按钮|入口|选项|控件|区域|标签（选中状态）|标签\(选中状态\)|标签"
+    r"\u6309\u94ae|\u56fe\u6807|\u5165\u53e3\u6761\u76ee|\u5165\u53e3\u6309\u94ae|\u5165\u53e3|\u9009\u9879|\u63a7\u4ef6|\u533a\u57df|\u6807\u7b7e（\u9009\u4e2d\u72b6\u6001）|\u6807\u7b7e\(\u9009\u4e2d\u72b6\u6001\)|\u6807\u7b7e"
 )
 NON_INTERACTIVE_STATE_PATTERN = re.compile(
-    r"加载指示器|发布时间|时间分隔|未读红点状态|状态提示|提示文本|系统软键盘"
+    r"loading indicator|publication time|time separator|unread badge state|status hint|hint text|system keyboard|\u52a0\u8f7d\u6307\u793a\u5668|\u53d1\u5e03\u65f6\u95f4|\u65f6\u95f4\u5206\u9694|\u672a\u8bfb\u7ea2\u70b9\u72b6\u6001|\u72b6\u6001\u63d0\u793a|\u63d0\u793a\u6587\u672c|\u7cfb\u7edf\u8f6f\u952e\u76d8", re.IGNORECASE
 )
-# “返回首页/返回桌面”等带目的地的按钮与左上角通用返回是页面上两个不同控件，
-# 不能并成同一“返回”族，否则只有其中一个能被绑定和覆盖。只看第一个“返回”
-# 紧跟的目的地，“点击返回按钮返回首页”仍是通用返回。
-BACK_DESTINATION_PATTERN = re.compile(r"返回(?:到)?(首页|主页|主界面|桌面|顶部)")
+# Back-to-home and generic Back are distinct controls. Use the destination immediately after the first Back occurrence.
+BACK_DESTINATION_PATTERN = re.compile(r"\u8fd4\u56de(?:\u5230)?(\u9996\u9875|\u4e3b\u9875|\u4e3b\u754c\u9762|\u684c\u9762|\u9876\u90e8)")
 
 
 def _back_destination(text: str) -> str:
-    index = text.find("返回")
+    index = text.find("\u8fd4\u56de")
     if index < 0:
         return ""
     match = BACK_DESTINATION_PATTERN.match(text, index)
-    return match.group(1) if match else ""
+    if not match:
+        return ""
+    return {
+        "\u9996\u9875": "home", "\u4e3b\u9875": "home", "\u4e3b\u754c\u9762": "home",
+        "\u684c\u9762": "desktop", "\u9876\u90e8": "top",
+    }[match.group(1)]
 
 
 def control_family_key(value: object) -> str:
@@ -169,72 +171,84 @@ def control_family_key(value: object) -> str:
     text = str(value or "").strip().lower()
     if not text:
         return ""
-    text = re.sub(r"（代表[：:].*?）|\(代表[：:].*?\)", "", text)
+    english_back = re.fullmatch(
+        r"(?:(?:top|upper)[ -]?(?:left|right)?(?: corner)?\s+)?back"
+        r"(?:(?::| to )(home|main page|desktop|top))?(?: (?:button|arrow|icon|control))?", text,
+    )
+    if english_back:
+        destination = english_back.group(1)
+        if destination == "main page":
+            destination = "home"
+        return "back" + (":" + destination if destination else "")
+    # English authored descriptions coexist with literal labels from any UI language.
+    text = re.sub(r"\s*\(representative[: ].*?\)", "", text)
+    text = re.sub(r"^(?:(?:currently )?visible|clickable|top toolbar)\s+", "", text)
+    text = re.sub(r"\s+(?:button|icon|control|widget|entrypoint)$", "", text)
+    text = re.sub(r"（\u4ee3\u8868[：:].*?）|\(\u4ee3\u8868[：:].*?\)", "", text)
     text = re.sub(r"[“”‘’\"']", "", text)
-    text = re.sub(r"\d+\s*条", "", text)
-    # 去噪会删掉“顶部”，先取返回目的地。
+    text = re.sub(r"\d+\s*\u6761", "", text)
+    # Extract the back destination before removing positional noise.
     back_destination = _back_destination(text)
     text = CONTROL_NOISE_PATTERN.sub("", text)
 
     # Visual state, item names and category choices do not create new
     # semantic families. One representative selection is sufficient.
-    if "表情" in text:
+    if "\u8868\u60c5" in text:
         # Search, delete/backspace and the panel toggle are separate fixed
-        # semantic controls even though they share the word "表情".
-        if "搜索" in text:
-            return "表情搜索"
-        if any(token in text for token in ("删除", "退格")):
-            return "表情删除"
-        if "消息" in text:
-            return "表情消息"
-        if any(token in text for token in ("分类", "表情项", "选择面板", "选择项")) or re.search(
-            r"(?:第一个|首个|任意一个|名为.+的)表情",
+        # semantic controls despite sharing the same emoji-related label.
+        if "\u641c\u7d22" in text:
+            return "\u8868\u60c5\u641c\u7d22"
+        if any(token in text for token in ("\u5220\u9664", "\u9000\u683c")):
+            return "\u8868\u60c5\u5220\u9664"
+        if "\u6d88\u606f" in text:
+            return "\u8868\u60c5\u6d88\u606f"
+        if any(token in text for token in ("\u5206\u7c7b", "\u8868\u60c5\u9879", "\u9009\u62e9\u9762\u677f", "\u9009\u62e9\u9879")) or re.search(
+            r"(?:\u7b2c\u4e00\u4e2a|\u9996\u4e2a|\u4efb\u610f\u4e00\u4e2a|\u540d\u4e3a.+\u7684)\u8868\u60c5",
             text,
         ):
-            return "表情选择项"
-        if any(token in text for token in ("按钮", "图标", "入口")):
-            return "表情"
-    if "发送" in text and any(token in text for token in ("按钮", "图标", "操作")):
-        return "发送"
+            return "\u8868\u60c5\u9009\u62e9\u9879"
+        if any(token in text for token in ("\u6309\u94ae", "\u56fe\u6807", "\u5165\u53e3")):
+            return "\u8868\u60c5"
+    if "\u53d1\u9001" in text and any(token in text for token in ("\u6309\u94ae", "\u56fe\u6807", "\u64cd\u4f5c")):
+        return "\u53d1\u9001"
 
     if (
-        any(token in text for token in ("文本输入框", "文字输入框", "消息输入框"))
-        and "搜索" not in text
+        any(token in text for token in ("\u6587\u672c\u8f93\u5165\u6846", "\u6587\u5b57\u8f93\u5165\u6846", "\u6d88\u606f\u8f93\u5165\u6846"))
+        and "\u641c\u7d22" not in text
     ):
-        return "文本输入框"
+        return "\u6587\u672c\u8f93\u5165\u6846"
 
-    if "列表项" in text:
+    if "\u5217\u8868\u9879" in text:
         # Named list categories are distinct evidence. Do not strip concrete
         # labels with an App-specific dictionary: that silently turns different
-        # business rows into one generic "列表项" family.
-        label = text.replace("列表项", "")
+        # business rows into one generic list-item family.
+        label = text.replace("\u5217\u8868\u9879", "")
         label = CONTROL_NOISE_PATTERN.sub("", label)
         label = TEXT_NORMALIZE_PATTERN.sub("", label)
-        return f"列表项:{label}" if label else "列表项"
-    if "会话" in text and (
-        "条目" in text
-        or "列表" in text
-        or re.search(r"(?:的|个|任一|任意)会话$", text)
+        return f"\u5217\u8868\u9879:{label}" if label else "\u5217\u8868\u9879"
+    if "\u4f1a\u8bdd" in text and (
+        "\u6761\u76ee" in text
+        or "\u5217\u8868" in text
+        or re.search(r"(?:\u7684|\u4e2a|\u4efb\u4e00|\u4efb\u610f)\u4f1a\u8bdd$", text)
     ):
-        # 实例级表述（"张三的会话""某个会话"）与"会话条目"同属一族：命中
-        # 同一控件，重复实例操作由 _merge_operation_families 归并为一条。
-        return "会话条目"
-    if "联系人" in text and ("条目" in text or "列表" in text):
-        return "联系人条目"
-    if "文章" in text and ("卡片" in text or "标题" in text or "封面" in text):
-        return "文章卡片"
-    if "内容" in text and any(token in text for token in ("卡片", "标题", "图片", "缩略图")):
-        return "内容卡片"
-    if "分类标签" in text:
-        return "分类标签"
-    if text.endswith("分区") or "分区标题" in text:
-        return "内容分区"
-    if "搜索" in text and any(token in text for token in ("放大镜", "按钮", "图标", "输入框")):
-        return "搜索输入框" if "输入框" in text else "搜索"
-    if "返回" in text and any(token in text for token in ("箭头", "按钮", "操作")):
-        return f"返回{back_destination}" if back_destination else "返回"
-    if "更多" in text and any(token in text for token in ("菜单", "按钮", "图标")):
-        return "更多菜单"
+        # Instance-level conversation labels share one control family; repeated instance operations are merged.
+        return "\u4f1a\u8bdd\u6761\u76ee"
+    if "\u8054\u7cfb\u4eba" in text and ("\u6761\u76ee" in text or "\u5217\u8868" in text):
+        return "\u8054\u7cfb\u4eba\u6761\u76ee"
+    if "\u6587\u7ae0" in text and ("\u5361\u7247" in text or "\u6807\u9898" in text or "\u5c01\u9762" in text):
+        return "\u6587\u7ae0\u5361\u7247"
+    if "\u5185\u5bb9" in text and any(token in text for token in ("\u5361\u7247", "\u6807\u9898", "\u56fe\u7247", "\u7f29\u7565\u56fe")):
+        return "\u5185\u5bb9\u5361\u7247"
+    if "\u5206\u7c7b\u6807\u7b7e" in text:
+        return "\u5206\u7c7b\u6807\u7b7e"
+    if text.endswith("\u5206\u533a") or "\u5206\u533a\u6807\u9898" in text:
+        return "\u5185\u5bb9\u5206\u533a"
+    if "\u641c\u7d22" in text and any(token in text for token in ("\u653e\u5927\u955c", "\u6309\u94ae", "\u56fe\u6807", "\u8f93\u5165\u6846")):
+        return "\u641c\u7d22\u8f93\u5165\u6846" if "\u8f93\u5165\u6846" in text else "\u641c\u7d22"
+    if "\u8fd4\u56de" in text and (text == "\u8fd4\u56de" or back_destination or any(token in text for token in ("\u7bad\u5934", "\u6309\u94ae", "\u64cd\u4f5c"))):
+        return "back" + (":" + back_destination if back_destination else "")
+    if "\u66f4\u591a" in text and any(token in text for token in ("\u83dc\u5355", "\u6309\u94ae", "\u56fe\u6807")):
+        return "\u66f4\u591a\u83dc\u5355"
 
     text = CONTROL_WIDGET_PATTERN.sub("", text)
     text = TEXT_NORMALIZE_PATTERN.sub("", text)
@@ -250,27 +264,46 @@ def _operation_action_and_target(value: object) -> tuple[str, str]:
     text = str(value or "").strip()
     if not text:
         return "", ""
-    text = re.sub(r"^自动恢复[：:]?", "", text)
+    text = re.sub(r"^automatic recovery:\s*", "", text, flags=re.IGNORECASE)
+    english_failure = ENGLISH_OPERATION_FAILURE_PATTERN.match(text)
+    if english_failure:
+        text = (english_failure.group(1) or english_failure.group(2) or "").strip()
+    if re.match(r"^(?:(?:click|tap|press)\s+(?:the\s+)?)?(?:back|press_back)\b", text, re.IGNORECASE):
+        destination = re.search(r"\bback\s+to\s+(home|main page|desktop|top)\b", text, re.IGNORECASE)
+        return "back", "back" + (":" + destination.group(1).lower() if destination else "")
+    english_actions = (
+        ("long_press", r"^(?:long[-_ ]press)\s+"),
+        ("type", r"^(?:type|input|enter)\s+"),
+        ("scroll", r"^(?:scroll|swipe|drag)\s+"),
+        ("open", r"^(?:open|launch)\s+"),
+        ("click", r"^(?:click|tap|select|switch to|check)\s+"),
+    )
+    for action, pattern in english_actions:
+        if re.match(pattern, text, re.IGNORECASE):
+            target = re.sub(pattern, "", text, count=1, flags=re.IGNORECASE)
+            target = re.split(r"\s*(?:;|->|→)\s*|\s+(?:then|and then)\s+", target, maxsplit=1)[0]
+            return action, target.strip()
+    text = re.sub(r"^\u81ea\u52a8\u6062\u590d[：:]?", "", text)
     failure_match = OPERATION_FAILURE_PATTERN.match(text)
     if failure_match:
         text = failure_match.group(1).strip()
-    text = re.sub(r"^尝试", "", text)
-    if re.search(r"返回|press_back", text, re.IGNORECASE):
+    text = re.sub(r"^\u5c1d\u8bd5", "", text)
+    if re.search(r"\u8fd4\u56de|press_back", text, re.IGNORECASE):
         destination = _back_destination(text)
-        return "back", f"返回{destination}"
-    if re.match(r"^发送", text):
-        return "click", "发送"
+        return "back", "back" + (":" + destination if destination else "")
+    if re.match(r"^\u53d1\u9001", text):
+        return "click", "\u53d1\u9001"
     action_patterns = (
-        ("long_press", r"^(?:长按)"),
-        ("type", r"^(?:在.+?中)?输入|^输入"),
-        ("scroll", r"^(?:滑动|滚动|上滑|下滑|左滑|右滑|拖动|拖拽)"),
-        ("open", r"^(?:打开|启动)"),
-        ("click", r"^(?:点击|选择|切换到|勾选)"),
+        ("long_press", r"^(?:\u957f\u6309)"),
+        ("type", r"^(?:\u5728.+?\u4e2d)?\u8f93\u5165|^\u8f93\u5165"),
+        ("scroll", r"^(?:\u6ed1\u52a8|\u6eda\u52a8|\u4e0a\u6ed1|\u4e0b\u6ed1|\u5de6\u6ed1|\u53f3\u6ed1|\u62d6\u52a8|\u62d6\u62fd)"),
+        ("open", r"^(?:\u6253\u5f00|\u542f\u52a8)"),
+        ("click", r"^(?:\u70b9\u51fb|\u9009\u62e9|\u5207\u6362\u5230|\u52fe\u9009)"),
     )
     for action, pattern in action_patterns:
         if re.search(pattern, text, re.IGNORECASE):
             target = re.sub(pattern, "", text, count=1, flags=re.IGNORECASE).strip()
-            target = re.split(r"(?:并|后|，|,|；|;|→|->)", target, maxsplit=1)[0]
+            target = re.split(r"(?:\u5e76|\u540e|，|,|；|;|→|->)", target, maxsplit=1)[0]
             return action, target
     return "action", text
 
@@ -286,7 +319,12 @@ def operation_family_key(value: object) -> str:
 
 def operation_is_failure(value: object) -> bool:
     text = str(value or "").strip()
-    return bool(OPERATION_FAILURE_PATTERN.match(text) or "动作执行失败" in text)
+    return bool(
+        OPERATION_FAILURE_PATTERN.match(text)
+        or ENGLISH_OPERATION_FAILURE_PATTERN.match(text)
+        or "\u52a8\u4f5c\u6267\u884c\u5931\u8d25" in text
+        or "action execution failed" in text.lower()
+    )
 
 
 def operation_is_recovery(value: object) -> bool:
@@ -347,12 +385,9 @@ def _coverage_match_key(value: object) -> str:
 
 
 def _coverage_keys_refer_to_same_control(control_key: str, target_key: str) -> bool:
-    """Decide whether an operation target names the same control.
+    """Decide whether an operation target identifies the same control.
 
-    Containment is kept because operation phrasing often adds qualifiers, but a
-    numeric-suffix extension (``控件1`` vs ``控件12``) is rejected: treating those
-    as the same control silently marks never-operated controls as covered.
-    """
+    Allow descriptive qualifiers but reject numeric suffix extensions, such as control1 versus control12, that would incorrectly cover a different control."""
     if not control_key or not target_key:
         return False
     if control_key == target_key:
@@ -366,7 +401,7 @@ def _coverage_keys_refer_to_same_control(control_key: str, target_key: str) -> b
 
 
 def _control_has_binding(page: Page, control: str) -> bool:
-    """控件是否被任一非恢复/非失败操作的显式绑定命中。"""
+    """Return whether a successful, non-recovery operation explicitly binds this control."""
     for binding in page.operation_bindings:
         operation = str(binding.get("operation", "") or "")
         if operation_is_failure(operation) or operation_is_recovery(operation):
@@ -377,7 +412,7 @@ def _control_has_binding(page: Page, control: str) -> bool:
 
 
 def _control_text_matched(page: Page, control: str) -> bool:
-    """旧文本家族匹配兜底（详见 function_handled_controls 文档）。"""
+    """Legacy operation-family matching; see function_handled_controls."""
     control_match_key = _coverage_match_key(control)
     control_family = control_family_key(control)
     for operation in page.operations:
@@ -411,26 +446,12 @@ def _read_screenshot(value: object, screenshots_dir: str | None) -> str:
         if os.path.exists(path):
             with open(path, "rb") as f:
                 return base64.b64encode(f.read()).decode("ascii")
-        # M5: screenshots_dir 已指定但引用的文件缺失，说明这是一个悬空的
-        # 文件名引用，不能等同于"未走 file-ref 模式、value 本身就是原始
-        # 内容"的情形（那种情形 screenshots_dir 为空才会走到下面的
-        # return ref）。此前这里会直接 fall through 把文件名当截图内容
-        # 返回；下次落盘时 _write_screenshot 对它做 base64.b64decode 会
-        # 直接抛 binascii.Error，导致此后每一次 FFG 保存都失败——比"静默
-        # 写坏一张图"更严重，而且发生在与本次加载毫不相关的某次检查点。
-        # load_seed_graph 已经对 --seed-ffg 路径做了这个校验（fail fast，
-        # 拒绝在设备操作前使用残缺种子）；--resume-output 路径此前完全没
-        # 有对应校验。这里直接在读取处失败，两条路径统一在 FlowGraph.load()
-        # 阶段就能发现问题，而不是等到某次无关的落盘才崩溃。
-        raise ValueError(f"截图文件缺失，无法加载 FFG：{path}")
+        # A missing referenced screenshot is invalid input, not inline image data. Fail during load for both seeds and resumes instead of corrupting later checkpoints.
+        raise ValueError(f"Cannot load FFG: screenshot file is missing: {path}")
     return ref
 
 
-# 截图落盘跳过缓存：文件路径 → 最后一次写入的内容哈希。save() 每轮对全部
-# 页面截图做 b64decode + 读回逐字节比较，而截图内容在轮间几乎不变；只有
-# “该路径最后写入的就是这份内容”且文件仍存在时才跳过。按路径只记最后一次
-# 写入，A→B→A 轮换（证据截图按下标命名会发生）不会命中过期记录。
-# 缓存有界，超过上限整表清空（重新走一次比较即可恢复）。
+# Cache only the latest content hash per existing screenshot path. Bound the cache and clear it when full; A-to-B-to-A writes must not reuse stale entries.
 _SCREENSHOT_LAST_WRITTEN: dict[str, str] = {}
 _SCREENSHOT_LAST_WRITTEN_MAX = 4096
 
@@ -448,7 +469,7 @@ def _write_screenshot(
     path = os.path.join(screenshots_dir, filename)
     content_key = ""
     try:
-        # base64 串是 ASCII；直接哈希原串（O(字节) 但远快于解码 + 读回比较）。
+        # Hash the ASCII base64 text directly instead of decoding and rereading the image.
         content_key = hashlib.sha256(screenshot.encode("ascii")).hexdigest()
     except (AttributeError, UnicodeEncodeError):
         content_key = ""
@@ -466,7 +487,7 @@ def _write_screenshot(
 
 @dataclass(slots=True, init=False)
 class Page:
-    """稳定逻辑页面，包含一张代表截图和有界的历史状态截图。"""
+    """A stable logical page with a representative screenshot and bounded state history."""
 
     id: str | None = None
     name: str = ""
@@ -525,7 +546,7 @@ class Page:
         )
 
     def _remerge_operations(self) -> None:
-        """家族归并操作清单；归并替换原文时把绑定迁移到保留文本上。"""
+        """Merge operation families and migrate bindings when the retained wording changes."""
         merged = _merge_operation_families(self.operations)
         if merged == self.operations:
             return
@@ -612,19 +633,14 @@ class Page:
     def add_operation(self, operation: str):
         operation = str(operation or "").strip()
         if operation:
-            # 必须走 _remerge_operations：家族归并若替换了保留文本，绑定要同步
-            # 迁移。否则绑定悬空，会在下一次 from_dict 归一化时被静默丢弃，
-            # 覆盖率随每次落盘/续跑无故下跌（实测 100% → 0%）。
+            # Merge through _remerge_operations so retained wording and bindings move together; dangling bindings would otherwise disappear on reload.
             self.operations = [*self.operations, operation]
             self._remerge_operations()
 
     def remove_operation(self, operation: str) -> bool:
-        """Remove one operation by exact text; returns whether it existed.
+        """Remove an operation only when its exact recorded text matches.
 
-        页面审计点名删除专用：只接受与清单原文完全一致的文本，杜绝
-        改写或幻觉操作名清空清单。page_transitions 不受影响；与该操作
-        关联的显式绑定一并移除。
-        """
+        Page auditing cannot delete an operation through a paraphrase or invented name. Remove associated bindings while preserving page transitions."""
         operation = str(operation or "").strip()
         if operation and operation in self.operations:
             self.operations = [item for item in self.operations if item != operation]
@@ -637,12 +653,9 @@ class Page:
         return False
 
     def add_operation_binding(self, operation: str, control: str) -> bool:
-        """记录"操作→控件"显式绑定；两侧必须能对上本页清单原文。
+        """Bind a recorded operation to a recorded control on this page.
 
-        绑定是覆盖率计算的权威来源（见 function_handled_controls）：
-        operation 必须是本页已记录操作、control 必须是本页控件清单
-        原文，杜绝幻觉绑定；不满足时返回 False，由调用方丢弃并告警。
-        """
+        Explicit bindings are authoritative coverage evidence. Both sides must match the original lists; return False for an invalid binding so the caller can report and discard it."""
         operation = _resolve_list_text(operation, self.operations)
         control = _resolve_list_text(control, self.controls)
         if not operation or not control:
@@ -662,7 +675,7 @@ class Page:
         return True
 
     def has_operation_binding(self, operation: str, control: str) -> bool:
-        """是否已存在该 (操作, 控件) 绑定（按归一化文本比较）。"""
+        """Check whether this operation/control binding exists after normalization."""
         key = (
             _text_key(_resolve_list_text(operation, self.operations) or operation),
             _text_key(_resolve_list_text(control, self.controls) or control),
@@ -677,7 +690,7 @@ class Page:
         return False
 
     def bound_operation_texts(self) -> set[str]:
-        """已声明作用控件的操作原文集合（页面审计标注未绑定操作用）。"""
+        """Return original operation texts that already have explicit control bindings."""
         return {
             str(binding.get("operation", "") or "")
             for binding in self.operation_bindings
@@ -822,13 +835,12 @@ class FunctionNode:
     test_status: str = "not_started"
     coverage_percent: int = 0
     intra_attempt_count: int = 0
-    # 深度尝试用于预算；失败尝试不能证明深度测试完成。
+    # Depth attempts consume budget; failed attempts do not prove completion.
     depth_scenario_count: int = 0
     successful_depth_scenario_count: int = 0
-    # 连续导航失败次数（测试阶段真正开始后清零），达到上限时延后该功能。
+    # Consecutive navigation failures reset when testing starts; defer at the limit.
     navigation_failure_count: int = 0
-    # 最近一次状态迁移的原因（如 navigation_failed / exploratory_navigation_failed / blocked），
-    # 供重开判定与报告追溯；为空表示由完成判定等常规规则迁移。
+    # Keep the last transition reason for reopening decisions and reports; empty means an ordinary completion transition.
     status_reason: str = ""
 
     def __post_init__(self):
@@ -936,7 +948,7 @@ class FunctionNode:
         for value in data.get("scenarios", []):
             if not isinstance(value, str) or not value.strip():
                 continue
-            # 旧快照的验证型场景带 [verify:]/[mismatch:] 前缀：去掉前缀，按深度场景计数。
+            # Migrate legacy verify/mismatch prefixes into depth-attempt counts.
             text, marked = LEGACY_DEPTH_MARKER_PATTERN.subn("", value.strip(), count=1)
             legacy_depth += marked
             if text.strip():
@@ -968,7 +980,7 @@ class FunctionNode:
 
 
 class FlowGraph:
-    """最小 FFG：功能、页面、全局页面边和功能数据依赖。"""
+    """Functional Flow Graph: functionalities, pages, page transitions, and resource dependencies."""
 
     def __init__(self):
         self.functions: dict[str, FunctionNode] = {}
@@ -981,8 +993,7 @@ class FlowGraph:
         # Legacy [cross:...] strings remain attempt history, never a cross outcome.
         self.cross_test_results: list[dict] = []
         self.cross_test_history: list[dict] = []
-        # 测试数据登记：执行轨迹中实际输入的 FuncDroid_ 自建数据及其产出功能，
-        # 供跨功能场景显式引用“源功能已产出的数据”，而不是让执行器临场猜测。
+        # Record actually entered FuncDroid_ test values and their producing functionality for explicit reuse in inter-functional scenarios.
         self.test_data_records: list[dict] = []
 
     @property
@@ -1023,19 +1034,19 @@ class FlowGraph:
 
     def add_page(self, page: Page, node_id: str):
         if page.id is None:
-            raise ValueError("加入 FlowGraph 的 Page 必须先有 id")
+            raise ValueError("A page must have an id before being added to the FFG")
         node = self.functions.get(node_id)
         if node is None:
-            raise ValueError(f"未知节点: {node_id}")
+            raise ValueError(f"Unknown functionality node: {node_id}")
         self.pages[page.id] = page
         node.add_page_id(page.id)
 
     def add_entry_page(self, page: Page, node_id: str):
         if page.id is None:
-            raise ValueError("加入 FlowGraph 的 Page 必须先有 id")
+            raise ValueError("A page must have an id before being added to the FFG")
         node = self.functions.get(node_id)
         if node is None:
-            raise ValueError(f"未知节点: {node_id}")
+            raise ValueError(f"Unknown functionality node: {node_id}")
         self.pages[page.id] = page
         node.add_page_id(page.id, entry_only=True)
 
@@ -1049,11 +1060,9 @@ class FlowGraph:
         node.entry_page_ids = [value for value in node.entry_page_ids if value != page_id]
 
     def _transition_bucket(self, src_page_id: str, dst_page_id: str) -> list[PageTransition]:
-        """按 (src, dst) 索引已有跳转边，避免每次新增都线性扫描全部边。
+        """Index transitions by (source, destination), avoiding a full scan per insertion.
 
-        索引按需重建：page_transitions 被整体替换或长度与索引不一致时
-        （例如外部代码直接赋值），下一次访问自动重建，保持与列表一致。
-        """
+        Rebuild lazily if the transition list is replaced or its size diverges from the index."""
         index = getattr(self, "_transition_index", None)
         if (
             index is None
@@ -1159,14 +1168,11 @@ class FlowGraph:
         scenario: str, status: str, *, reason: str = "",
         retryable: bool = False, attempts: int | None = None,
     ) -> None:
-        """Persist the outcome of one directed resource flow separately from attempts.
+        """Persist the outcome of a directed resource flow separately from its attempts.
 
-        done 表示测试阶段已跑完（与功能内场景同口径，不再区分结果是否一致）；
-        failed 表示没有跑完。同一 key 的结果按最新一次覆盖，但尝试次数累加：
-        规划器据此对导航类失败做有限次重试，而不是一次失败就永久放弃。
-        """
+        Done means the test phase finished, not that the business outcome was correct. Failed means execution did not finish. Replace the latest result but accumulate attempts for bounded retries."""
         if status not in {"done", "failed"}:
-            raise ValueError(f"未知跨功能结果: {status}")
+            raise ValueError(f"Unknown inter-functional test outcome: {status}")
         key = self.cross_test_key(src_function_id, dst_function_id, resource)
         previous = next((
             item for item in self.cross_test_results
@@ -1184,7 +1190,7 @@ class FlowGraph:
         })
 
     def record_test_data(self, function_id: str, values: list[str], *, iteration: int = 0, scenario: str = "") -> int:
-        """登记某功能在执行中实际输入的自建测试数据；同一功能同一取值只记一次。"""
+        """Record self-created values actually entered by a functionality, once per functionality/value pair."""
         if self.get_node(function_id) is None:
             return 0
         existing = {(item["function_id"], item["value"]) for item in self.test_data_records}
@@ -1221,10 +1227,10 @@ class FlowGraph:
         }
 
     def set_node_test_status(self, node_id: str, status: str, reason: str = ""):
-        """功能状态迁移的唯一入口：未知状态直接报错，不再静默映射。"""
+        """Apply a functionality status transition; reject unknown states explicitly."""
         normalized = str(status or "").strip().lower()
         if normalized not in FUNCTION_STATUSES:
-            raise ValueError(f"未知功能状态: {status}")
+            raise ValueError(f"Unknown functionality status: {status}")
         node = self.get_node(node_id)
         if node is None:
             return
@@ -1277,15 +1283,9 @@ class FlowGraph:
         return controls
 
     def function_handled_controls(self, node_id: str) -> set[tuple[str, str]]:
-        """Controls actually hit by recorded business operations.
+        """Return controls hit by recorded business operations.
 
-        第一来源是 Page.operation_bindings 显式绑定（操作→控件由 FFG 更新
-        patch 声明并做清单原文校验）；旧文本家族匹配保留为兜底
-        （COVERAGE_LEGACY_TEXT_MATCHING 可关）：两侧 family 一致即命中；
-        两侧 family 均非空且不同（语义分歧，如"表情消息"控件 vs 目标
-        "表情按钮"）时不再用子串包含兜底，防止点击一个控件把同前缀的
-        其它控件误标为覆盖。
-        """
+        Page.operation_bindings is authoritative and validated against original list entries. Optional legacy matching uses operation families, rejecting substring fallback when both nonempty families differ."""
         controls = self.function_controls(node_id)
         handled: set[tuple[str, str]] = set()
         for control_ref, control in controls.items():
@@ -1325,12 +1325,9 @@ class FlowGraph:
         return executed
 
     def function_coverage_details(self, node_id: str) -> dict[str, object]:
-        """Coverage is anchored to hit controls, not raw operation count.
+        """Compute coverage from distinct controls hit, not raw operation counts.
 
-        用操作数量顶替命中数会让"单控件反复点、其余控件从未碰"的
-        Function 提前满足完成门槛；handled 只统计被业务 operation 命中
-        的控件数（family 匹配规则见 function_handled_controls）。
-        """
+        Repeatedly operating one control must not satisfy coverage while other controls remain untouched."""
         controls = self.function_controls(node_id)
         total = len(controls)
         directly_handled = self.function_handled_controls(node_id)
@@ -1454,11 +1451,9 @@ class FlowGraph:
         return changed
 
     def clone(self) -> FlowGraph:
-        """结构副本：节点、页面列表字段独立复制，截图字符串共享（不可变）。
+        """Copy mutable graph structure while sharing immutable screenshot strings.
 
-        比 ``from_dict(to_dict())`` 便宜得多：不重新归并文本、不重建全部跳转边，
-        也不对截图做任何编解码。返回的图可以独立修改而不影响原图。
-        """
+        Unlike a serialization round trip, this avoids text merging, transition rebuilding, and image decoding. The copy can be mutated independently."""
         graph = FlowGraph()
         for node_id, node in self.functions.items():
             graph.functions[node_id] = FunctionNode(
@@ -1551,7 +1546,7 @@ class FlowGraph:
             if src not in graph.functions or dst not in graph.functions or src == dst:
                 graph.cross_test_history.append({**item, "invalidation_reason": "inactive function reference on load"})
                 continue
-            # 旧快照的 verified/unverified 都表示测试阶段已跑完。
+            # Legacy verified/unverified statuses both indicate the test phase finished.
             status = {"verified": "done", "unverified": "done"}.get(item.get("status"), item.get("status"))
             if status not in {"done", "failed"}:
                 continue
@@ -1579,10 +1574,10 @@ class FlowGraph:
             indent=2,
         ).encode("utf-8")
         _write_bytes_if_changed(os.path.join(output_dir, "ffg.json"), serialized)
-        print(f"[持久化] FFG 已保存到 {output_dir}")
+        print(f"[Persistence] FFG saved to {output_dir}")
         print(
-            f"  功能节点: {len(self.functions)}, 页面: {len(self.pages)}, "
-            f"页面跳转: {len(self.page_transitions)}, 功能依赖: {len(self.function_dependencies)}"
+            f"  Functionality nodes: {len(self.functions)}, Pages: {len(self.pages)}, "
+            f"Page transitions: {len(self.page_transitions)}, Resource dependencies: {len(self.function_dependencies)}"
         )
 
     @classmethod
@@ -1593,14 +1588,19 @@ class FlowGraph:
         with open(os.path.join(output_dir, "ffg.json"), "r", encoding="utf-8") as f:
             data = json.load(f)
         if not isinstance(data, dict):
-            raise ValueError("ffg.json 根节点必须是对象")
+            raise ValueError("The root of ffg.json must be an object")
         for key in ("functions", "pages", "page_transitions", "function_dependencies"):
             if not isinstance(data.get(key), list):
-                raise ValueError(f"ffg.json 缺少当前结构字段或类型错误: {key}")
+                raise ValueError(f"Missing or invalid ffg.json structure field: {key}")
         graph = cls.from_dict(data, screenshots_dir=screenshots_dir)
-        print(f"[持久化] FFG 已从 {output_dir} 加载")
+        print(f"[Persistence] FFG loaded from {output_dir}")
         print(
-            f"  功能节点: {len(graph.functions)}, 页面: {len(graph.pages)}, "
-            f"页面跳转: {len(graph.page_transitions)}, 功能依赖: {len(graph.function_dependencies)}"
+            f"  Functionality nodes: {len(graph.functions)}, Pages: {len(graph.pages)}, "
+            f"Page transitions: {len(graph.page_transitions)}, Resource dependencies: {len(graph.function_dependencies)}"
         )
         return graph
+
+
+# Paper terminology aliases preserve existing imports and serialized formats.
+FunctionalFlowGraph = FlowGraph
+FunctionalityNode = FunctionNode

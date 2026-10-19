@@ -1,9 +1,6 @@
-"""异步执行轨迹合规判定。
+"""Asynchronous compliance review with per-rule idempotent results.
 
-与 bug_detection_worker 同构。检测结果除落盘报告外，还通过只读快照参与
-scenario_plan 的合规闭环重试；不直接修改 FFG。结果是按 rule_id 幂等的条款
-结论（compliance_findings + checklist status）。
-"""
+Persist findings and expose read-only checklist snapshots for evidence-driven retries without modifying the FFG."""
 
 from __future__ import annotations
 
@@ -23,9 +20,9 @@ def plan_check_ids(plan: dict[str, Any] | None) -> list[str]:
 
 
 class ComplianceDetectionWorker(SerialWorker):
-    """顺序执行 `analyze_execution_for_compliance`。"""
+    """Run analyze_execution_for_compliance serially."""
 
-    log_prefix = "[合规检测线程]"
+    log_prefix = "[Compliance worker]"
     thread_name = "compliance-detection-worker"
 
     def __init__(self) -> None:
@@ -48,7 +45,7 @@ class ComplianceDetectionWorker(SerialWorker):
                 self._checklist = ComplianceChecklist.from_state(initial_checklist)
         self._configure_base(llm, on_batch_done, initial_failures)
 
-    # 状态标记（供规划器派发合规场景时调用，防止队列积压时重复调度）
+    # Mark scheduling state to prevent duplicate dispatch while the queue is backlogged.
     def mark_executing(
         self,
         rule_ids: list[str],
@@ -58,11 +55,11 @@ class ComplianceDetectionWorker(SerialWorker):
             self._checklist.mark_executing(rule_ids, evidence_signature)
 
     def defer_checks(self, rule_ids: list[str], reason: str) -> None:
-        """执行或入队失败从未产生判定结果：退回 pending 并归还本次重试预算。"""
+        """Return checks without a verdict to pending and refund their attempt budget."""
         with self._lock:
             released = self._checklist.release_scheduled(rule_ids)
         if released:
-            print(f"{self.log_prefix} {reason}：{released} 已退回待执行，不计入重试预算")
+            print(f"{self.log_prefix} {reason}: returned {released} to pending without consuming retries")
 
     def reopen_deferred(
         self,
@@ -71,7 +68,7 @@ class ComplianceDetectionWorker(SerialWorker):
         force: bool = False,
         rules_path: Any = None,
     ) -> tuple[list[str], dict[str, Any]]:
-        """原子重开可重试条款，并返回重开编号与最新清单快照。"""
+        """Atomically reopen retryable rules and return their IDs and the new checklist snapshot."""
         with self._lock:
             reopened = self._checklist.reopen_deferred(
                 evidence_signature,
@@ -101,15 +98,13 @@ class ComplianceDetectionWorker(SerialWorker):
         return {"check_ids": plan_check_ids(job.get("current_plan")), **super()._failure_record(job, exc)}
 
     def _on_failure_locked(self, job: dict[str, Any], exc: BaseException) -> None:
-        # 调用/解析重试耗尽、flush 超时、入队超时都属于基础设施失败：失败本身已由
-        # record_failure 单独留痕；这里没有产生真实判定，不能按 undetermined 消耗
-        # 重试预算（mark_executing 时已 +1），退回 pending 并归还预算（见 M3）。
+        # Infrastructure failures produced no verdict: record failure separately, return to pending, and refund the review attempt.
         released = self._checklist.release_scheduled(plan_check_ids(job.get("current_plan")))
         if released:
-            print(f"{self.log_prefix} 判定任务未产生结论（{type(exc).__name__}）：{released} 已退回待执行，不计入重试预算")
+            print(f"{self.log_prefix} Review produced no verdict ({type(exc).__name__}); returned {released} to pending without consuming retries")
 
     def snapshot(self) -> dict[str, Any]:
-        """线程安全地读取当前检测点清单状态。"""
+        """Return a thread-safe snapshot of current checkpoint state."""
         with self._lock:
             return self._checklist.to_state()
 
@@ -121,7 +116,7 @@ class ComplianceDetectionWorker(SerialWorker):
 
 
 def build_compliance_detection_job(state: dict[str, Any]) -> dict[str, Any]:
-    """从工作流状态抽取合规判定所需的只读快照。"""
+    """Capture a read-only compliance-review job snapshot."""
     return build_trace_job(
         state,
         "current_test_scenario",
@@ -130,5 +125,5 @@ def build_compliance_detection_job(state: dict[str, Any]) -> dict[str, Any]:
     )
 
 
-# 进程内单例。
+# Process-local singleton.
 compliance_worker = ComplianceDetectionWorker()

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#000000" />
+<title>FuncDroid · Run visualization</title>
+<link rel="stylesheet" href="/static/css/style.css?v=4" />
+<script src="https://unpkg.com/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div id="app">
+
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="brand">
+        <span class="brand-mark">FD</span>
+        <div class="brand-text">
+          <div class="brand-title">FuncDroid</div>
+          <div class="brand-sub">Run progress and FFG evolution</div>
+        </div>
+      </div>
+    </div>
+    <div class="topbar-mid">
+      <select id="runSelect" class="run-select"></select>
+      <span id="runStatusBadge" class="badge badge-muted">Unknown</span>
+    </div>
+    <div class="topbar-right">
+      <label class="switch">
+        <input type="checkbox" id="autoRefreshToggle" checked />
+        <span>Auto-refresh</span>
+      </label>
+      <select id="refreshInterval" class="interval-select">
+        <option value="2000">2s</option>
+        <option value="3000" selected>3s</option>
+        <option value="5000">5s</option>
+        <option value="10000">10s</option>
+      </select>
+      <span id="connDot" class="conn-dot" title="Connection status"></span>
+    </div>
+  </header>
+
+  <section class="metrics-row" id="metricsRow">
+    <div class="metric-card"><div class="metric-label">Status</div><div class="metric-value" id="mStatus">-</div></div>
+    <div class="metric-card"><div class="metric-label">Iterations</div><div class="metric-value" id="mIteration">-</div></div>
+    <div class="metric-card"><div class="metric-label">Elapsed time</div><div class="metric-value" id="mElapsed">-</div></div>
+    <div class="metric-card"><div class="metric-label">Functionalities / pages</div><div class="metric-value" id="mFuncPage">-</div></div>
+    <div class="metric-card"><div class="metric-label">Completion</div><div class="metric-value" id="mCompletion">-</div></div>
+    <div class="metric-card"><div class="metric-label">High-confidence bugs</div><div class="metric-value" id="mBugs">-</div></div>
+    <div class="metric-card"><div class="metric-label">LLM requests / tokens</div><div class="metric-value" id="mLLM">-</div></div>
+  </section>
+
+  <nav class="tabs" id="tabs">
+    <button class="tab-btn active" data-tab="graph">FFG</button>
+    <button class="tab-btn" data-tab="evolution">Evolution</button>
+    <button class="tab-btn" data-tab="log">Execution log</button>
+    <button class="tab-btn" data-tab="bugs">Bugs</button>
+    <button class="tab-btn" data-tab="compliance">Compliance</button>
+    <button class="tab-btn" data-tab="stats">Statistics</button>
+  </nav>
+
+  <main class="panels">
+
+    <section class="panel active" id="panel-graph">
+      <div class="runtime-layout">
+        <header class="runtime-head">
+          <div class="runtime-stage">
+            <span id="livePulse" class="live-pulse"></span>
+            <span id="liveRound" class="runtime-round">Iteration -</span>
+            <span id="liveStage" class="stage-pill">Waiting for data</span>
+          </div>
+          <div id="liveScenario" class="runtime-scenario">Reading current execution state...</div>
+          <div id="liveDelta" class="runtime-delta"></div>
+        </header>
+
+        <div class="runtime-workbench">
+          <aside class="current-page-panel">
+            <div class="pane-title"><span>Current location</span><small id="currentPageMatch">FFG match</small></div>
+            <div id="currentPageView" class="current-page-view">
+              <div class="detail-empty">Waiting for a page observation</div>
+            </div>
+          </aside>
+
+          <section class="graph-stage">
+            <div class="graph-toolbar">
+              <input type="text" id="graphSearch" placeholder="Search functionalities / pages..." />
+              <label><input type="checkbox" id="toggleTransitions" checked /> Transitions</label>
+              <label><input type="checkbox" id="toggleDependencies" checked /> Dependencies</label>
+              <label><input type="checkbox" id="togglePages" checked /> Page</label>
+              <button id="graphFitBtn" class="btn-ghost">Fit graph</button>
+            </div>
+            <div class="graph-canvas-wrap">
+              <div id="ffgGraph" class="ffg-graph"></div>
+              <div class="graph-key">
+                <span><i class="key-line key-current"></i>Current location</span>
+                <span><i class="key-line key-trace"></i>Current trace</span>
+                <span><i class="key-line key-new"></i>Newly discovered</span>
+              </div>
+              <aside id="detailPanel" class="detail-panel graph-detail-panel">
+                <button id="detailClose" class="detail-close" aria-label="Close details">×</button>
+                <div class="detail-empty">Select a node to inspect the FFG</div>
+              </aside>
+            </div>
+          </section>
+
+          <aside class="trace-panel">
+            <div class="pane-title">
+              <span>Execution trace</span>
+              <small id="traceMeta">0 steps</small>
+            </div>
+            <div class="trace-phase-key"><span class="nav-key">Navigation</span><span class="test-key">Test</span></div>
+            <div id="liveTrace" class="live-trace"><div class="detail-empty">No actions executed this iteration</div></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-evolution">
+      <div class="evo-layout">
+        <div class="card">
+          <div class="card-title">FFG size by iteration</div>
+          <div class="chart-frame chart-frame-lg">
+            <canvas id="chartFfgGrowth"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Functionality completion over time</div>
+          <div class="chart-frame">
+            <canvas id="chartCompletion"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Observed activities over elapsed time</div>
+          <div class="chart-frame">
+            <canvas id="chartActivity"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Iteration details</div>
+          <div class="table-wrap">
+            <table id="iterTable" class="data-table">
+              <thead>
+                <tr>
+                  <th>Iteration</th><th>Result</th><th>Scenario type</th><th>Scope</th><th>Page</th>
+                  <th>Duration (s)</th><th>LLM requests</th><th>Token</th>
+                  <th>Functionalities</th><th>Pages</th><th>Completed</th><th>Completion</th><th>Scenario status</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-log">
+      <div class="log-toolbar">
+        <input type="text" id="logSearch" placeholder="Filter log text..." />
+        <div class="log-tags" id="logTagFilters"></div>
+        <label class="switch"><input type="checkbox" id="logAutoScroll" checked /><span>Auto-scroll</span></label>
+      </div>
+      <div id="logView" class="log-view"></div>
+    </section>
+
+    <section class="panel" id="panel-bugs">
+      <div class="bugs-layout">
+        <div class="bugs-list" id="bugsList"></div>
+        <div class="bug-detail" id="bugDetail">
+          <div class="detail-empty">Select a bug to view its reproduction trace</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-compliance">
+      <div class="compliance-layout">
+        <div class="card">
+          <div class="card-title">Compliance verdict summary</div>
+          <div id="complianceSummary" class="compliance-stats"></div>
+        </div>
+        <div class="compliance-toolbar">
+          <input type="text" id="complianceSearch" placeholder="Search rules / clauses / verdict details..." />
+          <div class="verdict-filters" id="complianceFilters"></div>
+        </div>
+        <div id="complianceChecks" class="compliance-list"></div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-stats">
+      <div class="stats-layout">
+        <div class="card">
+          <div class="card-title">LLM usage summary</div>
+          <div id="llmTotals" class="kv-grid"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">By model</div>
+          <div class="table-wrap"><table id="llmByModelTable" class="data-table"><thead><tr><th>Model</th><th>Requests</th><th>Failed</th><th>Prompt Tokens</th><th>Completion Tokens</th><th>Total tokens</th></tr></thead><tbody></tbody></table></div>
+        </div>
+        <div class="card">
+          <div class="card-title">By operation</div>
+          <div class="table-wrap"><table id="llmByOpTable" class="data-table"><thead><tr><th>Action</th><th>Requests</th><th>Failed</th><th>Total tokens</th></tr></thead><tbody></tbody></table></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Error counts</div>
+          <div id="errorCounts" class="kv-grid"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Artifact validation (artifact_manifest)</div>
+          <div id="manifestInfo" class="kv-grid"></div>
+        </div>
+        <div class="card" id="seedInfoCard" hidden>
+          <div class="card-title">Seed provenance (seed_provenance)</div>
+          <div id="seedInfo" class="kv-grid"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Observed activities</div>
+          <div id="activityList" class="chip-list"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div id="toast" class="toast"></div>
+</div>
+
+<script src="/static/js/api.js?v=4"></script>
+<script src="/static/js/graph.js?v=4"></script>
+<script src="/static/js/evolution.js?v=4"></script>
+<script src="/static/js/logview.js?v=4"></script>
+<script src="/static/js/bugs.js?v=4"></script>
+<script src="/static/js/compliance.js?v=4"></script>
+<script src="/static/js/stats.js?v=4"></script>
+<script src="/static/js/app.js?v=4"></script>
+</body>
+</html>

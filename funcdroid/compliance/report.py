@@ -1,4 +1,4 @@
-"""合规检测报告生成（json + markdown）。"""
+"""Generate JSON and Markdown compliance reports."""
 
 from __future__ import annotations
 
@@ -12,24 +12,24 @@ from compliance.checkpoints import ComplianceChecklist
 from compliance.rule_library import gui_rules
 
 VERDICT_LABELS = {
-    "compliant": "符合",
-    "violation": "违规",
-    "undetermined": "证据不足",
-    "not_applicable": "不适用",
-    "": "未执行",
+    "compliant": "Compliant",
+    "violation": "Violation",
+    "undetermined": "Insufficient evidence",
+    "not_applicable": "Not applicable",
+    "": "Not executed",
 }
 
 STATUS_LABELS = {
-    "pending": "待执行",
-    "executing": "执行中",
-    "deferred": "未决（等待新证据）",
-    "done": "已形成结论",
-    "": "待执行",
+    "pending": "Pending",
+    "executing": "Executing",
+    "deferred": "Deferred (awaiting new evidence)",
+    "done": "Resolved",
+    "": "Pending",
 }
 
 GUI_SCREENING_SCOPE_NOTE = (
-    "本报告采用 GUI 动态筛查口径：‘符合’仅表示已观察到的适用界面与交互路径符合，"
-    "不构成对网络请求、后台代码、服务端处理或长期运营行为的完整证明。"
+    "This report covers dynamic GUI screening. Compliant means only that observed applicable interfaces and interaction paths met the rule. "
+    "It is not comprehensive evidence about network traffic, background code, server-side processing, or long-term operation."
 )
 
 
@@ -39,7 +39,7 @@ def build_compliance_report(
     package_name: str = "",
     rules_path: Any = None,
 ) -> dict[str, Any]:
-    """汇总规则库中的 GUI 动态检测条款及其结论与证据。"""
+    """Summarize GUI-screenable rules, verdicts, and supporting evidence."""
     all_rules = gui_rules(rules_path)
 
     entries: list[dict[str, Any]] = []
@@ -95,17 +95,17 @@ def build_compliance_report(
 def _render_markdown(report: dict[str, Any]) -> str:
     summary = report.get("summary", {})
     lines: list[str] = [
-        "# App 合规性动态检测报告",
+        "# App Dynamic Compliance Screening Report",
         "",
-        f"- 应用：{report.get('app_name', '') or '未知'}（{report.get('package_name', '') or '未知包名'}）",
-        f"- GUI 动态检测规则数：{summary.get('total_rules', 0)}",
-        f"- 已处理检测点：{summary.get('processed', summary.get('executed', 0))}/{summary.get('gui_total', 0)}"
-        f"｜已形成结论 {summary.get('resolved', 0)}"
-        f"｜符合 {summary.get('compliant', 0)}｜违规 {summary.get('violation', 0)}"
-        f"｜证据不足 {summary.get('undetermined', 0)}｜不适用 {summary.get('not_applicable', 0)}"
-        f"｜未决待新证据 {summary.get('unresolved', summary.get('deferred', 0))}"
-        f"｜尚未处理 {summary.get('untested', summary.get('pending', 0))}",
-        f"- 结论范围：{report.get('scope_note', GUI_SCREENING_SCOPE_NOTE)}",
+        f"- Application: {report.get('app_name', '') or 'unknown'}（{report.get('package_name', '') or 'unknown package'}）",
+        f"- GUI screening rules: {summary.get('total_rules', 0)}",
+        f"- Processed checkpoints: {summary.get('processed', summary.get('executed', 0))}/{summary.get('gui_total', 0)}"
+        f"｜Resolved {summary.get('resolved', 0)}"
+        f"｜Compliant {summary.get('compliant', 0)}｜Violation {summary.get('violation', 0)}"
+        f"｜Insufficient evidence {summary.get('undetermined', 0)}｜Not applicable {summary.get('not_applicable', 0)}"
+        f"｜Awaiting new evidence {summary.get('unresolved', summary.get('deferred', 0))}"
+        f"｜Not processed {summary.get('untested', summary.get('pending', 0))}",
+        f"- Verdict scope: {report.get('scope_note', GUI_SCREENING_SCOPE_NOTE)}",
         "",
     ]
     by_regulation: dict[str, list[dict[str, Any]]] = {}
@@ -114,7 +114,7 @@ def _render_markdown(report: dict[str, Any]) -> str:
     for regulation, entries in by_regulation.items():
         lines.append(f"## {regulation}")
         lines.append("")
-        lines.append("| 编号 | 条款 | 状态 | 结论 | 尝试次数 | 说明 |")
+        lines.append("| ID | Rule | Status | Verdict | Attempts | Description |")
         lines.append("| --- | --- | --- | --- | ---: | --- |")
         for entry in entries:
             verdict = VERDICT_LABELS.get(entry.get("verdict", ""), entry.get("verdict", ""))
@@ -122,7 +122,7 @@ def _render_markdown(report: dict[str, Any]) -> str:
             clause = str(entry.get("clause", "")).replace("|", "\\|").replace("\n", " ")
             description = str(entry.get("description", "")).replace("|", "\\|").replace("\n", " ")
             if entry.get("trace_path"):
-                description += f" [执行证据]({entry['trace_path']})"
+                description += f" [Execution evidence]({entry['trace_path']})"
             lines.append(
                 f"| {entry.get('rule_id', '')} | {clause} | {status} | {verdict} | "
                 f"{entry.get('attempts', 0)} | {description} |"

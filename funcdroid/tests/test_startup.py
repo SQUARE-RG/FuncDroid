@@ -1,13 +1,10 @@
+# Multilingual UI and model-response fixtures use Unicode escapes to preserve their exact text.
 import contextlib
 import io
 import subprocess
-import sys
 import unittest
 from pathlib import Path
 from unittest.mock import patch
-
-FUNCDROID_DIR = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(FUNCDROID_DIR))
 
 import main
 from connector.adb import ADB
@@ -19,6 +16,9 @@ from workflow.nodes.scenario_plan import (
     _function_phase,
     _required_depth_count,
 )
+
+
+FUNCDROID_DIR = Path(__file__).resolve().parents[1]
 
 
 class DeviceSelectionTests(unittest.TestCase):
@@ -104,7 +104,7 @@ class SchedulingTests(unittest.TestCase):
 class AccountSessionTests(unittest.TestCase):
     def test_session_guard_blocks_logout_but_not_observation(self):
         with patch.dict("os.environ", {"ACCOUNT_SESSION_GUARD": "1"}):
-            self.assertTrue(account_session_action_violation("click", "点击退出登录"))
+            self.assertTrue(account_session_action_violation("click", "\u70b9\u51fb\u9000\u51fa\u767b\u5f55"))
             self.assertTrue(account_session_action_violation("click", "Click Log out"))
             self.assertFalse(account_session_action_violation("click", "Open account settings"))
             self.assertFalse(account_session_action_violation("wait", "Log out button is visible"))

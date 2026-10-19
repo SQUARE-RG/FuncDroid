@@ -1,14 +1,12 @@
-"""目标进程崩溃 logcat 判别（缺陷检测共用）。
+"""Identify target-process crash and ANR evidence in logcat.
 
-运行器抓取的 crash_logcat 可能混入图形栈噪声或其他进程的崩溃；只有能确认属于
-被测包名的崩溃/ANR 证据才记录为目标 App 缺陷。
-"""
+Exclude graphics-stack noise and other processes; report a defect only when evidence belongs to the tested package."""
 
 from __future__ import annotations
 
 import re
 
-# 整段 logcat 每一行都同时包含这些片段时，是 SurfaceFlinger 时间戳噪声，不是崩溃。
+# A log containing only these SurfaceFlinger timestamp fragments is graphics noise, not a crash.
 NON_CRASH_LOGCAT_PATTERNS = (
     "BufferLayer",
     "Timestamp",
@@ -50,5 +48,5 @@ def _logcat_has_target_process_crash(crash_logcat: str, package_name: str) -> bo
     return False
 
 
-# 公开别名，便于其它模块复用（保留下划线名以兼容既有导入）。
+# Public alias retained alongside the private compatibility name.
 logcat_has_target_process_crash = _logcat_has_target_process_crash

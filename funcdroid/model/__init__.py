@@ -1,5 +1,7 @@
 from .flow_graph import (
     FlowGraph,
+    FunctionalFlowGraph,
+    FunctionalityNode,
     FunctionDependency,
     FunctionNode,
     Page,
@@ -8,6 +10,8 @@ from .flow_graph import (
 
 __all__ = [
     "FlowGraph",
+    "FunctionalFlowGraph",
+    "FunctionalityNode",
     "FunctionDependency",
     "FunctionNode",
     "Page",
